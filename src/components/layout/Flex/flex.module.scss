@@ -1,0 +1,74 @@
+.flex {
+  display: flex;
+}
+
+.flex--horizontal {
+  flex-direction: row;
+}
+
+.flex--vertical {
+  flex-direction: column;
+}
+
+.flex--alignStart {
+  align-items: flex-start;
+}
+
+.flex--alignCenter {
+  align-items: center;
+}
+
+.flex--alignEnd {
+  align-items: flex-end;
+}
+
+.flex--justifyStart {
+  justify-content: flex-start;
+}
+
+.flex--justifyCenter {
+  justify-content: center;
+}
+
+.flex--justifyEnd {
+  justify-content: flex-end;
+}
+
+.flex--justifyBetween {
+  justify-content: space-between;
+}
+
+.flex--justifyAround {
+  justify-content: space-around;
+}
+
+.flex--justifyEvenly {
+  justify-content: space-evenly;
+}
+
+$spacing-values: (
+    xs: 4px,
+    s: 8px,
+    m: 10px,
+    l: 12px,
+    xl: 16px,
+);
+
+@each $key, $value in $spacing-values {
+  .flex--spacing-#{$key} > *:not(:last-child) {
+    margin-right: $value;
+  }
+
+  .flex--vertical.flex--spacing-#{$key} > *:not(:last-child) {
+    margin-right: 0;
+    margin-bottom: $value;
+  }
+}
+
+.flex--fullHeight {
+  height: 100%;
+}
+
+.flex--fullWidth {
+  width: 100%;
+}
