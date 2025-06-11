@@ -1,0 +1,89 @@
+/* Base Button Style */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  gap: 0.5rem;
+  border-radius: 4px;
+}
+
+/* Variants */
+.button--primary {
+  background-color: #0F83B2;
+  color: white;
+}
+
+.button--primary:hover {
+  background-color: #0a6487;
+}
+
+.button--link {
+  background-color: transparent;
+}
+
+.button--link:hover {
+  text-decoration: underline;
+}
+
+.button--linkLight {
+  background-color: transparent;
+  color: white;
+}
+
+.button--linkLight:hover {
+  text-decoration: underline;
+}
+
+/* Sizes */
+.button--small {
+  padding: 0 16px;
+  height: 38px;
+}
+
+.button--medium {
+  padding: 0 25px;
+  height: 38px;
+}
+
+.button--large {
+  padding: 0 16px;
+  height: 50px;
+}
+
+/* Utility Modifiers */
+.button--noPadding {
+  padding: 0 !important;
+}
+
+.button--isSelected {
+  color: #0F83B2;
+}
+
+.button--noText {
+  border-radius: 50%;
+  padding: 0 !important;
+  aspect-ratio: 1 / 1;
+}
+
+/* Width override for noText + size combos */
+.button--noText.button--small {
+  width: 38px;
+}
+
+.button--noText.button--medium {
+  width: 38px;
+}
+
+.button--noText.button--large {
+  width: 50px;
+}
+
+/* Icon-specific */
+.button-icon {
+  display: inline-flex;
+  align-items: center;
+}

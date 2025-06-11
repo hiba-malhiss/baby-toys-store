@@ -52,6 +52,8 @@ $spacing-values: (
     m: 10px,
     l: 12px,
     xl: 16px,
+    xxl: 20px,
+    xxxl: 40px,
 );
 
 @each $key, $value in $spacing-values {

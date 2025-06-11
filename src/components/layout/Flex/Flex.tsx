@@ -1,10 +1,11 @@
 import React, { type ReactNode } from 'react';
 import styles from './flex.module.scss';
+import { capitalizeFirstLetter } from '../../../utils/stringUtils.ts';
 
 type Direction = 'horizontal' | 'vertical';
 type Align = 'start' | 'center' | 'end';
 type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
-type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl';
+type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl';
 
 interface FlexProps {
   children?: ReactNode;
@@ -44,7 +45,8 @@ const Flex: React.FC<FlexProps> = ({
     evenly: styles.flexJustifyEvenly,
   }[justify];
 
-  const spacingClass = spacing === 'none' ? '' : styles[`flexSpacing${spacing?.toUpperCase()}`];
+  const spacingClass =
+    spacing === 'none' ? '' : styles[`flexSpacing${capitalizeFirstLetter(spacing)}`];
   const fullHeightClass = fullHeight ? styles.flexFullHeight : '';
   const fullWidthClass = fullWidth ? styles.flexFullWidth : '';
 
