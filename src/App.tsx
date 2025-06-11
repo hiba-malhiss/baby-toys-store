@@ -1,11 +1,19 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import HomePage from './pages/HomePage/HomePage.tsx';
+import Layout from './components/layout/Layout/Layout.tsx';
+import './App.scss';
 
-function App(){
+const App: React.FC = () => {
   return (
-    <>
-      Hello World!
-    </>
-  )
-}
+    <Router>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </Layout>
+    </Router>
+  );
+};
 
-export default App
+export default App;

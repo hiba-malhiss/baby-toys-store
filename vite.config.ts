@@ -17,7 +17,6 @@ export default defineConfig({
   css: {
     modules: {
       localsConvention: 'camelCaseOnly', //allows styles.myClass from .my-class
-      scopeBehaviour: 'local',
     },
   },
 });

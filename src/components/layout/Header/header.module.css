@@ -1,0 +1,25 @@
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  justify-content: center;
+
+  .header-announcement {
+    background-image: url('assets/images/wave.svg');
+    background-position: center;
+    height: 51px;
+    background-repeat: repeat-x;
+    padding: 0 100px;
+    color: white;
+  }
+
+  .header-main {
+    padding: 0 100px;
+    height: 164px;
+  }
+
+  .header-logo {
+    height: 53px;
+  }
+}
