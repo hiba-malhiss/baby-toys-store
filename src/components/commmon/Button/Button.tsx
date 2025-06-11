@@ -3,10 +3,11 @@ import styles from './button.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { appearanceClassMap, sizeClassMap } from './button.constants.ts';
 
 type ButtonProps = {
   children?: React.ReactNode;
-  appearance?: 'link' | 'light-link' | 'primary' | 'primary-link';
+  appearance?: 'link' | 'light-link' | 'primary' | 'primary-link' | 'secondary';
   size?: 'small' | 'medium' | 'large';
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
@@ -15,19 +16,6 @@ type ButtonProps = {
   withoutPadding?: boolean;
   isSelected?: boolean;
   className?: string;
-};
-
-const appearanceClassMap = {
-  primary: styles.buttonPrimary,
-  link: styles.buttonLink,
-  'light-link': styles.buttonLightLink,
-  'primary-link': styles.buttonPrimaryLink,
-};
-
-const sizeClassMap = {
-  small: styles.buttonSmall,
-  medium: styles.buttonMedium,
-  large: styles.buttonLarge,
 };
 
 export const Button: React.FC<ButtonProps> = ({

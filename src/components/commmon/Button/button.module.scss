@@ -19,6 +19,15 @@
     }
   }
 
+  &--secondary {
+    background-color: #F26C62;
+    color: white;
+
+    &:hover {
+      background-color: #d9574f;
+    }
+  }
+
   &--link {
     background-color: transparent;
 

@@ -1,28 +1,7 @@
 import styles from './footer.module.scss';
-import { faFacebookF, faTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { Button } from '../../commmon/Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
-
-const exploreLinks = [
-  'My account',
-  'Track my order',
-  'Terms of use',
-  'Wishlist',
-  'Submit Your feedback',
-];
-
-const socialMediaLinks = [
-  { icon: faFacebookF, url: '' },
-  { icon: faTwitter, url: '' },
-  { icon: faInstagram, url: '' },
-];
-
-const customerServiceInfo = [
-  'Monday to Friday',
-  '10am - 6pm (New York time)',
-  { label: 'Call us:', value: '123-456-7868', link: 'tel:1234567868' },
-  { label: 'Email us:', value: 'info@example.com', link: 'mailto:info@example.com' },
-];
+import { customerServiceInfo, exploreLinks, socialMediaLinks } from './footer.constants.ts';
 
 const Footer = () => {
   return (
@@ -34,7 +13,12 @@ const Footer = () => {
         </p>
         <Flex spacing="xl">
           {socialMediaLinks.map(({ icon, url }) => (
-            <Button key={icon.iconName} leftIcon={icon} onClick={() => console.log(url)} />
+            <Button
+              key={icon.iconName}
+              appearance="secondary"
+              leftIcon={icon}
+              onClick={() => console.log(url)}
+            />
           ))}
         </Flex>
       </Flex>
