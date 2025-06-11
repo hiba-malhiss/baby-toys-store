@@ -1,4 +1,4 @@
-import styles from './header.module.css';
+import styles from './header.module.scss';
 import Flex from '../Flex/Flex.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faVanShuttle } from '@fortawesome/free-solid-svg-icons';

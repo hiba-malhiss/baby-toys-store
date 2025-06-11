@@ -1,5 +1,5 @@
 import React, { type InputHTMLAttributes } from 'react';
-import styles from './input.module.css';
+import styles from './input.module.scss';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

@@ -1,5 +1,7 @@
+import styles from './home-page.module.scss';
+
 const HomePage = () => {
-  return <img src="/assets/images/homeMain.png" alt="" />;
+  return <div className={styles.homeImageContainer}></div>;
 };
 
 export default HomePage;

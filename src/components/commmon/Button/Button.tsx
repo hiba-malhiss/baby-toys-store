@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './button.module.css';
+import styles from './button.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';

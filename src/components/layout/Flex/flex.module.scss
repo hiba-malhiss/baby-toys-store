@@ -1,76 +1,77 @@
 .flex {
   display: flex;
-}
 
-.flex--horizontal {
-  flex-direction: row;
-}
-
-.flex--vertical {
-  flex-direction: column;
-}
-
-.flex--alignStart {
-  align-items: flex-start;
-}
-
-.flex--alignCenter {
-  align-items: center;
-}
-
-.flex--alignEnd {
-  align-items: flex-end;
-}
-
-.flex--justifyStart {
-  justify-content: flex-start;
-}
-
-.flex--justifyCenter {
-  justify-content: center;
-}
-
-.flex--justifyEnd {
-  justify-content: flex-end;
-}
-
-.flex--justifyBetween {
-  justify-content: space-between;
-}
-
-.flex--justifyAround {
-  justify-content: space-around;
-}
-
-.flex--justifyEvenly {
-  justify-content: space-evenly;
-}
-
-$spacing-values: (
-    xs: 4px,
-    s: 8px,
-    m: 10px,
-    l: 12px,
-    xl: 16px,
-    xxl: 20px,
-    xxxl: 40px,
-);
-
-@each $key, $value in $spacing-values {
-  .flex--spacing-#{$key} > *:not(:last-child) {
-    margin-right: $value;
+  &--horizontal {
+    flex-direction: row;
   }
 
-  .flex--vertical.flex--spacing-#{$key} > *:not(:last-child) {
-    margin-right: 0;
-    margin-bottom: $value;
+  &--vertical {
+    flex-direction: column;
   }
-}
 
-.flex--fullHeight {
-  height: 100%;
-}
+  &--alignStart {
+    align-items: flex-start;
+  }
 
-.flex--fullWidth {
-  width: 100%;
+  &--alignCenter {
+    align-items: center;
+  }
+
+  &--alignEnd {
+    align-items: flex-end;
+  }
+
+  &--justifyStart {
+    justify-content: flex-start;
+  }
+
+  &--justifyCenter {
+    justify-content: center;
+  }
+
+  &--justifyEnd {
+    justify-content: flex-end;
+  }
+
+  &--justifyBetween {
+    justify-content: space-between;
+  }
+
+  &--justifyAround {
+    justify-content: space-around;
+  }
+
+  &--justifyEvenly {
+    justify-content: space-evenly;
+  }
+
+  &--fullHeight {
+    height: 100%;
+  }
+
+  &--fullWidth {
+    width: 100%;
+  }
+
+  // Spacing modifiers
+  $spacing-values: (
+      xs: 4px,
+      s: 8px,
+      m: 10px,
+      l: 12px,
+      xl: 16px,
+      xxl: 20px,
+      xxxl: 40px
+  );
+
+  @each $key, $value in $spacing-values {
+    &--spacing-#{$key} > *:not(:last-child) {
+      margin-right: $value;
+    }
+
+    &--vertical&--spacing-#{$key} > *:not(:last-child) {
+      margin-right: 0;
+      margin-bottom: $value;
+    }
+  }
 }

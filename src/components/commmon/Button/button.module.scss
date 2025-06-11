@@ -1,0 +1,86 @@
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+  gap: 0.5rem;
+  border-radius: 4px;
+
+  /* Variants */
+  &--primary {
+    background-color: #0F83B2;
+    color: white;
+
+    &:hover {
+      background-color: #0a6487;
+    }
+  }
+
+  &--link {
+    background-color: transparent;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &--linkLight {
+    background-color: transparent;
+    color: white;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  /* Sizes */
+  &--small {
+    padding: 0 16px;
+    height: 38px;
+  }
+
+  &--medium {
+    padding: 0 25px;
+    height: 38px;
+  }
+
+  &--large {
+    padding: 0 16px;
+    height: 50px;
+  }
+
+  /* Utility Modifiers */
+  &--noPadding {
+    padding: 0 !important;
+  }
+
+  &--isSelected {
+    color: #0F83B2;
+  }
+
+  &--noText {
+    border-radius: 50%;
+    padding: 0 !important;
+    aspect-ratio: 1 / 1;
+
+    &.button--small {
+      width: 38px;
+    }
+
+    &.button--medium {
+      width: 38px;
+    }
+
+    &.button--large {
+      width: 50px;
+    }
+  }
+}
+
+.button-icon {
+  display: inline-flex;
+  align-items: center;
+}

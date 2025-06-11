@@ -1,6 +1,6 @@
 import React, { type ReactNode } from 'react';
 import styles from './flex.module.scss';
-import { capitalizeFirstLetter } from '../../../utils/stringUtils.ts';
+import clsx from 'clsx';
 
 type Direction = 'horizontal' | 'vertical';
 type Align = 'start' | 'center' | 'end';
@@ -17,6 +17,17 @@ interface FlexProps {
   fullWidth?: boolean;
   className?: string;
 }
+
+const spacingClassMap: Record<Spacing, string | undefined> = {
+  none: '',
+  xs: styles.flexSpacingXs,
+  s: styles.flexSpacingS,
+  m: styles.flexSpacingM,
+  l: styles.flexSpacingL,
+  xl: styles.flexSpacingXl,
+  xxl: styles.flexSpacingXxl,
+  xxxl: styles.flexSpacingXxxl,
+};
 
 const Flex: React.FC<FlexProps> = ({
   children,
@@ -45,23 +56,16 @@ const Flex: React.FC<FlexProps> = ({
     evenly: styles.flexJustifyEvenly,
   }[justify];
 
-  const spacingClass =
-    spacing === 'none' ? '' : styles[`flexSpacing${capitalizeFirstLetter(spacing)}`];
-  const fullHeightClass = fullHeight ? styles.flexFullHeight : '';
-  const fullWidthClass = fullWidth ? styles.flexFullWidth : '';
-
-  const combinedClassName = [
+  const combinedClassName = clsx(
     styles.flex,
     directionClass,
     alignClass,
     justifyClass,
-    spacingClass,
-    fullHeightClass,
-    fullWidthClass,
-    className,
-  ]
-    .filter(Boolean)
-    .join(' ');
+    spacingClassMap[spacing],
+    fullHeight && styles.flexFullHeight,
+    fullWidth && styles.flexFullWidth,
+    className
+  );
 
   return <div className={combinedClassName}>{children}</div>;
 };
