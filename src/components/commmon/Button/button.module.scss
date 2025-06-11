@@ -27,7 +27,16 @@
     }
   }
 
-  &--linkLight {
+  &--primaryLink {
+    color: #0F83B2;
+    background-color: transparent;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &-lightLink {
     background-color: transparent;
     color: white;
 
@@ -38,8 +47,7 @@
 
   /* Sizes */
   &--small {
-    padding: 0 16px;
-    height: 38px;
+    padding: 10px;
   }
 
   &--medium {

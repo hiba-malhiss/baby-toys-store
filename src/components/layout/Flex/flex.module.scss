@@ -61,15 +61,16 @@
       l: 12px,
       xl: 16px,
       xxl: 20px,
-      xxxl: 40px
+      xxxl: 32px,
+      xxxxl: 40px
   );
 
   @each $key, $value in $spacing-values {
-    &--spacing-#{$key} > *:not(:last-child) {
+    &--horizontal.flex--spacing-#{$key} > *:not(:last-child) {
       margin-right: $value;
     }
 
-    &--vertical&--spacing-#{$key} > *:not(:last-child) {
+    &--vertical.flex--spacing-#{$key} > *:not(:last-child) {
       margin-right: 0;
       margin-bottom: $value;
     }

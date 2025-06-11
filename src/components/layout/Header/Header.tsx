@@ -21,11 +21,11 @@ const Header = () => {
           <FontAwesomeIcon icon={faVanShuttle} />
           <span>Free free shipping with over $150</span>
         </Flex>
-        <Flex spacing="xxxl">
-          <Button withoutPadding appearance="link-light">
+        <Flex spacing="xxxxl">
+          <Button withoutPadding appearance="light-link">
             Login
           </Button>
-          <Button withoutPadding appearance="link-light">
+          <Button withoutPadding appearance="light-link">
             Register
           </Button>
         </Flex>

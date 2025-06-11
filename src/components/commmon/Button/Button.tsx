@@ -6,7 +6,7 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 type ButtonProps = {
   children?: React.ReactNode;
-  appearance?: 'link' | 'link-light' | 'primary';
+  appearance?: 'link' | 'light-link' | 'primary' | 'primary-link';
   size?: 'small' | 'medium' | 'large';
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
@@ -20,7 +20,8 @@ type ButtonProps = {
 const appearanceClassMap = {
   primary: styles.buttonPrimary,
   link: styles.buttonLink,
-  'link-light': styles.buttonLinkLight,
+  'light-link': styles.buttonLinkLight,
+  'primary-link': styles.buttonPrimaryLink,
 };
 
 const sizeClassMap = {
