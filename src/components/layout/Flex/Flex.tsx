@@ -5,7 +5,7 @@ import clsx from 'clsx';
 type Direction = 'horizontal' | 'vertical';
 type Align = 'start' | 'center' | 'end';
 type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
-type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl';
+type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl';
 
 interface FlexProps {
   children?: ReactNode;
@@ -27,6 +27,7 @@ const spacingClassMap: Record<Spacing, string | undefined> = {
   xl: styles.flexSpacingXl,
   xxl: styles.flexSpacingXxl,
   xxxl: styles.flexSpacingXxxl,
+  xxxxl: styles.flexSpacingXxxxl,
 };
 
 const Flex: React.FC<FlexProps> = ({

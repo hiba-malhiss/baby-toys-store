@@ -20,7 +20,7 @@ type ButtonProps = {
 const appearanceClassMap = {
   primary: styles.buttonPrimary,
   link: styles.buttonLink,
-  'light-link': styles.buttonLinkLight,
+  'light-link': styles.buttonLightLink,
   'primary-link': styles.buttonPrimaryLink,
 };
 
