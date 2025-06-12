@@ -1,0 +1,27 @@
+.radioButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  gap: 0.5rem;
+  border-radius: 74px;
+  padding: 12px 20px;
+  user-select: none;
+  color: black;
+  background-color: transparent;
+
+  input {
+    display: none;
+  }
+
+  &--selected {
+    background-color: #F8EDF8;
+  }
+
+  &:hover {
+    background-color: #F2D9F2;
+  }
+}
