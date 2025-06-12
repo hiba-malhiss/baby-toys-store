@@ -14,15 +14,30 @@ type ToyCardProps = {
   price: string;
   rating: number;
   oldPrice?: string;
+  isFavorite?: boolean;
+  onToggleFavorite?: () => void;
 };
 
-const ToyCard: React.FC<ToyCardProps> = ({ label, imageSrc, name, price, rating, oldPrice }) => {
+const ToyCard: React.FC<ToyCardProps> = ({
+  isFavorite,
+  onToggleFavorite,
+  label,
+  imageSrc,
+  name,
+  price,
+  rating,
+  oldPrice,
+}) => {
   return (
     <Flex direction="vertical" className={styles.toyCard}>
       <Flex direction="vertical" align="center" className={styles.toyCardBox}>
         {label && <Chip label={label} className={styles.toyCardChip} />}
         <div className={styles.toyCardIcons}>
-          <FontAwesomeIcon icon={faHeart} className={styles.toyCardIcon} />
+          <FontAwesomeIcon
+            icon={faHeart}
+            className={clsx(styles.toyCardIcon, isFavorite && styles.toyCardIconActive)}
+            onClick={onToggleFavorite}
+          />
           <FontAwesomeIcon icon={faCartShopping} className={styles.toyCardIcon} />
         </div>
         <div className={styles.toyCardImageWrapper}>

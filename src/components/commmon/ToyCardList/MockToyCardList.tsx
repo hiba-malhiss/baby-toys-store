@@ -1,4 +1,5 @@
 import ToyCard from '../ToyCard/ToyCard.tsx';
+import { useState } from 'react';
 
 const toyNames = [
   'Blocks shape-sorting Toy',
@@ -19,9 +20,7 @@ const generateRandomToys = (count = 9) => {
     const basePrice = Math.random() * 30 + 10;
     const price = parseFloat(basePrice.toFixed(2));
     const hasDiscount = Math.random() < 0.5;
-
     const oldPrice = hasDiscount ? `$${(price + Math.random() * 10 + 5).toFixed(2)}` : undefined;
-
     const label = oldPrice ? 'SALE' : getRandom([undefined, 'NEW']);
 
     return {
@@ -31,6 +30,7 @@ const generateRandomToys = (count = 9) => {
       price: `$${price}`,
       oldPrice,
       rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)), // between 3.5–5.0
+      isFavorite: false,
     };
   });
 };
@@ -38,6 +38,14 @@ const generateRandomToys = (count = 9) => {
 const toys = generateRandomToys();
 
 const MockToyCardList = () => {
+  const [toysState, setToysState] = useState(toys);
+
+  const toggleFavorite = (index: number) => {
+    setToysState((prev) =>
+      prev.map((toy, i) => (i === index ? { ...toy, isFavorite: !toy.isFavorite } : toy))
+    );
+  };
+
   return (
     <div
       style={{
@@ -48,7 +56,7 @@ const MockToyCardList = () => {
         justifyContent: 'center',
       }}
     >
-      {toys.map((toy, index) => (
+      {toysState.map((toy, index) => (
         <ToyCard
           key={index}
           label={toy.label}
@@ -57,6 +65,8 @@ const MockToyCardList = () => {
           price={toy.price}
           oldPrice={toy.oldPrice}
           rating={toy.rating}
+          isFavorite={toy.isFavorite}
+          onToggleFavorite={() => toggleFavorite(index)}
         />
       ))}
     </div>
