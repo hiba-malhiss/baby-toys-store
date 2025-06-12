@@ -9,6 +9,12 @@
   gap: 0.5rem;
   border-radius: 74px;
 
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+  }
+
   /* Variants */
   &--primary {
     background-color: #0F83B2;
@@ -30,9 +36,10 @@
 
   &--link {
     background-color: transparent;
+    color: #333;
 
     &:hover {
-      text-decoration: underline;
+      color: #0F83B2;
     }
   }
 
@@ -41,7 +48,7 @@
     background-color: transparent;
 
     &:hover {
-      text-decoration: underline;
+      color: #0a6487;
     }
   }
 
@@ -50,7 +57,7 @@
     color: white;
 
     &:hover {
-      text-decoration: underline;
+      color: #ffd8cc;
     }
   }
 
