@@ -1,0 +1,17 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 13px;
+  border-radius: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
+  text-transform: uppercase;
+  font-family: "Poppins", sans-serif;
+
+  &--primary {
+    background-color: #F27373;
+    color: white;
+  }
+}
