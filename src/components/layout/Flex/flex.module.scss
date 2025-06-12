@@ -13,6 +13,10 @@
     align-items: flex-start;
   }
 
+  &--alignStretch {
+    align-items: stretch;
+  }
+
   &--alignCenter {
     align-items: center;
   }

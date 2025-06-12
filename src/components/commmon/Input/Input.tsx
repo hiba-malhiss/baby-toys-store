@@ -14,7 +14,7 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   size?: 'small' | 'medium' | 'large';
 };
 
-const sizeMap = {
+const sizeMap: Record<string, string> = {
   small: styles.inputSmall,
   medium: styles.inputMedium,
   large: styles.inputLarge,

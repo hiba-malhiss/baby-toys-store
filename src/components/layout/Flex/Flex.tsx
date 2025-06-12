@@ -3,7 +3,7 @@ import styles from './flex.module.scss';
 import clsx from 'clsx';
 
 type Direction = 'horizontal' | 'vertical';
-type Align = 'start' | 'center' | 'end';
+type Align = 'start' | 'center' | 'end' | 'stretch';
 type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
 type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl';
 
@@ -46,6 +46,7 @@ const Flex: React.FC<FlexProps> = ({
     start: styles.flexAlignStart,
     center: styles.flexAlignCenter,
     end: styles.flexAlignEnd,
+    stretch: styles.flexAlignStretch,
   }[align];
 
   const justifyClass = {
