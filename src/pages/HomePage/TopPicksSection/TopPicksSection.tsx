@@ -3,10 +3,21 @@ import Section from '../../../components/layout/Section/Section.tsx';
 import RadioButtonGroup from '../../../components/commmon/RadioButtonGroup/RadioButtonGroup.tsx';
 import { topPicksRadioOptions } from '../home-page.constants.ts';
 import styles from './top-picks-section.module.scss';
-import MockToyCardList from '../../../components/commmon/ToyCardList/MockToyCardList.tsx';
+import ToyCard from '../../../components/commmon/ToyCard/ToyCard.tsx';
+import type { Toy } from '../../../types/toy.types.ts';
+import { toys } from '../../../mock-data/toy-card-list.ts';
 
 const TopPicksSection = () => {
   const [selected, setSelected] = useState(topPicksRadioOptions[0].value); // e.g., "featured"
+  const [toysState, setToysState] = useState(toys);
+
+  const toggleFavorite = (index: number) => {
+    setToysState((prev) =>
+      prev.map((toy: Toy, i: number) =>
+        i === index ? { ...toy, isFavorite: !toy.isFavorite } : toy
+      )
+    );
+  };
 
   return (
     <Section title="Top picks for your little ones">
@@ -17,7 +28,11 @@ const TopPicksSection = () => {
         name="topPicks"
         onChange={setSelected}
       />
-      <MockToyCardList />
+      <div className={styles.topPicksGrid}>
+        {toysState.map((toy, index) => (
+          <ToyCard key={index} toy={toy} onToggleFavorite={() => toggleFavorite(index)} />
+        ))}
+      </div>
     </Section>
   );
 };

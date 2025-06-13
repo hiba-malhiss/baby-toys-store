@@ -1,4 +1,12 @@
 .topPicks {
   margin-top: 48px;
   margin-bottom: 32px;
+
+  &-grid {
+    display: flex;
+    row-gap: 60px;
+    column-gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 }

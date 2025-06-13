@@ -6,54 +6,39 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import Flex from '../../layout/Flex/Flex.tsx';
 import clsx from 'clsx';
+import type { Toy } from '../../../types/toy.types.ts';
 
 type ToyCardProps = {
-  label?: string;
-  imageSrc: string;
-  name: string;
-  price: string;
-  rating: number;
-  oldPrice?: string;
-  isFavorite?: boolean;
+  toy: Toy;
   onToggleFavorite?: () => void;
 };
 
-const ToyCard: React.FC<ToyCardProps> = ({
-  isFavorite,
-  onToggleFavorite,
-  label,
-  imageSrc,
-  name,
-  price,
-  rating,
-  oldPrice,
-}) => {
+const ToyCard: React.FC<ToyCardProps> = ({ toy, onToggleFavorite }) => {
   return (
     <Flex direction="vertical" className={styles.toyCard}>
       <Flex direction="vertical" align="center" className={styles.toyCardBox}>
-        {label && <Chip label={label} className={styles.toyCardChip} />}
+        {toy.label && <Chip label={toy.label} className={styles.toyCardChip} />}
         <div className={styles.toyCardIcons}>
           <FontAwesomeIcon
             icon={faHeart}
-            className={clsx(styles.toyCardIcon, isFavorite && styles.toyCardIconActive)}
+            className={clsx(styles.toyCardIcon, toy.isFavorite && styles.toyCardIconActive)}
             onClick={onToggleFavorite}
           />
           <FontAwesomeIcon icon={faCartShopping} className={styles.toyCardIcon} />
         </div>
         <div className={styles.toyCardImageWrapper}>
-          <img src={imageSrc} alt={name} />
+          <img src={toy.imageSrc} alt={toy.name} />
         </div>
       </Flex>
       <div className={styles.toyCardInfo}>
-        <div className={styles.toyCardInfoName}>{name}</div>
-        <div className={clsx(styles.toyCardInfoPrice, oldPrice && styles.toyCardWithDiscount)}>
-          <span className={styles.toyCardInfoPriceNew}>{price}</span>
-          {oldPrice && <span className={styles.toyCardInfoPriceOld}>{oldPrice}</span>}
+        <div className={styles.toyCardInfoName}>{toy.name}</div>
+        <div className={clsx(styles.toyCardInfoPrice, toy.oldPrice && styles.toyCardWithDiscount)}>
+          <span className={styles.toyCardInfoPriceNew}>{toy.price}</span>
+          {toy.oldPrice && <span className={styles.toyCardInfoPriceOld}>{toy.oldPrice}</span>}
         </div>
-        <Rating value={rating} />
+        <Rating value={toy.rating} />
       </div>
     </Flex>
   );
 };
-
 export default ToyCard;
