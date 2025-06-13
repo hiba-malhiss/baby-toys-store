@@ -80,6 +80,11 @@
     padding: 0 !important;
   }
 
+  &--isDisabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   &--isSelected {
     color: #0F83B2;
   }

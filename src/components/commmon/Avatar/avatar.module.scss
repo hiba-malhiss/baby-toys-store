@@ -1,0 +1,18 @@
+.avatar {
+  border-radius: 50%;
+  object-fit: cover;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #CCC8C8;
+  color: #5C5C5C;
+
+  &--small {
+    width: 40px;
+    height: 40px;
+  }
+
+  &-Icon {
+    font-size: 20px;
+  }
+}

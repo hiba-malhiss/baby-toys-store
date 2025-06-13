@@ -1,0 +1,37 @@
+import type { Toy } from '../types/toy.types.ts';
+
+const toyNames = [
+  'Blocks shape-sorting Toy',
+  'Stitch Medium Soft Toy',
+  'Wooden Train Set',
+  'Stacking Rings',
+  'Puzzle Cubes',
+  'Animal Figurines',
+  'Toy Car Set',
+  'Mini Kitchen Set',
+  'Learning Laptop',
+];
+
+const getRandom = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+
+const generateRandomToys = (count = 9): Toy[] => {
+  return Array.from({ length: count }, (_, i) => {
+    const basePrice = Math.random() * 30 + 10;
+    const price = parseFloat(basePrice.toFixed(2));
+    const hasDiscount = Math.random() < 0.5;
+    const oldPrice = hasDiscount ? `$${(price + Math.random() * 10 + 5).toFixed(2)}` : undefined;
+    const label = oldPrice ? 'SALE' : getRandom([undefined, 'NEW']);
+
+    return {
+      label,
+      imageSrc: `/assets/images/toys/img${i + 1}.png`,
+      name: getRandom(toyNames),
+      price: `$${price}`,
+      oldPrice,
+      rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)), // between 3.5–5.0
+      isFavorite: false,
+    };
+  });
+};
+
+export const toys = generateRandomToys();

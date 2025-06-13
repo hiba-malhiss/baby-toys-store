@@ -28,14 +28,17 @@ export const Button: React.FC<ButtonProps> = ({
   isDisabled = false,
   withoutPadding,
   isSelected,
+  className,
 }) => {
   const calculatedClassName = clsx(
     styles.button,
     appearanceClassMap[appearance],
     sizeClassMap[size],
+    isDisabled && styles.buttonIsDisabled,
     withoutPadding && styles.buttonNoPadding,
     isSelected && styles.buttonIsSelected,
-    !children && styles.buttonNoText
+    !children && styles.buttonNoText,
+    className
   );
 
   return (

@@ -11,6 +11,6 @@ export type Toy = {
 export interface Feedback {
   rating: number;
   name: string;
-  avatarUrl: string;
-  comment?: string;
+  avatarUrl?: string;
+  comment: string;
 }

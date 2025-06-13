@@ -1,0 +1,27 @@
+.feedbackCard {
+  background-image: url('assets/images/feedback-card.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+  padding: 37px 43px 17px 43px;
+  max-width: 400px;
+
+  &-name {
+    font-weight: 600;
+    color: #4A4748;
+    font-size: 16px;
+  }
+
+  &-comment {
+    color: #4A4748;
+    font-size: 16px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    width: 100%;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    flex: 1;
+  }
+}
