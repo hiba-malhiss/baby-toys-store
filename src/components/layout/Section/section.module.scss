@@ -1,8 +1,9 @@
 .section {
-  padding: 50px 100px 100px 100px;
+  padding-top: 50px;
+  padding-bottom: 50px;
 
   &--compactPadding {
-    padding: 50px 100px 20px 100px;
+    padding-bottom: 20px;
   }
 
   &-title {

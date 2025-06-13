@@ -8,7 +8,7 @@ import { appearanceClassMap, sizeClassMap } from './button.constants.ts';
 type ButtonProps = {
   children?: React.ReactNode;
   appearance?: 'link' | 'light-link' | 'primary' | 'primary-link' | 'secondary';
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'xlarge';
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
   onClick?: () => void;

@@ -72,6 +72,10 @@
   }
 
   &--large {
+    padding: 17px 22px;
+  }
+
+  &--xlarge {
     padding: 22px 45px;
   }
 
@@ -102,7 +106,7 @@
       width: 38px;
     }
 
-    &.button--large {
+    &.button--large, &.button--xlarge {
       width: 54px;
     }
   }

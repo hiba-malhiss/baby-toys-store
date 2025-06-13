@@ -12,4 +12,5 @@ export const sizeClassMap = {
   small: styles.buttonSmall,
   medium: styles.buttonMedium,
   large: styles.buttonLarge,
+  xlarge: styles.buttonXlarge,
 };

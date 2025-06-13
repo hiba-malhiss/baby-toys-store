@@ -6,17 +6,22 @@ import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSecti
 import BannersSection from './BannersSection/BannersSection.tsx';
 import RecentPhotoShoots from './RecentPhotoShoots/RecentPhotoShoots.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
+import NewsletterSection from './NewsletterSection/NewsletterSection.tsx';
+import styles from './home-page.module.scss';
 
 const HomePage = () => {
   return (
-    <Flex direction="vertical" spacing="xxl" fullWidth>
+    <Flex direction="vertical" align="center" spacing="xxl" fullWidth>
       <ShopNowSection />
-      <OurCollectionSection />
-      <TopPicksSection />
-      <BannersSection />
-      <CustomerFeedbacksSection />
-      <RecentPhotoShoots />
-      <PolicyCardsSection />
+      <Flex direction="vertical" spacing="xxl" className={styles.homeContent}>
+        <OurCollectionSection />
+        <TopPicksSection />
+        <BannersSection />
+        <CustomerFeedbacksSection />
+        <RecentPhotoShoots />
+        <PolicyCardsSection />
+        <NewsletterSection />
+      </Flex>
     </Flex>
   );
 };

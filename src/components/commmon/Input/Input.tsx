@@ -11,12 +11,10 @@ type InputProps = InputHTMLAttributes<HTMLInputElement> & {
   iconRight?: IconDefinition;
   iconLeft?: IconDefinition;
   isSearch?: boolean;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'large';
 };
 
 const sizeMap: Record<string, string> = {
-  small: styles.inputSmall,
-  medium: styles.inputMedium,
   large: styles.inputLarge,
 };
 
@@ -25,7 +23,7 @@ export const Input: React.FC<InputProps> = ({
   isSearch = false,
   iconRight,
   iconLeft,
-  size = 'medium',
+  size = 'large',
   className,
   ...props
 }) => {
