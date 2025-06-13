@@ -3,6 +3,7 @@ import OurCollectionSection from './OurCollectionSection/OurCollectionSection.ts
 import Flex from '../../components/layout/Flex/Flex.tsx';
 import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';
 import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSection.tsx';
+import BannersSection from './BannersSection/BannersSection.tsx';
 
 const HomePage = () => {
   return (
@@ -10,6 +11,7 @@ const HomePage = () => {
       <ShopNowSection />
       <OurCollectionSection />
       <TopPicksSection />
+      <BannersSection />
       <CustomerFeedbacksSection />
     </Flex>
   );
