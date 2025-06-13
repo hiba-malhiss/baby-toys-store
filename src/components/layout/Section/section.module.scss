@@ -1,6 +1,10 @@
 .section {
   padding: 50px 100px 100px 100px;
 
+  &--compactPadding {
+    padding: 50px 100px 20px 100px;
+  }
+
   &-title {
     font-weight: bold;
     font-size: 38px;
@@ -8,5 +12,6 @@
 
   &-subTitle {
     margin-top: 10px;
+    margin-bottom: 60px;
   }
 }

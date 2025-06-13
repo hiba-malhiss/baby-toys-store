@@ -1,5 +1,12 @@
 import type { Feedback } from '../types/toy.types.ts';
 
+export const photoShoots: string[] = [
+  '/assets/images/recent-photo-shoots/pic1.png',
+  '/assets/images/recent-photo-shoots/pic2.png',
+  '/assets/images/recent-photo-shoots/pic3.png',
+  '/assets/images/recent-photo-shoots/pic4.png',
+];
+
 export const feedbacks: Feedback[] = [
   {
     rating: 5,

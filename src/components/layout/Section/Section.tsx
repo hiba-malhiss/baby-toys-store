@@ -8,12 +8,13 @@ interface SectionProps {
   title: string;
   subTitle?: string;
   className?: string;
+  compactPadding?: boolean;
 }
 
-const Section = ({ subTitle, className, title, children }: SectionProps) => {
+const Section = ({ compactPadding, subTitle, className, title, children }: SectionProps) => {
   return (
     <Flex
-      className={clsx(className, styles.section)}
+      className={clsx(className, styles.section, compactPadding && styles.sectionCompactPadding)}
       direction="vertical"
       justify="center"
       align="center"
