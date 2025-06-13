@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Section from '../../../components/layout/Section/Section.tsx';
 import RadioButtonGroup from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
-import { topPicksRadioOptions } from '../home-page.constants.ts';
+import { topPicksRadioOptions } from '../../../mock-data/home-page.ts';
 import styles from './top-picks-section.module.scss';
 import ToyCard from '../../../components/common/ToyCard/ToyCard.tsx';
 import type { Toy } from '../../../types/toy.types.ts';
