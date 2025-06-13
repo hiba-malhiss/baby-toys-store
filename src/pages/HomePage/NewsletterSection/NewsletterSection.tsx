@@ -1,7 +1,7 @@
 import Flex from '../../../components/layout/Flex/Flex.tsx';
 import styles from './newsletter-section.module.scss';
-import { Input } from '../../../components/commmon/Input/Input.tsx';
-import { Button } from '../../../components/commmon/Button/Button.tsx';
+import { Input } from '../../../components/common/Input/Input.tsx';
+import { Button } from '../../../components/common/Button/Button.tsx';
 import Section from '../../../components/layout/Section/Section.tsx';
 
 const NewsletterSection = () => {

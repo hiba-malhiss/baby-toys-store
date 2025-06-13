@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Section from '../../../components/layout/Section/Section.tsx';
-import RadioButtonGroup from '../../../components/commmon/RadioButtonGroup/RadioButtonGroup.tsx';
+import RadioButtonGroup from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import { topPicksRadioOptions } from '../home-page.constants.ts';
 import styles from './top-picks-section.module.scss';
-import ToyCard from '../../../components/commmon/ToyCard/ToyCard.tsx';
+import ToyCard from '../../../components/common/ToyCard/ToyCard.tsx';
 import type { Toy } from '../../../types/toy.types.ts';
 import { toys } from '../../../mock-data/toy-card-list.ts';
 

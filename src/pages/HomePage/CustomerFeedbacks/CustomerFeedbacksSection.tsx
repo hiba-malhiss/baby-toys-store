@@ -1,7 +1,7 @@
 import Section from '../../../components/layout/Section/Section.tsx';
-import FeedbackCard from '../../../components/commmon/FeedbackCard/FeedbackCard.tsx';
+import FeedbackCard from '../../../components/common/FeedbackCard/FeedbackCard.tsx';
 import styles from './customer-feedbacks-section.module.scss';
-import Carousel from '../../../components/commmon/Carousel/Carousel.tsx';
+import Carousel from '../../../components/common/Carousel/Carousel.tsx';
 import { feedbacks } from '../../../mock-data/home-page.ts';
 
 const CustomerFeedbacksSection = () => {

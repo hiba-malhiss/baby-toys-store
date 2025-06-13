@@ -2,9 +2,9 @@ import styles from './header.module.scss';
 import Flex from '../Flex/Flex.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruckFast } from '@fortawesome/free-solid-svg-icons';
-import { Nav } from '../../commmon/Nav/Nav.tsx';
-import { Button } from '../../commmon/Button/Button.tsx';
-import { Input } from '../../commmon/Input/Input.tsx';
+import { Nav } from '../../common/Nav/Nav.tsx';
+import { Button } from '../../common/Button/Button.tsx';
+import { Input } from '../../common/Input/Input.tsx';
 
 const navConfig = [
   { path: '/', label: 'Home' },

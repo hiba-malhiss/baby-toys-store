@@ -1,6 +1,6 @@
 import Flex from '../../../components/layout/Flex/Flex.tsx';
 import { infoCards } from '../../../mock-data/home-page.ts';
-import InfoCard from '../../../components/commmon/InfoCard/InfoCard.tsx';
+import InfoCard from '../../../components/common/InfoCard/InfoCard.tsx';
 
 const PolicyCardsSection = () => {
   return (

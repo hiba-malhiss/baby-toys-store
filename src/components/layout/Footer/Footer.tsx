@@ -1,5 +1,5 @@
 import styles from './footer.module.scss';
-import { Button } from '../../commmon/Button/Button.tsx';
+import { Button } from '../../common/Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
 import { customerServiceInfo, exploreLinks, socialMediaLinks } from './footer.constants.ts';
 
