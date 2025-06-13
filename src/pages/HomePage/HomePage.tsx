@@ -4,7 +4,7 @@ import Flex from '../../components/layout/Flex/Flex.tsx';
 import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';
 import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSection.tsx';
 import BannersSection from './BannersSection/BannersSection.tsx';
-import RecentPhotoShoots from './RecentPhotoShoots/RecentPhotoShoots.tsx';
+import RecentPhotoShootsSection from './RecentPhotoShootsSection/RecentPhotoShootsSection.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
 import NewsletterSection from './NewsletterSection/NewsletterSection.tsx';
 import styles from './home-page.module.scss';
@@ -18,7 +18,7 @@ const HomePage = () => {
         <TopPicksSection />
         <BannersSection />
         <CustomerFeedbacksSection />
-        <RecentPhotoShoots />
+        <RecentPhotoShootsSection />
         <PolicyCardsSection />
         <NewsletterSection />
       </Flex>
