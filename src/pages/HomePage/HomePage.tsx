@@ -5,6 +5,7 @@ import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';
 import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSection.tsx';
 import BannersSection from './BannersSection/BannersSection.tsx';
 import RecentPhotoShoots from './RecentPhotoShoots/RecentPhotoShoots.tsx';
+import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
 
 const HomePage = () => {
   return (
@@ -15,6 +16,7 @@ const HomePage = () => {
       <BannersSection />
       <CustomerFeedbacksSection />
       <RecentPhotoShoots />
+      <PolicyCardsSection />
     </Flex>
   );
 };

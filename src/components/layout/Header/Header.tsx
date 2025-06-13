@@ -1,7 +1,7 @@
 import styles from './header.module.scss';
 import Flex from '../Flex/Flex.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faVanShuttle } from '@fortawesome/free-solid-svg-icons';
+import { faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { Nav } from '../../commmon/Nav/Nav.tsx';
 import { Button } from '../../commmon/Button/Button.tsx';
 import { Input } from '../../commmon/Input/Input.tsx';
@@ -18,7 +18,7 @@ const Header = () => {
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
         <Flex spacing="m">
-          <FontAwesomeIcon icon={faVanShuttle} />
+          <FontAwesomeIcon icon={faTruckFast} />
           <span>Free free shipping with over $150</span>
         </Flex>
         <Flex spacing="xxxxl">

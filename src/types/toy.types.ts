@@ -1,3 +1,5 @@
+import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+
 export type Toy = {
   label?: string;
   imageSrc: string;
@@ -14,3 +16,10 @@ export interface Feedback {
   avatarUrl?: string;
   comment: string;
 }
+
+export type InfoCardType = {
+  appearance?: 'info' | 'warning' | 'success';
+  icon: IconDefinition;
+  title: string;
+  content: string;
+};

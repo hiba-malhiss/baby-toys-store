@@ -1,4 +1,5 @@
-import type { Feedback } from '../types/toy.types.ts';
+import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import type { Feedback, InfoCardType } from '../types/toy.types.ts';
 
 export const photoShoots: string[] = [
   '/assets/images/recent-photo-shoots/pic1.png',
@@ -36,5 +37,26 @@ export const feedbacks: Feedback[] = [
     name: 'Sophia Wilson',
     avatarUrl: '/assets/images/avatars/avatar4.png',
     comment: 'The website is easy to navigate and delivery was quick.',
+  },
+];
+
+export const infoCards: InfoCardType[] = [
+  {
+    appearance: 'info',
+    icon: faHeadset,
+    title: 'Customer Care',
+    content: '24h hour follow up',
+  },
+  {
+    appearance: 'warning',
+    icon: faTruckFast,
+    title: 'Free Shipping',
+    content: 'Free shipping for $150 and up',
+  },
+  {
+    appearance: 'success',
+    icon: faArrowRotateLeft,
+    title: 'Return',
+    content: 'Within 7 Days',
   },
 ];
