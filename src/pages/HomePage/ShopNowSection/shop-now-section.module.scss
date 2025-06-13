@@ -1,12 +1,15 @@
 .shopNowSection {
+  &-content {
+    width: 50%;
+    padding-bottom: 9%;
+  }
+
   &-imageContainer {
     width: 100%;
     height: 810px;
     background-image: url('assets/images/home-main.png');
     background-repeat: no-repeat;
     background-size: cover;
-    padding-top: 168px;
-    padding-right: 120px;
   }
 
   &-title {
