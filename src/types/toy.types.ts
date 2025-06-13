@@ -23,3 +23,13 @@ export type InfoCardType = {
   title: string;
   content: string;
 };
+
+export type ToyCategory = {
+  label: string;
+  image: string;
+};
+
+export type RadioOption = {
+  label: string;
+  value: string;
+};
