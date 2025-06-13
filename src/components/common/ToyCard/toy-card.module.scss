@@ -10,7 +10,7 @@
 
   &-box {
     position: relative;
-    border: 1px solid #D4D4D4;
+    border: 1px solid $color-disabled;
     border-radius: 8px;
     padding: 11px 13px;
     height: 295px;
@@ -35,14 +35,14 @@
   &-icon {
     font-size: 25px;
     cursor: pointer;
-    color: #9E9E9E;
+    color: $color-icon;
 
     &--active {
-      color: #f26c62;
+      color: $color-icon-active;
     }
 
     &:hover {
-      color: #d9574f;
+      color: $color-icon-hover;
     }
   }
 
@@ -80,16 +80,16 @@
       gap: 8px;
       margin-top: 6px;
       margin-bottom: 12px;
-      color: #171717;
+      color: $color-text-primary;
 
       &.toyCard-withDiscount .toyCard-infoPrice-new {
-        color: #25BF0C;
+        color: $color-success;
       }
 
       &-old {
         text-decoration: line-through;
         font-size: 14px;
-        color: #898989;
+        color: $color-text-muted;
       }
 
       &-new {

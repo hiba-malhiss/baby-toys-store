@@ -1,3 +1,4 @@
+
 .chip {
   display: inline-flex;
   align-items: center;
@@ -11,7 +12,7 @@
   font-family: "Poppins", sans-serif;
 
   &--primary {
-    background-color: #F27373;
-    color: white;
+    background-color: $color-bg-chip-primary;
+    color: $color-white;
   }
 }

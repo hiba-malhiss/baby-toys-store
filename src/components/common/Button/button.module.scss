@@ -17,47 +17,47 @@
 
   /* Variants */
   &--primary {
-    background-color: #0F83B2;
-    color: white;
+    background-color: $color-primary-dark;
+    color: $color-white;
 
     &:hover {
-      background-color: #0a6487;
+      background-color: $color-primary-hover;
     }
   }
 
   &--secondary {
-    background-color: #F26C62;
-    color: white;
+    background-color: $color-secondary;
+    color: $color-white;
 
     &:hover {
-      background-color: #d9574f;
+      background-color: $color-secondary-hover;
     }
   }
 
   &--link {
     background-color: transparent;
-    color: #333;
+    color: $color-link;
 
     &:hover {
-      color: #0F83B2;
+      color: $color-primary-dark;
     }
   }
 
   &--primaryLink {
-    color: #0F83B2;
+    color: $color-primary-dark;
     background-color: transparent;
 
     &:hover {
-      color: #0a6487;
+      color: $color-primary-hover;
     }
   }
 
   &-lightLink {
     background-color: transparent;
-    color: white;
+    color: $color-white;
 
     &:hover {
-      color: #ffd8cc;
+      color: $color-link-hover;
     }
   }
 
@@ -90,7 +90,7 @@
   }
 
   &--isSelected {
-    color: #0F83B2;
+    color: $color-primary-dark;
   }
 
   &--noText {

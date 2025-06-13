@@ -1,3 +1,4 @@
+
 .banner {
   padding: 0 100px;
 
@@ -13,9 +14,9 @@
     p {
       width: 50%;
       text-align: center;
-      text-shadow: 3px 0 white;
+      text-shadow: 3px 0 $color-white;
       font-size: 36px;
-      color: #1096B5;
+      color: $color-primary;
     }
 
     &-center {

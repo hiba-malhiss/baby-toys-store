@@ -4,8 +4,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #CCC8C8;
-  color: #5C5C5C;
+  background: $color-bg-avatar;
+  color: $color-text-avatar;
 
   &--small {
     width: 40px;

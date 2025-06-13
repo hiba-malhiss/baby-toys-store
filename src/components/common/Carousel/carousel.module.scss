@@ -1,3 +1,4 @@
+
 .carousel {
   position: relative;
   width: 100%;
@@ -47,9 +48,9 @@
     }
 
     &-icon {
-      color: #A5A5A5;
+      color: $color-icon;
       font-size: 18px;
-      border: 3px solid #A5A5A5;
+      border: 3px solid $color-icon;
       width: 40px;
       padding: 5px;
       height: 40px;

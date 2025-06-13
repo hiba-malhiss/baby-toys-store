@@ -1,3 +1,4 @@
+
 .shopNowSection {
   &-content {
     width: 50%;
@@ -13,16 +14,16 @@
   }
 
   &-title {
-    color: #1096B5;
+    color: $color-primary;
     font-size: 67px;
-    text-shadow: 5px 0 white;
+    text-shadow: 5px 0 $color-white;
     font-family: "BalooBhaina", serif !important;
   }
 
   &-subTitle {
     font-weight: bold;
     font-size: 20px;
-    color: #375259;
+    color: $color-text-secondary;
     padding-top: 16px;
     padding-bottom: 68px;
     max-width: 545px;
