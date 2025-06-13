@@ -4,6 +4,7 @@ import Flex from '../../components/layout/Flex/Flex.tsx';
 import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';
 import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSection.tsx';
 import BannersSection from './BannersSection/BannersSection.tsx';
+import RecentPhotoShoots from './RecentPhotoShoots/RecentPhotoShoots.tsx';
 
 const HomePage = () => {
   return (
@@ -13,6 +14,7 @@ const HomePage = () => {
       <TopPicksSection />
       <BannersSection />
       <CustomerFeedbacksSection />
+      <RecentPhotoShoots />
     </Flex>
   );
 };
