@@ -1,9 +1,8 @@
-
 .input {
   position: relative;
   display: inline-flex;
   align-items: center;
-  width: 295px;
+  max-width: 295px;
   border: 2px solid $color-disabled;
   border-radius: 15px;
   background-color: $color-white;

@@ -25,7 +25,7 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   direction = 'horizontal',
 }) => {
   return (
-    <Flex direction={direction} spacing="xl" className={className}>
+    <Flex direction={direction} spacing="xl" className={className} align="stretch">
       {options.map((option) => (
         <RadioButton
           key={option.value}

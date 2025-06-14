@@ -18,7 +18,7 @@ type NavProps = {
 
 export const Nav: React.FC<NavProps> = ({ config }) => {
   return (
-    <Flex spacing="s">
+    <Flex>
       {config.map(({ path, label, icon }) => (
         <NavLink key={path} to={path} end className={({ isActive }) => clsx(isActive && 'active')}>
           {({ isActive }) => (

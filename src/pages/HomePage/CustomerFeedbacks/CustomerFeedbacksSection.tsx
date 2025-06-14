@@ -17,6 +17,10 @@ const CustomerFeedbacksSection = () => {
         numVisible={3}
         orientation="horizontal"
         showNavigation
+        responsiveOptions={[
+          { breakpoint: '900', numVisible: 2 },
+          { breakpoint: '600', numVisible: 1 },
+        ]}
         itemTemplate={(feedback) => <FeedbackCard feedback={feedback} fullHeight />}
       />
     </Section>
