@@ -37,7 +37,7 @@ const Carousel: React.FC<CarouselProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [visible, setVisible] = useState(numVisible);
-  const intervalRef = useRef<number | null>(null);
+  const intervalRef = useRef<any>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const totalItems = items.length;
