@@ -1,12 +1,12 @@
 {
-  "homepage": "https://hiba-malhiss.github.io/baby-toys-store",
+  "homepage": "https://hiba-malhis.github.io/baby-toys-store",
   "name": "baby-toys-store",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
+    "deploy": "gh-pages -d dist",
     "start": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
