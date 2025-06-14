@@ -20,6 +20,7 @@ interface CarouselProps {
   itemTemplate: (item: any) => React.ReactNode;
   className?: string;
   showNavigation?: boolean;
+  responsiveOptions?: { breakpoint: string; numVisible: number }[];
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -32,15 +33,32 @@ const Carousel: React.FC<CarouselProps> = ({
   itemTemplate,
   className = '',
   showNavigation = true,
+  responsiveOptions = [],
 }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const intervalRef = useRef<number>(null);
+  const [visible, setVisible] = useState(numVisible);
+  const intervalRef = useRef<number | null>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const totalItems = items.length;
-  const totalPages = Math.ceil(totalItems / numVisible);
+  const totalPages = Math.ceil(totalItems / visible);
 
-  // Handle navigation
+  useEffect(() => {
+    if (!responsiveOptions?.length) return;
+    const handleResize = () => {
+      const width = window.innerWidth;
+      const sorted = [...responsiveOptions].sort(
+        (a, b) => parseInt(a.breakpoint) - parseInt(b.breakpoint)
+      );
+      const match = sorted.find((opt) => width <= parseInt(opt.breakpoint));
+      setVisible(match ? match.numVisible : numVisible);
+    };
+
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [responsiveOptions, numVisible]);
+
   const goToIndex = (newIndex: number) => {
     if (circular) {
       setCurrentIndex((newIndex + totalPages) % totalPages);
@@ -64,9 +82,7 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // Pause autoplay on hover
   const handleMouseEnter = () => {
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
-    }
+    if (intervalRef.current) clearInterval(intervalRef.current);
   };
 
   // Proceed autoplay
@@ -103,7 +119,7 @@ const Carousel: React.FC<CarouselProps> = ({
   };
 
   const getTransform = () => {
-    const percentage = (currentIndex * 100) / numVisible;
+    const percentage = (currentIndex * 100) / visible;
     return orientation === 'horizontal'
       ? `translateX(-${percentage}%)`
       : `translateY(-${percentage}%)`;
@@ -111,12 +127,16 @@ const Carousel: React.FC<CarouselProps> = ({
 
   // Calculate item width or height
   const getItemSize = () => {
-    return `${100 / numVisible}%`;
+    return `${100 / visible}%`;
   };
 
   return (
     <div
-      className={`${styles.carousel} ${orientation === 'vertical' ? styles.carouselVertical : ''} ${className}`}
+      className={clsx(
+        styles.carousel,
+        orientation === 'vertical' && styles.carouselVertical,
+        className
+      )}
       style={{ height: orientation === 'vertical' ? verticalViewPortHeight : 'auto' }}
       ref={carouselRef}
       onMouseEnter={handleMouseEnter}
