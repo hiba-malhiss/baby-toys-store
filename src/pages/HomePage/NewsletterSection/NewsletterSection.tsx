@@ -13,7 +13,7 @@ const NewsletterSection = () => {
       </p>
       <Flex spacing="m">
         <Input placeholder="Enter your email" className={styles.newsletterSectionInput} />
-        <Button size="large" className={styles.newsletterSectionButton}>
+        <Button size="large" isRounded={false}>
           Join
         </Button>
       </Flex>

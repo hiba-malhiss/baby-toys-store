@@ -7,7 +7,7 @@
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
   gap: 0.5rem;
-  border-radius: 74px;
+  border-radius: 15px;
 
   &:hover {
     img {
@@ -91,6 +91,10 @@
 
   &--isSelected {
     color: $color-primary-dark;
+  }
+
+  &--isRounded {
+    border-radius: 74px;
   }
 
   &--noText {

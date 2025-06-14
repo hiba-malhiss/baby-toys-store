@@ -15,6 +15,7 @@ type ButtonProps = {
   isDisabled?: boolean;
   withoutPadding?: boolean;
   isSelected?: boolean;
+  isRounded?: boolean;
   className?: string;
 };
 
@@ -29,6 +30,7 @@ export const Button: React.FC<ButtonProps> = ({
   withoutPadding,
   isSelected,
   className,
+  isRounded = 'true',
 }) => {
   const calculatedClassName = clsx(
     styles.button,
@@ -38,6 +40,7 @@ export const Button: React.FC<ButtonProps> = ({
     withoutPadding && styles.buttonNoPadding,
     isSelected && styles.buttonIsSelected,
     !children && styles.buttonNoText,
+    isRounded && styles.buttonIsRounded,
     className
   );
 
