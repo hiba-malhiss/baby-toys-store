@@ -52,5 +52,10 @@
       color: #06C825;
     }
   }
+}
 
+@media (max-width: 400px) {
+  .infoCard {
+    min-width: 100%;
+  }
 }
