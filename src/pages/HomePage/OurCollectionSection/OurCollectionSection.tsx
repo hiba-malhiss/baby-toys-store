@@ -14,7 +14,7 @@ const OurCollectionSection = () => {
       <Flex
         fullWidth
         align="stretch"
-        justify="between"
+        justify="center"
         className={styles.ourCollectionCategories}
         wrap
       >
