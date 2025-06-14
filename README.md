@@ -102,9 +102,5 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 ---
 
 ## Credits
-
-- [React](https://react.dev/)
-- [Vite](https://vitejs.dev/)
-- [FontAwesome](https://fontawesome.com/)
-- [SUIT CSS](https://suitcss.github.io/)
+- [Design - Figma](https://www.figma.com/community/file/1380032564098282114)
 
