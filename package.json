@@ -1,9 +1,12 @@
 {
+  "homepage": "https://hiba-malhiss.github.io/baby-toys-store",
   "name": "baby-toys-store",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
@@ -33,6 +36,7 @@
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.19",
+    "gh-pages": "^6.3.0",
     "globals": "^16.2.0",
     "prettier": "^3.5.3",
     "sass-embedded": "^1.89.2",
