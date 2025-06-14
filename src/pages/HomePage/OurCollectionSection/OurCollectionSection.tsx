@@ -11,7 +11,13 @@ const OurCollectionSection = () => {
       subTitle="Our Collections"
       className={styles.ourCollection}
     >
-      <Flex fullWidth align="stretch" justify="between" className={styles.ourCollectionCategories}>
+      <Flex
+        fullWidth
+        align="stretch"
+        justify="between"
+        className={styles.ourCollectionCategories}
+        wrap
+      >
         {toyCategories.map(({ label, image }) => (
           <Button withoutPadding key={label} appearance="link" size="large" onClick={() => {}}>
             <Flex fullHeight direction="vertical" align="center" justify="between">

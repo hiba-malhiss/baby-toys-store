@@ -2,10 +2,22 @@
   margin-top: 30px;
 
   &-categories {
-    height: 178px;
+    min-height: 178px;
   }
 
   &-image {
     height: 130px;
+  }
+}
+
+@media (max-width: 900px) {
+  .ourCollection-categories {
+    height: auto;
+    justify-content: center !important;
+    gap: 16px;
+  }
+  .ourCollection-image {
+    height: 80px;
+    width: auto;
   }
 }

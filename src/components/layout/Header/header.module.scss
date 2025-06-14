@@ -23,3 +23,33 @@
     height: 53px;
   }
 }
+
+@media (max-width: 900px) {
+  .header-announcement {
+    padding: 0 24px;
+    font-size: 0.95rem;
+  }
+  .header-main {
+    padding: 0 24px;
+    justify-content: center;
+  }
+  .header-logo {
+    height: 40px;
+    margin-bottom: 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .header-announcement {
+    padding: 0 8px;
+    font-size: 0.85rem;
+  }
+
+  .header-freeChipping {
+    display: none;
+  }
+
+  .header-logo {
+    height: 32px;
+  }
+}

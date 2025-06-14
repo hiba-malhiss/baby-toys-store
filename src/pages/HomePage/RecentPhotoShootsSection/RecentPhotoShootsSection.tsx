@@ -6,7 +6,7 @@ import styles from './recent-photo-shoots-section.module.scss';
 const RecentPhotoShoots = () => {
   return (
     <Section title="Recent photo Shoots" subTitle="Check gallery" compactPadding>
-      <Flex>
+      <Flex wrap justify="center">
         {photoShoots.map((src, index) => (
           <div key={index} className={styles.recentPhotoShootsImageWrapper}>
             <img

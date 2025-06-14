@@ -6,7 +6,7 @@ import { customerServiceInfo, exploreLinks, socialMediaLinks } from './footer.co
 const Footer = () => {
   return (
     <footer className={styles.footer}>
-      <Flex direction="vertical">
+      <Flex direction="vertical" className={styles.footerLogo}>
         <img src="/assets/images/logo.png" alt="logo" />
         <p className={styles.footerDescription}>
           Bringing you quality products at affordable prices.

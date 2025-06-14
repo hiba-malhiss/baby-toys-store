@@ -4,7 +4,7 @@ import InfoCard from '../../../components/common/InfoCard/InfoCard.tsx';
 
 const PolicyCardsSection = () => {
   return (
-    <Flex spacing="xxl" align="center" fullWidth justify="center">
+    <Flex spacing="xxl" align="center" fullWidth justify="center" wrap>
       {infoCards.map((card, index) => (
         <InfoCard key={index} card={card} />
       ))}

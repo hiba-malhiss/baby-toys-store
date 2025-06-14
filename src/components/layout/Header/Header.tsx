@@ -17,7 +17,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
-        <Flex spacing="m">
+        <Flex spacing="m" className={styles.headerFreeChipping}>
           <FontAwesomeIcon icon={faTruckFast} />
           <span>Free free shipping with over $150</span>
         </Flex>
@@ -30,7 +30,7 @@ const Header = () => {
           </Button>
         </Flex>
       </Flex>
-      <Flex className={styles.headerMain} justify="between" align="center">
+      <Flex className={styles.headerMain} justify="between" align="center" wrap fullWidth>
         <img src="/assets/images/logo.png" alt="logo" className={styles.headerLogo} />
         <Nav config={navConfig} />
         <Input isSearch placeholder="Search" />

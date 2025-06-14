@@ -3,7 +3,7 @@ import styles from './banners-section.module.scss';
 
 const BannersSection = () => {
   return (
-    <Flex spacing="xxl" fullWidth className={styles.banner}>
+    <Flex spacing="xxl" fullWidth className={styles.banner} wrap justify="center">
       <Flex
         align="center"
         justify="center"

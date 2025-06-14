@@ -57,6 +57,10 @@
     width: 100%;
   }
 
+  &--wrap {
+    flex-wrap: wrap;
+  }
+
   // Spacing modifiers
   $spacing-values: (
       xs: 4px,
@@ -66,17 +70,16 @@
       xl: 16px,
       xxl: 20px,
       xxxl: 32px,
-      xxxxl: 40px
+      xxxxl: 40px,
   );
 
   @each $key, $value in $spacing-values {
-    &--horizontal.flex--spacing-#{$key} > *:not(:last-child) {
-      margin-right: $value;
+    &--horizontal.flex--spacing-#{$key} {
+      gap: $value;
     }
 
-    &--vertical.flex--spacing-#{$key} > *:not(:last-child) {
-      margin-right: 0;
-      margin-bottom: $value;
+    &--vertical.flex--spacing-#{$key} {
+      gap: $value;
     }
   }
 }
