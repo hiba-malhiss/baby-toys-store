@@ -5,6 +5,7 @@ $track-width: 10px;
   width: 100%;
   touch-action: none;
 
+  // orientation updates
   &--horizontal {
     // this is because the slider overflow  (width + left)
     width: calc(100% - 16px);
@@ -82,6 +83,7 @@ $track-width: 10px;
   }
 
   &-handle {
+    z-index: 2;
     box-sizing: border-box;
     user-select: none;
     touch-action: none;
@@ -125,6 +127,56 @@ $track-width: 10px;
     user-select: none;
     width: calc(100% + 13px);
     position: absolute;
-    left: -4px;
+    left: -7px;
+  }
+}
+
+// extra size under handlers since on edges it overflow
+.slider {
+  &-range {
+    &:after, &:before {
+      background: $color-border !important;
+    }
+  }
+
+  &:after {
+    content: " ";
+    background: $color-primary;
+    position: absolute;
+    width: 15px;
+    height: 100%;
+    left: -7px;
+    border-radius: 4px;
+    top: 0;
+    z-index: 1;
+  }
+
+  &:before {
+    content: " ";
+    background: $color-border;
+    position: absolute;
+    width: 15px;
+    height: 100%;
+    right: -7px;
+    border-radius: 4px;
+    top: 0;
+    z-index: 1;
+  }
+
+  &--vertical {
+    &:before {
+      left: 8px;
+      top: -7px;
+      height: 15px;
+      width: $track-width;
+    }
+
+    &:after {
+      left: 8px;
+      top: auto;
+      width: $track-width;
+      height: 15px;
+      bottom: -7px;
+    }
   }
 }
