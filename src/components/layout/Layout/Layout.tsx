@@ -1,9 +1,9 @@
 import React, { type ReactNode } from 'react';
 import Header from '../Header/Header.tsx';
-import Flex from '../Flex/Flex.tsx';
 import Footer from '../Footer/Footer.tsx';
 import styles from './layout.module.scss';
 import LayoutBreadcrumb from './LayoutBreadcrumb/LayoutBreadcrumb.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 
 interface LayoutProps {
   children: ReactNode;

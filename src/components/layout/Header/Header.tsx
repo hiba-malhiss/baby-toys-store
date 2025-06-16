@@ -1,10 +1,10 @@
 import styles from './header.module.scss';
-import Flex from '../Flex/Flex.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { Nav } from '../../common/Nav/Nav.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import { Input } from '../../common/Input/Input.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 
 const navConfig = [
   { path: '/', label: 'Home' },
