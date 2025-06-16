@@ -225,21 +225,9 @@ const Slider: React.FC<SliderProps> = ({
       ref={trackRef}
       aria-disabled={disabled}
     >
-      <div
-        className={clsx(
-          styles.sliderTrack,
-          orientation === 'vertical' && styles.sliderTrackVertical,
-          disabled && styles.sliderTrackIsDisabled
-        )}
-      >
+      <div className={clsx(styles.sliderTrack, disabled && styles.sliderTrackIsDisabled)}>
         <div
-          className={clsx(
-            styles.sliderFilledTrack,
-            orientation === 'vertical'
-              ? styles.sliderFilledTrackVertical
-              : styles.sliderFilledTrackHorizontal,
-            disabled && styles.sliderFilledTrackIsDisabled
-          )}
+          className={clsx(styles.sliderFilledTrack, disabled && styles.sliderFilledTrackIsDisabled)}
           style={
             orientation === 'horizontal'
               ? { left: `${startPercent}%`, width: `${filledSize}%` }
