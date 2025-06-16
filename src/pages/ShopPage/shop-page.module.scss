@@ -1,0 +1,13 @@
+.shopPage {
+  display: grid;
+  grid-gap: 50px 60px;
+  grid-template-columns: 290px 1fr;
+  grid-template-rows: max-content max-content max-content;
+  padding: 0 100px;
+  width: 100%;
+
+  &-collection {
+    grid-row: 1 / -1;
+    grid-column: 2 / -1;
+  }
+}

@@ -5,6 +5,7 @@ import Layout from './components/layout/Layout/Layout.tsx';
 import './App.scss';
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.tsx';
 import { BreadcrumbProvider } from './context/BreadcrumbContext.tsx';
+import ShopPage from './pages/ShopPage/ShopPage.tsx';
 
 const App: React.FC = () => {
   return (
@@ -13,6 +14,7 @@ const App: React.FC = () => {
         <Layout>
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/shop" element={<ShopPage />} />
             <Route path="*" element={<NotFoundPage />} />
           </Routes>
         </Layout>
