@@ -10,4 +10,14 @@
     grid-row: 1 / -1;
     grid-column: 2 / -1;
   }
+
+  &-priceFilter {
+    display: flex;
+    flex-direction: column;
+
+    &-btn {
+      align-self: end;
+      margin-top: 20px;
+    }
+  }
 }
