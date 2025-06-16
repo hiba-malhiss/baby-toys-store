@@ -1,21 +1,35 @@
-import React from 'react';
+import React, { type ReactNode } from 'react';
 import styles from './radio-button.module.scss';
 import clsx from 'clsx';
 
-type RadioButtonProps = {
-  name: string;
-  label: string;
+interface RadioButtonProps {
+  name?: string;
+  children: ReactNode;
   value: string;
-  isSelected: boolean;
-  onChange: (value: string) => void;
+  isSelected?: boolean;
+  onChange?: (value: string) => void;
+  appearance?: 'link' | 'secondary';
+}
+
+export const appearanceClassMap = {
+  secondary: styles.radioButtonSecondary,
+  link: styles.radioButtonLink,
 };
 
-const RadioButton: React.FC<RadioButtonProps> = ({ name, label, value, isSelected, onChange }) => {
+const RadioButton: React.FC<RadioButtonProps> = ({
+  name,
+  children,
+  value,
+  isSelected,
+  onChange,
+  appearance = 'secondary',
+}) => {
   return (
     <label
       htmlFor={`${name}-${value}`}
-      className={clsx(styles.radioButton, { [styles.radioButtonSelected]: isSelected })}
-      onClick={() => onChange(value)}
+      className={clsx(styles.radioButton, appearanceClassMap[appearance], {
+        [styles.isSelected]: isSelected,
+      })}
     >
       <input
         type="radio"
@@ -23,9 +37,9 @@ const RadioButton: React.FC<RadioButtonProps> = ({ name, label, value, isSelecte
         name={name}
         value={value}
         checked={isSelected}
-        onChange={() => onChange(value)}
+        onChange={() => onChange?.(value)}
       />
-      {label}
+      {children}
     </label>
   );
 };

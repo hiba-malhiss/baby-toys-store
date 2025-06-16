@@ -11,18 +11,34 @@
   border-radius: 74px;
   padding: 12px 20px;
   user-select: none;
-  color: $color-black;
-  background-color: transparent;
 
   input {
     display: none;
   }
 
-  &--selected {
-    background-color: $color-bg-radio-selected;
+  &--secondary {
+    background-color: transparent;
+    color: $color-black;
+
+    &.isSelected {
+      background-color: $color-bg-radio-selected;
+    }
+
+    &:hover {
+      background-color: $color-bg-radio-hover;
+    }
   }
 
-  &:hover {
-    background-color: $color-bg-radio-hover;
+  &--link {
+    padding: 0;
+    color: $color-text-primary;
+
+    &.isSelected {
+      color: $color-primary-dark;
+    }
+
+    &:hover {
+      color: $color-primary;
+    }
   }
 }
