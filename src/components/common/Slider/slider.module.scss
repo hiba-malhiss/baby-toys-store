@@ -1,0 +1,93 @@
+.slider {
+  position: relative;
+  width: 100%;
+  height: 20px;
+  touch-action: none;
+
+  &--vertical {
+    width: 20px;
+    height: 100%;
+  }
+
+  &-isDisabled {
+    cursor: not-allowed;
+  }
+
+  &-track {
+    position: relative;
+    background-color: #ccc;
+    border-radius: 4px;
+    width: 100%;
+    height: 4px;
+    margin: 8px 0;
+
+    &-vertical {
+      width: 4px;
+      height: 100%;
+      margin: 0 8px;
+    }
+
+    &-isDisabled {
+      background-color: #ddd;
+    }
+  }
+
+  &-filledTrack {
+    position: absolute;
+    background-color: #007bff;
+    border-radius: 4px;
+
+    &--horizontal {
+      height: 100%;
+    }
+
+    &--vertical {
+      width: 100%;
+    }
+
+    &-isDisabled {
+      background-color: #bbb;
+    }
+  }
+
+  &-handle {
+    box-sizing: border-box;
+    user-select: none;
+    touch-action: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: #fff;
+    border: 2px solid #007bff;
+    cursor: pointer;
+
+    &-isDisabled {
+      background-color: #999;
+      border: 2px solid #777;
+      cursor: not-allowed;
+    }
+  }
+
+  &-handleLabel {
+    position: absolute;
+    top: -24px;
+    color: #007bff;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+  }
+
+  &-minMaxLabel {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #444;
+    user-select: none;
+  }
+}
