@@ -217,6 +217,7 @@ const Slider: React.FC<SliderProps> = ({
       className={clsx(
         styles.slider,
         orientation === 'vertical' && styles.sliderVertical,
+        orientation === 'horizontal' && styles.sliderHorizontal,
         disabled && styles.sliderIsDisabled,
         className
       )}
