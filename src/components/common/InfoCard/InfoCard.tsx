@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './info-card.module.scss';
-import Flex from '../../layout/Flex/Flex.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 import clsx from 'clsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { InfoCardType } from '../../../types/toy.types.ts';

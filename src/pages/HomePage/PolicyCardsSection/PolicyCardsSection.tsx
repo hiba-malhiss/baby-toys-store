@@ -1,4 +1,4 @@
-import Flex from '../../../components/layout/Flex/Flex.tsx';
+import Flex from '../../../components/common/Flex/Flex.tsx';
 import { infoCards } from '../../../mock-data/home-page.ts';
 import InfoCard from '../../../components/common/InfoCard/InfoCard.tsx';
 

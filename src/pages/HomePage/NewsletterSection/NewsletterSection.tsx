@@ -1,4 +1,4 @@
-import Flex from '../../../components/layout/Flex/Flex.tsx';
+import Flex from '../../../components/common/Flex/Flex.tsx';
 import styles from './newsletter-section.module.scss';
 import { Input } from '../../../components/common/Input/Input.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';

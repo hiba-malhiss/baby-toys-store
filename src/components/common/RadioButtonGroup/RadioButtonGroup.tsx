@@ -1,5 +1,5 @@
 import React from 'react';
-import Flex from '../../layout/Flex/Flex.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 import RadioButton from './RadioButton';
 
 type RadioOption = {

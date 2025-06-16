@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import Flex from '../../components/layout/Flex/Flex';
+import Flex from '../../components/common/Flex/Flex';
 import styles from './not-found-page.module.scss';
 import { Button } from '../../components/common/Button/Button.tsx';
 

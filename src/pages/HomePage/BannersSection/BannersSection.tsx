@@ -1,4 +1,4 @@
-import Flex from '../../../components/layout/Flex/Flex.tsx';
+import Flex from '../../../components/common/Flex/Flex.tsx';
 import styles from './banners-section.module.scss';
 
 const BannersSection = () => {

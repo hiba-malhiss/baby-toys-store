@@ -3,7 +3,7 @@ import styles from './rating.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
-import Flex from '../../layout/Flex/Flex.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 
 type RatingProps = {
   value: number;

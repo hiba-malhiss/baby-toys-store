@@ -1,5 +1,5 @@
 import React from 'react';
-import Flex from '../../layout/Flex/Flex.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 import Rating from '../Rating/Rating.tsx';
 import Avatar from '../Avatar/Avatar.tsx';
 import styles from './feedback-card.module.scss';

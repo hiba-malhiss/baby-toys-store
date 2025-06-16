@@ -1,5 +1,5 @@
 import styles from './shop-now-section.module.scss';
-import Flex from '../../../components/layout/Flex/Flex.tsx';
+import Flex from '../../../components/common/Flex/Flex.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 
 const ShopNowSection = () => {

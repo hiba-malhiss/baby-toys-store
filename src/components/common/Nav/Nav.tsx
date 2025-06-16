@@ -3,7 +3,7 @@ import { NavLink } from 'react-router-dom';
 import clsx from 'clsx';
 
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import Flex from '../../layout/Flex/Flex.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../Button/Button.tsx';
 
 type NavItem = {

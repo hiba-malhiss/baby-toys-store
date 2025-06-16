@@ -4,7 +4,7 @@ import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faCartShopping } from '@fortawesome/free-solid-svg-icons';
-import Flex from '../../layout/Flex/Flex.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
 import clsx from 'clsx';
 import type { Toy } from '../../../types/toy.types.ts';
 

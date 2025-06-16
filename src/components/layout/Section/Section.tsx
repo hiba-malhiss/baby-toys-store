@@ -1,5 +1,5 @@
 import styles from './section.module.scss';
-import Flex from '../../../components/layout/Flex/Flex.tsx';
+import Flex from '../../../components/common/Flex/Flex.tsx';
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
 
