@@ -7,6 +7,7 @@ import { faHeart, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import Flex from '../../common/Flex/Flex.tsx';
 import clsx from 'clsx';
 import type { Toy } from '../../../types/toy.types.ts';
+import Card from '../Card/Card.tsx';
 
 type ToyCardProps = {
   toy: Toy;
@@ -16,7 +17,7 @@ type ToyCardProps = {
 const ToyCard: React.FC<ToyCardProps> = ({ toy, onToggleFavorite }) => {
   return (
     <Flex direction="vertical" className={styles.toyCard}>
-      <Flex direction="vertical" align="center" className={styles.toyCardBox}>
+      <Card size="small" className={styles.toyCardBox}>
         {toy.label && <Chip label={toy.label} className={styles.toyCardChip} />}
         <div className={styles.toyCardIcons}>
           <FontAwesomeIcon
@@ -29,7 +30,7 @@ const ToyCard: React.FC<ToyCardProps> = ({ toy, onToggleFavorite }) => {
         <div className={styles.toyCardImageWrapper}>
           <img src={toy.imageSrc} alt={toy.name} />
         </div>
-      </Flex>
+      </Card>
       <div className={styles.toyCardInfo}>
         <div className={styles.toyCardInfoName}>{toy.name}</div>
         <div className={clsx(styles.toyCardInfoPrice, toy.oldPrice && styles.toyCardWithDiscount)}>

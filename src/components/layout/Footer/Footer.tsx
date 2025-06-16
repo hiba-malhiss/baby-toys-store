@@ -2,6 +2,7 @@ import styles from './footer.module.scss';
 import { Button } from '../../common/Button/Button.tsx';
 import { customerServiceInfo, exploreLinks, socialMediaLinks } from './footer.constants.ts';
 import Flex from '../../common/Flex/Flex.tsx';
+import Heading from '../../common/Heading/Heading.tsx';
 
 const Footer = () => {
   return (
@@ -24,7 +25,9 @@ const Footer = () => {
       </Flex>
 
       <Flex direction="vertical">
-        <h4 className={styles.footerSectionHeader}>Explore</h4>
+        <Heading level="h3" className={styles.footerSectionHeader}>
+          Explore
+        </Heading>
         <Flex direction="vertical" spacing="xl">
           {exploreLinks.map((label) => (
             <Button key={label} withoutPadding size="small" appearance="link" onClick={() => {}}>
@@ -35,7 +38,9 @@ const Footer = () => {
       </Flex>
 
       <Flex direction="vertical">
-        <h4 className={styles.footerSectionHeader}>Customer Service</h4>
+        <Heading level="h3" className={styles.footerSectionHeader}>
+          Customer Service
+        </Heading>
         <Flex direction="vertical" spacing="xl">
           {customerServiceInfo.map((item, index) =>
             typeof item === 'string' ? (

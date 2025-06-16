@@ -2,10 +2,10 @@ import React, { type ReactNode } from 'react';
 import styles from './flex.module.scss';
 import clsx from 'clsx';
 
-type Direction = 'horizontal' | 'vertical';
-type Align = 'start' | 'center' | 'end' | 'stretch';
-type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
-type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl';
+export type Direction = 'horizontal' | 'vertical';
+export type Align = 'start' | 'center' | 'end' | 'stretch';
+export type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+export type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl';
 
 interface FlexProps {
   children?: ReactNode;

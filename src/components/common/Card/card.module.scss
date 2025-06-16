@@ -1,0 +1,17 @@
+.card {
+  border: 1px solid $color-border;
+
+  &-header {
+    padding-bottom: 40px;
+  }
+
+  &--medium {
+    border-radius: 15px;
+    padding: 30px 10px;
+  }
+
+  &--small {
+    border-radius: 8px;
+    padding: 11px 13px;
+  }
+}

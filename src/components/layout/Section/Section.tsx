@@ -2,6 +2,7 @@ import styles from './section.module.scss';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import type { ReactNode } from 'react';
 import clsx from 'clsx';
+import Heading from '../../common/Heading/Heading.tsx';
 
 interface SectionProps {
   children?: ReactNode;
@@ -20,8 +21,14 @@ const Section = ({ compactPadding, subTitle, className, title, children }: Secti
       align="center"
       fullWidth
     >
-      <h2 className={styles.sectionTitle}>{title}</h2>
-      {subTitle && <h4 className={styles.sectionSubTitle}>{subTitle}</h4>}
+      <Heading level="h1" align="center">
+        {title}
+      </Heading>
+      {subTitle && (
+        <Heading level="h5" align="center" className={styles.sectionSubTitle}>
+          {subTitle}
+        </Heading>
+      )}
       {children}
     </Flex>
   );
