@@ -1,18 +1,35 @@
-$track-width: 10px;
+// Core sizes
+$track-thickness: 10px;
+$handle-width: 16px;
+$handle-border: 2px;
+$track-extend: 7px;
+$track-border-radius: 4px;
+$h-min-max-gap: 8px;
+$v-min-max-gap: 0px;
+
+// Reduce width by handler size
+$width-shrink: $handle-width;
+$horizontal-slider-width-calc: calc(100% - #{$width-shrink});
+$horizontal-slider-left-offset: $width-shrink/2;
+
+// Reduce height by handler size and label size
+$min-max-font-size: 12px;
+$height-shrink: 2 *  calc($min-max-font-size + ($handle-width / 2) + ($v-min-max-gap/2));
+$vertical-slider-height-calc: calc(100% - #{$height-shrink});
+
+$center-handler-position: calc(($track-thickness - $handle-width) / 2);
 
 .slider {
   position: relative;
   width: 100%;
   touch-action: none;
 
-  // orientation updates
   &--horizontal {
-    // this is because the slider overflow  (width + left)
-    width: calc(100% - 16px);
-    left: 8px;
+    width: $horizontal-slider-width-calc;
+    left: $horizontal-slider-left-offset;
 
     .slider-handle {
-      top: -3px;
+      top: $center-handler-position;
     }
 
     .slider-filledTrack {
@@ -21,19 +38,17 @@ $track-width: 10px;
   }
 
   &--vertical {
-    width: 20px;
-    // this is because the slider overflow (height + top)
-    height: calc(100% - 40px);
-    top: 20px;
+    width: $track-thickness;
+    height: $vertical-slider-height-calc;
+    top: $height-shrink;
 
     .slider-handle {
-      left: 5px;
+      left: $center-handler-position;
     }
 
     .slider-track {
-      width: $track-width;
+      width: $track-thickness;
       height: 100%;
-      margin: 0 8px;
     }
 
     .slider-filledTrack {
@@ -42,16 +57,20 @@ $track-width: 10px;
 
     .slider-handleLabel {
       left: 17px;
-      top: -4px;
+      top: -2px;
     }
 
     .slider-minMaxLabel {
       flex-direction: column-reverse;
-      height: calc(100% + 40px);
+      height: calc(100% + #{$height-shrink});
       width: 100%;
-      margin: 0 6px;
-      top: -19px;
+      margin: 0 8px;
+      top: -1 * calc($height-shrink / 2);
       align-items: center;
+
+      span:last-child {
+        padding-top: 1px;
+      }
     }
   }
 
@@ -62,10 +81,11 @@ $track-width: 10px;
   &-track {
     position: relative;
     background-color: $color-border;
-    border-radius: 4px;
+    border-radius: $track-border-radius;
     width: 100%;
-    height: $track-width;
-    margin: 8px 0;
+    height: $track-thickness;
+    margin-bottom: $h-min-max-gap;
+    overflow: hidden;
 
     &-isDisabled {
       background-color: $color-disabled;
@@ -75,7 +95,7 @@ $track-width: 10px;
   &-filledTrack {
     position: absolute;
     background-color: $color-primary;
-    border-radius: 4px;
+    border-radius: $track-border-radius;
 
     &-isDisabled {
       background-color: $color-disabled2;
@@ -92,15 +112,15 @@ $track-width: 10px;
     align-items: center;
     border-radius: 50%;
     position: absolute;
-    width: 16px;
-    height: 16px;
+    width: $handle-width;
+    height: $handle-width;
     background-color: $color-white;
-    border: 2px solid $color-primary;
+    border: $handle-border solid $color-primary;
     cursor: pointer;
 
     &-isDisabled {
       background-color: $color-disabled;
-      border: 2px solid darken($color-disabled, 10%);
+      border: $handle-border solid darken($color-disabled, 10%);
       cursor: not-allowed;
     }
   }
@@ -122,61 +142,63 @@ $track-width: 10px;
   &-minMaxLabel {
     display: flex;
     justify-content: space-between;
-    font-size: 12px;
+    font-size: $min-max-font-size;
     color: $color-text-primary;
     user-select: none;
-    width: calc(100% + 13px);
     position: absolute;
-    left: -7px;
+    width: calc(100% + $width-shrink);
+    left: -1 * calc($width-shrink/2);
   }
 }
 
-// extra size under handlers since on edges it overflow
+// Fill slider track under slider handlers
 .slider {
   &-range {
-    &:after, &:before {
+    &:after,
+    &:before {
       background: $color-border !important;
     }
   }
 
-  &:after {
+  &:after,
+  &:before {
     content: " ";
-    background: $color-primary;
     position: absolute;
-    width: 15px;
-    height: 100%;
-    left: -7px;
-    border-radius: 4px;
-    top: 0;
+    width: 14px;
     z-index: 1;
+    top: 0;
+    border-radius: $track-border-radius;
+  }
+
+  &:after {
+    height: $track-thickness;
+    left: -$track-extend;
+    background: $color-primary;
   }
 
   &:before {
-    content: " ";
+    height: $track-thickness;
+    right: -$track-extend;
     background: $color-border;
-    position: absolute;
-    width: 15px;
-    height: 100%;
-    right: -7px;
-    border-radius: 4px;
-    top: 0;
-    z-index: 1;
   }
 
   &--vertical {
+    &:before,
+    &:after {
+      width: $track-thickness;
+      height: 14px;
+    }
+
     &:before {
-      left: 8px;
-      top: -7px;
-      height: 15px;
-      width: $track-width;
+      left: 0;
+      top: -$track-extend;
+      width: $track-thickness;
     }
 
     &:after {
-      left: 8px;
+      left: 0;
       top: auto;
-      width: $track-width;
-      height: 15px;
-      bottom: -7px;
+      bottom: -$track-extend;
     }
   }
 }
