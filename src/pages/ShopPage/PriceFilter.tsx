@@ -9,17 +9,24 @@ interface CategoryFilterProps {
 }
 
 const PriceFilter: React.FC<CategoryFilterProps> = ({ onApply }) => {
-  const [priceRange, setPriceRange] = useState();
+  const [priceRange, setPriceRange] = useState<[number, number]>([50, 100]);
 
   return (
     <Card header="Filter by price" className={styles.shopPagePriceFilter}>
-      <Slider min={50} max={100} step={1} range value={priceRange} onChange={setPriceRange} />
+      <Slider
+        min={50}
+        max={100}
+        step={1}
+        range
+        value={priceRange}
+        onChange={(val: [number, number]) => setPriceRange(val)}
+      />
       <Button
         appearance="primary"
         size="large"
         isRounded={false}
         className={styles.shopPagePriceFilterBtn}
-        onClick={onApply}
+        onClick={() => onApply(priceRange)}
       >
         Apply
       </Button>

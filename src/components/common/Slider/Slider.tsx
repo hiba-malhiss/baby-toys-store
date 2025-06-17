@@ -3,18 +3,27 @@ import { clamp, roundToStep, getPercentFromEvent } from './slider.utils.ts';
 import styles from './slider.module.scss';
 import clsx from 'clsx';
 
-interface SliderProps {
+type BaseProps = {
   min?: number;
   max?: number;
-  value?: number | [number, number];
-  onChange?: (value: number | [number, number]) => void;
   step?: number;
-  range?: boolean;
   orientation?: 'horizontal' | 'vertical';
   className?: string;
   autoFocus?: boolean;
   disabled?: boolean;
-}
+};
+
+type SliderProps =
+  | ({
+      range: true;
+      value?: [number, number];
+      onChange?: (value: [number, number]) => void;
+    } & BaseProps)
+  | ({
+      range?: false;
+      value?: number;
+      onChange?: (value: number) => void;
+    } & BaseProps);
 
 const passiveFalseOptions: AddEventListenerOptions = { passive: false };
 
@@ -76,10 +85,10 @@ const Slider: React.FC<SliderProps> = ({
 
       const newRange: [number, number] = [start, end];
       setValue(newRange);
-      onChange?.(newRange);
+      (onChange as ((value: [number, number]) => void) | undefined)?.(newRange);
     } else {
       setValue(newVal);
-      onChange?.(newVal);
+      (onChange as ((value: number) => void) | undefined)?.(newVal);
     }
   };
 
