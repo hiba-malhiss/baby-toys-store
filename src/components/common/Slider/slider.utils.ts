@@ -14,6 +14,7 @@ export const isRTL = (): boolean => {
   );
 };
 
+// Calculate how much of the slider track was clicked (in %), based on mouse position
 export const getPercentFromEvent = (
   clientX: number,
   clientY: number,
@@ -21,6 +22,7 @@ export const getPercentFromEvent = (
   trackRef: RefObject<HTMLDivElement | null>
 ): number => {
   if (!trackRef.current) return 0;
+
   const rect = trackRef.current.getBoundingClientRect();
   let percent: number;
 

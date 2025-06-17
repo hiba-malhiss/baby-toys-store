@@ -27,6 +27,8 @@ type SliderProps =
 
 const passiveFalseOptions: AddEventListenerOptions = { passive: false };
 
+// Uses percentage positioning for responsive layout,
+// adapting to different container widths/heights without pixel recalculations on re-size.
 const Slider: React.FC<SliderProps> = ({
   min = 0,
   max = 100,
@@ -44,7 +46,7 @@ const Slider: React.FC<SliderProps> = ({
   );
 
   const trackRef = useRef<HTMLDivElement>(null);
-  const draggingRef = useRef<number | null>(null);
+  const draggedHandleRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (propValue !== undefined) {
@@ -78,8 +80,10 @@ const Slider: React.FC<SliderProps> = ({
       let [start, end] = (value as [number, number]) || [min, max];
 
       if (handleIndex === 0) {
+        // When moving the left handle, limit it, so it can't go beyond the right handle
         start = Math.min(newVal, end);
       } else if (handleIndex === 1) {
+        // When moving the right handle, limit it, so it can't go below the left handle
         end = Math.max(newVal, start);
       }
 
@@ -95,23 +99,23 @@ const Slider: React.FC<SliderProps> = ({
   // Native event handlers for mouse/touch move
 
   const handleMouseMove = (e: MouseEvent) => {
-    if (draggingRef.current === null) return;
+    if (draggedHandleRef.current === null) return;
     e.preventDefault();
     const percent = getPercentFromEvent(e.clientX, e.clientY, orientation, trackRef);
-    updateValue(getValueFromPercent(percent), draggingRef.current);
+    updateValue(getValueFromPercent(percent), draggedHandleRef.current);
   };
 
   const handleTouchMove = (e: TouchEvent) => {
-    if (draggingRef.current === null) return;
+    if (draggedHandleRef.current === null) return;
     if (e.touches.length !== 1) return;
     e.preventDefault();
     const touch = e.touches[0];
     const percent = getPercentFromEvent(touch.clientX, touch.clientY, orientation, trackRef);
-    updateValue(getValueFromPercent(percent), draggingRef.current);
+    updateValue(getValueFromPercent(percent), draggedHandleRef.current);
   };
 
   const handleDragEnd = () => {
-    draggingRef.current = null;
+    draggedHandleRef.current = null;
     window.removeEventListener('mouseup', handleDragEnd);
     window.removeEventListener('touchend', handleDragEnd);
     window.removeEventListener('mousemove', handleMouseMove);
@@ -119,12 +123,11 @@ const Slider: React.FC<SliderProps> = ({
   };
 
   // React synthetic event handlers for drag start
-
   const handleDragStart =
     (index: number) => (e: React.MouseEvent<HTMLDivElement> | React.TouchEvent<HTMLDivElement>) => {
       if (disabled) return;
       e.preventDefault();
-      draggingRef.current = index;
+      draggedHandleRef.current = index;
 
       window.addEventListener('mouseup', handleDragEnd);
       window.addEventListener('touchend', handleDragEnd);
@@ -185,7 +188,7 @@ const Slider: React.FC<SliderProps> = ({
     const percent = getPercent(val);
     const style: CSSProperties =
       orientation === 'horizontal'
-        ? { left: `calc(${percent}% - 8px)` }
+        ? { left: `calc(${percent}% - 8px)` } // (- 8px) to center the handler visually (half handler width)
         : { bottom: `calc(${percent}% - 8px)` };
 
     return (
