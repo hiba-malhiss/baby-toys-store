@@ -7,6 +7,7 @@ export type Toy = {
   price: string;
   rating: number;
   oldPrice?: string;
+  description?: string;
   isFavorite?: boolean;
 };
 

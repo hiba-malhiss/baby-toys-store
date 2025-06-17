@@ -1,6 +1,32 @@
 .toyCard {
-  width: 295px;
   cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+
+  &--horizontal {
+    max-height: 280px;
+    grid-template-columns: 280px 1fr;
+    gap: 36px;
+
+    .toyCard-buttons {
+      margin-top: auto;
+      position: static;
+
+      .toyCard-icon {
+        padding: 13px 20px;
+        border: 1px solid $color-border;
+        border-radius: 15px;
+        font-size: 20px;
+      }
+    }
+  }
+
+  &-buttons {
+    position: absolute;
+    top: 13px;
+    right: 11px;
+  }
 
   &:hover {
     img {
@@ -10,7 +36,7 @@
 
   &-box {
     position: relative;
-    height: 295px;
+    height: 280px;
     width: 100%;
     display: flex;
     align-items: center;
@@ -23,14 +49,6 @@
     left: 11px;
   }
 
-  &-icons {
-    position: absolute;
-    top: 13px;
-    right: 11px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
 
   &-icon {
     font-size: 25px;
@@ -39,10 +57,12 @@
 
     &--active {
       color: $color-icon-active;
+      border-color: $color-icon-hover !important;
     }
 
     &:hover {
       color: $color-icon-hover;
+      border-color: $color-icon-hover;
     }
   }
 
@@ -59,22 +79,38 @@
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-      clip-path: inset(5px); // TODO: remove juts to remove border from test images
+      clip-path: inset(5px); // Remove when test images no longer need it
     }
   }
 
   &-info {
     width: 100%;
-    margin-top: 25px;
+    display: flex;
+    flex-direction: column;
+    padding: 8px 0;
+    max-width: 500px;
 
-    .toyCard-infoName {
+    &-name {
       text-overflow: ellipsis;
       overflow: hidden;
-      white-space: nowrap;
       width: 100%;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
     }
 
-    .toyCard-infoPrice {
+    &-description {
+      text-overflow: ellipsis;
+      overflow: hidden;
+      width: 100%;
+      margin: 16px 0;
+      color: $color-text-grey;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+    }
+
+    &-price {
       display: flex;
       align-items: end;
       gap: 8px;
@@ -82,8 +118,9 @@
       margin-bottom: 12px;
       color: $color-text-primary;
 
-      &.toyCard-withDiscount .toyCard-infoPrice-new {
-        color: $color-success;
+      &-new {
+        font-weight: bold;
+        font-size: 18px;
       }
 
       &-old {
@@ -91,11 +128,10 @@
         font-size: 14px;
         color: $color-text-muted;
       }
-
-      &-new {
-        font-weight: bold;
-        font-size: 18px;
-      }
     }
+  }
+
+  &--withDiscount .toyCard-infoPriceNew {
+    color: $color-success;
   }
 }

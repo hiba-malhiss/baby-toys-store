@@ -12,7 +12,7 @@ const toyNames = [
   'Learning Laptop',
 ];
 
-const getRandom = <T,>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
+const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
 const generateRandomToys = (count = 9): Toy[] => {
   return Array.from({ length: count }, (_, i) => {
@@ -30,6 +30,8 @@ const generateRandomToys = (count = 9): Toy[] => {
       oldPrice,
       rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)), // between 3.5–5.0
       isFavorite: false,
+      description:
+        'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus',
     };
   });
 };
