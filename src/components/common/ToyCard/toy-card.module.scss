@@ -4,14 +4,28 @@
   grid-template-columns: 1fr;
   gap: 24px;
 
+  &--Small {
+    gap: 8px !important;
+
+    .toyCard-box {
+      height: 84px;
+      width: 84px;
+    }
+  }
+
   &--horizontal {
-    max-height: 280px;
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: max-content 1fr;
     gap: 36px;
+    align-items: flex-start;
+
+    .toyCard-info {
+      height: 100%;
+    }
 
     .toyCard-buttons {
       margin-top: auto;
       position: static;
+      padding-top: 8px;
 
       .toyCard-icon {
         padding: 13px 20px;
@@ -22,22 +36,11 @@
     }
   }
 
-  &-buttons {
-    position: absolute;
-    top: 13px;
-    right: 11px;
-  }
-
-  &:hover {
-    img {
-      transform: scale(1.05);
-    }
-  }
-
   &-box {
     position: relative;
     height: 280px;
-    width: 100%;
+    width: 280px;
+    max-height: 360px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -46,9 +49,16 @@
   &-chip {
     position: absolute;
     top: 13px;
+    z-index: 10;
     left: 11px;
   }
 
+  &-buttons {
+    position: absolute;
+    top: 13px;
+    right: 11px;
+    z-index: 10;
+  }
 
   &-icon {
     font-size: 25px;
@@ -72,7 +82,6 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: -1;
     position: relative;
 
     img {
@@ -117,21 +126,55 @@
       margin-top: 6px;
       margin-bottom: 12px;
       color: $color-text-primary;
+    }
 
-      &-new {
-        font-weight: bold;
-        font-size: 18px;
-      }
+    &-priceNew {
+      font-weight: bold;
+      font-size: 18px;
+    }
 
-      &-old {
-        text-decoration: line-through;
-        font-size: 14px;
-        color: $color-text-muted;
-      }
+    &-priceOld {
+      text-decoration: line-through;
+      font-size: 14px;
+      color: $color-text-muted;
     }
   }
 
   &--withDiscount .toyCard-infoPriceNew {
     color: $color-success;
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.05);
+      transition: transform 0.3s ease;
+    }
+  }
+
+  // 📱 GROUPED RESPONSIVE STYLES
+  @media (max-width: 768px) {
+    gap: 16px;
+
+    &--horizontal {
+      grid-template-columns: 1fr;
+    }
+
+    &-box {
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    &-info {
+      max-width: 100%;
+    }
+
+    &-buttons {
+      top: 8px;
+      right: 8px;
+    }
+
+    &-info-description {
+      margin: 12px 0;
+    }
   }
 }

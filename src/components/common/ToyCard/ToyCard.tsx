@@ -12,12 +12,19 @@ import Flex from '../Flex/Flex.tsx';
 
 type ToyCardProps = {
   direction?: 'horizontal' | 'vertical';
+  size?: 'small';
   toy: Toy;
   onToggleFavorite?: () => void;
 };
 
-const ToyCard: React.FC<ToyCardProps> = ({ toy, onToggleFavorite, direction = 'vertical' }) => {
+const ToyCard: React.FC<ToyCardProps> = ({
+  size,
+  toy,
+  onToggleFavorite,
+  direction = 'vertical',
+}) => {
   const isHorizontal = direction === 'horizontal';
+  const isSmallSize = size === 'small';
 
   const renderButtons = () => (
     <Flex
@@ -43,19 +50,24 @@ const ToyCard: React.FC<ToyCardProps> = ({ toy, onToggleFavorite, direction = 'v
   );
 
   return (
-    <div className={clsx(styles.toyCard, isHorizontal && styles.toyCardHorizontal)}>
+    <div
+      className={clsx(
+        styles.toyCard,
+        isHorizontal && styles.toyCardHorizontal,
+        size === 'small' && styles.toyCardSmall
+      )}
+    >
       <Card size="small" className={styles.toyCardBox}>
-        {toy.label && <Chip label={toy.label} className={styles.toyCardChip} />}
+        {toy.label && !isSmallSize && <Chip label={toy.label} className={styles.toyCardChip} />}
 
-        {!isHorizontal && renderButtons()}
+        {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.toyCardImageWrapper}>
           <img src={toy.imageSrc} alt={toy.name} />
         </div>
       </Card>
       <div className={styles.toyCardInfo}>
         <div className={styles.toyCardInfoName}>{toy.name}</div>
-
-        {isHorizontal && toy.description && (
+        {isHorizontal && toy.description && !isSmallSize && (
           <div className={styles.toyCardInfoDescription}>{toy.description}</div>
         )}
         <div className={clsx(styles.toyCardInfoPrice, toy.oldPrice && styles.toyCardWithDiscount)}>
@@ -63,7 +75,7 @@ const ToyCard: React.FC<ToyCardProps> = ({ toy, onToggleFavorite, direction = 'v
           {toy.oldPrice && <span className={styles.toyCardInfoPriceOld}>{toy.oldPrice}</span>}
         </div>
         <Rating value={toy.rating} />
-        {isHorizontal && renderButtons()}
+        {isHorizontal && !isSmallSize && renderButtons()}
       </div>
     </div>
   );
