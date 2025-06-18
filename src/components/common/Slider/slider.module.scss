@@ -1,3 +1,5 @@
+@use "sass:color";
+
 // Core sizes
 $track-thickness: 10px;
 $handle-width: 16px;
@@ -10,7 +12,7 @@ $v-min-max-gap: 0px;
 // Reduce width by handler size
 $width-shrink: $handle-width;
 $horizontal-slider-width-calc: calc(100% - #{$width-shrink});
-$horizontal-slider-left-offset: $width-shrink/2;
+$horizontal-slider-left-offset: calc($width-shrink/2);
 
 // Reduce height by handler size and label size
 $min-max-font-size: 12px;
@@ -120,7 +122,7 @@ $center-handler-position: calc(($track-thickness - $handle-width) / 2);
 
     &-isDisabled {
       background-color: $color-disabled;
-      border: $handle-border solid darken($color-disabled, 10%);
+      border: $handle-border solid color.adjust($color-disabled, $lightness: -10%);
       cursor: not-allowed;
     }
   }
