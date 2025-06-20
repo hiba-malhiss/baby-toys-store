@@ -15,7 +15,7 @@ const toyNames = [
 const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
 const generateRandomToys = (count = 19): Toy[] => {
-  return Array.from({ length: count }, (_, i) => {
+  return Array.from({ length: count }, (_) => {
     const basePrice = Math.random() * 30 + 10;
     const price = parseFloat(basePrice.toFixed(2));
     const hasDiscount = Math.random() < 0.5;

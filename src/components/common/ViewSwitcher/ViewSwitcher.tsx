@@ -12,7 +12,7 @@ type ResponsiveOption = {
   gridColumns: number;
 };
 
-type ViewMode = 'grid' | 'list';
+export type ViewMode = 'grid' | 'list';
 
 type ViewSwitcherProps = {
   children: ReactNode[] | ReactNode;

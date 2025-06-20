@@ -6,8 +6,8 @@ import styles from './icon.module.scss';
 
 interface IconProps {
   icon: any;
-  size?: IconSize;
-  color?: IconColor;
+  size?: IconSize | string | null;
+  color?: IconColor | string | null;
   isRotating?: boolean;
   className?: string;
 }
@@ -28,7 +28,7 @@ export const Icon = ({
 
   const iconClass = useMemo(
     () =>
-      clsx(styles.icon, iconClassMap.color[color], iconClassMap.size[size], {
+      clsx(styles.icon, color && iconClassMap.color[color], size && iconClassMap.size[size], {
         [styles.isRotating]: isRotating,
       }),
     [color, size, isRotating]

@@ -7,11 +7,11 @@ import PriceFilter from './PriceFilter.tsx';
 import ToyCard from '../../components/common/ToyCard/ToyCard.tsx';
 import { toys } from '../../mock-data/toy-card-list.ts';
 import Flex from '../../components/common/Flex/Flex.tsx';
-import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
+import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 
 const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(categoriesRadioOptions[0].value);
-  const [view, setView] = useState();
+  const [view, setView] = useState<ViewMode>();
   const selectedLabel =
     categoriesRadioOptions.find(({ value }) => value === selectedCategory)?.label ?? '';
 

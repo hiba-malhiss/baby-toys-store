@@ -1,5 +1,14 @@
 import styles from './icon.module.scss';
 
+export enum IconSize {
+  small = 'small',
+  medium = 'medium',
+  large = 'large',
+  xlarge = 'xlarge',
+  xxlarge = 'xxlarge',
+  xxxlarge = 'xxxlarge',
+}
+
 export enum IconColor {
   primary = 'primary',
   ternary = 'ternary',
@@ -11,16 +20,7 @@ export enum IconColor {
   success = 'success',
 }
 
-export enum IconSize {
-  small = 'small',
-  medium = 'medium',
-  large = 'large',
-  xlarge = 'xlarge',
-  xxlarge = 'xxlarge',
-  xxxlarge = 'xxxlarge',
-}
-
-export const iconClassMap = {
+export const iconClassMap: Record<string, Record<string, string>> = {
   color: {
     [IconColor.primary]: styles.iconIconPrimaryColor,
     [IconColor.light]: styles.iconIconLightColor,

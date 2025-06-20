@@ -15,8 +15,8 @@ export type StringInputSize = 'small' | 'medium' | 'large';
 interface StringInputProps {
   type?: string;
   min?: string;
-  value: string;
-  onChange: (val: string) => void;
+  value?: string;
+  onChange?: (val: string) => void;
   placeholder?: string;
   icon?: any;
   iconColor?: string;
@@ -81,7 +81,7 @@ export const StringInput: React.FC<StringInputProps> = ({
         disabled={isDisabled}
         placeholder={placeholder}
         value={value}
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange?.(e.target.value)}
         className={inputClass}
       />
       {icon && (
