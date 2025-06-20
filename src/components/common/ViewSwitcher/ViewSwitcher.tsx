@@ -16,11 +16,12 @@ type ViewMode = 'grid' | 'list';
 
 type ViewSwitcherProps = {
   children: ReactNode[] | ReactNode;
-  page: number;
+  page?: number;
   pageSize: number;
+  minColWidth?: number;
   totalSize?: number;
   className?: string;
-  onPaginationChange: (page: number, pageSize: number) => void;
+  onPaginationChange?: (page: number, pageSize: number) => void;
   responsiveOptions?: ResponsiveOption[];
   onViewChange?: (view: ViewMode) => void;
   initialView?: ViewMode;
@@ -35,6 +36,7 @@ export function ViewSwitcher({
   onPaginationChange,
   responsiveOptions = [],
   onViewChange,
+  minColWidth,
   initialView = 'grid',
   totalSize,
   header,
@@ -89,7 +91,7 @@ export function ViewSwitcher({
   const handlePageChange = (newPage: number, newPageSize: number) => {
     setCurrentPage(newPage);
     setCurrentPageSize(newPageSize);
-    onPaginationChange(newPage, newPageSize);
+    onPaginationChange?.(newPage, newPageSize);
   };
 
   const totalPages = Math.ceil(totalItems / currentPageSize);
@@ -111,7 +113,7 @@ export function ViewSwitcher({
     <div className={clsx(className, styles.container)}>
       {header && <Heading level="h1">{header}</Heading>}
 
-      <Flex justify="between" align="center" className={clsx('bts-marginVxxxxl')}>
+      <Flex justify="between" align="center" className={clsx('bts-marginVxxxl')}>
         <Flex>
           <Button
             onClick={() => changeView('grid')}
@@ -146,7 +148,7 @@ export function ViewSwitcher({
         style={
           viewMode === 'grid'
             ? {
-                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(200px, 1fr))`,
+                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(${minColWidth || 200}px, 1fr))`,
               }
             : undefined
         }
