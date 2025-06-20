@@ -1,10 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faChevronDown,
-  faChevronRight,
-  faChevronLeft,
-  faChevronUp,
+  faChevronCircleDown,
+  faChevronCircleUp,
+  faChevronCircleLeft,
+  faChevronCircleRight,
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './carousel.module.scss';
 import { Button } from '../Button/Button.tsx';
@@ -150,15 +149,10 @@ const Carousel: React.FC<CarouselProps> = ({
             className={clsx(styles.carouselNavButton, styles.carouselNavButtonPrev)}
             onClick={prevSlide}
             appearance="link"
-            size="large"
-            withoutPadding
+            size="xxlarge"
+            leftIcon={orientation === 'horizontal' ? faChevronCircleLeft : faChevronCircleUp}
             isDisabled={!circular && currentIndex === 0}
-          >
-            <FontAwesomeIcon
-              className={styles.carouselNavButtonIcon}
-              icon={orientation === 'horizontal' ? faChevronLeft : faChevronUp}
-            />
-          </Button>
+          />
         )}
 
         <div className={styles.carouselViewport}>
@@ -189,15 +183,10 @@ const Carousel: React.FC<CarouselProps> = ({
             className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
             onClick={nextSlide}
             appearance="link"
-            size="large"
-            withoutPadding
+            size="xxlarge"
+            leftIcon={orientation === 'horizontal' ? faChevronCircleRight : faChevronCircleDown}
             isDisabled={!circular && currentIndex === totalPages - 1}
-          >
-            <FontAwesomeIcon
-              className={styles.carouselNavButtonIcon}
-              icon={orientation === 'horizontal' ? faChevronRight : faChevronDown}
-            />
-          </Button>
+          />
         )}
       </div>
     </div>

@@ -1,8 +1,40 @@
+@mixin bts-button-default($color, $background) {
+  background-color: $background;
+  color: $color;
+}
+
+@mixin bts-button-active($color, $background) {
+  &:active:not(.is-disabled):not(.has-error) {
+    background-color: $background !important;
+    color: $color;
+  }
+}
+
+@mixin bts-button-selected($color, $background, $border : transparent) {
+  &.is-selected {
+    background-color: $background;
+    color: $color;
+    border-color: $border;
+  }
+}
+
+@mixin bts-button-hover($color, $background, $border : transparent, $icon-color: $color, $text-underline-decoration: transparent) {
+  &:hover:not(.is-disabled):not(.is-selected):not(.has-error) {
+    background-color: $background;
+    color: $color;
+    border-color: $border;
+    text-decoration-color: $text-underline-decoration;
+
+    .button-icon {
+      color: $icon-color;
+    }
+  }
+}
+
 .button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
   border: none;
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
@@ -15,115 +47,159 @@
     }
   }
 
-  /* Variants */
   &--primary {
-    background-color: $color-primary-dark;
-    color: $color-white;
-
-    &:hover {
-      background-color: $color-primary-hover;
-    }
+    @include bts-button-default($color-white, $color-primary-dark);
+    @include bts-button-hover($color-white, $color-primary-hover);
   }
 
   &--secondary {
-    background-color: $color-secondary;
-    color: $color-white;
-
-    &:hover {
-      background-color: $color-secondary-hover;
-    }
+    @include bts-button-default($color-white, $color-secondary);
+    @include bts-button-hover($color-white, $color-secondary-hover);
   }
 
   &--link {
-    background-color: transparent;
-    color: $color-link;
-
-    &:hover {
-      color: $color-primary-dark;
-    }
+    @include bts-button-default($color-link, transparent);
+    @include bts-button-hover($color-primary-dark, transparent);
+    @include bts-button-selected($color-primary-dark, transparent);
   }
 
   &--primaryLink {
-    color: $color-primary-dark;
-    background-color: transparent;
+    @include bts-button-default($color-primary-dark, transparent);
+    @include bts-button-hover($color-primary-hover, transparent);
+  }
 
-    &:hover {
-      color: $color-primary-hover;
+  &--lightLink {
+    @include bts-button-default($color-white, transparent);
+    @include bts-button-hover($color-link-hover, transparent);
+  }
+
+  &--secondaryLink {
+    @include bts-button-default($color-icon, transparent);
+    @include bts-button-hover($color-secondary-hover, transparent);
+    @include bts-button-selected($color-secondary-hover, transparent);
+  }
+
+
+  &--largeSize {
+    font-size: 16px;
+    height: 48px;
+
+    &.button--withText {
+      padding-left: 24px;
+      padding-right: 24px;
+
+      .button-icon {
+        &--left {
+          margin-right: 8px;
+        }
+
+        &--right {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 48px;
     }
   }
 
-  &-lightLink {
-    background-color: transparent;
-    color: $color-white;
+  &--mediumSize {
+    font-size: 14px;
+    line-height: 18px;
+    min-height: 40px;
 
-    &:hover {
-      color: $color-link-hover;
+    &.button--withText {
+      padding-left: 16px;
+      padding-right: 16px;
+
+      .button-icon {
+        &--left {
+          margin-right: 8px;
+        }
+
+        &--right {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 40px;
     }
   }
 
-  /* Sizes */
-  &--small {
-    padding: 10px;
+  &--smallSize {
+    font-size: 14px;
+    line-height: 18px;
+    height: 24px;
+
+    .button-icon {
+      position: relative;
+      top: -1px;
+    }
+
+    &.button--withText {
+      padding-left: 8px;
+      padding-right: 8px;
+
+      .button-icon {
+        &--left {
+          margin-right: 4px;
+        }
+
+        &--right {
+          padding-left: 4px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 24px;
+    }
   }
 
-  &--medium {
-    padding: 0 25px;
-    height: 38px;
+  &--xlargeSize,  &--xxlargeSize {
+    font-size: 20px;
+    height: 48px;
+
+    &.button--withText {
+      padding-left: 24px;
+      padding-right: 24px;
+
+      .button-icon {
+        &--left {
+          margin-right: 8px;
+        }
+
+        &--right {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 48px;
+    }
   }
 
-  &--large {
-    padding: 16px 24px;
-  }
-
-  &--xlarge {
-    padding: 22px 45px;
-  }
 
   /* Utility Modifiers */
   &--noPadding {
     padding: 0 !important;
   }
 
-  &--isDisabled {
+  &--autoHeight {
+    height: auto !important;
+  }
+
+  &.is-rounded {
+    border-radius: 26px !important;
+  }
+
+  &.is-disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
 
-  &--isSelected {
-    color: $color-primary-dark;
-  }
-
-  &--isRounded {
-    border-radius: 74px;
-  }
-
-  &--noText {
-    border-radius: 50%;
-    padding: 0 !important;
-    aspect-ratio: 1 / 1;
-
-    &.button--small {
-      width: 38px;
-    }
-
-    &.button--medium {
-      width: 38px;
-    }
-
-    &.button--large, &.button--xlarge {
-      width: 54px;
-    }
-  }
-}
-
-.button-icon {
-  display: inline-flex;
-  align-items: center;
-}
-
-
-@media (max-width: 600px) {
-  .button--medium {
-    padding: 0 18px;
-  }
 }

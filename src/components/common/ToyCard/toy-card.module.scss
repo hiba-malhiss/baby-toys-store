@@ -26,20 +26,14 @@
       margin-top: auto;
       position: static;
       padding-top: 8px;
-
-      .toyCard-icon {
-        padding: 13px 20px;
-        border: 1px solid $color-border;
-        border-radius: 15px;
-        font-size: 20px;
-      }
     }
   }
 
   &-box {
     position: relative;
     height: 280px;
-    width: 280px;
+    width: 100%;
+    max-width: 280px;
     max-height: 360px;
     display: flex;
     align-items: center;
@@ -58,22 +52,6 @@
     top: 13px;
     right: 11px;
     z-index: 10;
-  }
-
-  &-icon {
-    font-size: 25px;
-    cursor: pointer;
-    color: $color-icon;
-
-    &--active {
-      color: $color-icon-active;
-      border-color: $color-icon-hover !important;
-    }
-
-    &:hover {
-      color: $color-icon-hover;
-      border-color: $color-icon-hover;
-    }
   }
 
   &-imageWrapper {

@@ -1,21 +1,22 @@
 import React from 'react';
 import styles from './button.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { appearanceClassMap, sizeClassMap } from './button.constants.ts';
+import { Icon } from '../Icon/Icon.tsx';
 
 type ButtonProps = {
   children?: React.ReactNode;
-  appearance?: 'link' | 'light-link' | 'primary' | 'primary-link' | 'secondary';
-  size?: 'small' | 'medium' | 'large' | 'xlarge';
+  appearance?: 'link' | 'light-link' | 'primary' | 'primary-link' | 'secondary' | 'secondary-link';
+  size?: 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
   onClick?: () => void;
   isDisabled?: boolean;
-  withoutPadding?: boolean;
-  isSelected?: boolean;
   isRounded?: boolean;
+  withoutPadding?: boolean;
+  withoutAutoHeight?: boolean;
+  isSelected?: boolean;
   className?: string;
 };
 
@@ -27,28 +28,32 @@ export const Button: React.FC<ButtonProps> = ({
   rightIcon,
   onClick,
   isDisabled = false,
+  withoutAutoHeight = false,
+  isRounded = false,
   withoutPadding,
   isSelected,
   className,
-  isRounded = 'true',
 }) => {
   const calculatedClassName = clsx(
     styles.button,
     appearanceClassMap[appearance],
     sizeClassMap[size],
-    isDisabled && styles.buttonIsDisabled,
+    isRounded && styles.isRounded,
+    isDisabled && styles.isDisabled,
     withoutPadding && styles.buttonNoPadding,
-    isSelected && styles.buttonIsSelected,
-    !children && styles.buttonNoText,
-    isRounded && styles.buttonIsRounded,
+    withoutAutoHeight && styles.buttonAutoHeight,
+    isSelected && styles.isSelected,
+    children && styles.buttonWithText,
     className
   );
 
   return (
     <button className={calculatedClassName} onClick={onClick} disabled={isDisabled}>
-      {leftIcon && <FontAwesomeIcon icon={leftIcon} className={styles.buttonIcon} />}
+      {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} color={null} />}
       {children}
-      {rightIcon && <FontAwesomeIcon icon={rightIcon} className={styles.buttonIcon} />}
+      {rightIcon && (
+        <Icon icon={rightIcon} className={styles.buttonIcon} size={size} color={null} />
+      )}
     </button>
   );
 };

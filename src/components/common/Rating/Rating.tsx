@@ -1,9 +1,8 @@
 import React from 'react';
-import styles from './rating.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import Flex from '../../common/Flex/Flex.tsx';
+import { Icon } from '../Icon/Icon.tsx';
 
 type RatingProps = {
   value: number;
@@ -25,7 +24,7 @@ const Rating: React.FC<RatingProps> = ({ value, max = 5 }) => {
           icon = regularStar; // empty star
         }
 
-        return <FontAwesomeIcon key={i} icon={icon} className={styles.ratingFilled} />;
+        return <Icon key={i} icon={icon} color="warning" />;
       })}
     </Flex>
   );

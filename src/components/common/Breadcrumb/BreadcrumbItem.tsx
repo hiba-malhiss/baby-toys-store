@@ -1,11 +1,11 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import clsx from 'clsx';
 
 import styles from './breadcrumb-item.module.scss';
 import Flex from '../Flex/Flex.tsx';
+import { Icon } from '../Icon/Icon.tsx';
 
 export type BreadcrumbItemData = {
   label?: string;
@@ -26,7 +26,7 @@ export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
 }) => {
   const content = (
     <Flex className={styles.breadcrumbItemContent} align="center" spacing="xs">
-      {item.icon && <FontAwesomeIcon icon={item.icon} />}
+      {item.icon && <Icon icon={item.icon}/>}
       {item.label && <span>{item.label}</span>}
     </Flex>
   );

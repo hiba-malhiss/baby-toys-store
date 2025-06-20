@@ -6,11 +6,13 @@ export const appearanceClassMap = {
   link: styles.buttonLink,
   'light-link': styles.buttonLightLink,
   'primary-link': styles.buttonPrimaryLink,
+  'secondary-link': styles.buttonSecondaryLink,
 };
 
 export const sizeClassMap = {
-  small: styles.buttonSmall,
-  medium: styles.buttonMedium,
-  large: styles.buttonLarge,
-  xlarge: styles.buttonXlarge,
+  small: styles.buttonSmallSize,
+  medium: styles.buttonMediumSize,
+  large: styles.buttonLargeSize,
+  xlarge: styles.buttonXlargeSize,
+  xxlarge: styles.buttonXxlargeSize,
 };

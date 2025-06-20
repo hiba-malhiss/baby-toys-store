@@ -2,7 +2,6 @@ import React from 'react';
 import styles from './toy-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faCartShopping } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import type { Toy } from '../../../types/toy.types.ts';
@@ -29,21 +28,23 @@ const ToyCard: React.FC<ToyCardProps> = ({
   const renderButtons = () => (
     <Flex
       className={styles.toyCardButtons}
-      spacing={direction === 'vertical' ? 's' : 'xl'}
+      spacing={direction === 'vertical' ? 'none' : 'xl'}
       align="center"
       direction={direction}
     >
       {direction === 'vertical' && (
-        <FontAwesomeIcon icon={faCartShopping} className={styles.toyCardIcon} />
+        <Button leftIcon={faCartShopping} appearance="secondary-link" size="xlarge" />
       )}
       {direction === 'horizontal' && (
         <Button leftIcon={faCartShopping} appearance="primary" size="large">
           Add to cart
         </Button>
       )}
-      <FontAwesomeIcon
-        icon={faHeart}
-        className={clsx(styles.toyCardIcon, toy.isFavorite && styles.toyCardIconActive)}
+      <Button
+        leftIcon={faHeart}
+        appearance="secondary-link"
+        size="xlarge"
+        isSelected={toy.isFavorite}
         onClick={onToggleFavorite}
       />
     </Flex>

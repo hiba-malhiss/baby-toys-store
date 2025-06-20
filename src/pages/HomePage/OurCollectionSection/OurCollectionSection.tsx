@@ -19,8 +19,15 @@ const OurCollectionSection = () => {
         wrap
       >
         {toyCategories.map(({ label, image }) => (
-          <Button withoutPadding key={label} appearance="link" size="large" onClick={() => {}}>
-            <Flex fullHeight direction="vertical" align="center" justify="between">
+          <Button
+            withoutPadding
+            key={label}
+            withoutAutoHeight
+            appearance="link"
+            size="large"
+            onClick={() => {}}
+          >
+            <Flex fullHeight direction="vertical" align="center" justify="between" spacing="xl">
               <img src={image} alt={label} className={styles.ourCollectionImage} />
               <span>{label}</span>
             </Flex>

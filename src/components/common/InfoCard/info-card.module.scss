@@ -4,10 +4,6 @@
   min-height: 188px;
   padding: 20px;
 
-  .infoCard-icon {
-    font-size: 70px;
-  }
-
   .infoCard-title, .infoCard-content {
     text-overflow: ellipsis;
     overflow: hidden;
@@ -32,7 +28,7 @@
   &-Info {
     background-color: $color-bg-info;
 
-    .infoCard-icon, .infoCard-title {
+    .infoCard-title {
       color: $color-info;
     }
   }
@@ -40,15 +36,15 @@
   &-Warning {
     background-color: $color-bg-warning;
 
-    .infoCard-icon, .infoCard-title {
-      color: $color-warning;
+    .infoCard-title {
+      color: $color-ternary;
     }
   }
 
   &-Success {
     background-color: $color-bg-success;
 
-    .infoCard-icon, .infoCard-title {
+    .infoCard-title {
       color: #06C825;
     }
   }

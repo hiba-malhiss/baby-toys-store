@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './avatar.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser } from '@fortawesome/free-solid-svg-icons';
+import { Icon } from '../Icon/Icon.tsx';
 
 type AvatarProps = {
   src?: string;
@@ -21,7 +21,7 @@ const Avatar: React.FC<AvatarProps> = ({ src, alt, size }) => {
       {src ? (
         <img src={src} alt={alt} />
       ) : (
-        <FontAwesomeIcon icon={faUser} className={styles.avatarIcon} />
+        <Icon icon={faUser} className={styles.avatarIcon} color="gray" />
       )}
     </div>
   );
