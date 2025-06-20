@@ -1,4 +1,4 @@
-.toyCard {
+.productCard {
   cursor: pointer;
   display: grid;
   grid-template-columns: 1fr;
@@ -9,7 +9,7 @@
   &--Small {
     gap: 8px !important;
 
-    .toyCard-box {
+    .productCard-box {
       height: 84px;
       width: 84px;
     }
@@ -21,11 +21,11 @@
     align-items: flex-start;
     max-width: 100%;
 
-    .toyCard-info {
+    .productCard-info {
       height: 100%;
     }
 
-    .toyCard-buttons {
+    .productCard-buttons {
       margin-top: auto;
       position: static;
       padding-top: 8px;
@@ -121,7 +121,7 @@
     }
   }
 
-  &--withDiscount .toyCard-infoPriceNew {
+  &--withDiscount .productCard-infoPriceNew {
     color: $color-success;
   }
 

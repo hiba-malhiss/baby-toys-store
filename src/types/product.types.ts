@@ -1,6 +1,6 @@
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
-export type Toy = {
+export type Product = {
   label?: string;
   imageSrc: string;
   name: string;
@@ -25,7 +25,7 @@ export type InfoCardType = {
   content: string;
 };
 
-export type ToyCategory = {
+export type ProductCategory = {
   label: string;
   image: string;
 };

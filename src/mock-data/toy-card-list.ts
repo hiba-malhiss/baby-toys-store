@@ -1,4 +1,4 @@
-import type { Toy } from '../types/toy.types.ts';
+import type { Product } from '../types/product.types.ts';
 
 const toyNames = [
   'Blocks shape-sorting Toy',
@@ -14,7 +14,7 @@ const toyNames = [
 
 const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
-const generateRandomToys = (count = 19): Toy[] => {
+const generateRandomToys = (count = 19): Product[] => {
   return Array.from({ length: count }, (_) => {
     const basePrice = Math.random() * 30 + 10;
     const price = parseFloat(basePrice.toFixed(2));

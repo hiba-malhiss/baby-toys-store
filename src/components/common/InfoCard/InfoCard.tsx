@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './info-card.module.scss';
 import Flex from '../../common/Flex/Flex.tsx';
 import clsx from 'clsx';
-import type { InfoCardType } from '../../../types/toy.types.ts';
+import type { InfoCardType } from '../../../types/product.types.ts';
 import { Icon } from '../Icon/Icon.tsx';
 
 type InfoCardProps = {

@@ -3,7 +3,7 @@ import Flex from '../../common/Flex/Flex.tsx';
 import Rating from '../Rating/Rating.tsx';
 import Avatar from '../Avatar/Avatar.tsx';
 import styles from './feedback-card.module.scss';
-import type { Feedback } from '../../../types/toy.types.ts';
+import type { Feedback } from '../../../types/product.types.ts';
 import clsx from 'clsx';
 
 type FeedbackCardProps = {

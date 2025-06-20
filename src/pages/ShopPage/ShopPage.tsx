@@ -4,7 +4,7 @@ import Card from '../../components/common/Card/Card.tsx';
 import { categoriesRadioOptions } from '../../mock-data/shop-page.ts';
 import CategoryFilter from './CategoryFilter.tsx';
 import PriceFilter from './PriceFilter.tsx';
-import ToyCard from '../../components/common/ToyCard/ToyCard.tsx';
+import ProductCard from '../../components/common/ProductCard/ProductCard.tsx';
 import { toys } from '../../mock-data/toy-card-list.ts';
 import Flex from '../../components/common/Flex/Flex.tsx';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
@@ -26,7 +26,7 @@ const ShopPage = () => {
         <Card header="Popular products">
           <Flex direction="vertical" spacing="s">
             {toys.slice(1, 4).map((toy) => (
-              <ToyCard key={toy.label} toy={toy} direction="horizontal" size="small" />
+              <ProductCard key={toy.label} product={toy} direction="horizontal" size="small" />
             ))}
           </Flex>
         </Card>
@@ -40,9 +40,9 @@ const ShopPage = () => {
         onViewChange={(newView) => setView(newView)}
       >
         {toys.map((toy) => (
-          <ToyCard
+          <ProductCard
             key={toy.label}
-            toy={toy}
+            product={toy}
             direction={view === 'grid' ? 'vertical' : 'horizontal'}
           />
         ))}

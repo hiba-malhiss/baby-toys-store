@@ -1,6 +1,6 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import type { Feedback, InfoCardType } from '../types/toy.types.ts';
-import type { ToyCategory, RadioOption } from '../types/toy.types';
+import type { Feedback, InfoCardType } from '../types/product.types.ts';
+import type { ProductCategory, RadioOption } from '../types/product.types.ts';
 
 export const photoShoots: string[] = [
   '/assets/images/recent-photo-shoots/pic1.png',
@@ -62,7 +62,7 @@ export const infoCards: InfoCardType[] = [
   },
 ];
 
-export const toyCategories: ToyCategory[] = [
+export const toyCategories: ProductCategory[] = [
   { label: 'Control Toys', image: '/assets/icons/control-toys.svg' },
   { label: 'Eco-Friendly Toys', image: '/assets/icons/eco-friendly.svg' },
   { label: 'Educational Toys', image: '/assets/icons/educational-toys.svg' },

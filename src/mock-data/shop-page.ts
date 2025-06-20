@@ -1,4 +1,4 @@
-import type { RadioOption } from '../types/toy.types.ts';
+import type { RadioOption } from '../types/product.types.ts';
 
 export const categoriesRadioOptions: RadioOption[] = [
   { label: 'Play sets', value: 'play-sets' },
