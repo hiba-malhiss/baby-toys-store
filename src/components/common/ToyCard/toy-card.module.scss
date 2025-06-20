@@ -3,6 +3,8 @@
   display: grid;
   grid-template-columns: 1fr;
   gap: 24px;
+  width: 100%;
+  max-width: 280px;
 
   &--Small {
     gap: 8px !important;
@@ -17,6 +19,7 @@
     grid-template-columns: max-content 1fr;
     gap: 36px;
     align-items: flex-start;
+    max-width: 100%;
 
     .toyCard-info {
       height: 100%;

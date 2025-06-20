@@ -4,17 +4,17 @@
   gap: 12px;
 
   &-button {
-    border: 1px solid #d4d4d4;
+    border: 1px solid $color-border;
     border-radius: 50%;
     width: 40px;
     height: 40px;
-    background: white;
-    color: #171717;
+    background: $color-white;
+    color: $color-text-primary;
     font-weight: bold;
   }
 
   &-activeButton {
-    background: #0f83b2;
-    color: white;
+    background: $color-primary-dark;
+    color: $color-white;
   }
 }

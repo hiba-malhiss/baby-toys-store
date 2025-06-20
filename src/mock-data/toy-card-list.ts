@@ -14,7 +14,7 @@ const toyNames = [
 
 const getRandom = <T>(arr: T[]) => arr[Math.floor(Math.random() * arr.length)];
 
-const generateRandomToys = (count = 9): Toy[] => {
+const generateRandomToys = (count = 19): Toy[] => {
   return Array.from({ length: count }, (_, i) => {
     const basePrice = Math.random() * 30 + 10;
     const price = parseFloat(basePrice.toFixed(2));
@@ -24,7 +24,7 @@ const generateRandomToys = (count = 9): Toy[] => {
 
     return {
       label,
-      imageSrc: `/assets/images/toys/img${i + 1}.png`,
+      imageSrc: `/assets/images/toys/img${Math.floor(Math.random() * 9) + 1}.png`,
       name: getRandom(toyNames),
       price: `$${price}`,
       oldPrice,

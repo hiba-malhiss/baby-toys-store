@@ -26,7 +26,7 @@ export const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
 }) => {
   const content = (
     <Flex className={styles.breadcrumbItemContent} align="center" spacing="xs">
-      {item.icon && <Icon icon={item.icon}/>}
+      {item.icon && <Icon icon={item.icon} />}
       {item.label && <span>{item.label}</span>}
     </Flex>
   );

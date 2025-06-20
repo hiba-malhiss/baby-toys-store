@@ -14,7 +14,7 @@
   &.is-selected {
     background-color: $background;
     color: $color;
-    border-color: $border;
+    //border-color: $border;
   }
 }
 
@@ -22,7 +22,7 @@
   &:hover:not(.is-disabled):not(.is-selected):not(.has-error) {
     background-color: $background;
     color: $color;
-    border-color: $border;
+    //border-color: $border;
     text-decoration-color: $text-underline-decoration;
 
     .button-icon {
@@ -58,7 +58,7 @@
   }
 
   &--link {
-    @include bts-button-default($color-link, transparent);
+    @include bts-button-default($color-text-grey, transparent);
     @include bts-button-hover($color-primary-dark, transparent);
     @include bts-button-selected($color-primary-dark, transparent);
   }
