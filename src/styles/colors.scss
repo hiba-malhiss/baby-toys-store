@@ -44,3 +44,10 @@ $color-icon: #A5A5A5;
 // Utility
 $color-white: #fff;
 $color-black: #000;
+
+/* Shadows */
+$box-shadow-xs: 0 2px 4px 0 rgba($color-text-primary, 0.08);
+$box-shadow-s: 0 4px 8px 0 rgba($color-text-primary, 0.12);
+$box-shadow-m: 0 8px 12px 0 rgba($color-text-primary, 0.16);
+$box-shadow-l: 0 12px 16px 0 rgba($color-text-primary, 0.2);
+$box-shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
