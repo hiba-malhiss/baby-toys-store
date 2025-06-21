@@ -17,6 +17,7 @@ export type ViewMode = 'grid' | 'list';
 type ViewSwitcherProps = {
   children: ReactNode[] | ReactNode;
   page?: number;
+  gap?: 'small';
   pageSize: number;
   minColWidth?: number;
   totalSize?: number;
@@ -25,6 +26,7 @@ type ViewSwitcherProps = {
   responsiveOptions?: ResponsiveOption[];
   onViewChange?: (view: ViewMode) => void;
   initialView?: ViewMode;
+  staticView?: ViewMode;
   header?: ReactNode;
   topBar?: ReactNode;
 };
@@ -38,23 +40,26 @@ export function ViewSwitcher({
   onViewChange,
   minColWidth,
   initialView = 'grid',
+  staticView,
   totalSize,
   header,
   topBar,
+  gap,
   className,
 }: ViewSwitcherProps) {
   const allItems = React.Children.toArray(children);
   const totalItems = totalSize ?? allItems.length;
 
-  const [viewMode, setViewMode] = useState<ViewMode>(initialView);
+  const [viewMode, setViewMode] = useState<ViewMode>(staticView ?? initialView);
   const [columns, setColumns] = useState<number | undefined>(undefined);
-
   const [currentPage, setCurrentPage] = useState(page || 1);
   const [currentPageSize, setCurrentPageSize] = useState(pageSize);
 
   useEffect(() => {
-    onViewChange?.(initialView);
-  }, [initialView]);
+    if (!staticView) {
+      onViewChange?.(initialView);
+    }
+  }, [initialView, staticView]);
 
   useEffect(() => {
     if (responsiveOptions.length === 0) {
@@ -105,40 +110,48 @@ export function ViewSwitcher({
   );
 
   const changeView = (view: ViewMode) => {
+    if (staticView) return;
     setViewMode(view);
     onViewChange?.(view);
   };
 
   return (
-    <div className={clsx(className, styles.container)}>
+    <div className={clsx(className, styles.container, gap === 'small' && styles.containerSmallGap)}>
       {header && <Heading level="h1">{header}</Heading>}
 
-      <Flex justify="between" align="center" className={clsx('bts-marginVxxxl')}>
-        <Flex>
-          <Button
-            onClick={() => changeView('grid')}
-            isSelected={viewMode === 'grid'}
-            appearance="link"
-            size="xlarge"
-            withoutPadding
-            leftIcon={faTh}
-          />
-          <Button
-            onClick={() => changeView('list')}
-            isSelected={viewMode === 'list'}
-            appearance="link"
-            size="xlarge"
-            withoutPadding
-            leftIcon={faBars}
-          />
+      {!staticView && (
+        <Flex
+          key="header-buttons"
+          justify="between"
+          align="center"
+          className={clsx('bts-marginVxxxl')}
+        >
+          <Flex>
+            <Button
+              onClick={() => changeView('grid')}
+              isSelected={viewMode === 'grid'}
+              appearance="link"
+              size="xlarge"
+              withoutPadding
+              leftIcon={faTh}
+            />
+            <Button
+              onClick={() => changeView('list')}
+              isSelected={viewMode === 'list'}
+              appearance="link"
+              size="xlarge"
+              withoutPadding
+              leftIcon={faBars}
+            />
+          </Flex>
+
+          <div className={styles.containerTopBar}>{topBar}</div>
+
+          <span className={styles.containerResultsInfo}>
+            Showing {totalItems === 0 ? 0 : startIdx + 1}–{endIdx} of {totalItems} results
+          </span>
         </Flex>
-
-        <div className={styles.containerTopBar}>{topBar}</div>
-
-        <span className={styles.containerResultsInfo}>
-          Showing {totalItems === 0 ? 0 : startIdx + 1}–{endIdx} of {totalItems} results
-        </span>
-      </Flex>
+      )}
 
       <div
         className={clsx(styles.containerContent, {
@@ -157,6 +170,7 @@ export function ViewSwitcher({
           <React.Fragment key={i}>{child}</React.Fragment>
         ))}
       </div>
+
       <Paginator
         className={styles.containerPaginator}
         totalItems={totalItems}

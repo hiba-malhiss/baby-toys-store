@@ -4,6 +4,12 @@
   flex-direction: column;
   justify-content: start;
 
+  &--smallGap {
+    .container-list {
+      grid-row-gap: 8px;
+    }
+  }
+
   &-topBar {
     flex: 1;
   }
