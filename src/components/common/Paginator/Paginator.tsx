@@ -9,7 +9,7 @@ type PaginatorProps = {
   initialPage?: number;
   pageSize: number;
   className?: string;
-  onPageChange: (page: number, pageSize: number) => void;
+  onPageChange?: (page: number, pageSize: number) => void;
 };
 
 export function Paginator({
@@ -27,7 +27,7 @@ export function Paginator({
   }, [initialPage]);
 
   useEffect(() => {
-    onPageChange(currentPage, pageSize);
+    onPageChange?.(currentPage, pageSize);
   }, [currentPage, pageSize, onPageChange]);
 
   const gotoPage = (page: number) => {

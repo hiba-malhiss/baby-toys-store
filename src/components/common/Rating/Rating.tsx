@@ -7,11 +7,12 @@ import { Icon } from '../Icon/Icon.tsx';
 type RatingProps = {
   value: number;
   max?: number;
+  className?: string;
 };
 
-const Rating: React.FC<RatingProps> = ({ value, max = 5 }) => {
+const Rating: React.FC<RatingProps> = ({ className, value, max = 5 }) => {
   return (
-    <Flex direction="horizontal" spacing="xs">
+    <Flex direction="horizontal" spacing="xs" className={className}>
       {Array.from({ length: max }).map((_, i) => {
         const diff = value - i;
 
