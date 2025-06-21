@@ -1,0 +1,26 @@
+.imageMagnifierPopover {
+  position: relative;
+  display: inline-block;
+
+  &-container {
+    position: relative;
+    width: 100%;
+    display: block;
+  }
+
+  &-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: cover;
+  }
+
+  &-lens {
+    position: absolute;
+    pointer-events: none;
+    border: 1px solid $color-border;
+    background-color: rgba(255, 255, 255, 0.3);
+    z-index: 2;
+  }
+
+}
