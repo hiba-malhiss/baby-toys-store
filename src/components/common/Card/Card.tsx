@@ -6,7 +6,7 @@ import Heading from '../Heading/Heading.tsx';
 type CardProps = {
   children: ReactNode;
   header?: ReactNode;
-  size?: 'small' | 'medium';
+  size?: 'small' | 'medium' | 'large';
   className?: string;
   fullWidth?: boolean;
 };
@@ -14,6 +14,7 @@ type CardProps = {
 const sizeClassMap: Record<string, string> = {
   small: styles.cardSmall,
   medium: styles.cardMedium,
+  large: styles.cardLarge,
 };
 
 const Card: React.FC<CardProps> = ({ fullWidth, children, className, header, size = 'medium' }) => {
