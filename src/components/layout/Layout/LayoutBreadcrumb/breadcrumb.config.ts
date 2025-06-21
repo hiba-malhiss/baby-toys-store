@@ -11,4 +11,8 @@ export const baseBreadcrumbs: Record<string, BreadcrumbItemData[]> = {
     { label: 'Shop', path: '/shop' },
     { label: 'Toys', path: '/shop/toys' },
   ],
+  '/product-details/:id': [
+    { icon: faHome, path: '/' },
+    { label: 'Shop', path: '/shop' },
+  ],
 };

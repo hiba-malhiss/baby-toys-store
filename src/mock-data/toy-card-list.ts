@@ -24,6 +24,7 @@ const generateRandomToys = (count = 19): Product[] => {
 
     return {
       label,
+      id: getRandom(toyNames),
       imageSrc: `/assets/images/toys/img${Math.floor(Math.random() * 9) + 1}.png`,
       name: getRandom(toyNames),
       price: `$${price}`,

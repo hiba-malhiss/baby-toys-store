@@ -9,7 +9,7 @@ export type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl' | 
 
 interface FlexProps {
   children?: ReactNode;
-  spacing?: Spacing;
+  spacing?: Spacing | string;
   direction?: Direction;
   align?: Align;
   justify?: Justify;

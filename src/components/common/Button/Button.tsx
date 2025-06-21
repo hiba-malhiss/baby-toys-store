@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type MouseEventHandler } from 'react';
 import styles from './button.module.scss';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -11,7 +11,7 @@ type ButtonProps = {
   size?: 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
-  onClick?: () => void;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
   isRounded?: boolean;
   withoutPadding?: boolean;

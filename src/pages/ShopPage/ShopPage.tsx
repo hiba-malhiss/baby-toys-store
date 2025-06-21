@@ -8,12 +8,14 @@ import ProductCard from '../../components/common/ProductCard/ProductCard.tsx';
 import { toys } from '../../mock-data/toy-card-list.ts';
 import Flex from '../../components/common/Flex/Flex.tsx';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
+import { useNavigate } from 'react-router-dom';
 
 const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(categoriesRadioOptions[0].value);
   const [view, setView] = useState<ViewMode>();
   const selectedLabel =
     categoriesRadioOptions.find(({ value }) => value === selectedCategory)?.label ?? '';
+  const navigate = useNavigate();
 
   return (
     <div className={styles.shopPage}>
@@ -26,7 +28,13 @@ const ShopPage = () => {
         <Card header="Popular products">
           <Flex direction="vertical" spacing="s">
             {toys.slice(1, 4).map((toy) => (
-              <ProductCard key={toy.label} product={toy} direction="horizontal" size="small" />
+              <ProductCard
+                key={toy.label}
+                product={toy}
+                direction="horizontal"
+                size="small"
+                onClick={(product) => navigate(`/product-details/${product.id}`)}
+              />
             ))}
           </Flex>
         </Card>
@@ -43,6 +51,7 @@ const ShopPage = () => {
           <ProductCard
             key={toy.label}
             product={toy}
+            onClick={(product) => navigate(`/product-details/${product.id}`)}
             direction={view === 'grid' ? 'vertical' : 'horizontal'}
           />
         ))}

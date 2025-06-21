@@ -1,5 +1,5 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { matchPath, useLocation } from 'react-router-dom';
 import { useBreadcrumb } from '../../../../context/BreadcrumbContext.tsx';
 import { baseBreadcrumbs } from './breadcrumb.config.ts';
 import { Breadcrumb } from '../../../common/Breadcrumb/Breadcrumb.tsx';
@@ -9,16 +9,23 @@ type LayoutBreadcrumbProps = {
   className: string;
 };
 
+const findBasePath = (pathname: string) => {
+  // Sort keys descending by length so longer (more specific) paths match first
+  const sortedPaths = Object.keys(baseBreadcrumbs).sort((a, b) => b.length - a.length);
+
+  return sortedPaths.find((pattern) => matchPath({ path: pattern, end: false }, pathname));
+};
+
 const LayoutBreadcrumb: React.FC<LayoutBreadcrumbProps> = ({ className }) => {
   const location = useLocation();
-  const { extraCrumb } = useBreadcrumb(); // append toy id from component
+  const { extraCrumbs } = useBreadcrumb();
 
-  const basePath = Object.keys(baseBreadcrumbs).find((path) => location.pathname.startsWith(path));
+  const basePath = findBasePath(location.pathname);
   const baseCrumbs = basePath ? baseBreadcrumbs[basePath] : [];
 
   const finalCrumbs = [...baseCrumbs];
-  if (extraCrumb) {
-    finalCrumbs.push({ label: extraCrumb.label });
+  if (extraCrumbs) {
+    finalCrumbs.push(...extraCrumbs);
   }
 
   if (!finalCrumbs.length) return null;
@@ -36,5 +43,4 @@ const LayoutBreadcrumb: React.FC<LayoutBreadcrumbProps> = ({ className }) => {
     </Breadcrumb>
   );
 };
-
 export default LayoutBreadcrumb;

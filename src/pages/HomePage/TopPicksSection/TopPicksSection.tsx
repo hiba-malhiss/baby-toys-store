@@ -6,10 +6,12 @@ import styles from './top-picks-section.module.scss';
 import ProductCard from '../../../components/common/ProductCard/ProductCard.tsx';
 import type { Product } from '../../../types/product.types.ts';
 import { toys } from '../../../mock-data/toy-card-list.ts';
+import { useNavigate } from 'react-router-dom';
 
 const TopPicksSection = () => {
   const [selected, setSelected] = useState(topPicksRadioOptions[0].value); // e.g., "featured"
   const [toysState, setToysState] = useState(toys);
+  const navigate = useNavigate();
 
   const toggleFavorite = (index: number) => {
     setToysState((prev) =>
@@ -30,7 +32,12 @@ const TopPicksSection = () => {
       />
       <div className={styles.topPicksGrid}>
         {toysState.map((toy, index) => (
-          <ProductCard key={index} product={toy} onToggleFavorite={() => toggleFavorite(index)} />
+          <ProductCard
+            key={index}
+            product={toy}
+            onToggleFavorite={() => toggleFavorite(index)}
+            onClick={(product) => navigate(`/product-details/${product.id}`)}
+          />
         ))}
       </div>
     </Section>

@@ -5,6 +5,7 @@ export type Product = {
   imageSrc: string;
   name: string;
   price: string;
+  id: string;
   rating: number;
   oldPrice?: string;
   description?: string;

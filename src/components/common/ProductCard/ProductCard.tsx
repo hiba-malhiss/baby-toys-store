@@ -14,6 +14,7 @@ type ProductCardProps = {
   size?: 'small';
   product: Product;
   onToggleFavorite?: () => void;
+  onClick?: (product: Product) => void;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -21,6 +22,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   product,
   onToggleFavorite,
   direction = 'vertical',
+  onClick,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
@@ -45,7 +47,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
         appearance="secondary-link"
         size="xlarge"
         isSelected={product.isFavorite}
-        onClick={onToggleFavorite}
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          onToggleFavorite?.();
+        }}
       />
     </Flex>
   );
@@ -57,6 +63,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         isHorizontal && styles.productCardHorizontal,
         size === 'small' && styles.productCardSmall
       )}
+      onClick={() => onClick(product)}
     >
       <Card size="small" className={styles.productCardBox}>
         {product.label && !isSmallSize && (

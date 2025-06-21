@@ -14,6 +14,16 @@ const navConfig = [
 ];
 
 const Header = () => {
+  const isActivePath = (navPath: string, currentPath: string) => {
+    if (navPath === '/') {
+      return currentPath === '/';
+    }
+    if (navPath === '/shop') {
+      return currentPath === '/shop' || currentPath.startsWith('/product-details/');
+    }
+    return currentPath === navPath || currentPath.startsWith(navPath + '/');
+  };
+
   return (
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
@@ -32,7 +42,7 @@ const Header = () => {
       </Flex>
       <Flex className={styles.headerMain} justify="between" align="center" wrap fullWidth>
         <img src="/assets/images/logo.png" alt="logo" className={styles.headerLogo} />
-        <Nav config={navConfig} />
+        <Nav config={navConfig} isActivePath={isActivePath} />
         <StringInput
           placeholder="Search"
           icon={faSearch}
