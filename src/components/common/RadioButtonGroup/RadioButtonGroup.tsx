@@ -1,14 +1,14 @@
-import React, { Children, isValidElement, cloneElement, type ReactElement } from 'react';
-import Flex, { type Align, type Direction, type Spacing } from '../../common/Flex/Flex.tsx';
+import React, { Children, isValidElement, cloneElement } from 'react';
+import Flex, {
+  type Align,
+  type Direction,
+  type Justify,
+  type Spacing,
+} from '../../common/Flex/Flex.tsx';
 import RadioButton from './RadioButton';
 
 type RadioOption = {
   label: React.ReactNode;
-  value: string;
-  appearance?: string;
-};
-
-type RadioButtonProps = {
   value: string;
   appearance?: string;
 };
@@ -21,14 +21,12 @@ interface RadioButtonGroupProps {
   onChange: (value: string) => void;
   direction?: Direction;
   align?: Align;
+  justify?: Justify;
   spacing?: Spacing;
   appearance?: string;
+  fullWidth?: boolean;
   children?: React.ReactNode;
 }
-
-const isRadioButtonElement = (child: React.ReactNode): child is ReactElement<RadioButtonProps> => {
-  return isValidElement(child) && typeof child.props.value === 'string';
-};
 
 const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   className,
@@ -39,8 +37,10 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   direction = 'horizontal',
   spacing = 'xl',
   align = 'stretch',
+  justify = 'stretch',
   appearance,
   children,
+  fullWidth,
 }) => {
   const renderButtons = () => {
     if (options && options.length > 0) {
@@ -59,7 +59,7 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
     }
 
     return Children.map(children, (child) => {
-      if (isRadioButtonElement(child)) {
+      if (isValidElement(child)) {
         return cloneElement(child, {
           name,
           isSelected: selectedValue === child.props.value,
@@ -72,7 +72,14 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   };
 
   return (
-    <Flex direction={direction} className={className} align={align} spacing={spacing}>
+    <Flex
+      direction={direction}
+      className={className}
+      align={align}
+      justify={justify}
+      spacing={spacing}
+      fullWidth={fullWidth}
+    >
       {renderButtons()}
     </Flex>
   );

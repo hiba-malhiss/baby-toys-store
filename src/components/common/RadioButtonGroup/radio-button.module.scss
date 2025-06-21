@@ -41,4 +41,18 @@
       color: $color-primary;
     }
   }
+
+  &--link-2 {
+    border-radius: 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid transparent;
+
+    &.isSelected {
+      border-bottom: 2px solid $color-primary-dark;
+    }
+
+    &:hover {
+      border-bottom: 2px solid $color-primary;
+    }
+  }
 }

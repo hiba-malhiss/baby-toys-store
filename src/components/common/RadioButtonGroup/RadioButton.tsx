@@ -8,12 +8,14 @@ interface RadioButtonProps {
   value: string;
   isSelected?: boolean;
   onChange?: (value: string) => void;
-  appearance?: 'link' | 'secondary';
+  appearance?: 'link' | 'secondary' | 'link2';
+  className?: string;
 }
 
 export const appearanceClassMap = {
   secondary: styles.radioButtonSecondary,
   link: styles.radioButtonLink,
+  link2: styles.radioButtonLink2,
 };
 
 const RadioButton: React.FC<RadioButtonProps> = ({
@@ -22,12 +24,13 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   value,
   isSelected,
   onChange,
+  className,
   appearance = 'secondary',
 }) => {
   return (
     <label
       htmlFor={`${name}-${value}`}
-      className={clsx(styles.radioButton, appearanceClassMap[appearance], {
+      className={clsx(className, styles.radioButton, appearanceClassMap[appearance], {
         [styles.isSelected]: isSelected,
       })}
     >
