@@ -1,8 +1,7 @@
 .shopPage {
-  gap: 60px;
+  gap: 60px !important;
   display: grid;
   grid-template-columns: max-content 1fr;
-  padding: 0 100px;
   width: 100%;
 
   &-rightSide {

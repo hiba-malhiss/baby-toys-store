@@ -8,6 +8,7 @@ type CardProps = {
   header?: ReactNode;
   size?: 'small' | 'medium';
   className?: string;
+  fullWidth?: boolean;
 };
 
 const sizeClassMap: Record<string, string> = {
@@ -15,9 +16,16 @@ const sizeClassMap: Record<string, string> = {
   medium: styles.cardMedium,
 };
 
-const Card: React.FC<CardProps> = ({ children, className, header, size = 'medium' }) => {
+const Card: React.FC<CardProps> = ({ fullWidth, children, className, header, size = 'medium' }) => {
   return (
-    <div className={clsx(styles.card, className, size && sizeClassMap[size])}>
+    <div
+      className={clsx(
+        fullWidth && styles.fullWidth,
+        styles.card,
+        className,
+        size && sizeClassMap[size]
+      )}
+    >
       {header && (
         <Heading level="h2" className={styles.cardHeader}>
           {header}

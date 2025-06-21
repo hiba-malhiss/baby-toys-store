@@ -1,19 +1,18 @@
 import ShopNowSection from './ShopNowSection/ShopNowSection.tsx';
 import OurCollectionSection from './OurCollectionSection/OurCollectionSection.tsx';
-import Flex from '../../components/common/Flex/Flex.tsx';
 import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';
 import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSection.tsx';
 import BannersSection from './BannersSection/BannersSection.tsx';
 import RecentPhotoShootsSection from './RecentPhotoShootsSection/RecentPhotoShootsSection.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
 import NewsletterSection from './NewsletterSection/NewsletterSection.tsx';
-import styles from './home-page.module.scss';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 const HomePage = () => {
   return (
-    <Flex direction="vertical" align="center" spacing="xxl" fullWidth>
+    <>
       <ShopNowSection />
-      <Flex direction="vertical" spacing="xxl" className={styles.homeContent}>
+      <PageContainer>
         <OurCollectionSection />
         <TopPicksSection />
         <BannersSection />
@@ -21,8 +20,8 @@ const HomePage = () => {
         <RecentPhotoShootsSection />
         <PolicyCardsSection />
         <NewsletterSection />
-      </Flex>
-    </Flex>
+      </PageContainer>
+    </>
   );
 };
 

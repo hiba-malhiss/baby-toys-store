@@ -13,6 +13,7 @@ type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
   size?: 'small';
   product: Product;
+  fullWidth?: boolean;
   onToggleFavorite?: () => void;
   onClick?: (product: Product) => void;
 };
@@ -23,6 +24,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onToggleFavorite,
   direction = 'vertical',
   onClick,
+  fullWidth,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
@@ -60,10 +62,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     <div
       className={clsx(
         styles.productCard,
+        fullWidth && styles.fullWidth,
         isHorizontal && styles.productCardHorizontal,
         size === 'small' && styles.productCardSmall
       )}
-      onClick={() => onClick(product)}
+      onClick={() => onClick?.(product)}
     >
       <Card size="small" className={styles.productCardBox}>
         {product.label && !isSmallSize && (

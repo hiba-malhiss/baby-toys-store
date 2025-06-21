@@ -9,6 +9,7 @@ import { toys } from '../../mock-data/toy-card-list.ts';
 import Flex from '../../components/common/Flex/Flex.tsx';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import { useNavigate } from 'react-router-dom';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(categoriesRadioOptions[0].value);
@@ -18,7 +19,7 @@ const ShopPage = () => {
   const navigate = useNavigate();
 
   return (
-    <div className={styles.shopPage}>
+    <PageContainer className={styles.shopPage}>
       <div className={styles.shopPageRightSide}>
         <CategoryFilter
           selectedCategory={selectedCategory}
@@ -56,7 +57,7 @@ const ShopPage = () => {
           />
         ))}
       </ViewSwitcher>
-    </div>
+    </PageContainer>
   );
 };
 
