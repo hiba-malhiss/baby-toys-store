@@ -1,13 +1,37 @@
-
 .feedbackCard {
+  display: grid;
+  grid-template-areas:
+    "rating"
+    "comment"
+    "avatar";
+  gap: 12px;
+  padding: 36px 36px 16px;
   background-image: url('/assets/images/feedback-card.svg');
   background-repeat: no-repeat;
   background-size: cover;
   border-radius: 10px;
-  padding: 37px 43px 17px 43px;
 
-  &-fullHeight {
+  &--fullHeight {
     height: 100%;
+  }
+
+  &--detailed {
+    gap: 8px;
+    background-image: unset;
+    padding: 16px;
+    grid-template-areas:
+      "avatar"
+      "rating"
+      "comment";
+
+    .feedbackCard-comment {
+      display: inline-block !important;
+      font-size: 14px;
+    }
+  }
+
+  &-avatarBlock {
+    grid-area: avatar;
   }
 
   &-name {
@@ -16,16 +40,20 @@
     font-size: 16px;
   }
 
+  &-rating {
+    grid-area: rating;
+  }
+
   &-comment {
+    grid-area: comment;
     color: $color-text-feedback;
     font-size: 16px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    margin: 0;
     overflow: hidden;
     width: 100%;
     display: -webkit-box;
     -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
-    flex: 1;
+    line-height: 20px;
   }
 }

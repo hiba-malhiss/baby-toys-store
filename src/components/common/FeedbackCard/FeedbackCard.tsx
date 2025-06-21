@@ -9,21 +9,26 @@ import clsx from 'clsx';
 type FeedbackCardProps = {
   feedback: Feedback;
   fullHeight?: boolean;
+  appearance?: 'main' | 'detailed';
 };
 
-const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, fullHeight }) => {
+const FeedbackCard: React.FC<FeedbackCardProps> = ({ feedback, appearance, fullHeight }) => {
   const { rating, name, avatarUrl, comment } = feedback;
   return (
     <Flex
       direction="vertical"
-      className={clsx(styles.feedbackCard, fullHeight && styles.feedbackCardFullHeight)}
+      className={clsx(
+        styles.feedbackCard,
+        fullHeight && styles.feedbackCardFullHeight,
+        appearance === 'detailed' && styles.feedbackCardDetailed
+      )}
     >
-      <Rating value={rating} />
-      {comment && <p className={styles.feedbackCardComment}>{comment}</p>}
-      <Flex align="center" spacing="s">
+      <Flex align="center" spacing="s" className={styles.feedbackCardAvatarBlock}>
         <Avatar src={avatarUrl} size="small" />
         <div className={styles.feedbackCardName}>{name}</div>
       </Flex>
+      <Rating value={rating} className={styles.feedbackCardRating} />
+      {comment && <p className={styles.feedbackCardComment}>{comment}</p>}
     </Flex>
   );
 };
