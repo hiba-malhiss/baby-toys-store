@@ -5,7 +5,6 @@ import { Popover } from '../Popover/Popover';
 type Props = {
   src: string;
   alt: string;
-  zoom?: number;
   lensSize?: number;
   popoverSize?: number;
 };
@@ -13,14 +12,13 @@ type Props = {
 const ImageMagnifierPopover: React.FC<Props> = ({
   src,
   alt,
-  zoom = 2,
-  lensSize = 200,
-  popoverSize = 400,
+  lensSize = 100,
+  popoverSize = 300,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
+  const [dimensions, setDimensions] = useState({ width: 1, height: 1 }); // avoid divide by zero
 
   useEffect(() => {
     if (containerRef.current) {
@@ -51,19 +49,18 @@ const ImageMagnifierPopover: React.FC<Props> = ({
     top: mousePos.y - lensSize / 2,
   };
 
-  const popoverContentStyle = {
-    width: popoverSize,
-    height: popoverSize,
-    backgroundImage: `url(${src})`,
-    backgroundSize: `${dimensions.width * zoom}px ${dimensions.height * zoom}px`,
-    backgroundPosition: `-${mousePos.x * zoom - popoverSize / 2}px -${mousePos.y * zoom - popoverSize / 2}px`,
-    borderRadius: 4,
+  const scale = popoverSize / lensSize;
+
+  const imageStyle = {
+    width: dimensions.width * scale,
+    height: dimensions.height * scale,
+    transform: `translate(-${mousePos.x * scale - popoverSize / 2}px, -${mousePos.y * scale - popoverSize / 2}px)`,
   };
 
   return (
-    <div className={styles.imageMagnifierPopover}>
+    <div className={styles.imageMagnifier}>
       <div
-        className={styles.imageMagnifierPopoverContainer}
+        className={styles.imageMagnifierContainer}
         ref={containerRef}
         onMouseEnter={() => {
           setIsHovering(true);
@@ -73,13 +70,20 @@ const ImageMagnifierPopover: React.FC<Props> = ({
         onMouseLeave={() => setIsHovering(false)}
         onMouseMove={handleMouseMove}
       >
-        <img src={src} alt={alt} className={styles.imageMagnifierPopoverImage} />
-        {isHovering && <div className={styles.imageMagnifierPopoverLens} style={lensStyle} />}
+        <img src={src} alt={alt} className={styles.imageMagnifierImage} />
+        {isHovering && <div className={styles.imageMagnifierLens} style={lensStyle} />}
       </div>
 
-      <Popover targetRef={containerRef} open={isHovering} position="right" autoWidth>
-        <div style={popoverContentStyle} />
-      </Popover>
+      {isHovering && (
+        <Popover open targetRef={containerRef} position="right" autoWidth>
+          <div
+            className={styles.imageMagnifierPopover}
+            style={{ width: popoverSize, height: popoverSize, overflow: 'hidden' }}
+          >
+            <img src={src} alt={alt} style={imageStyle} />
+          </div>
+        </Popover>
+      )}
     </div>
   );
 };
