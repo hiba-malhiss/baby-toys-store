@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './page-container.module.scss';
 import Flex from '../../common/Flex/Flex.tsx';
+import LayoutBreadcrumb from './LayoutBreadcrumb/LayoutBreadcrumb.tsx';
 
 type PageContainerProps = {
   children: React.ReactNode;
@@ -10,13 +11,16 @@ type PageContainerProps = {
 
 export const PageContainer = ({ spacing, children, className = '' }: PageContainerProps) => {
   return (
-    <Flex
-      fullWidth
-      direction="vertical"
-      spacing={spacing || 'xxl'}
-      className={`${styles.pageContainer} ${className}`}
-    >
-      {children}
-    </Flex>
+    <>
+      <LayoutBreadcrumb className={styles.breadcrumb} />
+      <Flex
+        fullWidth
+        direction="vertical"
+        spacing={spacing || 'xxl'}
+        className={`${styles.pageContainer} ${className}`}
+      >
+        {children}
+      </Flex>
+    </>
   );
 };
