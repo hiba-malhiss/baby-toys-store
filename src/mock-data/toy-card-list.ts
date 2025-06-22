@@ -32,6 +32,8 @@ const generateRandomToys = (count = 19): Product[] => {
       rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)), // between 3.5–5.0
       isFavorite: false,
       description:
+        'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus' +
+        'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus' +
         'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus',
     };
   });
