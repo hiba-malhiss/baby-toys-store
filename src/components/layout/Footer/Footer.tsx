@@ -28,7 +28,7 @@ const Footer = () => {
         <Heading level="h3" className={styles.footerSectionHeader}>
           Explore
         </Heading>
-        <Flex direction="vertical" spacing="xl">
+        <Flex direction="vertical" spacing="s">
           {exploreLinks.map((label) => (
             <Button key={label} withoutPadding size="small" appearance="link" onClick={() => {}}>
               {label}
@@ -41,7 +41,7 @@ const Footer = () => {
         <Heading level="h3" className={styles.footerSectionHeader}>
           Customer Service
         </Heading>
-        <Flex direction="vertical" spacing="xl">
+        <Flex direction="vertical" spacing="s">
           {customerServiceInfo.map((item, index) =>
             typeof item === 'string' ? (
               <p key={index}>{item}</p>

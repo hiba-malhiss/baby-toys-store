@@ -8,6 +8,11 @@
   padding: 100px 99px;
   gap: 80px;
   flex-wrap: wrap;
+  color: $color-text-grey;
+
+  p {
+    min-height: 32px;
+  }
 
   &-sectionHeader {
     padding-bottom: 28px;
