@@ -14,10 +14,11 @@ const CustomerFeedbacksSection = () => {
     >
       <Carousel
         items={feedbacks}
-        numVisible={3}
+        numVisible={4}
         orientation="horizontal"
         showNavigation
         responsiveOptions={[
+          { breakpoint: '1400', numVisible: 3 },
           { breakpoint: '900', numVisible: 2 },
           { breakpoint: '600', numVisible: 1 },
         ]}
