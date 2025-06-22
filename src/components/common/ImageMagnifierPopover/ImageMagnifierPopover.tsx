@@ -13,7 +13,7 @@ const ImageMagnifierPopover: React.FC<Props> = ({
   src,
   alt,
   lensSize = 100,
-  popoverSize = 300,
+  popoverSize = 400,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [isHovering, setIsHovering] = useState(false);
