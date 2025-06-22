@@ -14,8 +14,6 @@ type PopoverProps = {
   position?: Position;
   dismissible?: boolean;
   appendTo?: HTMLElement | null;
-  ariaLabel?: string;
-  ariaLabelledBy?: string;
   autoWidth?: boolean;
   children: React.ReactNode;
 };
@@ -27,8 +25,6 @@ export function Popover({
   position = 'bottom',
   dismissible = true,
   appendTo = typeof document !== 'undefined' ? document.body : null,
-  ariaLabel,
-  ariaLabelledBy,
   autoWidth,
   children,
 }: PopoverProps) {
@@ -53,6 +49,7 @@ export function Popover({
           top = targetRect.top - popoverRect.height - GAP;
           left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
           if (top < 0) {
+            // if got beyond the window size
             top = targetRect.bottom + GAP;
           }
           break;
@@ -103,6 +100,7 @@ export function Popover({
     };
   }, [open, position, targetRef]);
 
+  // Close popover when click outside
   useEffect(() => {
     if (!open || !dismissible) return;
 
@@ -134,13 +132,6 @@ export function Popover({
     };
   }, [open, dismissible, onClose, targetRef]);
 
-  useEffect(() => {
-    if (!open) return;
-    const onScroll = () => onClose?.();
-    window.addEventListener('scroll', onScroll, true);
-    return () => window.removeEventListener('scroll', onScroll, true);
-  }, [open, onClose]);
-
   if (!open || !appendTo) return null;
 
   return ReactDOM.createPortal(
@@ -148,8 +139,8 @@ export function Popover({
       ref={popoverRef}
       role="dialog"
       aria-modal="true"
-      aria-label={ariaLabel}
-      aria-labelledby={ariaLabelledBy}
+      aria-label="popover"
+      aria-labelledby="popover"
       style={style}
       className={clsx(autoWidth && styles.autoWidth, styles.popover)}
       onClick={(e) => e.stopPropagation()}
