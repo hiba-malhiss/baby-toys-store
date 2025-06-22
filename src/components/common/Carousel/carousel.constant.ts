@@ -1,8 +1,4 @@
 import {
-  faChevronCircleDown,
-  faChevronCircleLeft,
-  faChevronCircleRight,
-  faChevronCircleUp,
   faChevronDown,
   faChevronLeft,
   faChevronRight,
@@ -10,24 +6,12 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 export const ChevronIcons = {
-  overlay: {
-    horizontal: {
-      prev: faChevronCircleLeft,
-      next: faChevronCircleRight,
-    },
-    vertical: {
-      prev: faChevronCircleUp,
-      next: faChevronCircleDown,
-    },
+  horizontal: {
+    prev: faChevronLeft,
+    next: faChevronRight,
   },
-  side: {
-    horizontal: {
-      prev: faChevronLeft,
-      next: faChevronRight,
-    },
-    vertical: {
-      prev: faChevronUp,
-      next: faChevronDown,
-    },
+  vertical: {
+    prev: faChevronUp,
+    next: faChevronDown,
   },
 };

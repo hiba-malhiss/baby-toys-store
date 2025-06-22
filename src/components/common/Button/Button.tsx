@@ -2,20 +2,13 @@ import React, { type MouseEventHandler } from 'react';
 import styles from './button.module.scss';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { appearanceClassMap, sizeClassMap } from './button.constants.ts';
 import { Icon } from '../Icon/Icon.tsx';
 
 export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
 type ButtonProps = {
   children?: React.ReactNode;
-  appearance?:
-    | 'link'
-    | 'light-link'
-    | 'primary'
-    | 'primary-link'
-    | 'primary2'
-    | 'primary2-link'
-    | 'secondary';
+  appearance?: 'link' | 'filled' | 'outline';
+  color?: 'primary' | 'accent' | 'secondary' | 'light' | 'icon' | 'highlighted';
   size?: ButtonSize;
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
@@ -30,7 +23,8 @@ type ButtonProps = {
 
 export const Button: React.FC<ButtonProps> = ({
   children,
-  appearance = 'primary',
+  appearance = 'filled',
+  color = 'primary',
   size = 'medium',
   leftIcon,
   rightIcon,
@@ -44,9 +38,10 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   const calculatedClassName = clsx(
     styles.button,
-    appearanceClassMap[appearance],
-    sizeClassMap[size],
     isRounded && styles.isRounded,
+    styles['button--' + size + 'Size'],
+    styles['button--' + color + 'Color'],
+    styles['button--' + appearance + 'Appearance'],
     isDisabled && styles.isDisabled,
     withoutPadding && styles.buttonNoPadding,
     withoutAutoHeight && styles.buttonAutoHeight,

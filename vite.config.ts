@@ -28,7 +28,7 @@ export default defineConfig({
   },
   css: {
     modules: {
-      localsConvention: 'camelCaseOnly', // allows styles.myClass from .my-class
+      localsConvention: 'camelCase', // allows styles.myClass from .my-class
     },
     preprocessorOptions: {
       scss: {

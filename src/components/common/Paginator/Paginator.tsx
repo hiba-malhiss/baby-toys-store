@@ -43,7 +43,8 @@ export function Paginator({
         onClick={() => gotoPage(currentPage - 1)}
         isDisabled={currentPage <= 1}
         leftIcon={faChevronLeft}
-        appearance="link"
+        appearance="outline"
+        isRounded
         className={styles.paginationButton}
       />
       {Array.from({ length: totalPages }, (_, i) => {
@@ -51,10 +52,11 @@ export function Paginator({
         return (
           <Button
             key={pageNum}
+            appearance="outline"
+            isRounded
             onClick={() => gotoPage(pageNum)}
-            className={clsx(styles.paginationButton, {
-              [styles.paginationActiveButton]: currentPage === pageNum,
-            })}
+            className={clsx(styles.paginationButton)}
+            isSelected={currentPage === pageNum}
           >
             {pageNum}
           </Button>
@@ -64,7 +66,8 @@ export function Paginator({
         onClick={() => gotoPage(currentPage + 1)}
         isDisabled={currentPage >= totalPages}
         leftIcon={faChevronRight}
-        appearance="link"
+        appearance="outline"
+        isRounded
         className={styles.paginationButton}
       />
     </div>

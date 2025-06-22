@@ -74,7 +74,10 @@ src/
 - All CSS classes follow the [SUIT CSS](https://suitcss.github.io/) convention for clarity and scalability.
 - Example: `.button`, `.button--primary`, `.banner-Wrapper-center`
 - Class names are exported as camelCase in JS/TS via Vite’s `localsConvention: 'camelCaseOnly'` setting.
-
+-  ComponentName
+-  ComponentName--modifier
+-  ComponentName-descendant
+-  ComponentName.is-state
 ---
 
 ## Customization

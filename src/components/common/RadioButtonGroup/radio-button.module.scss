@@ -21,11 +21,11 @@
     color: $color-black;
 
     &.isSelected {
-      background-color: $color-bg-radio-selected;
+      background-color: $color-accent-light;
     }
 
     &:hover {
-      background-color: $color-bg-radio-hover;
+      background-color: $color-accent-light-hover;
     }
   }
 

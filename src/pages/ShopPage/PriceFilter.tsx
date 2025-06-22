@@ -22,7 +22,7 @@ const PriceFilter: React.FC<CategoryFilterProps> = ({ onApply }) => {
         onChange={(val: [number, number]) => setPriceRange(val)}
       />
       <Button
-        appearance="primary"
+        appearance="filled"
         size="large"
         isRounded={false}
         className={styles.shopPagePriceFilterBtn}

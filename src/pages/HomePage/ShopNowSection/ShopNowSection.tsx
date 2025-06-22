@@ -15,7 +15,7 @@ const ShopNowSection = () => {
         <span className={styles.shopNowSectionSubTitle}>
           Crafting smiles with every toy, made for learning, fun, and growth
         </span>
-        <Button size="xlarge" appearance="primary2" isRounded>
+        <Button size="xlarge" appearance="filled" color="accent" isRounded>
           Shop now
         </Button>
       </Flex>

@@ -16,7 +16,8 @@ const Footer = () => {
           {socialMediaLinks.map(({ icon, url }) => (
             <Button
               key={icon.iconName}
-              appearance="primary2"
+              appearance="filled"
+              color="accent"
               leftIcon={icon}
               onClick={() => console.log(url)}
             />
@@ -52,7 +53,8 @@ const Footer = () => {
                   key={item.label}
                   withoutPadding
                   size="small"
-                  appearance="primary-link"
+                  appearance="link"
+                  color="highlighted"
                   onClick={() => {}}
                 >
                   {item.value}

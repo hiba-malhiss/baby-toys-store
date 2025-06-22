@@ -37,16 +37,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
       direction={direction}
     >
       {direction === 'vertical' && (
-        <Button leftIcon={faCartShopping} appearance="primary2-link" size="xlarge" />
+        <Button leftIcon={faCartShopping} appearance="link" color="secondary" size="xlarge" />
       )}
       {direction === 'horizontal' && (
-        <Button leftIcon={faCartShopping} appearance="primary" size="large">
+        <Button leftIcon={faCartShopping} size="large">
           Add to cart
         </Button>
       )}
       <Button
         leftIcon={faHeart}
-        appearance="primary2-link"
+        appearance={direction === 'horizontal' ? 'outline' : 'link'}
+        color="icon"
         size="xlarge"
         isSelected={product.isFavorite}
         onClick={(e) => {

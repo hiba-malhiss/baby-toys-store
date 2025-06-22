@@ -34,7 +34,13 @@ export const Nav: React.FC<NavProps> = ({ config, isActivePath }) => {
             className={() => clsx(isActive && 'active')}
             end={!isActivePath}
           >
-            <Button appearance="link" size="medium" leftIcon={icon} isSelected={isActive}>
+            <Button
+              appearance="link"
+              color="primary"
+              size="medium"
+              leftIcon={icon}
+              isSelected={isActive}
+            >
               {label}
             </Button>
           </NavLink>

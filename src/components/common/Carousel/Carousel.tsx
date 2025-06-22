@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './carousel.module.scss';
-import { Button, type ButtonSize } from '../Button/Button.tsx';
+import { Button } from '../Button/Button.tsx';
 import clsx from 'clsx';
 import { ChevronIcons } from './carousel.constant.ts';
 
@@ -13,7 +13,6 @@ interface CarouselProps {
   autoplayInterval?: number;
   itemTemplate: (item: any) => React.ReactNode;
   className?: string;
-  navigationSize?: ButtonSize;
   showNavigation?: boolean;
   responsiveOptions?: { breakpoint: string; numVisible: number }[];
   navigationStyle?: 'overlay' | 'side';
@@ -30,7 +29,6 @@ const Carousel: React.FC<CarouselProps> = ({
   className = '',
   showNavigation = true,
   navigationStyle = 'overlay',
-  navigationSize = 'xxlarge',
   responsiveOptions = [],
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -147,9 +145,10 @@ const Carousel: React.FC<CarouselProps> = ({
         <Button
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonPrev)}
           onClick={prevSlide}
-          appearance="link"
-          size={navigationSize}
-          leftIcon={ChevronIcons[navigationStyle][orientation].prev}
+          appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
+          size="large"
+          isRounded
+          leftIcon={ChevronIcons[orientation].prev}
           isDisabled={!circular && currentPage === 0}
         />
       )}
@@ -181,9 +180,11 @@ const Carousel: React.FC<CarouselProps> = ({
         <Button
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
           onClick={nextSlide}
-          appearance="link"
-          size={navigationSize}
-          leftIcon={ChevronIcons[navigationStyle][orientation].next}
+          appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
+          color="secondary"
+          isRounded
+          size="large"
+          leftIcon={ChevronIcons[orientation].next}
           isDisabled={!circular && currentPage === totalPages - 1}
         />
       )}

@@ -21,7 +21,6 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({ images, productName 
         navigationStyle="side"
         items={images}
         numVisible={3}
-        navigationSize="medium"
         orientation="horizontal"
         responsiveOptions={[
           { breakpoint: '900', numVisible: 3 },

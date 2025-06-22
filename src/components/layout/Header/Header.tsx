@@ -32,10 +32,10 @@ const Header = () => {
           <span>Free free shipping with over $150</span>
         </Flex>
         <Flex spacing="xxxxl">
-          <Button withoutPadding appearance="light-link">
+          <Button withoutPadding appearance="link" color="light">
             Login
           </Button>
-          <Button withoutPadding appearance="light-link">
+          <Button withoutPadding appearance="link" color="light">
             Register
           </Button>
         </Flex>

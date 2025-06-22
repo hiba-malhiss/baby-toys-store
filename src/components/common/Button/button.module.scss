@@ -1,6 +1,7 @@
-@mixin bts-button-default($color, $background) {
+@mixin bts-button-default($color, $background, $border : transparent) {
   background-color: $background;
   color: $color;
+  border-color: $border;
 }
 
 @mixin bts-button-active($color, $background) {
@@ -14,7 +15,7 @@
   &.is-selected {
     background-color: $background;
     color: $color;
-    //border-color: $border;
+    border-color: $border;
   }
 }
 
@@ -22,7 +23,7 @@
   &:hover:not(.is-disabled):not(.is-selected):not(.has-error) {
     background-color: $background;
     color: $color;
-    //border-color: $border;
+    border-color: $border;
     text-decoration-color: $text-underline-decoration;
 
     .button-icon {
@@ -35,7 +36,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: none;
+  border: 1px solid transparent;
   cursor: pointer;
   transition: background 0.3s ease, color 0.3s ease;
   gap: 0.5rem;
@@ -47,44 +48,7 @@
     }
   }
 
-  &--primary {
-    @include bts-button-default($color-white, $color-primary-dark);
-    @include bts-button-hover($color-white, $color-primary-hover);
-  }
-
-  &--primary2 {
-    @include bts-button-default($color-white, $color-primary2);
-    @include bts-button-hover($color-white, $color-primary2-hover);
-  }
-
-  &--secondary {
-    @include bts-button-default($color-white, $color-secondary);
-    @include bts-button-hover($color-white, $color-secondary-hover);
-  }
-
-  &--link {
-    @include bts-button-default($color-text-grey, transparent);
-    @include bts-button-hover($color-primary-dark, transparent);
-    @include bts-button-selected($color-primary-dark, transparent);
-  }
-
-  &--primaryLink {
-    @include bts-button-default($color-primary-dark, transparent);
-    @include bts-button-hover($color-primary-hover, transparent);
-  }
-
-  &--lightLink {
-    @include bts-button-default($color-white, transparent);
-    @include bts-button-hover($color-link-hover, transparent);
-  }
-
-  &--primary2Link {
-    @include bts-button-default($color-icon, transparent);
-    @include bts-button-hover($color-primary2-hover, transparent);
-    @include bts-button-selected($color-primary2-hover, transparent);
-  }
-
-
+  /* Sizes */
   &--largeSize {
     font-size: 16px;
     height: 48px;
@@ -206,5 +170,104 @@
     opacity: 0.5;
     cursor: not-allowed;
   }
+}
 
+/* Appearance and color */
+$appearances: (
+    link: (
+        primary: (
+            text-default: $color-text-grey,
+            text-hover: $color-primary-hover,
+            text-selected: $color-primary-dark,
+        ),
+        light: (
+            text-default: $color-white,
+            text-hover: $color-accent-light-hover,
+        ),
+        icon: (
+            text-default: $color-secondary,
+            text-hover: $color-accent-hover,
+            text-selected: $color-accent-hover,
+        ),
+        secondary: (
+            text-default: $color-secondary,
+            text-hover: $color-secondary,
+        ),
+        highlighted: (
+            text-default: $color-primary-dark,
+            text-hover: $color-primary-hover,
+        )
+    ),
+    outline: (
+        primary: (
+            text-default: $color-text-primary,
+            border-default: $color-border,
+            text-hover: $color-white,
+            bg-hover: $color-primary-dark,
+            border-hover: $color-primary-dark,
+            text-selected: $color-white,
+            bg-selected: $color-primary-dark,
+            border-selected: $color-primary-dark,
+        ),
+        secondary: (
+            text-default: $color-secondary,
+            text-hover: $color-primary-dark,
+            border-default: $color-secondary,
+            border-hover: $color-primary-dark,
+        ),
+        icon: (
+            text-default: $color-secondary,
+            text-hover: $color-accent-hover,
+            border-default: $color-secondary,
+            border-hover: $color-accent-hover,
+        )
+    ),
+    filled: (
+        primary: (
+            text-default: $color-white,
+            text-hover: $color-white,
+            text-selected: $color-white,
+            bg-default: $color-primary,
+            bg-hover: $color-primary-hover,
+            bg-selected: $color-primary-dark,
+        ),
+        accent: (
+            text-default: $color-white,
+            text-hover: $color-white,
+            text-selected: $color-white,
+            bg-default: $color-accent,
+            bg-hover: $color-accent-hover,
+            bg-selected: $color-accent-hover,
+        ),
+        secondary: (
+            text-default: $color-white,
+            bg-default: $color-secondary,
+            bg-hover: $color-secondary-hover,
+        ),
+    ),
+);
+
+
+@each $appearance, $colorsMap in $appearances {
+  @each $colorName, $styleMap in $colorsMap {
+    .button--#{$colorName}Color.button--#{$appearance}Appearance {
+      @include bts-button-default(
+              map-get($styleMap, text-default),
+              map-get($styleMap, bg-default),
+              map-get($styleMap, border-default)
+      );
+
+      @include bts-button-hover(
+              map-get($styleMap, text-hover),
+              map-get($styleMap, bg-hover),
+              map-get($styleMap, border-hover)
+      );
+
+      @include bts-button-selected(
+              map-get($styleMap, text-selected),
+              map-get($styleMap, bg-selected),
+              map-get($styleMap, border-selected)
+      );
+    }
+  }
 }
