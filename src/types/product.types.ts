@@ -1,15 +1,20 @@
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 export type Product = {
-  label?: string;
-  imageSrc: string;
-  name: string;
-  price: string;
   id: string;
+  name: string;
+  mainImage: string;
+  images: string[];
+  currency: string;
+  price: number;
+  oldPrice?: number;
+  label?: 'SALE' | 'NEW' | string;
   rating: number;
-  oldPrice?: string;
-  description?: string;
+  numberOfRatings: number;
   isFavorite?: boolean;
+  description?: string;
+  featureBullets?: string[];
+  details?: { label: string; value: string }[];
 };
 
 export interface Feedback {

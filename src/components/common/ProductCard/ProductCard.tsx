@@ -76,7 +76,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
 
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
-          <img src={product.imageSrc} alt={product.name} />
+          <img src={product.mainImage} alt={product.name} />
         </div>
       </Card>
       <div className={styles.productCardInfo}>
@@ -90,9 +90,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
             product.oldPrice && styles.productCardWithDiscount
           )}
         >
-          <span className={styles.productCardInfoPriceNew}>{product.price}</span>
+          <span className={styles.productCardInfoPriceNew}>{product.price + product.currency}</span>
           {product.oldPrice && (
-            <span className={styles.productCardInfoPriceOld}>{product.oldPrice}</span>
+            <span className={styles.productCardInfoPriceOld}>
+              {product.oldPrice + product.currency}
+            </span>
           )}
         </div>
         <Rating value={product.rating} />
