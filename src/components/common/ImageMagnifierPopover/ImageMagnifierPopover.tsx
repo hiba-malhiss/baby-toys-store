@@ -33,9 +33,11 @@ const ImageMagnifierPopover: React.FC<Props> = ({
     const rect = containerRef.current?.getBoundingClientRect();
     if (!rect) return;
 
+    // get  mouse position relative to image
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
 
+    // make sure mouse position is at the center of the lens
     const clampedX = Math.max(Math.min(x, dimensions.width - lensSize / 2), lensSize / 2);
     const clampedY = Math.max(Math.min(y, dimensions.height - lensSize / 2), lensSize / 2);
 

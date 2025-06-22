@@ -1,18 +1,20 @@
 .imageMagnifierPopover {
   position: relative;
   display: inline-block;
+  height: 100%;
+  width: 100%;
 
   &-container {
     position: relative;
+    height: 100%;
     width: 100%;
     display: block;
   }
 
   &-image {
+    height: 100%;
     width: 100%;
-    height: auto;
-    display: block;
-    object-fit: cover;
+    object-fit: contain;
   }
 
   &-lens {
@@ -22,5 +24,4 @@
     background-color: rgba(255, 255, 255, 0.3);
     z-index: 2;
   }
-
 }
