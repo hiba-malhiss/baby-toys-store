@@ -1,13 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-import {
-  faChevronCircleDown,
-  faChevronCircleUp,
-  faChevronCircleLeft,
-  faChevronCircleRight,
-} from '@fortawesome/free-solid-svg-icons';
 import styles from './carousel.module.scss';
-import { Button } from '../Button/Button.tsx';
+import { Button, type ButtonSize } from '../Button/Button.tsx';
 import clsx from 'clsx';
+import { ChevronIcons } from './carousel.constant.ts';
 
 interface CarouselProps {
   items: any[];
@@ -18,8 +13,10 @@ interface CarouselProps {
   autoplayInterval?: number;
   itemTemplate: (item: any) => React.ReactNode;
   className?: string;
+  navigationSize?: ButtonSize;
   showNavigation?: boolean;
   responsiveOptions?: { breakpoint: string; numVisible: number }[];
+  navigationStyle?: 'overlay' | 'side';
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -32,9 +29,11 @@ const Carousel: React.FC<CarouselProps> = ({
   itemTemplate,
   className = '',
   showNavigation = true,
+  navigationStyle = 'overlay',
+  navigationSize = 'xxlarge',
   responsiveOptions = [],
 }) => {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [visible, setVisible] = useState(numVisible);
   const intervalRef = useRef<any>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
@@ -60,14 +59,14 @@ const Carousel: React.FC<CarouselProps> = ({
 
   const goToIndex = (newIndex: number) => {
     if (circular) {
-      setCurrentIndex((newIndex + totalPages) % totalPages);
+      setCurrentPage((newIndex + totalPages) % totalPages);
     } else {
-      setCurrentIndex(Math.max(0, Math.min(newIndex, totalPages - 1)));
+      setCurrentPage(Math.max(0, Math.min(newIndex, totalPages - 1)));
     }
   };
 
-  const nextSlide = () => goToIndex(currentIndex + 1);
-  const prevSlide = () => goToIndex(currentIndex - 1);
+  const nextSlide = () => goToIndex(currentPage + 1);
+  const prevSlide = () => goToIndex(currentPage - 1);
 
   // Autoplay functionality
   useEffect(() => {
@@ -77,7 +76,7 @@ const Carousel: React.FC<CarouselProps> = ({
         if (intervalRef.current) clearInterval(intervalRef.current);
       };
     }
-  }, [autoplayInterval, currentIndex]);
+  }, [autoplayInterval, currentPage]);
 
   // Pause autoplay on hover
   const handleMouseEnter = () => {
@@ -118,7 +117,7 @@ const Carousel: React.FC<CarouselProps> = ({
   };
 
   const getTransform = () => {
-    const percentage = (currentIndex * 100) / visible;
+    const percentage = (currentPage * 100) / visible;
     return orientation === 'horizontal'
       ? `translateX(-${percentage}%)`
       : `translateY(-${percentage}%)`;
@@ -134,6 +133,7 @@ const Carousel: React.FC<CarouselProps> = ({
       className={clsx(
         styles.carousel,
         orientation === 'vertical' && styles.carouselVertical,
+        navigationStyle === 'side' && styles.carouselSideNav,
         className
       )}
       style={{ height: orientation === 'vertical' ? verticalViewPortHeight : 'auto' }}
@@ -143,52 +143,50 @@ const Carousel: React.FC<CarouselProps> = ({
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      <div className={styles.carouselContent}>
-        {showNavigation && (
-          <Button
-            className={clsx(styles.carouselNavButton, styles.carouselNavButtonPrev)}
-            onClick={prevSlide}
-            appearance="link"
-            size="xxlarge"
-            leftIcon={orientation === 'horizontal' ? faChevronCircleLeft : faChevronCircleUp}
-            isDisabled={!circular && currentIndex === 0}
-          />
-        )}
+      {showNavigation && (
+        <Button
+          className={clsx(styles.carouselNavButton, styles.carouselNavButtonPrev)}
+          onClick={prevSlide}
+          appearance="link"
+          size={navigationSize}
+          leftIcon={ChevronIcons[navigationStyle][orientation].prev}
+          isDisabled={!circular && currentPage === 0}
+        />
+      )}
 
-        <div className={styles.carouselViewport}>
-          <div
-            className={styles.carouselTrack}
-            style={{
-              transform: getTransform(),
-              flexDirection: orientation === 'vertical' ? 'column' : 'row',
-            }}
-          >
-            {items.map((item, index) => (
-              <div
-                key={index}
-                className={styles.carouselItem}
-                style={{
-                  [orientation === 'horizontal' ? 'width' : 'height']: getItemSize(),
-                  flexShrink: 0,
-                }}
-              >
-                {itemTemplate(item)}
-              </div>
-            ))}
-          </div>
+      <div className={styles.carouselViewport}>
+        <div
+          className={styles.carouselTrack}
+          style={{
+            transform: getTransform(),
+            flexDirection: orientation === 'vertical' ? 'column' : 'row',
+          }}
+        >
+          {items.map((item, index) => (
+            <div
+              key={index}
+              className={styles.carouselItem}
+              style={{
+                [orientation === 'horizontal' ? 'width' : 'height']: getItemSize(),
+                flexShrink: 0,
+              }}
+            >
+              {itemTemplate(item)}
+            </div>
+          ))}
         </div>
-
-        {showNavigation && (
-          <Button
-            className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
-            onClick={nextSlide}
-            appearance="link"
-            size="xxlarge"
-            leftIcon={orientation === 'horizontal' ? faChevronCircleRight : faChevronCircleDown}
-            isDisabled={!circular && currentIndex === totalPages - 1}
-          />
-        )}
       </div>
+
+      {showNavigation && (
+        <Button
+          className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
+          onClick={nextSlide}
+          appearance="link"
+          size={navigationSize}
+          leftIcon={ChevronIcons[navigationStyle][orientation].next}
+          isDisabled={!circular && currentPage === totalPages - 1}
+        />
+      )}
     </div>
   );
 };

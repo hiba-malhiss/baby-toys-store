@@ -5,10 +5,11 @@ import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { appearanceClassMap, sizeClassMap } from './button.constants.ts';
 import { Icon } from '../Icon/Icon.tsx';
 
+export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
 type ButtonProps = {
   children?: React.ReactNode;
   appearance?: 'link' | 'light-link' | 'primary' | 'primary-link' | 'secondary' | 'secondary-link';
-  size?: 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
+  size?: ButtonSize;
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
   onClick?: MouseEventHandler<HTMLButtonElement>;
