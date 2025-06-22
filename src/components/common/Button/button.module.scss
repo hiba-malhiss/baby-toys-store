@@ -52,6 +52,11 @@
     @include bts-button-hover($color-white, $color-primary-hover);
   }
 
+  &--primary2 {
+    @include bts-button-default($color-white, $color-primary2);
+    @include bts-button-hover($color-white, $color-primary2-hover);
+  }
+
   &--secondary {
     @include bts-button-default($color-white, $color-secondary);
     @include bts-button-hover($color-white, $color-secondary-hover);
@@ -73,10 +78,10 @@
     @include bts-button-hover($color-link-hover, transparent);
   }
 
-  &--secondaryLink {
+  &--primary2Link {
     @include bts-button-default($color-icon, transparent);
-    @include bts-button-hover($color-secondary-hover, transparent);
-    @include bts-button-selected($color-secondary-hover, transparent);
+    @include bts-button-hover($color-primary2-hover, transparent);
+    @include bts-button-selected($color-primary2-hover, transparent);
   }
 
 
@@ -159,7 +164,7 @@
     }
   }
 
-  &--xlargeSize,  &--xxlargeSize {
+  &--xlargeSize, &--xxlargeSize {
     font-size: 20px;
     height: 48px;
 

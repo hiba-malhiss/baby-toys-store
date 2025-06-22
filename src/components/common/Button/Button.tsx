@@ -8,7 +8,14 @@ import { Icon } from '../Icon/Icon.tsx';
 export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
 type ButtonProps = {
   children?: React.ReactNode;
-  appearance?: 'link' | 'light-link' | 'primary' | 'primary-link' | 'secondary' | 'secondary-link';
+  appearance?:
+    | 'link'
+    | 'light-link'
+    | 'primary'
+    | 'primary-link'
+    | 'primary2'
+    | 'primary2-link'
+    | 'secondary';
   size?: ButtonSize;
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;

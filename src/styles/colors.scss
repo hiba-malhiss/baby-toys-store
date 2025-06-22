@@ -1,12 +1,17 @@
-// Primary brand colors
+@use "sass:color";
+
+// Primary brand colors => from logo
 $color-primary: #1096B5;
 $color-primary-dark: #0F83B2;
 $color-primary-hover: #0a6487;
 
-$color-secondary: #F26C62;
-$color-secondary-hover: #d9574f;
+$color-primary2: #F26C62;
+$color-primary2-hover: #d9574f;
 
-$color-ternary: #E87B16;
+$color-primary3: #E87B16;
+
+$color-secondary: #7f7f7f;
+$color-secondary-hover: color.adjust($color-secondary, $lightness: 8%);
 
 $color-success: #25BF0C;
 $color-info: #12AEE0;
@@ -30,7 +35,6 @@ $color-text-light: #fff;
 $color-text-dark: #101010;
 $color-text-grey: #333333;
 $color-text-grey-light: #555555;
-$color-text-grey-medium: #7f7f7f;
 
 $color-text-avatar: #5C5C5C;
 $color-text-feedback: #4A4748;

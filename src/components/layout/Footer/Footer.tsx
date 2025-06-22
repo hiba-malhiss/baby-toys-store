@@ -16,7 +16,7 @@ const Footer = () => {
           {socialMediaLinks.map(({ icon, url }) => (
             <Button
               key={icon.iconName}
-              appearance="secondary"
+              appearance="primary2"
               leftIcon={icon}
               onClick={() => console.log(url)}
             />

@@ -19,7 +19,7 @@ const NotFoundPage: React.FC = () => {
         Oops! We could’t find that page. Maybe it rolled under the toy shelf?
       </div>
       <Link to="/">
-        <Button appearance="secondary">Back to Home</Button>
+        <Button appearance="primary2">Back to Home</Button>
       </Link>
     </Flex>
   );

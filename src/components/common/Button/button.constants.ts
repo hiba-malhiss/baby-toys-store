@@ -2,11 +2,12 @@ import styles from './button.module.scss';
 
 export const appearanceClassMap = {
   primary: styles.buttonPrimary,
+  primary2: styles.buttonPrimary2,
   secondary: styles.buttonSecondary,
   link: styles.buttonLink,
   'light-link': styles.buttonLightLink,
   'primary-link': styles.buttonPrimaryLink,
-  'secondary-link': styles.buttonSecondaryLink,
+  'primary2-link': styles.buttonPrimary2Link,
 };
 
 export const sizeClassMap = {

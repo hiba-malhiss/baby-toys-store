@@ -37,7 +37,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       direction={direction}
     >
       {direction === 'vertical' && (
-        <Button leftIcon={faCartShopping} appearance="secondary-link" size="xlarge" />
+        <Button leftIcon={faCartShopping} appearance="primary2-link" size="xlarge" />
       )}
       {direction === 'horizontal' && (
         <Button leftIcon={faCartShopping} appearance="primary" size="large">
@@ -46,7 +46,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
       <Button
         leftIcon={faHeart}
-        appearance="secondary-link"
+        appearance="primary2-link"
         size="xlarge"
         isSelected={product.isFavorite}
         onClick={(e) => {
