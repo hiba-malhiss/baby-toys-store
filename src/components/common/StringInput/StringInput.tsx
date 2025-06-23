@@ -1,7 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './string-input.module.scss';
 import { Icon } from '../Icon/Icon.tsx';
+import { Button } from '../Button/Button.tsx';
+import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 
 export type IconPosition = 'left' | 'right';
 export type StringInputSize = 'small' | 'medium' | 'large';
@@ -22,6 +24,7 @@ interface StringInputProps {
   size?: StringInputSize;
   fullWidth?: boolean;
   hasError?: boolean;
+  withControls?: boolean;
 }
 
 export const StringInput: React.FC<StringInputProps> = ({
@@ -40,8 +43,32 @@ export const StringInput: React.FC<StringInputProps> = ({
   hasError = false,
   isRounded = false,
   withIconBackground = false,
+  withControls = false,
 }) => {
-  const inputRef = useRef<HTMLInputElement>(null);
+  const [internalValue, setInternalValue] = useState(value ?? min ?? '');
+
+  useEffect(() => {
+    if (value !== undefined && value !== internalValue) {
+      setInternalValue(value);
+    }
+  }, [value]);
+
+  const handleChange = (newVal: string) => {
+    setInternalValue(newVal);
+    onChange?.(newVal);
+  };
+
+  const handleStep = (step: number) => {
+    if (isDisabled) return;
+
+    const current = parseFloat(internalValue || min || '0');
+    const next = current + step;
+    const minVal = min ? parseFloat(min) : undefined;
+
+    if (typeof minVal === 'number' && next < minVal) return;
+
+    handleChange(next.toString());
+  };
 
   const containerClass = clsx(
     styles.stringInput,
@@ -49,7 +76,9 @@ export const StringInput: React.FC<StringInputProps> = ({
     styles[`stringInput--${iconPosition}Icon`],
     isRounded && styles.isRounded,
     {
+      [styles.stringWithControls]: withControls,
       [styles.stringInputFullWidth]: fullWidth,
+      [styles.stringInputWithControls]: type === 'number' && withControls,
     }
   );
 
@@ -67,17 +96,47 @@ export const StringInput: React.FC<StringInputProps> = ({
 
   return (
     <div className={containerClass}>
+      {type === 'number' && withControls && (
+        <Button
+          appearance="link"
+          color="secondary"
+          onClick={(e) => {
+            handleStep(-1);
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          leftIcon={faMinus}
+          isDisabled={isDisabled}
+          className={styles.stringInputDecreaseControl}
+        />
+      )}
+
       <input
-        ref={inputRef}
         type={type}
         min={min}
         step="any"
         disabled={isDisabled}
         placeholder={placeholder}
-        value={value}
-        onChange={(e) => onChange?.(e.target.value)}
+        value={internalValue}
+        onChange={(e) => handleChange(e.target.value)}
         className={inputClass}
       />
+
+      {type === 'number' && withControls && (
+        <Button
+          appearance="link"
+          color="secondary"
+          onClick={(e) => {
+            handleStep(1);
+            e.stopPropagation();
+            e.preventDefault();
+          }}
+          leftIcon={faPlus}
+          isDisabled={isDisabled}
+          className={styles.stringInputIncreaseControl}
+        />
+      )}
+
       {icon && (
         <Icon
           icon={icon}

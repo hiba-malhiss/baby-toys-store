@@ -52,6 +52,26 @@
   align-items: center;
   justify-items: center;
   width: max-content;
+  position: relative;
+
+  &--withControls .input {
+    padding-left: 40px !important;
+    padding-right: 40px !important;
+  }
+
+  &--increaseControl {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 10;
+  }
+
+  &--decreaseControl {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 10;
+  }
 
   &--rightIcon {
     direction: rtl;
