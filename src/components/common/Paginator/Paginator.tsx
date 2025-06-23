@@ -53,6 +53,7 @@ export function Paginator({
           <Button
             key={pageNum}
             appearance="outline"
+            color="highlighted"
             isRounded
             onClick={() => gotoPage(pageNum)}
             className={clsx(styles.paginationButton)}

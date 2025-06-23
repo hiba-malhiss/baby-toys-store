@@ -200,16 +200,6 @@ $appearances: (
     ),
     outline: (
         primary: (
-            text-default: $color-text-primary,
-            border-default: $color-border,
-            text-hover: $color-white,
-            bg-hover: $color-primary-dark,
-            border-hover: $color-primary-dark,
-            text-selected: $color-white,
-            bg-selected: $color-primary-dark,
-            border-selected: $color-primary-dark,
-        ),
-        secondary: (
             text-default: $color-secondary,
             text-hover: $color-primary-dark,
             border-default: $color-secondary,
@@ -220,7 +210,17 @@ $appearances: (
             text-hover: $color-accent-hover,
             border-default: $color-secondary,
             border-hover: $color-accent-hover,
-        )
+        ),
+        highlighted: (
+            text-default: $color-secondary,
+            border-default: $color-border,
+            text-hover: $color-white,
+            bg-hover: $color-primary-dark,
+            border-hover: $color-primary-dark,
+            text-selected: $color-white,
+            bg-selected: $color-primary-dark,
+            border-selected: $color-primary-dark,
+        ),
     ),
     filled: (
         primary: (

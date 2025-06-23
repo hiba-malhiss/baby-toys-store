@@ -84,12 +84,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {isHorizontal && product.description && !isSmallSize && (
           <div className={styles.productCardInfoDescription}>{product.description}</div>
         )}
-        <div
-          className={clsx(
-            styles.productCardInfoPrice,
-            product.oldPrice && styles.productCardWithDiscount
-          )}
-        >
+        <div className={clsx(product.oldPrice && styles.productCardWithDiscount)}>
           <span className={styles.productCardInfoPriceNew}>{product.price + product.currency}</span>
           {product.oldPrice && (
             <span className={styles.productCardInfoPriceOld}>

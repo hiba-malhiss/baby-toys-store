@@ -181,7 +181,6 @@ const Carousel: React.FC<CarouselProps> = ({
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
           onClick={nextSlide}
           appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
-          color="secondary"
           isRounded
           size="large"
           leftIcon={ChevronIcons[orientation].next}
