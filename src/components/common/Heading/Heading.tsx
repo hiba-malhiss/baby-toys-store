@@ -28,9 +28,9 @@ const Heading: React.FC<HeadingProps> = ({
 
   const headingClassName = clsx(
     styles.heading,
-    styles[`heading-${align}Align`],
-    styles[`heading-${appearance}Appearance`],
-    styles[`heading-${level}Level`]
+    styles[`heading--${align}Align`],
+    styles[`heading--${appearance}Appearance`],
+    styles[`heading--${level}Level`]
   );
 
   return <Tag className={clsx(className, headingClassName)}>{children}</Tag>;

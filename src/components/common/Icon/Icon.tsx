@@ -15,7 +15,7 @@ interface IconProps {
 export const Icon = ({
   icon,
   size = IconSize.medium,
-  color = IconColor.primary,
+  color,
   isRotating = false,
   className,
 }: IconProps) => {
