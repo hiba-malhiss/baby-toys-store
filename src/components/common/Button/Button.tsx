@@ -52,11 +52,9 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button className={calculatedClassName} onClick={onClick} disabled={isDisabled}>
-      {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} color={null} />}
+      {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} />}
       {children}
-      {rightIcon && (
-        <Icon icon={rightIcon} className={styles.buttonIcon} size={size} color={null} />
-      )}
+      {rightIcon && <Icon icon={rightIcon} className={styles.buttonIcon} size={size} />}
     </button>
   );
 };

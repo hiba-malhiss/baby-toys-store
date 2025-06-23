@@ -1,5 +1,3 @@
-import styles from './icon.module.scss';
-
 export enum IconSize {
   small = 'small',
   medium = 'medium',
@@ -11,7 +9,7 @@ export enum IconSize {
 
 export enum IconColor {
   primary = 'primary',
-  ternary = 'ternary',
+  warningBrand = 'warning-brand',
   light = 'light',
   dark = 'dark',
   gray = 'gray',
@@ -19,24 +17,3 @@ export enum IconColor {
   info = 'info',
   success = 'success',
 }
-
-export const iconClassMap: Record<string, Record<string, string>> = {
-  color: {
-    [IconColor.primary]: styles.iconIconPrimaryColor,
-    [IconColor.light]: styles.iconIconLightColor,
-    [IconColor.dark]: styles.iconIconDarkColor,
-    [IconColor.gray]: styles.iconIconGrayColor,
-    [IconColor.warning]: styles.iconIconWarningColor,
-    [IconColor.success]: styles.iconIconSuccessColor,
-    [IconColor.info]: styles.iconIconInfoColor,
-    [IconColor.ternary]: styles.iconIconTernaryColor,
-  },
-  size: {
-    [IconSize.small]: styles.iconSmallSize,
-    [IconSize.medium]: styles.iconMediumSize,
-    [IconSize.large]: styles.iconLargeSize,
-    [IconSize.xlarge]: styles.iconXlargeSize,
-    [IconSize.xxlarge]: styles.iconXxlargeSize,
-    [IconSize.xxxlarge]: styles.iconXxxlargeSize,
-  },
-};

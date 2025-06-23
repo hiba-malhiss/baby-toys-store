@@ -1,11 +1,10 @@
 import React from 'react';
 import clsx from 'clsx';
 import styles from './heading.module.scss';
-import { alignClassMap, appearanceClassMap, levelClassMap } from './heading.constants';
 
-export type HeadingAlign = keyof typeof alignClassMap;
-export type HeadingAppearance = keyof typeof appearanceClassMap;
-export type HeadingLevel = keyof typeof levelClassMap;
+export type HeadingAlign = 'left' | 'center' | 'right';
+export type HeadingAppearance = 'dark' | 'light' | 'white';
+export type HeadingLevel = 'h0' | 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 interface HeadingProps {
   align?: HeadingAlign;
@@ -29,9 +28,9 @@ const Heading: React.FC<HeadingProps> = ({
 
   const headingClassName = clsx(
     styles.heading,
-    alignClassMap[align],
-    appearanceClassMap[appearance],
-    levelClassMap[level]
+    styles[`heading-${align}Align`],
+    styles[`heading-${appearance}Appearance`],
+    styles[`heading-${level}Level`]
   );
 
   return <Tag className={clsx(className, headingClassName)}>{children}</Tag>;

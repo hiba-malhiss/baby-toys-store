@@ -1,12 +1,6 @@
 import React, { useRef } from 'react';
 import clsx from 'clsx';
 import styles from './string-input.module.scss';
-import {
-  iconPosClassMap,
-  inputClassMap,
-  inputSizeClassMap,
-  sizeClassMap,
-} from './string-input.constants.ts';
 import { Icon } from '../Icon/Icon.tsx';
 
 export type IconPosition = 'left' | 'right';
@@ -51,9 +45,9 @@ export const StringInput: React.FC<StringInputProps> = ({
 
   const containerClass = clsx(
     styles.stringInput,
-    size && sizeClassMap[size],
+    styles[`stringInput--${size}Size`],
+    styles[`stringInput--${iconPosition}Icon`],
     isRounded && styles.isRounded,
-    iconPosition && iconPosClassMap[iconPosition],
     {
       [styles.stringInputFullWidth]: fullWidth,
     }
@@ -62,8 +56,8 @@ export const StringInput: React.FC<StringInputProps> = ({
   const inputClass = clsx(
     styles.input,
     className,
-    size && inputSizeClassMap[size],
-    inputClassMap[size + iconPosition],
+    styles[`input--${size}Size`],
+    styles[`${size}Size-${iconPosition}Icon`],
     {
       [styles.isDisabled]: isDisabled,
       [styles.hasIcon]: icon,

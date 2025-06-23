@@ -17,7 +17,7 @@ const appearanceClassMap: Record<string, string> = {
 
 const IconColor: Record<string, string> = {
   info: 'info',
-  warning: 'ternary',
+  warning: 'warning-brand',
   success: 'success',
 };
 

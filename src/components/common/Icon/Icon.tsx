@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { icon as faIcon } from '@fortawesome/fontawesome-svg-core';
 import clsx from 'clsx';
-import { iconClassMap, IconColor, IconSize } from './icon.constant.ts';
+import { IconColor, IconSize } from './icon.constant.ts';
 import styles from './icon.module.scss';
 
 interface IconProps {
@@ -28,7 +28,7 @@ export const Icon = ({
 
   const iconClass = useMemo(
     () =>
-      clsx(styles.icon, color && iconClassMap.color[color], size && iconClassMap.size[size], {
+      clsx(styles.icon, styles[`icon--${color}Color`], styles[`icon--${size}Size`], {
         [styles.isRotating]: isRotating,
       }),
     [color, size, isRotating]

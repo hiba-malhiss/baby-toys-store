@@ -39,35 +39,35 @@
     animation: faSpin 1s infinite linear;
   }
 
-  &--iconPrimaryColor {
+  &--primaryColor {
     color: $color-primary;
   }
 
-  &--iconLightColor {
+  &--lightColor {
     color: $color-white;
   }
 
-  &--iconDarkColor {
+  &--darkColor {
     color: $color-text-primary;
   }
 
-  &--iconGrayColor {
+  &--grayColor {
     color: $color-icon;
   }
 
-  &--iconInfoColor {
+  &--infoColor {
     color: $color-info;
   }
 
-  &--iconSuccessColor {
+  &--successColor {
     color: $color-success;
   }
 
-  &--iconWarningColor {
+  &--warningColor {
     color: $color-warning;
   }
 
-  &--iconTernaryColor {
+  &--warning-brandColor {
     color: $color-warning-brand;
   }
 }
