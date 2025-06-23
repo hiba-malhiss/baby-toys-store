@@ -24,7 +24,7 @@
   }
 
   &.is-disabled {
-    background-color: $color-disabled2;;
+    background-color: $color-disabled2;
     cursor: not-allowed;
   }
 }
@@ -54,25 +54,6 @@
   width: max-content;
   position: relative;
 
-  &--withControls .input {
-    padding-left: 40px !important;
-    padding-right: 40px !important;
-  }
-
-  &--increaseControl {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 10;
-  }
-
-  &--decreaseControl {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-  }
-
   &--rightIcon {
     direction: rtl;
   }
@@ -93,12 +74,34 @@
     }
   }
 
-  input[type='number']::-webkit-inner-spin-button,
-  input[type='number']::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+  &--withControls {
+    .input {
+      padding-left: 48px !important;
+      padding-right: 48px !important;
+    }
   }
 
+  // Control buttons (– / +)
+  &-decreaseControl,
+  &-increaseControl {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border-radius: 0;
+  }
+
+  &-decreaseControl {
+    left: 0;
+    border-right: 1px solid $color-border;
+  }
+
+  &-increaseControl {
+    right: 0;
+    border-left: 1px solid $color-border;
+  }
+
+  // Icon styles
   .icon--filled {
     height: 38px;
     width: 38px;
@@ -127,6 +130,7 @@
     }
   }
 
+  // Input styles
   .input {
     color: $color-text-primary;
     direction: ltr;
@@ -188,5 +192,11 @@
         padding-right: 28px;
       }
     }
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }

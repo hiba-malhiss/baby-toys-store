@@ -99,7 +99,7 @@ export const StringInput: React.FC<StringInputProps> = ({
       {type === 'number' && withControls && (
         <Button
           appearance="link"
-          color="secondary"
+          color="primary"
           onClick={(e) => {
             handleStep(-1);
             e.stopPropagation();
@@ -125,7 +125,7 @@ export const StringInput: React.FC<StringInputProps> = ({
       {type === 'number' && withControls && (
         <Button
           appearance="link"
-          color="secondary"
+          color="primary"
           onClick={(e) => {
             handleStep(1);
             e.stopPropagation();
