@@ -10,6 +10,12 @@
     }
   }
 
+  &--noneGap {
+    .container-list {
+      grid-row-gap: 0px;
+    }
+  }
+
   &-topBar {
     flex: 1;
   }

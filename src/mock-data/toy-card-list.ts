@@ -46,7 +46,7 @@ const generateRandomToys = (count = 19): Product[] => {
     const label = oldPrice ? 'SALE' : getRandom([undefined, 'NEW']);
 
     return {
-      id: `${name.replace(/\s+/g, '-').toLowerCase()}-${Math.floor(Math.random() * 10000)}`,
+      id: `${name.replace(/\s+/g, '-').toLowerCase()}`,
       name,
       mainImage: galleryImages[0],
       images: galleryImages,

@@ -17,7 +17,7 @@ export type ViewMode = 'grid' | 'list';
 type ViewSwitcherProps = {
   children: ReactNode[] | ReactNode;
   page?: number;
-  gap?: 'small';
+  gap?: 'small' | 'none';
   pageSize: number;
   minColWidth?: number;
   totalSize?: number;
@@ -116,7 +116,7 @@ export function ViewSwitcher({
   };
 
   return (
-    <div className={clsx(className, styles.container, gap === 'small' && styles.containerSmallGap)}>
+    <div className={clsx(className, styles.container, styles[`container--${gap}Gap`])}>
       {header && <Heading level="h1">{header}</Heading>}
 
       {!staticView && (
