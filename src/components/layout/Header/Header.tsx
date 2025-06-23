@@ -5,6 +5,7 @@ import { Button } from '../../common/Button/Button.tsx';
 import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Icon } from '../../common/Icon/Icon.tsx';
+import { CartButton } from '../../common/CartButton/CartButton.tsx';
 
 const navConfig = [
   { path: '/', label: 'Home' },
@@ -43,14 +44,17 @@ const Header = () => {
       <Flex className={styles.headerMain} justify="between" align="center" wrap fullWidth>
         <img src="/assets/images/logo.png" alt="logo" className={styles.headerLogo} />
         <Nav config={navConfig} isActivePath={isActivePath} />
-        <StringInput
-          placeholder="Search"
-          icon={faSearch}
-          isRounded
-          withIconBackground
-          iconColor="light"
-          iconPosition="right"
-        />
+        <Flex spacing="xxxl" align="center">
+          <CartButton itemCount={4} />
+          <StringInput
+            placeholder="Search"
+            icon={faSearch}
+            isRounded
+            withIconBackground
+            iconColor="light"
+            iconPosition="right"
+          />
+        </Flex>
       </Flex>
     </header>
   );
