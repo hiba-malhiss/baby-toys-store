@@ -1,0 +1,51 @@
+import React, { useState } from 'react';
+import styles from './order-summary.module.scss';
+import Flex from '../Flex/Flex';
+import CartItemCard from '../CartItemCard/CartItemCard';
+import { Divider } from '../Divider/Divider';
+import { TotalAmountSection } from './TotalAmountSection';
+
+export interface OrderItem {
+  image: string;
+  name: string;
+  price: number;
+  amount: number;
+}
+
+interface OrderSummaryProps {
+  items: OrderItem[];
+  shipping: number;
+  currency: string;
+}
+
+const OrderSummary: React.FC<OrderSummaryProps> = ({ items, shipping, currency }) => {
+  const [quantities, setQuantities] = useState<number[]>(items.map((item) => item.amount));
+
+  const handleAmountChange = (index: number, newVal: string) => {
+    const updated = [...quantities];
+    updated[index] = Math.max(parseInt(newVal) || 1, 1);
+    setQuantities(updated);
+  };
+
+  return (
+    <div className={styles.orderSummary}>
+      <Flex direction="vertical" spacing="xxl" fullWidth>
+        {items.map((item, index) => (
+          <React.Fragment key={index}>
+            <CartItemCard
+              image={item.image}
+              name={item.name}
+              price={item.price}
+              amount={quantities[index]}
+              onAmountChange={(val) => handleAmountChange(index, val)}
+            />
+            <Divider />
+          </React.Fragment>
+        ))}
+        <TotalAmountSection items={items} shipping={shipping} currency={currency} />
+      </Flex>
+    </div>
+  );
+};
+
+export default OrderSummary;
