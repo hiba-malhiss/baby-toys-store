@@ -1,0 +1,108 @@
+@use "sass:color";
+
+.drawer {
+  position: fixed;
+  background: $color-white;
+  z-index: 1050;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  box-shadow: $box-shadow-m;
+  display: flex;
+  flex-direction: column;
+  max-width: 450px;
+
+  &-header {
+    padding: 24px;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: space-between;
+    border-bottom: 1px solid $color-border;
+  }
+
+  &-footer {
+    box-shadow: 0 0 10px $color-border;
+    padding: 32px;
+  }
+
+  &-content {
+    flex: 1;
+    overflow: auto;
+    padding: 24px;
+  }
+
+  &-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba($color-black, 0.4);
+    z-index: 1040;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &.visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  &--left {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+
+    &.drawer--visible {
+      transform: translateX(0);
+    }
+  }
+
+  &--right {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    transform: translateX(100%);
+
+    &.drawer--visible {
+      transform: translateX(0);
+    }
+  }
+
+  &--top {
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    transform: translateY(-100%);
+
+    &.drawer--visible {
+      transform: translateY(0);
+    }
+  }
+
+  &--bottom {
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 300px;
+    transform: translateY(100%);
+
+    &.drawer--visible {
+      transform: translateY(0);
+    }
+  }
+
+  &--full {
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    transform: scale(0.95);
+
+    &.drawer--visible {
+      transform: scale(1);
+    }
+  }
+}
