@@ -9,7 +9,7 @@ export interface OrderItem {
   image: string;
   name: string;
   price: number;
-  amount: number;
+  quantity: number;
 }
 
 interface OrderSummaryProps {
@@ -19,7 +19,7 @@ interface OrderSummaryProps {
 }
 
 const OrderSummary: React.FC<OrderSummaryProps> = ({ items, shipping, currency }) => {
-  const [quantities, setQuantities] = useState<number[]>(items.map((item) => item.amount));
+  const [quantities, setQuantities] = useState<number[]>(items.map((item) => item.quantity));
 
   const handleAmountChange = (index: number, newVal: string) => {
     const updated = [...quantities];
@@ -36,7 +36,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, shipping, currency }
               image={item.image}
               name={item.name}
               price={item.price}
-              amount={quantities[index]}
+              quantity={quantities[index]}
               onAmountChange={(val) => handleAmountChange(index, val)}
             />
             <Divider />

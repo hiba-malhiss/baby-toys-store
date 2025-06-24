@@ -7,8 +7,8 @@ interface CartItemCardProps {
   image: string;
   name: string;
   price: number;
-  amount: number;
-  fullWidth: boolean;
+  quantity: number;
+  fullWidth?: boolean;
   onAmountChange: (val: string) => void;
 }
 
@@ -16,7 +16,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   image,
   name,
   price,
-  amount,
+  quantity,
   fullWidth,
   onAmountChange,
 }) => {
@@ -27,7 +27,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       <StringInput
         type="number"
         min={1}
-        value={amount}
+        value={quantity}
         withControls
         onChange={onAmountChange}
         className={styles.cartItemCardAmount}

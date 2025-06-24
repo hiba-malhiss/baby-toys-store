@@ -23,6 +23,17 @@
     }
   }
 
+
+  &--vertical {
+    .productCard-info {
+      gap: 6px;
+    }
+
+    .productCard-rating {
+      padding-top: 6px;
+    }
+  }
+
   &--horizontal {
     grid-template-columns: max-content 1fr;
     gap: 36px;
@@ -31,6 +42,7 @@
 
     .productCard-info {
       height: 100%;
+      padding: 8px 0;
     }
 
     .productCard-buttons {
@@ -85,7 +97,6 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    padding: 8px 0;
     max-width: 500px;
 
     &-name {

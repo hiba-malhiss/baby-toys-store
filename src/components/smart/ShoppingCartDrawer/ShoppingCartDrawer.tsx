@@ -15,7 +15,7 @@ interface ShoppingCartDrawerProps {
 
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
-  const [quantities, setQuantities] = useState<number[]>(cartItems.map((item) => item.amount));
+  const [quantities, setQuantities] = useState<number[]>(cartItems.map((item) => item.quantity));
   const { subtotal } = calculateOrderSummary(cartItems, shippingCost);
 
   const handleAmountChange = (index: number, newVal: string) => {
@@ -62,7 +62,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               image={item.image}
               name={item.name}
               price={item.price}
-              amount={quantities[index]}
+              quantity={quantities[index]}
               onAmountChange={(val) => handleAmountChange(index, val)}
             />
             <Divider />

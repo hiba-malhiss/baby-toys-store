@@ -64,7 +64,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       className={clsx(
         styles.productCard,
         fullWidth && styles.fullWidth,
-        isHorizontal && styles.productCardHorizontal,
+        styles[`productCard--${direction}`],
         size === 'small' && styles.productCardSmall
       )}
       onClick={() => onClick?.(product)}
@@ -92,7 +92,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
             </span>
           )}
         </div>
-        <Rating value={product.rating} />
+        <Rating value={product.rating} className={styles.productCardRating} />
         {isHorizontal && !isSmallSize && renderButtons()}
       </div>
     </div>
