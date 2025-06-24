@@ -10,8 +10,8 @@ export type StringInputSize = 'small' | 'medium' | 'large';
 
 interface StringInputProps {
   type?: string;
-  min?: string;
-  value?: string;
+  min?: string | number;
+  value?: string | number;
   onChange?: (val: string) => void;
   placeholder?: string;
   icon?: any;
@@ -72,6 +72,7 @@ export const StringInput: React.FC<StringInputProps> = ({
 
   const containerClass = clsx(
     styles.stringInput,
+    className,
     styles[`stringInput--${size}Size`],
     styles[`stringInput--${iconPosition}Icon`],
     isRounded && styles.isRounded,
@@ -84,7 +85,6 @@ export const StringInput: React.FC<StringInputProps> = ({
 
   const inputClass = clsx(
     styles.input,
-    className,
     styles[`input--${size}Size`],
     styles[`${size}Size-${iconPosition}Icon`],
     {
@@ -100,6 +100,7 @@ export const StringInput: React.FC<StringInputProps> = ({
         <Button
           appearance="link"
           color="primary"
+          size={size}
           onClick={(e) => {
             handleStep(-1);
             e.stopPropagation();
@@ -126,6 +127,7 @@ export const StringInput: React.FC<StringInputProps> = ({
         <Button
           appearance="link"
           color="primary"
+          size={size}
           onClick={(e) => {
             handleStep(1);
             e.stopPropagation();
