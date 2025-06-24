@@ -1,4 +1,4 @@
-import type { OrderItem } from '../components/common/OrderSummary/OrderSummary.tsx';
+import type { OrderItem } from '../types/product.types.ts';
 
 export const calculateOrderSummary = (items: OrderItem[], shipping: number) => {
   const subtotal = items.reduce((acc, item) => acc + item.price * (item.quantity || 1), 0);

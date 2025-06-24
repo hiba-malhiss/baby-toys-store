@@ -1,4 +1,4 @@
-import type { OrderItem } from '../components/common/OrderSummary/OrderSummary.tsx';
+import type { OrderItem } from '../types/product.types.ts';
 
 export const cartItems = [
   {

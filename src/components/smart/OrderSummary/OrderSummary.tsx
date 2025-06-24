@@ -4,13 +4,7 @@ import Flex from '../Flex/Flex';
 import CartItemCard from '../CartItemCard/CartItemCard';
 import { Divider } from '../Divider/Divider';
 import { TotalAmountSection } from './TotalAmountSection';
-
-export interface OrderItem {
-  image: string;
-  name: string;
-  price: number;
-  quantity: number;
-}
+import type { OrderItem } from '../../../types/product.types.ts';
 
 interface OrderSummaryProps {
   items: OrderItem[];

@@ -40,3 +40,10 @@ export type RadioOption = {
   label: string;
   value: string;
 };
+
+export interface OrderItem {
+  image: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
