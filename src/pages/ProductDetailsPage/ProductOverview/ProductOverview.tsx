@@ -47,7 +47,6 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
           {socialMediaLinks.map(({ icon, url }) => (
             <Button
               size="small"
-              appearance="filled"
               color="secondary"
               key={icon.iconName}
               leftIcon={icon}
