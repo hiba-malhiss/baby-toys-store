@@ -42,6 +42,10 @@
   gap: 0.5rem;
   border-radius: 15px;
 
+  &.fullWidth {
+    width: 100% !important;
+  }
+
   &:hover {
     img {
       transform: scale(1.05);
@@ -243,6 +247,11 @@ $appearances: (
             text-default: $color-white,
             bg-default: $color-secondary,
             bg-hover: $color-secondary-hover,
+        ),
+        secondary-light: (
+            text-default: $color-text-grey,
+            bg-default: $color-secondary-light,
+            bg-hover: $color-secondary-light-hover,
         ),
     ),
 );

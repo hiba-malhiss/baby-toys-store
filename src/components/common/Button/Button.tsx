@@ -8,7 +8,7 @@ export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
 type ButtonProps = {
   children?: React.ReactNode;
   appearance?: 'link' | 'filled' | 'outline';
-  color?: 'primary' | 'accent' | 'secondary' | 'light' | 'icon' | 'highlighted';
+  color?: 'primary' | 'accent' | 'secondary' | 'light' | 'icon' | 'highlighted' | 'secondary-light';
   size?: ButtonSize;
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
@@ -18,6 +18,7 @@ type ButtonProps = {
   withoutPadding?: boolean;
   withoutAutoHeight?: boolean;
   isSelected?: boolean;
+  fullWidth?: boolean;
   className?: string;
 };
 
@@ -31,6 +32,7 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
   isDisabled = false,
   withoutAutoHeight = false,
+  fullWidth = false,
   isRounded = false,
   withoutPadding,
   isSelected,
@@ -43,6 +45,7 @@ export const Button: React.FC<ButtonProps> = ({
     styles['button--' + color + 'Color'],
     styles['button--' + appearance + 'Appearance'],
     isDisabled && styles.isDisabled,
+    fullWidth && styles.fullWidth,
     withoutPadding && styles.buttonNoPadding,
     withoutAutoHeight && styles.buttonAutoHeight,
     isSelected && styles.isSelected,
