@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
@@ -9,25 +9,35 @@ import Card from '../Card/Card.tsx';
 import { Button } from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
 
-type ProductCardProps = {
+export type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
   size?: 'small';
   product: Product;
   fullWidth?: boolean;
-  onToggleFavorite?: () => void;
+  isFavorite?: boolean;
+  onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
+  onAddToCart?: (product: Product) => void;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
   size,
   product,
   onToggleFavorite,
+  onAddToCart,
   direction = 'vertical',
   onClick,
   fullWidth,
+  isFavorite,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
+
+  const handleButtonClick = useCallback((e: MouseEvent, handler?: (product: Product) => void) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handler?.(product);
+  }, []);
 
   const renderButtons = () => (
     <Flex
@@ -37,24 +47,32 @@ const ProductCard: React.FC<ProductCardProps> = ({
       direction={direction}
     >
       {direction === 'vertical' && (
-        <Button leftIcon={faCartShopping} appearance="link" color="secondary" size="xlarge" />
+        <Button
+          leftIcon={faCartShopping}
+          appearance="link"
+          color="secondary"
+          size="xlarge"
+          onClick={(e) => handleButtonClick(e, onAddToCart)}
+          aria-label="Add to cart"
+        />
       )}
       {direction === 'horizontal' && (
-        <Button leftIcon={faCartShopping} size="large">
+        <Button
+          leftIcon={faCartShopping}
+          size="large"
+          onClick={(e) => handleButtonClick(e, onAddToCart)}
+        >
           Add to cart
         </Button>
       )}
       <Button
         leftIcon={faHeart}
-        appearance={direction === 'horizontal' ? 'outline' : 'link'}
+        appearance={isHorizontal ? 'outline' : 'link'}
         color="icon"
         size="xlarge"
-        isSelected={product.isFavorite}
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          onToggleFavorite?.();
-        }}
+        isSelected={isFavorite}
+        onClick={(e) => handleButtonClick(e, onToggleFavorite)}
+        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       />
     </Flex>
   );
@@ -65,9 +83,16 @@ const ProductCard: React.FC<ProductCardProps> = ({
         styles.productCard,
         fullWidth && styles.fullWidth,
         styles[`productCard--${direction}`],
-        size === 'small' && styles.productCardSmall
+        isSmallSize && styles.productCardSmall
       )}
       onClick={() => onClick?.(product)}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={(e) => {
+        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+          e.preventDefault();
+          onClick(product);
+        }
+      }}
     >
       <Card size="small" className={styles.productCardBox}>
         {product.label && !isSmallSize && (

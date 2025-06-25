@@ -11,7 +11,6 @@ export type Product = {
   label?: 'SALE' | 'NEW' | string;
   rating: number;
   numberOfRatings: number;
-  isFavorite?: boolean;
   description?: string;
   featureBullets?: string[];
   details?: { label: string; value: string }[];
