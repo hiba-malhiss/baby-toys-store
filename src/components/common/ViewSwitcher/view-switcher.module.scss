@@ -4,6 +4,15 @@
   flex-direction: column;
   justify-content: start;
 
+  .container-flex {
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
   &--smallGap {
     .container-list {
       grid-row-gap: 8px;
@@ -12,7 +21,7 @@
 
   &--noneGap {
     .container-list {
-      grid-row-gap: 0px;
+      grid-row-gap: 0;
     }
   }
 

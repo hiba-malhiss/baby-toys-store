@@ -5,9 +5,10 @@ import { topPicksRadioOptions } from '../../../mock-data/home-page.ts';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/smart/SmartProductCard/SmartProductCard.tsx';
 import { toys } from '../../../mock-data/toy-card-list.ts';
+import { ViewSwitcher } from '../../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 
 const TopPicksSection = () => {
-  const [selected, setSelected] = useState(topPicksRadioOptions[0].value); // e.g., "featured"
+  const [selected, setSelected] = useState(topPicksRadioOptions[0].value);
 
   return (
     <Section title="Top picks for your little ones">
@@ -18,11 +19,11 @@ const TopPicksSection = () => {
         name="topPicks"
         onChange={setSelected}
       />
-      <div className={styles.topPicksGrid}>
+      <ViewSwitcher staticView="flex" totalSize={toys.length} pageSize={8}>
         {toys.map((toy, index) => (
           <SmartProductCard key={index} product={toy} />
         ))}
-      </div>
+      </ViewSwitcher>
     </Section>
   );
 };

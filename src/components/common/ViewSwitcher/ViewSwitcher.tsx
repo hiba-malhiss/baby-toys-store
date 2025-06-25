@@ -12,7 +12,7 @@ type ResponsiveOption = {
   gridColumns: number;
 };
 
-export type ViewMode = 'grid' | 'list';
+export type ViewMode = 'grid' | 'list' | 'flex';
 
 type ViewSwitcherProps = {
   children: ReactNode[] | ReactNode;
@@ -157,6 +157,7 @@ export function ViewSwitcher({
         className={clsx(styles.containerContent, {
           [styles.containerGrid]: viewMode === 'grid',
           [styles.containerList]: viewMode === 'list',
+          [styles.containerFlex]: viewMode === 'flex',
         })}
         style={
           viewMode === 'grid'
