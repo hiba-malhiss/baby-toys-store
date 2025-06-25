@@ -3,11 +3,11 @@ import Flex from '../Flex/Flex';
 import { Divider } from '../Divider/Divider';
 import styles from './order-summary.module.scss';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
-import type { OrderItem } from './OrderSummary.tsx';
+import type { CartItem } from './OrderSummary.tsx';
 import clsx from 'clsx';
 
 interface TotalAmountSectionProps {
-  items: OrderItem[];
+  items: CartItem[];
   shipping: number;
   currency: string;
 }

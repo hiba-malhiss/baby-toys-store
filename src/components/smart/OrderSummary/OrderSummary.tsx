@@ -4,10 +4,10 @@ import Flex from '../Flex/Flex';
 import CartItemCard from '../CartItemCard/CartItemCard';
 import { Divider } from '../Divider/Divider';
 import { TotalAmountSection } from './TotalAmountSection';
-import type { OrderItem } from '../../../types/product.types.ts';
+import type { CartItem } from '../../../types/product.types.ts';
 
 interface OrderSummaryProps {
-  items: OrderItem[];
+  items: CartItem[];
   shipping: number;
   currency: string;
 }
@@ -27,7 +27,8 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, shipping, currency }
         {items.map((item, index) => (
           <React.Fragment key={index}>
             <CartItemCard
-              image={item.image}
+              key={item.productId}
+              image={item.mainImage}
               name={item.name}
               price={item.price}
               quantity={quantities[index]}

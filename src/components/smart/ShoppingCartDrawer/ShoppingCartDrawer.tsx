@@ -1,12 +1,13 @@
 import Drawer from '../../common/Drawer/Drawer';
 import { Divider } from '../../common/Divider/Divider.tsx';
 import CartItemCard from '../../common/CartItemCard/CartItemCard.tsx';
-import { cartItems, currency, shippingCost } from '../../../mock-data/shipping-page.ts';
+import { currency, shippingCost } from '../../../mock-data/shipping-page.ts';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
-import { useState } from 'react';
+import { useCartStore } from '../../../store/useCartStore';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -15,13 +16,23 @@ interface ShoppingCartDrawerProps {
 
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
-  const [quantities, setQuantities] = useState<number[]>(cartItems.map((item) => item.quantity));
+  const { items: cartItems, updateQuantity, closeShippingCartDrawer } = useCartStore();
+
   const { subtotal } = calculateOrderSummary(cartItems, shippingCost);
 
-  const handleAmountChange = (index: number, newVal: string) => {
-    const updated = [...quantities];
-    updated[index] = Math.max(parseInt(newVal) || 1, 1);
-    setQuantities(updated);
+  const handleAmountChange = (productId: string, newVal: string) => {
+    const newQuantity = Math.max(parseInt(newVal) || 1, 1);
+    updateQuantity(productId, newQuantity);
+  };
+
+  const handleClose = () => {
+    closeShippingCartDrawer();
+    setIsOpen(false);
+  };
+
+  const handlePlaceOrder = () => {
+    navigate('/shopping-cart');
+    handleClose();
   };
 
   return (
@@ -29,7 +40,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       visible={isOpen}
       header="Order Summary"
       position="right"
-      onClose={() => setIsOpen(false)}
+      onClose={handleClose}
       footer={
         <>
           <Flex fullWidth justify="between" className="bts-marginBxl">
@@ -39,34 +50,36 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               {currency}
             </span>
           </Flex>
-          <Button onClick={() => navigate('/shopping-cart')} fullWidth className="bts-marginTl">
+          <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
             Place order
           </Button>
           <Button
-            onClick={() => navigate('/shopping-cart')}
+            onClick={() => {
+              navigate('/shopping-cart');
+              handleClose();
+            }}
             fullWidth
             color="secondary-light"
             className="bts-marginTl"
           >
-            Go To Shipping Cart
+            Go To Shopping Cart
           </Button>
         </>
       }
     >
       <Flex direction="vertical" spacing="l" fullWidth>
         {cartItems.map((item, index) => (
-          <>
+          <React.Fragment key={item.productId}>
             <CartItemCard
               fullWidth
-              key={index}
-              image={item.image}
+              image={item.mainImage || ''}
               name={item.name}
               price={item.price}
-              quantity={quantities[index]}
-              onAmountChange={(val) => handleAmountChange(index, val)}
+              quantity={item.quantity}
+              onAmountChange={(val) => handleAmountChange(item.productId, val)}
             />
-            <Divider />
-          </>
+            {index < cartItems.length - 1 && <Divider />}
+          </React.Fragment>
         ))}
       </Flex>
     </Drawer>

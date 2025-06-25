@@ -3,18 +3,31 @@ import Header from '../Header/Header.tsx';
 import Footer from '../Footer/Footer.tsx';
 import styles from './layout.module.scss';
 import Flex from '../../common/Flex/Flex.tsx';
+import ShoppingCartDrawer from '../../smart/ShoppingCartDrawer/ShoppingCartDrawer.tsx';
+import { useCartStore } from '../../../store/useCartStore.ts';
+import { Toast } from '../../common/Toast/Toast.tsx';
 
 interface LayoutProps {
   children: ReactNode;
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  const { isShippingCartDrawerOpen, openShippingCartDrawer, closeShippingCartDrawer } =
+    useCartStore();
+
   return (
-    <Flex direction="vertical" spacing="xxl" className={styles.layout}>
-      <Header />
-      {children}
-      <Footer />
-    </Flex>
+    <>
+      <Toast />
+      <Flex direction="vertical" spacing="xxl" className={styles.layout}>
+        <Header />
+        {children}
+        <Footer />
+        <ShoppingCartDrawer
+          isOpen={isShippingCartDrawerOpen}
+          setIsOpen={(val) => (val ? openShippingCartDrawer() : closeShippingCartDrawer())}
+        ></ShoppingCartDrawer>
+      </Flex>
+    </>
   );
 };
 

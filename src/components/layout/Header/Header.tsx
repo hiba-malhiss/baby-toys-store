@@ -6,6 +6,7 @@ import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Icon } from '../../common/Icon/Icon.tsx';
 import { CartButton } from '../../common/CartButton/CartButton.tsx';
+import { useCartStore } from '../../../store/useCartStore.ts';
 
 const navConfig = [
   { path: '/', label: 'Home' },
@@ -15,6 +16,8 @@ const navConfig = [
 ];
 
 const Header = () => {
+  const { getTotalItemsInCart } = useCartStore();
+
   const isActivePath = (navPath: string, currentPath: string) => {
     if (navPath === '/') {
       return currentPath === '/';
@@ -45,7 +48,7 @@ const Header = () => {
         <img src="/assets/images/logo.png" alt="logo" className={styles.headerLogo} />
         <Nav config={navConfig} isActivePath={isActivePath} />
         <Flex spacing="xxxl" align="center">
-          <CartButton itemCount={4} />
+          <CartButton itemCount={getTotalItemsInCart()} />
           <StringInput
             placeholder="Search"
             icon={faSearch}

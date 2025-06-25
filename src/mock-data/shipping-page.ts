@@ -1,62 +1,62 @@
-import type { OrderItem } from '../types/product.types.ts';
+import type { CartItem } from '../types/product.types.ts';
 
 export const cartItems = [
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '1',
-    image: '/assets/images/toys/img1.png',
+    mainImage: '/assets/images/toys/img1.png',
     name: 'Wireless Headphones',
     price: 59.99,
     quantity: 2,
   },
   {
     id: '2',
-    image: '/assets/images/toys/img2.png',
+    mainImage: '/assets/images/toys/img2.png',
     name: 'Smart Watch',
     price: 129.99,
     quantity: 1,
   },
-] as OrderItem[];
+] as CartItem[];
 export const shippingCost = 20;
 export const currency = '$';

@@ -40,8 +40,9 @@ export type RadioOption = {
   value: string;
 };
 
-export interface OrderItem {
-  image: string;
+export interface CartItem {
+  productId: string;
+  mainImage: string;
   name: string;
   price: number;
   quantity: number;
