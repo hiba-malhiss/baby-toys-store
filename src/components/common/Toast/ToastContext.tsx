@@ -1,22 +1,12 @@
 import { createContext, useContext, useState, ReactNode, useCallback } from 'react';
-
-type ToastType = 'success' | 'error' | 'info';
-
-type Toast = {
-  id: string;
-  type: ToastType;
-  title: string;
-  message: string;
-};
+import type { Toast, ToastType } from './Toast.tsx';
 
 type ToastContextType = {
   toasts: Toast[];
   removeToast: (id: string) => void;
-  toast: {
-    success: (title: string, message?: string) => void;
-    error: (title: string, message?: string) => void;
-    info: (title: string, message?: string) => void;
-  };
+  success: (title: string, message?: string) => void;
+  error: (title: string, message?: string) => void;
+  info: (title: string, message?: string) => void;
 };
 
 const ToastContext = createContext<ToastContextType | undefined>(undefined);
@@ -29,7 +19,7 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const addToast = useCallback(
-    (type: ToastType, title: string, message: string) => {
+    (type: ToastType, title: string, message?: string) => {
       const id = Date.now().toString();
       const toast = { id, type, title, message };
       setToasts((prev) => [...prev, toast]);
@@ -39,19 +29,19 @@ export const ToastProvider = ({ children }: { children: ReactNode }) => {
     [removeToast]
   );
 
-  const toast = {
-    success: (title: string, message: string) => addToast('success', title, message),
-    error: (title: string, message: string) => addToast('error', title, message),
-    info: (title: string, message: string) => addToast('info', title, message),
+  const value: ToastContextType = {
+    toasts,
+    removeToast,
+    success: (title: string, message?: string) => addToast('success', title, message),
+    error: (title: string, message?: string) => addToast('error', title, message),
+    info: (title: string, message?: string) => addToast('info', title, message),
   };
 
-  return (
-    <ToastContext.Provider value={{ toasts, toast, removeToast }}>{children}</ToastContext.Provider>
-  );
+  return <ToastContext.Provider value={value}>{children}</ToastContext.Provider>;
 };
 
 export const useToast = () => {
   const ctx = useContext(ToastContext);
   if (!ctx) throw new Error('useToast must be used within a ToastProvider');
-  return ctx.toast;
+  return ctx;
 };

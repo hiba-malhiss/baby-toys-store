@@ -1,52 +1,59 @@
-/* Toast.module.scss */
 .toastContainer {
   position: fixed;
   top: 20px;
   right: 20px;
-  z-index: 1000;
-  display: flex;
-  flex-direction: column;
+  z-index: 2000;
+  display: grid;
   gap: 12px;
+  justify-items: center;
+  align-items: center;
 }
 
 .toast {
   position: relative;
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  align-items: center;
   min-width: 250px;
   max-width: 350px;
-  padding: 12px 16px;
+  padding: 4px 8px;
   border-left: 5px solid;
-  border-radius: 6px;
-  background-color: #fff;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  background-color: $color-white;
+  box-shadow: $box-shadow-m;
   animation: fadeIn 0.3s ease, fadeOut 0.3s ease 2.7s;
-}
+  color: $color-text-primary;
 
-.success {
-  border-color: #28a745;
-}
+  &-success {
+    border-color: $color-success;
+    background-color: $color-bg-success;
+  }
 
-.error {
-  border-color: #dc3545;
-}
+  &-error {
+    border-color: $color-accent;
+    background-color: $color-accent-light;
+  }
 
-.info {
-  border-color: #007bff;
-}
+  &-info {
+    border-color: $color-info;
+    background-color: $color-bg-info;
+  }
 
-.toast strong {
-  display: block;
-  margin-bottom: 4px;
-}
+  &-closeButton {
+    grid-column: 3 / 4;
+  }
 
-.closeButton {
-  position: absolute;
-  right: 8px;
-  top: 8px;
-  background: none;
-  border: none;
-  font-size: 16px;
-  cursor: pointer;
-  color: #333;
+  strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: $color-text-dark;
+  }
+
+  p {
+    margin: 0;
+    color: $color-text-muted;
+  }
 }
 
 @keyframes fadeIn {
