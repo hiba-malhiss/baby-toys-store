@@ -8,6 +8,8 @@ import { calculateOrderSummary } from '../../../util/order.utils.ts';
 import { useCartStore } from '../../../store/useCartStore';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
+import { EmptyPlaceholder } from '../../common/EmptyPlaceholder/EmptyPlaceholder.tsx';
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -16,7 +18,12 @@ interface ShoppingCartDrawerProps {
 
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
-  const { items: cartItems, updateQuantity, closeShippingCartDrawer } = useCartStore();
+  const {
+    items: cartItems,
+    updateQuantity,
+    removeFromCart,
+    closeShippingCartDrawer,
+  } = useCartStore();
 
   const { subtotal } = calculateOrderSummary(cartItems, shippingCost);
 
@@ -42,29 +49,31 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       position="right"
       onClose={handleClose}
       footer={
-        <>
-          <Flex fullWidth justify="between" className="bts-marginBxl">
-            <span>Subtotal</span>
-            <span>
-              {subtotal}
-              {currency}
-            </span>
-          </Flex>
-          <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
-            Place order
-          </Button>
-          <Button
-            onClick={() => {
-              navigate('/shopping-cart');
-              handleClose();
-            }}
-            fullWidth
-            color="secondary-light"
-            className="bts-marginTl"
-          >
-            Go To Shopping Cart
-          </Button>
-        </>
+        cartItems.length > 0 && (
+          <>
+            <Flex fullWidth justify="between" className="bts-marginBxl">
+              <span>Subtotal</span>
+              <span>
+                {subtotal}
+                {currency}
+              </span>
+            </Flex>
+            <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
+              Place order
+            </Button>
+            <Button
+              onClick={() => {
+                navigate('/shopping-cart');
+                handleClose();
+              }}
+              fullWidth
+              color="secondary-light"
+              className="bts-marginTl"
+            >
+              Go To Shopping Cart
+            </Button>
+          </>
+        )
       }
     >
       <Flex direction="vertical" spacing="l" fullWidth>
@@ -72,15 +81,28 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           <React.Fragment key={item.productId}>
             <CartItemCard
               fullWidth
+              id={item.productId}
               image={item.mainImage || ''}
               name={item.name}
               price={item.price}
               quantity={item.quantity}
               onAmountChange={(val) => handleAmountChange(item.productId, val)}
+              onRemove={() => removeFromCart(item.productId)}
             />
             {index < cartItems.length - 1 && <Divider />}
           </React.Fragment>
         ))}
+        {cartItems.length === 0 && (
+          <EmptyPlaceholder
+            icon={faShoppingCart}
+            message="You'r cart is empty!"
+            buttonText="Continue Shopping"
+            onButtonClick={() => {
+              closeShippingCartDrawer();
+              navigate('/shop');
+            }}
+          ></EmptyPlaceholder>
+        )}
       </Flex>
     </Drawer>
   );

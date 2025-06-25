@@ -23,14 +23,13 @@
     }
   }
 
+  .productCard-rating {
+    padding-top: 6px;
+  }
 
   &--vertical {
     .productCard-info {
       gap: 6px;
-    }
-
-    .productCard-rating {
-      padding-top: 6px;
     }
   }
 
@@ -49,6 +48,10 @@
       margin-top: auto;
       position: static;
       padding-top: 8px;
+    }
+
+    .productCard-rating {
+      padding-top: 12px;
     }
   }
 

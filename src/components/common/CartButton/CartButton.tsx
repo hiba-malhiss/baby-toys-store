@@ -20,7 +20,7 @@ export const CartButton: React.FC<CartButtonProps> = ({ itemCount }) => {
     >
       <div className={styles.cartIcon}>
         <Icon icon={faShoppingCart} color="dark" size="xl" />
-        {itemCount > 0 && <span className={styles.cartIconBadge}>{itemCount}</span>}
+        <span className={styles.cartIconBadge}>{itemCount}</span>
       </div>
     </Button>
   );

@@ -214,6 +214,8 @@ $appearances: (
             text-hover: $color-accent-hover,
             border-default: $color-secondary,
             border-hover: $color-accent-hover,
+            text-selected: $color-accent-hover,
+            border-selected: $color-accent-hover,
         ),
         highlighted: (
             text-default: $color-secondary,
