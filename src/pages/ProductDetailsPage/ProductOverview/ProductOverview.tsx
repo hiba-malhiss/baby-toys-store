@@ -9,11 +9,19 @@ import Card from '../../../components/common/Card/Card.tsx';
 import type { Product } from '../../../types/product.types.ts';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import { StringInput } from '../../../components/common/StringInput/StringInput.tsx';
+import { useCartStore } from '../../../store/useCartStore.ts';
+import { useFavoritesStore } from '../../../store/useFavoritesStore.ts';
+import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
+  const [quantity, setQuantity] = useState(1);
+  const { addToCart } = useCartStore();
+  const { isFavorite, toggleFavorite } = useFavoritesStore();
+  const toast = useToast();
+
   return (
     <div className={styles.productOverview}>
       <ImageGallery images={product.images} productName={product.name}></ImageGallery>
@@ -56,9 +64,29 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
           ))}
         </Flex>
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
-          <StringInput type="number" withControls min={1}></StringInput>
-          <Button leftIcon={faShoppingCart}>Add to cart</Button>
-          <Button leftIcon={faHeart} appearance="outline" color="icon"></Button>
+          <StringInput
+            type="number"
+            withControls
+            min={1}
+            value={quantity}
+            onChange={(val) => setQuantity(Number(val))}
+          />
+          <Button
+            leftIcon={faShoppingCart}
+            onClick={() => {
+              addToCart(product, quantity);
+              toast.success('Added to cart!');
+            }}
+          >
+            Add to cart
+          </Button>
+          <Button
+            leftIcon={faHeart}
+            appearance="outline"
+            color="icon"
+            isSelected={isFavorite(product.id)}
+            onClick={() => toggleFavorite(product.id)}
+          ></Button>
           <Button leftIcon={faRightLeft} appearance="outline"></Button>
         </Flex>
         <Card fullWidth size="small">

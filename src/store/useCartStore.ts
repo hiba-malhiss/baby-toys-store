@@ -20,17 +20,12 @@ export const useCartStore = create<CartState>()(
       items: [],
       isShippingCartDrawerOpen: false,
       addToCart: (product, quantity = 1) => {
+        // overwrite it if it's already added
         const { items } = get();
-        const existingItem = items.find((item) => item.productId === product.id);
+        const filteredItems = items.filter((item) => item.productId !== product.id);
 
         set({
-          items: existingItem
-            ? items.map((item) =>
-                item.productId === product.id
-                  ? { ...item, quantity: item.quantity + quantity }
-                  : item
-              )
-            : [...items, getProductItem(product, quantity)],
+          items: [...filteredItems, getProductItem(product, quantity)],
           isShippingCartDrawerOpen: true,
         });
       },
