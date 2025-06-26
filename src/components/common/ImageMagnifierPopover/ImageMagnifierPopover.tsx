@@ -75,7 +75,7 @@ const ImageMagnifierPopover: React.FC<Props> = ({
       </div>
 
       {isHovering && (
-        <Popover open targetRef={containerRef} position="right" autoWidth>
+        <Popover open targetRef={containerRef} position="right" width="auto">
           <div
             className={styles.imageMagnifierPopover}
             style={{ width: popoverSize, height: popoverSize, overflow: 'hidden' }}
