@@ -9,6 +9,7 @@ import Flex from '../../components/common/Flex/Flex.tsx';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
+import { SortProducts } from './SortProducts.tsx';
 
 const ShopPage = () => {
   const [selectedCategory, setSelectedCategory] = useState(categoriesRadioOptions[0].value);
@@ -39,6 +40,11 @@ const ShopPage = () => {
         minColWidth={250}
         totalSize={toys.length}
         onViewChange={(newView) => setView(newView)}
+        topBar={
+          <Flex>
+            <SortProducts />
+          </Flex>
+        }
       >
         {toys.map((toy) => (
           <SmartProductCard
