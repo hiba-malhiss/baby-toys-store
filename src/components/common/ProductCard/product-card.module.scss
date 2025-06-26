@@ -116,7 +116,7 @@
       text-overflow: ellipsis;
       overflow: hidden;
       width: 100%;
-      margin: 16px 0;
+      margin: 16px 0 10px 0;
       color: $color-text-grey;
       display: -webkit-box;
       -webkit-line-clamp: 5;
@@ -143,6 +143,10 @@
       color: $color-text-muted;
       padding-left: 4px;
     }
+  }
+
+  &--price {
+    margin-top: 6px;
   }
 
   &--withDiscount .productCard-infoPriceNew {
