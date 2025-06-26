@@ -29,17 +29,22 @@ export function Popover({
   gap = 12,
 }: PopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
-  const [style, setStyle] = useState<React.CSSProperties>({
-    opacity: 0,
-  });
+  const [style, setStyle] = useState<React.CSSProperties>({});
   const selfClick = useRef(false);
 
   useEffect(() => {
     if (!open || !targetRef.current || !popoverRef.current) return;
 
     const updatePosition = () => {
-      const targetRect = targetRef.current!.getBoundingClientRect();
-      const popoverRect = popoverRef.current!.getBoundingClientRect();
+      if (!popoverRef.current || !targetRef.current) return;
+
+      const targetRect = targetRef.current.getBoundingClientRect();
+
+      // Force popover width for stable measurement
+      const targetWidth = targetRect.width;
+      popoverRef.current.style.width = width || `${targetWidth}px`;
+
+      const popoverRect = popoverRef.current.getBoundingClientRect();
 
       let top = 0;
       let left = 0;
@@ -47,31 +52,25 @@ export function Popover({
       switch (position) {
         case 'top':
           top = targetRect.top - popoverRect.height - gap;
-          left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
-          if (top < 0) {
-            top = targetRect.bottom + gap;
-          }
+          left = targetRect.left + targetWidth / 2 - popoverRect.width / 2;
+          if (top < 0) top = targetRect.bottom + gap;
           break;
         case 'bottom':
           top = targetRect.bottom + gap;
-          left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
-          if (top + popoverRect.height > window.innerHeight) {
+          left = targetRect.left + targetWidth / 2 - popoverRect.width / 2;
+          if (top + popoverRect.height > window.innerHeight)
             top = targetRect.top - popoverRect.height - gap;
-          }
           break;
         case 'left':
           top = targetRect.top + targetRect.height / 2 - popoverRect.height / 2;
           left = targetRect.left - popoverRect.width - gap;
-          if (left < 0) {
-            left = targetRect.right + gap;
-          }
+          if (left < 0) left = targetRect.right + gap;
           break;
         case 'right':
           top = targetRect.top + targetRect.height / 2 - popoverRect.height / 2;
           left = targetRect.right + gap;
-          if (left + popoverRect.width > window.innerWidth) {
+          if (left + popoverRect.width > window.innerWidth)
             left = targetRect.left - popoverRect.width - gap;
-          }
           break;
       }
 
@@ -86,11 +85,12 @@ export function Popover({
         transform: 'scale(1)',
         transition: 'opacity 150ms ease, transform 150ms ease',
         zIndex: 9999,
-        width: width ? width : `${targetRect.width}px`,
+        width: width || `${targetWidth}px`,
       });
     };
 
-    updatePosition();
+    requestAnimationFrame(updatePosition);
+
     window.addEventListener('resize', updatePosition);
     window.addEventListener('scroll', updatePosition, true);
 
@@ -98,7 +98,7 @@ export function Popover({
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition, true);
     };
-  }, [open, position, targetRef, width]);
+  }, [open, position, targetRef, width, gap]);
 
   // Close popover when click outside
   useEffect(() => {
