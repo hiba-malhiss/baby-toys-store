@@ -6,10 +6,5 @@
   transform-origin: center top;
   user-select: none;
   z-index: 9999;
-  width: 280px;
   overflow: hidden;
-
-  &.autoWidth {
-    width: auto;
-  }
 }

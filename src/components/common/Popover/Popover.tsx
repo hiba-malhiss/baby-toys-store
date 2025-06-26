@@ -5,8 +5,6 @@ import clsx from 'clsx';
 
 type Position = 'top' | 'bottom' | 'left' | 'right';
 
-const GAP = 12;
-
 type PopoverProps = {
   targetRef: React.RefObject<HTMLElement>;
   open: boolean;
@@ -14,8 +12,9 @@ type PopoverProps = {
   position?: Position;
   dismissible?: boolean;
   appendTo?: HTMLElement | null;
-  autoWidth?: boolean;
+  width?: string;
   children: React.ReactNode;
+  gap: number;
 };
 
 export function Popover({
@@ -25,8 +24,9 @@ export function Popover({
   position = 'bottom',
   dismissible = true,
   appendTo = typeof document !== 'undefined' ? document.body : null,
-  autoWidth,
+  width,
   children,
+  gap = 12,
 }: PopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({
@@ -46,32 +46,31 @@ export function Popover({
 
       switch (position) {
         case 'top':
-          top = targetRect.top - popoverRect.height - GAP;
+          top = targetRect.top - popoverRect.height - gap;
           left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
           if (top < 0) {
-            // if got beyond the window size
-            top = targetRect.bottom + GAP;
+            top = targetRect.bottom + gap;
           }
           break;
         case 'bottom':
-          top = targetRect.bottom + GAP;
+          top = targetRect.bottom + gap;
           left = targetRect.left + targetRect.width / 2 - popoverRect.width / 2;
           if (top + popoverRect.height > window.innerHeight) {
-            top = targetRect.top - popoverRect.height - GAP;
+            top = targetRect.top - popoverRect.height - gap;
           }
           break;
         case 'left':
           top = targetRect.top + targetRect.height / 2 - popoverRect.height / 2;
-          left = targetRect.left - popoverRect.width - GAP;
+          left = targetRect.left - popoverRect.width - gap;
           if (left < 0) {
-            left = targetRect.right + GAP;
+            left = targetRect.right + gap;
           }
           break;
         case 'right':
           top = targetRect.top + targetRect.height / 2 - popoverRect.height / 2;
-          left = targetRect.right + GAP;
+          left = targetRect.right + gap;
           if (left + popoverRect.width > window.innerWidth) {
-            left = targetRect.left - popoverRect.width - GAP;
+            left = targetRect.left - popoverRect.width - gap;
           }
           break;
       }
@@ -87,6 +86,7 @@ export function Popover({
         transform: 'scale(1)',
         transition: 'opacity 150ms ease, transform 150ms ease',
         zIndex: 9999,
+        width: width ? width : `${targetRect.width}px`,
       });
     };
 
@@ -98,7 +98,7 @@ export function Popover({
       window.removeEventListener('resize', updatePosition);
       window.removeEventListener('scroll', updatePosition, true);
     };
-  }, [open, position, targetRef]);
+  }, [open, position, targetRef, width]);
 
   // Close popover when click outside
   useEffect(() => {
@@ -142,7 +142,7 @@ export function Popover({
       aria-label="popover"
       aria-labelledby="popover"
       style={style}
-      className={clsx(autoWidth && styles.autoWidth, styles.popover)}
+      className={clsx(styles.popover)}
       onClick={(e) => e.stopPropagation()}
     >
       {children}
