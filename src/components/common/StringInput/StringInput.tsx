@@ -12,7 +12,7 @@ interface StringInputProps {
   type?: string;
   min?: string | number;
   value?: string | number;
-  onChange?: (val: string) => void;
+  onChange?: (val: string | number) => void;
   placeholder?: string;
   icon?: any;
   iconColor?: string;
@@ -45,27 +45,43 @@ export const StringInput: React.FC<StringInputProps> = ({
   withIconBackground = false,
   withControls = false,
 }) => {
-  const [internalValue, setInternalValue] = useState(value ?? min ?? '');
+  const [internalValue, setInternalValue] = useState<string>(() => {
+    if (value === undefined || value === null) return '';
+    return String(value);
+  });
 
   useEffect(() => {
-    if (value !== undefined && value !== internalValue) {
-      setInternalValue(value);
+    const valStr = value === undefined || value === null ? '' : String(value);
+    if (valStr !== internalValue) {
+      setInternalValue(valStr);
     }
   }, [value]);
 
   const handleChange = (newVal: string) => {
     setInternalValue(newVal);
-    onChange?.(newVal);
+
+    if (type === 'number') {
+      // Try to parse as number
+      const parsed = parseFloat(newVal);
+      if (!isNaN(parsed)) {
+        onChange?.(parsed);
+      } else {
+        // If empty or invalid number, pass NaN or empty string (optional)
+        onChange?.(newVal === '' ? '' : NaN);
+      }
+    } else {
+      onChange?.(newVal);
+    }
   };
 
   const handleStep = (step: number) => {
     if (isDisabled) return;
 
-    const current = parseFloat(internalValue || min || '0');
+    const current = parseFloat(internalValue || String(min ?? '0'));
     const next = current + step;
-    const minVal = min ? parseFloat(min) : undefined;
+    const minVal = min !== undefined ? parseFloat(String(min)) : undefined;
 
-    if (typeof minVal === 'number' && next < minVal) return;
+    if (minVal !== undefined && next < minVal) return;
 
     handleChange(next.toString());
   };

@@ -7,12 +7,18 @@ type PageContainerProps = {
   children: React.ReactNode;
   className?: string;
   spacing?: string;
+  isBreadcrumbHidden?: boolean;
 };
 
-export const PageContainer = ({ spacing, children, className = '' }: PageContainerProps) => {
+export const PageContainer = ({
+  spacing,
+  children,
+  isBreadcrumbHidden,
+  className = '',
+}: PageContainerProps) => {
   return (
     <>
-      <LayoutBreadcrumb className={styles.breadcrumb} />
+      {!isBreadcrumbHidden && <LayoutBreadcrumb className={styles.breadcrumb} />}
       <Flex
         fullWidth
         direction="vertical"

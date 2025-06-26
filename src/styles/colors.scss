@@ -108,3 +108,11 @@ $box-shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
   line-height: 20px;
   height: 30px;
 }
+
+@mixin bts-line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: #{$lines};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

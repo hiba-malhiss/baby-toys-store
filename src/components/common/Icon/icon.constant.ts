@@ -5,6 +5,7 @@ export enum IconSize {
   xlarge = 'xlarge',
   xxlarge = 'xxlarge',
   xxxlarge = 'xxxlarge',
+  pagelarge = 'pagelarge',
 }
 
 export enum IconColor {

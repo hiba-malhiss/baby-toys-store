@@ -1,16 +1,94 @@
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import { useState } from 'react';
-import ShoppingCartDrawer from '../../components/smart/ShoppingCartDrawer/ShoppingCartDrawer.tsx';
+import { useCartStore } from '../../store/useCartStore.ts';
+import { StringInput } from '../../components/common/StringInput/StringInput.tsx';
 import { Button } from '../../components/common/Button/Button.tsx';
+import { faShoppingCart, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import Card from '../../components/common/Card/Card.tsx';
+import { EmptyPlaceholder } from '../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
+import { useNavigate } from 'react-router-dom';
+import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
+import clsx from 'clsx';
+import Heading from '../../components/common/Heading/Heading.tsx';
 
 const ShoppingCartPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { cartItems, updateQuantity, removeFromCart } = useCartStore();
+  const navigate = useNavigate();
+  if (cartItems.length === 0) {
+    return (
+      <PageContainer
+        isBreadcrumbHidden
+        className={clsx(
+          styles.shoppingCartPage,
+          cartItems.length === 0 && styles.shoppingCartPageIsEmpty
+        )}
+      >
+        <EmptyPlaceholder
+          iconSize="pagelarge"
+          icon={faShoppingCart}
+          message="Your cart is empty"
+          buttonText="Start Shopping"
+          onButtonClick={() => {
+            navigate('/shop');
+          }}
+        />
+      </PageContainer>
+    );
+  }
 
   return (
-    <PageContainer className={styles.shoppingCartPage}>
-      <Button onClick={() => setIsOpen(!isOpen)}>click</Button>
-      <ShoppingCartDrawer isOpen={isOpen} setIsOpen={setIsOpen}></ShoppingCartDrawer>
+    <PageContainer className={styles.shoppingCartPage} isBreadcrumbHidden>
+      <Heading level="h1" className="bts-marginBxl">
+        Your Shopping Cart
+      </Heading>
+      <div className={styles.shoppingCartPageTable}>
+        <div className={styles.shoppingCartPageTableHeader}>
+          <div>Product</div>
+          <div>Name</div>
+          <div>Price</div>
+          <div>Quantity</div>
+          <div>Subtotal</div>
+          <div>Action</div>
+        </div>
+
+        <div className={styles.shoppingCartPageTableBody}>
+          {cartItems.map((item) => (
+            <div key={item.productId} className={styles.shoppingCartPageTableRow}>
+              <div className={styles.shoppingCartPageImage}>
+                <img src={item.mainImage} alt={item.name} />
+              </div>
+              <div className={styles.shoppingCartPageProductName}>{item.name}</div>
+              <div>{item.price} $</div>
+              <div style={{ width: '142px' }}>
+                <StringInput
+                  type="number"
+                  min={1}
+                  value={item.quantity}
+                  withControls
+                  onChange={(quantity) => updateQuantity(item.productId, quantity)}
+                  size="small"
+                  fullWidth
+                />
+              </div>
+              <div>{item.price * item.quantity} ₪</div>
+              <div>
+                <Button
+                  leftIcon={faTrashAlt}
+                  appearance="link"
+                  color="secondary"
+                  onClick={() => removeFromCart(item.productId)}
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <Card header="Cart Total" className={styles.shoppingCartPageSummary}>
+        <TotalAmountSection items={cartItems} shipping={20} currency={'$'} />
+        <Button color="accent" fullWidth size="large" className="bts-marginTxl">
+          Proceed to checkout
+        </Button>
+      </Card>
     </PageContainer>
   );
 };

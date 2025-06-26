@@ -18,12 +18,7 @@ interface ShoppingCartDrawerProps {
 
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
-  const {
-    items: cartItems,
-    updateQuantity,
-    removeFromCart,
-    closeShippingCartDrawer,
-  } = useCartStore();
+  const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
 
   const { subtotal } = calculateOrderSummary(cartItems, shippingCost);
 

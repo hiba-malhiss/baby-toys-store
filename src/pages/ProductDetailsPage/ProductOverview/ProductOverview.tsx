@@ -9,18 +9,37 @@ import Card from '../../../components/common/Card/Card.tsx';
 import type { Product } from '../../../types/product.types.ts';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { StringInput } from '../../../components/common/StringInput/StringInput.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useFavoritesStore } from '../../../store/useFavoritesStore.ts';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
+import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const { addToCart } = useCartStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
   const toast = useToast();
+
+  const handleCopyUrl = useCallback(
+    (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+
+      const urlToCopy = `${window.location.origin}/product-details/${product.id}`;
+
+      copyTextToClipboard(urlToCopy)
+        .then(() => {
+          toast.success('Product URL copied to clipboard!');
+        })
+        .catch(() => {
+          toast.error('Failed to copy URL.');
+        });
+    },
+    [product.id]
+  );
 
   return (
     <div className={styles.productOverview}>
@@ -87,7 +106,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             isSelected={isFavorite(product.id)}
             onClick={() => toggleFavorite(product.id)}
           ></Button>
-          <Button leftIcon={faRightLeft} appearance="outline"></Button>
+          <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl}></Button>
         </Flex>
         <Card fullWidth size="small">
           <Heading level="h3">Item details</Heading>

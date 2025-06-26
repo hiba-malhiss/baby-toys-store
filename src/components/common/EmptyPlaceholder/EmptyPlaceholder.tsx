@@ -8,6 +8,7 @@ type EmptyPlaceholderProps = {
   icon: IconDefinition;
   message: string;
   buttonText?: string;
+  iconSize?: string;
   onButtonClick?: () => void;
 };
 
@@ -16,6 +17,7 @@ export const EmptyPlaceholder: React.FC<EmptyPlaceholderProps> = ({
   message,
   buttonText,
   onButtonClick,
+  iconSize = 'xxxlarge',
 }) => {
   return (
     <Flex
@@ -26,7 +28,7 @@ export const EmptyPlaceholder: React.FC<EmptyPlaceholderProps> = ({
       fullWidth
       className={styles.emptyPlaceholder}
     >
-      <Icon icon={icon} size="xxxlarge" color="gray" />
+      <Icon icon={icon} size={iconSize} color="gray" />
       <p>{message}</p>
       {buttonText && onButtonClick && (
         <Button color="accent" onClick={onButtonClick}>

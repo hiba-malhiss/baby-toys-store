@@ -1,6 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '../../context/BreadcrumbContext.tsx';
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { getProductById, toys } from '../../mock-data/toy-card-list.ts';
 import Section from '../../components/layout/Section/Section.tsx';
 import Carousel from '../../components/common/Carousel/Carousel.tsx';

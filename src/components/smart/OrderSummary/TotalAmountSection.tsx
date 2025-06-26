@@ -1,10 +1,10 @@
 import React from 'react';
-import Flex from '../Flex/Flex';
-import { Divider } from '../Divider/Divider';
 import styles from './order-summary.module.scss';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
-import type { CartItem } from './OrderSummary.tsx';
 import clsx from 'clsx';
+import Flex from '../../common/Flex/Flex.tsx';
+import { Divider } from '../../common/Divider/Divider.tsx';
+import type { CartItem } from '../../../types/product.types.ts';
 
 interface TotalAmountSectionProps {
   items: CartItem[];

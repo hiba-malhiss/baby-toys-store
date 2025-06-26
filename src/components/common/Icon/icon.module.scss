@@ -35,6 +35,10 @@
     font-size: 64px;
   }
 
+  &--pagelargeSize {
+    font-size: 120px;
+  }
+
   &.isRotating {
     animation: faSpin 1s infinite linear;
   }

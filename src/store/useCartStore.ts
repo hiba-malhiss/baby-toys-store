@@ -4,7 +4,7 @@ import type { CartItem, Product } from '../types/product.types.ts';
 import { getProductItem } from '../util/order.utils.ts';
 
 interface CartState {
-  items: CartItem[];
+  cartItems: CartItem[];
   isShippingCartDrawerOpen: boolean;
   openShippingCartDrawer: () => void;
   closeShippingCartDrawer: () => void;
@@ -17,36 +17,36 @@ interface CartState {
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
-      items: [],
+      cartItems: [],
       isShippingCartDrawerOpen: false,
       addToCart: (product, quantity = 1) => {
         // overwrite it if it's already added
-        const { items } = get();
-        const filteredItems = items.filter((item) => item.productId !== product.id);
+        const { cartItems } = get();
+        const filteredItems = cartItems.filter((item) => item.productId !== product.id);
 
         set({
-          items: [...filteredItems, getProductItem(product, quantity)],
+          cartItems: [...filteredItems, getProductItem(product, quantity)],
           isShippingCartDrawerOpen: true,
         });
       },
       removeFromCart: (productId) =>
-        set({ items: get().items.filter((item) => item.productId !== productId) }),
+        set({ cartItems: get().cartItems.filter((item) => item.productId !== productId) }),
       updateQuantity: (productId, quantity) =>
         set({
-          items:
+          cartItems:
             quantity <= 0
-              ? get().items.filter((item) => item.productId !== productId)
-              : get().items.map((item) =>
+              ? get().cartItems.filter((item) => item.productId !== productId)
+              : get().cartItems.map((item) =>
                   item.productId === productId ? { ...item, quantity } : item
                 ),
         }),
       openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
       closeShippingCartDrawer: () => set({ isShippingCartDrawerOpen: false }),
-      getTotalItemsInCart: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
+      getTotalItemsInCart: () => get().cartItems.reduce((sum, item) => sum + item.quantity, 0),
     }),
     {
       name: 'cart-storage',
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({ cartItems: state.cartItems }),
     }
   )
 );

@@ -5,11 +5,7 @@
   padding: 20px;
 
   .infoCard-title, .infoCard-content {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+    @include bts-line-clamp(2);
     width: 100%;
     text-align: center;
     line-height: 20px;

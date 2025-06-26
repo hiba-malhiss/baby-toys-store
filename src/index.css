@@ -16,3 +16,11 @@
 body {
   font-family: 'Comfortaa', serif !important;
 }
+
+img {
+  clip-path: inset(5px);
+}
+
+button img {
+  clip-path: unset;
+}

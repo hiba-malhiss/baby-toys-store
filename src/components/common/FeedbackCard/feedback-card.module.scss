@@ -45,15 +45,12 @@
   }
 
   &-comment {
+    @include bts-line-clamp(4);
     grid-area: comment;
     color: $color-text-feedback;
     font-size: 16px;
     margin: 0;
-    overflow: hidden;
     width: 100%;
-    display: -webkit-box;
-    -webkit-line-clamp: 4;
-    -webkit-box-orient: vertical;
     line-height: 20px;
   }
 }
