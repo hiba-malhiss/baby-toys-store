@@ -16,6 +16,32 @@
     display: none;
   }
 
+  &--field {
+    padding: 8px 0;
+    color: $color-text-grey;
+
+    .radioButtonBox {
+      color: $color-white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 2px solid $color-border;
+      border-radius: 4px;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    &.isSelected .radioButtonBox {
+      background-color: $color-primary;
+      border-color: $color-primary-dark;
+    }
+
+    &:hover .radioButtonBox {
+      border-color: $color-primary;
+    }
+  }
+
   &--secondary {
     background-color: transparent;
     color: $color-black;
@@ -42,7 +68,7 @@
     }
   }
 
-  &--link-2 {
+  &--link-underline {
     border-radius: 0;
     padding-bottom: 8px;
     border-bottom: 2px solid transparent;

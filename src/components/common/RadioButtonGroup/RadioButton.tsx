@@ -1,6 +1,8 @@
 import React, { type ReactNode } from 'react';
 import styles from './radio-button.module.scss';
 import clsx from 'clsx';
+import { Icon } from '../Icon/Icon.tsx';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 interface RadioButtonProps {
   name?: string;
@@ -8,15 +10,9 @@ interface RadioButtonProps {
   value: string;
   isSelected?: boolean;
   onChange?: (value: string) => void;
-  appearance?: 'link' | 'secondary' | 'link2';
+  appearance?: 'link' | 'secondary' | 'link-underline' | 'field';
   className?: string;
 }
-
-export const appearanceClassMap = {
-  secondary: styles.radioButtonSecondary,
-  link: styles.radioButtonLink,
-  link2: styles.radioButtonLink2,
-};
 
 const RadioButton: React.FC<RadioButtonProps> = ({
   name,
@@ -25,12 +21,12 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   isSelected,
   onChange,
   className,
-  appearance = 'secondary',
+  appearance = 'field',
 }) => {
   return (
     <label
       htmlFor={`${name}-${value}`}
-      className={clsx(className, styles.radioButton, appearanceClassMap[appearance], {
+      className={clsx(className, styles.radioButton, styles[`radioButton--${appearance}`], {
         [styles.isSelected]: isSelected,
       })}
     >
@@ -42,6 +38,11 @@ const RadioButton: React.FC<RadioButtonProps> = ({
         checked={isSelected}
         onChange={() => onChange?.(value)}
       />
+      {appearance === 'field' && (
+        <span className={styles.radioButtonBox}>
+          <Icon icon={faCheck} size="xsmall" />
+        </span>
+      )}
       {children}
     </label>
   );
