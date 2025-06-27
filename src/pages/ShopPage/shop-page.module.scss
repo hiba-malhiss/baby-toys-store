@@ -1,13 +1,14 @@
 .shopPage {
-  gap: 60px !important;
+  column-gap: 60px !important;
   display: grid;
   grid-template-columns: max-content 1fr;
   width: 100%;
 
   &-rightSide {
-    gap: 50px;
-    display: flex;
-    flex-direction: column;
+    max-height: 100%;
+    overflow-y: auto;
+    width: 300px;
+    align-self: stretch;
   }
 
   &-collection {
@@ -15,14 +16,8 @@
     padding-bottom: 40px;
   }
 
-  &-priceFilter {
-    display: flex;
-    flex-direction: column;
-
-    &-btn {
-      align-self: end;
-      margin-top: 20px;
-    }
+  &-relatedProducts {
+    grid-column: 1/-1;
   }
 
   &-select {
