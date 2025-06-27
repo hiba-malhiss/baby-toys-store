@@ -132,6 +132,11 @@
     }
   }
 
+  &--xsmallSize {
+    @extend .button--smallSize;
+    height: auto;
+  }
+
   &--xlargeSize, &--xxlargeSize {
     font-size: 20px;
     height: 48px;

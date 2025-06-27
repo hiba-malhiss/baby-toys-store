@@ -4,11 +4,19 @@ import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { Icon } from '../Icon/Icon.tsx';
 
-export type ButtonSize = 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
+export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
+export type ButtonColor =
+  | 'primary'
+  | 'accent'
+  | 'secondary'
+  | 'light'
+  | 'icon'
+  | 'highlighted'
+  | 'secondary-light';
 type ButtonProps = {
   children?: React.ReactNode;
   appearance?: 'link' | 'filled' | 'outline';
-  color?: 'primary' | 'accent' | 'secondary' | 'light' | 'icon' | 'highlighted' | 'secondary-light';
+  color?: ButtonColor;
   size?: ButtonSize;
   leftIcon?: IconDefinition;
   rightIcon?: IconDefinition;
