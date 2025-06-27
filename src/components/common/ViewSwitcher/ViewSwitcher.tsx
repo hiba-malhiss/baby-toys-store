@@ -125,14 +125,18 @@ export function ViewSwitcher({
       className={clsx(className, styles.container, styles[`container--${gap}Gap`])}
       ref={containerRef}
     >
-      {header && <Heading level="h1">{header}</Heading>}
+      {header && (
+        <Heading level="h1" className={clsx('bts-marginBxxxl')}>
+          {header}
+        </Heading>
+      )}
 
       {!staticView && (
         <Flex
           key="header-buttons"
           justify="between"
           align="center"
-          className={clsx('bts-marginVxxxl')}
+          className={clsx('bts-marginBxxxl')}
         >
           <Flex>
             <Button

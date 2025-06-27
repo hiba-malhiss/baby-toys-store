@@ -15,7 +15,8 @@ const ShopPage = () => {
   const [appliedFilters, setAppliedFilters] = useState<ShopFilters>();
   const [view, setView] = useState<ViewMode>();
   const selectedLabel =
-    categoriesRadioOptions.find(({ value }) => value === appliedFilters?.category)?.label ?? '';
+    categoriesRadioOptions.find(({ value }) => value === appliedFilters?.category)?.label ??
+    'All Categories';
 
   return (
     <PageContainer className={styles.shopPage}>
