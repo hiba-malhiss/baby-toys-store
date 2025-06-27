@@ -15,6 +15,8 @@ export const ProductInfoTabs = () => {
         tabs={[
           { header: 'Description', value: 'description' },
           { header: 'Reviews', value: 'reviews' },
+          { header: 'Cancellation Policy', value: 'order-cancellation' },
+          { header: 'Return Policy', value: 'return-policy' },
         ]}
         defaultSelected="description"
       >
@@ -29,6 +31,16 @@ export const ProductInfoTabs = () => {
               <FeedbackCard feedback={feedback} appearance="detailed"></FeedbackCard>
             ))}
           </ViewSwitcher>
+        </TabBarItem>
+        <TabBarItem value="order-cancellation">
+          <ExpandableContent className={styles.productDetailsDescription}>
+            {description}
+          </ExpandableContent>
+        </TabBarItem>
+        <TabBarItem value="return-policy">
+          <ExpandableContent className={styles.productDetailsDescription}>
+            {description}
+          </ExpandableContent>
         </TabBarItem>
       </TabBar>
     </Card>
