@@ -1,0 +1,69 @@
+.accordionGroup {
+  border: 1px solid $color-border;
+  border-radius: 12px;
+  background-color: $color-white;
+  box-shadow: $box-shadow-s;
+  overflow: hidden;
+  width: 100%;
+}
+
+.accordion {
+  width: 100%;
+
+  &.withoutPadding {
+    .accordionContent, .accordion-header {
+      padding: 12px 0;
+    }
+  }
+
+  &.isControlled {
+    border-bottom: 1px solid $color-secondary-light;
+
+    .accordion-header:hover {
+      background-color: $color-accent-light-hover;
+    }
+
+    &.isActive .accordion-header {
+      background-color: $color-accent-light;
+    }
+  }
+
+  &.isActive .accordion-headerIcon {
+    transform: rotate(180deg);
+    color: $color-primary-dark;
+  }
+
+  &.isDisabled {
+    pointer-events: none;
+    opacity: 0.5;
+
+    .accordion-header {
+      cursor: not-allowed;
+      color: $color-disabled2;
+    }
+  }
+
+  .accordion-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    font-weight: 500;
+    color: $color-text-primary;
+    background-color: $color-white;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s ease;
+  }
+
+  &-headerIcon {
+    transition: transform 0.3s ease;
+    color: $color-icon;
+  }
+
+  &-Content {
+    padding: 16px 20px;
+    color: $color-text-grey;
+    background-color: $color-white;
+  }
+}
