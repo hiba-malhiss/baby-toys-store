@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect, type ReactNode } from 'react';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import './expandable-content.scss';
-import { Button } from '../Button/Button.tsx';
+import { Button, type ButtonColor } from '../Button/Button.tsx';
 
 type ExpandableContentProps = {
   className?: string;
   maxHeight?: string;
+  buttonColor?: ButtonColor;
   children: ReactNode;
 };
 
@@ -13,6 +14,7 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
   children,
   className,
   maxHeight = '300px',
+  buttonColor = 'highlighted',
 }) => {
   const [expanded, setExpanded] = useState(false);
   const [truncated, setTruncated] = useState(false);
@@ -40,6 +42,7 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
         style={{
           maxHeight: expanded ? 'none' : maxHeight,
           overflow: 'hidden',
+          width: '100%',
         }}
       >
         {children}
@@ -49,7 +52,7 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
         <Button
           withoutPadding
           appearance="link"
-          color="highlighted"
+          color={buttonColor}
           leftIcon={expanded ? faChevronUp : faChevronDown}
           onClick={() => setExpanded(!expanded)}
         >

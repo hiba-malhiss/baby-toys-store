@@ -108,8 +108,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
           ></Button>
           <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl}></Button>
         </Flex>
-        <Card fullWidth size="small">
-          <Heading level="h3">Item details</Heading>
+        <Card fullWidth size="small" header="Item details">
           <ExpandableContent>
             <div className={styles.productOverviewDetails}>
               {product.details?.map(({ label, value }) => (

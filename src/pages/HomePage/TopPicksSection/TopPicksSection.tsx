@@ -18,6 +18,7 @@ const TopPicksSection = () => {
         selectedValue={selected}
         name="topPicks"
         onChange={setSelected}
+        appearance="secondary"
       />
       <ViewSwitcher staticView="flex" totalSize={toys.length} pageSize={8}>
         {toys.map((toy, index) => (

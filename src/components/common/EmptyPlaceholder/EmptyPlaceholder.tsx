@@ -1,14 +1,15 @@
 import { Icon } from '../Icon/Icon.tsx';
-import Flex from '../Flex/Flex.tsx';
+import Flex, { type Align } from '../Flex/Flex.tsx';
 import { Button } from '../Button/Button.tsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './empty-placeholder.module.scss';
 
 type EmptyPlaceholderProps = {
-  icon: IconDefinition;
+  icon?: IconDefinition;
   message: string;
   buttonText?: string;
   iconSize?: string;
+  align?: Align;
   onButtonClick?: () => void;
 };
 
@@ -18,17 +19,18 @@ export const EmptyPlaceholder: React.FC<EmptyPlaceholderProps> = ({
   buttonText,
   onButtonClick,
   iconSize = 'xxxlarge',
+  align = 'center',
 }) => {
   return (
     <Flex
       direction="vertical"
       spacing="xl"
-      align="center"
+      align={align}
       justify="center"
       fullWidth
       className={styles.emptyPlaceholder}
     >
-      <Icon icon={icon} size={iconSize} color="gray" />
+      {icon && <Icon icon={icon} size={iconSize} color="gray" />}
       <p>{message}</p>
       {buttonText && onButtonClick && (
         <Button color="accent" onClick={onButtonClick}>

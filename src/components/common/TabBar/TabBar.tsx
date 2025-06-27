@@ -41,7 +41,7 @@ export const TabBar = ({
         direction={direction}
         align="center"
         justify="center"
-        appearance="link2"
+        appearance="link-underline"
       >
         {tabs.map(({ header, value }) => (
           <RadioButton key={value} value={value}>

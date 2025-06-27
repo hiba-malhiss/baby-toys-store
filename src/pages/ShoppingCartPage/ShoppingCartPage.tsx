@@ -84,7 +84,12 @@ const ShoppingCartPage = () => {
         </div>
       </div>
       <Card header="Cart Total" className={styles.shoppingCartPageSummary}>
-        <TotalAmountSection items={cartItems} shipping={20} currency={'$'} />
+        <TotalAmountSection
+          items={cartItems}
+          shipping={20}
+          currency={'$'}
+          className="bts-marginTxxl"
+        />
         <Button color="accent" fullWidth size="large" className="bts-marginTxl">
           Proceed to checkout
         </Button>

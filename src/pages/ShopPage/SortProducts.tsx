@@ -24,7 +24,7 @@ export const SortProducts: React.FC<{
   return (
     <Select
       value={sortBy}
-      onChange={handleSortChange}
+      onChange={(value) => handleSortChange(value as SortOption)}
       placeholder="Sort by"
       className={styles.shopPageSelect}
     >

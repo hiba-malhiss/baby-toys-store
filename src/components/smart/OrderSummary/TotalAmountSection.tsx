@@ -10,17 +10,19 @@ interface TotalAmountSectionProps {
   items: CartItem[];
   shipping: number;
   currency: string;
+  className: string;
 }
 
 export const TotalAmountSection: React.FC<TotalAmountSectionProps> = ({
   items,
   shipping,
   currency,
+  className,
 }) => {
   const { subtotal, total } = calculateOrderSummary(items, shipping);
 
   return (
-    <Flex direction="vertical" spacing="xl">
+    <Flex direction="vertical" spacing="xl" className={className}>
       <Flex justify="between" fullWidth>
         <span>Subtotal</span>
         <span>
