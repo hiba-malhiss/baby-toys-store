@@ -28,6 +28,7 @@ export const Toast = () => {
             className={styles.toastCloseButton}
             onClick={() => removeToast(toast.id)}
             withoutPadding
+            size="xsmall"
           ></Button>
         </div>
       ))}

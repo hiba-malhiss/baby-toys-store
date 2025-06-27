@@ -16,13 +16,14 @@
   align-items: center;
   min-width: 250px;
   max-width: 350px;
-  padding: 4px 8px;
+  padding: 10px;
   border-left: 5px solid;
   border-radius: 8px;
   background-color: $color-white;
   box-shadow: $box-shadow-m;
   animation: fadeIn 0.3s ease, fadeOut 0.3s ease 2.7s;
   color: $color-text-primary;
+  font-size: 14px;
 
   &-success {
     border-color: $color-success;
