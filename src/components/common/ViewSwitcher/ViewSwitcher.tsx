@@ -1,4 +1,4 @@
-import React, { useEffect, useState, type ReactNode, useMemo } from 'react';
+import React, { useEffect, useState, type ReactNode, useMemo, useRef } from 'react';
 import Flex from '../Flex/Flex.tsx';
 import { Button } from '../Button/Button.tsx';
 import { faTh, faBars } from '@fortawesome/free-solid-svg-icons';
@@ -49,6 +49,7 @@ export function ViewSwitcher({
 }: ViewSwitcherProps) {
   const allItems = React.Children.toArray(children);
   const totalItems = totalSize ?? allItems.length;
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const [viewMode, setViewMode] = useState<ViewMode>(staticView ?? initialView);
   const [columns, setColumns] = useState<number | undefined>(undefined);
@@ -97,6 +98,10 @@ export function ViewSwitcher({
     setCurrentPage(newPage);
     setCurrentPageSize(newPageSize);
     onPaginationChange?.(newPage, newPageSize);
+    if (containerRef.current) {
+      const top = containerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+      window.scrollTo({ top, behavior: 'smooth' });
+    }
   };
 
   const totalPages = Math.ceil(totalItems / currentPageSize);
@@ -116,7 +121,10 @@ export function ViewSwitcher({
   };
 
   return (
-    <div className={clsx(className, styles.container, styles[`container--${gap}Gap`])}>
+    <div
+      className={clsx(className, styles.container, styles[`container--${gap}Gap`])}
+      ref={containerRef}
+    >
       {header && <Heading level="h1">{header}</Heading>}
 
       {!staticView && (
