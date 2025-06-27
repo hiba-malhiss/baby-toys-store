@@ -33,7 +33,7 @@ type ViewSwitcherProps = {
 
 export function ViewSwitcher({
   children,
-  page,
+  page = 1,
   pageSize,
   onPaginationChange,
   responsiveOptions = [],
@@ -98,7 +98,7 @@ export function ViewSwitcher({
     setCurrentPage(newPage);
     setCurrentPageSize(newPageSize);
     onPaginationChange?.(newPage, newPageSize);
-    if (containerRef.current) {
+    if (containerRef.current && newPage !== page) {
       const top = containerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
       window.scrollTo({ top, behavior: 'smooth' });
     }
