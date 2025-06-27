@@ -11,7 +11,7 @@
   width: 100%;
 
   &.withoutPadding {
-    .accordionContent, .accordion-header {
+    .accordion-content, .accordion-header {
       padding: 12px 0;
     }
   }
@@ -61,7 +61,7 @@
     color: $color-icon;
   }
 
-  &-Content {
+  &-content {
     padding: 16px 20px;
     color: $color-text-grey;
     background-color: $color-white;
