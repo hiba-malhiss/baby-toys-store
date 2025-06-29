@@ -1,11 +1,12 @@
-import React, { useEffect, useState, type ReactNode, useMemo, useRef } from 'react';
+import React, { useEffect, useState, type ReactNode, useRef } from 'react';
+import clsx from 'clsx';
 import Flex from '../Flex/Flex.tsx';
 import { Button } from '../Button/Button.tsx';
 import { faTh, faBars } from '@fortawesome/free-solid-svg-icons';
 import Heading from '../Heading/Heading.tsx';
-import clsx from 'clsx';
 import styles from './view-switcher.module.scss';
 import { Paginator } from '../Paginator/Paginator.tsx';
+import SkeletonCard from '../Skeleton/SkeletonCard.tsx';
 
 type ResponsiveOption = {
   breakpoint: number;
@@ -14,111 +15,137 @@ type ResponsiveOption = {
 
 export type ViewMode = 'grid' | 'list' | 'flex';
 
+type PaginationMode = 'default' | 'show-more';
+
 type ViewSwitcherProps = {
-  children: ReactNode[] | ReactNode;
-  page?: number;
-  gap?: 'small' | 'none';
+  items: ReactNode[];
+  page: number;
   pageSize: number;
+  totalSize: number;
+  isLoading?: boolean;
   minColWidth?: number;
-  totalSize?: number;
   className?: string;
-  onPaginationChange?: (page: number, pageSize: number) => void;
+  onPaginationChange: (page: number, pageSize: number) => void;
   responsiveOptions?: ResponsiveOption[];
   onViewChange?: (view: ViewMode) => void;
   initialView?: ViewMode;
   staticView?: ViewMode;
+  paginationMode?: PaginationMode;
   header?: ReactNode;
   topBar?: ReactNode;
+  gap?: 'small' | 'none';
 };
 
 export function ViewSwitcher({
-  children,
-  page = 1,
+  items,
+  page,
   pageSize,
+  totalSize,
   onPaginationChange,
   responsiveOptions = [],
   onViewChange,
   minColWidth,
   initialView = 'grid',
   staticView,
-  totalSize,
+  paginationMode = 'default',
   header,
   topBar,
   gap,
   className,
+  isLoading = false,
 }: ViewSwitcherProps) {
-  const allItems = React.Children.toArray(children);
-  const totalItems = totalSize ?? allItems.length;
   const containerRef = useRef<HTMLDivElement>(null);
-
   const [viewMode, setViewMode] = useState<ViewMode>(staticView ?? initialView);
   const [columns, setColumns] = useState<number | undefined>(undefined);
-  const [currentPage, setCurrentPage] = useState(page || 1);
-  const [currentPageSize, setCurrentPageSize] = useState(pageSize);
 
+  // Track if this is the initial render
+  const isInitialMount = useRef(true);
+
+  // Notify initial view on mount if not static
   useEffect(() => {
-    if (!staticView) {
+    if (!staticView && isInitialMount.current) {
+      isInitialMount.current = false;
       onViewChange?.(initialView);
     }
-  }, [initialView, staticView]);
+  }, [initialView, staticView, onViewChange]);
 
+  // Memoize sorted options to prevent unnecessary resorting
+  const sortedOptions = React.useMemo(() => {
+    return [...(responsiveOptions || [])].sort((a, b) => a.breakpoint - b.breakpoint);
+  }, [responsiveOptions]);
+
+  // Handle responsive columns for grid view
   useEffect(() => {
     if (responsiveOptions.length === 0) {
       setColumns(undefined);
       return;
     }
 
-    const sortedOptions = [...responsiveOptions].sort((a, b) => a.breakpoint - b.breakpoint);
+    let timeoutId: NodeJS.Timeout;
 
     const updateColumns = () => {
       const width = window.innerWidth;
       let matched = pageSize;
+
+      // Find the best matching breakpoint
       for (const opt of sortedOptions) {
         if (width >= opt.breakpoint) {
           matched = opt.gridColumns;
+        } else {
+          break;
         }
       }
-      setColumns(matched);
+
+      // Only update state if columns changed
+      setColumns((prev) => (prev !== matched ? matched : prev));
     };
 
+    // Debounce the resize handler
+    const handleResize = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(updateColumns, 100);
+    };
+
+    // Initial update
     updateColumns();
-    window.addEventListener('resize', updateColumns);
-    return () => window.removeEventListener('resize', updateColumns);
-  }, [responsiveOptions, pageSize]);
 
-  useEffect(() => {
-    setCurrentPage(page || 1);
-  }, [page]);
+    // Add event listener with passive: true for better performance
+    window.addEventListener('resize', handleResize, { passive: true });
 
-  useEffect(() => {
-    setCurrentPageSize(pageSize);
-  }, [pageSize]);
+    // Cleanup
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [sortedOptions, pageSize, responsiveOptions.length]);
 
-  const handlePageChange = (newPage: number, newPageSize: number) => {
-    setCurrentPage(newPage);
-    setCurrentPageSize(newPageSize);
-    onPaginationChange?.(newPage, newPageSize);
-    if (containerRef.current && newPage !== page) {
-      const top = containerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
-      window.scrollTo({ top, behavior: 'smooth' });
-    }
-  };
-
-  const totalPages = Math.ceil(totalItems / currentPageSize);
-  const safePage = Math.min(Math.max(currentPage, 1), totalPages);
-  const startIdx = (safePage - 1) * currentPageSize;
-  const endIdx = Math.min(startIdx + currentPageSize, totalItems);
-
-  const paginatedItems = useMemo(
-    () => allItems.slice(startIdx, endIdx),
-    [allItems, startIdx, endIdx]
+  const changeView = React.useCallback(
+    (view: ViewMode) => {
+      if (staticView || view === viewMode) return;
+      setViewMode(view);
+      onViewChange?.(view);
+    },
+    [staticView, viewMode, onViewChange]
   );
 
-  const changeView = (view: ViewMode) => {
-    if (staticView) return;
-    setViewMode(view);
-    onViewChange?.(view);
-  };
+  const startIdx = (page - 1) * pageSize + 1;
+  const endIdx = Math.min(page * pageSize, totalSize);
+
+  // Memoize the page change handler
+  const handlePageChange = React.useCallback(
+    (newPage: number) => {
+      if (newPage !== page) {
+        onPaginationChange(newPage, pageSize);
+
+        // Scroll to top of container on page change (only for 'default' mode)
+        if (paginationMode === 'default' && containerRef.current) {
+          const top = containerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
+          window.scrollTo({ top, behavior: 'smooth' });
+        }
+      }
+    },
+    [page, pageSize, paginationMode, onPaginationChange]
+  );
 
   return (
     <div
@@ -160,7 +187,7 @@ export function ViewSwitcher({
           <div className={styles.containerTopBar}>{topBar}</div>
 
           <span className={styles.containerResultsInfo}>
-            Showing {totalItems === 0 ? 0 : startIdx + 1}–{endIdx} of {totalItems} results
+            Showing {totalSize === 0 ? 0 : startIdx}–{endIdx} of {totalSize} results
           </span>
         </Flex>
       )}
@@ -174,21 +201,43 @@ export function ViewSwitcher({
         style={
           viewMode === 'grid'
             ? {
-                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(${minColWidth || 200}px, 1fr))`,
+                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(${
+                  minColWidth || 200
+                }px, 1fr))`,
               }
             : undefined
         }
       >
-        {paginatedItems.map((child, i) => (
-          <React.Fragment key={i}>{child}</React.Fragment>
-        ))}
+        {isLoading && paginationMode === 'default' ? (
+          // Show a page of skeleton cards for a better loading experience
+          Array.from({ length: pageSize }).map((_, i) => (
+            <React.Fragment key={`skeleton-${i}`}>
+              <SkeletonCard />
+            </React.Fragment>
+          ))
+        ) : items.length === 0 ? (
+          <div
+            style={{
+              color: 'var(--color-text-muted)',
+              textAlign: 'center',
+              width: '100%',
+              padding: '32px 0',
+            }}
+          >
+            No data found
+          </div>
+        ) : (
+          items.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>)
+        )}
       </div>
 
       <Paginator
+        mode={paginationMode}
         className={styles.containerPaginator}
-        totalItems={totalItems}
-        initialPage={currentPage}
-        pageSize={currentPageSize}
+        totalItems={totalSize}
+        initialPage={page}
+        pageSize={pageSize}
+        isLoading={isLoading}
         onPageChange={handlePageChange}
       />
     </div>
