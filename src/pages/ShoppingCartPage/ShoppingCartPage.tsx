@@ -18,7 +18,7 @@ import { useCartSync } from '../../hooks/useCartSync';
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
-  const { currency, shipping, loading, isLoggedIn } = useStoreConfiguration();
+  const { currency, shipping, loading } = useStoreConfiguration();
   useCartSync();
 
   if (loading || !currency || !shipping) {
@@ -80,7 +80,7 @@ const ShoppingCartPage = () => {
                   min={1}
                   value={item.quantity}
                   withControls
-                  onChange={(quantity) => updateQuantity(item.productId, quantity)}
+                  onChange={(quantity) => updateQuantity(item.productId, quantity as number)}
                   size="small"
                   fullWidth
                 />

@@ -11,8 +11,7 @@ import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import type { Product } from '../../types/product.types.ts';
 import styles from './product-details-page.module.scss';
-
-const RELATED_PRODUCTS_PAGE_SIZE = 4;
+import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +19,7 @@ const ProductDetailsPage: React.FC = () => {
   const [product, setProduct] = useState<Product | undefined>();
 
   const { getProductById, getRelatedProducts } = useMockProductsApi<Product>(
-    RELATED_PRODUCTS_PAGE_SIZE
+    PRODUCT_RELATED_PRODUCTS_LIMIT
   );
 
   // Use a custom fetch function for related products
@@ -29,11 +28,11 @@ const ProductDetailsPage: React.FC = () => {
       return { items: [], page, totalPages: 0, totalItems: 0 };
     }
 
-    const relatedProducts = await getRelatedProducts(id, RELATED_PRODUCTS_PAGE_SIZE);
+    const relatedProducts = await getRelatedProducts(id, PRODUCT_RELATED_PRODUCTS_LIMIT);
     return {
       items: relatedProducts,
       page,
-      totalPages: Math.ceil(relatedProducts.length / RELATED_PRODUCTS_PAGE_SIZE),
+      totalPages: Math.ceil(relatedProducts.length / PRODUCT_RELATED_PRODUCTS_LIMIT),
       totalItems: relatedProducts.length,
     };
   };
@@ -44,7 +43,7 @@ const ProductDetailsPage: React.FC = () => {
     page: relatedPage,
     loading: relatedLoading,
     handlePaginationChange: handleRelatedPaginationChange,
-  } = useHandlePagination(fetchRelatedProducts, RELATED_PRODUCTS_PAGE_SIZE, null, 'show-more');
+  } = useHandlePagination(fetchRelatedProducts, PRODUCT_RELATED_PRODUCTS_LIMIT, null, 'show-more');
 
   useEffect(() => {
     if (!id || product?.id === id) return;
@@ -69,7 +68,7 @@ const ProductDetailsPage: React.FC = () => {
         <ViewSwitcher
           className={styles.productDetailsRelatedProd}
           page={relatedPage}
-          pageSize={RELATED_PRODUCTS_PAGE_SIZE}
+          pageSize={PRODUCT_RELATED_PRODUCTS_LIMIT}
           totalSize={relatedTotalSize}
           isLoading={relatedLoading}
           staticView="flex"

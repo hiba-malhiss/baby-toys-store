@@ -1,36 +1,44 @@
 import { useEffect, useRef } from 'react';
 import { useCartStore } from '../store/useCartStore';
-import { useStoreConfiguration } from '../context/StoreConfigurationContext';
+import { useAuth } from '../context/AuthContext';
 import { mockSaveCartToCloud, mockLoadCartFromCloud } from '../mock-data/useMockProductsApi';
 
 export function useCartSync() {
-  const { cartItems, clearCart } = useCartStore();
-  const { isLoggedIn } = useStoreConfiguration();
+  const { cartItems, clearCart, setCartItems } = useCartStore();
+  const { isLoggedIn } = useAuth();
   const prevLoggedIn = useRef(isLoggedIn);
 
-  // Sync cart to cloud when logged in and cart changes
+  // On cart or login state change, save to cloud if logged in
   useEffect(() => {
     if (isLoggedIn) {
-      mockSaveCartToCloud(cartItems);
+      (async () => {
+        try {
+          await mockSaveCartToCloud(cartItems);
+        } catch (e) {
+          console.error('Failed saving cart to cloud', e);
+        }
+      })();
     }
-  }, [isLoggedIn, cartItems]);
+  }, [cartItems, isLoggedIn]);
 
-  // On login, merge local and cloud cart
+  // On login, load cloud cart and merge with local
   useEffect(() => {
     if (!prevLoggedIn.current && isLoggedIn) {
       (async () => {
-        const localCart = cartItems;
-        const cloudCart = await mockLoadCartFromCloud();
-        const merged = cloudCart.length ? cloudCart : localCart;
-        clearCart();
-        useCartStore.setState({ cartItems: merged });
-        await mockSaveCartToCloud(merged);
+        try {
+          const cloudCart = await mockLoadCartFromCloud();
+          const mergedCart = cloudCart.length ? cloudCart : cartItems;
+          setCartItems(mergedCart);
+          await mockSaveCartToCloud(mergedCart);
+        } catch (e) {
+          console.error('Failed loading or merging cart on login', e);
+        }
       })();
     }
     prevLoggedIn.current = isLoggedIn;
-  }, [isLoggedIn]);
+  }, [isLoggedIn, cartItems, setCartItems]);
 
-  // On logout, clear local cart
+  // On logout, clear local cart (and no cloud sync needed)
   useEffect(() => {
     if (prevLoggedIn.current && !isLoggedIn) {
       clearCart();

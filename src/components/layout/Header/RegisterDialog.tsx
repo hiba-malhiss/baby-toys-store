@@ -2,29 +2,31 @@ import React, { useState } from 'react';
 import Dialog from '../../common/Dialog/Dialog.tsx';
 import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import { Button } from '../../common/Button/Button.tsx';
-import { mockRegisterApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useAuth } from '../../../context/AuthContext';
+import { useToast } from '../../common/Toast/ToastContext.tsx';
 
 interface RegisterDialogProps {
   open: boolean;
   onClose: () => void;
-  onRegister: (user: { email: string }) => void;
 }
 
-const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose, onRegister }) => {
+const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
+  const { register } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const user = await mockRegisterApi(email, password);
-      onRegister(user);
+      await register(email, password);
       onClose();
     } catch (err: any) {
+      toast.error(err.message || 'Registration failed');
       setError(err.message || 'Registration failed');
     } finally {
       setLoading(false);

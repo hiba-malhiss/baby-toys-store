@@ -1,30 +1,32 @@
 import React, { useState } from 'react';
-import { mockLoginApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useAuth } from '../../../context/AuthContext';
 import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import Dialog from '../../common/Dialog/Dialog.tsx';
+import { useToast } from '../../common/Toast/ToastContext.tsx';
 
 interface LoginDialogProps {
   open: boolean;
   onClose: () => void;
-  onLogin: (user: { email: string }) => void;
 }
 
-const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
+const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
+  const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const toast = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     try {
-      const user = await mockLoginApi(email, password);
-      onLogin(user);
+      await login(email, password);
       onClose();
     } catch (err: any) {
+      toast.error(err.message || 'Login failed');
       setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
@@ -35,7 +37,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => 
     <Dialog
       visible={open}
       onHide={onClose}
-      onVisibleChange={(val) => {
+      onVisibleChange={(val: boolean) => {
         if (!val) onClose();
       }}
       header="Login"

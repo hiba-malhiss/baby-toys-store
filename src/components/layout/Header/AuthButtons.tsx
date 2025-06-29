@@ -8,16 +8,6 @@ const AuthButtonsWithDialogs: React.FC = () => {
   const [isLoginOpen, setLoginOpen] = useState(false);
   const [isRegisterOpen, setRegisterOpen] = useState(false);
 
-  const handleLogin = (user: { email: string }) => {
-    console.log('Logged in user:', user);
-    setLoginOpen(false);
-  };
-
-  const handleRegister = (user: { email: string }) => {
-    console.log('Registered user:', user);
-    setRegisterOpen(false);
-  };
-
   return (
     <>
       <Flex spacing="xxxxl">
@@ -34,13 +24,9 @@ const AuthButtonsWithDialogs: React.FC = () => {
         </Button>
       </Flex>
 
-      <LoginDialog open={isLoginOpen} onClose={() => setLoginOpen(false)} onLogin={handleLogin} />
+      <LoginDialog open={isLoginOpen} onClose={() => setLoginOpen(false)} />
 
-      <RegisterDialog
-        open={isRegisterOpen}
-        onClose={() => setRegisterOpen(false)}
-        onRegister={handleRegister}
-      />
+      <RegisterDialog open={isRegisterOpen} onClose={() => setRegisterOpen(false)} />
     </>
   );
 };

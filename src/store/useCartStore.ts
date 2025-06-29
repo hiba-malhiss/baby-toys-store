@@ -10,13 +10,15 @@ import {
 interface CartState {
   cartItems: CartItem[];
   isShippingCartDrawerOpen: boolean;
-  openShippingCartDrawer: () => void;
-  closeShippingCartDrawer: () => void;
-  addToCart: (product: Product, quantity?: number) => void;
+  addToCart: (product: Product | Product[], quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   getTotalItemsInCart: () => number;
   clearCart: () => void;
+  setCartItems: (items: CartItem[]) => void;
+  openShippingCartDrawer: () => void;
+  closeShippingCartDrawer: () => void;
+  hasProduct: (productId: string) => boolean;
 }
 
 export const useCartStore = create<CartState>()(
@@ -25,9 +27,20 @@ export const useCartStore = create<CartState>()(
       cartItems: [],
       isShippingCartDrawerOpen: false,
 
-      addToCart: (product, quantity = 1) => {
+      addToCart: (productOrProducts, quantity = 1) => {
+        if (quantity <= 0) return;
+
         const { cartItems } = get();
-        const updatedItems = addOrUpdateCartItem(cartItems, product, quantity);
+        let updatedItems = cartItems;
+
+        if (Array.isArray(productOrProducts)) {
+          updatedItems = productOrProducts.reduce(
+            (acc, product) => addOrUpdateCartItem(acc, product, quantity),
+            cartItems
+          );
+        } else {
+          updatedItems = addOrUpdateCartItem(cartItems, productOrProducts, quantity);
+        }
 
         set({
           cartItems: updatedItems,
@@ -44,24 +57,33 @@ export const useCartStore = create<CartState>()(
       updateQuantity: (productId, quantity) => {
         const { cartItems } = get();
         let updatedItems;
+
         if (quantity <= 0) {
           updatedItems = cartItems.filter((item) => item.productId !== productId);
         } else {
           updatedItems = updateCartItemQuantity(cartItems, productId, quantity);
         }
+
         set({ cartItems: updatedItems });
+      },
+
+      setCartItems: (items) => {
+        set({ cartItems: items });
+      },
+
+      clearCart: () => {
+        set({ cartItems: [] });
+      },
+
+      getTotalItemsInCart: () => {
+        return getTotalCartItems(get().cartItems);
       },
 
       openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
       closeShippingCartDrawer: () => set({ isShippingCartDrawerOpen: false }),
 
-      getTotalItemsInCart: () => {
-        const { cartItems } = get();
-        return getTotalCartItems(cartItems);
-      },
-
-      clearCart: () => {
-        set({ cartItems: [] });
+      hasProduct: (productId) => {
+        return get().cartItems.some((item) => item.productId === productId);
       },
     }),
     {

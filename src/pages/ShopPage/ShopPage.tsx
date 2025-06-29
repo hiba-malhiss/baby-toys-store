@@ -6,7 +6,9 @@ import SmartProductCard from '../../components/smart/SmartProductCard/SmartProdu
 import Section from '../../components/layout/Section/Section.tsx';
 import Carousel from '../../components/common/Carousel/Carousel.tsx';
 import { SideFilters, type ShopFilters } from './SideFilters/SideFilters.tsx';
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { getProductCategories, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants.ts';
+import { SHOP_PAGE_SIZE } from '../../constants/display.constants.ts';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import { useUrlFilters } from '../../hooks/useUrlFilters.ts';
 import { SortProducts } from './SortProducts.tsx';
@@ -14,30 +16,37 @@ import type { Product } from '../../types/product.types.ts';
 import type { RadioOption } from '../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import Flex from '../../components/common/Flex/Flex.tsx';
 
-const PAGE_SIZE = 8;
+// PAGE_SIZE moved to constants/display.constants.ts
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
   const [categoriesOptions, setCategoriesOptions] = useState<RadioOption[]>([]);
-  const { fetchProducts, getShopCategories } = useMockProductsApi<Product>(PAGE_SIZE);
+  const { fetchProducts } = useMockProductsApi<Product>(SHOP_PAGE_SIZE);
   const { filters: urlFilters, updateFilters } = useUrlFilters();
   const [relatedItems, setRelatedItems] = useState<Product[]>([]);
   const [relatedLoading, setRelatedLoading] = useState(false);
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange, filters } =
-    useHandlePagination((page, filters) => fetchProducts(page, filters), PAGE_SIZE, urlFilters);
+    useHandlePagination(
+      (page, filters) => fetchProducts(page, filters),
+      SHOP_PAGE_SIZE,
+      urlFilters
+    );
 
   useEffect(() => {
-    getShopCategories()
-      .then(setCategoriesOptions)
+    getProductCategories()
+      .then((data) => {
+        // For shop, use all categories as radio options (label/value)
+        setCategoriesOptions(data.map(({ label, value }) => ({ label, value })));
+      })
       .catch((error) => {
         console.error('Error fetching shop categories:', error);
       });
-  }, [getShopCategories]);
+  }, []);
 
   // fetch related products
   useEffect(() => {
     setRelatedLoading(true);
-    fetchProducts(1, { sortBy: 'featured' })
+    fetchProducts(1, { sortBy: DEFAULT_SORT_OPTION })
       .then((data) => {
         setRelatedItems(data.items);
       })
@@ -105,7 +114,7 @@ const ShopPage = () => {
         className={styles.shopPageCollection}
         header={selectedLabel}
         page={page}
-        pageSize={PAGE_SIZE}
+        pageSize={SHOP_PAGE_SIZE}
         totalSize={totalSize}
         topBar={
           <Flex>

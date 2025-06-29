@@ -10,25 +10,28 @@ import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage.ts
 import ShoppingCartPage from './pages/ShoppingCartPage/ShoppingCartPage.tsx';
 import { ToastProvider } from './components/common/Toast/ToastContext.tsx';
 import { StoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
+import { AuthProvider } from './context/AuthContext.tsx';
 
 const App: React.FC = () => {
   return (
     <StoreConfigurationProvider>
-      <BreadcrumbProvider>
-        <ToastProvider>
-          <BrowserRouter>
-            <Layout>
-              <Routes>
-                <Route path="/" element={<HomePage />} />
-                <Route path="/shop" element={<ShopPage />} />
-                <Route path="/product-details/:id" element={<ProductDetailsPage />} />
-                <Route path="/shopping-cart" element={<ShoppingCartPage />} />
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </Layout>
-          </BrowserRouter>
-        </ToastProvider>
-      </BreadcrumbProvider>
+      <AuthProvider>
+        <BreadcrumbProvider>
+          <ToastProvider>
+            <BrowserRouter>
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/shop" element={<ShopPage />} />
+                  <Route path="/product-details/:id" element={<ProductDetailsPage />} />
+                  <Route path="/shopping-cart" element={<ShoppingCartPage />} />
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Layout>
+            </BrowserRouter>
+          </ToastProvider>
+        </BreadcrumbProvider>
+      </AuthProvider>
     </StoreConfigurationProvider>
   );
 };

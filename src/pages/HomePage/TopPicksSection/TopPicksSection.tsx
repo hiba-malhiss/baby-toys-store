@@ -9,7 +9,7 @@ import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
 import type { Product } from '../../../types/product.types.ts';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 
-const DISPLAY_LIMIT = 6; // Show only 6 items on homepage
+import { HOMEPAGE_TOP_PICKS_LIMIT } from '../../../constants/display.constants.ts';
 
 const TopPicksSection = () => {
   const [topPicksOptions, setTopPicksOptions] = useState([]);
@@ -19,7 +19,8 @@ const TopPicksSection = () => {
   const [optionsLoading, setOptionsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const { fetchProducts, getHomepageContent } = useMockProductsApi<Product>(DISPLAY_LIMIT);
+  const { fetchProducts, getHomepageContent } =
+    useMockProductsApi<Product>(HOMEPAGE_TOP_PICKS_LIMIT);
 
   useEffect(() => {
     getHomepageContent()

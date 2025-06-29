@@ -1,6 +1,5 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import type { Feedback, InfoCardType } from '../types/product.types.ts';
-import type { ProductCategory } from '../types/product.types.ts';
 import type { RadioOption } from '../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 
 export const photoShoots: string[] = [
@@ -64,17 +63,32 @@ export const infoCards: InfoCardType[] = [
   },
 ];
 
-export const toyCategories: ProductCategory[] = [
-  { label: 'Control Toys', image: '/assets/icons/control-toys.svg' },
-  { label: 'Eco-Friendly Toys', image: '/assets/icons/eco-friendly.svg' },
-  { label: 'Educational Toys', image: '/assets/icons/educational-toys.svg' },
-  { label: 'Play sets', image: '/assets/icons/play-sets.svg' },
-  { label: 'Stuffed Toys', image: '/assets/icons/stuffed-toys.svg' },
-];
-
 // same as SortOptions values
 export const topPicksRadioOptions: RadioOption[] = [
   { label: 'Featured', value: 'featured' },
   { label: 'Best seller', value: 'best_seller' },
   { label: 'New arrivals', value: 'new_arrivals' },
+];
+
+export interface UnifiedCategory {
+  label: string;
+  value: string;
+  image: string | null;
+}
+
+export const unifiedCategories: UnifiedCategory[] = [
+  { label: 'Play sets', value: 'play-sets', image: '/assets/icons/play-sets.svg' },
+  { label: 'Control Toys', value: 'control-toys', image: '/assets/icons/control-toys.svg' },
+  {
+    label: 'Educational Toys',
+    value: 'educational-toys',
+    image: '/assets/icons/educational-toys.svg',
+  },
+  {
+    label: 'Eco-Friendly Toys',
+    value: 'eco-friendly-toys',
+    image: '/assets/icons/eco-friendly.svg',
+  },
+  { label: 'Stuffed Toys', value: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
+  { label: 'Other', value: 'other', image: null },
 ];

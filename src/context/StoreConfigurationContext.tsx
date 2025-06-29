@@ -1,5 +1,5 @@
-import { createContext, useContext, useEffect, useState, type ReactNode, useCallback } from 'react';
-import { useMockProductsApi, mockCheckTokenApi } from '../mock-data/useMockProductsApi.ts';
+import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
+import { useMockProductsApi } from '../mock-data/useMockProductsApi.ts';
 
 export interface CurrencySettings {
   currency: string;
@@ -15,7 +15,6 @@ export interface StoreConfiguration {
   currency: CurrencySettings | null;
   shipping: ShippingSettings | null;
   loading: boolean;
-  isLoggedIn: boolean;
 }
 
 const StoreConfigurationContext = createContext<StoreConfiguration | undefined>(undefined);
@@ -24,21 +23,8 @@ export const StoreConfigurationProvider = ({ children }: { children: ReactNode }
   const [currency, setCurrency] = useState<CurrencySettings | null>(null);
   const [shipping, setShipping] = useState<ShippingSettings | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
-
-  // Auth logic
-  const checkToken = useCallback(async () => {
-    const token = localStorage.getItem('mock-token');
-    if (!token) {
-      setIsLoggedIn(false);
-      return;
-    }
-    const result = await mockCheckTokenApi(token);
-    setIsLoggedIn(result.valid);
-    if (!result.valid) localStorage.removeItem('mock-token');
-  }, []);
 
   useEffect(() => {
     Promise.all([getCurrencySettings(), getShippingSettings()])
@@ -52,11 +38,10 @@ export const StoreConfigurationProvider = ({ children }: { children: ReactNode }
       .finally(() => {
         setLoading(false);
       });
-    checkToken();
-  }, [getCurrencySettings, getShippingSettings, checkToken]);
+  }, [getCurrencySettings, getShippingSettings]);
 
   return (
-    <StoreConfigurationContext.Provider value={{ currency, shipping, loading, isLoggedIn }}>
+    <StoreConfigurationContext.Provider value={{ currency, shipping, loading }}>
       {children}
     </StoreConfigurationContext.Provider>
   );

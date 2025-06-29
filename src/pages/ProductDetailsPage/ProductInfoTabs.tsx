@@ -8,13 +8,13 @@ import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import ExpandableContent from '../../components/common/ExpandableContent/ExpandableContent.tsx';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
-
-const REVIEWS_PAGE_SIZE = 4;
+import { PRODUCT_REVIEWS_PAGE_SIZE } from '../../constants/display.constants.ts';
 
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   const [description, setDescription] = useState('');
   const [descriptionLoading, setDescriptionLoading] = useState(true);
-  const { getProductDescription, fetchProductReviews } = useMockProductsApi(REVIEWS_PAGE_SIZE);
+  const { getProductDescription, fetchProductReviews } =
+    useMockProductsApi(PRODUCT_REVIEWS_PAGE_SIZE);
 
   const {
     items: reviews,
@@ -27,7 +27,7 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
       productId
         ? fetchProductReviews(productId, page)
         : Promise.resolve({ items: [], page, totalPages: 0, totalItems: 0 }),
-    REVIEWS_PAGE_SIZE
+    PRODUCT_REVIEWS_PAGE_SIZE
   );
 
   // Load product description
@@ -64,7 +64,7 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
           <ViewSwitcher
             gap="none"
             page={reviewsPage}
-            pageSize={REVIEWS_PAGE_SIZE}
+            pageSize={PRODUCT_REVIEWS_PAGE_SIZE}
             totalSize={reviewsTotalSize}
             isLoading={reviewsLoading}
             staticView="list"

@@ -2,22 +2,13 @@ import { useEffect, useState } from 'react';
 import { Select } from '../../components/common/Select/Select.tsx';
 import { Option } from '../../components/common/Select/Option.tsx';
 import styles from './shop-page.module.scss';
-
-// Add all top picks options
-export const SortOptions = [
-  { label: 'Featured', value: 'featured' },
-  { label: 'Best Seller', value: 'best_seller' },
-  { label: 'New Arrivals', value: 'new_arrivals' },
-  { label: 'Price: Low to High', value: 'price_asc' },
-  { label: 'Price: High to Low', value: 'price_desc' },
-  { label: 'Rating', value: 'rating' },
-];
+import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from '../../constants/filters.constants.ts';
 
 export const SortProducts: React.FC<{
   selected?: string;
   onSort?: (sortOption: string) => void;
 }> = ({ selected, onSort }) => {
-  const [sortBy, setSortBy] = useState<string>(selected || 'featured');
+  const [sortBy, setSortBy] = useState<string>(selected || DEFAULT_SORT_OPTION);
 
   // Keep local state in sync with prop
   useEffect(() => {
@@ -36,7 +27,7 @@ export const SortProducts: React.FC<{
       placeholder="Sort by"
       className={styles.shopPageSelect}
     >
-      {SortOptions.map((opt) => (
+      {SORT_OPTIONS.map((opt) => (
         <Option key={opt.value} value={opt.value}>
           {opt.label}
         </Option>

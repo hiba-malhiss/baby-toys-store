@@ -1,22 +1,32 @@
+import { useEffect, useState } from 'react';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import styles from './banners-section.module.scss';
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import clsx from 'clsx';
 
 const BannersSection = () => {
+  const [banners, setBanners] = useState<string[]>([]);
+  const { getHomepageContent } = useMockProductsApi(10);
+
+  useEffect(() => {
+    getHomepageContent().then((data) => setBanners(data.banners));
+  }, []);
+
   return (
     <Flex spacing="xxl" fullWidth className={styles.banner} wrap justify="center">
       <Flex
         align="center"
         justify="center"
-        className={styles.bannerWrapper + ' ' + styles.bannerWrapperCenter}
+        className={clsx(styles.bannerWrapper, styles.bannerWrapperCenter)}
       >
-        <p>Discover the Joy of Play</p>
+        <p>{banners[0] || ''}</p>
       </Flex>
       <Flex
         align="center"
         justify="end"
-        className={styles.bannerWrapper + ' ' + styles.bannerWrapperTopRight}
+        className={clsx(styles.bannerWrapper, styles.bannerWrapperTopRight)}
       >
-        <p>Flash sale 30%, Extra discount for loyal customers</p>
+        <p>{banners.slice(1).join(', ')}</p>
       </Flex>
     </Flex>
   );

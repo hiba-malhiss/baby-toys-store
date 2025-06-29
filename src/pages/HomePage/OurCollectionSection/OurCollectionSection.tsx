@@ -4,29 +4,29 @@ import styles from './our-collection-section.module.scss';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import Section from '../../../components/layout/Section/Section.tsx';
-import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
-import type { ProductCategory } from '../../../types/product.types.ts';
+import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 
 const OurCollectionSection = () => {
-  const [categories, setCategories] = useState<ProductCategory[]>([]);
+  const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  const { getCategories } = useMockProductsApi(10);
 
   useEffect(() => {
-    getCategories()
-      .then(setCategories)
+    getProductCategories()
+      .then((data) => {
+        setCategories(data.filter((cat: any) => cat.image));
+      })
       .catch((error) => {
         console.error('Error fetching categories:', error);
       })
       .finally(() => {
         setLoading(false);
       });
-  }, [getCategories]);
+  }, []);
 
-  const handleCategoryClick = (categoryLabel: string) => {
+  const handleCategoryClick = (category: string) => {
     // Navigate to shop page with category filter
-    navigate(`/shop?category=${encodeURIComponent(categoryLabel)}`);
+    navigate(`/shop?category=${encodeURIComponent(category)}`);
   };
 
   if (loading) {
@@ -54,14 +54,14 @@ const OurCollectionSection = () => {
         className={styles.ourCollectionCategories}
         wrap
       >
-        {categories.map(({ label, image }) => (
+        {categories.map(({ label, image, value }) => (
           <Button
             withoutPadding
             key={label}
             withoutAutoHeight
             appearance="link"
             size="large"
-            onClick={() => handleCategoryClick(label)}
+            onClick={() => handleCategoryClick(value)}
           >
             <Flex fullHeight direction="vertical" align="center" justify="between" spacing="xl">
               <img src={image} alt={label} className={styles.ourCollectionImage} />

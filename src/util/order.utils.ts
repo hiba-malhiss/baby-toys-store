@@ -5,7 +5,7 @@ import type { CartItem, Product } from '../types/product.types.ts';
  */
 export const calculateOrderSummary = (
   items: CartItem[],
-  shipping: number | { cost: number; freeThreshold: number }
+  shipping: { cost: number; freeThreshold: number }
 ) => {
   // Validate inputs
   if (!Array.isArray(items)) {
@@ -15,16 +15,14 @@ export const calculateOrderSummary = (
 
   // Calculate subtotal
   const subtotal = items.reduce((acc, item) => {
-    const price = typeof item.price === 'number' ? item.price : 0;
-    const quantity = typeof item.quantity === 'number' ? item.quantity : 1;
+    const price = item.price || 0;
+    const quantity = item.quantity || 1;
     return acc + price * quantity;
   }, 0);
 
   // Handle shipping cost
   let shippingCost = 0;
-  if (typeof shipping === 'number') {
-    shippingCost = shipping;
-  } else if (shipping && typeof shipping.cost === 'number') {
+  if (shipping) {
     // Apply free shipping logic
     const threshold = shipping.freeThreshold || 0;
     shippingCost = subtotal >= threshold ? 0 : shipping.cost;
@@ -58,31 +56,6 @@ export const getProductItem = (product: Product, quantity: number = 1): CartItem
  */
 export const getTotalCartItems = (items: CartItem[]): number => {
   return items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-};
-
-/**
- * Calculate cart subtotal
- */
-export const getCartSubtotal = (items: CartItem[]): number => {
-  return items.reduce((acc, item) => {
-    const price = typeof item.price === 'number' ? item.price : 0;
-    const quantity = typeof item.quantity === 'number' ? item.quantity : 1;
-    return acc + price * quantity;
-  }, 0);
-};
-
-/**
- * Check if item exists in cart
- */
-export const isItemInCart = (items: CartItem[], productId: string): boolean => {
-  return items.some((item) => item.productId === productId);
-};
-
-/**
- * Get item from cart by product ID
- */
-export const getCartItem = (items: CartItem[], productId: string): CartItem | undefined => {
-  return items.find((item) => item.productId === productId);
 };
 
 /**
