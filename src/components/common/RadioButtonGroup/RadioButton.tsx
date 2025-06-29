@@ -1,17 +1,19 @@
 import React, { type ReactNode } from 'react';
-import styles from './radio-button.module.scss';
 import clsx from 'clsx';
 import { Icon } from '../Icon/Icon.tsx';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import styles from './radio-button.module.scss';
 
 interface RadioButtonProps {
   name?: string;
-  children: ReactNode;
+  children?: ReactNode;
   value: string;
   isSelected?: boolean;
   onChange?: (value: string) => void;
-  appearance?: 'link' | 'secondary' | 'link-underline' | 'field';
+  appearance?: 'link' | 'secondary' | 'link-underline' | 'field' | 'color-swatch';
   className?: string;
+  swatchColor?: string;
+  isRainbow?: boolean;
 }
 
 const RadioButton: React.FC<RadioButtonProps> = ({
@@ -22,28 +24,45 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   onChange,
   className,
   appearance = 'field',
+  swatchColor,
+  isRainbow,
 }) => {
+  const inputId = `${name}-${value}`;
+
   return (
     <label
-      htmlFor={`${name}-${value}`}
+      htmlFor={inputId}
       className={clsx(className, styles.radioButton, styles[`radioButton--${appearance}`], {
         [styles.isSelected]: isSelected,
       })}
     >
       <input
         type="radio"
-        id={`${name}-${value}`}
+        id={inputId}
         name={name}
         value={value}
         checked={isSelected}
         onChange={() => onChange?.(value)}
       />
+
       {appearance === 'field' && (
         <span className={styles.radioButtonBox}>
           <Icon icon={faCheck} size="xsmall" />
         </span>
       )}
-      {children}
+
+      {appearance === 'color-swatch' ? (
+        <span
+          className={clsx(styles.radioButtonSwatch, {
+            [styles.radioButtonSwatchSelected]: isSelected,
+            [styles.radioButtonSwatchRainbow]: isRainbow,
+          })}
+          style={isRainbow ? undefined : { background: swatchColor }}
+          title={value}
+        />
+      ) : (
+        children
+      )}
     </label>
   );
 };

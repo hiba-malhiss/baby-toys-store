@@ -79,6 +79,7 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
       justify={justify}
       spacing={spacing}
       fullWidth={fullWidth}
+      wrap
     >
       {renderButtons()}
     </Flex>
