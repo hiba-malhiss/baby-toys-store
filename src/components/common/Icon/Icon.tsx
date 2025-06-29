@@ -9,6 +9,7 @@ interface IconProps {
   size?: IconSize | string | null;
   color?: IconColor | string | null;
   isRotating?: boolean;
+  isSpinning?: boolean; // New prop
   className?: string;
 }
 
@@ -17,6 +18,7 @@ export const Icon = ({
   size = IconSize.medium,
   color,
   isRotating = false,
+  isSpinning = false,
   className,
 }: IconProps) => {
   const [svgHtml, setSvgHtml] = useState('');
@@ -28,10 +30,18 @@ export const Icon = ({
 
   const iconClass = useMemo(
     () =>
-      clsx(styles.icon, styles[`icon--${color}Color`], styles[`icon--${size}Size`], {
-        [styles.isRotating]: isRotating,
-      }),
-    [color, size, isRotating]
+      clsx(
+        styles.icon,
+        styles[`icon--${color}Color`],
+        styles[`icon--${size}Size`],
+        {
+          [styles.isRotating]: isRotating,
+        },
+        {
+          'fa-spin': isSpinning,
+        }
+      ),
+    [color, size, isRotating, isSpinning]
   );
 
   return (

@@ -3,6 +3,7 @@ import styles from './button.module.scss';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { Icon } from '../Icon/Icon.tsx';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
 export type ButtonColor =
@@ -26,6 +27,7 @@ type ButtonProps = {
   withoutPadding?: boolean;
   withoutAutoHeight?: boolean;
   isSelected?: boolean;
+  isLoading?: boolean;
   fullWidth?: boolean;
   className?: string;
 };
@@ -39,6 +41,7 @@ export const Button: React.FC<ButtonProps> = ({
   rightIcon,
   onClick,
   isDisabled = false,
+  isLoading = false,
   withoutAutoHeight = false,
   fullWidth = false,
   isRounded = false,
@@ -63,9 +66,20 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <button className={calculatedClassName} onClick={onClick} disabled={isDisabled}>
-      {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} />}
-      {children}
-      {rightIcon && <Icon icon={rightIcon} className={styles.buttonIcon} size={size} />}
+      {isLoading ? (
+        <Icon
+          isSpinning
+          icon={faSpinner}
+          className={clsx(styles.buttonIcon, styles.spin)}
+          size={size}
+        />
+      ) : (
+        <>
+          {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} />}
+          {children}
+          {rightIcon && <Icon icon={rightIcon} className={styles.buttonIcon} size={size} />}
+        </>
+      )}
     </button>
   );
 };

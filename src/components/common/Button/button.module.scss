@@ -26,7 +26,7 @@
     border-color: $border;
     text-decoration-color: $text-underline-decoration;
 
-    .button-icon {
+    .buttonIcon {
       color: $icon-color;
     }
   }
@@ -82,11 +82,11 @@
     line-height: 18px;
     min-height: 40px;
 
-    &.button--withText {
+    &.buttonWithText {
       padding-left: 16px;
       padding-right: 16px;
 
-      .button-icon {
+      .buttonIcon {
         &--left {
           margin-right: 8px;
         }
@@ -97,7 +97,7 @@
       }
     }
 
-    &:not(.button--withText) {
+    &:not(.buttonWithText) {
       width: 40px;
     }
   }
@@ -107,16 +107,16 @@
     line-height: 18px;
     height: 32px;
 
-    .button-icon {
+    .buttonIcon {
       position: relative;
       top: -1px;
     }
 
-    &.button--withText {
+    &.buttonWithText {
       padding-left: 8px;
       padding-right: 8px;
 
-      .button-icon {
+      .buttonIcon {
         &--left {
           margin-right: 4px;
         }
@@ -127,7 +127,7 @@
       }
     }
 
-    &:not(.button--withText) {
+    &:not(.buttonWithText) {
       width: 32px;
     }
   }
@@ -139,13 +139,13 @@
 
   &--xlargeSize, &--xxlargeSize {
     font-size: 20px;
-    height: 48px;
+    height: 56px;
 
-    &.button--withText {
-      padding-left: 24px;
-      padding-right: 24px;
+    &.buttonWithText {
+      padding-left: 32px;
+      padding-right: 32px;
 
-      .button-icon {
+      .buttonIcon {
         &--left {
           margin-right: 8px;
         }
@@ -156,28 +156,45 @@
       }
     }
 
-    &:not(.button--withText) {
-      width: 48px;
+    &:not(.buttonWithText) {
+      width: 56px;
     }
   }
 
 
   /* Utility Modifiers */
-  &--noPadding {
+  &NoPadding {
     padding: 0 !important;
   }
 
-  &--autoHeight {
+  &AutoHeight {
     height: auto !important;
   }
 
-  &.is-rounded {
+  &.isRounded {
     border-radius: 26px !important;
   }
 
-  &.is-disabled {
+  &.isDisabled {
     opacity: 0.5;
     cursor: not-allowed;
+  }
+}
+
+.buttonIcon {
+  // Icon styles
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
   }
 }
 
@@ -192,6 +209,7 @@ $appearances: (
         light: (
             text-default: $color-white,
             text-hover: $color-accent-light-hover,
+            text-selected: $color-primary,
         ),
         icon: (
             text-default: $color-secondary,
