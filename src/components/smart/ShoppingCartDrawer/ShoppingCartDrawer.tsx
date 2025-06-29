@@ -1,15 +1,19 @@
+import { useState, useEffect } from 'react';
 import Drawer from '../../common/Drawer/Drawer';
 import { Divider } from '../../common/Divider/Divider.tsx';
 import CartItemCard from '../../common/CartItemCard/CartItemCard.tsx';
-import { currency, shippingCost } from '../../../mock-data/shipping-page.ts';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
+import { formatQuantity } from '../../../util/format.utils.ts';
 import { useCartStore } from '../../../store/useCartStore';
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { EmptyPlaceholder } from '../../common/EmptyPlaceholder/EmptyPlaceholder.tsx';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import clsx from 'clsx';
+import styles from './shopping-cart-drawer.module.scss';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -19,11 +23,35 @@ interface ShoppingCartDrawerProps {
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
+  const [currency, setCurrency] = useState({ currency: 'USD', symbol: '$' });
+  const [shippingSettings, setShippingSettings] = useState({ cost: 0, freeThreshold: 0 });
+  const [loading, setLoading] = useState(true);
+  
+  const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
 
-  const { subtotal } = calculateOrderSummary(cartItems, shippingCost);
+  // Load currency and shipping settings
+  useEffect(() => {
+    Promise.all([
+      getCurrencySettings(),
+      getShippingSettings()
+    ])
+      .then(([currencyData, shippingData]) => {
+        setCurrency(currencyData);
+        setShippingSettings(shippingData);
+      })
+      .catch((error) => {
+        console.error('Error fetching settings:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [getCurrencySettings, getShippingSettings]);
+
+  // Calculate order summary with proper shipping settings
+  const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shippingSettings);
 
   const handleAmountChange = (productId: string, newVal: string) => {
-    const newQuantity = Math.max(parseInt(newVal) || 1, 1);
+    const newQuantity = formatQuantity(newVal);
     updateQuantity(productId, newQuantity);
   };
 
@@ -37,6 +65,25 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     handleClose();
   };
 
+  const handleContinueShopping = () => {
+    closeShippingCartDrawer();
+    navigate('/shop');
+    setIsOpen(false);
+  };
+
+  if (loading) {
+    return (
+      <Drawer
+        visible={isOpen}
+        header="Order Summary"
+        position="right"
+        onClose={handleClose}
+      >
+        <div>Loading cart...</div>
+      </Drawer>
+    );
+  }
+
   return (
     <Drawer
       visible={isOpen}
@@ -46,13 +93,19 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       footer={
         cartItems.length > 0 && (
           <>
-            <Flex fullWidth justify="between" className="bts-marginBxl">
+            <Flex fullWidth justify="between" className={clsx("bts-marginBxl", styles.subtotalRow)}>
               <span>Subtotal</span>
               <span>
-                {subtotal}
-                {currency}
+                {currency.symbol}{subtotal}
               </span>
             </Flex>
+            {isFreeShipping && (
+              <Flex fullWidth justify="center" className="bts-marginBs">
+                <span className={styles.freeShippingIndicator}>
+                  Free shipping applied!
+                </span>
+              </Flex>
+            )}
             <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
               Place order
             </Button>
@@ -71,7 +124,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
         )
       }
     >
-      <Flex direction="vertical" spacing="l" fullWidth>
+      <Flex direction="vertical" spacing="l" fullWidth className={styles.drawerContent}>
         {cartItems.map((item, index) => (
           <React.Fragment key={item.productId}>
             <CartItemCard
@@ -88,15 +141,14 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           </React.Fragment>
         ))}
         {cartItems.length === 0 && (
-          <EmptyPlaceholder
-            icon={faShoppingCart}
-            message="You'r cart is empty!"
-            buttonText="Continue Shopping"
-            onButtonClick={() => {
-              closeShippingCartDrawer();
-              navigate('/shop');
-            }}
-          ></EmptyPlaceholder>
+          <div className={styles.emptyCartContainer}>
+            <EmptyPlaceholder
+              icon={faShoppingCart}
+              message="Your cart is empty!"
+              buttonText="Continue Shopping"
+              onButtonClick={handleContinueShopping}
+            />
+          </div>
         )}
       </Flex>
     </Drawer>

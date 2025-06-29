@@ -8,9 +8,9 @@ import type { CartItem } from '../../../types/product.types.ts';
 
 interface TotalAmountSectionProps {
   items: CartItem[];
-  shipping: number;
+  shipping: number | { cost: number; freeThreshold: number };
   currency: string;
-  className: string;
+  className?: string;
 }
 
 export const TotalAmountSection: React.FC<TotalAmountSectionProps> = ({
@@ -19,30 +19,38 @@ export const TotalAmountSection: React.FC<TotalAmountSectionProps> = ({
   currency,
   className,
 }) => {
-  const { subtotal, total } = calculateOrderSummary(items, shipping);
+  const { subtotal, total, shipping: shippingCost, isFreeShipping } = calculateOrderSummary(items, shipping);
 
   return (
     <Flex direction="vertical" spacing="xl" className={className}>
       <Flex justify="between" fullWidth>
         <span>Subtotal</span>
         <span>
-          {currency}
-          {subtotal}
+          {currency}{subtotal}
         </span>
       </Flex>
-      <Flex justify="between" fullWidth>
+      <Flex justify="between" fullWidth className={styles.shippingRow}>
         <span>Shipping</span>
         <span>
-          {currency}
-          {shipping.toFixed(2)}
+          {isFreeShipping ? (
+            <span className={styles.freeShippingText}>Free</span>
+          ) : (
+            <span>{currency}{shippingCost}</span>
+          )}
         </span>
       </Flex>
+      {isFreeShipping && (
+        <Flex justify="center" fullWidth>
+          <span className={styles.freeShippingIndicator}>
+            Free shipping applied!
+          </span>
+        </Flex>
+      )}
       <Divider />
       <Flex justify="between" className={clsx('bts-marginTl', styles.orderSummaryTotal)} fullWidth>
         <span>Total</span>
         <span>
-          {currency}
-          {total}
+          {currency}{total}
         </span>
       </Flex>
     </Flex>
