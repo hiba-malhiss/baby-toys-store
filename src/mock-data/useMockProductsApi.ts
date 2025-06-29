@@ -227,3 +227,15 @@ export function useMockProductsApi<T extends { category?: string }>(
     getCategoriesOptions,
   };
 }
+
+export const mockLoginApi = async (email: string, password: string) => {
+  await new Promise((res) => setTimeout(res, 500));
+  if (email && password) return { email, token: 'mock-token' };
+  throw new Error('Invalid credentials');
+};
+
+export const mockRegisterApi = async (email: string, password: string) => {
+  await new Promise((res) => setTimeout(res, 500));
+  if (email && password) return { email, token: 'mock-token' };
+  throw new Error('Registration failed');
+};

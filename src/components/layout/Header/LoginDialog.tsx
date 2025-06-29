@@ -1,19 +1,14 @@
 import React, { useState } from 'react';
-import Dialog from './Dialog';
-import { StringInput } from '../StringInput/StringInput';
-import { Button } from '../Button/Button';
+import { mockLoginApi } from '../../../mock-data/useMockProductsApi.ts';
+import { StringInput } from '../../common/StringInput/StringInput.tsx';
+import { Button } from '../../common/Button/Button.tsx';
+import Dialog from '../../common/Dialog/Dialog.tsx';
 
 interface LoginDialogProps {
   open: boolean;
   onClose: () => void;
   onLogin: (user: { email: string }) => void;
 }
-
-const mockLoginApi = async (email: string, password: string) => {
-  await new Promise((res) => setTimeout(res, 500));
-  if (email && password) return { email, token: 'mock-token' };
-  throw new Error('Invalid credentials');
-};
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onLogin }) => {
   const [email, setEmail] = useState('');

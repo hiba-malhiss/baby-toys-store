@@ -2,18 +2,13 @@ import React, { useState } from 'react';
 import Dialog from '../../common/Dialog/Dialog.tsx';
 import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import { Button } from '../../common/Button/Button.tsx';
+import { mockRegisterApi } from '../../../mock-data/useMockProductsApi.ts';
 
 interface RegisterDialogProps {
   open: boolean;
   onClose: () => void;
   onRegister: (user: { email: string }) => void;
 }
-
-const mockRegisterApi = async (email: string, password: string) => {
-  await new Promise((res) => setTimeout(res, 500));
-  if (email && password) return { email, token: 'mock-token' };
-  throw new Error('Registration failed');
-};
 
 const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose, onRegister }) => {
   const [email, setEmail] = useState('');

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../../common/Button/Button.tsx';
-import LoginDialog from '../../common/Dialog/LoginDialog.tsx';
-import RegisterDialog from '../../common/Dialog/RegisterDialog.tsx';
+import LoginDialog from './LoginDialog.tsx';
+import RegisterDialog from './RegisterDialog.tsx';
 
 const AuthButtonsWithDialogs: React.FC = () => {
   const [isLoginOpen, setLoginOpen] = useState(false);

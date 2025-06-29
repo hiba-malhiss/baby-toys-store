@@ -1,6 +1,7 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import type { Feedback, InfoCardType } from '../types/product.types.ts';
-import type { ProductCategory, RadioOption } from '../types/product.types.ts';
+import type { ProductCategory } from '../types/product.types.ts';
+import type { RadioOption } from '../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 
 export const photoShoots: string[] = [
   '/assets/images/recent-photo-shoots/pic1.png',

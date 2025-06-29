@@ -7,7 +7,7 @@ import Flex, {
 } from '../../common/Flex/Flex.tsx';
 import RadioButton from './RadioButton';
 
-type RadioOption = {
+export type RadioOption = {
   label: React.ReactNode;
   value: string;
   appearance?: string;

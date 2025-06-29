@@ -1,4 +1,4 @@
-import type { RadioOption } from '../types/product.types.ts';
+import type { RadioOption } from '../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 
 export const categoriesRadioOptions: RadioOption[] = [
   { label: 'Play sets', value: 'play-sets' },

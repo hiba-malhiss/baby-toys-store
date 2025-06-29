@@ -161,7 +161,7 @@ const Carousel: React.FC<CarouselProps> = ({
             flexDirection: orientation === 'vertical' ? 'column' : 'row',
           }}
         >
-          {items.map((item, index) => (
+          {items?.map((item, index) => (
             <div
               key={index}
               className={styles.carouselItem}

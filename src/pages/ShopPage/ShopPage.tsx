@@ -11,9 +11,9 @@ import { useShowMorePagination } from '../../hooks/useShowMorePagination.ts';
 import { useUrlFilters } from '../../hooks/useUrlFilters.ts';
 import { SortProducts } from './SortProducts.tsx';
 import type { Product } from '../../types/product.types.ts';
+import type { RadioOption } from '../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 
 const PAGE_SIZE = 8;
-const RELATED_PRODUCTS_PAGE_SIZE = 4;
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
@@ -38,17 +38,21 @@ const ShopPage = () => {
       urlFilters // Initialize with URL filters
     );
 
-  // Related products pagination (show-more mode)
-  const {
-    items: relatedItems,
-    totalSize: relatedTotalSize,
-    page: relatedPage,
-    loading: relatedLoading,
-    handlePaginationChange: handleRelatedPaginationChange,
-  } = useShowMorePagination(
-    (page) => fetchProducts(page, { sortBy: 'featured' }),
-    RELATED_PRODUCTS_PAGE_SIZE
-  );
+  // Related products fetch (no pagination)
+  const [relatedItems, setRelatedItems] = useState<Product[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
+
+  useEffect(() => {
+    setRelatedLoading(true);
+    fetchProducts(1, { sortBy: 'featured' })
+      .then((data) => {
+        setRelatedItems(data.items);
+      })
+      .catch((error) => {
+        console.error('Error fetching related products:', error);
+      })
+      .finally(() => setRelatedLoading(false));
+  }, [fetchProducts]);
 
   // Update URL when filters change
   useEffect(() => {
@@ -129,6 +133,7 @@ const ShopPage = () => {
       />
 
       <Section title="You May Also Like" className={styles.shopPageRelatedProducts}>
+        {relatedLoading && 'Loading...'}
         <Carousel
           className="bts-marginTxxxxl"
           items={relatedItems}
