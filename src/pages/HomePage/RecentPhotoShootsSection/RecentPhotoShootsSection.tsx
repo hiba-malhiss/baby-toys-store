@@ -1,9 +1,35 @@
+import { useState, useEffect } from 'react';
 import Section from '../../../components/layout/Section/Section.tsx';
 import Flex from '../../../components/common/Flex/Flex.tsx';
-import { photoShoots } from '../../../mock-data/home-page.ts';
 import styles from './recent-photo-shoots-section.module.scss';
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
 
 const RecentPhotoShoots = () => {
+  const [photoShoots, setPhotoShoots] = useState<string[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { getHomepageContent } = useMockProductsApi(10);
+
+  useEffect(() => {
+    getHomepageContent()
+      .then(({ photoShoots }) => {
+        setPhotoShoots(photoShoots);
+      })
+      .catch((error) => {
+        console.error('Error fetching photo shoots:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [getHomepageContent]);
+
+  if (loading) {
+    return (
+      <Section title="Recent photo Shoots" subTitle="Check gallery" compactPadding>
+        <div>Loading gallery...</div>
+      </Section>
+    );
+  }
+
   return (
     <Section title="Recent photo Shoots" subTitle="Check gallery" compactPadding>
       <Flex wrap justify="center">

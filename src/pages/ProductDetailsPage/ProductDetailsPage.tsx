@@ -1,47 +1,81 @@
 import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '../../context/BreadcrumbContext.tsx';
-import React, { useEffect } from 'react';
-import { getProductById, toys } from '../../mock-data/toy-card-list.ts';
+import React, { useEffect, useState } from 'react';
 import Section from '../../components/layout/Section/Section.tsx';
-import Carousel from '../../components/common/Carousel/Carousel.tsx';
-import styles from './product-details-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';
 import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
 import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
+import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
+import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { useShowMorePagination } from '../../hooks/useShowMorePagination.ts';
+import type { Product } from '../../types/product.types.ts';
+import styles from './product-details-page.module.scss';
+
+const RELATED_PRODUCTS_PAGE_SIZE = 4;
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { setExtraCrumbs } = useBreadcrumb();
-  const product = getProductById(id);
-  const productName = product?.name;
-  const productId = product?.id;
+  const [product, setProduct] = useState<Product | undefined>();
+
+  const { getProductById, getRelatedProducts } = useMockProductsApi<Product>(
+    RELATED_PRODUCTS_PAGE_SIZE,
+    'show-more'
+  );
+
+  // Use a custom fetch function for related products
+  const fetchRelatedProducts = async (page: number) => {
+    if (!id) {
+      return { items: [], page, totalPages: 0, totalItems: 0 };
+    }
+
+    const relatedProducts = await getRelatedProducts(id, page * RELATED_PRODUCTS_PAGE_SIZE);
+    return {
+      items: relatedProducts,
+      page,
+      totalPages: Math.ceil(relatedProducts.length / RELATED_PRODUCTS_PAGE_SIZE),
+      totalItems: relatedProducts.length,
+    };
+  };
+
+  const {
+    items: relatedItems,
+    totalSize: relatedTotalSize,
+    page: relatedPage,
+    loading: relatedLoading,
+    handlePaginationChange: handleRelatedPaginationChange,
+  } = useShowMorePagination(fetchRelatedProducts, RELATED_PRODUCTS_PAGE_SIZE);
 
   useEffect(() => {
-    setExtraCrumbs([{ label: productName, path: `/product-details/${productId}` }]);
+    if (!id) return;
+
+    getProductById(id).then((data) => {
+      setProduct(data);
+      setExtraCrumbs([{ label: data?.name ?? '', path: `/product-details/${data?.id}` }]);
+    });
+
     return () => setExtraCrumbs(null);
-  }, [productName, productId, setExtraCrumbs]);
+  }, [id, getProductById, setExtraCrumbs]);
 
   return (
     <PageContainer>
-      <ProductOverview product={product} />
-      <ProductInfoTabs />
+      {product && <ProductOverview product={product} />}
+      <ProductInfoTabs productId={id} />
       <Section title="Related products">
-        <Carousel
+        <ViewSwitcher
           className={styles.productDetailsRelatedProd}
-          items={toys}
-          circular
-          numVisible={4}
-          orientation="horizontal"
-          showNavigation
-          responsiveOptions={[
-            { breakpoint: '900', numVisible: 3 },
-            { breakpoint: '600', numVisible: 2 },
-            { breakpoint: '400', numVisible: 1 },
-          ]}
-          itemTemplate={(toy) => (
-            <SmartProductCard fullWidth key={toy.label} product={toy} direction="vertical" />
-          )}
+          page={relatedPage}
+          pageSize={RELATED_PRODUCTS_PAGE_SIZE}
+          totalSize={relatedTotalSize}
+          isLoading={relatedLoading}
+          staticView="flex"
+          paginationMode="show-more"
+          onPaginationChange={handleRelatedPaginationChange}
+          minColWidth={220}
+          items={relatedItems.map((item, index) => (
+            <SmartProductCard key={item.id || `related-${item.label}-${index}`} product={item} />
+          ))}
         />
       </Section>
     </PageContainer>

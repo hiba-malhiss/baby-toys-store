@@ -22,7 +22,7 @@
   }
 
   &-name {
-    @include bts-line-clamp(2);
+    @include line-clamp(2);
     font-weight: 500;
     line-height: 20px;
     font-size: 16px;

@@ -1,8 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './shop-now-section.module.scss';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 
 const ShopNowSection = () => {
+  const navigate = useNavigate();
+
+  const handleShopNow = () => {
+    navigate('/shop');
+  };
+
   return (
     <Flex
       className={styles.shopNowSectionImageContainer}
@@ -15,7 +22,7 @@ const ShopNowSection = () => {
         <span className={styles.shopNowSectionSubTitle}>
           Crafting smiles with every toy, made for learning, fun, and growth
         </span>
-        <Button size="xlarge" appearance="filled" color="accent" isRounded>
+        <Button size="xxlarge" appearance="filled" color="accent" onClick={handleShopNow}>
           Shop now
         </Button>
       </Flex>

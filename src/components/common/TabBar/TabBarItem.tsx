@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './tab-bar-item.module.scss';
 
 type TabBarItemProps = {
   value: string;
@@ -7,7 +8,7 @@ type TabBarItemProps = {
 
 export const TabBarItem = ({ value, children }: TabBarItemProps) => {
   return (
-    <div data-value={value} style={{ width: '100%' }}>
+    <div data-value={value} className={styles.tabBarItem}>
       {children}
     </div>
   );

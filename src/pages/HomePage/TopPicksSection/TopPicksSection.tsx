@@ -1,30 +1,103 @@
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Section from '../../../components/layout/Section/Section.tsx';
 import RadioButtonGroup from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
-import { topPicksRadioOptions } from '../../../mock-data/home-page.ts';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/smart/SmartProductCard/SmartProductCard.tsx';
-import { toys } from '../../../mock-data/toy-card-list.ts';
-import { ViewSwitcher } from '../../../components/common/ViewSwitcher/ViewSwitcher.tsx';
+import { Button } from '../../../components/common/Button/Button.tsx';
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import type { Product } from '../../../types/product.types.ts';
+import Flex from '../../../components/common/Flex/Flex.tsx';
+
+const DISPLAY_LIMIT = 6; // Show only 6 items on homepage
 
 const TopPicksSection = () => {
-  const [selected, setSelected] = useState(topPicksRadioOptions[0].value);
+  const [topPicksOptions, setTopPicksOptions] = useState([]);
+  const [selected, setSelected] = useState('');
+  const [items, setItems] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [optionsLoading, setOptionsLoading] = useState(true);
+  const navigate = useNavigate();
+
+  const { fetchProducts, getHomepageContent } = useMockProductsApi<Product>(DISPLAY_LIMIT);
+
+  // Load homepage content (including top picks options)
+  useEffect(() => {
+    getHomepageContent()
+      .then(({ topPicksOptions }) => {
+        setTopPicksOptions(topPicksOptions);
+        setSelected(topPicksOptions[0]?.value || '');
+      })
+      .catch((error) => {
+        console.error('Error fetching homepage content:', error);
+      })
+      .finally(() => {
+        setOptionsLoading(false);
+      });
+  }, [getHomepageContent]);
+
+  // Fetch limited items for homepage display
+  useEffect(() => {
+    if (!selected) return;
+
+    setLoading(true);
+    fetchProducts(1, { sortBy: selected })
+      .then(({ items }) => {
+        setItems(items);
+      })
+      .catch((error) => {
+        console.error('Error fetching top picks:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [selected, fetchProducts]);
+
+  const handleSortChange = useCallback((val: string) => {
+    setSelected(val);
+  }, []);
+
+  const handleViewAll = useCallback(() => {
+    // Navigate to shop page with the selected sort filter
+    navigate(`/shop?sortBy=${selected}`);
+  }, [navigate, selected]);
+
+  if (optionsLoading) {
+    return (
+      <Section title="Top picks for your little ones">
+        <div>Loading...</div>
+      </Section>
+    );
+  }
 
   return (
     <Section title="Top picks for your little ones">
       <RadioButtonGroup
         className={styles.topPicks}
-        options={topPicksRadioOptions}
+        options={topPicksOptions}
         selectedValue={selected}
         name="topPicks"
-        onChange={setSelected}
+        onChange={handleSortChange}
         appearance="secondary"
       />
-      <ViewSwitcher staticView="flex" totalSize={toys.length} pageSize={8}>
-        {toys.map((toy, index) => (
-          <SmartProductCard key={index} product={toy} />
-        ))}
-      </ViewSwitcher>
+
+      {loading ? (
+        <div>Loading products...</div>
+      ) : (
+        <>
+          <div className={styles.topPicksGrid}>
+            {items.map((toy, index) => (
+              <SmartProductCard key={toy.id || `product-${toy.label}-${index}`} product={toy} />
+            ))}
+          </div>
+
+          <Flex justify="center" className="bts-marginTxxxl">
+            <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>
+              View All {topPicksOptions.find((opt) => opt.value === selected)?.label}
+            </Button>
+          </Flex>
+        </>
+      )}
     </Section>
   );
 };

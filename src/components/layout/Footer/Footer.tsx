@@ -31,7 +31,7 @@ const Footer = () => {
         </Heading>
         <Flex direction="vertical" spacing="s">
           {exploreLinks.map((label) => (
-            <Button key={label} withoutPadding size="small" appearance="link" onClick={() => {}}>
+            <Button key={label} withoutPadding size="small" appearance="link" color="primary" onClick={() => {}}>
               {label}
             </Button>
           ))}

@@ -119,7 +119,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {product.label && !isSmallSize && (
           <Chip label={product.label} className={styles.productCardChip} />
         )}
-
+        {/* Show buttons on hover only for vertical */}
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
           <img src={product.mainImage} alt={product.name} />
@@ -136,10 +136,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
             styles.productCardPrice
           )}
         >
-          <span className={styles.productCardInfoPriceNew}>{product.price + product.currency}</span>
+          <span className={styles.productCardInfoPriceNew}>{product.price} {product.currency}</span>
           {product.oldPrice && (
             <span className={styles.productCardInfoPriceOld}>
-              {product.oldPrice + product.currency}
+              {product.oldPrice} {product.currency}
             </span>
           )}
         </div>

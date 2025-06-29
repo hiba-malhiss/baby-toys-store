@@ -1,10 +1,19 @@
+import { useEffect, useState } from 'react';
 import Section from '../../../components/layout/Section/Section.tsx';
 import FeedbackCard from '../../../components/common/FeedbackCard/FeedbackCard.tsx';
 import styles from './customer-feedbacks-section.module.scss';
 import Carousel from '../../../components/common/Carousel/Carousel.tsx';
-import { feedbacks } from '../../../mock-data/home-page.ts';
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import type { Feedback } from '../../../types/product.types.ts';
 
 const CustomerFeedbacksSection = () => {
+  const [featuredReviews, setFeaturedReviews] = useState<Feedback[]>([]);
+  const { getTestimonials } = useMockProductsApi(5);
+
+  useEffect(() => {
+    getTestimonials(5).then(setFeaturedReviews);
+  }, [getTestimonials]);
+
   return (
     <Section
       title="Hear from Other Happy Parents"
@@ -13,7 +22,7 @@ const CustomerFeedbacksSection = () => {
       className={styles.customerFeedbacks}
     >
       <Carousel
-        items={feedbacks}
+        items={featuredReviews}
         numVisible={4}
         orientation="horizontal"
         showNavigation

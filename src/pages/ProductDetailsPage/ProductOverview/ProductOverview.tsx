@@ -111,11 +111,11 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
         <Card fullWidth size="small" header="Item details">
           <ExpandableContent>
             <div className={styles.productOverviewDetails}>
-              {product.details?.map(({ label, value }) => (
-                <>
+              {product.details?.map(({ label, value }, index) => (
+                <React.Fragment key={`${label}-${index}`}>
                   <label>{label}</label>
                   <span>{value}</span>
-                </>
+                </React.Fragment>
               ))}
             </div>
           </ExpandableContent>
