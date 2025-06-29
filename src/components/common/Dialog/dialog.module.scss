@@ -1,0 +1,61 @@
+.dialog-mask {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+
+  &--visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.dialog-root {
+  background: #fff;
+  border-radius: 8px;
+  width: 600px;
+  max-width: 95%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform: scale(0.95);
+  transition: transform 0.15s ease;
+
+  &--maximized {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
+}
+
+.dialog-header {
+  padding: 4px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f6f6f6;
+  border-bottom: 1px solid #ddd;
+}
+
+.dialog-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.dialog-header-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.dialog-content {
+  padding: 1rem;
+  overflow-y: auto;
+  flex-grow: 1;
+}
