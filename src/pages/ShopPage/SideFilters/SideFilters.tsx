@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Card from '../../../components/common/Card/Card.tsx';
 import RadioButtonGroup from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import RadioButton from '../../../components/common/RadioButtonGroup/RadioButton.tsx';
 import Slider from '../../../components/common/Slider/Slider.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import {
-  categoriesRadioOptions,
   colorsRadioOptions,
   brandsRadioOptions,
   materialsRadioOptions,
@@ -20,31 +19,59 @@ import styles from './side-filters.module.scss';
 import { EmptyPlaceholder } from '../../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
 
 export type ShopFilters = {
-  category: string;
-  color: string;
-  brand: string;
-  material: string;
-  price: [number, number];
+  category?: string;
+  color?: string;
+  brand?: string;
+  material?: string;
+  sortBy?: string;
+  search?: string;
+  priceRange?: [number, number];
 };
 
 type SideFiltersProps = {
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
+  initialFilters?: ShopFilters;
+  categoriesOptions?: { label: string; value: string }[];
 };
 
-export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersChange }) => {
+export const SideFilters: React.FC<SideFiltersProps> = ({
+  className,
+  onFiltersChange,
+  initialFilters,
+  categoriesOptions = [],
+}) => {
   const [filters, setFilters] = useState<ShopFilters>({
-    category: '',
-    color: '',
-    brand: '',
-    material: '',
-    price: DEFAULT_PRICE,
+    category: initialFilters?.category || '',
+    color: initialFilters?.color || '',
+    brand: initialFilters?.brand || '',
+    material: initialFilters?.material || '',
+    sortBy: initialFilters?.sortBy || 'featured',
+    search: initialFilters?.search || '',
+    priceRange: initialFilters?.priceRange || DEFAULT_PRICE,
   });
 
+  // Update filters when initialFilters change (from URL)
+  useEffect(() => {
+    if (initialFilters) {
+      setFilters({
+        category: initialFilters.category || '',
+        color: initialFilters.color || '',
+        brand: initialFilters.brand || '',
+        material: initialFilters.material || '',
+        sortBy: initialFilters.sortBy || 'featured',
+        search: initialFilters.search || '',
+        priceRange: initialFilters.priceRange || DEFAULT_PRICE,
+      });
+    }
+  }, [initialFilters]);
+
   const handleFilterChange = (key: keyof ShopFilters, value: string | [number, number]) => {
-    const updated = { ...filters, [key]: value };
-    setFilters(updated);
-    onFiltersChange(updated);
+    setFilters((prev) => {
+      const updated = { ...prev, [key]: value };
+      onFiltersChange(updated);
+      return updated;
+    });
   };
 
   const clearFilters = () => {
@@ -53,16 +80,25 @@ export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersCh
       color: '',
       brand: '',
       material: '',
-      price: DEFAULT_PRICE,
+      sortBy: 'featured',
+      search: '',
+      priceRange: DEFAULT_PRICE,
     };
     setFilters(cleared);
     onFiltersChange(cleared);
   };
+
   const filtersCount = getActiveFiltersCount(filters);
+
   const removeFilter = (key: keyof ShopFilters) => {
-    const updated = { ...filters, [key]: key === 'price' ? DEFAULT_PRICE : '' };
-    setFilters(updated);
-    onFiltersChange(updated);
+    setFilters((prev) => {
+      const updated = {
+        ...prev,
+        [key]: key === 'priceRange' ? DEFAULT_PRICE : key === 'sortBy' ? 'featured' : '',
+      };
+      onFiltersChange(updated);
+      return updated;
+    });
   };
 
   return (
@@ -98,16 +134,17 @@ export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersCh
           {filtersCount < 1 && <EmptyPlaceholder message="No filters applied" align="start" />}
         </Flex>
         <Divider className="bts-marginTxl" />
+
         <Accordion header="Category" withoutPadding>
           <RadioButtonGroup
             name="category"
-            selectedValue={filters.category}
+            selectedValue={filters.category || ''}
             onChange={(val) => handleFilterChange('category', val)}
             direction="vertical"
             align="start"
             spacing="l"
           >
-            {categoriesRadioOptions.map(({ label, value }) => (
+            {categoriesOptions.map(({ label, value }) => (
               <RadioButton key={value} value={value}>
                 {label}
               </RadioButton>
@@ -118,16 +155,16 @@ export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersCh
         <Accordion header="Color" withoutPadding>
           <RadioButtonGroup
             name="color"
-            selectedValue={filters.color}
+            selectedValue={filters.color || ''}
             onChange={(val) => handleFilterChange('color', val)}
-            direction="vertical"
+            direction="horizontal"
             align="start"
             spacing="l"
+            appearance="color-swatch"
           >
-            {colorsRadioOptions.map(({ label, value }) => (
-              <RadioButton key={value} value={value}>
-                {label}
-              </RadioButton>
+            <RadioButton key="multi" value="multi" name="color" isRainbow />
+            {colorsRadioOptions.map(({ value }) => (
+              <RadioButton key={value} value={value} name="color" swatchColor={value} />
             ))}
           </RadioButtonGroup>
         </Accordion>
@@ -135,7 +172,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersCh
         <Accordion header="Brand" withoutPadding>
           <RadioButtonGroup
             name="brand"
-            selectedValue={filters.brand}
+            selectedValue={filters.brand || ''}
             onChange={(val) => handleFilterChange('brand', val)}
             direction="vertical"
             spacing="l"
@@ -152,7 +189,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersCh
         <Accordion header="Material" withoutPadding>
           <RadioButtonGroup
             name="material"
-            selectedValue={filters.material}
+            selectedValue={filters.material || ''}
             onChange={(val) => handleFilterChange('material', val)}
             direction="vertical"
             spacing="l"
@@ -172,9 +209,9 @@ export const SideFilters: React.FC<SideFiltersProps> = ({ className, onFiltersCh
             max={DEFAULT_PRICE[1]}
             step={1}
             range
-            value={filters.price}
+            value={filters.priceRange || DEFAULT_PRICE}
             className="bts-marginTxl"
-            onChange={(val: [number, number]) => handleFilterChange('price', val)}
+            onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
           />
         </Accordion>
       </Flex>

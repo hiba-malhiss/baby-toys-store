@@ -1,7 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type { CartItem, Product } from '../types/product.types.ts';
-import { getProductItem } from '../util/order.utils.ts';
+import {
+  getTotalCartItems,
+  addOrUpdateCartItem,
+  removeCartItem,
+  updateCartItemQuantity,
+} from '../util/order.utils.ts';
 
 interface CartState {
   cartItems: CartItem[];
@@ -12,6 +17,7 @@ interface CartState {
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   getTotalItemsInCart: () => number;
+  clearCart: () => void;
 }
 
 export const useCartStore = create<CartState>()(
@@ -19,30 +25,46 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       cartItems: [],
       isShippingCartDrawerOpen: false,
+
       addToCart: (product, quantity = 1) => {
-        // overwrite it if it's already added
         const { cartItems } = get();
-        const filteredItems = cartItems.filter((item) => item.productId !== product.id);
+        const updatedItems = addOrUpdateCartItem(cartItems, product, quantity);
 
         set({
-          cartItems: [...filteredItems, getProductItem(product, quantity)],
+          cartItems: updatedItems,
           isShippingCartDrawerOpen: true,
         });
       },
-      removeFromCart: (productId) =>
-        set({ cartItems: get().cartItems.filter((item) => item.productId !== productId) }),
-      updateQuantity: (productId, quantity) =>
-        set({
-          cartItems:
-            quantity <= 0
-              ? get().cartItems.filter((item) => item.productId !== productId)
-              : get().cartItems.map((item) =>
-                  item.productId === productId ? { ...item, quantity } : item
-                ),
-        }),
+
+      removeFromCart: (productId) => {
+        const { cartItems } = get();
+        const updatedItems = removeCartItem(cartItems, productId);
+        set({ cartItems: updatedItems });
+      },
+
+      updateQuantity: (productId, quantity) => {
+        const { cartItems } = get();
+
+        if (quantity <= 0) {
+          // Remove item if quantity is 0 or negative
+          const updatedItems = removeCartItem(cartItems, productId);
+          set({ cartItems: updatedItems });
+        } else {
+          // Update quantity
+          const updatedItems = updateCartItemQuantity(cartItems, productId, quantity);
+          set({ cartItems: updatedItems });
+        }
+      },
+
       openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
       closeShippingCartDrawer: () => set({ isShippingCartDrawerOpen: false }),
-      getTotalItemsInCart: () => get().cartItems.reduce((sum, item) => sum + item.quantity, 0),
+
+      getTotalItemsInCart: () => {
+        const { cartItems } = get();
+        return getTotalCartItems(cartItems);
+      },
+
+      clearCart: () => set({ cartItems: [] }),
     }),
     {
       name: 'cart-storage',

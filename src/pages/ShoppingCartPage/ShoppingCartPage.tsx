@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useCartStore } from '../../store/useCartStore.ts';
@@ -8,12 +9,46 @@ import Card from '../../components/common/Card/Card.tsx';
 import { EmptyPlaceholder } from '../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
 import { useNavigate } from 'react-router-dom';
 import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
+import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { formatCurrency } from '../../util/format.utils.ts';
 import clsx from 'clsx';
 import Heading from '../../components/common/Heading/Heading.tsx';
 
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
+  const [currency, setCurrency] = useState({ currency: 'USD', symbol: '$' });
+  const [shippingSettings, setShippingSettings] = useState({ cost: 0, freeThreshold: 0 });
+  const [loading, setLoading] = useState(true);
+  
+  const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
+
+  // Load currency and shipping settings
+  useEffect(() => {
+    Promise.all([
+      getCurrencySettings(),
+      getShippingSettings()
+    ])
+      .then(([currencyData, shippingData]) => {
+        setCurrency(currencyData);
+        setShippingSettings(shippingData);
+      })
+      .catch((error) => {
+        console.error('Error fetching settings:', error);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, [getCurrencySettings, getShippingSettings]);
+
+  if (loading) {
+    return (
+      <PageContainer className={styles.shoppingCartPage} isBreadcrumbHidden>
+        <div>Loading cart...</div>
+      </PageContainer>
+    );
+  }
+
   if (cartItems.length === 0) {
     return (
       <PageContainer
@@ -58,8 +93,8 @@ const ShoppingCartPage = () => {
                 <img src={item.mainImage} alt={item.name} />
               </div>
               <div className={styles.shoppingCartPageProductName}>{item.name}</div>
-              <div>{item.price} $</div>
-              <div style={{ width: '142px' }}>
+              <div>{formatCurrency(item.price, currency.symbol)}</div>
+              <div className={styles.shoppingCartPageQuantityInput}>
                 <StringInput
                   type="number"
                   min={1}
@@ -70,7 +105,7 @@ const ShoppingCartPage = () => {
                   fullWidth
                 />
               </div>
-              <div>{item.price * item.quantity} ₪</div>
+              <div>{formatCurrency(item.price * item.quantity, currency.symbol)}</div>
               <div>
                 <Button
                   leftIcon={faTrashAlt}
@@ -86,8 +121,8 @@ const ShoppingCartPage = () => {
       <Card header="Cart Total" className={styles.shoppingCartPageSummary}>
         <TotalAmountSection
           items={cartItems}
-          shipping={20}
-          currency={'$'}
+          shipping={shippingSettings}
+          currency={currency.symbol}
           className="bts-marginTxxl"
         />
         <Button color="accent" fullWidth size="large" className="bts-marginTxl">

@@ -1,11 +1,12 @@
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-
 export type Product = {
   id: string;
   name: string;
+  category: string;
+  brand: string;
+  color: string;
+  material: string;
   mainImage: string;
   images: string[];
-  currency: string;
   price: number;
   oldPrice?: number;
   label?: 'SALE' | 'NEW' | string;
@@ -14,6 +15,24 @@ export type Product = {
   description?: string;
   featureBullets?: string[];
   details?: { label: string; value: string }[];
+};
+
+export interface CartItem {
+  productId: string; // foreign key to Product.id
+  name: string;
+  mainImage: string;
+  price: number;
+  quantity: number;
+}
+
+export type FilterOption = {
+  value: string;
+  label: string;
+};
+
+export type ProductCategory = {
+  label: string;
+  image: string;
 };
 
 export interface Feedback {
@@ -25,25 +44,7 @@ export interface Feedback {
 
 export type InfoCardType = {
   appearance?: 'info' | 'warning' | 'success';
-  icon: IconDefinition;
+  icon: any;
   title: string;
   content: string;
 };
-
-export type ProductCategory = {
-  label: string;
-  image: string;
-};
-
-export type RadioOption = {
-  label: string;
-  value: string;
-};
-
-export interface CartItem {
-  productId: string;
-  mainImage: string;
-  name: string;
-  price: number;
-  quantity: number;
-}

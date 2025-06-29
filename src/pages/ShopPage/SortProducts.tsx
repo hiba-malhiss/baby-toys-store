@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Select } from '../../components/common/Select/Select.tsx';
 import { Option } from '../../components/common/Select/Option.tsx';
 import styles from './shop-page.module.scss';
@@ -12,19 +12,35 @@ const sortOptions = [
 ];
 
 export const SortProducts: React.FC<{
-  onSort?: (sortOption: SortOption) => void;
-}> = ({ onSort }) => {
-  const [sortBy, setSortBy] = useState<SortOption>('price-low-high');
+  selected?: string;
+  onSort?: (sortOption: string) => void;
+}> = ({ selected, onSort }) => {
+  const [sortBy, setSortBy] = useState<string>(selected || 'featured');
 
-  const handleSortChange = (selected: SortOption) => {
+  // Keep local state in sync with prop
+  useEffect(() => {
+    if (selected && selected !== sortBy) setSortBy(selected);
+  }, [selected]);
+
+  const handleSortChange = (selected: string) => {
     setSortBy(selected);
     onSort?.(selected);
   };
 
+  // Add all top picks options
+  const sortOptions = [
+    { label: 'Featured', value: 'featured' },
+    { label: 'Best Seller', value: 'best_seller' },
+    { label: 'New Arrivals', value: 'new_arrivals' },
+    { label: 'Price: Low to High', value: 'price_asc' },
+    { label: 'Price: High to Low', value: 'price_desc' },
+    { label: 'Rating', value: 'rating' },
+  ];
+
   return (
     <Select
       value={sortBy}
-      onChange={(value) => handleSortChange(value as SortOption)}
+      onChange={(value) => handleSortChange(value as string)}
       placeholder="Sort by"
       className={styles.shopPageSelect}
     >
