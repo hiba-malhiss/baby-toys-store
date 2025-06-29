@@ -11,7 +11,7 @@ interface CarouselProps {
   verticalViewPortHeight?: string;
   circular?: boolean;
   autoplayInterval?: number;
-  itemTemplate: (item: any) => React.ReactNode;
+  itemTemplate: (item: any) => React.ReactNode | Element;
   className?: string;
   showNavigation?: boolean;
   responsiveOptions?: { breakpoint: string; numVisible: number }[];
