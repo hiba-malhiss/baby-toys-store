@@ -45,7 +45,7 @@
   }
 
   &-comment {
-    @include bts-line-clamp(4);
+    @include line-clamp(4);
     grid-area: comment;
     color: $color-text-feedback;
     font-size: 16px;

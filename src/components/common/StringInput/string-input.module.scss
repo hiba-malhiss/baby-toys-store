@@ -88,18 +88,18 @@
     grid-column: 1/-1;
     grid-row: 1/2;
     width: 100%;
-    @include bts-form-input-component();
+    @include form-input-base();
 
     &--largeSize {
-      @include bts-form-input-large-component();
+      @include form-input-large();
     }
 
     &--mediumSize {
-      @include bts-form-input-medium-component();
+      @include form-input-medium();
     }
 
     &--smallSize {
-      @include bts-form-input-small-component();
+      @include form-input-small();
     }
 
     &[type='date'] {

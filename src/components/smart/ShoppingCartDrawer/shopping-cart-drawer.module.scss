@@ -1,0 +1,24 @@
+.freeShippingIndicator {
+  @include free-shipping-indicator();
+  
+  &::before {
+    content: '🎉';
+    margin-right: $spacing-xs;
+  }
+}
+
+.subtotalRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  font-weight: 500;
+}
+
+.drawerContent {
+  @include animate-fade-in();
+}
+
+.emptyCartContainer {
+  @include animate-fade-in-up();
+}

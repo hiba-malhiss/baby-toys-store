@@ -5,6 +5,9 @@
   gap: 24px;
   width: 100%;
   max-width: 280px;
+  transition: $transition-transform, box-shadow $transition-normal;
+  
+  @include animate-fade-in-up();
 
   &.fullWidth {
     max-width: 100%;
@@ -102,13 +105,13 @@
     max-width: 500px;
 
     &-name {
-      @include bts-line-clamp(2);
+      @include line-clamp(2);
       width: 100%;
       line-height: 20px;
     }
 
     &-description {
-      @include bts-line-clamp(5);
+      @include line-clamp(5);
       width: 100%;
       margin: 16px 0 10px 0;
       color: $color-text-grey;
@@ -144,11 +147,40 @@
     color: $color-success;
   }
 
-  &:hover {
+  // Remove hover effect from the whole card
+
+  &-box:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-hover;
+    transition: $transition-transform, box-shadow $transition-normal;
+    
     img {
       transform: scale(1.05);
-      transition: transform 0.3s ease;
+      transition: $transition-transform;
     }
+  }
+
+  // Show buttons on hover for vertical cards
+  &--vertical .productCard-buttons {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: $transition-all;
+  }
+  &--vertical:hover .productCard-buttons {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Always show buttons for horizontal cards
+  &--horizontal .productCard-buttons {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &-buttons {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: $transition-all;
   }
 
   // 📱 GROUPED RESPONSIVE STYLES

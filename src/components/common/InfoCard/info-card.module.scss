@@ -5,7 +5,7 @@
   padding: 20px;
 
   .infoCard-title, .infoCard-content {
-    @include bts-line-clamp(2);
+    @include line-clamp(2);
     width: 100%;
     text-align: center;
     line-height: 20px;

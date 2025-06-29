@@ -20,7 +20,7 @@
     padding: 8px 0;
     color: $color-text-grey;
 
-    .radioButtonBox {
+    .radioButton-box {
       color: $color-white;
       display: flex;
       align-items: center;
@@ -32,12 +32,12 @@
       transition: background-color 0.2s, border-color 0.2s;
     }
 
-    &.isSelected .radioButtonBox {
+    &.is-selected .radioButton-box {
       background-color: $color-primary;
       border-color: $color-primary-dark;
     }
 
-    &:hover .radioButtonBox {
+    &:hover .radioButton-box {
       border-color: $color-primary;
     }
   }
@@ -46,7 +46,7 @@
     background-color: transparent;
     color: $color-black;
 
-    &.isSelected {
+    &.is-selected {
       background-color: $color-accent-light;
     }
 
@@ -59,7 +59,7 @@
     padding: 0;
     color: $color-text-primary;
 
-    &.isSelected {
+    &.is-selected {
       color: $color-primary-dark;
     }
 
@@ -73,7 +73,7 @@
     padding-bottom: 8px;
     border-bottom: 2px solid transparent;
 
-    &.isSelected {
+    &.is-selected {
       border-bottom: 2px solid $color-primary-dark;
     }
 

@@ -1,0 +1,360 @@
+@use "sass:color";
+
+// ===== BRAND COLORS =====
+// Primary brand colors (from logo)
+$color-primary: #1096B5;
+$color-primary-dark: #0F83B2;
+$color-primary-hover: #0a6487;
+$color-primary-light: #E6F7FB;
+
+// Accent colors
+$color-accent: #F26C62;
+$color-accent-hover: #d9574f;
+$color-accent-light: #FFF5F4;
+$color-accent-dark: #C54A42;
+$color-accent-light-hover: #F2D9F2;
+
+// Secondary colors
+$color-secondary: #7f7f7f;
+$color-secondary-hover: #6f6f6f;
+$color-secondary-light: #EAEAEA;
+$color-secondary-light-hover: #D6D6D6;
+$color-secondary-dark: #5a5a5a;
+
+// ===== STATUS COLORS =====
+$color-success: #25BF0C;
+$color-success-hover: #1fa309;
+$color-success-light: #F4FFF5;
+$color-success-dark: #1a8607;
+
+$color-warning: #FEB705;
+$color-warning-hover: #e5a504;
+$color-warning-light: #FFFAF4;
+$color-warning-dark: #cc9204;
+$color-warning-brand: #FFD600;
+
+$color-info: #12AEE0;
+$color-info-hover: #0f9bc7;
+$color-info-light: #F4FAFF;
+$color-info-dark: #0d7ea3;
+
+$color-error: #E74C3C;
+$color-error-hover: #c0392b;
+$color-error-light: #FDEDEC;
+$color-error-dark: #a93226;
+
+// ===== TEXT COLORS =====
+$color-text-primary: #171717;
+$color-text-secondary: #375259;
+$color-text-muted: #898989;
+$color-text-light: #ffffff;
+$color-text-dark: #101010;
+$color-text-grey: #333333;
+$color-text-grey-light: #555555;
+$color-text-avatar: #5C5C5C;
+$color-text-feedback: #4A4748;
+
+// ===== BACKGROUND COLORS =====
+$color-bg-primary: #ffffff;
+$color-bg-secondary: #f8f9fa;
+$color-bg-tertiary: #f1f3f4;
+$color-bg-info: #F4FAFF;
+$color-bg-warning: #FFFAF4;
+$color-bg-success: #F4FFF5;
+$color-bg-error: #FDEDEC;
+$color-bg-avatar: #CCC8C8;
+$color-bg-photo: #b9b9b9;
+$color-bg-overlay: rgba(0, 0, 0, 0.5);
+
+// ===== BORDER & UTILITY COLORS =====
+$color-border: #d4d4d4;
+$color-border-light: #e9ecef;
+$color-border-dark: #adb5bd;
+$color-disabled: #d4d4d4;
+$color-disabled2: #e0e0e0;
+$color-disabled-text: #898989;
+$color-icon: #A5A5A5;
+$color-link-hover: #ffd8cc;
+
+// Base colors
+$color-white: #ffffff;
+$color-black: #000000;
+$color-transparent: transparent;
+
+// ===== FREE SHIPPING COLORS =====
+$color-free-shipping: $color-success;
+$color-free-shipping-bg: $color-success-light;
+$color-free-shipping-text: $color-success-dark;
+
+// ===== SHADOWS =====
+$shadow-xs: 0 2px 4px 0 rgba($color-text-primary, 0.08);
+$shadow-sm: 0 4px 8px 0 rgba($color-text-primary, 0.12);
+$shadow-md: 0 8px 12px 0 rgba($color-text-primary, 0.16);
+$shadow-lg: 0 12px 16px 0 rgba($color-text-primary, 0.2);
+$shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
+$shadow-2xl: 0 24px 32px 0 rgba($color-text-primary, 0.28);
+
+// Hover shadows
+$shadow-hover: 0 8px 16px 0 rgba($color-text-primary, 0.15);
+$shadow-focus: 0 0 0 3px rgba($color-primary, 0.2);
+
+// ===== SPACING =====
+$spacing-xs: 4px;
+$spacing-sm: 8px;
+$spacing-md: 16px;
+$spacing-lg: 24px;
+$spacing-xl: 32px;
+$spacing-2xl: 48px;
+$spacing-3xl: 64px;
+
+// ===== BORDER RADIUS =====
+$radius-xs: 4px;
+$radius-sm: 8px;
+$radius-md: 12px;
+$radius-lg: 16px;
+$radius-xl: 20px;
+$radius-full: 50%;
+
+// ===== TRANSITIONS =====
+$transition-fast: 0.15s ease-in-out;
+$transition-normal: 0.25s ease-in-out;
+$transition-slow: 0.35s ease-in-out;
+
+// Common transition properties
+$transition-all: all $transition-normal;
+$transition-colors: color $transition-fast, background-color $transition-fast, border-color $transition-fast;
+$transition-transform: transform $transition-normal;
+$transition-opacity: opacity $transition-fast;
+
+// ===== Z-INDEX LAYERS =====
+$z-dropdown: 1000;
+$z-sticky: 1020;
+$z-fixed: 1030;
+$z-modal-backdrop: 1040;
+$z-modal: 1050;
+$z-popover: 1060;
+$z-tooltip: 1070;
+$z-toast: 1080;
+
+// ===== BREAKPOINTS =====
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 1024px;
+$breakpoint-lg: 1280px;
+$breakpoint-xl: 1536px;
+
+// ===== ANIMATIONS =====
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes bounce {
+  0%, 20%, 53%, 80%, 100% {
+    transform: translate3d(0, 0, 0);
+  }
+  40%, 43% {
+    transform: translate3d(0, -8px, 0);
+  }
+  70% {
+    transform: translate3d(0, -4px, 0);
+  }
+  90% {
+    transform: translate3d(0, -2px, 0);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+// ===== MIXINS =====
+
+// Form input styles
+@mixin form-input-base() {
+  color: $color-text-dark;
+  box-sizing: border-box;
+  appearance: none;
+  background-color: $color-bg-primary;
+  border: 1px solid $color-border;
+  border-radius: $radius-lg;
+  outline: none;
+  width: 100%;
+  line-height: 1;
+  transition: $transition-colors, box-shadow $transition-fast;
+
+  &:active:not(.is-disabled) {
+    border-color: $color-primary;
+    box-shadow: $shadow-focus;
+  }
+
+  &:focus:not(.is-disabled) {
+    border-color: $color-primary;
+    box-shadow: $shadow-focus;
+  }
+
+  &:hover:not(.is-disabled) {
+    border-color: $color-primary-hover;
+  }
+
+  &.is-disabled {
+    background-color: $color-disabled;
+    color: $color-disabled-text;
+    cursor: not-allowed;
+  }
+}
+
+@mixin form-input-large() {
+  font-size: 16px;
+  padding: 14px;
+  line-height: 20px;
+}
+
+@mixin form-input-medium() {
+  font-size: 14px;
+  padding: 9px 12px;
+  line-height: 20px;
+}
+
+@mixin form-input-small() {
+  font-size: 14px;
+  padding: 1px 3px;
+  line-height: 20px;
+  height: 30px;
+}
+
+// Text utilities
+@mixin line-clamp($lines) {
+  display: -webkit-box;
+  -webkit-line-clamp: #{$lines};
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Hover effects
+@mixin hover-lift() {
+  transition: $transition-transform, box-shadow $transition-normal;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: $shadow-hover;
+  }
+}
+
+@mixin hover-scale() {
+  transition: $transition-transform;
+  
+  &:hover {
+    transform: scale(1.02);
+  }
+}
+
+// Free shipping styles
+@mixin free-shipping-indicator() {
+  color: $color-free-shipping-text;
+  background-color: $color-free-shipping-bg;
+  padding: $spacing-xs $spacing-sm;
+  border-radius: $radius-sm;
+  font-size: 0.9em;
+  font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+// Animation utilities
+@mixin animate-fade-in($duration: $transition-normal) {
+  animation: fadeIn $duration ease-out;
+}
+
+@mixin animate-fade-in-up($duration: $transition-normal) {
+  animation: fadeInUp $duration ease-out;
+}
+
+@mixin animate-slide-in-left($duration: $transition-normal) {
+  animation: slideInLeft $duration ease-out;
+}
+
+@mixin animate-scale-in($duration: $transition-normal) {
+  animation: scaleIn $duration ease-out;
+}
+
+/* Shadows */
+$box-shadow-xs: 0 2px 4px 0 rgba($color-text-primary, 0.08);
+$box-shadow-s: 0 4px 8px 0 rgba($color-text-primary, 0.12);
+$box-shadow-m: 0 8px 12px 0 rgba($color-text-primary, 0.16);
+$box-shadow-l: 0 12px 16px 0 rgba($color-text-primary, 0.2);
+$box-shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
