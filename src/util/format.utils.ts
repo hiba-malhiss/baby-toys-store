@@ -9,25 +9,6 @@ export const formatCurrency = (amount: number, symbol: string = '$'): string => 
 };
 
 /**
- * Format price with currency from product
- */
-export const formatPrice = (price: number, currency?: string): string => {
-  if (typeof price !== 'number' || isNaN(price)) {
-    return `${currency || '$'}0.00`;
-  }
-  return `${price.toFixed(2)}${currency || ''}`;
-};
-
-/**
- * Parse number safely
- */
-export const safeParseNumber = (value: string | number, defaultValue: number = 0): number => {
-  if (typeof value === 'number') return isNaN(value) ? defaultValue : value;
-  const parsed = parseFloat(String(value));
-  return isNaN(parsed) ? defaultValue : parsed;
-};
-
-/**
  * Parse integer safely
  */
 export const safeParseInt = (value: string | number, defaultValue: number = 0): number => {

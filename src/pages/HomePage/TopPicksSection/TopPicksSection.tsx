@@ -21,7 +21,6 @@ const TopPicksSection = () => {
 
   const { fetchProducts, getHomepageContent } = useMockProductsApi<Product>(DISPLAY_LIMIT);
 
-  // Load homepage content (including top picks options)
   useEffect(() => {
     getHomepageContent()
       .then(({ topPicksOptions }) => {
@@ -36,7 +35,6 @@ const TopPicksSection = () => {
       });
   }, [getHomepageContent]);
 
-  // Fetch limited items for homepage display
   useEffect(() => {
     if (!selected) return;
 

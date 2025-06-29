@@ -10,18 +10,18 @@ type FetchFunction<T, F> = (
   totalItems: number;
 }>;
 
-export function useShowMorePagination<T, F = any>(
+export function useHandlePagination<T, F = any>(
   fetchFunction: FetchFunction<T, F>,
   pageSize: number,
-  initialFilters?: F
+  initialFilters?: F,
+  mode: 'default' | 'show-more' = 'default'
 ) {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<T[]>([]);
   const [totalSize, setTotalSize] = useState(0);
   const [loading, setLoading] = useState(false);
   const [filters, setFilters] = useState<F | undefined>(initialFilters);
-  
-  // Use ref to store the latest fetchFunction to prevent unnecessary re-renders
+
   const fetchFunctionRef = useRef(fetchFunction);
   fetchFunctionRef.current = fetchFunction;
 
@@ -30,7 +30,6 @@ export function useShowMorePagination<T, F = any>(
     setPage(1);
   }, [filters]);
 
-  // Fetch data when page or filters change
   useEffect(() => {
     let isMounted = true;
 
@@ -38,11 +37,15 @@ export function useShowMorePagination<T, F = any>(
       setLoading(true);
       try {
         const { items: pagedItems, totalItems } = await fetchFunctionRef.current(page, filters);
-
         if (!isMounted) return;
 
-        // For show-more: accumulate items, for page 1: replace all items
-        setItems((prevItems) => (page === 1 ? pagedItems : [...prevItems, ...pagedItems]));
+        setItems((prevItems) => {
+          if (mode === 'show-more') {
+            return page === 1 ? pagedItems : [...prevItems, ...pagedItems];
+          }
+          return pagedItems; // Default mode: always replace
+        });
+
         setTotalSize(totalItems);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -56,20 +59,17 @@ export function useShowMorePagination<T, F = any>(
     return () => {
       isMounted = false;
     };
-  }, [page, filters]); // Removed fetchFunction from dependencies
+  }, [page, filters, mode]);
 
-  // Handle pagination change (show more)
   const handlePaginationChange = useCallback((newPage: number) => {
     setPage(newPage);
   }, []);
 
-  // Handle filter changes
   const handleFiltersChange = useCallback((newFilters: F) => {
-    setItems([]); // Clear items when filters change
+    setItems([]);
     setFilters(newFilters);
   }, []);
 
-  // Reset function to clear all data
   const reset = useCallback(() => {
     setPage(1);
     setItems([]);
@@ -78,20 +78,16 @@ export function useShowMorePagination<T, F = any>(
   }, []);
 
   return {
-    // Data
     items,
     totalSize,
     page,
+    pageSize,
     loading,
     filters,
-    
-    // Actions
+    hasMore: items.length < totalSize,
+
     handlePaginationChange,
     handleFiltersChange,
     reset,
-    
-    // Computed values
-    hasMore: items.length < totalSize,
-    pageSize,
   };
 }

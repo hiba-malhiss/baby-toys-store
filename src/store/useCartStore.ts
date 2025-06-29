@@ -4,7 +4,6 @@ import type { CartItem, Product } from '../types/product.types.ts';
 import {
   getTotalCartItems,
   addOrUpdateCartItem,
-  removeCartItem,
   updateCartItemQuantity,
 } from '../util/order.utils.ts';
 
@@ -38,22 +37,19 @@ export const useCartStore = create<CartState>()(
 
       removeFromCart: (productId) => {
         const { cartItems } = get();
-        const updatedItems = removeCartItem(cartItems, productId);
+        const updatedItems = cartItems.filter((item) => item.productId !== productId);
         set({ cartItems: updatedItems });
       },
 
       updateQuantity: (productId, quantity) => {
         const { cartItems } = get();
-
+        let updatedItems;
         if (quantity <= 0) {
-          // Remove item if quantity is 0 or negative
-          const updatedItems = removeCartItem(cartItems, productId);
-          set({ cartItems: updatedItems });
+          updatedItems = cartItems.filter((item) => item.productId !== productId);
         } else {
-          // Update quantity
-          const updatedItems = updateCartItemQuantity(cartItems, productId, quantity);
-          set({ cartItems: updatedItems });
+          updatedItems = updateCartItemQuantity(cartItems, productId, quantity);
         }
+        set({ cartItems: updatedItems });
       },
 
       openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
@@ -64,7 +60,9 @@ export const useCartStore = create<CartState>()(
         return getTotalCartItems(cartItems);
       },
 
-      clearCart: () => set({ cartItems: [] }),
+      clearCart: () => {
+        set({ cartItems: [] });
+      },
     }),
     {
       name: 'cart-storage',

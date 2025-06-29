@@ -51,7 +51,7 @@ const Header = () => {
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
         <Flex spacing="m" className={styles.headerFreeChipping}>
           <Icon icon={faTruckFast} color="light" />
-          <span>Free shipping with over $150</span>
+          <span>Free shipping with over 150</span> // add currancy
         </Flex>
         <AuthButtonsWithDialogs />
       </Flex>

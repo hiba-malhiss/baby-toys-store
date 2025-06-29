@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Card from '../../../components/common/Card/Card.tsx';
-import RadioButtonGroup from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
+import RadioButtonGroup, {
+  type RadioOption,
+} from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import RadioButton from '../../../components/common/RadioButtonGroup/RadioButton.tsx';
 import Slider from '../../../components/common/Slider/Slider.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
@@ -15,6 +17,7 @@ import Chip from '../../../components/common/Chip/Chip.tsx';
 import { Divider } from '../../../components/common/Divider/Divider.tsx';
 import { Accordion } from '../../../components/common/Accordion/Accordion.tsx';
 import { getActiveFiltersCount, getFilterChips } from '../side-filters.utils.ts';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './side-filters.module.scss';
 import { EmptyPlaceholder } from '../../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
 
@@ -32,7 +35,7 @@ type SideFiltersProps = {
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
   initialFilters?: ShopFilters;
-  categoriesOptions?: { label: string; value: string }[];
+  categoriesOptions?: RadioOption[];
 };
 
 export const SideFilters: React.FC<SideFiltersProps> = ({
@@ -41,15 +44,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   initialFilters,
   categoriesOptions = [],
 }) => {
-  const [filters, setFilters] = useState<ShopFilters>({
-    category: initialFilters?.category || '',
-    color: initialFilters?.color || '',
-    brand: initialFilters?.brand || '',
-    material: initialFilters?.material || '',
-    sortBy: initialFilters?.sortBy || 'featured',
-    search: initialFilters?.search || '',
-    priceRange: initialFilters?.priceRange || DEFAULT_PRICE,
-  });
+  const { currency } = useStoreConfiguration();
+  const [filters, setFilters] = useState<ShopFilters>({});
 
   // Update filters when initialFilters change (from URL)
   useEffect(() => {
@@ -123,7 +119,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
     >
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex wrap spacing="m" fullWidth className={styles.sideFilterChipsContainer}>
-          {getFilterChips(filters).map(({ key, label }) => (
+          {getFilterChips(filters, currency?.symbol || '').map(({ key, label }) => (
             <Chip
               key={key}
               appearance="secondary-outline"

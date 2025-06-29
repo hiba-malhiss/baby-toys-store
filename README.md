@@ -16,6 +16,7 @@ A modern, modular, and fully customizable React + TypeScript template for a baby
 - 🗂️ **Centralized mock data** for easy prototyping
 - 🧹 **Consistent folder and file naming**
 - 🛠️ **ESLint & Prettier** for code quality
+- 🌍 **StoreConfigurationContext** for global currency and shipping settings
 
 ---
 
@@ -55,6 +56,7 @@ src/
   assets/           # Images, icons, fonts
   components/       # Reusable UI components (Button, Card, etc.)
     common/         # Atomic/common components
+  context/          # React contexts (StoreConfigurationContext for currency/shipping)
   mock-data/        # All mock data for prototyping
   pages/            # Page-level and section components
     HomePage/       # Home page and its sections
@@ -85,6 +87,7 @@ src/
 - **Mock Data:** All mock data is in `src/mock-data/`. Replace or extend as needed.
 - **Theming:** Update `src/styles/colors.scss` for your brand colors.
 - **Components:** Add or modify components in `src/components/common/` or section components in `src/pages/HomePage/`.
+- **Currency/Shipping:** Use the `StoreConfigurationContext` to access global currency and shipping settings throughout the app.
 
 ---
 
@@ -106,4 +109,3 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Credits
 - [Design - Figma](https://www.figma.com/community/file/1380032564098282114)
-

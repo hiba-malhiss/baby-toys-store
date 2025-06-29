@@ -1,5 +1,3 @@
-import React from 'react';
-
 export type Product = {
   id: string;
   name: string;
@@ -20,17 +18,12 @@ export type Product = {
 };
 
 export interface CartItem {
-  productId: string; // foreign key to Product.id
+  productId: string;
   name: string;
   mainImage: string;
   price: number;
   quantity: number;
 }
-
-export type FilterOption = {
-  value: string;
-  label: string;
-};
 
 export type ProductCategory = {
   label: string;

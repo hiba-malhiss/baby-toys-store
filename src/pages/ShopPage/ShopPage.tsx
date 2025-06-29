@@ -7,11 +7,12 @@ import Section from '../../components/layout/Section/Section.tsx';
 import Carousel from '../../components/common/Carousel/Carousel.tsx';
 import { SideFilters, type ShopFilters } from './SideFilters/SideFilters.tsx';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
-import { useShowMorePagination } from '../../hooks/useShowMorePagination.ts';
+import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import { useUrlFilters } from '../../hooks/useUrlFilters.ts';
 import { SortProducts } from './SortProducts.tsx';
 import type { Product } from '../../types/product.types.ts';
 import type { RadioOption } from '../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
+import Flex from '../../components/common/Flex/Flex.tsx';
 
 const PAGE_SIZE = 8;
 
@@ -20,8 +21,11 @@ const ShopPage = () => {
   const [categoriesOptions, setCategoriesOptions] = useState<RadioOption[]>([]);
   const { fetchProducts, getShopCategories } = useMockProductsApi<Product>(PAGE_SIZE);
   const { filters: urlFilters, updateFilters } = useUrlFilters();
+  const [relatedItems, setRelatedItems] = useState<Product[]>([]);
+  const [relatedLoading, setRelatedLoading] = useState(false);
+  const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange, filters } =
+    useHandlePagination((page, filters) => fetchProducts(page, filters), PAGE_SIZE, urlFilters);
 
-  // Load shop categories
   useEffect(() => {
     getShopCategories()
       .then(setCategoriesOptions)
@@ -30,18 +34,7 @@ const ShopPage = () => {
       });
   }, [getShopCategories]);
 
-  // Main products pagination with URL filters
-  const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange, filters } =
-    useShowMorePagination(
-      (page, filters) => fetchProducts(page, filters),
-      PAGE_SIZE,
-      urlFilters // Initialize with URL filters
-    );
-
-  // Related products fetch (no pagination)
-  const [relatedItems, setRelatedItems] = useState<Product[]>([]);
-  const [relatedLoading, setRelatedLoading] = useState(false);
-
+  // fetch related products
   useEffect(() => {
     setRelatedLoading(true);
     fetchProducts(1, { sortBy: 'featured' })
@@ -83,8 +76,8 @@ const ShopPage = () => {
   );
 
   const handlePaginationChangeWrapper = useCallback(
-    (newPage: number, pageSize: number) => {
-      handlePaginationChange(newPage, pageSize);
+    (newPage: number) => {
+      handlePaginationChange(newPage);
     },
     [handlePaginationChange]
   );
@@ -99,7 +92,7 @@ const ShopPage = () => {
           sortBy: filters?.sortBy,
           search: filters?.search,
           priceRange:
-            filters?.priceMin || filters?.priceMax
+            filters?.priceMin && filters?.priceMax
               ? [filters.priceMin, filters.priceMax]
               : undefined,
           brand: filters?.brand,
@@ -115,10 +108,14 @@ const ShopPage = () => {
         pageSize={PAGE_SIZE}
         totalSize={totalSize}
         topBar={
-          <SortProducts
-            selected={filters?.sortBy}
-            onSort={(sortOption) => handleFiltersChangeWrapper({ ...filters, sortBy: sortOption })}
-          />
+          <Flex>
+            <SortProducts
+              selected={filters?.sortBy}
+              onSort={(sortOption) =>
+                handleFiltersChangeWrapper({ ...filters, sortBy: sortOption })
+              }
+            />
+          </Flex>
         }
         items={items.map((toy, index) => (
           <SmartProductCard
@@ -146,14 +143,7 @@ const ShopPage = () => {
             { breakpoint: '600', numVisible: 2 },
             { breakpoint: '400', numVisible: 1 },
           ]}
-          itemTemplate={(toy, index) => (
-            <SmartProductCard
-              fullWidth
-              key={toy.id || `carousel-${toy.label}-${index}`}
-              product={toy}
-              direction="vertical"
-            />
-          )}
+          itemTemplate={(toy) => <SmartProductCard fullWidth product={toy} direction="vertical" />}
         />
       </Section>
     </PageContainer>

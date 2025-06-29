@@ -53,7 +53,8 @@ export const infoCards: InfoCardType[] = [
     appearance: 'warning',
     icon: faTruckFast,
     title: 'Free Shipping',
-    content: 'Free shipping for $150 and up',
+    // content will be injected from UI with currency symbol
+    content: '',
   },
   {
     appearance: 'success',
@@ -71,6 +72,7 @@ export const toyCategories: ProductCategory[] = [
   { label: 'Stuffed Toys', image: '/assets/icons/stuffed-toys.svg' },
 ];
 
+// same as SortOptions values
 export const topPicksRadioOptions: RadioOption[] = [
   { label: 'Featured', value: 'featured' },
   { label: 'Best seller', value: 'best_seller' },

@@ -1,18 +1,18 @@
 import React, { useState } from 'react';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './order-summary.module.scss';
-import Flex from '../Flex/Flex';
-import CartItemCard from '../CartItemCard/CartItemCard';
-import { Divider } from '../Divider/Divider';
 import { TotalAmountSection } from './TotalAmountSection';
 import type { CartItem } from '../../../types/product.types.ts';
+import Flex from '../../common/Flex/Flex.tsx';
+import CartItemCard from '../../common/CartItemCard/CartItemCard.tsx';
+import { Divider } from '../../common/Divider/Divider.tsx';
 
 interface OrderSummaryProps {
   items: CartItem[];
-  shipping: number;
-  currency: string;
 }
 
-const OrderSummary: React.FC<OrderSummaryProps> = ({ items, shipping, currency }) => {
+const OrderSummary: React.FC<OrderSummaryProps> = ({ items }) => {
+  const { shipping, currency } = useStoreConfiguration();
   const [quantities, setQuantities] = useState<number[]>(items.map((item) => item.quantity));
 
   const handleAmountChange = (index: number, newVal: string) => {
@@ -37,7 +37,9 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items, shipping, currency }
             <Divider />
           </React.Fragment>
         ))}
-        <TotalAmountSection items={items} shipping={shipping} currency={currency} />
+        {currency && shipping && (
+          <TotalAmountSection items={items} shipping={shipping} currency={currency.symbol} />
+        )}
       </Flex>
     </div>
   );

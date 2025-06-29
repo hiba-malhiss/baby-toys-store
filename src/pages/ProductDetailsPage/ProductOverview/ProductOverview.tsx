@@ -7,6 +7,7 @@ import { socialMediaLinks } from '../../../components/layout/Footer/footer.const
 import { Button } from '../../../components/common/Button/Button.tsx';
 import Card from '../../../components/common/Card/Card.tsx';
 import type { Product } from '../../../types/product.types.ts';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import React, { useCallback, useState } from 'react';
@@ -14,13 +15,18 @@ import clsx from 'clsx';
 import { StringInput } from '../../../components/common/StringInput/StringInput.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useFavoritesStore } from '../../../store/useFavoritesStore.ts';
+import { useCartSync } from '../../../hooks/useCartSync';
+import { useFavoritesSync } from '../../../hooks/useFavoritesSync';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
+  const { currency } = useStoreConfiguration();
   const { addToCart } = useCartStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
+  useCartSync();
+  useFavoritesSync();
   const toast = useToast();
 
   const handleCopyUrl = useCallback(
@@ -52,10 +58,12 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
           level="h2"
           className={clsx('bts-marginBl', product.oldPrice && styles.productOverviewWithDiscount)}
         >
-          <span className={styles.productOverviewPriceNew}>{product.price + product.currency}</span>
+          <span className={styles.productOverviewPriceNew}>
+            {product.price} {currency?.symbol}
+          </span>
           {product.oldPrice && (
             <span className={styles.productOverviewPriceOld}>
-              {product.oldPrice + product.currency}
+              {product.oldPrice} {currency?.symbol}
             </span>
           )}
         </Heading>

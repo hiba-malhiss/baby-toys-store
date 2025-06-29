@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useCartStore } from '../../store/useCartStore.ts';
@@ -9,36 +9,19 @@ import Card from '../../components/common/Card/Card.tsx';
 import { EmptyPlaceholder } from '../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
 import { useNavigate } from 'react-router-dom';
 import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import { formatCurrency } from '../../util/format.utils.ts';
 import clsx from 'clsx';
 import Heading from '../../components/common/Heading/Heading.tsx';
 
+import { useCartSync } from '../../hooks/useCartSync';
+
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
-  const [currency, setCurrency] = useState();
-  const [shippingSettings, setShippingSettings] = useState();
-  const [loading, setLoading] = useState(true);
+  const { currency, shipping, loading, isLoggedIn } = useStoreConfiguration();
+  useCartSync();
 
-  const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
-
-  // Load currency and shipping settings
-  useEffect(() => {
-    Promise.all([getCurrencySettings(), getShippingSettings()])
-      .then(([currencyData, shippingData]) => {
-        setCurrency(currencyData);
-        setShippingSettings(shippingData);
-      })
-      .catch((error) => {
-        console.error('Error fetching settings:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [getCurrencySettings, getShippingSettings]);
-
-  if (loading) {
+  if (loading || !currency || !shipping) {
     return (
       <PageContainer className={styles.shoppingCartPage} isBreadcrumbHidden>
         <div>Loading cart...</div>
@@ -118,11 +101,17 @@ const ShoppingCartPage = () => {
       <Card header="Cart Total" className={styles.shoppingCartPageSummary}>
         <TotalAmountSection
           items={cartItems}
-          shipping={shippingSettings}
+          shipping={shipping}
           currency={currency.symbol}
           className="bts-marginTxxl"
         />
-        <Button color="accent" fullWidth size="large" className="bts-marginTxl">
+        <Button
+          color="accent"
+          fullWidth
+          size="large"
+          className="bts-marginTxl"
+          onClick={() => navigate('/checkout')}
+        >
           Proceed to checkout
         </Button>
       </Card>

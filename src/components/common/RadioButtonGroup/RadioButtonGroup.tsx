@@ -10,7 +10,6 @@ import RadioButton from './RadioButton';
 export type RadioOption = {
   label: React.ReactNode;
   value: string;
-  appearance?: string;
 };
 
 interface RadioButtonGroupProps {

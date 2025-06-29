@@ -1,7 +1,7 @@
 .accordionGroup {
   border: 1px solid $color-border;
-  border-radius: 12px;
-  background-color: $color-white;
+  border-radius: $radius-md;
+  background-color: $color-bg-primary;
   box-shadow: $box-shadow-s;
   overflow: hidden;
   width: 100%;
@@ -50,10 +50,11 @@
     padding: 12px 20px;
     font-weight: 500;
     color: $color-text-primary;
-    background-color: $color-white;
+    background-color: $color-bg-primary;
     cursor: pointer;
     user-select: none;
-    transition: background-color 0.3s ease;
+    border-radius: $radius-md;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   &-headerIcon {
@@ -64,6 +65,7 @@
   &-content {
     padding: 16px 20px;
     color: $color-text-grey;
-    background-color: $color-white;
+    background-color: $color-bg-primary;
+    border-radius: 0 0 $radius-md $radius-md;
   }
 }

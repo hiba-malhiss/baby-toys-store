@@ -1,6 +1,8 @@
 import ProductCard, { type ProductCardProps } from '../../common/ProductCard/ProductCard.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useFavoritesStore } from '../../../store/useFavoritesStore.ts';
+import { useCartSync } from '../../../hooks/useCartSync';
+import { useFavoritesSync } from '../../../hooks/useFavoritesSync';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../common/Toast/ToastContext.tsx';
 
@@ -8,6 +10,8 @@ const SmartProductCard: React.FC<ProductCardProps> = (props) => {
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
   const { isFavorite, toggleFavorite } = useFavoritesStore();
+  useCartSync();
+  useFavoritesSync();
   const toast = useToast();
 
   return (

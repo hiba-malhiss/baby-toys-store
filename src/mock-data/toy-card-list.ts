@@ -55,7 +55,6 @@ const generateRandomToys = (count = 19): Product[] => {
       label,
       rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)),
       numberOfRatings: Math.floor(Math.random() * 1000),
-      currency: '$',
       isFavorite: false,
       description:
         'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus.',

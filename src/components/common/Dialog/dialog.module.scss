@@ -17,11 +17,11 @@
 }
 
 .dialog-root {
-  background: #fff;
-  border-radius: 8px;
+  background: $color-white;
+  border-radius: $radius-md;
   width: 600px;
   max-width: 95%;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  box-shadow: $box-shadow-l;
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -36,26 +36,28 @@
 }
 
 .dialog-header {
-  padding: 4px 16px;
+  padding: $spacing-xs $spacing-lg;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #f6f6f6;
-  border-bottom: 1px solid #ddd;
+  background-color: $color-bg-secondary;
+  border-bottom: 1px solid $color-border-light;
 }
 
 .dialog-title {
   font-size: 1.25rem;
   font-weight: 600;
+  color: $color-text-primary;
 }
 
 .dialog-header-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: $spacing-sm;
 }
 
 .dialog-content {
-  padding: 1rem;
+  padding: $spacing-lg;
   overflow-y: auto;
   flex-grow: 1;
+  color: $color-text-primary;
 }

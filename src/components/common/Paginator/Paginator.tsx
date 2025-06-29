@@ -40,7 +40,7 @@ export function Paginator({
     () => ({
       currentPage,
       pageSize,
-      hasChanged: currentPage !== prevPageRef.current
+      hasChanged: currentPage !== prevPageRef.current,
     }),
     [currentPage, pageSize]
   );
@@ -53,10 +53,13 @@ export function Paginator({
     }
   }, [paginationState, onPageChange]);
 
-  const gotoPage = useCallback((page: number) => {
-    if (page < 1 || page > totalPages || page === currentPage) return;
-    setCurrentPage(page);
-  }, [currentPage, totalPages]);
+  const gotoPage = useCallback(
+    (page: number) => {
+      if (page < 1 || page > totalPages || page === currentPage) return;
+      setCurrentPage(page);
+    },
+    [currentPage, totalPages]
+  );
 
   // Reset to first page if totalItems changes and current page is no longer valid
   useEffect(() => {
@@ -75,7 +78,7 @@ export function Paginator({
   if (mode === 'show-more') {
     // Calculate how many items have been loaded so far
     const itemsLoaded = currentPage * pageSize;
-    
+
     // Hide button only if no items OR (not loading AND all items have been loaded)
     if (totalItems === 0 || (!isLoading && itemsLoaded >= totalItems)) return null;
 

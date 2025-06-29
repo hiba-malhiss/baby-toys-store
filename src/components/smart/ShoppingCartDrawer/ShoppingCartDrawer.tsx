@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import Drawer from '../../common/Drawer/Drawer';
 import { Divider } from '../../common/Divider/Divider.tsx';
 import CartItemCard from '../../common/CartItemCard/CartItemCard.tsx';
@@ -7,7 +7,7 @@ import { Button } from '../../common/Button/Button.tsx';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
 import { formatQuantity } from '../../../util/format.utils.ts';
 import { useCartStore } from '../../../store/useCartStore';
-import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useCartSync } from '../../../hooks/useCartSync';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { EmptyPlaceholder } from '../../common/EmptyPlaceholder/EmptyPlaceholder.tsx';
@@ -23,29 +23,11 @@ interface ShoppingCartDrawerProps {
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
-  const [currency, setCurrency] = useState();
-  const [shippingSettings, setShippingSettings] = useState({ cost: 0, freeThreshold: 0 });
-  const [loading, setLoading] = useState(true);
-
-  const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
-
-  // Load currency and shipping settings
-  useEffect(() => {
-    Promise.all([getCurrencySettings(), getShippingSettings()])
-      .then(([currencyData, shippingData]) => {
-        setCurrency(currencyData);
-        setShippingSettings(shippingData);
-      })
-      .catch((error) => {
-        console.error('Error fetching settings:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [getCurrencySettings, getShippingSettings]);
+  const { currency, shipping, loading } = useStoreConfiguration();
+  useCartSync();
 
   // Calculate order summary with proper shipping settings
-  const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shippingSettings);
+  const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
 
   const handleAmountChange = (productId: string, newVal: string) => {
     const newQuantity = formatQuantity(newVal);
@@ -68,7 +50,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     setIsOpen(false);
   };
 
-  if (loading) {
+  if (loading || !currency || !shipping) {
     return (
       <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
         <div>Loading cart...</div>

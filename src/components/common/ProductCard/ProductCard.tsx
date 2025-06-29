@@ -1,4 +1,5 @@
 import React, { useCallback } from 'react';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
@@ -35,6 +36,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
   const toast = useToast();
+  const { currency } = useStoreConfiguration();
 
   const handleButtonClick = useCallback((e: MouseEvent, handler?: (product: Product) => void) => {
     e.preventDefault();
@@ -136,10 +138,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
             styles.productCardPrice
           )}
         >
-          <span className={styles.productCardInfoPriceNew}>{product.price} {product.currency}</span>
+          <span className={styles.productCardInfoPriceNew}>
+            {product.price} {currency?.symbol || ''}
+          </span>
           {product.oldPrice && (
             <span className={styles.productCardInfoPriceOld}>
-              {product.oldPrice} {product.currency}
+              {product.oldPrice} {currency?.symbol || ''}
             </span>
           )}
         </div>

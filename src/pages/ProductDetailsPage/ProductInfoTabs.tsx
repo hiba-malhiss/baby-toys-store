@@ -5,16 +5,16 @@ import styles from './product-details-page.module.scss';
 import Card from '../../components/common/Card/Card.tsx';
 import FeedbackCard from '../../components/common/FeedbackCard/FeedbackCard.tsx';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
-import { useReviewsPagination } from '../../hooks/useReviewsPagination.ts';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import ExpandableContent from '../../components/common/ExpandableContent/ExpandableContent.tsx';
+import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 
 const REVIEWS_PAGE_SIZE = 4;
 
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   const [description, setDescription] = useState('');
   const [descriptionLoading, setDescriptionLoading] = useState(true);
-  const { getProductDescription } = useMockProductsApi(REVIEWS_PAGE_SIZE);
+  const { getProductDescription, fetchProductReviews } = useMockProductsApi(REVIEWS_PAGE_SIZE);
 
   const {
     items: reviews,
@@ -22,7 +22,13 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
     page: reviewsPage,
     loading: reviewsLoading,
     handlePaginationChange: handleReviewsPaginationChange,
-  } = useReviewsPagination(REVIEWS_PAGE_SIZE, 'default', productId);
+  } = useHandlePagination(
+    (page) =>
+      productId
+        ? fetchProductReviews(productId, page)
+        : Promise.resolve({ items: [], page, totalPages: 0, totalItems: 0 }),
+    REVIEWS_PAGE_SIZE
+  );
 
   // Load product description
   useEffect(() => {
@@ -55,20 +61,16 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
           </ExpandableContent>
         </TabBarItem>
         <TabBarItem value="reviews">
-          <ViewSwitcher 
-            gap="none" 
+          <ViewSwitcher
+            gap="none"
             page={reviewsPage}
-            pageSize={REVIEWS_PAGE_SIZE} 
+            pageSize={REVIEWS_PAGE_SIZE}
             totalSize={reviewsTotalSize}
             isLoading={reviewsLoading}
             staticView="list"
             onPaginationChange={handleReviewsPaginationChange}
             items={reviews.map((feedback, index) => (
-              <FeedbackCard 
-                key={`review-${index}`} 
-                feedback={feedback} 
-                appearance="detailed"
-              />
+              <FeedbackCard key={`review-${index}`} feedback={feedback} appearance="detailed" />
             ))}
           />
         </TabBarItem>

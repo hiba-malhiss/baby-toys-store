@@ -9,74 +9,63 @@ import {
 } from './home-page.ts';
 import { categoriesRadioOptions } from './shop-page.ts';
 import { description } from './product-details-page.ts';
+import type { CartItem } from '../types/product.types.ts';
 
-// Pagination mode for API
-// In a real API, this would be handled by query params
-// e.g. /api/products?page=1&pageSize=8
-// Here, 'show-more' simulates infinite scroll, 'default' simulates classic pagination
-// This is easy to swap for a real API in the future
-//
-type PaginationMode = 'default' | 'show-more';
+// --- AUTH & CLOUD MOCK API ---
+export const mockLoginApi = async (email: string, password: string) => {
+  await new Promise((res) => setTimeout(res, 500));
+  if (email && password) return { email, token: 'mock-token' };
+  throw new Error('Invalid credentials');
+};
 
-/**
- * BACKEND API DESIGN FOR BABY TOYS STORE
- *
- * This mock API simulates how the real backend should be structured.
- * The backend should be a RESTful API with the following endpoints:
- *
- * PRODUCTS API:
- * GET /api/products?page=1&limit=8&category=toys&sortBy=featured&search=teddy&priceMin=10&priceMax=100
- * GET /api/products/:id
- * GET /api/products/related/:id?limit=4
- *
- * REVIEWS API:
- * GET /api/products/:productId/reviews?page=1&limit=10
- * POST /api/products/:productId/reviews
- *
- * TESTIMONIALS API:
- * GET /api/testimonials?limit=5
- *
- * CATEGORIES API:
- * GET /api/categories
- *
- * CONTENT API:
- * GET /api/content/homepage
- * GET /api/content/policies
- * GET /api/content/product-description/:id
- *
- * SETTINGS API:
- * GET /api/settings/currency
- * GET /api/settings/shipping
- *
- * SEARCH API:
- * GET /api/search?q=teddy&limit=10
- *
- * Foreign keys:
- * - Product.brand, Product.material, Product.color, Product.category should match values in filter option endpoints
- * - Product.id is used as a foreign key in reviews, favorites, cart, etc.
- */
+export const mockRegisterApi = async (email: string, password: string) => {
+  await new Promise((res) => setTimeout(res, 500));
+  if (email && password) return { email, token: 'mock-token' };
+  throw new Error('Registration failed');
+};
 
-export function useMockProductsApi<T extends { category?: string }>(
-  pageSize: number,
-  mode: PaginationMode = 'default'
-) {
+export const mockCheckTokenApi = async (token: string) => {
+  await new Promise((res) => setTimeout(res, 300));
+  // Simulate token expiry: only 'mock-token' is valid
+  if (token === 'mock-token') return { valid: true };
+  return { valid: false };
+};
+
+export const mockSaveCartToCloud = async (cartItems: CartItem[]) => {
+  localStorage.setItem('cloud-cart', JSON.stringify(cartItems));
+};
+export const mockLoadCartFromCloud = async (): Promise<CartItem[]> => {
+  const data = localStorage.getItem('cloud-cart');
+  return data ? JSON.parse(data) : [];
+};
+export const mockClearCartCloud = async () => {
+  localStorage.removeItem('cloud-cart');
+};
+
+export const mockSaveFavoritesToCloud = async (favoriteIds: string[]) => {
+  localStorage.setItem('cloud-favorites', JSON.stringify(favoriteIds));
+};
+export const mockLoadFavoritesFromCloud = async (): Promise<string[]> => {
+  const data = localStorage.getItem('cloud-favorites');
+  return data ? JSON.parse(data) : [];
+};
+export const mockClearFavoritesCloud = async () => {
+  localStorage.removeItem('cloud-favorites');
+};
+
+export function useMockProductsApi<T extends { category?: string }>(pageSize: number) {
   const fullItems = toys;
-  const allTestimonials = feedbacks;
 
-  // Centralized filter option extraction utility
-  // In a real API, these would be separate endpoints (e.g. /api/colors)
   function extractFilterOptions(field: keyof T): { value: string; label: string }[] {
     const values = Array.from(
       new Set(fullItems.map((item) => item[field] as string).filter(Boolean))
     );
-    // In a real API, label could be localized or more descriptive
     return values.map((value) => ({
       value,
       label: value.charAt(0).toUpperCase() + value.slice(1),
     }));
   }
 
-  // PRODUCTS API
   const fetchProducts = useCallback(
     (
       page: number,
@@ -99,8 +88,6 @@ export function useMockProductsApi<T extends { category?: string }>(
       return new Promise((resolve) => {
         setTimeout(() => {
           let filteredItems = fullItems;
-
-          // Filtering logic (matches real API query params)
           if (filters?.category && filters.category !== 'all') {
             filteredItems = filteredItems.filter((item) => item.category === filters.category);
           }
@@ -128,8 +115,6 @@ export function useMockProductsApi<T extends { category?: string }>(
           if (filters?.color) {
             filteredItems = filteredItems.filter((item) => item.color === filters.color);
           }
-
-          // Sorting logic (matches real API query params)
           if (filters?.sortBy === 'featured') {
             filteredItems = [...filteredItems];
           } else if (filters?.sortBy === 'best_seller') {
@@ -146,17 +131,12 @@ export function useMockProductsApi<T extends { category?: string }>(
           } else if (filters?.sortBy === 'rating') {
             filteredItems = [...filteredItems].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
           }
-
           const totalItems = filteredItems.length;
           const totalPages = Math.ceil(totalItems / pageSize);
-
           let paginated: T[];
-          if (mode === 'show-more') {
-            paginated = filteredItems.slice(0, page * pageSize);
-          } else {
-            const startIdx = (page - 1) * pageSize;
-            paginated = filteredItems.slice(startIdx, startIdx + pageSize);
-          }
+
+          const startIdx = (page - 1) * pageSize;
+          paginated = filteredItems.slice(startIdx, startIdx + pageSize);
 
           resolve({
             items: paginated,
@@ -167,10 +147,9 @@ export function useMockProductsApi<T extends { category?: string }>(
         }, 500);
       });
     },
-    [pageSize, mode]
+    [pageSize]
   );
 
-  // Filter option endpoints (easy to swap for real API)
   const getBrands = useCallback(() => Promise.resolve(extractFilterOptions('brand')), []);
   const getColors = useCallback(() => Promise.resolve(extractFilterOptions('color')), []);
   const getMaterials = useCallback(() => Promise.resolve(extractFilterOptions('material')), []);
@@ -178,9 +157,6 @@ export function useMockProductsApi<T extends { category?: string }>(
     () => Promise.resolve(extractFilterOptions('category')),
     []
   );
-
-  // The rest of the API (reviews, testimonials, categories, homepage, etc.) remains unchanged
-  // ...
 
   return {
     fetchProducts,
@@ -201,10 +177,18 @@ export function useMockProductsApi<T extends { category?: string }>(
     ),
     getTestimonials: useCallback((limit: number = 5) => Promise.resolve(feedbacks), []),
     getCategories: useCallback(() => Promise.resolve(toyCategories), []),
-    getHomepageContent: useCallback(
-      () => Promise.resolve({ photoShoots, topPicksOptions: topPicksRadioOptions, infoCards }),
-      []
-    ),
+    getHomepageContent: useCallback((currencySymbol?: string) => {
+      const dynamicInfoCards = infoCards.map((card) =>
+        card.title === 'Free Shipping' && currencySymbol
+          ? { ...card, content: `Free shipping for 150${currencySymbol} and up` }
+          : card
+      );
+      return Promise.resolve({
+        photoShoots,
+        topPicksOptions: topPicksRadioOptions,
+        infoCards: dynamicInfoCards,
+      });
+    }, []),
     getShopCategories: useCallback(() => Promise.resolve(categoriesRadioOptions), []),
     getProductDescription: useCallback((productId: string) => Promise.resolve(description), []),
     getCurrencySettings: useCallback(() => Promise.resolve({ currency: 'USD', symbol: '$' }), []),
@@ -219,22 +203,9 @@ export function useMockProductsApi<T extends { category?: string }>(
         Promise.resolve({ products: [], suggestions: [], categories: [] }),
       []
     ),
-    // Centralized filter option endpoints
     getBrands,
     getColors,
     getMaterials,
     getCategoriesOptions,
   };
 }
-
-export const mockLoginApi = async (email: string, password: string) => {
-  await new Promise((res) => setTimeout(res, 500));
-  if (email && password) return { email, token: 'mock-token' };
-  throw new Error('Invalid credentials');
-};
-
-export const mockRegisterApi = async (email: string, password: string) => {
-  await new Promise((res) => setTimeout(res, 500));
-  if (email && password) return { email, token: 'mock-token' };
-  throw new Error('Registration failed');
-};

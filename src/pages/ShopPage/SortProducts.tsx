@@ -4,7 +4,7 @@ import { Option } from '../../components/common/Select/Option.tsx';
 import styles from './shop-page.module.scss';
 
 // Add all top picks options
-const sortOptions = [
+export const SortOptions = [
   { label: 'Featured', value: 'featured' },
   { label: 'Best Seller', value: 'best_seller' },
   { label: 'New Arrivals', value: 'new_arrivals' },
@@ -36,7 +36,7 @@ export const SortProducts: React.FC<{
       placeholder="Sort by"
       className={styles.shopPageSelect}
     >
-      {sortOptions.map((opt) => (
+      {SortOptions.map((opt) => (
         <Option key={opt.value} value={opt.value}>
           {opt.label}
         </Option>

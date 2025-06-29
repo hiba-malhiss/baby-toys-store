@@ -4,7 +4,7 @@ import type { CartItem, Product } from '../types/product.types.ts';
  * Calculate order summary with proper type checking and validation
  */
 export const calculateOrderSummary = (
-  items: CartItem[], 
+  items: CartItem[],
   shipping: number | { cost: number; freeThreshold: number }
 ) => {
   // Validate inputs
@@ -17,7 +17,7 @@ export const calculateOrderSummary = (
   const subtotal = items.reduce((acc, item) => {
     const price = typeof item.price === 'number' ? item.price : 0;
     const quantity = typeof item.quantity === 'number' ? item.quantity : 1;
-    return acc + (price * quantity);
+    return acc + price * quantity;
   }, 0);
 
   // Handle shipping cost
@@ -32,11 +32,11 @@ export const calculateOrderSummary = (
 
   const total = subtotal + shippingCost;
 
-  return { 
-    subtotal: subtotal.toFixed(2), 
+  return {
+    subtotal: subtotal.toFixed(2),
     total: total.toFixed(2),
     shipping: shippingCost.toFixed(2),
-    isFreeShipping: shippingCost === 0 && subtotal > 0
+    isFreeShipping: shippingCost === 0 && subtotal > 0,
   };
 };
 
@@ -67,7 +67,7 @@ export const getCartSubtotal = (items: CartItem[]): number => {
   return items.reduce((acc, item) => {
     const price = typeof item.price === 'number' ? item.price : 0;
     const quantity = typeof item.quantity === 'number' ? item.quantity : 1;
-    return acc + (price * quantity);
+    return acc + price * quantity;
   }, 0);
 };
 
@@ -75,43 +75,42 @@ export const getCartSubtotal = (items: CartItem[]): number => {
  * Check if item exists in cart
  */
 export const isItemInCart = (items: CartItem[], productId: string): boolean => {
-  return items.some(item => item.productId === productId);
+  return items.some((item) => item.productId === productId);
 };
 
 /**
  * Get item from cart by product ID
  */
 export const getCartItem = (items: CartItem[], productId: string): CartItem | undefined => {
-  return items.find(item => item.productId === productId);
+  return items.find((item) => item.productId === productId);
 };
 
 /**
  * Update cart item quantity with validation
  */
-export const updateCartItemQuantity = (items: CartItem[], productId: string, quantity: number): CartItem[] => {
+export const updateCartItemQuantity = (
+  items: CartItem[],
+  productId: string,
+  quantity: number
+): CartItem[] => {
   const validQuantity = Math.max(parseInt(String(quantity)) || 1, 1);
-  
-  return items.map(item => 
-    item.productId === productId 
-      ? { ...item, quantity: validQuantity }
-      : item
-  );
-};
 
-/**
- * Remove item from cart
- */
-export const removeCartItem = (items: CartItem[], productId: string): CartItem[] => {
-  return items.filter(item => item.productId !== productId);
+  return items.map((item) =>
+    item.productId === productId ? { ...item, quantity: validQuantity } : item
+  );
 };
 
 /**
  * Add or update item in cart
  */
-export const addOrUpdateCartItem = (items: CartItem[], product: Product, quantity: number = 1): CartItem[] => {
-  const existingItemIndex = items.findIndex(item => item.productId === product.id);
+export const addOrUpdateCartItem = (
+  items: CartItem[],
+  product: Product,
+  quantity: number = 1
+): CartItem[] => {
+  const existingItemIndex = items.findIndex((item) => item.productId === product.id);
   const newItem = getProductItem(product, quantity);
-  
+
   if (existingItemIndex >= 0) {
     // Update existing item
     const updatedItems = [...items];

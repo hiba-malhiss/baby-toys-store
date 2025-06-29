@@ -5,22 +5,26 @@ interface FavoritesState {
   favoriteIds: string[];
   toggleFavorite: (id: string) => void;
   isFavorite: (id: string) => boolean;
+  clearFavorite: () => void;
 }
 
 export const useFavoritesStore = create<FavoritesState>()(
   persist(
     (set, get) => ({
       favoriteIds: [],
-      toggleFavorite: (id) =>
-        set({
-          favoriteIds: get().favoriteIds.includes(id)
-            ? get().favoriteIds.filter((favId) => favId !== id)
-            : [...get().favoriteIds, id],
-        }),
+      toggleFavorite: (id) => {
+        const { favoriteIds } = get();
+        const updated = favoriteIds.includes(id)
+          ? favoriteIds.filter((favId) => favId !== id)
+          : [...favoriteIds, id];
+        set({ favoriteIds: updated });
+      },
       isFavorite: (id) => get().favoriteIds.includes(id),
+      clearFavorite: () => set({ favoriteIds: [] }),
     }),
     {
       name: 'favorites-storage',
+      partialize: (state) => ({ favoriteIds: state.favoriteIds }),
     }
   )
 );
