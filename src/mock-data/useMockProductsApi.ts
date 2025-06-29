@@ -9,7 +9,6 @@ import {
 } from './home-page.ts';
 import { categoriesRadioOptions } from './shop-page.ts';
 import { description } from './product-details-page.ts';
-import { currency, shippingCost } from './shipping-page.ts';
 
 // Pagination mode for API
 // In a real API, this would be handled by query params
@@ -200,7 +199,7 @@ export function useMockProductsApi<T extends { category?: string }>(
         Promise.resolve({ items: [], page, totalPages: 1, totalItems: 0 }),
       []
     ),
-    getTestimonials: useCallback((limit: number = 5) => Promise.resolve([]), []),
+    getTestimonials: useCallback((limit: number = 5) => Promise.resolve(feedbacks), []),
     getCategories: useCallback(() => Promise.resolve(toyCategories), []),
     getHomepageContent: useCallback(
       () => Promise.resolve({ photoShoots, topPicksOptions: topPicksRadioOptions, infoCards }),
@@ -208,8 +207,8 @@ export function useMockProductsApi<T extends { category?: string }>(
     ),
     getShopCategories: useCallback(() => Promise.resolve(categoriesRadioOptions), []),
     getProductDescription: useCallback((productId: string) => Promise.resolve(description), []),
-    getCurrencySettings: useCallback(() => Promise.resolve(currency), []),
-    getShippingSettings: useCallback(() => Promise.resolve(shippingCost), []),
+    getCurrencySettings: useCallback(() => Promise.resolve({ currency: 'USD', symbol: '$' }), []),
+    getShippingSettings: useCallback(() => Promise.resolve({ cost: 0, freeThreshold: 0 }), []),
     globalSearch: useCallback(
       (query: string, limit: number = 10) =>
         Promise.resolve({ products: [], suggestions: [], categories: [] }),

@@ -23,18 +23,15 @@ interface ShoppingCartDrawerProps {
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
-  const [currency, setCurrency] = useState({ currency: 'USD', symbol: '$' });
+  const [currency, setCurrency] = useState();
   const [shippingSettings, setShippingSettings] = useState({ cost: 0, freeThreshold: 0 });
   const [loading, setLoading] = useState(true);
-  
+
   const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
 
   // Load currency and shipping settings
   useEffect(() => {
-    Promise.all([
-      getCurrencySettings(),
-      getShippingSettings()
-    ])
+    Promise.all([getCurrencySettings(), getShippingSettings()])
       .then(([currencyData, shippingData]) => {
         setCurrency(currencyData);
         setShippingSettings(shippingData);
@@ -73,12 +70,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
 
   if (loading) {
     return (
-      <Drawer
-        visible={isOpen}
-        header="Order Summary"
-        position="right"
-        onClose={handleClose}
-      >
+      <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
         <div>Loading cart...</div>
       </Drawer>
     );
@@ -93,17 +85,16 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       footer={
         cartItems.length > 0 && (
           <>
-            <Flex fullWidth justify="between" className={clsx("bts-marginBxl", styles.subtotalRow)}>
+            <Flex fullWidth justify="between" className={clsx('bts-marginBxl', styles.subtotalRow)}>
               <span>Subtotal</span>
               <span>
-                {currency.symbol}{subtotal}
+                {currency.symbol}
+                {subtotal}
               </span>
             </Flex>
             {isFreeShipping && (
               <Flex fullWidth justify="center" className="bts-marginBs">
-                <span className={styles.freeShippingIndicator}>
-                  Free shipping applied!
-                </span>
+                <span className={styles.freeShippingIndicator}>Free shipping applied!</span>
               </Flex>
             )}
             <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">

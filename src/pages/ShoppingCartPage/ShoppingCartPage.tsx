@@ -17,18 +17,15 @@ import Heading from '../../components/common/Heading/Heading.tsx';
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
-  const [currency, setCurrency] = useState({ currency: 'USD', symbol: '$' });
-  const [shippingSettings, setShippingSettings] = useState({ cost: 0, freeThreshold: 0 });
+  const [currency, setCurrency] = useState();
+  const [shippingSettings, setShippingSettings] = useState();
   const [loading, setLoading] = useState(true);
-  
+
   const { getCurrencySettings, getShippingSettings } = useMockProductsApi(10);
 
   // Load currency and shipping settings
   useEffect(() => {
-    Promise.all([
-      getCurrencySettings(),
-      getShippingSettings()
-    ])
+    Promise.all([getCurrencySettings(), getShippingSettings()])
       .then(([currencyData, shippingData]) => {
         setCurrency(currencyData);
         setShippingSettings(shippingData);

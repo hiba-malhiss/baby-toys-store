@@ -26,7 +26,7 @@
     border-color: $border;
     text-decoration-color: $text-underline-decoration;
 
-    .buttonIcon {
+    .button-icon {
       color: $icon-color;
     }
   }
@@ -82,11 +82,11 @@
     line-height: 18px;
     min-height: 40px;
 
-    &.buttonWithText {
+    &.button--withText {
       padding-left: 16px;
       padding-right: 16px;
 
-      .buttonIcon {
+      .button-icon {
         &--left {
           margin-right: 8px;
         }
@@ -97,7 +97,7 @@
       }
     }
 
-    &:not(.buttonWithText) {
+    &:not(.button--withText) {
       width: 40px;
     }
   }
@@ -107,12 +107,12 @@
     line-height: 18px;
     height: 32px;
 
-    .buttonIcon {
+    .button-icon {
       position: relative;
       top: -1px;
     }
 
-    &.buttonWithText {
+    &.button--withText {
       padding-left: 8px;
       padding-right: 8px;
 
@@ -127,7 +127,7 @@
       }
     }
 
-    &:not(.buttonWithText) {
+    &:not(.button--withText) {
       width: 32px;
     }
   }
@@ -141,7 +141,7 @@
     font-size: 20px;
     height: 56px;
 
-    &.buttonWithText {
+    &.button--withText {
       padding-left: 32px;
       padding-right: 32px;
 
@@ -156,18 +156,18 @@
       }
     }
 
-    &:not(.buttonWithText) {
+    &:not(.button--withText) {
       width: 56px;
     }
   }
 
 
   /* Utility Modifiers */
-  &NoPadding {
+  &--noPadding {
     padding: 0 !important;
   }
 
-  &AutoHeight {
+  &--autoHeight {
     height: auto !important;
   }
 
@@ -178,23 +178,6 @@
   &.isDisabled {
     opacity: 0.5;
     cursor: not-allowed;
-  }
-}
-
-.buttonIcon {
-  // Icon styles
-}
-
-.spin {
-  animation: spin 1s linear infinite;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
   }
 }
 

@@ -67,12 +67,7 @@ export const Button: React.FC<ButtonProps> = ({
   return (
     <button className={calculatedClassName} onClick={onClick} disabled={isDisabled}>
       {isLoading ? (
-        <Icon
-          isSpinning
-          icon={faSpinner}
-          className={clsx(styles.buttonIcon, styles.spin)}
-          size={size}
-        />
+        <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
       ) : (
         <>
           {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} />}
