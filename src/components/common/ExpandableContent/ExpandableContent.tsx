@@ -32,7 +32,7 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
 
     setExpanded(contentFits);
     setTruncated(!contentFits);
-  }, [maxHeight, children]);
+  }, [maxHeight]);
 
   return (
     <div className={className}>
