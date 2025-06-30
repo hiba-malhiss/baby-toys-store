@@ -2,12 +2,12 @@ import React, { useEffect, useState } from 'react';
 import Section from '../../components/layout/Section/Section';
 import Carousel from '../../components/common/Carousel/Carousel';
 import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard';
-import LoadingSpinner from '../../components/common/LoadingSpinner/LoadingSpinner';
 import styles from './shop-page.module.scss';
 import type { Product } from '../../types/product.types';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi';
 import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants';
+import BouncingDotsLoader from '../../components/common/BouncingDotsLoader/BouncingDotsLoader.tsx';
 
 const YouMayAlsoLikeSection: React.FC = () => {
   const { fetchProducts } = useMockProductsApi<Product>(SHOP_PAGE_SIZE);
@@ -28,7 +28,7 @@ const YouMayAlsoLikeSection: React.FC = () => {
 
   return (
     <Section title="You May Also Like" className={styles.shopPageRelatedProducts}>
-      {relatedLoading && <LoadingSpinner size="medium" color="primary" />}
+      {relatedLoading && <BouncingDotsLoader />}
       <Carousel
         className="bts-marginTxxxxl"
         items={relatedItems}
