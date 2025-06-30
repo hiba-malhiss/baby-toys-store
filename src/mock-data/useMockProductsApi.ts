@@ -146,7 +146,6 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
       const totalItems = filteredItems.length;
       const totalPages = Math.ceil(totalItems / pageSize);
       const paginated = filteredItems.slice((page - 1) * pageSize, page * pageSize);
-
       return { items: paginated, page, totalPages, totalItems };
     },
     [pageSize]

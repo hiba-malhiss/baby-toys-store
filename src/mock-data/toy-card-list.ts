@@ -18,6 +18,8 @@ const materials = ['Plastic', 'Wood', 'Cotton', 'Metal', 'Rubber'];
 const ageGroups = ['1-3 years', '3-5 years', '5-7 years', '7+ years'];
 const dimensions = ['10 x 8 x 4 inches', '12 x 10 x 6 inches', '8 x 6 x 3 inches'];
 const weights = ['0.5 lbs', '1.2 lbs', '0.8 lbs', '1.0 lbs'];
+const categories = ['Blocks', 'Plush', 'Vehicles', 'Educational', 'Pretend Play'];
+const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Multi'];
 
 const totalImages = 9;
 
@@ -45,9 +47,14 @@ const generateRandomToys = (count = 19): Product[] => {
       : undefined;
     const label = oldPrice ? 'SALE' : getRandom([undefined, 'NEW']);
 
+    // Assign all required top-level fields
     return {
-      id: `${name.replace(/\s+/g, '-').toLowerCase()}`,
+      id: `${name.replace(/\s+/g, '-').toLowerCase()}-${Math.floor(Math.random() * 10000)}`,
       name,
+      category: getRandom(categories),
+      brand: getRandom(brands),
+      color: getRandom(colors),
+      material: getRandom(materials),
       mainImage: galleryImages[0],
       images: galleryImages,
       price,

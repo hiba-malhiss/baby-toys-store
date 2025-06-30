@@ -28,4 +28,4 @@ export const materialsRadioOptions: RadioOption[] = [
   { label: 'Eco-Friendly', value: 'eco-friendly' },
 ];
 
-export const DEFAULT_PRICE: [number, number] = [50, 100];
+export const DEFAULT_PRICE: [number, number] = [0, 300];
