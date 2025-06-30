@@ -16,8 +16,6 @@ import type { Product } from '../../types/product.types.ts';
 import type { RadioOption } from '../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import Flex from '../../components/common/Flex/Flex.tsx';
 
-// PAGE_SIZE moved to constants/display.constants.ts
-
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
   const [categoriesOptions, setCategoriesOptions] = useState<RadioOption[]>([]);

@@ -7,6 +7,7 @@ import RadioButton from '../../../components/common/RadioButtonGroup/RadioButton
 import Slider from '../../../components/common/Slider/Slider.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import { useShopFilterOptions } from '../../../hooks/useShopFilterOptions';
+import { useDebounce } from '../../../hooks/useDebounce';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import Chip from '../../../components/common/Chip/Chip.tsx';
 import { Divider } from '../../../components/common/Divider/Divider.tsx';
@@ -43,10 +44,12 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   const { currency } = useStoreConfiguration();
   const { colors, brands, materials, priceRange, loading: filterLoading } = useShopFilterOptions();
   const [filters, setFilters] = useState<ShopFilters>({});
+  const debouncedFilters = useDebounce(filters, 400);
 
+  // Initialize filters from initialFilters prop
   useEffect(() => {
     if (initialFilters) {
-      const nextFilters: ShopFilters = {
+      setFilters({
         category: initialFilters.category,
         color: initialFilters.color,
         brand: initialFilters.brand,
@@ -54,38 +57,34 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         sortBy: initialFilters.sortBy || DEFAULT_SORT_OPTION,
         search: initialFilters.search,
         priceRange: initialFilters.priceRange || priceRange,
-      };
-      setFilters(nextFilters);
+      });
     }
-  }, [initialFilters]);
+  }, [initialFilters, priceRange]);
+
+  useEffect(() => {
+    onFiltersChange(debouncedFilters);
+  }, [debouncedFilters, onFiltersChange]);
 
   const handleFilterChange = (key: keyof ShopFilters, value: string | [number, number]) => {
-    const updated = { ...filters, [key]: value };
-    setFilters(updated);
-    onFiltersChange(updated);
+    setFilters((prev) => ({ ...prev, [key]: value }));
   };
 
   const clearFilters = () => {
-    const cleared: ShopFilters = {
+    setFilters({
       category: undefined,
       color: undefined,
       brand: undefined,
       material: undefined,
       sortBy: DEFAULT_SORT_OPTION,
-      search: undefined,
       priceRange: priceRange,
-    };
-    setFilters(cleared);
-    onFiltersChange(cleared);
+    });
   };
 
   const removeFilter = (key: keyof ShopFilters) => {
-    const updated = {
-      ...filters,
+    setFilters((prev) => ({
+      ...prev,
       [key]: key === 'priceRange' ? priceRange : key === 'sortBy' ? DEFAULT_SORT_OPTION : undefined,
-    };
-    setFilters(updated);
-    onFiltersChange(updated);
+    }));
   };
 
   const filtersCount = getActiveFiltersCount(filters, priceRange);
