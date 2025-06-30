@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import styles from './shop-page.module.scss';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
@@ -13,6 +13,7 @@ import type { Product } from '../../types/product.types.ts';
 import type { RadioOption } from '../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import Flex from '../../components/common/Flex/Flex.tsx';
 import YouMayAlsoLikeSection from './YouMayAlsoLikeSection.tsx';
+import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants.ts';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
@@ -20,16 +21,15 @@ const ShopPage = () => {
   const { fetchProducts } = useMockProductsApi<Product>(SHOP_PAGE_SIZE);
   const { urlFilters, updateUrlFilters } = useUrlFilters();
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange, filters } =
-    useHandlePagination(
-      (page, filters) => fetchProducts(page, filters),
-      SHOP_PAGE_SIZE,
-      urlFilters
-    );
+    useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE);
 
+  const selectedLabel =
+    categoriesOptions.find(({ value }) => value === filters?.category)?.label ?? 'All Categories';
+
+  // Fetch categories once
   useEffect(() => {
     getProductCategories()
       .then((data) => {
-        // For shop, use all categories as radio options (label/value)
         setCategoriesOptions(data.map(({ label, value }) => ({ label, value })));
       })
       .catch((error) => {
@@ -37,19 +37,22 @@ const ShopPage = () => {
       });
   }, []);
 
-  // Update URL when filters change
+  // Set initial filters from URL
+  useEffect(() => {
+    if (!filters || Object.keys(filters).length === 0) {
+      handleFiltersChange(urlFilters);
+    }
+  }, [urlFilters, filters, handleFiltersChange]);
+
+  // Update URL when filters or page change
   useEffect(() => {
     if (filters) {
       updateUrlFilters({ ...filters, page });
     }
   }, [filters, page, updateUrlFilters]);
 
-  const selectedLabel =
-    categoriesOptions.find(({ value }) => value === filters?.category)?.label ?? 'All Categories';
-
   const handleFiltersChangeWrapper = useCallback(
     (shopFilters: ShopFilters) => {
-      // Convert ShopFilters to API filters format (include all fields)
       const apiFilters = {
         category: shopFilters.category,
         color: shopFilters.color,
@@ -72,28 +75,32 @@ const ShopPage = () => {
     [handlePaginationChange]
   );
 
-  const initialFilters = useMemo(
-    () => ({
-      category: urlFilters.category,
-      priceRange:
-        typeof urlFilters.priceMin === 'number' && typeof urlFilters.priceMax === 'number'
-          ? [urlFilters.priceMin, urlFilters.priceMax]
-          : undefined,
-      brand: urlFilters.brand,
-      color: urlFilters.color,
-      material: urlFilters.material,
-      search: urlFilters.search,
-      sortBy: urlFilters.sortBy,
-    }),
-    [urlFilters]
+  const handleSortChangeWrapper = useCallback(
+    (sortOption: string) => {
+      handleFiltersChangeWrapper({
+        ...(filters || {}),
+        sortBy: sortOption,
+      });
+    },
+    [filters, handleFiltersChangeWrapper]
+  );
+
+  const handleSideFilterChangeWrapper = useCallback(
+    (newFilters: ShopFilters) => {
+      handleFiltersChangeWrapper({
+        ...newFilters,
+        sortBy: filters?.sortBy || DEFAULT_SORT_OPTION,
+      });
+    },
+    [filters?.sortBy, handleFiltersChangeWrapper]
   );
 
   return (
     <PageContainer className={styles.shopPage}>
       <SideFilters
         className={styles.shopPageRightSide}
-        onFiltersChange={handleFiltersChangeWrapper}
-        initialFilters={initialFilters}
+        onFiltersChange={handleSideFilterChangeWrapper}
+        initialFilters={filters}
         categoriesOptions={categoriesOptions}
       />
 
@@ -106,18 +113,13 @@ const ShopPage = () => {
         totalSize={totalSize}
         topBar={
           <Flex>
-            <SortProducts
-              selected={filters?.sortBy}
-              onSort={(sortOption) =>
-                handleFiltersChangeWrapper({ ...filters, sortBy: sortOption })
-              }
-            />
+            <SortProducts selected={filters?.sortBy} onSort={handleSortChangeWrapper} />
           </Flex>
         }
-        items={items.map((toy, index) => (
+        items={items.map((product, index) => (
           <SmartProductCard
-            key={toy.id || `product-${toy.label}-${index}`}
-            product={toy}
+            key={product.id || `product-${product.label}-${index}`}
+            product={product}
             direction={view === 'grid' ? 'vertical' : 'horizontal'}
           />
         ))}

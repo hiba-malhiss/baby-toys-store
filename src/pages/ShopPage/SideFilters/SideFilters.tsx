@@ -16,14 +16,12 @@ import { getActiveFiltersCount, getFilterChips } from '../side-filters.utils.ts'
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './side-filters.module.scss';
 import { EmptyPlaceholder } from '../../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
-import { DEFAULT_SORT_OPTION } from '../../../constants/filters.constants.ts';
 
 export type ShopFilters = {
   category?: string;
   color?: string;
   brand?: string;
   material?: string;
-  sortBy?: string;
   search?: string;
   priceRange?: [number, number];
 };
@@ -48,13 +46,12 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
   // Initialize filters from initialFilters prop
   useEffect(() => {
-    if (initialFilters) {
+    if (initialFilters && !Object.values(filters).length) {
       setFilters({
         category: initialFilters.category,
         color: initialFilters.color,
         brand: initialFilters.brand,
         material: initialFilters.material,
-        sortBy: initialFilters.sortBy || DEFAULT_SORT_OPTION,
         search: initialFilters.search,
         priceRange: initialFilters.priceRange || priceRange,
       });
@@ -75,7 +72,6 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
       color: undefined,
       brand: undefined,
       material: undefined,
-      sortBy: DEFAULT_SORT_OPTION,
       priceRange: priceRange,
     });
   };
@@ -83,12 +79,13 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   const removeFilter = (key: keyof ShopFilters) => {
     setFilters((prev) => ({
       ...prev,
-      [key]: key === 'priceRange' ? priceRange : key === 'sortBy' ? DEFAULT_SORT_OPTION : undefined,
+      [key]: key === 'priceRange' ? priceRange : undefined,
     }));
   };
 
   const filtersCount = getActiveFiltersCount(filters, priceRange);
 
+  if (filterLoading) return null;
   return (
     <Card
       header={

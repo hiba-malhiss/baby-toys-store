@@ -6,7 +6,7 @@ export function useShopFilterOptions() {
   const [colors, setColors] = useState<RadioOption[]>([]);
   const [brands, setBrands] = useState<RadioOption[]>([]);
   const [materials, setMaterials] = useState<RadioOption[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>([0, 0]);
+  const [priceRange, setPriceRange] = useState<[number, number]>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

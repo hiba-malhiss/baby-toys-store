@@ -13,14 +13,13 @@ type FetchFunction<T, F> = (
 export function useHandlePagination<T, F = any>(
   fetchFunction: FetchFunction<T, F>,
   pageSize: number,
-  initialFilters?: F,
   mode: 'default' | 'show-more' = 'default'
 ) {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<T[]>([]);
   const [totalSize, setTotalSize] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [filters, setFilters] = useState<F | undefined>(initialFilters);
+  const [filters, setFilters] = useState<F | undefined>();
 
   const fetchFunctionRef = useRef(fetchFunction);
   fetchFunctionRef.current = fetchFunction;
@@ -66,6 +65,7 @@ export function useHandlePagination<T, F = any>(
   }, []);
 
   const handleFiltersChange = useCallback((newFilters: F) => {
+    if (Object.keys(newFilters || {}).every((key) => filters?.[key] === newFilters[key])) return;
     setItems([]);
     setFilters(newFilters);
   }, []);

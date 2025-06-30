@@ -38,7 +38,7 @@ export function useUrlFilters() {
     const result: UrlFilters = {};
     Object.entries(paramParsers).forEach(([key, parser]) => {
       const val = searchParams.get(key);
-      if (val !== null) {
+      if (val) {
         result[key as keyof UrlFilters] = parser(val);
       }
     });
@@ -50,7 +50,7 @@ export function useUrlFilters() {
       setSearchParams((prev) => {
         const params = new URLSearchParams(prev);
         Object.entries(newFilters).forEach(([key, value]) => {
-          if (value === undefined || value === null || value === '') {
+          if (!value) {
             params.delete(key);
           } else {
             params.set(key, value.toString());

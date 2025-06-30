@@ -14,7 +14,7 @@ export interface ShippingSettings {
 export interface StoreConfiguration {
   currency: CurrencySettings | null;
   shipping: ShippingSettings | null;
-  loading: boolean;
+  isLoadingConfigs: boolean;
 }
 
 const StoreConfigurationContext = createContext<StoreConfiguration | undefined>(undefined);
@@ -41,7 +41,7 @@ export const StoreConfigurationProvider = ({ children }: { children: ReactNode }
   }, [getCurrencySettings, getShippingSettings]);
 
   return (
-    <StoreConfigurationContext.Provider value={{ currency, shipping, loading }}>
+    <StoreConfigurationContext.Provider value={{ currency, shipping, isLoadingConfigs: loading }}>
       {children}
     </StoreConfigurationContext.Provider>
   );
