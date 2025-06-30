@@ -47,7 +47,7 @@ const OurCollectionSection = () => {
           <Button
             withoutPadding
             key={label}
-            withoutAutoHeight
+            withAutoHeight
             appearance="link"
             size="large"
             onClick={() => handleCategoryClick(value)}

@@ -88,7 +88,6 @@ export const StringInput: React.FC<StringInputProps> = ({
 
   const containerClass = clsx(
     styles.stringInput,
-    className,
     styles[`stringInput--${size}Size`],
     styles[`stringInput--${iconPosition}Icon`],
     isRounded && styles.isRounded,
@@ -111,58 +110,60 @@ export const StringInput: React.FC<StringInputProps> = ({
   );
 
   return (
-    <div className={containerClass}>
-      {type === 'number' && withControls && (
-        <Button
-          appearance="link"
-          color="primary"
-          size={size}
-          onClick={(e) => {
-            handleStep(-1);
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          leftIcon={faMinus}
-          isDisabled={isDisabled}
-          className={styles.stringInputDecreaseControl}
-        />
-      )}
+    <div className={clsx(className)}>
+      <div className={containerClass}>
+        {type === 'number' && withControls && (
+          <Button
+            appearance="link"
+            color="primary"
+            size={size}
+            onClick={(e) => {
+              handleStep(-1);
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            leftIcon={faMinus}
+            isDisabled={isDisabled}
+            className={styles.stringInputDecreaseControl}
+          />
+        )}
 
-      <input
-        type={type}
-        min={min}
-        step="any"
-        disabled={isDisabled}
-        placeholder={placeholder}
-        value={internalValue}
-        onChange={(e) => handleChange(e.target.value)}
-        className={inputClass}
-      />
-
-      {type === 'number' && withControls && (
-        <Button
-          appearance="link"
-          color="primary"
-          size={size}
-          onClick={(e) => {
-            handleStep(1);
-            e.stopPropagation();
-            e.preventDefault();
-          }}
-          leftIcon={faPlus}
-          isDisabled={isDisabled}
-          className={styles.stringInputIncreaseControl}
+        <input
+          type={type}
+          min={min}
+          step="any"
+          disabled={isDisabled}
+          placeholder={placeholder}
+          value={internalValue}
+          onChange={(e) => handleChange(e.target.value)}
+          className={inputClass}
         />
-      )}
 
-      {icon && (
-        <Icon
-          icon={icon}
-          className={clsx(withIconBackground && styles.iconFilled, styles.icon)}
-          color={iconColor}
-          size={size}
-        />
-      )}
+        {type === 'number' && withControls && (
+          <Button
+            appearance="link"
+            color="primary"
+            size={size}
+            onClick={(e) => {
+              handleStep(1);
+              e.stopPropagation();
+              e.preventDefault();
+            }}
+            leftIcon={faPlus}
+            isDisabled={isDisabled}
+            className={styles.stringInputIncreaseControl}
+          />
+        )}
+
+        {icon && (
+          <Icon
+            icon={icon}
+            className={clsx(withIconBackground && styles.iconFilled, styles.icon)}
+            color={iconColor}
+            size={size}
+          />
+        )}
+      </div>
     </div>
   );
 };

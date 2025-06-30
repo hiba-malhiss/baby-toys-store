@@ -90,5 +90,4 @@ export const unifiedCategories: UnifiedCategory[] = [
     image: '/assets/icons/eco-friendly.svg',
   },
   { label: 'Stuffed Toys', value: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
-  { label: 'Other', value: 'other', image: null },
 ];

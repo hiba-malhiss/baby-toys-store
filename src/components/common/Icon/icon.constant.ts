@@ -14,6 +14,7 @@ export enum IconColor {
   warningBrand = 'warning-brand',
   light = 'light',
   dark = 'dark',
+  grayDark = 'gray-dark',
   gray = 'gray',
   warning = 'warning',
   info = 'info',

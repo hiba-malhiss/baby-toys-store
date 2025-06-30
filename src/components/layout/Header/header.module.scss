@@ -3,7 +3,9 @@
   flex-direction: column;
   gap: 20px;
   width: 100%;
-  justify-content: center;
+  justify-content: start;
+  min-height: 245px;
+  box-shadow: 0 2px 4px 0 rgba($color-text-primary, 0.03);
 
   &-announcement {
     background-image: url('/assets/images/wave.svg');
@@ -15,8 +17,14 @@
   }
 
   &-main {
-    padding: 0 100px;
-    height: 164px;
+    margin: auto;
+    padding: 0 100px 20px;
+  }
+
+  &-search {
+    flex-grow: 1;
+    padding-right: 24px;
+    padding-left: 24px;
   }
 
   &-logo {

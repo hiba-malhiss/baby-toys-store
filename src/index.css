@@ -17,8 +17,8 @@ body {
   font-family: 'Comfortaa', serif !important;
 }
 
-img {
-  clip-path: inset(5px);
+img:not([alt="logo"]) {
+  clip-path: inset(2px);
 }
 
 button img {

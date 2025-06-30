@@ -37,6 +37,10 @@
     justify-content: flex-end;
   }
 
+  &--stretchEnd {
+    justify-content: stretch;
+  }
+
   &--justifyBetween {
     justify-content: space-between;
   }

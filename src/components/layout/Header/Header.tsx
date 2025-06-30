@@ -1,8 +1,7 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './header.module.scss';
-import { faSearch, faTruckFast } from '@fortawesome/free-solid-svg-icons';
-import { Nav } from '../../common/Nav/Nav.tsx';
+import { faHeart, faSearch, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Icon } from '../../common/Icon/Icon.tsx';
@@ -10,28 +9,23 @@ import { CartButton } from '../../common/CartButton/CartButton.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext';
-
-const navConfig = [
-  { path: '/', label: 'Home' },
-  { path: '/shop', label: 'Shop' },
-  { path: '/blog', label: 'Blog' },
-  { path: '/contact', label: 'Contact' },
-];
+import { IconColor } from '../../common/Icon/icon.constant.ts';
+import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
+import { Button } from '../../common/Button/Button.tsx';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
   const [searchQuery, setSearchQuery] = useState('');
+  const [categories, setCategories] = useState<any[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { shipping } = useStoreConfiguration();
 
-  const isActivePath = (navPath: string, currentPath: string) => {
-    if (navPath === '/') {
-      return currentPath === '/';
-    }
-    if (navPath === '/shop') {
-      return currentPath === '/shop' || currentPath.startsWith('/product-details/');
-    }
-    return currentPath === navPath || currentPath.startsWith(navPath + '/');
-  };
+  useEffect(() => {
+    getProductCategories().then((data) => {
+      setCategories(data);
+    });
+  }, []);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -41,13 +35,22 @@ const Header = () => {
     }
   };
 
+  const handleCategoryClick = (category?: string) => {
+    if (!category) {
+      navigate('/shop');
+    } else {
+      navigate(`/shop?category=${encodeURIComponent(category)}`);
+    }
+  };
+
   const handleSearchInputKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
       handleSearch(e);
     }
   };
 
-  const { shipping } = useStoreConfiguration();
+  // Determine if current path is shop page or a subpage of it
+  const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
 
   return (
     <header className={styles.header}>
@@ -58,7 +61,8 @@ const Header = () => {
         </Flex>
         <AuthButtonsWithDialogs />
       </Flex>
-      <Flex className={styles.headerMain} justify="between" align="center" wrap fullWidth>
+
+      <Flex className={styles.headerMain} justify="stretch" align="center" wrap fullWidth>
         <img
           src="/assets/images/logo.png"
           alt="logo"
@@ -66,24 +70,55 @@ const Header = () => {
           style={{ cursor: 'pointer' }}
           onClick={() => navigate('/')}
         />
-        <Nav config={navConfig} isActivePath={isActivePath} />
-        <Flex spacing="xxxl" align="center">
+
+        <form
+          onSubmit={handleSearch}
+          style={{ flex: 1, margin: '0 16px' }}
+          aria-label="Product Search Form"
+        >
+          <StringInput
+            placeholder="Search products..."
+            icon={faSearch}
+            className={styles.headerSearch}
+            fullWidth
+            isRounded
+            withIconBackground
+            iconColor="light"
+            iconPosition="right"
+            value={searchQuery}
+            onChange={(value: any) => setSearchQuery(value)}
+            onKeyDown={handleSearchInputKeyDown}
+          />
+        </form>
+
+        <Flex spacing="xl" align="center">
           <CartButton itemCount={getTotalItemsInCart()} />
-          <form onSubmit={handleSearch}>
-            <StringInput
-              placeholder="Search products..."
-              icon={faSearch}
-              isRounded
-              withIconBackground
-              iconColor="light"
-              iconPosition="right"
-              value={searchQuery}
-              onChange={(value: any) => setSearchQuery(value)}
-              onKeyDown={(value: any) => handleSearchInputKeyDown(value)}
-            />
-          </form>
+          <Icon icon={faHeart} color={IconColor.grayDark} size="xlarge" />
         </Flex>
       </Flex>
+      {!isShopPage && (
+        <Flex fullWidth spacing="xxxl" wrap justify="center" align="center">
+          <Button
+            size="large"
+            withoutPadding
+            appearance="link"
+            onClick={() => handleCategoryClick()}
+          >
+            All Toys
+          </Button>
+          {categories.map(({ label, value }) => (
+            <Button
+              withoutPadding
+              key={label}
+              size="large"
+              appearance="link"
+              onClick={() => handleCategoryClick(value)}
+            >
+              {label}
+            </Button>
+          ))}
+        </Flex>
+      )}
     </header>
   );
 };

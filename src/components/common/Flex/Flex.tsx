@@ -4,7 +4,7 @@ import clsx from 'clsx';
 
 export type Direction = 'horizontal' | 'vertical';
 export type Align = 'start' | 'center' | 'end' | 'stretch';
-export type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly';
+export type Justify = 'start' | 'center' | 'end' | 'between' | 'around' | 'evenly' | 'stretch';
 export type Spacing = 'none' | 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | 'xxxl' | 'xxxxl';
 
 interface FlexProps {

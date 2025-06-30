@@ -25,7 +25,7 @@ type ButtonProps = {
   isDisabled?: boolean;
   isRounded?: boolean;
   withoutPadding?: boolean;
-  withoutAutoHeight?: boolean;
+  withAutoHeight?: boolean;
   isSelected?: boolean;
   isLoading?: boolean;
   fullWidth?: boolean;
@@ -42,7 +42,7 @@ export const Button: React.FC<ButtonProps> = ({
   onClick,
   isDisabled = false,
   isLoading = false,
-  withoutAutoHeight = false,
+  withAutoHeight = false,
   fullWidth = false,
   isRounded = false,
   withoutPadding,
@@ -58,7 +58,7 @@ export const Button: React.FC<ButtonProps> = ({
     isDisabled && styles.isDisabled,
     fullWidth && styles.fullWidth,
     withoutPadding && styles.buttonNoPadding,
-    withoutAutoHeight && styles.buttonAutoHeight,
+    withAutoHeight && styles.buttonAutoHeight,
     isSelected && styles.isSelected,
     children && styles.buttonWithText,
     className
