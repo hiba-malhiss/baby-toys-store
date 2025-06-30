@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import styles from './shop-page.module.scss';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
@@ -72,21 +72,28 @@ const ShopPage = () => {
     [handlePaginationChange]
   );
 
+  const initialFilters = useMemo(
+    () => ({
+      category: urlFilters.category,
+      priceRange:
+        typeof urlFilters.priceMin === 'number' && typeof urlFilters.priceMax === 'number'
+          ? [urlFilters.priceMin, urlFilters.priceMax]
+          : undefined,
+      brand: urlFilters.brand,
+      color: urlFilters.color,
+      material: urlFilters.material,
+      search: urlFilters.search,
+      sortBy: urlFilters.sortBy,
+    }),
+    [urlFilters]
+  );
+
   return (
     <PageContainer className={styles.shopPage}>
       <SideFilters
         className={styles.shopPageRightSide}
         onFiltersChange={handleFiltersChangeWrapper}
-        initialFilters={{
-          category: filters?.category,
-          sortBy: filters?.sortBy,
-          search: filters?.search,
-          priceRange:
-            filters?.priceMin && filters?.priceMax
-              ? [filters.priceMin, filters.priceMax]
-              : undefined,
-          brand: filters?.brand,
-        }}
+        initialFilters={initialFilters}
         categoriesOptions={categoriesOptions}
       />
 
