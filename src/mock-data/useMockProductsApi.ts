@@ -215,7 +215,7 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
       () =>
         Promise.resolve({
           message: 'Limited time deals on select products.',
-          endTime: new Date(Date.now() + 1000 * 60 * 60 * 2).toISOString(), // 2 hours from now
+          endTime: new Date(Date.now() + 1000 * 60).toISOString(), // 2 hours from now
           title: 'Flash Sale!',
           icon: 'faBolt',
         }),

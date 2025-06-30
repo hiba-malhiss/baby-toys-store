@@ -6,7 +6,7 @@ import Flex from '../../common/Flex/Flex.tsx';
 import ShoppingCartDrawer from '../../smart/ShoppingCartDrawer/ShoppingCartDrawer.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { Toast } from '../../common/Toast/Toast.tsx';
-import FlashSaleBanner from '../../common/FlashSaleBanner.tsx';
+import FlashSaleBanner from './FlashSaleBanner.tsx';
 
 interface LayoutProps {
   children: ReactNode;
