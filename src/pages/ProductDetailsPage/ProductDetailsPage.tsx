@@ -1,49 +1,20 @@
 import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '../../context/BreadcrumbContext.tsx';
 import React, { useEffect, useState } from 'react';
-import Section from '../../components/layout/Section/Section.tsx';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';
 import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
-import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
-import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import type { Product } from '../../types/product.types.ts';
-import styles from './product-details-page.module.scss';
 import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
+import RelatedProducts from './RelatedProducts.tsx';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { setExtraCrumbs } = useBreadcrumb();
   const [product, setProduct] = useState<Product | undefined>();
 
-  const { getProductById, getRelatedProducts } = useMockProductsApi<Product>(
-    PRODUCT_RELATED_PRODUCTS_LIMIT
-  );
-
-  // Use a custom fetch function for related products
-  const fetchRelatedProducts = async (page: number) => {
-    if (!id) {
-      return { items: [], page, totalPages: 0, totalItems: 0 };
-    }
-
-    const relatedProducts = await getRelatedProducts(id, PRODUCT_RELATED_PRODUCTS_LIMIT);
-    return {
-      items: relatedProducts,
-      page,
-      totalPages: Math.ceil(relatedProducts.length / PRODUCT_RELATED_PRODUCTS_LIMIT),
-      totalItems: relatedProducts.length,
-    };
-  };
-
-  const {
-    items: relatedItems,
-    totalSize: relatedTotalSize,
-    page: relatedPage,
-    loading: relatedLoading,
-    handlePaginationChange: handleRelatedPaginationChange,
-  } = useHandlePagination(fetchRelatedProducts, PRODUCT_RELATED_PRODUCTS_LIMIT, null, 'show-more');
+  const { getProductById } = useMockProductsApi<Product>(PRODUCT_RELATED_PRODUCTS_LIMIT);
 
   useEffect(() => {
     if (!id || product?.id === id) return;
@@ -64,22 +35,7 @@ const ProductDetailsPage: React.FC = () => {
     <PageContainer>
       <ProductOverview product={product} />
       <ProductInfoTabs productId={id} />
-      <Section title="Related products">
-        <ViewSwitcher
-          className={styles.productDetailsRelatedProd}
-          page={relatedPage}
-          pageSize={PRODUCT_RELATED_PRODUCTS_LIMIT}
-          totalSize={relatedTotalSize}
-          isLoading={relatedLoading}
-          staticView="flex"
-          paginationMode="show-more"
-          onPaginationChange={handleRelatedPaginationChange}
-          minColWidth={220}
-          items={relatedItems.map((item, index) => (
-            <SmartProductCard key={item.id || `related-${item.label}-${index}`} product={item} />
-          ))}
-        />
-      </Section>
+      <RelatedProducts productId={id} />
     </PageContainer>
   );
 };
