@@ -18,7 +18,7 @@ const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
   const [categoriesOptions, setCategoriesOptions] = useState<RadioOption[]>([]);
   const { fetchProducts } = useMockProductsApi<Product>(SHOP_PAGE_SIZE);
-  const { filters: urlFilters, updateFilters } = useUrlFilters();
+  const { urlFilters, updateUrlFilters } = useUrlFilters();
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange, filters } =
     useHandlePagination(
       (page, filters) => fetchProducts(page, filters),
@@ -40,9 +40,9 @@ const ShopPage = () => {
   // Update URL when filters change
   useEffect(() => {
     if (filters) {
-      updateFilters({ ...filters, page });
+      updateUrlFilters({ ...filters, page });
     }
-  }, [filters, page, updateFilters]);
+  }, [filters, page, updateUrlFilters]);
 
   const selectedLabel =
     categoriesOptions.find(({ value }) => value === filters?.category)?.label ?? 'All Categories';

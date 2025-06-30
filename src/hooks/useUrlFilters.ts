@@ -34,7 +34,7 @@ function filtersToSearchParams(filters: Partial<UrlFilters>): URLSearchParams {
 export function useUrlFilters() {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const filters = useMemo((): UrlFilters => {
+  const urlFilters = useMemo((): UrlFilters => {
     const result: UrlFilters = {};
     Object.entries(paramParsers).forEach(([key, parser]) => {
       const val = searchParams.get(key);
@@ -45,7 +45,7 @@ export function useUrlFilters() {
     return result;
   }, [searchParams]);
 
-  const updateFilters = useCallback(
+  const updateUrlFilters = useCallback(
     (newFilters: Partial<UrlFilters>) => {
       setSearchParams((prev) => {
         const params = new URLSearchParams(prev);
@@ -76,8 +76,8 @@ export function useUrlFilters() {
   }, []);
 
   return {
-    filters,
-    updateFilters,
+    urlFilters,
+    updateUrlFilters,
     clearFilters,
     navigateToShop,
   };
