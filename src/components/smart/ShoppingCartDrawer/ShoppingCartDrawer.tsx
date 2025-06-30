@@ -14,6 +14,7 @@ import { EmptyPlaceholder } from '../../common/EmptyPlaceholder/EmptyPlaceholder
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import styles from './shopping-cart-drawer.module.scss';
+import BouncingDotsLoader from '../../common/BouncingDotsLoader/BouncingDotsLoader';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -53,7 +54,9 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   if (loading || !currency || !shipping) {
     return (
       <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
-        <div>Loading cart...</div>
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 120 }}>
+          <BouncingDotsLoader />
+        </div>
       </Drawer>
     );
   }

@@ -1,8 +1,9 @@
 import styles from './section.module.scss';
 import Flex from '../../../components/common/Flex/Flex.tsx';
-import type { ReactNode } from 'react';
+import React, { type ReactNode } from 'react';
 import clsx from 'clsx';
 import Heading from '../../common/Heading/Heading.tsx';
+import BouncingDotsLoader from '../../common/BouncingDotsLoader/BouncingDotsLoader.tsx';
 
 interface SectionProps {
   children?: ReactNode;
@@ -10,9 +11,17 @@ interface SectionProps {
   subTitle?: string;
   className?: string;
   compactPadding?: boolean;
+  isLoading?: boolean;
 }
 
-const Section = ({ compactPadding, subTitle, className, title, children }: SectionProps) => {
+const Section = ({
+  compactPadding,
+  subTitle,
+  className,
+  title,
+  children,
+  isLoading,
+}: SectionProps) => {
   return (
     <Flex
       className={clsx(className, styles.section, compactPadding && styles.sectionCompactPadding)}
@@ -29,7 +38,8 @@ const Section = ({ compactPadding, subTitle, className, title, children }: Secti
           {subTitle}
         </Heading>
       )}
-      {children}
+      {isLoading && <BouncingDotsLoader className="bts-paddingVxxl" />}
+      {!isLoading && children}
     </Flex>
   );
 };

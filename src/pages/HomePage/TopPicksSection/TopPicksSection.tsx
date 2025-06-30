@@ -61,16 +61,8 @@ const TopPicksSection = () => {
     navigate(`/shop?sortBy=${selected}`);
   }, [navigate, selected]);
 
-  if (optionsLoading) {
-    return (
-      <Section title="Top picks for your little ones">
-        <div>Loading...</div>
-      </Section>
-    );
-  }
-
   return (
-    <Section title="Top picks for your little ones">
+    <Section title="Top picks for your little ones" isLoading={optionsLoading || loading}>
       <RadioButtonGroup
         className={styles.topPicks}
         options={topPicksOptions}
@@ -79,24 +71,16 @@ const TopPicksSection = () => {
         onChange={handleSortChange}
         appearance="secondary"
       />
-
-      {loading ? (
-        <div>Loading products...</div>
-      ) : (
-        <>
-          <div className={styles.topPicksGrid}>
-            {items.map((toy, index) => (
-              <SmartProductCard key={toy.id || `product-${toy.label}-${index}`} product={toy} />
-            ))}
-          </div>
-
-          <Flex justify="center" className="bts-marginTxxxl">
-            <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>
-              View All {topPicksOptions.find((opt) => opt.value === selected)?.label}
-            </Button>
-          </Flex>
-        </>
-      )}
+      <div className={styles.topPicksGrid}>
+        {items.map((toy, index) => (
+          <SmartProductCard key={toy.id || `product-${toy.label}-${index}`} product={toy} />
+        ))}
+      </div>
+      <Flex justify="center" className="bts-marginTxxxl">
+        <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>
+          View All {topPicksOptions.find((opt) => opt.value === selected)?.label}
+        </Button>
+      </Flex>
     </Section>
   );
 };

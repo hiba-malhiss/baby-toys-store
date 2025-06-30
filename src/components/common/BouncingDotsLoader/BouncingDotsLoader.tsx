@@ -1,26 +1,38 @@
 import styles from './bouncing-dots-loader.module.scss';
 
-const BouncingDotsLoader = ({ scale = 2 }) => {
+const BouncingDotsLoader = ({ className }: { className: string }) => {
+  const radius = 12;
+  const dotsCount = 4;
+  const width = 180;
+  const height = 60;
+  const cy = height / 2;
+
+  // Calculate cx positions evenly spaced inside width with padding = radius
+  const padding = radius * 3;
+  const step = (width - padding * 2) / (dotsCount - 1);
+  const positions = Array.from({ length: dotsCount }, (_, i) => padding + step * i);
+
   return (
     <div
       style={{
-        display: 'inline-block',
-        transform: `scale(${scale})`,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         transformOrigin: 'center',
-        width: 'max-content',
+        width: '100%',
       }}
+      className={className}
     >
       <svg
-        width={100}
-        height={40}
-        viewBox="0 0 100 40"
+        width={width}
+        height={height}
+        viewBox={`0 0 ${width} ${height}`}
         xmlns="http://www.w3.org/2000/svg"
         aria-label="Loading..."
       >
-        <circle className={styles.dot} cx="25" cy="25" r="6" />
-        <circle className={styles.dot} cx="43" cy="25" r="6" />
-        <circle className={styles.dot} cx="61" cy="25" r="6" />
-        <circle className={styles.dot} cx="79" cy="25" r="6" />
+        {positions.map((cx, i) => (
+          <circle key={i} className={styles.dot} cx={cx} cy={cy} r={radius} />
+        ))}
       </svg>
     </div>
   );

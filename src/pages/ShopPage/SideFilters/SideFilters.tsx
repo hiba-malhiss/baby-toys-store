@@ -16,6 +16,7 @@ import { getActiveFiltersCount, getFilterChips } from '../side-filters.utils.ts'
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './side-filters.module.scss';
 import { EmptyPlaceholder } from '../../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
+import BouncingDotsLoader from '../../../components/common/BouncingDotsLoader/BouncingDotsLoader';
 
 export type ShopFilters = {
   category?: string;
@@ -85,7 +86,14 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
   const filtersCount = getActiveFiltersCount(filters, priceRange);
 
-  if (filterLoading) return null;
+  if (filterLoading) {
+    return (
+      <Card className={className} header="Filters">
+        <BouncingDotsLoader />
+      </Card>
+    );
+  }
+
   return (
     <Card
       header={

@@ -8,10 +8,18 @@ import type { Feedback } from '../../../types/product.types.ts';
 
 const CustomerFeedbacksSection = () => {
   const [featuredReviews, setFeaturedReviews] = useState<Feedback[]>([]);
+  const [isLoading, setIsLoading] = useState(true); // <-- added loading state
   const { getTestimonials } = useMockProductsApi(5);
 
   useEffect(() => {
-    getTestimonials(5).then(setFeaturedReviews);
+    setIsLoading(true);
+    getTestimonials(5)
+      .then((data) => {
+        setFeaturedReviews(data);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
   }, [getTestimonials]);
 
   return (
@@ -20,6 +28,7 @@ const CustomerFeedbacksSection = () => {
       subTitle="Customer testimonials"
       compactPadding
       className={styles.customerFeedbacks}
+      isLoading={isLoading}
     >
       <Carousel
         items={featuredReviews}

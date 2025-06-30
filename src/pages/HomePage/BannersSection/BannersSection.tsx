@@ -6,11 +6,19 @@ import clsx from 'clsx';
 
 const BannersSection = () => {
   const [banners, setBanners] = useState<string[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { getHomepageContent } = useMockProductsApi(10);
 
   useEffect(() => {
-    getHomepageContent().then((data) => setBanners(data.banners));
-  }, []);
+    setIsLoading(true);
+    getHomepageContent()
+      .then((data) => setBanners(data.banners))
+      .finally(() => setIsLoading(false));
+  }, [getHomepageContent]);
+
+  if (isLoading) {
+    return null;
+  }
 
   return (
     <Flex spacing="xxl" fullWidth className={styles.banner} wrap justify="center">

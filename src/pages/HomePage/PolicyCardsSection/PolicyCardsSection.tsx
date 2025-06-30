@@ -25,11 +25,7 @@ const PolicyCardsSection = () => {
   }, [getHomepageContent, currency?.symbol]);
 
   if (loading) {
-    return (
-      <Flex spacing="xxl" align="center" fullWidth justify="center" wrap>
-        <div>Loading policies...</div>
-      </Flex>
-    );
+    return null;
   }
 
   return (

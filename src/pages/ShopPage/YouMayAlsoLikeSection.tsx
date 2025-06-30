@@ -27,8 +27,11 @@ const YouMayAlsoLikeSection: React.FC = () => {
   }, []); // Only run once on mount
 
   return (
-    <Section title="You May Also Like" className={styles.shopPageRelatedProducts}>
-      {relatedLoading && <BouncingDotsLoader />}
+    <Section
+      title="You May Also Like"
+      className={styles.shopPageRelatedProducts}
+      isLoading={relatedLoading}
+    >
       <Carousel
         className="bts-marginTxxxxl"
         items={relatedItems}

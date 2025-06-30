@@ -29,23 +29,12 @@ const OurCollectionSection = () => {
     navigate(`/shop?category=${encodeURIComponent(category)}`);
   };
 
-  if (loading) {
-    return (
-      <Section
-        title="Find The Perfect Toy"
-        subTitle="Our Collections"
-        className={styles.ourCollection}
-      >
-        <div>Loading categories...</div>
-      </Section>
-    );
-  }
-
   return (
     <Section
       title="Find The Perfect Toy"
       subTitle="Our Collections"
       className={styles.ourCollection}
+      isLoading={loading}
     >
       <Flex
         fullWidth

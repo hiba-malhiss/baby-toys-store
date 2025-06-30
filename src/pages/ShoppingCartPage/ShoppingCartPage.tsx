@@ -21,18 +21,11 @@ const ShoppingCartPage = () => {
   const { currency, shipping, loading } = useStoreConfiguration();
   useCartSync();
 
-  if (loading || !currency || !shipping) {
-    return (
-      <PageContainer className={styles.shoppingCartPage} isBreadcrumbHidden>
-        <div>Loading cart...</div>
-      </PageContainer>
-    );
-  }
-
   if (cartItems.length === 0) {
     return (
       <PageContainer
         isBreadcrumbHidden
+        isLoading={loading || !currency || !shipping}
         className={clsx(
           styles.shoppingCartPage,
           cartItems.length === 0 && styles.shoppingCartPageIsEmpty

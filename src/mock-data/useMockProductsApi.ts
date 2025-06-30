@@ -16,8 +16,14 @@ import {
   materialsRadioOptions,
 } from './shop-page.ts';
 
+export const MOCK_API_DELAY_MS = 1000;
+
+// Helper to add delay to any promise
+const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+
 // Mocked API to simulate categories fetching
 export const getProductCategories = async () => {
+  await delay(MOCK_API_DELAY_MS);
   return unifiedCategories;
 };
 
@@ -26,19 +32,19 @@ export const getProductCategories = async () => {
 // -----------------------------
 
 export const mockLoginApi = async (email: string, password: string) => {
-  await delay(500);
+  await delay(MOCK_API_DELAY_MS);
   if (email && password) return { email, token: 'mock-token' };
   throw new Error('Invalid credentials');
 };
 
 export const mockRegisterApi = async (email: string, password: string) => {
-  await delay(500);
+  await delay(MOCK_API_DELAY_MS);
   if (email && password) return { email, token: 'mock-token' };
   throw new Error('Registration failed');
 };
 
 export const mockFetchUserApi = async (token: string) => {
-  await delay(300);
+  await delay(MOCK_API_DELAY_MS);
   if (token === 'mock-token') {
     return { id: '1', name: 'Mock User', email: 'mockuser@example.com' };
   }
@@ -72,7 +78,7 @@ export const mockLoadFavoritesFromCloud = async (): Promise<string[]> => {
 // -----------------------------
 
 export const getShopFilterOptions = async (token: string) => {
-  await delay(300);
+  await delay(MOCK_API_DELAY_MS);
   return {
     colors: colorsRadioOptions,
     brands: brandsRadioOptions,
@@ -108,7 +114,7 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
       totalPages: number;
       totalItems: number;
     }> => {
-      await delay(500);
+      await delay(MOCK_API_DELAY_MS);
 
       let filteredItems = fullItems;
 
@@ -155,28 +161,30 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
   return {
     fetchProducts,
     fetchPage: fetchProducts,
-    getProductById: useCallback(
-      (id: string) => Promise.resolve(fullItems.find((item) => item.id === id)),
-      []
-    ),
-    getRelatedProducts: useCallback(
-      (productId: string, limit: number = 4) =>
-        Promise.resolve(fullItems.filter((item) => item.id !== productId).slice(0, limit)),
-      []
-    ),
-    fetchProductReviews: useCallback(
-      (productId: string, page: number) =>
-        Promise.resolve({ items: [], page, totalPages: 1, totalItems: 0 }),
-      []
-    ),
-    getTestimonials: useCallback(() => Promise.resolve(feedbacks), []),
-    getHomepageContent: useCallback((currencySymbol?: string) => {
+    getProductById: useCallback(async (id: string) => {
+      await delay(MOCK_API_DELAY_MS);
+      return fullItems.find((item) => item.id === id);
+    }, []),
+    getRelatedProducts: useCallback(async (productId: string, limit: number = 4) => {
+      await delay(MOCK_API_DELAY_MS);
+      return fullItems.filter((item) => item.id !== productId).slice(0, limit);
+    }, []),
+    fetchProductReviews: useCallback(async (productId: string, page: number) => {
+      await delay(MOCK_API_DELAY_MS);
+      return { items: [], page, totalPages: 1, totalItems: 0 };
+    }, []),
+    getTestimonials: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return feedbacks;
+    }, []),
+    getHomepageContent: useCallback(async (currencySymbol?: string) => {
+      await delay(MOCK_API_DELAY_MS);
       const dynamicCards = infoCards.map((card) =>
         card.title === 'Free Shipping' && currencySymbol
           ? { ...card, content: `Free shipping for 150${currencySymbol} and up` }
           : card
       );
-      return Promise.resolve({
+      return {
         photoShoots,
         topPicksOptions: topPicksRadioOptions,
         infoCards: dynamicCards,
@@ -185,50 +193,63 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
           'Flash sale 30%',
           'Extra discount for loyal customers',
         ],
-      });
+      };
     }, []),
-    getProductDescription: useCallback(() => Promise.resolve(description), []),
-    getCurrencySettings: useCallback(() => Promise.resolve({ currency: 'USD', symbol: '$' }), []),
-    getShippingSettings: useCallback(
-      () =>
-        Promise.resolve({
-          cost: 0,
-          freeThreshold: 150,
-          message: 'Free shipping with over $150',
-        }),
-      []
-    ),
-    globalSearch: useCallback(
-      () => Promise.resolve({ products: [], suggestions: [], categories: [] }),
-      []
-    ),
-    searchProducts: useCallback(
-      () => Promise.resolve({ products: [], suggestions: [], categories: [] }),
-      []
-    ),
-    getBrands: useCallback(() => Promise.resolve(extractFilterOptions('brand')), []),
-    getColors: useCallback(() => Promise.resolve(extractFilterOptions('color')), []),
-    getMaterials: useCallback(() => Promise.resolve(extractFilterOptions('material')), []),
-    getCategoriesOptions: useCallback(() => Promise.resolve(extractFilterOptions('category')), []),
-    getFlashSale: useCallback(
-      () =>
-        Promise.resolve({
-          message: 'Limited time deals on select products.',
-          endTime: new Date(Date.now() + 1000 * 60).toISOString(), // 2 hours from now
-          title: 'Flash Sale!',
-          icon: 'faBolt',
-        }),
-      []
-    ),
+    getProductDescription: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return description;
+    }, []),
+    getCurrencySettings: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return { currency: 'USD', symbol: '$' };
+    }, []),
+    getShippingSettings: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return {
+        cost: 0,
+        freeThreshold: 150,
+        message: 'Free shipping with over $150',
+      };
+    }, []),
+    globalSearch: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return { products: [], suggestions: [], categories: [] };
+    }, []),
+    searchProducts: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return { products: [], suggestions: [], categories: [] };
+    }, []),
+    getBrands: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return extractFilterOptions('brand');
+    }, []),
+    getColors: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return extractFilterOptions('color');
+    }, []),
+    getMaterials: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return extractFilterOptions('material');
+    }, []),
+    getCategoriesOptions: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return extractFilterOptions('category');
+    }, []),
+    getFlashSale: useCallback(async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return {
+        message: 'Limited time deals on select products.',
+        endTime: new Date(Date.now() + 1000 * 60).toISOString(), // 2 hours from now
+        title: 'Flash Sale!',
+        icon: 'faBolt',
+      };
+    }, []),
   };
 }
 
 // -----------------------------
 // Helpers
 // -----------------------------
-
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
-
 function sortItems<
   T extends { price: number; sales?: number; rating?: number; releaseDate?: string },
 >(items: T[], sortBy?: string): T[] {

@@ -22,16 +22,13 @@ const RecentPhotoShoots = () => {
       });
   }, [getHomepageContent]);
 
-  if (loading) {
-    return (
-      <Section title="Recent photo Shoots" subTitle="Check gallery" compactPadding>
-        <div>Loading gallery...</div>
-      </Section>
-    );
-  }
-
   return (
-    <Section title="Recent photo Shoots" subTitle="Check gallery" compactPadding>
+    <Section
+      title="Recent photo Shoots"
+      subTitle="Check gallery"
+      compactPadding
+      isLoading={loading}
+    >
       <Flex wrap justify="center">
         {photoShoots.map((src, index) => (
           <div key={index} className={styles.recentPhotoShootsImageWrapper}>
