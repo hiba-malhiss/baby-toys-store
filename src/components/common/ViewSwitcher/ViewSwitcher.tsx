@@ -6,7 +6,7 @@ import { faTh, faBars } from '@fortawesome/free-solid-svg-icons';
 import Heading from '../Heading/Heading.tsx';
 import styles from './view-switcher.module.scss';
 import { Paginator } from '../Paginator/Paginator.tsx';
-import SkeletonCard from '../Skeleton/SkeletonCard.tsx';
+import SkeletonProductCard from '../Skeleton/SkeletonProductCard.tsx';
 
 type ResponsiveOption = {
   breakpoint: number;
@@ -212,7 +212,7 @@ export function ViewSwitcher({
           // Show a page of skeleton cards for a better loading experience
           Array.from({ length: pageSize }).map((_, i) => (
             <React.Fragment key={`skeleton-${i}`}>
-              <SkeletonCard />
+              <SkeletonProductCard direction={viewMode === 'list' ? 'horizontal' : 'vertical'} />
             </React.Fragment>
           ))
         ) : items.length === 0 ? (
