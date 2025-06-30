@@ -1,0 +1,28 @@
+.noDataFound {
+  width: 100%;
+  color: $color-text-muted;
+  background: none;
+  padding: $spacing-2xl 0 $spacing-xl 0;
+
+  &.withoutPadding {
+    padding: 0;
+  }
+
+  &-icon {
+    margin-bottom: $spacing-lg;
+  }
+
+  &_text {
+    font-size: 1.3rem;
+    font-weight: 500;
+    margin-bottom: $spacing-xs;
+    color: $color-text-grey-dark;
+    background: none;
+  }
+
+  &_subtext {
+    font-size: 1rem;
+    margin-top: -8px;
+    background: none;
+  }
+}

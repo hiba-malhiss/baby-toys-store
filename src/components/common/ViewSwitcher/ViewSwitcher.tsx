@@ -7,6 +7,8 @@ import Heading from '../Heading/Heading.tsx';
 import styles from './view-switcher.module.scss';
 import { Paginator } from '../Paginator/Paginator.tsx';
 import SkeletonProductCard from '../Skeleton/SkeletonProductCard.tsx';
+import { NoDataFound } from '../NoDataFound';
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 
 type ResponsiveOption = {
   breakpoint: number;
@@ -197,6 +199,7 @@ export function ViewSwitcher({
           [styles.containerGrid]: viewMode === 'grid',
           [styles.containerList]: viewMode === 'list',
           [styles.containerFlex]: viewMode === 'flex',
+          [styles.hasNoData]: items.length === 0 && !isLoading,
         })}
         style={
           viewMode === 'grid'
@@ -216,16 +219,12 @@ export function ViewSwitcher({
             </React.Fragment>
           ))
         ) : items.length === 0 ? (
-          <div
-            style={{
-              color: 'var(--color-text-muted)',
-              textAlign: 'center',
-              width: '100%',
-              padding: '32px 0',
-            }}
-          >
-            No data found
-          </div>
+          <NoDataFound
+            icon={faBoxOpen}
+            message="No toys found"
+            subtext="Try changing your search or filters."
+            align="center"
+          />
         ) : (
           items.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>)
         )}

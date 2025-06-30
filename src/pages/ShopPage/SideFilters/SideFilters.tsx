@@ -15,7 +15,7 @@ import { Accordion } from '../../../components/common/Accordion/Accordion.tsx';
 import { getActiveFiltersCount, getFilterChips } from '../side-filters.utils.ts';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './side-filters.module.scss';
-import { EmptyPlaceholder } from '../../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
+import { NoDataFound } from '../../../components/common/NoDataFound';
 import BouncingDotsLoader from '../../../components/common/BouncingDotsLoader/BouncingDotsLoader';
 
 export type ShopFilters = {
@@ -124,7 +124,9 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
               onClose={() => removeFilter(key)}
             />
           ))}
-          {filtersCount < 1 && <EmptyPlaceholder message="No filters applied" align="start" />}
+          {filtersCount < 1 && (
+            <NoDataFound subtext="No filters applied" align="start" withoutPadding />
+          )}
         </Flex>
         <Divider className="bts-marginTxl" />
 

@@ -6,8 +6,8 @@ import styles from './icon.module.scss';
 
 interface IconProps {
   icon: any;
-  size?: IconSize | string | null;
-  color?: IconColor | string | null;
+  size?: IconSize;
+  color?: IconColor;
   isRotating?: boolean;
   isSpinning?: boolean; // New prop
   className?: string;

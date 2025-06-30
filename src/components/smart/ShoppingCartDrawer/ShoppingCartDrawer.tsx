@@ -10,7 +10,7 @@ import { useCartStore } from '../../../store/useCartStore';
 import { useCartSync } from '../../../hooks/useCartSync';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
-import { EmptyPlaceholder } from '../../common/EmptyPlaceholder/EmptyPlaceholder.tsx';
+import { NoDataFound } from '../../common/NoDataFound';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import styles from './shopping-cart-drawer.module.scss';
@@ -54,9 +54,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   if (loading || !currency || !shipping) {
     return (
       <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
-        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 120 }}>
-          <BouncingDotsLoader />
-        </div>
+        <BouncingDotsLoader />
       </Drawer>
     );
   }
@@ -117,14 +115,12 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           </React.Fragment>
         ))}
         {cartItems.length === 0 && (
-          <div className={styles.emptyCartContainer}>
-            <EmptyPlaceholder
-              icon={faShoppingCart}
-              message="Your cart is empty!"
-              buttonText="Continue Shopping"
-              onButtonClick={handleContinueShopping}
-            />
-          </div>
+          <NoDataFound
+            icon={faShoppingCart}
+            message="Your cart is feeling empty!"
+            buttonText="Browse Toys"
+            onButtonClick={handleContinueShopping}
+          />
         )}
       </Flex>
     </Drawer>

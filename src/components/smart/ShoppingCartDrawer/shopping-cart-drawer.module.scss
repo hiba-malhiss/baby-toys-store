@@ -18,7 +18,3 @@
 .drawerContent {
   @include animate-fade-in();
 }
-
-.emptyCartContainer {
-  @include animate-fade-in-up();
-}

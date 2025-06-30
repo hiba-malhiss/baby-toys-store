@@ -4,9 +4,9 @@ import { PageContainer } from '../../components/layout/PageContainer/PageContain
 import { useCartStore } from '../../store/useCartStore.ts';
 import { StringInput } from '../../components/common/StringInput/StringInput.tsx';
 import { Button } from '../../components/common/Button/Button.tsx';
-import { faShoppingCart, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Card from '../../components/common/Card/Card.tsx';
-import { EmptyPlaceholder } from '../../components/common/EmptyPlaceholder/EmptyPlaceholder.tsx';
+import { NoDataFound } from '../../components/common/NoDataFound';
 import { useNavigate } from 'react-router-dom';
 import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
 import { formatCurrency } from '../../util/format.utils.ts';
@@ -18,24 +18,23 @@ import { useCartSync } from '../../hooks/useCartSync';
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
-  const { currency, shipping, loading } = useStoreConfiguration();
+  const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
   useCartSync();
 
   if (cartItems.length === 0) {
     return (
       <PageContainer
         isBreadcrumbHidden
-        isLoading={loading || !currency || !shipping}
+        isLoading={isLoadingConfigs || !currency || !shipping}
         className={clsx(
           styles.shoppingCartPage,
           cartItems.length === 0 && styles.shoppingCartPageIsEmpty
         )}
       >
-        <EmptyPlaceholder
-          iconSize="pagelarge"
-          icon={faShoppingCart}
-          message="Your cart is empty"
-          buttonText="Start Shopping"
+        <NoDataFound
+          icon={faBoxOpen}
+          message="Oops! No toys here..."
+          buttonText="Browse Toys"
           onButtonClick={() => {
             navigate('/shop');
           }}
