@@ -6,6 +6,7 @@ import Flex from '../../common/Flex/Flex.tsx';
 import ShoppingCartDrawer from '../../smart/ShoppingCartDrawer/ShoppingCartDrawer.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { Toast } from '../../common/Toast/Toast.tsx';
+import FlashSaleBanner from '../../common/FlashSaleBanner.tsx';
 
 interface LayoutProps {
   children: ReactNode;
@@ -18,6 +19,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   return (
     <>
       <Toast />
+      <FlashSaleBanner />
       <Flex direction="vertical" spacing="xxl" className={styles.layout}>
         <Header />
         {children}

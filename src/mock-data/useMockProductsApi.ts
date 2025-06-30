@@ -85,7 +85,7 @@ export const getShopFilterOptions = async (token: string) => {
 // PRODUCTS & HOME DATA (MOCKED)
 // -----------------------------
 
-export function useMockProductsApi<T extends { category?: string }>(pageSize: number) {
+export function useMockProductsApi<T extends { category?: string }>(pageSize?: number) {
   const fullItems = toys;
 
   function extractFilterOptions(field: keyof T): { value: string; label: string }[] {
@@ -211,6 +211,16 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize: nu
     getColors: useCallback(() => Promise.resolve(extractFilterOptions('color')), []),
     getMaterials: useCallback(() => Promise.resolve(extractFilterOptions('material')), []),
     getCategoriesOptions: useCallback(() => Promise.resolve(extractFilterOptions('category')), []),
+    getFlashSale: useCallback(
+      () =>
+        Promise.resolve({
+          message: 'Limited time deals on select products.',
+          endTime: new Date(Date.now() + 1000 * 60 * 60 * 2).toISOString(), // 2 hours from now
+          title: 'Flash Sale!',
+          icon: 'faBolt',
+        }),
+      []
+    ),
   };
 }
 
