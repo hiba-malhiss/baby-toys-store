@@ -23,7 +23,6 @@ export type ShopFilters = {
   color?: string;
   brand?: string;
   material?: string;
-  search?: string;
   priceRange?: [number, number];
 };
 
@@ -53,7 +52,6 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         color: initialFilters.color,
         brand: initialFilters.brand,
         material: initialFilters.material,
-        search: initialFilters.search,
         priceRange: initialFilters.priceRange || priceRange,
       });
     }

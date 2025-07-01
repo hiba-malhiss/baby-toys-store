@@ -44,12 +44,12 @@ const ShopPage = () => {
     }
   }, [urlFilters, filters, handleFiltersChange]);
 
-  // Update URL when filters or page change
+  // Update URL when filters or page change (preserve search param from URL)
   useEffect(() => {
     if (filters) {
-      updateUrlFilters({ ...filters, page });
+      updateUrlFilters({ ...filters, search: urlFilters.search, page });
     }
-  }, [filters, page, updateUrlFilters]);
+  }, [filters, page, updateUrlFilters, urlFilters.search]);
 
   const handleFiltersChangeWrapper = useCallback(
     (shopFilters: ShopFilters) => {

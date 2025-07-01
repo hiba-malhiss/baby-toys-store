@@ -27,29 +27,44 @@ const Header = () => {
     });
   }, []);
 
-  const handleSearch = (e: React.FormEvent) => {
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const searchFromUrl = params.get('search') || '';
+    setSearchQuery(searchFromUrl);
+  }, [location.search]);
+
+  const handleSearch = (e: React.FormEvent | React.KeyboardEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
+
+    const params = new URLSearchParams(location.search);
+    const trimmed = searchQuery.trim();
+
+    if (trimmed) {
+      params.set('search', trimmed);
+    } else {
+      params.delete('search');
     }
+
+    navigate({
+      pathname: '/shop',
+      search: `?${params.toString()}`,
+    });
   };
 
   const handleCategoryClick = (category?: string) => {
-    if (!category) {
-      navigate('/shop');
+    const params = new URLSearchParams(location.search);
+    if (category) {
+      params.set('category', category);
     } else {
-      navigate(`/shop?category=${encodeURIComponent(category)}`);
+      params.delete('category');
     }
+
+    navigate({
+      pathname: '/shop',
+      search: `?${params.toString()}`,
+    });
   };
 
-  const handleSearchInputKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch(e);
-    }
-  };
-
-  // Determine if current path is shop page or a subpage of it
   const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
 
   return (
@@ -82,8 +97,7 @@ const Header = () => {
             fullWidth
             value={searchQuery}
             onChange={(value: any) => setSearchQuery(value)}
-            onKeyDown={handleSearchInputKeyDown}
-            onClick={handleSearchInputKeyDown}
+            onIconClick={handleSearch}
           />
         </form>
 
@@ -92,6 +106,7 @@ const Header = () => {
           <Icon icon={faHeart} color={IconColor.grayDark} size="xlarge" />
         </Flex>
       </Flex>
+
       {!isShopPage && (
         <Flex fullWidth spacing="xxxl" wrap justify="center" align="center">
           <Button
