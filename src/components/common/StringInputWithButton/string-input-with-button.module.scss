@@ -1,0 +1,10 @@
+.stringInputWithButton {
+  position: relative;
+  width: 100%;
+
+  &-button {
+    position: absolute;
+    right: 1px;
+    top: 0;
+  }
+}

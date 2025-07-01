@@ -8,7 +8,7 @@ import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 export type IconPosition = 'left' | 'right';
 export type StringInputSize = 'small' | 'medium' | 'large';
 
-interface StringInputProps {
+export interface StringInputProps {
   type?: string;
   min?: string | number;
   value?: string | number;
@@ -19,7 +19,6 @@ interface StringInputProps {
   className?: string;
   iconPosition?: IconPosition;
   isDisabled?: boolean;
-  withIconBackground?: boolean;
   isRounded?: boolean;
   size?: StringInputSize;
   fullWidth?: boolean;
@@ -42,7 +41,6 @@ export const StringInput: React.FC<StringInputProps> = ({
   fullWidth = false,
   hasError = false,
   isRounded = false,
-  withIconBackground = false,
   withControls = false,
 }) => {
   const [internalValue, setInternalValue] = useState<string>(() => {
@@ -155,14 +153,7 @@ export const StringInput: React.FC<StringInputProps> = ({
           />
         )}
 
-        {icon && (
-          <Icon
-            icon={icon}
-            className={clsx(withIconBackground && styles.iconFilled, styles.icon)}
-            color={iconColor}
-            size={size}
-          />
-        )}
+        {icon && <Icon icon={icon} className={clsx(styles.icon)} color={iconColor} size={size} />}
       </div>
     </div>
   );

@@ -52,14 +52,6 @@
     border-left: 1px solid $color-border;
   }
 
-  // Icon styles
-  .icon--filled {
-    height: 38px;
-    width: 38px;
-    background: $color-primary;
-    justify-self: start;
-  }
-
   .icon {
     grid-column: 1/2;
     grid-row: 1/2;

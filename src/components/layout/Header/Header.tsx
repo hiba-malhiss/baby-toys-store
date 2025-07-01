@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './header.module.scss';
 import { faHeart, faSearch, faTruckFast } from '@fortawesome/free-solid-svg-icons';
-import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Icon } from '../../common/Icon/Icon.tsx';
 import { CartButton } from '../../common/CartButton/CartButton.tsx';
@@ -12,6 +11,7 @@ import { useStoreConfiguration } from '../../../context/StoreConfigurationContex
 import { IconColor } from '../../common/Icon/icon.constant.ts';
 import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 import { Button } from '../../common/Button/Button.tsx';
+import { StringInputWithButton } from '../../common/StringInputWithButton/StringInputWithButton.tsx';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
@@ -73,21 +73,17 @@ const Header = () => {
 
         <form
           onSubmit={handleSearch}
-          style={{ flex: 1, margin: '0 16px' }}
           aria-label="Product Search Form"
+          className={styles.headerSearch}
         >
-          <StringInput
+          <StringInputWithButton
             placeholder="Search products..."
-            icon={faSearch}
-            className={styles.headerSearch}
+            buttonIcon={faSearch}
             fullWidth
-            isRounded
-            withIconBackground
-            iconColor="light"
-            iconPosition="right"
             value={searchQuery}
             onChange={(value: any) => setSearchQuery(value)}
             onKeyDown={handleSearchInputKeyDown}
+            onClick={handleSearchInputKeyDown}
           />
         </form>
 
