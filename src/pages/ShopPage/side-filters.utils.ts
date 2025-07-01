@@ -1,45 +1,48 @@
-import type { ShopFilters } from './SideFilters/SideFilters.tsx';
+import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
 
-export const isPriceDefault = (price: [number, number], defaultRange: [number, number]) =>
-  price[0] === defaultRange[0] && price[1] === defaultRange[1];
+const isEqual = (value1: any, value2: any): boolean => {
+  if (Array.isArray(value1) && Array.isArray(value2)) {
+    if (value1.length !== value2.length) return false;
+    return value1.every((v, i) => v === value2[i]);
+  }
+  return value1 === value2;
+};
 
-export const getActiveFilters = (filters: ShopFilters, defaultPriceRange: [number, number]) => {
-  if (!defaultPriceRange) return [];
+export const getActiveFilters = (filters: ShopFilters, defaultFilters: Record<string, any>) => {
   return Object.entries(filters).filter(([key, value]) => {
-    if (key === 'priceRange')
-      return value && !isPriceDefault(value as [number, number], defaultPriceRange);
-    return Boolean(value);
+    const defaultValue = defaultFilters[key];
+    if (value == null) return false;
+    return !isEqual(value, defaultValue);
   });
 };
 
 export const getActiveFiltersCount = (
   filters: ShopFilters,
-  defaultPriceRange: [number, number]
+  defaultFilters: Record<string, any>
 ): number => {
-  if (!defaultPriceRange) return 0;
-  return getActiveFilters(filters, defaultPriceRange).length;
+  return getActiveFilters(filters, defaultFilters).length;
 };
 
 export const getFilterChips = (
   filters: ShopFilters,
-  currencySymbol: string = '',
-  defaultPriceRange: [number, number]
+  currencySymbol = '',
+  defaultFilters: Record<string, any>
 ): { key: keyof ShopFilters; label: string }[] => {
-  if (!defaultPriceRange) return [];
   const chips: { key: keyof ShopFilters; label: string }[] = [];
 
   Object.entries(filters).forEach(([key, value]) => {
-    if (
-      key === 'priceRange' &&
-      value &&
-      !isPriceDefault(value as [number, number], defaultPriceRange)
-    ) {
-      const range = value as [number, number];
+    const defaultValue = defaultFilters[key as keyof ShopFilters];
+
+    if (value == null || isEqual(value, defaultValue)) {
+      return;
+    }
+
+    if (key === 'priceRange' && Array.isArray(value)) {
       chips.push({
         key: 'priceRange',
-        label: `${range[0]}${currencySymbol} - ${range[1]}${currencySymbol}`,
+        label: `${value[0]}${currencySymbol} - ${value[1]}${currencySymbol}`,
       });
-    } else if (value && key !== 'priceRange') {
+    } else {
       chips.push({ key: key as keyof ShopFilters, label: String(value) });
     }
   });

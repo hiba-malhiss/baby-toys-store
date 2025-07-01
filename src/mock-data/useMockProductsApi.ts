@@ -77,7 +77,7 @@ export const mockLoadFavoritesFromCloud = async (): Promise<string[]> => {
 // SHOP FILTER OPTIONS
 // -----------------------------
 
-export const getShopFilterOptions = async (token: string) => {
+export const getShopFilterOptions = async () => {
   await delay(MOCK_API_DELAY_MS);
   return {
     colors: colorsRadioOptions,

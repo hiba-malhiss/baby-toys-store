@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './header.module.scss';
-import { faHeart, faSearch, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Icon } from '../../common/Icon/Icon.tsx';
 import { CartButton } from '../../common/CartButton/CartButton.tsx';
@@ -11,11 +11,10 @@ import { useStoreConfiguration } from '../../../context/StoreConfigurationContex
 import { IconColor } from '../../common/Icon/icon.constant.ts';
 import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 import { Button } from '../../common/Button/Button.tsx';
-import { StringInputWithButton } from '../../common/StringInputWithButton/StringInputWithButton.tsx';
+import SearchInputWithUrl from './SearchInputWithUrl.tsx';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
-  const [searchQuery, setSearchQuery] = useState('');
   const [categories, setCategories] = useState<any[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
@@ -26,30 +25,6 @@ const Header = () => {
       setCategories(data);
     });
   }, []);
-
-  useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const searchFromUrl = params.get('search') || '';
-    setSearchQuery(searchFromUrl);
-  }, [location.search]);
-
-  const handleSearch = (e: React.FormEvent | React.KeyboardEvent) => {
-    e.preventDefault();
-
-    const params = new URLSearchParams(location.search);
-    const trimmed = searchQuery.trim();
-
-    if (trimmed) {
-      params.set('search', trimmed);
-    } else {
-      params.delete('search');
-    }
-
-    navigate({
-      pathname: '/shop',
-      search: `?${params.toString()}`,
-    });
-  };
 
   const handleCategoryClick = (category?: string) => {
     const params = new URLSearchParams(location.search);
@@ -86,20 +61,9 @@ const Header = () => {
           onClick={() => navigate('/')}
         />
 
-        <form
-          onSubmit={handleSearch}
-          aria-label="Product Search Form"
-          className={styles.headerSearch}
-        >
-          <StringInputWithButton
-            placeholder="Search products..."
-            buttonIcon={faSearch}
-            fullWidth
-            value={searchQuery}
-            onChange={(value: any) => setSearchQuery(value)}
-            onIconClick={handleSearch}
-          />
-        </form>
+        <div className={styles.headerSearch}>
+          <SearchInputWithUrl />
+        </div>
 
         <Flex spacing="xl" align="center">
           <CartButton itemCount={getTotalItemsInCart()} />

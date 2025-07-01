@@ -7,7 +7,6 @@ import type { Product } from '../../types/product.types';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi';
 import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants';
-import BouncingDotsLoader from '../../components/common/BouncingDotsLoader/BouncingDotsLoader.tsx';
 
 const YouMayAlsoLikeSection: React.FC = () => {
   const { fetchProducts } = useMockProductsApi<Product>(SHOP_PAGE_SIZE);

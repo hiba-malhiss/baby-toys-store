@@ -1,84 +1,96 @@
 import { useSearchParams } from 'react-router-dom';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useRef } from 'react';
+import { isEqual } from '../util/isEqual.utils';
 
-export type UrlFilters = {
-  category?: string;
-  sortBy?: string;
-  search?: string;
-  priceMin?: number;
-  priceMax?: number;
-  brand?: string;
-  page?: number;
-};
+type Parser<T> = (value: string) => T;
 
-const paramParsers: Record<keyof UrlFilters, (val: string) => any> = {
-  category: (v) => v,
-  sortBy: (v) => v,
-  search: (v) => v,
-  priceMin: (v) => parseFloat(v),
-  priceMax: (v) => parseFloat(v),
-  brand: (v) => v,
-  page: (v) => parseInt(v, 10),
-};
-
-function filtersToSearchParams(filters: Partial<UrlFilters>): URLSearchParams {
-  const params = new URLSearchParams();
-  Object.entries(filters).forEach(([key, value]) => {
-    if (value !== undefined && value !== null && value !== '') {
-      params.set(key, value.toString());
-    }
-  });
-  return params;
-}
-
-export function useUrlFilters() {
+export const useUrlFilters = <T extends Record<string, any>>(
+  parsers: Record<keyof T, Parser<any>>,
+  defaultValues: Partial<T> = {},
+  filterKeys?: (keyof T)[]
+) => {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const urlFilters = useMemo((): UrlFilters => {
-    const result: UrlFilters = {};
-    Object.entries(paramParsers).forEach(([key, parser]) => {
-      const val = searchParams.get(key);
-      if (val) {
-        result[key as keyof UrlFilters] = parser(val);
+  // Keep a ref to last filters to avoid returning new object if unchanged
+  const lastFiltersRef = useRef<Partial<T>>({});
+
+  const urlFilters = useMemo((): Partial<T> => {
+    const keys = filterKeys ?? (Object.keys(parsers) as (keyof T)[]);
+
+    const result = {} as Partial<T>;
+
+    keys.forEach((key) => {
+      const val = searchParams.get(key as string);
+      if (val !== null) {
+        result[key] = parsers[key](val);
+      } else {
+        result[key] = defaultValues[key];
       }
     });
-    return result;
-  }, [searchParams]);
+
+    if (isEqual(result, lastFiltersRef.current)) {
+      return lastFiltersRef.current;
+    } else {
+      lastFiltersRef.current = result;
+      return result;
+    }
+  }, [searchParams, parsers, defaultValues, filterKeys]);
 
   const updateUrlFilters = useCallback(
-    (newFilters: Partial<UrlFilters>) => {
+    (newFilters: Partial<T>) => {
       setSearchParams((prev) => {
         const params = new URLSearchParams(prev);
+
         Object.entries(newFilters).forEach(([key, value]) => {
-          if (!value) {
+          const defaultVal = defaultValues[key as keyof T];
+
+          if (value === undefined || value === null || value === '' || value === defaultVal) {
             params.delete(key);
           } else {
             params.set(key, value.toString());
           }
         });
-        // Reset page if filters other than page change
+
         if (!('page' in newFilters)) {
           params.delete('page');
         }
+
         return params;
       });
     },
-    [setSearchParams]
+    [setSearchParams, defaultValues]
   );
 
   const clearFilters = useCallback(() => {
     setSearchParams({});
   }, [setSearchParams]);
 
-  const navigateToShop = useCallback((filters: UrlFilters) => {
-    const params = filtersToSearchParams(filters);
-    return '/shop?' + params.toString();
-  }, []);
+  const filtersToSearchParams = useCallback(
+    (filters: Partial<T>): URLSearchParams => {
+      const params = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        const defaultVal = defaultValues[key as keyof T];
+        if (value !== undefined && value !== null && value !== '' && value !== defaultVal) {
+          params.set(key, value.toString());
+        }
+      });
+      return params;
+    },
+    [defaultValues]
+  );
+
+  const navigateTo = useCallback(
+    (path: string, filters: Partial<T>) => {
+      const params = filtersToSearchParams(filters);
+      return `${path}?${params.toString()}`;
+    },
+    [filtersToSearchParams]
+  );
 
   return {
     urlFilters,
     updateUrlFilters,
     clearFilters,
-    navigateToShop,
+    navigateTo,
   };
-}
+};

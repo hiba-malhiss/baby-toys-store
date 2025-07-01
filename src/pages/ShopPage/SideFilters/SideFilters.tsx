@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Card from '../../../components/common/Card/Card.tsx';
 import RadioButtonGroup, {
   type RadioOption,
@@ -17,72 +17,74 @@ import { useStoreConfiguration } from '../../../context/StoreConfigurationContex
 import styles from './side-filters.module.scss';
 import { NoDataFound } from '../../../components/common/NoDataFound';
 import BouncingDotsLoader from '../../../components/common/BouncingDotsLoader/BouncingDotsLoader';
-
-export type ShopFilters = {
-  category?: string;
-  color?: string;
-  brand?: string;
-  material?: string;
-  priceRange?: [number, number];
-};
+import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
+import { type ShopFilters, urlFilterParsers } from './side-filters.utils.ts';
 
 type SideFiltersProps = {
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
-  initialFilters?: ShopFilters;
   categoriesOptions?: RadioOption[];
 };
 
 export const SideFilters: React.FC<SideFiltersProps> = ({
   className,
   onFiltersChange,
-  initialFilters,
   categoriesOptions = [],
 }) => {
   const { currency } = useStoreConfiguration();
-  const { colors, brands, materials, priceRange, loading: filterLoading } = useShopFilterOptions();
-  const [filters, setFilters] = useState<ShopFilters>({});
-  const debouncedFilters = useDebounce(filters, 400);
+  const {
+    colors,
+    brands,
+    materials,
+    priceRange,
+    defaultPriceRange,
+    loading: filterLoading,
+  } = useShopFilterOptions();
 
-  // Initialize filters from initialFilters prop
+  const defaultFilters: ShopFilters = {
+    category: undefined,
+    brand: undefined,
+    color: undefined,
+    material: undefined,
+    priceRange: defaultPriceRange ?? [0, 1000],
+  };
+
+  const { urlFilters, updateUrlFilters } = useUrlFilters<ShopFilters>(
+    urlFilterParsers,
+    defaultFilters
+  );
+
+  const debouncedFilters = useDebounce(urlFilters, 400);
+
   useEffect(() => {
-    if (initialFilters && !Object.values(filters).length) {
-      setFilters({
-        category: initialFilters.category,
-        color: initialFilters.color,
-        brand: initialFilters.brand,
-        material: initialFilters.material,
-        priceRange: initialFilters.priceRange || priceRange,
-      });
+    if (!filterLoading) {
+      onFiltersChange(debouncedFilters);
     }
-  }, [initialFilters, priceRange]);
-
-  useEffect(() => {
-    onFiltersChange(debouncedFilters);
   }, [debouncedFilters, onFiltersChange]);
 
-  const handleFilterChange = (key: keyof ShopFilters, value: string | [number, number]) => {
-    setFilters((prev) => ({ ...prev, [key]: value }));
+  const handleFilterChange = (key: keyof ShopFilters, value: any) => {
+    updateUrlFilters({ [key]: value });
   };
 
   const clearFilters = () => {
-    setFilters({
+    updateUrlFilters({
       category: undefined,
-      color: undefined,
       brand: undefined,
+      color: undefined,
       material: undefined,
-      priceRange: priceRange,
+      priceRange: defaultPriceRange,
     });
   };
 
   const removeFilter = (key: keyof ShopFilters) => {
-    setFilters((prev) => ({
-      ...prev,
-      [key]: key === 'priceRange' ? priceRange : undefined,
-    }));
+    if (key === 'priceRange') {
+      handleFilterChange(key, defaultPriceRange ?? [0, 1000]);
+    } else {
+      handleFilterChange(key, undefined);
+    }
   };
 
-  const filtersCount = getActiveFiltersCount(filters, priceRange);
+  const filtersCount = getActiveFiltersCount(urlFilters, defaultFilters);
 
   if (filterLoading) {
     return (
@@ -114,24 +116,27 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
     >
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex wrap spacing="m" fullWidth className={styles.sideFilterChipsContainer}>
-          {getFilterChips(filters, currency?.symbol || '', priceRange).map(({ key, label }) => (
-            <Chip
-              key={key}
-              appearance="secondary-outline"
-              label={label}
-              onClose={() => removeFilter(key)}
-            />
-          ))}
+          {getFilterChips(urlFilters, currency?.symbol || '', defaultFilters).map(
+            ({ key, label }) => (
+              <Chip
+                key={key}
+                appearance="secondary-outline"
+                label={label}
+                onClose={() => removeFilter(key)}
+              />
+            )
+          )}
           {filtersCount < 1 && (
             <NoDataFound subtext="No filters applied" align="start" withoutPadding />
           )}
         </Flex>
+
         <Divider className="bts-marginTxl" />
 
         <Accordion header="Category" withoutPadding>
           <RadioButtonGroup
             name="category"
-            selectedValue={filters.category}
+            selectedValue={urlFilters.category}
             onChange={(val) => handleFilterChange('category', val)}
             direction="vertical"
             align="start"
@@ -148,7 +153,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Color" withoutPadding>
           <RadioButtonGroup
             name="color"
-            selectedValue={filters.color}
+            selectedValue={urlFilters.color}
             onChange={(val) => handleFilterChange('color', val)}
             direction="horizontal"
             align="start"
@@ -165,7 +170,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Brand" withoutPadding>
           <RadioButtonGroup
             name="brand"
-            selectedValue={filters.brand}
+            selectedValue={urlFilters.brand}
             onChange={(val) => handleFilterChange('brand', val)}
             direction="vertical"
             spacing="l"
@@ -182,7 +187,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Material" withoutPadding>
           <RadioButtonGroup
             name="material"
-            selectedValue={filters.material}
+            selectedValue={urlFilters.material}
             onChange={(val) => handleFilterChange('material', val)}
             direction="vertical"
             spacing="l"
@@ -198,11 +203,11 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
         <Accordion header="Price" withoutPadding>
           <Slider
-            min={priceRange[0]}
-            max={priceRange[1]}
+            min={priceRange ? priceRange[0] : 0}
+            max={priceRange ? priceRange[1] : 1000}
             step={1}
             range
-            value={filters.priceRange || priceRange}
+            value={urlFilters.priceRange || (defaultPriceRange ?? [0, 1000])}
             className="bts-marginTxl"
             onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
           />

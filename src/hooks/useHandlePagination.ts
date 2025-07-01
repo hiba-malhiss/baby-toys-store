@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { isEqual } from '../util/isEqual.utils.ts';
 
 type FetchFunction<T, F> = (
   page: number,
@@ -18,14 +19,20 @@ export function useHandlePagination<T, F = any>(
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<T[]>([]);
   const [totalSize, setTotalSize] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState<F | undefined>();
 
   const fetchFunctionRef = useRef(fetchFunction);
   fetchFunctionRef.current = fetchFunction;
 
-  // Reset to page 1 when filters change
+  const previousFiltersRef = useRef<F | undefined>(undefined);
+  const isFirstFiltersUpdate = useRef(true);
+
   useEffect(() => {
+    if (isFirstFiltersUpdate.current) {
+      isFirstFiltersUpdate.current = false;
+      return; // skip first time filters effect
+    }
     setPage(1);
   }, [filters]);
 
@@ -42,7 +49,7 @@ export function useHandlePagination<T, F = any>(
           if (mode === 'show-more') {
             return page === 1 ? pagedItems : [...prevItems, ...pagedItems];
           }
-          return pagedItems; // Default mode: always replace
+          return pagedItems;
         });
 
         setTotalSize(totalItems);
@@ -53,19 +60,26 @@ export function useHandlePagination<T, F = any>(
       }
     };
 
-    fetchData();
+    if (!!filters) {
+      fetchData();
+    }
 
     return () => {
       isMounted = false;
     };
   }, [page, filters, mode]);
 
-  const handlePaginationChange = useCallback((newPage: number) => {
-    setPage(newPage);
-  }, []);
+  const handlePaginationChange = useCallback(
+    (newPage: number) => {
+      if (page === newPage) return;
+      setPage(newPage);
+    },
+    [page]
+  );
 
   const handleFiltersChange = useCallback((newFilters: F) => {
-    if (Object.keys(newFilters || {}).every((key) => filters?.[key] === newFilters[key])) return;
+    if (isEqual(newFilters, previousFiltersRef.current)) return;
+    previousFiltersRef.current = newFilters;
     setItems([]);
     setFilters(newFilters);
   }, []);

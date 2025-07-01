@@ -7,6 +7,7 @@ export function useShopFilterOptions() {
   const [brands, setBrands] = useState<RadioOption[]>([]);
   const [materials, setMaterials] = useState<RadioOption[]>([]);
   const [priceRange, setPriceRange] = useState<[number, number]>();
+  const [defaultPriceRange, setDefaultPriceRange] = useState<[number, number]>();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -16,10 +17,11 @@ export function useShopFilterOptions() {
       setBrands(brands);
       setMaterials(materials);
       setPriceRange(priceRange);
+      setDefaultPriceRange(priceRange);
       setLoading(false);
     };
     fetchFilterOptions();
   }, []);
 
-  return { colors, brands, materials, priceRange, loading };
+  return { colors, brands, materials, priceRange, loading, defaultPriceRange };
 }
