@@ -89,7 +89,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   if (filterLoading) {
     return (
       <Card className={className} header="Filters">
-        <BouncingDotsLoader />
+        <BouncingDotsLoader size="medium" />
       </Card>
     );
   }

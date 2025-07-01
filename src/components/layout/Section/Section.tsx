@@ -38,7 +38,11 @@ const Section = ({
           {subTitle}
         </Heading>
       )}
-      {isLoading && <BouncingDotsLoader className="bts-paddingVxxl" />}
+      {isLoading && (
+        <BouncingDotsLoader
+          className={!subTitle ? 'bts-paddingVxxxl bts-marginTxxxl' : 'bts-paddingVxxl'}
+        />
+      )}
       {!isLoading && children}
     </Flex>
   );

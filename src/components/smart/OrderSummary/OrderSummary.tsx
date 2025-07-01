@@ -39,7 +39,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items }) => {
           </React.Fragment>
         ))}
         {currency && shipping && (
-          <TotalAmountSection items={items} shipping={shipping} currency={currency.symbol} />
+          <TotalAmountSection items={items} shipping={shipping} currency={currency?.symbol} />
         )}
       </Flex>
     </div>

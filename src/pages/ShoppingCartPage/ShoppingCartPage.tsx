@@ -65,7 +65,7 @@ const ShoppingCartPage = () => {
                 <img src={item.mainImage} alt={item.name} />
               </div>
               <div className={styles.shoppingCartPageProductName}>{item.name}</div>
-              <div>{formatCurrency(item.price, currency.symbol)}</div>
+              <div>{formatCurrency(item.price, currency?.symbol)}</div>
               <div className={styles.shoppingCartPageQuantityInput}>
                 <StringInput
                   type="number"
@@ -77,7 +77,7 @@ const ShoppingCartPage = () => {
                   fullWidth
                 />
               </div>
-              <div>{formatCurrency(item.price * item.quantity, currency.symbol)}</div>
+              <div>{formatCurrency(item.price * item.quantity, currency?.symbol)}</div>
               <div>
                 <Button
                   leftIcon={faTrashAlt}
@@ -94,7 +94,7 @@ const ShoppingCartPage = () => {
         <TotalAmountSection
           items={cartItems}
           shipping={shipping}
-          currency={currency.symbol}
+          currency={currency?.symbol}
           className="bts-marginTxxl"
         />
         <Button
