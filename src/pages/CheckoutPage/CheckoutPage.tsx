@@ -11,6 +11,8 @@ import { Select } from '../../components/common/Select/Select';
 import { calculateOrderSummary } from '../../util/order.utils';
 import { useToast } from '../../components/common/Toast/ToastContext.tsx';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
+import { mockPlaceOrder } from '../../mock-data/useMockProductsApi.ts';
+import { useNavigate } from 'react-router-dom';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
@@ -29,7 +31,7 @@ const CheckoutPage: React.FC = () => {
   const [placingOrder, setPlacingOrder] = useState(false);
   const toast = useToast();
   const { currency, shipping } = useStoreConfiguration();
-
+  const navigate = useNavigate();
   const {
     subtotal,
     total,
@@ -55,86 +57,93 @@ const CheckoutPage: React.FC = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleOrder = (e: React.FormEvent) => {
+  const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    setPlacingOrder(true);
-    setTimeout(() => {
-      setPlacingOrder(false);
+    try {
+      const orderData = {
+        shippingInfo: form,
+        items: cartItems,
+        total,
+      };
+      await mockPlaceOrder(orderData);
       toast.success('Order placed successfully!');
-    }, 1200);
+      navigate(`/home`);
+    } catch (error) {
+      toast.error('Failed to place order. Please try again.');
+    } finally {
+      setPlacingOrder(false);
+    }
   };
 
   return (
     <PageContainer>
       <div className={styles.checkoutPage}>
         <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
-          <form onSubmit={handleOrder} className={styles.checkoutPageForm}>
-            <FieldWrapper label="Country" error={errors.country}>
-              <Select
-                options={COUNTRIES}
-                hasError={!!errors.country}
-                value={form.country}
-                onChange={(val) => handleInput('country', val)}
-                placeholder="Select country"
+          <FieldWrapper label="Country" error={errors.country}>
+            <Select
+              options={COUNTRIES}
+              hasError={!!errors.country}
+              value={form.country}
+              onChange={(val) => handleInput('country', val)}
+              placeholder="Select country"
+            />
+          </FieldWrapper>
+
+          <div className={styles.checkoutPageFormRow}>
+            <FieldWrapper label="First Name" error={errors.firstName}>
+              <StringInput
+                hasError={!!errors.firstName}
+                value={form.firstName}
+                onChange={(val) => handleInput('firstName', val)}
               />
             </FieldWrapper>
+            <FieldWrapper label="Last Name" error={errors.lastName}>
+              <StringInput
+                hasError={!!errors.lastName}
+                value={form.lastName}
+                onChange={(val) => handleInput('lastName', val)}
+              />
+            </FieldWrapper>
+          </div>
 
-            <div className={styles.checkoutPageFormRow}>
-              <FieldWrapper label="First Name" error={errors.firstName}>
-                <StringInput
-                  hasError={!!errors.firstName}
-                  value={form.firstName}
-                  onChange={(val) => handleInput('firstName', val)}
-                />
-              </FieldWrapper>
-              <FieldWrapper label="Last Name" error={errors.lastName}>
-                <StringInput
-                  hasError={!!errors.lastName}
-                  value={form.lastName}
-                  onChange={(val) => handleInput('lastName', val)}
-                />
-              </FieldWrapper>
-            </div>
+          <div className={styles.checkoutPageFormRow}>
+            <FieldWrapper label="Village or Region" error={errors.region}>
+              <StringInput
+                hasError={!!errors.region}
+                value={form.region}
+                onChange={(val) => handleInput('region', val)}
+              />
+            </FieldWrapper>
+            <FieldWrapper label="Detailed Address" error={errors.address}>
+              <StringInput
+                hasError={!!errors.address}
+                value={form.address}
+                onChange={(val) => handleInput('address', val)}
+              />
+            </FieldWrapper>
+          </div>
 
-            <div className={styles.checkoutPageFormRow}>
-              <FieldWrapper label="Village or Region" error={errors.region}>
-                <StringInput
-                  hasError={!!errors.region}
-                  value={form.region}
-                  onChange={(val) => handleInput('region', val)}
-                />
-              </FieldWrapper>
-              <FieldWrapper label="Detailed Address" error={errors.address}>
-                <StringInput
-                  hasError={!!errors.address}
-                  value={form.address}
-                  onChange={(val) => handleInput('address', val)}
-                />
-              </FieldWrapper>
-            </div>
+          <div className={styles.checkoutPageFormRow}>
+            <FieldWrapper label="Town" error={errors.town}>
+              <StringInput
+                hasError={!!errors.town}
+                value={form.town}
+                onChange={(val) => handleInput('town', val)}
+              />
+            </FieldWrapper>
+            <FieldWrapper label="Phone Number" error={errors.phone}>
+              <StringInput
+                hasError={!!errors.phone}
+                value={form.phone}
+                onChange={(val) => handleInput('phone', val)}
+              />
+            </FieldWrapper>
+          </div>
 
-            <div className={styles.checkoutPageFormRow}>
-              <FieldWrapper label="Town" error={errors.town}>
-                <StringInput
-                  hasError={!!errors.town}
-                  value={form.town}
-                  onChange={(val) => handleInput('town', val)}
-                />
-              </FieldWrapper>
-              <FieldWrapper label="Phone Number" error={errors.phone}>
-                <StringInput
-                  hasError={!!errors.phone}
-                  value={form.phone}
-                  onChange={(val) => handleInput('phone', val)}
-                />
-              </FieldWrapper>
-            </div>
-
-            <Button onClick={handleOrder} fullWidth isLoading={placingOrder}>
-              Place Order
-            </Button>
-          </form>
+          <Button onClick={handleOrder} fullWidth isLoading={placingOrder}>
+            Place Order
+          </Button>
         </Card>
 
         <Card className={styles.checkoutPageSummary} fullWidth header="Your Shopping Cart">

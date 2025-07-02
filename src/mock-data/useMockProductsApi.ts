@@ -59,6 +59,15 @@ import type { ProductWithFavorite } from '../types/product.types';
 // CLOUD STORAGE MOCKS
 // -----------------------------
 
+export const mockPlaceOrder = async (order: any) => {
+  await delay(MOCK_API_DELAY_MS);
+  const orders = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+  orders.push({ ...order, id: Date.now() });
+  localStorage.setItem('mock-orders', JSON.stringify(orders));
+  // Optionally clear cart after order
+  localStorage.setItem('cloud-cart', '[]');
+};
+
 export const mockFetchWishlist = async (
   page: number,
   pageSize: number
