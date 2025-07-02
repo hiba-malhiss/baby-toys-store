@@ -47,7 +47,11 @@ export const useUrlFilters = <T extends Record<string, any>>(
           if (value === undefined || value === null || value === '' || value === defaultVal) {
             params.delete(key);
           } else {
-            params.set(key, value.toString());
+            if (Array.isArray(value)) {
+              params.set(key, JSON.stringify(value));
+            } else {
+              params.set(key, value.toString());
+            }
           }
         });
 

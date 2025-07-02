@@ -6,10 +6,16 @@ export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> =
   priceRange: (v) => {
     try {
       const parsed = JSON.parse(v);
-      if (Array.isArray(parsed) && parsed.length === 2) return parsed;
-    } catch {
-      return [0, 1000]; // fallback
-    }
+      if (
+        Array.isArray(parsed) &&
+        parsed.length === 2 &&
+        typeof parsed[0] === 'number' &&
+        typeof parsed[1] === 'number'
+      ) {
+        return parsed;
+      }
+    } catch {}
+    return undefined;
   },
 };
 
