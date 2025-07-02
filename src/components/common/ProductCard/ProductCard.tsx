@@ -18,6 +18,7 @@ export type ProductCardProps = {
   product: Product;
   fullWidth?: boolean;
   isFavorite?: boolean;
+  isLoadingFavorite?: boolean;
   onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
   onAddToCart?: (product: Product) => void;
@@ -32,6 +33,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onClick,
   fullWidth,
   isFavorite,
+  isLoadingFavorite,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
@@ -86,6 +88,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         color="icon"
         size="xlarge"
         isSelected={isFavorite}
+        isLoading={isLoadingFavorite}
         onClick={(e) => handleButtonClick(e, onToggleFavorite)}
         aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       />

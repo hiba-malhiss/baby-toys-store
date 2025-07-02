@@ -1,31 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import LoginDialog from './LoginDialog.tsx';
 import RegisterDialog from './RegisterDialog.tsx';
+import { useLoginDialogStore } from '../../../store/useLoginDialogStore';
+import { useAuth } from '../../../context/AuthContext';
 
 const AuthButtonsWithDialogs: React.FC = () => {
-  const [isLoginOpen, setLoginOpen] = useState(false);
-  const [isRegisterOpen, setRegisterOpen] = useState(false);
+  const { isOpen, open, close } = useLoginDialogStore();
+  const [isRegisterOpen, setRegisterOpen] = React.useState(false);
+  const { isLoggedIn, logout } = useAuth();
 
   return (
     <>
       <Flex spacing="xxxxl">
-        <Button withoutPadding appearance="link" color="light" onClick={() => setLoginOpen(true)}>
-          Login
-        </Button>
-        <Button
-          withoutPadding
-          appearance="link"
-          color="light"
-          onClick={() => setRegisterOpen(true)}
-        >
-          Register
-        </Button>
+        {!isLoggedIn ? (
+          <>
+            <Button withoutPadding appearance="link" color="light" onClick={open}>
+              Login
+            </Button>
+            <Button
+              withoutPadding
+              appearance="link"
+              color="light"
+              onClick={() => setRegisterOpen(true)}
+            >
+              Register
+            </Button>
+          </>
+        ) : (
+          <Button withoutPadding appearance="link" color="light" onClick={logout}>
+            Logout
+          </Button>
+        )}
       </Flex>
-
-      <LoginDialog open={isLoginOpen} onClose={() => setLoginOpen(false)} />
-
+      <LoginDialog open={isOpen} onClose={close} />
       <RegisterDialog open={isRegisterOpen} onClose={() => setRegisterOpen(false)} />
     </>
   );

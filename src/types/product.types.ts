@@ -17,6 +17,8 @@ export type Product = {
   details?: { label: string; value: string }[];
 };
 
+export type ProductWithFavorite = Product & { isUserFavorite: boolean };
+
 export interface CartItem {
   productId: string;
   name: string;

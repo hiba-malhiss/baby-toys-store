@@ -20,7 +20,7 @@ const ShopPage = () => {
   const [categoriesOptions, setCategoriesOptions] = useState([]);
   const { fetchProducts } = useMockProductsApi(SHOP_PAGE_SIZE);
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange } =
-    useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE);
+    useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE, true);
   const header =
     categoriesOptions.find((option) => option.value === sideFilters?.category)?.label ||
     'All Categories';
@@ -69,7 +69,7 @@ const ShopPage = () => {
         }
       />
 
-      <YouMayAlsoLikeSection />
+      <YouMayAlsoLikeSection mode="carousel" />
     </PageContainer>
   );
 };

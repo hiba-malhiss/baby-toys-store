@@ -196,7 +196,7 @@ $appearances: (
         ),
         icon: (
             text-default: $color-secondary,
-            text-hover: $color-accent-hover,
+            text-hover: $color-secondary-dark,
             text-selected: $color-accent-hover,
         ),
         secondary: (
@@ -217,7 +217,7 @@ $appearances: (
         ),
         icon: (
             text-default: $color-secondary,
-            text-hover: $color-accent-hover,
+            text-hover: $color-secondary-dark,
             border-default: $color-secondary,
             border-hover: $color-accent-hover,
             text-selected: $color-accent-hover,

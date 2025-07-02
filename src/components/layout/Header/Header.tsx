@@ -8,7 +8,6 @@ import { CartButton } from '../../common/CartButton/CartButton.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext';
-import { IconColor } from '../../common/Icon/icon.constant.ts';
 import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 import { Button } from '../../common/Button/Button.tsx';
 import SearchInputWithUrl from './SearchInputWithUrl.tsx';
@@ -67,7 +66,13 @@ const Header = () => {
 
         <Flex spacing="xl" align="center">
           <CartButton itemCount={getTotalItemsInCart()} />
-          <Icon icon={faHeart} color={IconColor.grayDark} size="xlarge" />
+          <Button
+            appearance="link"
+            size="xlarge"
+            withoutPadding
+            leftIcon={faHeart}
+            onClick={() => navigate('/wish-list')}
+          />
         </Flex>
       </Flex>
 

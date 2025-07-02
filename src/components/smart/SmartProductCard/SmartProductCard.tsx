@@ -1,28 +1,29 @@
+import React from 'react';
 import ProductCard, { type ProductCardProps } from '../../common/ProductCard/ProductCard.tsx';
-import { useCartStore } from '../../../store/useCartStore.ts';
-import { useFavoritesStore } from '../../../store/useFavoritesStore.ts';
+import { useCartStore } from '../../../store/useCartStore';
 import { useCartSync } from '../../../hooks/useCartSync';
-import { useFavoritesSync } from '../../../hooks/useFavoritesSync';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../common/Toast/ToastContext.tsx';
+import { useFavorite } from '../../../hooks/useFavorite';
 
 const SmartProductCard: React.FC<ProductCardProps> = (props) => {
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
-  const { isFavorite, toggleFavorite } = useFavoritesStore();
   useCartSync();
-  useFavoritesSync();
   const toast = useToast();
+
+  const { isFavorite, isLoading, toggleFavorite } = useFavorite(props.product.id);
 
   return (
     <ProductCard
       {...props}
+      isFavorite={isFavorite}
+      onToggleFavorite={toggleFavorite}
       onAddToCart={(product) => {
         addToCart(product);
         toast.success('Added to cart!');
       }}
-      onToggleFavorite={(product) => toggleFavorite(product.id)}
-      isFavorite={isFavorite(props.product.id)}
+      isLoadingFavorite={isLoading}
       onClick={(product) => navigate(`/product-details/${product.id}`)}
     />
   );

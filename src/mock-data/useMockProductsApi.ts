@@ -33,7 +33,10 @@ export const getProductCategories = async () => {
 
 export const mockLoginApi = async (email: string, password: string) => {
   await delay(MOCK_API_DELAY_MS);
-  if (email && password) return { email, token: 'mock-token' };
+  // Demo credentials: user@example.com / password123
+  if ((email === 'user@example.com' && password === 'password123') || (email && password)) {
+    return { email, token: 'mock-token' };
+  }
   throw new Error('Invalid credentials');
 };
 
@@ -51,9 +54,34 @@ export const mockFetchUserApi = async (token: string) => {
   throw new Error('Invalid token');
 };
 
+import type { ProductWithFavorite } from '../types/product.types';
 // -----------------------------
 // CLOUD STORAGE MOCKS
 // -----------------------------
+
+export const mockFetchWishlist = async (
+  page: number,
+  pageSize: number
+): Promise<{
+  items: ProductWithFavorite[];
+  page: number;
+  totalPages: number;
+  totalItems: number;
+}> => {
+  await delay(MOCK_API_DELAY_MS);
+  const data = localStorage.getItem('cloud-favorites');
+  const favIds: string[] = data ? JSON.parse(data) : [];
+  const allProducts = toys.filter((p) => favIds.includes(p.id));
+  const totalItems = allProducts.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  const paginated = allProducts.slice((page - 1) * pageSize, page * pageSize);
+  return {
+    items: paginated.map((p) => ({ ...p, isUserFavorite: true })),
+    page,
+    totalPages,
+    totalItems,
+  };
+};
 
 export const mockSaveCartToCloud = async (cartItems: CartItem[]) => {
   localStorage.setItem('cloud-cart', JSON.stringify(cartItems));
@@ -64,8 +92,26 @@ export const mockLoadCartFromCloud = async (): Promise<CartItem[]> => {
   return data ? JSON.parse(data) : [];
 };
 
-export const mockSaveFavoritesToCloud = async (favoriteIds: string[]) => {
-  localStorage.setItem('cloud-favorites', JSON.stringify(favoriteIds));
+function triggerWishlistChange() {
+  localStorage.setItem('cloud-favorites-timestamp', Date.now().toString());
+}
+
+export const mockAddToWishlist = async (productId: string) => {
+  const data = localStorage.getItem('cloud-favorites');
+  const favs: string[] = data ? JSON.parse(data) : [];
+  if (!favs.includes(productId)) {
+    favs.push(productId);
+    localStorage.setItem('cloud-favorites', JSON.stringify(favs));
+    triggerWishlistChange();
+  }
+};
+
+export const mockRemoveFromWishlist = async (productId: string) => {
+  const data = localStorage.getItem('cloud-favorites');
+  const favs: string[] = data ? JSON.parse(data) : [];
+  const newFavs = favs.filter((id) => id !== productId);
+  localStorage.setItem('cloud-favorites', JSON.stringify(newFavs));
+  triggerWishlistChange();
 };
 
 export const mockLoadFavoritesFromCloud = async (): Promise<string[]> => {
@@ -109,7 +155,7 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
       page: number,
       filters = {}
     ): Promise<{
-      items: T[];
+      items: any[];
       page: number;
       totalPages: number;
       totalItems: number;
@@ -149,9 +195,17 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
       // Sorting
       filteredItems = sortItems(filteredItems, filters.sortBy);
 
-      const totalItems = filteredItems.length;
+      // Add isUserFavorite to each product
+      const favIdsData = localStorage.getItem('cloud-favorites');
+      const favIds: string[] = favIdsData ? JSON.parse(favIdsData) : [];
+      const withFavorite = filteredItems.map((item) => ({
+        ...item,
+        isUserFavorite: favIds.includes(item.id),
+      }));
+
+      const totalItems = withFavorite.length;
       const totalPages = Math.ceil(totalItems / pageSize);
-      const paginated = filteredItems.slice((page - 1) * pageSize, page * pageSize);
+      const paginated = withFavorite.slice((page - 1) * pageSize, page * pageSize);
       return { items: paginated, page, totalPages, totalItems };
     },
     [pageSize]

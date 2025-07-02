@@ -1,48 +1,46 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 type PaginationMode = 'default' | 'show-more';
 
 export function useOfflinePagination<T>(
-  items: T[],
+  fetchPage: (page: number, pageSize: number) => Promise<{ items: T[]; page: number; totalPages: number; totalItems: number }>,
   pageSize: number,
-  initialPage = 1,
-  mode: PaginationMode = 'default'
+  paginationMode: PaginationMode = 'default'
 ) {
-  const totalPages = Math.ceil(items.length / pageSize);
-  const [page, setPage] = useState(initialPage);
+  const [page, setPage] = useState(1);
+  const [items, setItems] = useState<T[]>([]);
+  const [totalSize, setTotalSize] = useState(0);
+  const [loading, setLoading] = useState(false);
+  const [totalPages, setTotalPages] = useState(1);
+
+  const fetchAndSet = useCallback(async () => {
+    setLoading(true);
+    const data = await fetchPage(page, pageSize);
+    setTotalSize(data.totalItems);
+    setTotalPages(data.totalPages);
+    setItems((prev) =>
+      paginationMode === 'show-more' && page > 1 ? [...prev, ...data.items] : data.items
+    );
+    setLoading(false);
+  }, [fetchPage, page, pageSize, paginationMode]);
 
   useEffect(() => {
-    setPage(initialPage);
-  }, [initialPage]);
+    fetchAndSet();
+    // eslint-disable-next-line
+  }, [page, pageSize, fetchAndSet]);
 
-  const paginatedItems = useMemo(() => {
-    if (mode === 'show-more') {
-      // show all items from page 1 up to current page * pageSize
-      return items.slice(0, page * pageSize);
-    }
-    // default: slice items for current page only
-    const startIdx = (page - 1) * pageSize;
-    return items.slice(startIdx, startIdx + pageSize);
-  }, [items, page, pageSize, mode]);
-
-  const hasMore = page < totalPages;
-
-  const goToPage = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages) return;
-    setPage(newPage);
-  };
-
-  const showMore = () => {
-    if (page < totalPages) setPage(page + 1);
-  };
+  const showMore = useCallback(() => {
+    if (page < totalPages) setPage((p) => p + 1);
+  }, [page, totalPages]);
 
   return {
-    totalSize: items.length,
-    items: paginatedItems,
+    items,
     page,
     totalPages,
-    hasMore,
-    goToPage,
+    totalSize,
+    loading,
+    setPage,
     showMore,
+    hasMore: page < totalPages,
   };
 }

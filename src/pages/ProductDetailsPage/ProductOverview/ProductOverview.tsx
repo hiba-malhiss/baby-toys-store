@@ -1,3 +1,4 @@
+import React, { useCallback, useState } from 'react';
 import { ImageGallery } from '../../../components/common/ImageGallery/ImageGallery.tsx';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import Heading from '../../../components/common/Heading/Heading.tsx';
@@ -10,24 +11,23 @@ import type { Product } from '../../../types/product.types.ts';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
-import React, { useCallback, useState } from 'react';
 import clsx from 'clsx';
 import { StringInput } from '../../../components/common/StringInput/StringInput.tsx';
-import { useCartStore } from '../../../store/useCartStore.ts';
-import { useFavoritesStore } from '../../../store/useFavoritesStore.ts';
+import { useCartStore } from '../../../store/useCartStore';
 import { useCartSync } from '../../../hooks/useCartSync';
-import { useFavoritesSync } from '../../../hooks/useFavoritesSync';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
+import { useFavorite } from '../../../hooks/useFavorite'; // <-- import hook
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const { currency } = useStoreConfiguration();
   const { addToCart } = useCartStore();
-  const { isFavorite, toggleFavorite } = useFavoritesStore();
   useCartSync();
-  useFavoritesSync();
   const toast = useToast();
+
+  // Use favorite hook here for this product
+  const { isFavorite, isLoading, toggleFavorite } = useFavorite(product.id);
 
   const handleCopyUrl = useCallback(
     (e: React.MouseEvent) => {
@@ -44,12 +44,12 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
           toast.error('Failed to copy URL.');
         });
     },
-    [product.id]
+    [product.id, toast]
   );
 
   return (
     <div className={styles.productOverview}>
-      <ImageGallery images={product.images} productName={product.name}></ImageGallery>
+      <ImageGallery images={product.images} productName={product.name} />
       <Flex direction="vertical">
         <Heading level="h2" className="bts-marginBxxl">
           {product.name}
@@ -111,10 +111,13 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             leftIcon={faHeart}
             appearance="outline"
             color="icon"
-            isSelected={isFavorite(product.id)}
-            onClick={() => toggleFavorite(product.id)}
-          ></Button>
-          <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl}></Button>
+            isSelected={isFavorite}
+            isLoading={isLoading}
+            onClick={() => toggleFavorite()}
+            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+          />
+
+          <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
         </Flex>
         <Card fullWidth size="small" header="Item details">
           <ExpandableContent>

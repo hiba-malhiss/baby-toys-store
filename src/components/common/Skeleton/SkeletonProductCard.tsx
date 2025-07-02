@@ -6,14 +6,19 @@ type Direction = 'vertical' | 'horizontal';
 
 interface SkeletonProductCardProps {
   direction?: Direction;
+  fullWidth?: boolean;
 }
 
-const SkeletonProductCard: React.FC<SkeletonProductCardProps> = ({ direction = 'vertical' }) => {
+const SkeletonProductCard: React.FC<SkeletonProductCardProps> = ({
+  direction = 'vertical',
+  fullWidth,
+}) => {
   return (
     <div
       className={clsx(
         styles.skeletonProductCard,
-        direction === 'horizontal' && styles.skeletonProductCardHorizontal
+        direction === 'horizontal' && styles.skeletonProductCardHorizontal,
+        fullWidth && styles.skeletonProductCardFullWidth
       )}
     >
       <div className={styles.skeletonProductCardCardBox}>

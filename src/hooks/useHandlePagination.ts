@@ -14,6 +14,7 @@ type FetchFunction<T, F> = (
 export function useHandlePagination<T, F = any>(
   fetchFunction: FetchFunction<T, F>,
   pageSize: number,
+  hasFilters: boolean,
   mode: 'default' | 'show-more' = 'default'
 ) {
   const [page, setPage] = useState(1);
@@ -60,9 +61,7 @@ export function useHandlePagination<T, F = any>(
       }
     };
 
-    if (!!filters) {
-      fetchData();
-    }
+    if (!hasFilters || (hasFilters && filters)) fetchData();
 
     return () => {
       isMounted = false;

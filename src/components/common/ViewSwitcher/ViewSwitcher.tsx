@@ -215,7 +215,10 @@ export function ViewSwitcher({
           // Show a page of skeleton cards for a better loading experience
           Array.from({ length: pageSize }).map((_, i) => (
             <React.Fragment key={`skeleton-${i}`}>
-              <SkeletonProductCard direction={viewMode === 'list' ? 'horizontal' : 'vertical'} />
+              <SkeletonProductCard
+                direction={viewMode === 'list' ? 'horizontal' : 'vertical'}
+                fullWidth={viewMode !== 'flex'}
+              />
             </React.Fragment>
           ))
         ) : items.length === 0 ? (

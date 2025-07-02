@@ -31,7 +31,7 @@ const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId
     page: relatedPage,
     loading: relatedLoading,
     handlePaginationChange: handleRelatedPaginationChange,
-  } = useHandlePagination(fetchRelatedProducts, PRODUCT_RELATED_PRODUCTS_LIMIT, null, 'show-more');
+  } = useHandlePagination(fetchRelatedProducts, PRODUCT_RELATED_PRODUCTS_LIMIT, false, 'show-more');
 
   return (
     <Section title="Related products">
