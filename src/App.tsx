@@ -12,6 +12,7 @@ import { ToastProvider } from './components/common/Toast/ToastContext.tsx';
 import { StoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
 import WishListPage from './pages/WishListPage/WishListPage.tsx';
+import CheckoutPage from './pages/CheckoutPage/CheckoutPage.tsx';
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
                   <Route path="/product-details/:id" element={<ProductDetailsPage />} />
                   <Route path="/shopping-cart" element={<ShoppingCartPage />} />
                   <Route path="/wish-list" element={<WishListPage />} />
+                  <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="*" element={<NotFoundPage />} />
                 </Routes>
               </Layout>

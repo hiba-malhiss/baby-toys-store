@@ -24,7 +24,7 @@ interface ShoppingCartDrawerProps {
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
-  const { currency, shipping, loading } = useStoreConfiguration();
+  const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
   useCartSync();
 
   // Calculate order summary with proper shipping settings
@@ -51,7 +51,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     setIsOpen(false);
   };
 
-  if (loading || !currency || !shipping) {
+  if (isLoadingConfigs || !currency || !shipping) {
     return (
       <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
         <BouncingDotsLoader />

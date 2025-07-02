@@ -94,6 +94,10 @@
       @include form-input-small();
     }
 
+    &.has-error {
+      border: 1.5px solid $color-error !important;
+    }
+
     &[type='date'] {
       padding: 8px 12px 7px 12px;
       line-height: 21px;
@@ -115,7 +119,7 @@
     }
 
     &:not(:focus):not(:hover).has-error {
-      border-color: red;
+      border-color: $color-error;
     }
 
     &.has-icon {

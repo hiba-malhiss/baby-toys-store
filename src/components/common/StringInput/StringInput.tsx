@@ -39,9 +39,9 @@ export const StringInput: React.FC<StringInputProps> = ({
   isDisabled = false,
   size = 'medium',
   fullWidth = false,
-  hasError = false,
   isRounded = false,
   withControls = false,
+  hasError,
 }) => {
   const [internalValue, setInternalValue] = useState<string>(() => {
     if (value === undefined || value === null) return '';
@@ -103,7 +103,7 @@ export const StringInput: React.FC<StringInputProps> = ({
     {
       [styles.isDisabled]: isDisabled,
       [styles.hasIcon]: icon,
-      [styles.hasError]: hasError,
+      [styles.hasError]: !!hasError,
     }
   );
 
@@ -134,7 +134,7 @@ export const StringInput: React.FC<StringInputProps> = ({
           placeholder={placeholder}
           value={internalValue}
           onChange={(e) => handleChange(e.target.value)}
-          className={inputClass}
+          className={clsx(inputClass)}
         />
 
         {type === 'number' && withControls && (

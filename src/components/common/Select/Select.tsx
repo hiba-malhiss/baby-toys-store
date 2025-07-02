@@ -13,14 +13,17 @@ import { Popover } from '../Popover/Popover.tsx';
 import clsx from 'clsx';
 import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
 import { Icon } from '../Icon/Icon.tsx';
+import { Option } from './Option.tsx';
 
 interface SelectProps {
   value?: string;
   onChange?: (value: string) => void;
-  children: ReactNode;
+  children?: ReactNode;
   className?: string;
   disabled?: boolean;
   placeholder?: string;
+  options?: { label: string; value: string }[];
+  hasError?: boolean;
 }
 
 export const Select: React.FC<SelectProps> = ({
@@ -30,6 +33,8 @@ export const Select: React.FC<SelectProps> = ({
   className = '',
   disabled = false,
   placeholder = 'Select...',
+  options,
+  hasError,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [internalValue, setInternalValue] = useState(value || '');
@@ -65,13 +70,22 @@ export const Select: React.FC<SelectProps> = ({
   return (
     <div
       ref={selectRef}
-      className={clsx(styles.select, className, disabled && styles.isDisabled)}
+      className={clsx(
+        styles.select,
+        className,
+        disabled && styles.isDisabled,
+        hasError && styles.selectHasError
+      )}
       tabIndex={disabled ? -1 : 0}
       onKeyDown={handleKeyDown}
       onClick={() => !disabled && setIsOpen((prev) => !prev)}
     >
       <div className={styles.selectLabel}>
-        {selectedChild ? selectedChild.props.children : placeholder}
+        {options
+          ? options.find((o) => o.value === internalValue)?.label || placeholder
+          : selectedChild
+            ? selectedChild.props.children
+            : placeholder}
         <Icon icon={isOpen ? faChevronUp : faChevronDown} />
       </div>
       <Popover
@@ -82,14 +96,24 @@ export const Select: React.FC<SelectProps> = ({
         gap={8}
       >
         <div className={styles.selectOptions}>
-          {Children.map(children, (child) => {
-            if (!isValidElement(child)) return null;
-
-            return cloneElement(child, {
-              isSelected: child.props.value === internalValue,
-              onSelect: handleSelect,
-            });
-          })}
+          {options
+            ? options.map((option) => (
+                <Option
+                  key={option.value}
+                  value={option.value}
+                  onSelect={handleSelect}
+                  isSelected={option.value === internalValue}
+                >
+                  {option.label}
+                </Option>
+              ))
+            : Children.map(children, (child) => {
+                if (!isValidElement(child)) return null;
+                return cloneElement(child, {
+                  isSelected: child.props.value === internalValue,
+                  onSelect: handleSelect,
+                });
+              })}
         </div>
       </Popover>
     </div>

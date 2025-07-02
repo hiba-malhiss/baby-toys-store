@@ -2,7 +2,6 @@
   &-label {
     @include form-input-base();
     @include form-input-medium();
-
     justify-content: space-between;
     align-items: center;
     gap: 8px;
@@ -13,5 +12,9 @@
     position: relative;
     text-align: left;
     height: 40px;
+  }
+
+  &--hasError .select-label {
+    border: 1.5px solid $color-error !important;
   }
 }
