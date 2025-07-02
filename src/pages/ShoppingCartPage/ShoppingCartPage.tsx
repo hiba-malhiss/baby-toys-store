@@ -12,7 +12,6 @@ import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmo
 import { formatCurrency } from '../../util/format.utils.ts';
 import clsx from 'clsx';
 import Heading from '../../components/common/Heading/Heading.tsx';
-
 import { useCartSync } from '../../hooks/useCartSync';
 
 const ShoppingCartPage = () => {
@@ -64,7 +63,13 @@ const ShoppingCartPage = () => {
               <div className={styles.shoppingCartPageImage}>
                 <img src={item.mainImage} alt={item.name} />
               </div>
-              <div className={styles.shoppingCartPageProductName}>{item.name}</div>
+              <Button
+                appearance="link"
+                className={styles.shoppingCartPageProductName}
+                onClick={() => navigate('/product-details/' + item.productId)}
+              >
+                {item.name}
+              </Button>
               <div>{formatCurrency(item.price, currency?.symbol)}</div>
               <div className={styles.shoppingCartPageQuantityInput}>
                 <StringInput

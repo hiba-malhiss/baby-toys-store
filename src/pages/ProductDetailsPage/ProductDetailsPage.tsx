@@ -8,6 +8,7 @@ import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import type { Product } from '../../types/product.types.ts';
 import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
 import RelatedProducts from './RelatedProducts.tsx';
+import BouncingDotsLoader from '../../components/common/BouncingDotsLoader/BouncingDotsLoader.tsx';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,7 +29,11 @@ const ProductDetailsPage: React.FC = () => {
   }, [id, getProductById, setExtraCrumbs]);
 
   if (!product) {
-    return null;
+    return (
+      <PageContainer>
+        <BouncingDotsLoader size="large" className="bts-paddingVxxxxl" />
+      </PageContainer>
+    );
   }
 
   return (
