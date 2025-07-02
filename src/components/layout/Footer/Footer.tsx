@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
 import { Button } from '../../common/Button/Button.tsx';
 import { customerServiceInfo, exploreLinks, socialMediaLinks } from './footer.constants.ts';
@@ -5,6 +6,8 @@ import Flex from '../../common/Flex/Flex.tsx';
 import Heading from '../../common/Heading/Heading.tsx';
 
 const Footer = () => {
+  const navigate = useNavigate();
+
   return (
     <footer className={styles.footer}>
       <Flex direction="vertical" className={styles.footerLogo}>
@@ -19,7 +22,7 @@ const Footer = () => {
               appearance="filled"
               color="accent"
               leftIcon={icon}
-              onClick={() => console.log(url)}
+              onClick={() => window.open(url, '_blank')}
             />
           ))}
         </Flex>
@@ -30,8 +33,15 @@ const Footer = () => {
           Explore
         </Heading>
         <Flex direction="vertical" spacing="s">
-          {exploreLinks.map((label) => (
-            <Button key={label} withoutPadding size="small" appearance="link" color="primary" onClick={() => {}}>
+          {exploreLinks.map(({ label, path }) => (
+            <Button
+              key={label}
+              withoutPadding
+              size="small"
+              appearance="link"
+              color="primary"
+              onClick={() => navigate(path)}
+            >
               {label}
             </Button>
           ))}

@@ -12,6 +12,7 @@ import { StoreConfigurationProvider } from './context/StoreConfigurationContext.
 import { AuthProvider } from './context/AuthContext.tsx';
 import WishListPage from './pages/WishListPage/WishListPage.tsx';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage.tsx';
+import ContactUsPage from './pages/ContactUsPage/ContactUsPage.tsx';
 
 const App: React.FC = () => {
   return (
@@ -31,6 +32,7 @@ const App: React.FC = () => {
                   <Route path="/shopping-cart" element={<ShoppingCartPage />} />
                   <Route path="/wish-list" element={<WishListPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
+                  <Route path="/contact-us" element={<ContactUsPage />} />
                   <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Layout>

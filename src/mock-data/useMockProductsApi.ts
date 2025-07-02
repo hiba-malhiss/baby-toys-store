@@ -337,3 +337,20 @@ function sortItems<
 function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
+
+export const mockSendContactMessage = async (messageData: {
+  name: string;
+  email: string;
+  message: string;
+}) => {
+  // simulate network delay
+  await new Promise((resolve) => setTimeout(resolve, 1200));
+  // You could add logic here to "fail" for testing if you want
+
+  // Save messages to localStorage for demo purposes
+  const messages = JSON.parse(localStorage.getItem('mock-contact-messages') || '[]');
+  messages.push({ ...messageData, id: Date.now() });
+  localStorage.setItem('mock-contact-messages', JSON.stringify(messages));
+
+  return true; // success
+};
