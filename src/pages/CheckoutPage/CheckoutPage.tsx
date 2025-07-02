@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import styles from './checkout-page.module.scss';
 import { useCartStore } from '../../store/useCartStore';
 import { Button } from '../../components/common/Button/Button';
@@ -7,10 +7,10 @@ import { PageContainer } from '../../components/layout/PageContainer/PageContain
 import Card from '../../components/common/Card/Card';
 import { StringInput } from '../../components/common/StringInput/StringInput';
 import FieldWrapper from '../../components/common/FieldWrapper/FieldWrapper';
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi';
 import { Select } from '../../components/common/Select/Select';
 import { calculateOrderSummary } from '../../util/order.utils';
 import { useToast } from '../../components/common/Toast/ToastContext.tsx';
+import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
@@ -27,20 +27,15 @@ const CheckoutPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [placingOrder, setPlacingOrder] = useState(false);
-  const [shipping, setShipping] = useState({ cost: 0, freeThreshold: 0 });
   const toast = useToast();
+  const { currency, shipping } = useStoreConfiguration();
 
-  const { getShippingSettings } = useMockProductsApi(10);
   const {
     subtotal,
     total,
     shipping: shippingCost,
     isFreeShipping,
   } = calculateOrderSummary(cartItems, shipping);
-
-  useEffect(() => {
-    getShippingSettings().then((s) => setShipping(s));
-  }, []);
 
   const handleInput = (name: string, value: string) => {
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -158,15 +153,21 @@ const CheckoutPage: React.FC = () => {
 
           <div className={styles.checkoutPageSummaryRow}>
             <span>Subtotal</span>
-            <span>{formatCurrency(subtotal)}</span>
+            <span>
+              {subtotal}
+              {currency?.symbol}
+            </span>
           </div>
           <div className={styles.checkoutPageSummaryRow}>
             <span>Shipping</span>
-            <span>{isFreeShipping ? 'Free' : formatCurrency(shippingCost)}</span>
+            <span>{isFreeShipping ? 'Free' : shippingCost + (currency?.symbol || '')}</span>
           </div>
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>Total</span>
-            <span>{formatCurrency(total)}</span>
+            <span>
+              {total}
+              {currency?.symbol}
+            </span>
           </div>
         </Card>
       </div>

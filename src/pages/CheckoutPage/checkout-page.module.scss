@@ -27,7 +27,7 @@
       display: grid;
       gap: 16px;
       margin-bottom: auto;
-      max-height: 250px;
+      max-height: 300px;
       overflow: auto;
     }
 
@@ -55,6 +55,7 @@
       font-size: 16px;
       gap: 8px;
       margin-bottom: 12px;
+      width: 100%;
 
       &:last-child {
         margin-bottom: 0;

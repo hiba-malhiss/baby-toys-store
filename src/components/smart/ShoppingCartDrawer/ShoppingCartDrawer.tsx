@@ -41,7 +41,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   };
 
   const handlePlaceOrder = () => {
-    navigate('/shopping-cart');
+    navigate('/checkout');
     handleClose();
   };
 
