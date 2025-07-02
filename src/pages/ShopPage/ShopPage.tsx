@@ -21,6 +21,9 @@ const ShopPage = () => {
   const { fetchProducts } = useMockProductsApi(SHOP_PAGE_SIZE);
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange } =
     useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE);
+  const header =
+    categoriesOptions.find((option) => option.value === sideFilters?.category)?.label ||
+    'All Categories';
 
   // Update full filter object when side filters or sortBy change
   useEffect(() => {
@@ -45,7 +48,7 @@ const ShopPage = () => {
       <ViewSwitcher
         isLoading={loading}
         className={styles.shopPageCollection}
-        header={sideFilters?.category || 'All Categories'}
+        header={header}
         page={page}
         pageSize={SHOP_PAGE_SIZE}
         totalSize={totalSize}
