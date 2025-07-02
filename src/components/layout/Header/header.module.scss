@@ -4,7 +4,7 @@
   gap: 20px;
   width: 100%;
   justify-content: start;
-  min-height: 245px;
+  min-height: $header-min-height;
   box-shadow: 0 2px 4px 0 rgba($color-text-primary, 0.03);
 
   &-announcement {
@@ -17,7 +17,7 @@
   }
 
   &-main {
-    padding: 40px 100px 20px 100px;
+    padding: 16px 100px 4px 100px
   }
 
   &-search {
