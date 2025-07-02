@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage.tsx';
 import Layout from './components/layout/Layout/Layout.tsx';
 import './App.scss';
@@ -23,13 +23,16 @@ const App: React.FC = () => {
             <BrowserRouter>
               <Layout>
                 <Routes>
-                  <Route path="/" element={<HomePage />} />
+                  {/* Redirect root "/" to "/home" */}
+                  <Route path="/" element={<Navigate to="/home" replace />} />
+
+                  <Route path="/home" element={<HomePage />} />
                   <Route path="/shop" element={<ShopPage />} />
                   <Route path="/product-details/:id" element={<ProductDetailsPage />} />
                   <Route path="/shopping-cart" element={<ShoppingCartPage />} />
                   <Route path="/wish-list" element={<WishListPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="*" element={<NotFoundPage />} />
+                  <Route path="*" element={<Navigate to="/" replace />} />
                 </Routes>
               </Layout>
             </BrowserRouter>
