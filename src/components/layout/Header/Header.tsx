@@ -70,6 +70,7 @@ const Header = () => {
             appearance="link"
             size="xlarge"
             withoutPadding
+            color="secondary"
             leftIcon={faHeart}
             onClick={() => navigate('/wish-list')}
           />
