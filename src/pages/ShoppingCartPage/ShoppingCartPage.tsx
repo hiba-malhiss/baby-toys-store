@@ -45,7 +45,7 @@ const ShoppingCartPage = () => {
 
   return (
     <PageContainer className={styles.shoppingCartPage} isBreadcrumbHidden>
-      <Heading level="h1" className="bts-marginBxl">
+      <Heading level="h1" className="bts-marginBxl bts-marginTxxxxl">
         Your Shopping Cart
       </Heading>
       <div className={styles.shoppingCartPageTable}>
