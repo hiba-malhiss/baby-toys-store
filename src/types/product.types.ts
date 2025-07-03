@@ -27,11 +27,15 @@ export interface CartItem {
   quantity: number;
 }
 
-export type ProductCategory = {
-  label: string;
-  value: string;
-  image: string;
-};
+export interface OrderItem {
+  id: number;
+  email: string;
+  date: string; // ISO date string, e.g. '2024-06-30T10:00:00Z'
+  cartItems: CartItem[];
+  subtotal: number;
+  shippingCost: number;
+  total: number;
+}
 
 export interface Feedback {
   rating: number;

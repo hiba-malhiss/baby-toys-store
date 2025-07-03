@@ -14,7 +14,6 @@ import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-sv
 import clsx from 'clsx';
 import { StringInput } from '../../../components/common/StringInput/StringInput.tsx';
 import { useCartStore } from '../../../store/useCartStore';
-import { useCartSync } from '../../../hooks/useCartSync';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
 import { useFavorite } from '../../../hooks/useFavorite'; // <-- import hook
@@ -23,7 +22,6 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
   const [quantity, setQuantity] = useState(1);
   const { currency } = useStoreConfiguration();
   const { addToCart } = useCartStore();
-  useCartSync();
   const toast = useToast();
 
   // Use favorite hook here for this product

@@ -7,6 +7,7 @@ import ShoppingCartDrawer from '../../smart/ShoppingCartDrawer/ShoppingCartDrawe
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { Toast } from '../../common/Toast/Toast.tsx';
 import FlashSaleBanner from './FlashSaleBanner.tsx';
+import { useCartSync } from '../../../hooks/useCartSync.ts';
 
 interface LayoutProps {
   children: ReactNode;
@@ -15,6 +16,7 @@ interface LayoutProps {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const { isShippingCartDrawerOpen, openShippingCartDrawer, closeShippingCartDrawer } =
     useCartStore();
+  useCartSync();
 
   return (
     <>

@@ -7,6 +7,11 @@ interface DividerProps {
   thickness?: string;
 }
 
-export const Divider: React.FC<DividerProps> = ({ className, thickness = '1px' }) => {
-  return <hr className={clsx(styles.divider, className)} style={{ borderTopWidth: thickness }} />;
+export const Divider: React.FC<DividerProps> = ({ className, thickness = '1px', fullWidth }) => {
+  return (
+    <hr
+      className={clsx(styles.divider, className, fullWidth && styles.fullWidth)}
+      style={{ borderTopWidth: thickness }}
+    />
+  );
 };

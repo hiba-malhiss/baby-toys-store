@@ -7,7 +7,6 @@ import { Button } from '../../common/Button/Button.tsx';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
 import { formatQuantity } from '../../../util/format.utils.ts';
 import { useCartStore } from '../../../store/useCartStore';
-import { useCartSync } from '../../../hooks/useCartSync';
 import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { NoDataFound } from '../../common/NoDataFound';
@@ -25,7 +24,6 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
-  useCartSync();
 
   // Calculate order summary with proper shipping settings
   const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);

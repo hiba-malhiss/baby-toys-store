@@ -5,7 +5,7 @@ import styles from './product-details-page.module.scss';
 import Card from '../../components/common/Card/Card.tsx';
 import FeedbackCard from '../../components/common/FeedbackCard/FeedbackCard.tsx';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { mockFetchProductReviews, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import ExpandableContent from '../../components/common/ExpandableContent/ExpandableContent.tsx';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import { PRODUCT_REVIEWS_PAGE_SIZE } from '../../constants/display.constants.ts';
@@ -13,8 +13,7 @@ import { PRODUCT_REVIEWS_PAGE_SIZE } from '../../constants/display.constants.ts'
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   const [description, setDescription] = useState('');
   const [descriptionLoading, setDescriptionLoading] = useState(true);
-  const { getProductDescription, fetchProductReviews } =
-    useMockProductsApi(PRODUCT_REVIEWS_PAGE_SIZE);
+  const { getProductDescription } = useMockProductsApi(PRODUCT_REVIEWS_PAGE_SIZE);
 
   const {
     items: reviews,
@@ -25,7 +24,7 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   } = useHandlePagination(
     (page) =>
       productId
-        ? fetchProductReviews(productId, page)
+        ? mockFetchProductReviews(productId, page, PRODUCT_REVIEWS_PAGE_SIZE)
         : Promise.resolve({ items: [], page, totalPages: 0, totalItems: 0 }),
     PRODUCT_REVIEWS_PAGE_SIZE
   );

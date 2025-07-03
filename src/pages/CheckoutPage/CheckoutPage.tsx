@@ -13,6 +13,8 @@ import { useToast } from '../../components/common/Toast/ToastContext.tsx';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { mockPlaceOrder } from '../../mock-data/useMockProductsApi.ts';
 import { useNavigate } from 'react-router-dom';
+import { Divider } from '../../components/common/Divider/Divider.tsx';
+import clsx from 'clsx';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
@@ -156,11 +158,12 @@ const CheckoutPage: React.FC = () => {
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
                 <div>{formatCurrency(item.price)}</div>
+                <Divider fullWidth />
               </div>
             ))}
           </div>
 
-          <div className={styles.checkoutPageSummaryRow}>
+          <div className={clsx(styles.checkoutPageSummaryRow, 'bts-marginTl')}>
             <span>Subtotal</span>
             <span>
               {subtotal}
@@ -171,6 +174,7 @@ const CheckoutPage: React.FC = () => {
             <span>Shipping</span>
             <span>{isFreeShipping ? 'Free' : shippingCost + (currency?.symbol || '')}</span>
           </div>
+          <Divider className="bts-marginBl" />
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>Total</span>
             <span>

@@ -12,13 +12,11 @@ import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmo
 import { formatCurrency } from '../../util/format.utils.ts';
 import clsx from 'clsx';
 import Heading from '../../components/common/Heading/Heading.tsx';
-import { useCartSync } from '../../hooks/useCartSync';
 
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
-  useCartSync();
 
   if (cartItems.length === 0) {
     return (

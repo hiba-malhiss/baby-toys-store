@@ -8,7 +8,7 @@ import {
   unifiedCategories,
 } from './home-page.ts';
 import { description } from './product-details-page.ts';
-import type { CartItem } from '../types/product.types.ts';
+import type { CartItem, Feedback } from '../types/product.types.ts';
 import {
   brandsRadioOptions,
   colorsRadioOptions,
@@ -49,7 +49,7 @@ export const mockRegisterApi = async (email: string, password: string) => {
 export const mockFetchUserApi = async (token: string) => {
   await delay(MOCK_API_DELAY_MS);
   if (token === 'mock-token') {
-    return { id: '1', name: 'Mock User', email: 'mockuser@example.com' };
+    return { id: '1', name: 'Mock User', email: 'user@example.com' };
   }
   throw new Error('Invalid token');
 };
@@ -66,6 +66,90 @@ export const mockPlaceOrder = async (order: any) => {
   localStorage.setItem('mock-orders', JSON.stringify(orders));
   // Optionally clear cart after order
   localStorage.setItem('cloud-cart', '[]');
+};
+
+function ensureMockOrders() {
+  const mockOrders = [
+    {
+      id: 1001,
+      email: 'user@example.com',
+      date: '2024-06-30T10:00:00Z',
+      cartItems: [
+        {
+          productId: 'toy-1',
+          name: 'Super Robot',
+          mainImage: '/assets/images/toys/img3.png',
+          price: 29.99,
+          quantity: 2,
+        },
+        {
+          productId: 'toy-2',
+          name: 'Magic Puzzle',
+          mainImage: '/assets/images/toys/img3.png',
+          price: 14.99,
+          quantity: 1,
+        },
+      ],
+      subtotal: 74.97,
+      shippingCost: 0,
+      total: 74.97,
+    },
+    {
+      id: 1002,
+      email: 'user@example.com',
+      date: '2024-06-28T15:30:00Z',
+      cartItems: [
+        {
+          productId: 'toy-3',
+          name: 'Plush Bear',
+          mainImage: '/assets/images/toys/img3.png',
+          price: 19.99,
+          quantity: 1,
+        },
+      ],
+      subtotal: 19.99,
+      shippingCost: 5,
+      total: 24.99,
+    },
+  ];
+  localStorage.setItem('mock-orders', JSON.stringify(mockOrders));
+}
+
+export const mockFetchOrdersHistory = async (
+  userEmail: string,
+  page: number = 1,
+  pageSize: number = 10
+): Promise<{
+  items: any[];
+  page: number;
+  totalPages: number;
+  totalItems: number;
+}> => {
+  await delay(MOCK_API_DELAY_MS);
+
+  ensureMockOrders();
+
+  const allOrders = JSON.parse(localStorage.getItem('mock-orders') || '[]').filter(
+    (o: any) => o.email === userEmail
+  );
+
+  const totalItems = allOrders.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+
+  // Clamp page within valid bounds
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  const items = allOrders.slice(startIndex, endIndex);
+
+  return {
+    items,
+    page: currentPage,
+    totalPages,
+    totalItems,
+  };
 };
 
 export const mockFetchWishlist = async (
@@ -232,10 +316,6 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
       await delay(MOCK_API_DELAY_MS);
       return fullItems.filter((item) => item.id !== productId).slice(0, limit);
     }, []),
-    fetchProductReviews: useCallback(async (productId: string, page: number) => {
-      await delay(MOCK_API_DELAY_MS);
-      return { items: [], page, totalPages: 1, totalItems: 0 };
-    }, []),
     getTestimonials: useCallback(async () => {
       await delay(MOCK_API_DELAY_MS);
       return feedbacks;
@@ -353,4 +433,76 @@ export const mockSendContactMessage = async (messageData: {
   localStorage.setItem('mock-contact-messages', JSON.stringify(messages));
 
   return true; // success
+};
+
+// -----------------------------
+// PRODUCT REVIEWS MOCK
+// -----------------------------
+
+interface ProductReview extends Feedback {
+  id: string;
+  productId: string;
+  userEmail: string;
+  date: string;
+}
+
+const REVIEWS_STORAGE_KEY = 'mock-product-reviews';
+
+export const mockAddProductReview = async (
+  userEmail: string,
+  productId: string,
+  review: Feedback
+) => {
+  await delay(MOCK_API_DELAY_MS);
+
+  const stored = localStorage.getItem(REVIEWS_STORAGE_KEY);
+  const allReviews: ProductReview[] = stored ? JSON.parse(stored) : [];
+
+  const newReview: ProductReview = {
+    id: `${productId}-${userEmail}-${Date.now()}`,
+    productId,
+    userEmail,
+    rating: review.rating,
+    comment: review.comment,
+    avatarUrl: review.avatarUrl,
+    name: review.name,
+    date: new Date().toISOString(),
+  };
+
+  allReviews.push(newReview);
+  localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(allReviews));
+
+  return newReview;
+};
+
+export const mockFetchProductReviews = async (
+  productId: string,
+  page: number = 1,
+  pageSize: number = 5
+): Promise<{
+  items: ProductReview[];
+  page: number;
+  totalPages: number;
+  totalItems: number;
+}> => {
+  await delay(MOCK_API_DELAY_MS);
+
+  const stored = localStorage.getItem(REVIEWS_STORAGE_KEY);
+  const allReviews: ProductReview[] = stored ? JSON.parse(stored) : [];
+
+  const filtered = allReviews.filter((r) => r.productId === productId);
+
+  const totalItems = filtered.length;
+  const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  const start = (currentPage - 1) * pageSize;
+  const end = start + pageSize;
+
+  return {
+    items: filtered.slice(start, end),
+    page: currentPage,
+    totalPages,
+    totalItems,
+  };
 };

@@ -21,6 +21,12 @@
     color: $color-text-dark;
   }
 
+  &-medium {
+    .infoCard-title {
+      font-size: 18px;
+    }
+  }
+
   &-Info {
     background-color: $color-bg-info;
 
@@ -34,6 +40,21 @@
 
     .infoCard-title {
       color: $color-warning-brand;
+    }
+  }
+
+  &-primary {
+    border: 1px solid $color-border;
+    border-radius: 16px;
+    background-color: $color-white;
+
+    .infoCard-title {
+      color: $color-text-dark;
+    }
+
+    .infoCard-content {
+      color: $color-text-grey;
+      padding-top: 12px;
     }
   }
 

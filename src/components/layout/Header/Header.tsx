@@ -7,6 +7,7 @@ import { Icon } from '../../common/Icon/Icon.tsx';
 import { CartButton } from '../../common/CartButton/CartButton.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
+import { useAuth } from '../../../context/AuthContext';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext';
 import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 import { Button } from '../../common/Button/Button.tsx';
@@ -18,6 +19,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shipping } = useStoreConfiguration();
+  const { isLoggedIn } = useAuth();
 
   useEffect(() => {
     getProductCategories().then((data) => {
@@ -48,7 +50,19 @@ const Header = () => {
           <Icon icon={faTruckFast} color="light" />
           <span>{shipping?.message}</span>
         </Flex>
-        <AuthButtonsWithDialogs />
+        <Flex spacing="xxxxl">
+          {isLoggedIn && (
+            <Button
+              withoutPadding
+              appearance="link"
+              color="light"
+              onClick={() => navigate('/orders-history')}
+            >
+              My Orders
+            </Button>
+          )}
+          <AuthButtonsWithDialogs />
+        </Flex>
       </Flex>
 
       <Flex className={styles.headerMain} justify="stretch" align="center" wrap fullWidth>

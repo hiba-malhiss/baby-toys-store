@@ -1,5 +1,4 @@
 import React from 'react';
-import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import LoginDialog from './LoginDialog.tsx';
 import RegisterDialog from './RegisterDialog.tsx';
@@ -13,27 +12,25 @@ const AuthButtonsWithDialogs: React.FC = () => {
 
   return (
     <>
-      <Flex spacing="xxxxl">
-        {!isLoggedIn ? (
-          <>
-            <Button withoutPadding appearance="link" color="light" onClick={open}>
-              Login
-            </Button>
-            <Button
-              withoutPadding
-              appearance="link"
-              color="light"
-              onClick={() => setRegisterOpen(true)}
-            >
-              Register
-            </Button>
-          </>
-        ) : (
-          <Button withoutPadding appearance="link" color="light" onClick={logout}>
-            Logout
+      {!isLoggedIn ? (
+        <>
+          <Button withoutPadding appearance="link" color="light" onClick={open}>
+            Login
           </Button>
-        )}
-      </Flex>
+          <Button
+            withoutPadding
+            appearance="link"
+            color="light"
+            onClick={() => setRegisterOpen(true)}
+          >
+            Register
+          </Button>
+        </>
+      ) : (
+        <Button withoutPadding appearance="link" color="light" onClick={logout}>
+          Logout
+        </Button>
+      )}
       <LoginDialog open={isOpen} onClose={close} />
       <RegisterDialog open={isRegisterOpen} onClose={() => setRegisterOpen(false)} />
     </>

@@ -24,3 +24,11 @@ export const formatQuantity = (quantity: number | string): number => {
   const parsed = safeParseInt(quantity, 1);
   return Math.max(parsed, 1); // Minimum quantity is 1
 };
+
+export const formatDate = (isoString: string) => {
+  return new Date(isoString).toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+};
