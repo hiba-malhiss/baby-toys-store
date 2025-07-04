@@ -5,10 +5,11 @@ import clsx from 'clsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Divider } from '../../common/Divider/Divider.tsx';
 import type { CartItem } from '../../../types/product.types.ts';
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter'; // import your hook
 
 interface TotalAmountSectionProps {
   items: CartItem[];
-  shipping: number | { cost: number; freeThreshold: number };
+  shipping: { cost: number; freeThreshold: number };
   currency: string;
   className?: string;
 }
@@ -19,15 +20,19 @@ export const TotalAmountSection: React.FC<TotalAmountSectionProps> = ({
   currency,
   className,
 }) => {
-  const { subtotal, total, shipping: shippingCost, isFreeShipping } = calculateOrderSummary(items, shipping);
+  const formatCurrency = useCurrencyFormatter(currency);
+  const {
+    subtotal,
+    total,
+    shipping: shippingCost,
+    isFreeShipping,
+  } = calculateOrderSummary(items, shipping);
 
   return (
     <Flex direction="vertical" spacing="xl" className={className}>
       <Flex justify="between" fullWidth>
         <span>Subtotal</span>
-        <span>
-          {currency}{subtotal}
-        </span>
+        <span>{formatCurrency(Number(subtotal))}</span>
       </Flex>
       <Flex justify="between" fullWidth className={styles.shippingRow}>
         <span>Shipping</span>
@@ -35,23 +40,19 @@ export const TotalAmountSection: React.FC<TotalAmountSectionProps> = ({
           {isFreeShipping ? (
             <span className={styles.freeShippingText}>Free</span>
           ) : (
-            <span>{currency}{shippingCost}</span>
+            <span>{formatCurrency(Number(shippingCost))}</span>
           )}
         </span>
       </Flex>
       {isFreeShipping && (
         <Flex justify="center" fullWidth>
-          <span className={styles.freeShippingIndicator}>
-            Free shipping applied!
-          </span>
+          <span className={styles.freeShippingIndicator}>Free shipping applied!</span>
         </Flex>
       )}
       <Divider />
       <Flex justify="between" className={clsx('bts-marginTl', styles.orderSummaryTotal)} fullWidth>
         <span>Total</span>
-        <span>
-          {currency}{total}
-        </span>
+        <span>{formatCurrency(Number(total))}</span>
       </Flex>
     </Flex>
   );

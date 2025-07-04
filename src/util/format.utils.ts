@@ -1,14 +1,4 @@
 /**
- * Format currency with symbol
- */
-export const formatCurrency = (amount: number, symbol: string = '$'): string => {
-  if (typeof amount !== 'number' || isNaN(amount)) {
-    return `${symbol}0.00`;
-  }
-  return `${symbol}${amount.toFixed(2)}`;
-};
-
-/**
  * Parse integer safely
  */
 export const safeParseInt = (value: string | number, defaultValue: number = 0): number => {

@@ -1,8 +1,9 @@
-import { formatCurrency, formatDate } from '../../../util/format.utils';
+import { formatDate } from '../../../util/format.utils';
 import Card from '../../../components/common/Card/Card.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import styles from './order-product-card.module.scss';
 import type { CartItem, OrderItem } from '../../../types/product.types.ts';
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter'; // adjust path if needed
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
@@ -10,46 +11,50 @@ interface OrderProductCardProps {
   order: OrderItem;
 }
 
-const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardProps) => (
-  <Card fullWidth size="small" className={styles.orderCard}>
-    <header className={styles.orderCardHeader}>
-      <div>Order #{order.id}</div>
-      <div>{formatDate(order.date)}</div>
-    </header>
+const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardProps) => {
+  const formatCurrency = useCurrencyFormatter();
 
-    <div>
-      {order.cartItems.map((item) => (
-        <div key={item.productId} className={styles.orderCardCartItem}>
-          <img src={item.mainImage} alt={item.name} className={styles.orderCardCartItemImage} />
-          <div className={styles.orderCardCartItemInfo}>
-            <div className={styles.orderCardCartItemName}>{item.name}</div>
-            <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
-          </div>
-          <div className={styles.orderCardCartItemPrice}>
-            {formatCurrency(item.price * item.quantity)}
-          </div>
-          <div className={styles.orderCardCartItemActions}>
-            <Button
-              color="secondary-light"
-              onClick={() => onBuyAgain(item)}
-              aria-label={`Buy again ${item.name}`}
-            >
-              Buy Again
-            </Button>
-            <Button onClick={() => onAddReview(item)} aria-label={`Add review for ${item.name}`}>
-              Add Review
-            </Button>
-          </div>
-        </div>
-      ))}
-    </div>
+  return (
+    <Card fullWidth size="small" className={styles.orderCard}>
+      <header className={styles.orderCardHeader}>
+        <div>Order #{order.id}</div>
+        <div>{formatDate(order.date)}</div>
+      </header>
 
-    <footer className={styles.orderCardFooter}>
-      <div>Subtotal: {formatCurrency(order.subtotal)}</div>
-      <div>Shipping: {formatCurrency(order.shippingCost)}</div>
-      <div>Total: {formatCurrency(order.total)}</div>
-    </footer>
-  </Card>
-);
+      <div>
+        {order.cartItems.map((item) => (
+          <div key={item.productId} className={styles.orderCardCartItem}>
+            <img src={item.mainImage} alt={item.name} className={styles.orderCardCartItemImage} />
+            <div className={styles.orderCardCartItemInfo}>
+              <div className={styles.orderCardCartItemName}>{item.name}</div>
+              <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
+            </div>
+            <div className={styles.orderCardCartItemPrice}>
+              {formatCurrency(item.price * item.quantity)}
+            </div>
+            <div className={styles.orderCardCartItemActions}>
+              <Button
+                color="secondary-light"
+                onClick={() => onBuyAgain(item)}
+                aria-label={`Buy again ${item.name}`}
+              >
+                Buy Again
+              </Button>
+              <Button onClick={() => onAddReview(item)} aria-label={`Add review for ${item.name}`}>
+                Add Review
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <footer className={styles.orderCardFooter}>
+        <div>Subtotal: {formatCurrency(order.subtotal)}</div>
+        <div>Shipping: {formatCurrency(order.shippingCost)}</div>
+        <div>Total: {formatCurrency(order.total)}</div>
+      </footer>
+    </Card>
+  );
+};
 
 export default OrderProductCard;

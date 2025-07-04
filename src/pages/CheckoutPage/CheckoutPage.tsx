@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styles from './checkout-page.module.scss';
 import { useCartStore } from '../../store/useCartStore';
 import { Button } from '../../components/common/Button/Button';
-import { formatCurrency } from '../../util/format.utils';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
 import Card from '../../components/common/Card/Card';
 import { StringInput } from '../../components/common/StringInput/StringInput';
@@ -15,6 +14,7 @@ import { mockPlaceOrder } from '../../mock-data/useMockProductsApi.ts';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '../../components/common/Divider/Divider.tsx';
 import clsx from 'clsx';
+import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter'; // <-- import the hook
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
@@ -34,6 +34,9 @@ const CheckoutPage: React.FC = () => {
   const toast = useToast();
   const { currency, shipping } = useStoreConfiguration();
   const navigate = useNavigate();
+  const formatCurrency = useCurrencyFormatter(currency?.symbol);
+
+  // Calculate order summary (returns numbers)
   const {
     subtotal,
     total,
@@ -62,6 +65,7 @@ const CheckoutPage: React.FC = () => {
   const handleOrder = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
+    setPlacingOrder(true);
     try {
       const orderData = {
         shippingInfo: form,
@@ -165,22 +169,16 @@ const CheckoutPage: React.FC = () => {
 
           <div className={clsx(styles.checkoutPageSummaryRow, 'bts-marginTl')}>
             <span>Subtotal</span>
-            <span>
-              {subtotal}
-              {currency?.symbol}
-            </span>
+            <span>{formatCurrency(subtotal)}</span>
           </div>
           <div className={styles.checkoutPageSummaryRow}>
             <span>Shipping</span>
-            <span>{isFreeShipping ? 'Free' : shippingCost + (currency?.symbol || '')}</span>
+            <span>{isFreeShipping ? 'Free' : formatCurrency(shippingCost)}</span>
           </div>
           <Divider className="bts-marginBl" />
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>Total</span>
-            <span>
-              {total}
-              {currency?.symbol}
-            </span>
+            <span>{formatCurrency(total)}</span>
           </div>
         </Card>
       </div>

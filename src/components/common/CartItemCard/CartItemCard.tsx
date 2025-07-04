@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './cart-item-card.module.scss';
 import { StringInput } from '../StringInput/StringInput';
-import { formatCurrency } from '../../../util/format.utils.ts';
 import clsx from 'clsx';
 import { Button } from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
@@ -49,7 +48,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           onClick={() => onRemove(id)}
         ></Button>
       </Flex>
-      <span className={styles.cartItemCardPrice}>{formatCurrency(price)}</span>
+      <span className={styles.cartItemCardPrice}>{price}</span>
     </div>
   );
 };

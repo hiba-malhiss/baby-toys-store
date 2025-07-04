@@ -9,14 +9,16 @@ import Card from '../../components/common/Card/Card.tsx';
 import { NoDataFound } from '../../components/common/NoDataFound';
 import { useNavigate } from 'react-router-dom';
 import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
-import { formatCurrency } from '../../util/format.utils.ts';
 import clsx from 'clsx';
 import Heading from '../../components/common/Heading/Heading.tsx';
+import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
+
+  const formatCurrency = useCurrencyFormatter(currency?.symbol);
 
   if (cartItems.length === 0) {
     return (
@@ -68,7 +70,7 @@ const ShoppingCartPage = () => {
               >
                 {item.name}
               </Button>
-              <div>{formatCurrency(item.price, currency?.symbol)}</div>
+              <div>{formatCurrency(item.price)}</div>
               <div className={styles.shoppingCartPageQuantityInput}>
                 <StringInput
                   type="number"
@@ -80,7 +82,7 @@ const ShoppingCartPage = () => {
                   fullWidth
                 />
               </div>
-              <div>{formatCurrency(item.price * item.quantity, currency?.symbol)}</div>
+              <div>{formatCurrency(item.price * item.quantity)}</div>
               <div>
                 <Button
                   leftIcon={faTrashAlt}

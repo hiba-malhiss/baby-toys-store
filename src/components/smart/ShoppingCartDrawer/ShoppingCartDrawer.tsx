@@ -1,3 +1,4 @@
+import React from 'react';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import Drawer from '../../common/Drawer/Drawer';
 import { Divider } from '../../common/Divider/Divider.tsx';
@@ -8,12 +9,12 @@ import { calculateOrderSummary } from '../../../util/order.utils.ts';
 import { formatQuantity } from '../../../util/format.utils.ts';
 import { useCartStore } from '../../../store/useCartStore';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
 import { NoDataFound } from '../../common/NoDataFound';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import styles from './shopping-cart-drawer.module.scss';
 import BouncingDotsLoader from '../../common/BouncingDotsLoader/BouncingDotsLoader';
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter'; // <-- import hook
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -25,7 +26,10 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
 
-  // Calculate order summary with proper shipping settings
+  // Use hook to format currency
+  const formatCurrency = useCurrencyFormatter(currency?.symbol);
+
+  // Calculate order summary
   const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
 
   const handleAmountChange = (productId: string, newVal: string) => {
@@ -68,10 +72,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           <>
             <Flex fullWidth justify="between" className={clsx('bts-marginBxl', styles.subtotalRow)}>
               <span>Subtotal</span>
-              <span>
-                {currency.symbol}
-                {subtotal}
-              </span>
+              <span>{formatCurrency(subtotal)}</span>
             </Flex>
             {isFreeShipping && (
               <Flex fullWidth justify="center" className="bts-marginBs">
