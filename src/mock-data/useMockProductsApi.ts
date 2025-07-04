@@ -436,22 +436,22 @@ const SHIPPING_INFO_STORAGE_KEY = 'mock-user-shipping-info';
 
 export const mockSaveShippingInfo = async (userEmail: string, shippingInfo: ShippingInfo) => {
   await delay(MOCK_API_DELAY_MS);
-  
+
   const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
   const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
-  
+
   allShippingInfo[userEmail] = shippingInfo;
   localStorage.setItem(SHIPPING_INFO_STORAGE_KEY, JSON.stringify(allShippingInfo));
-  
+
   return true;
 };
 
 export const mockFetchShippingInfo = async (userEmail: string): Promise<ShippingInfo | null> => {
   await delay(MOCK_API_DELAY_MS);
-  
+
   const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
   const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
-  
+
   return allShippingInfo[userEmail] || null;
 };
 
@@ -524,5 +524,26 @@ export const mockFetchProductReviews = async (
     page: currentPage,
     totalPages,
     totalItems,
+  };
+};
+export const getPolicies = async () => {
+  await delay(MOCK_API_DELAY_MS);
+
+  return {
+    return: {
+      title: 'Return Policy',
+      content:
+        'You can return any item within 30 days of receipt for a full refund. The item must be unused and in its original packaging.',
+    },
+    cancel: {
+      title: 'Cancel Order Policy',
+      content:
+        'Orders can be canceled within 2 hours of placing them. After that, they may already be in processing and cannot be canceled.',
+    },
+    shipping: {
+      title: 'Shipping Policy',
+      content:
+        'We offer standard and express shipping. Free shipping is available for orders over $150.',
+    },
   };
 };

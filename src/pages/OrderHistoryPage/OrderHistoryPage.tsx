@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
-import Heading from '../../components/common/Heading/Heading';
 import BouncingDotsLoader from '../../components/common/BouncingDotsLoader/BouncingDotsLoader';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
 import OrderProductCard from './OrderProductCard/OrderProductCard';
@@ -56,10 +55,7 @@ const OrderHistoryPage: React.FC = () => {
   };
 
   return (
-    <PageContainer>
-      <Heading level="h1" className="bts-marginBxl bts-marginTxxxxl">
-        Order History
-      </Heading>
+    <PageContainer header="Order History">
       {loading && page === 1 ? (
         <BouncingDotsLoader />
       ) : items.length === 0 ? (

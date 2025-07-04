@@ -10,7 +10,6 @@ import { NoDataFound } from '../../components/common/NoDataFound';
 import { useNavigate } from 'react-router-dom';
 import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
 import clsx from 'clsx';
-import Heading from '../../components/common/Heading/Heading.tsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../ShopPage/YouMayAlsoLikeSection.tsx';
 
@@ -44,10 +43,11 @@ const ShoppingCartPage = () => {
   }
 
   return (
-    <PageContainer className={styles.shoppingCartPage} isBreadcrumbHidden>
-      <Heading level="h1" className="bts-marginBxl bts-marginTxxxxl">
-        Your Shopping Cart
-      </Heading>
+    <PageContainer
+      header="Your Shopping Cart"
+      className={styles.shoppingCartPage}
+      isBreadcrumbHidden
+    >
       <div className={styles.shoppingCartPageTable}>
         <div className={styles.shoppingCartPageTableHeader}>
           <div>Product</div>

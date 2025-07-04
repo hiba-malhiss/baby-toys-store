@@ -73,10 +73,7 @@ const ContactUsPage: React.FC = () => {
   };
 
   return (
-    <PageContainer>
-      <Heading level="h1" className="bts-marginBxl bts-marginTxxxxl">
-        Contact
-      </Heading>
+    <PageContainer header="Contact">
       <Flex spacing="xxl">
         {CONTACT_INFO.map((item) => (
           <InfoCard key={item.title} card={item} size="medium" />

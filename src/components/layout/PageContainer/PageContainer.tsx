@@ -3,11 +3,13 @@ import styles from './page-container.module.scss';
 import Flex from '../../common/Flex/Flex.tsx';
 import LayoutBreadcrumb from './LayoutBreadcrumb/LayoutBreadcrumb.tsx';
 import BouncingDotsLoader from '../../common/BouncingDotsLoader/BouncingDotsLoader.tsx';
+import Heading from '../../common/Heading/Heading.tsx';
 
 type PageContainerProps = {
   children: React.ReactNode;
   className?: string;
   spacing?: string;
+  header?: string;
   isBreadcrumbHidden?: boolean;
   isLoading?: boolean;
 };
@@ -18,6 +20,7 @@ export const PageContainer = ({
   isBreadcrumbHidden,
   className = '',
   isLoading,
+  header,
 }: PageContainerProps) => {
   return (
     <>
@@ -29,6 +32,11 @@ export const PageContainer = ({
         spacing={spacing || 'xxl'}
         className={`${styles.pageContainer} ${className}`}
       >
+        {header && (
+          <Heading level="h1" className="bts-marginBxl bts-marginTxxxxl">
+            {header}
+          </Heading>
+        )}
         {!isLoading && children}
       </Flex>
     </>

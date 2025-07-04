@@ -2,13 +2,20 @@
   border: 1px solid $color-border;
   border-radius: $radius-md;
   background-color: $color-bg-primary;
-  box-shadow: $box-shadow-s;
   overflow: hidden;
   width: 100%;
+  padding: 18px 10px;
 }
 
 .accordion {
   width: 100%;
+
+  &--leftIcon {
+    .accordion-header {
+      justify-content: start !important;
+      gap: 16px;
+    }
+  }
 
   &.withoutPadding {
     .accordion-content, .accordion-header {
@@ -17,20 +24,16 @@
   }
 
   &.isControlled {
-    border-bottom: 1px solid $color-secondary-light;
-
-    .accordion-header:hover {
-      background-color: $color-accent-light-hover;
-    }
-
-    &.isActive .accordion-header {
-      background-color: $color-accent-light;
+    .accordion-content {
+      color: $color-text-grey;
+      font-size: 14px;
+      line-height: 20px;
     }
   }
 
   &.isActive .accordion-headerIcon {
-    transform: rotate(180deg);
-    color: $color-primary-dark;
+    //transform: rotate(180deg);
+    color: $color-primary-hover;
   }
 
   &.isDisabled {
@@ -59,7 +62,6 @@
 
   &-headerIcon {
     transition: transform 0.3s ease;
-    color: $color-icon;
   }
 
   &-content {

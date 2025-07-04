@@ -1,5 +1,4 @@
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
-import Heading from '../../components/common/Heading/Heading.tsx';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
 import { NoDataFound } from '../../components/common/NoDataFound';
 import { mockFetchWishlist } from '../../mock-data/useMockProductsApi';
@@ -66,10 +65,7 @@ const WishListPage = () => {
   };
 
   return (
-    <PageContainer>
-      <Heading level="h1" className="bts-marginBxl bts-marginTxxxxl">
-        My Wish List
-      </Heading>
+    <PageContainer header="My Wish List">
       {renderContent()}
       <YouMayAlsoLikeSection mode="flex" />
     </PageContainer>

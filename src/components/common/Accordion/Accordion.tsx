@@ -12,6 +12,7 @@ interface AccordionProps {
   withoutPadding?: boolean;
   onToggle?: () => void;
   defaultOpen?: boolean;
+  iconPosition?: 'left' | 'right';
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
@@ -22,6 +23,7 @@ export const Accordion: React.FC<AccordionProps> = ({
   onToggle,
   defaultOpen = false,
   withoutPadding = false,
+  iconPosition = 'right',
 }) => {
   // If controlled, use controlledIsOpen, else manage local open state
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(defaultOpen);
@@ -51,7 +53,8 @@ export const Accordion: React.FC<AccordionProps> = ({
         isOpen && styles.isActive,
         disabled && styles.isDisabled,
         isControlled && styles.isControlled,
-        withoutPadding && styles.withoutPadding
+        withoutPadding && styles.withoutPadding,
+        styles[`accordion--${iconPosition}Icon`]
       )}
     >
       <div
@@ -62,11 +65,19 @@ export const Accordion: React.FC<AccordionProps> = ({
         aria-expanded={isOpen}
         onKeyDown={handleKeyDown}
       >
+        {iconPosition === 'left' && (
+          <FontAwesomeIcon
+            icon={!isOpen ? faPlus : faMinus}
+            className={clsx(styles.accordionHeaderIcon, styles.left)}
+          />
+        )}
         <div>{header}</div>
-        <FontAwesomeIcon
-          icon={!isOpen ? faPlus : faMinus}
-          className={clsx(styles.accordionHeaderIcon)}
-        />
+        {iconPosition === 'right' && (
+          <FontAwesomeIcon
+            icon={!isOpen ? faPlus : faMinus}
+            className={clsx(styles.accordionHeaderIcon, styles.left)}
+          />
+        )}
       </div>
       {isOpen && <div className={styles.accordionContent}>{children}</div>}
     </div>
