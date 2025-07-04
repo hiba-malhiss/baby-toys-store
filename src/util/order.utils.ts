@@ -74,23 +74,72 @@ export const updateCartItemQuantity = (
 };
 
 /**
+ * Check if an object is a CartItem
+ */
+const isCartItem = (item: any): item is CartItem => {
+  return (
+    item && 
+    typeof item === 'object' && 
+    'productId' in item && 
+    'quantity' in item &&
+    'name' in item &&
+    'price' in item &&
+    'mainImage' in item
+  );
+};
+
+/**
+ * Convert CartItem to Product-like object for cart operations
+ */
+const cartItemToProduct = (cartItem: CartItem): Product => {
+  return {
+    id: cartItem.productId,
+    name: cartItem.name,
+    mainImage: cartItem.mainImage,
+    price: cartItem.price,
+    // Add default values for required Product fields
+    category: '',
+    brand: '',
+    color: '',
+    material: '',
+    images: [cartItem.mainImage],
+    rating: 0,
+    numberOfRatings: 0,
+  };
+};
+
+/**
  * Add or update item in cart
  */
 export const addOrUpdateCartItem = (
   items: CartItem[],
-  product: Product,
+  product: Product | CartItem,
   quantity: number = 1
 ): CartItem[] => {
-  const existingItemIndex = items.findIndex((item) => item.productId === product.id);
-  const newItem = getProductItem(product, quantity);
+  // Validate input
+  if (!product) {
+    console.error('addOrUpdateCartItem: product is null or undefined');
+    return items;
+  }
+
+  // Convert CartItem to Product if needed
+  const productToAdd = isCartItem(product) ? cartItemToProduct(product) : product;
+  const quantityToAdd = isCartItem(product) ? product.quantity : quantity;
+  
+  const existingItemIndex = items.findIndex((item) => item.productId === productToAdd.id);
 
   if (existingItemIndex >= 0) {
-    // Update existing item
+    // Update existing item by adding to the current quantity
     const updatedItems = [...items];
-    updatedItems[existingItemIndex] = newItem;
+    const existingItem = updatedItems[existingItemIndex];
+    updatedItems[existingItemIndex] = {
+      ...existingItem,
+      quantity: existingItem.quantity + quantityToAdd,
+    };
     return updatedItems;
   } else {
     // Add new item
+    const newItem = getProductItem(productToAdd, quantityToAdd);
     return [...items, newItem];
   }
 };

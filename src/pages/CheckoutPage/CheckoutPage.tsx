@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styles from './checkout-page.module.scss';
 import { useCartStore } from '../../store/useCartStore';
 import { Button } from '../../components/common/Button/Button';
@@ -10,16 +10,20 @@ import { Select } from '../../components/common/Select/Select';
 import { calculateOrderSummary } from '../../util/order.utils';
 import { useToast } from '../../components/common/Toast/ToastContext.tsx';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
-import { mockPlaceOrder } from '../../mock-data/useMockProductsApi.ts';
+import { mockPlaceOrder, mockFetchShippingInfo } from '../../mock-data/useMockProductsApi.ts';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '../../components/common/Divider/Divider.tsx';
 import clsx from 'clsx';
-import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter'; // <-- import the hook
+import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
+import { useAuth } from '../../context/AuthContext.tsx';
+import { Alert } from '../../components/common/Alert/Alert.tsx';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
 const CheckoutPage: React.FC = () => {
-  const { cartItems } = useCartStore();
+  const { cartItems, clearCart } = useCartStore();
+  const { user, isLoggedIn } = useAuth();
   const [form, setForm] = useState({
     country: '',
     firstName: '',
@@ -31,10 +35,30 @@ const CheckoutPage: React.FC = () => {
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [placingOrder, setPlacingOrder] = useState(false);
+  const [loadingShippingInfo, setLoadingShippingInfo] = useState(false);
   const toast = useToast();
   const { currency, shipping } = useStoreConfiguration();
   const navigate = useNavigate();
   const formatCurrency = useCurrencyFormatter(currency?.symbol);
+
+  // Load saved shipping information when user is logged in
+  useEffect(() => {
+    if (isLoggedIn && user?.email) {
+      setLoadingShippingInfo(true);
+      mockFetchShippingInfo(user.email)
+        .then((shippingInfo) => {
+          if (shippingInfo) {
+            setForm(shippingInfo);
+          }
+        })
+        .catch((error) => {
+          console.error('Error loading shipping info:', error);
+        })
+        .finally(() => {
+          setLoadingShippingInfo(false);
+        });
+    }
+  }, []);
 
   // Calculate order summary (returns numbers)
   const {
@@ -44,9 +68,9 @@ const CheckoutPage: React.FC = () => {
     isFreeShipping,
   } = calculateOrderSummary(cartItems, shipping);
 
-  const handleInput = (name: string, value: string) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
+  const handleInput = (name: string, value: string | number) => {
+    setForm((prev) => ({ ...prev, [name]: String(value) }));
+    setErrors((prev) => ({ ...prev, [name]: '' }));
   };
 
   const validate = () => {
@@ -71,8 +95,10 @@ const CheckoutPage: React.FC = () => {
         shippingInfo: form,
         items: cartItems,
         total,
+        shippingCost,
       };
       await mockPlaceOrder(orderData);
+      clearCart();
       toast.success('Order placed successfully!');
       navigate(`/home`);
     } catch (error) {
@@ -86,6 +112,30 @@ const CheckoutPage: React.FC = () => {
     <PageContainer>
       <div className={styles.checkoutPage}>
         <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
+          {isLoggedIn && !loadingShippingInfo && (form.firstName || form.lastName) && (
+            <Alert icon={faCheck} title="Using your saved shipping information">
+              <Button
+                appearance="link"
+                color="primary"
+                withoutPadding
+                size="small"
+                onClick={() => {
+                  setForm({
+                    country: '',
+                    firstName: '',
+                    lastName: '',
+                    region: '',
+                    address: '',
+                    town: '',
+                    phone: '',
+                  });
+                }}
+              >
+                Use different shipping address
+              </Button>
+            </Alert>
+          )}
+
           <FieldWrapper label="Country" error={errors.country}>
             <Select
               options={COUNTRIES}

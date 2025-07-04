@@ -23,45 +23,62 @@ const colors = ['Red', 'Blue', 'Green', 'Yellow', 'Pink', 'Multi'];
 
 const totalImages = 9;
 
-const getRandom = <T>(arr: T[]): T => arr[Math.floor(Math.random() * arr.length)];
-
-const getRandomImages = (count = 4): string[] => {
-  const set = new Set<string>();
-  while (set.size < count) {
-    const index = Math.floor(Math.random() * totalImages) + 1;
-    set.add(`/assets/images/toys/img${index}.png`);
-  }
-  return Array.from(set);
+// Seeded random function for consistent results
+const seededRandom = (seed: number) => {
+  const x = Math.sin(seed) * 10000;
+  return x - Math.floor(x);
 };
 
-// Main toy generator
+const getSeededRandom = <T>(arr: T[], seed: number): T => {
+  const index = Math.floor(seededRandom(seed) * arr.length);
+  return arr[index];
+};
+
+const getSeededRandomImages = (seed: number, count = 4): string[] => {
+  const images: string[] = [];
+  for (let i = 0; i < count; i++) {
+    const index = Math.floor(seededRandom(seed + i) * totalImages) + 1;
+    images.push(`/assets/images/toys/img${index}.png`);
+  }
+  // Remove duplicates while maintaining order
+  return [...new Set(images)];
+};
+
+// Main toy generator with consistent IDs
 const generateRandomToys = (count = 19): Product[] => {
-  return Array.from({ length: count }, () => {
-    const name = getRandom(toyNames);
-    const galleryImages = getRandomImages();
-    const basePrice = Math.random() * 30 + 10;
+  return Array.from({ length: count }, (_, index) => {
+    // Use index as seed for consistent results
+    const seed = index + 1;
+    
+    const name = getSeededRandom(toyNames, seed);
+    const galleryImages = getSeededRandomImages(seed, 4);
+    const basePrice = seededRandom(seed * 2) * 30 + 10;
     const price = parseFloat(basePrice.toFixed(2));
-    const hasDiscount = Math.random() < 0.5;
+    const hasDiscount = seededRandom(seed * 3) < 0.5;
     const oldPrice = hasDiscount
-      ? parseFloat((price + Math.random() * 10 + 5).toFixed(2))
+      ? parseFloat((price + seededRandom(seed * 4) * 10 + 5).toFixed(2))
       : undefined;
-    const label = oldPrice ? 'SALE' : getRandom([undefined, 'NEW']);
+    const labelRandom = seededRandom(seed * 5);
+    const label = oldPrice ? 'SALE' : (labelRandom < 0.3 ? 'NEW' : undefined);
+
+    // Create consistent ID based on index
+    const id = `toy-${index + 1}`;
 
     // Assign all required top-level fields
     return {
-      id: `${name.replace(/\s+/g, '-').toLowerCase()}-${Math.floor(Math.random() * 10000)}`,
+      id,
       name,
-      category: getRandom(categories),
-      brand: getRandom(brands),
-      color: getRandom(colors),
-      material: getRandom(materials),
+      category: getSeededRandom(categories, seed * 6),
+      brand: getSeededRandom(brands, seed * 7),
+      color: getSeededRandom(colors, seed * 8),
+      material: getSeededRandom(materials, seed * 9),
       mainImage: galleryImages[0],
       images: galleryImages,
       price,
       oldPrice,
       label,
-      rating: parseFloat((Math.random() * 1.5 + 3.5).toFixed(1)),
-      numberOfRatings: Math.floor(Math.random() * 1000),
+      rating: parseFloat((seededRandom(seed * 10) * 1.5 + 3.5).toFixed(1)),
+      numberOfRatings: Math.floor(seededRandom(seed * 11) * 1000),
       isFavorite: false,
       description:
         'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus.',
@@ -74,11 +91,11 @@ const generateRandomToys = (count = 19): Product[] => {
         'Perfect gift for birthdays or holidays. Perfect gift for birthdays or holidays.',
       ],
       details: [
-        { label: 'Brand Name', value: getRandom(brands) },
-        { label: 'Material', value: getRandom(materials) },
-        { label: 'Recommended Age', value: getRandom(ageGroups) },
-        { label: 'Dimensions', value: getRandom(dimensions) },
-        { label: 'Weight', value: getRandom(weights) },
+        { label: 'Brand Name', value: getSeededRandom(brands, seed * 12) },
+        { label: 'Material', value: getSeededRandom(materials, seed * 13) },
+        { label: 'Recommended Age', value: getSeededRandom(ageGroups, seed * 14) },
+        { label: 'Dimensions', value: getSeededRandom(dimensions, seed * 15) },
+        { label: 'Weight', value: getSeededRandom(weights, seed * 16) },
       ],
     };
   });

@@ -3,7 +3,8 @@ import Card from '../../../components/common/Card/Card.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import styles from './order-product-card.module.scss';
 import type { CartItem, OrderItem } from '../../../types/product.types.ts';
-import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter'; // adjust path if needed
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
+import { useNavigate } from 'react-router-dom'; // adjust path if needed
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
@@ -13,6 +14,7 @@ interface OrderProductCardProps {
 
 const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardProps) => {
   const formatCurrency = useCurrencyFormatter();
+  const navigate = useNavigate();
 
   return (
     <Card fullWidth size="small" className={styles.orderCard}>
@@ -26,7 +28,14 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
           <div key={item.productId} className={styles.orderCardCartItem}>
             <img src={item.mainImage} alt={item.name} className={styles.orderCardCartItemImage} />
             <div className={styles.orderCardCartItemInfo}>
-              <div className={styles.orderCardCartItemName}>{item.name}</div>
+              <Button
+                withoutPadding
+                appearance="link"
+                className={styles.orderCardCartItemName}
+                onClick={() => navigate('/product-details/' + item.productId)}
+              >
+                {item.name}
+              </Button>
               <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
             </div>
             <div className={styles.orderCardCartItemPrice}>

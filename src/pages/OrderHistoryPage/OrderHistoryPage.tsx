@@ -47,7 +47,7 @@ const OrderHistoryPage: React.FC = () => {
     fetchOrderProducts,
     SHOP_PAGE_SIZE,
     false,
-    'show-more'
+    'default'
   );
 
   const handleBuyAgain = async (product: any) => {
@@ -71,10 +71,10 @@ const OrderHistoryPage: React.FC = () => {
         />
       ) : (
         <ViewSwitcher
-          items={items.map((product, idx) => (
+          items={items.map((order, idx) => (
             <OrderProductCard
-              key={`${product.orderId}-${product.productId}-${idx}`}
-              order={product}
+              key={`order-${order.id}-${idx}`}
+              order={order}
               onBuyAgain={handleBuyAgain}
               onAddReview={(p) => setReviewDialog({ open: true, cartItem: p })}
             />
@@ -82,10 +82,9 @@ const OrderHistoryPage: React.FC = () => {
           page={page}
           pageSize={SHOP_PAGE_SIZE}
           totalSize={totalSize}
-          onPaginationChange={() => handlePaginationChange(page + 1)}
+          onPaginationChange={handlePaginationChange}
           staticView="flex"
           isLoading={loading}
-          paginationMode="show-more"
         />
       )}
 

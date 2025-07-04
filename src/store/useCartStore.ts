@@ -10,7 +10,7 @@ import {
 interface CartState {
   cartItems: CartItem[];
   isShippingCartDrawerOpen: boolean;
-  addToCart: (product: Product | Product[], quantity?: number) => void;
+  addToCart: (product: Product | Product[] | CartItem, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   getTotalItemsInCart: () => number;

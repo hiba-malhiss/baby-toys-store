@@ -13,7 +13,7 @@ interface AlertProps {
   appearance?: AlertAppearance;
   size?: AlertSize;
   title?: string;
-  message: string;
+  message?: string;
   icon?: any;
   onClose?: () => void;
   closable?: boolean;

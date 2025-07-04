@@ -26,7 +26,8 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
       productId
         ? mockFetchProductReviews(productId, page, PRODUCT_REVIEWS_PAGE_SIZE)
         : Promise.resolve({ items: [], page, totalPages: 0, totalItems: 0 }),
-    PRODUCT_REVIEWS_PAGE_SIZE
+    PRODUCT_REVIEWS_PAGE_SIZE,
+    false
   );
 
   // Load product description

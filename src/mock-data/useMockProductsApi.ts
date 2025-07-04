@@ -62,58 +62,40 @@ import type { ProductWithFavorite } from '../types/product.types';
 export const mockPlaceOrder = async (order: any) => {
   await delay(MOCK_API_DELAY_MS);
   const orders = JSON.parse(localStorage.getItem('mock-orders') || '[]');
-  orders.push({ ...order, id: Date.now() });
+
+  // Calculate subtotal from cart items
+  const subtotal = order.items.reduce(
+    (sum: number, item: any) => sum + item.price * item.quantity,
+    0
+  );
+
+  // Get user email from auth token
+  const token = localStorage.getItem('auth_token');
+  let userEmail = 'user@example.com'; // fallback
+  if (token === 'mock-token') {
+    userEmail = 'user@example.com';
+  }
+
+  // Save shipping information for future use
+  if (order.shippingInfo && userEmail) {
+    await mockSaveShippingInfo(userEmail, order.shippingInfo);
+  }
+
+  const newOrder = {
+    id: Date.now(),
+    email: userEmail,
+    date: new Date().toISOString(),
+    cartItems: order.items,
+    subtotal: subtotal,
+    shippingCost: order.shippingCost || 0,
+    total: order.total,
+    shippingInfo: order.shippingInfo,
+  };
+  orders.push(newOrder);
   localStorage.setItem('mock-orders', JSON.stringify(orders));
-  // Optionally clear cart after order
+  // Clear cart after order
   localStorage.setItem('cloud-cart', '[]');
 };
-
-function ensureMockOrders() {
-  const mockOrders = [
-    {
-      id: 1001,
-      email: 'user@example.com',
-      date: '2024-06-30T10:00:00Z',
-      cartItems: [
-        {
-          productId: 'toy-1',
-          name: 'Super Robot',
-          mainImage: '/assets/images/toys/img3.png',
-          price: 29.99,
-          quantity: 2,
-        },
-        {
-          productId: 'toy-2',
-          name: 'Magic Puzzle',
-          mainImage: '/assets/images/toys/img3.png',
-          price: 14.99,
-          quantity: 1,
-        },
-      ],
-      subtotal: 74.97,
-      shippingCost: 0,
-      total: 74.97,
-    },
-    {
-      id: 1002,
-      email: 'user@example.com',
-      date: '2024-06-28T15:30:00Z',
-      cartItems: [
-        {
-          productId: 'toy-3',
-          name: 'Plush Bear',
-          mainImage: '/assets/images/toys/img3.png',
-          price: 19.99,
-          quantity: 1,
-        },
-      ],
-      subtotal: 19.99,
-      shippingCost: 5,
-      total: 24.99,
-    },
-  ];
-  localStorage.setItem('mock-orders', JSON.stringify(mockOrders));
-}
 
 export const mockFetchOrdersHistory = async (
   userEmail: string,
@@ -127,11 +109,12 @@ export const mockFetchOrdersHistory = async (
 }> => {
   await delay(MOCK_API_DELAY_MS);
 
-  ensureMockOrders();
-
   const allOrders = JSON.parse(localStorage.getItem('mock-orders') || '[]').filter(
     (o: any) => o.email === userEmail
   );
+
+  // Sort orders by date (newest first)
+  allOrders.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   const totalItems = allOrders.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -433,6 +416,43 @@ export const mockSendContactMessage = async (messageData: {
   localStorage.setItem('mock-contact-messages', JSON.stringify(messages));
 
   return true; // success
+};
+
+// -----------------------------
+// SHIPPING INFORMATION MOCK
+// -----------------------------
+
+interface ShippingInfo {
+  country: string;
+  firstName: string;
+  lastName: string;
+  region: string;
+  address: string;
+  town: string;
+  phone: string;
+}
+
+const SHIPPING_INFO_STORAGE_KEY = 'mock-user-shipping-info';
+
+export const mockSaveShippingInfo = async (userEmail: string, shippingInfo: ShippingInfo) => {
+  await delay(MOCK_API_DELAY_MS);
+  
+  const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
+  const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
+  
+  allShippingInfo[userEmail] = shippingInfo;
+  localStorage.setItem(SHIPPING_INFO_STORAGE_KEY, JSON.stringify(allShippingInfo));
+  
+  return true;
+};
+
+export const mockFetchShippingInfo = async (userEmail: string): Promise<ShippingInfo | null> => {
+  await delay(MOCK_API_DELAY_MS);
+  
+  const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
+  const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
+  
+  return allShippingInfo[userEmail] || null;
 };
 
 // -----------------------------
