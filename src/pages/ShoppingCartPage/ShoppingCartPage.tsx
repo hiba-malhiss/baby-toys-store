@@ -12,6 +12,7 @@ import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmo
 import clsx from 'clsx';
 import Heading from '../../components/common/Heading/Heading.tsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
+import YouMayAlsoLikeSection from '../ShopPage/YouMayAlsoLikeSection.tsx';
 
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
@@ -112,6 +113,7 @@ const ShoppingCartPage = () => {
           Proceed to checkout
         </Button>
       </Card>
+      <YouMayAlsoLikeSection mode="flex" />
     </PageContainer>
   );
 };
