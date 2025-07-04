@@ -5,7 +5,7 @@ import { Button } from '../Button/Button.tsx';
 import { faTh, faBars } from '@fortawesome/free-solid-svg-icons';
 import Heading from '../Heading/Heading.tsx';
 import styles from './view-switcher.module.scss';
-import { Paginator } from '../Paginator/Paginator.tsx';
+import { type PaginationMode, Paginator } from '../Paginator/Paginator.tsx';
 import SkeletonProductCard from '../Skeleton/SkeletonProductCard.tsx';
 import { NoDataFound } from '../NoDataFound';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
@@ -16,8 +16,6 @@ type ResponsiveOption = {
 };
 
 export type ViewMode = 'grid' | 'list' | 'flex';
-
-type PaginationMode = 'default' | 'show-more';
 
 type ViewSwitcherProps = {
   items: ReactNode[];
@@ -33,6 +31,7 @@ type ViewSwitcherProps = {
   initialView?: ViewMode;
   staticView?: ViewMode;
   paginationMode?: PaginationMode;
+  hasMore?: boolean;
   header?: ReactNode;
   topBar?: ReactNode;
   gap?: 'small' | 'none';
@@ -50,6 +49,7 @@ export function ViewSwitcher({
   initialView = 'grid',
   staticView,
   paginationMode = 'default',
+  hasMore,
   header,
   topBar,
   gap,
@@ -231,10 +231,16 @@ export function ViewSwitcher({
         ) : (
           items.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>)
         )}
+        {isLoading &&
+          (paginationMode === 'show-more' || paginationMode === 'infinite-scroll') &&
+          items.length > 0 && (
+            <SkeletonProductCard direction={viewMode === 'list' ? 'horizontal' : 'vertical'} />
+          )}
       </div>
 
       <Paginator
         mode={paginationMode}
+        hasMore={hasMore}
         className={styles.containerPaginator}
         totalItems={totalSize}
         initialPage={page}

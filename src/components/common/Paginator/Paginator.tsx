@@ -1,8 +1,11 @@
-import { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import { Button } from '../Button/Button.tsx';
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import styles from './paginator.module.scss';
+import BouncingDotsLoader from '../BouncingDotsLoader/BouncingDotsLoader.tsx';
+
+export type PaginationMode = 'default' | 'show-more' | 'infinite-scroll';
 
 type PaginatorProps = {
   totalItems: number;
@@ -11,7 +14,8 @@ type PaginatorProps = {
   isLoading: boolean;
   className?: string;
   onPageChange?: (page: number, pageSize: number) => void;
-  mode?: 'default' | 'show-more';
+  mode?: PaginationMode;
+  hasMore?: boolean;
 };
 
 export function Paginator({
@@ -22,10 +26,12 @@ export function Paginator({
   isLoading,
   className,
   mode = 'default',
+  hasMore,
 }: PaginatorProps) {
   const totalPages = Math.ceil(totalItems / pageSize);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const prevPageRef = useRef(initialPage);
+  const showMoreRef = useRef<HTMLButtonElement | null>(null);
 
   // Update internal state when initialPage prop changes
   useEffect(() => {
@@ -74,23 +80,52 @@ export function Paginator({
     }
   }, [currentPage, totalPages]);
 
-  // === Show More Mode ===
-  if (mode === 'show-more') {
-    // Calculate how many items have been loaded so far
-    const itemsLoaded = currentPage * pageSize;
+  useEffect(() => {
+    if (mode !== 'infinite-scroll' || !showMoreRef.current) return;
 
-    // Hide button only if no items OR (not loading AND all items have been loaded)
-    if (totalItems === 0 || (!isLoading && itemsLoaded >= totalItems)) return null;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const [entry] = entries;
+        if (entry.isIntersecting && !isLoading && hasMore) {
+          handleShowMore();
+        }
+      },
+      {
+        root: null,
+        rootMargin: '0px',
+        threshold: 1.0,
+      }
+    );
+
+    observer.observe(showMoreRef.current);
+
+    return () => {
+      if (showMoreRef.current) observer.unobserve(showMoreRef.current);
+    };
+  }, [mode, isLoading, hasMore, handleShowMore]);
+
+  if (mode === 'infinite-scroll') {
+    if (!hasMore) return null;
+    return (
+      <div className={clsx(className, styles.pagination)}>
+        <BouncingDotsLoader size="medium" ref={showMoreRef}></BouncingDotsLoader>
+      </div>
+    );
+  }
+  // === Show More / Infinite Scroll Mode ===
+  if (mode === 'show-more') {
+    if (!hasMore) return null;
 
     return (
       <div className={clsx(className, styles.pagination)}>
         <Button
+          ref={showMoreRef}
           appearance="filled"
           color="secondary"
           className={styles.paginationButton}
           onClick={handleShowMore}
           isLoading={isLoading}
-          disabled={isLoading}
+          isDisabled={isLoading}
         >
           Show More
         </Button>

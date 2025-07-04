@@ -31,6 +31,7 @@ const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId
     page: relatedPage,
     loading: relatedLoading,
     handlePaginationChange: handleRelatedPaginationChange,
+    hasMore,
   } = useHandlePagination(fetchRelatedProducts, PRODUCT_RELATED_PRODUCTS_LIMIT, false, 'show-more');
 
   return (
@@ -45,6 +46,7 @@ const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId
         paginationMode="show-more"
         onPaginationChange={handleRelatedPaginationChange}
         minColWidth={220}
+        hasMore={hasMore}
         items={relatedItems.map((item, index) => (
           <SmartProductCard key={item.id || `related-${item.label}-${index}`} product={item} />
         ))}

@@ -15,7 +15,7 @@ export function useHandlePagination<T, F = any>(
   fetchFunction: FetchFunction<T, F>,
   pageSize: number,
   hasFilters: boolean,
-  mode: 'default' | 'show-more' = 'default'
+  mode: 'default' | 'show-more' | 'infinite-scroll' = 'default'
 ) {
   const [page, setPage] = useState(1);
   const [items, setItems] = useState<T[]>([]);
@@ -41,13 +41,13 @@ export function useHandlePagination<T, F = any>(
     let isMounted = true;
 
     const fetchData = async () => {
-      setLoading(true);
+      setLoading(items.length == 0 || mode === 'default');
       try {
         const { items: pagedItems, totalItems } = await fetchFunctionRef.current(page, filters);
         if (!isMounted) return;
 
         setItems((prevItems) => {
-          if (mode === 'show-more') {
+          if (mode === 'show-more' || mode === 'infinite-scroll') {
             return page === 1 ? pagedItems : [...prevItems, ...pagedItems];
           }
           return pagedItems;

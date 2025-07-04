@@ -13,13 +13,14 @@ interface YouMayAlsoLikeSectionProps {
   mode?: 'carousel' | 'flex';
 }
 
+const PAGE_NUMBER = 4;
 const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({ mode = 'carousel' }) => {
-  const { fetchProducts } = useMockProductsApi<Product>(SHOP_PAGE_SIZE);
-  const { items, totalSize, page, loading, handlePaginationChange } = useHandlePagination(
+  const { fetchProducts } = useMockProductsApi<Product>(PAGE_NUMBER);
+  const { items, totalSize, page, loading, handlePaginationChange, hasMore } = useHandlePagination(
     (page, filters) => fetchProducts(page, filters),
-    SHOP_PAGE_SIZE,
+    PAGE_NUMBER,
     false,
-    'show-more'
+    'infinite-scroll'
   );
 
   return (
@@ -56,8 +57,9 @@ const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({ mode = 'c
           totalSize={totalSize}
           onPaginationChange={handlePaginationChange}
           staticView="flex"
-          paginationMode="show-more"
+          paginationMode="infinite-scroll"
           isLoading={loading}
+          hasMore={hasMore}
         />
       )}
     </Section>
