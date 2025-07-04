@@ -3,35 +3,21 @@ import { TabBar } from '../../components/common/TabBar/TabBar.tsx';
 import { TabBarItem } from '../../components/common/TabBar/TabBarItem.tsx';
 import styles from './product-details-page.module.scss';
 import Card from '../../components/common/Card/Card.tsx';
-import FeedbackCard from '../../components/common/FeedbackCard/FeedbackCard.tsx';
-import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
-import { mockFetchProductReviews, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { getPolicies, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import ExpandableContent from '../../components/common/ExpandableContent/ExpandableContent.tsx';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
-
-export const PRODUCT_REVIEWS_PAGE_SIZE = 2;
+import { ProductReviews } from './ProductReviews.tsx';
 
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   const [description, setDescription] = useState('');
   const [descriptionLoading, setDescriptionLoading] = useState(true);
-  const { getProductDescription } = useMockProductsApi(PRODUCT_REVIEWS_PAGE_SIZE);
+  const [policies, setPolicies] = useState<Record<
+    string,
+    { title: string; content: string }
+  > | null>(null);
+  const [policiesLoading, setPoliciesLoading] = useState(true);
 
-  const {
-    items: reviews,
-    totalSize: reviewsTotalSize,
-    page: reviewsPage,
-    loading: reviewsLoading,
-    handlePaginationChange: handleReviewsPaginationChange,
-  } = useHandlePagination(
-    (page) =>
-      productId
-        ? mockFetchProductReviews(productId, page, PRODUCT_REVIEWS_PAGE_SIZE)
-        : Promise.resolve({ items: [], page, totalPages: 0, totalItems: 0 }),
-    PRODUCT_REVIEWS_PAGE_SIZE,
-    false
-  );
+  const { getProductDescription } = useMockProductsApi();
 
-  // Load product description
   useEffect(() => {
     if (!productId) return;
 
@@ -44,6 +30,18 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
         setDescriptionLoading(false);
       });
   }, [productId, getProductDescription]);
+
+  // Load policies
+  useEffect(() => {
+    getPolicies()
+      .then(setPolicies)
+      .catch((error) => {
+        console.error('Error fetching policies:', error);
+      })
+      .finally(() => {
+        setPoliciesLoading(false);
+      });
+  }, []);
 
   return (
     <Card fullWidth size="large">
@@ -61,27 +59,24 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
             {descriptionLoading ? 'Loading description...' : description}
           </ExpandableContent>
         </TabBarItem>
+
         <TabBarItem value="reviews">
-          <ViewSwitcher
-            page={reviewsPage}
-            pageSize={PRODUCT_REVIEWS_PAGE_SIZE}
-            totalSize={reviewsTotalSize}
-            isLoading={reviewsLoading}
-            staticView="list"
-            onPaginationChange={handleReviewsPaginationChange}
-            items={reviews.map((feedback, index) => (
-              <FeedbackCard key={`review-${index}`} feedback={feedback} appearance="detailed" />
-            ))}
-          />
+          <ProductReviews productId={productId} />
         </TabBarItem>
+
         <TabBarItem value="order-cancellation">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {descriptionLoading ? 'Loading policy...' : description}
+            {policiesLoading
+              ? 'Loading cancellation policy...'
+              : policies?.cancel?.content || 'No cancellation policy available.'}
           </ExpandableContent>
         </TabBarItem>
+
         <TabBarItem value="return-policy">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {descriptionLoading ? 'Loading policy...' : description}
+            {policiesLoading
+              ? 'Loading return policy...'
+              : policies?.return?.content || 'No return policy available.'}
           </ExpandableContent>
         </TabBarItem>
       </TabBar>
