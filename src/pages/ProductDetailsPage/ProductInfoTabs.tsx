@@ -8,7 +8,8 @@ import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.
 import { mockFetchProductReviews, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import ExpandableContent from '../../components/common/ExpandableContent/ExpandableContent.tsx';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
-import { PRODUCT_REVIEWS_PAGE_SIZE } from '../../constants/display.constants.ts';
+
+export const PRODUCT_REVIEWS_PAGE_SIZE = 2;
 
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   const [description, setDescription] = useState('');
@@ -62,7 +63,6 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
         </TabBarItem>
         <TabBarItem value="reviews">
           <ViewSwitcher
-            gap="none"
             page={reviewsPage}
             pageSize={PRODUCT_REVIEWS_PAGE_SIZE}
             totalSize={reviewsTotalSize}

@@ -109,7 +109,7 @@ const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <PageContainer>
+    <PageContainer isLoading={loadingShippingInfo}>
       <div className={styles.checkoutPage}>
         <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
           {isLoggedIn && !loadingShippingInfo && (form.firstName || form.lastName) && (

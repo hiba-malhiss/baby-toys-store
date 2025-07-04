@@ -42,6 +42,7 @@ export interface Feedback {
   name: string;
   avatarUrl?: string;
   comment: string;
+  date: string;
 }
 
 export type InfoCardType = {
