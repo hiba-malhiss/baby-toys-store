@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
 import { NoDataFound } from '../../components/common/NoDataFound';
@@ -8,17 +9,31 @@ import { useLoginDialogStore } from '../../store/useLoginDialogStore';
 import { useOfflinePagination } from '../../hooks/useOfflinePagination';
 import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
 import YouMayAlsoLikeSection from '../ShopPage/YouMayAlsoLikeSection';
+import { useWishlistStore } from '../../store/useWishlistStore';
 
 const LIST_PAGE_SIZE = 3;
 
 const WishListPage = () => {
   const { isLoggedIn } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
+  const pagination = useOfflinePagination(mockFetchWishlist, LIST_PAGE_SIZE);
+  const { page, totalSize, loading, setPage } = pagination;
+  const { wishlist } = useWishlistStore();
+  const [localItems, setLocalItems] = useState(pagination.items);
 
-  const { items, page, totalSize, loading, setPage } = useOfflinePagination(
-    mockFetchWishlist,
-    LIST_PAGE_SIZE
-  );
+  // Sync with pagination (initial load)
+  useEffect(() => {
+    setLocalItems(pagination.items);
+  }, [pagination.items]);
+  console.log(wishlist);
+  // Sync with wishlist store live updates
+  useEffect(() => {
+    setLocalItems((prev) => {
+      const filtered = prev.filter((item) => wishlist.some((p) => p.id === item.id));
+      const missing = wishlist.filter((p) => !filtered.some((i) => i.id === p.id));
+      return [...filtered, ...missing];
+    });
+  }, [wishlist]);
 
   const renderContent = () => {
     if (!isLoggedIn && !loading) {
@@ -34,7 +49,7 @@ const WishListPage = () => {
       );
     }
 
-    if (totalSize === 0 && !loading) {
+    if (localItems.length === 0 && !loading) {
       return (
         <NoDataFound
           icon={faHeart}
@@ -48,7 +63,7 @@ const WishListPage = () => {
 
     return (
       <ViewSwitcher
-        items={items.map((product, index) => (
+        items={localItems.map((product, index) => (
           <SmartProductCard
             key={product.id || `product-${product.label}-${index}`}
             product={product}

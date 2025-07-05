@@ -175,6 +175,7 @@ function triggerWishlistChange() {
 export const mockAddToWishlist = async (productId: string) => {
   const data = localStorage.getItem('cloud-favorites');
   const favs: string[] = data ? JSON.parse(data) : [];
+
   if (!favs.includes(productId)) {
     favs.push(productId);
     localStorage.setItem('cloud-favorites', JSON.stringify(favs));
@@ -185,14 +186,17 @@ export const mockAddToWishlist = async (productId: string) => {
 export const mockRemoveFromWishlist = async (productId: string) => {
   const data = localStorage.getItem('cloud-favorites');
   const favs: string[] = data ? JSON.parse(data) : [];
+
   const newFavs = favs.filter((id) => id !== productId);
   localStorage.setItem('cloud-favorites', JSON.stringify(newFavs));
   triggerWishlistChange();
 };
 
-export const mockLoadFavoritesFromCloud = async (): Promise<string[]> => {
+export const mockLoadFavoritesFromCloud = async (): Promise<ProductWithFavorite[]> => {
   const data = localStorage.getItem('cloud-favorites');
-  return data ? JSON.parse(data) : [];
+  const favIds: string[] = data ? JSON.parse(data) : [];
+
+  return toys.filter((p) => favIds.includes(p.id)).map((p) => ({ ...p, isUserFavorite: true }));
 };
 
 // -----------------------------

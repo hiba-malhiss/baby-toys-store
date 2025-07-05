@@ -3,20 +3,25 @@ import ProductCard, { type ProductCardProps } from '../../common/ProductCard/Pro
 import { useCartStore } from '../../../store/useCartStore';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../common/Toast/ToastContext.tsx';
-import { useFavorite } from '../../../hooks/useFavorite';
+import { useWishlist } from '../../../hooks/useWishlist.ts';
 
-const SmartProductCard: React.FC<ProductCardProps> = (props) => {
+type SmartProductCardProps = ProductCardProps;
+
+const SmartProductCard: React.FC<SmartProductCardProps> = ({ ...props }) => {
   const navigate = useNavigate();
   const { addToCart } = useCartStore();
   const toast = useToast();
+  const { isFavorite, isLoading, toggleFavorite } = useWishlist(props.product);
 
-  const { isFavorite, isLoading, toggleFavorite } = useFavorite(props.product.id);
+  const handleToggleFavorite = async () => {
+    await toggleFavorite();
+  };
 
   return (
     <ProductCard
       {...props}
       isFavorite={isFavorite}
-      onToggleFavorite={toggleFavorite}
+      onToggleFavorite={handleToggleFavorite}
       onAddToCart={(product) => {
         addToCart(product);
         toast.success('Added to cart!');

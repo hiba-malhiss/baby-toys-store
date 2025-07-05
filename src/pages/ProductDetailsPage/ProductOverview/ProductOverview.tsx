@@ -16,7 +16,7 @@ import { StringInput } from '../../../components/common/StringInput/StringInput.
 import { useCartStore } from '../../../store/useCartStore';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
-import { useFavorite } from '../../../hooks/useFavorite'; // <-- import hook
+import { useWishlist } from '../../../hooks/useWishlist.ts'; // <-- import hook
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -25,7 +25,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
   const toast = useToast();
 
   // Use favorite hook here for this product
-  const { isFavorite, isLoading, toggleFavorite } = useFavorite(product.id);
+  const { isFavorite, isLoading, toggleFavorite } = useWishlist(product);
 
   const handleCopyUrl = useCallback(
     (e: React.MouseEvent) => {
