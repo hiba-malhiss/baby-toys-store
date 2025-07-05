@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import Dialog from '../../components/common/Dialog/Dialog';
 import { Button } from '../../components/common/Button/Button';
-import { StringInput } from '../../components/common/StringInput/StringInput';
 import Rating from '../../components/common/Rating/Rating';
 import { useToast } from '../../components/common/Toast/ToastContext';
 import Flex from '../../components/common/Flex/Flex.tsx';
@@ -9,6 +8,7 @@ import Heading from '../../components/common/Heading/Heading.tsx';
 import type { CartItem } from '../../types/product.types.ts';
 import { mockAddProductReview } from '../../mock-data/useMockProductsApi.ts';
 import { useAuth } from '../../context/AuthContext.tsx';
+import { TextArea } from '../../components/common/TextArea/TextArea.tsx';
 
 interface AddReviewDialogProps {
   open: boolean;
@@ -79,7 +79,7 @@ const AddReviewDialog = ({
           onChange={(val) => setReview((r) => ({ ...r, rating: val }))}
         />
 
-        <StringInput
+        <TextArea
           value={review.comment}
           onChange={(val) => {
             setReview((r) => ({ ...r, comment: val }));

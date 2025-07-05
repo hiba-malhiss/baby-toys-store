@@ -1,8 +1,12 @@
 .infoCard {
   border-radius: 20px;
-  min-width: 400px;
+  min-width: max-content;
   min-height: 188px;
   padding: 20px;
+
+  &.fullWidth {
+    width: 100%
+  }
 
   .infoCard-title, .infoCard-content {
     @include line-clamp(2);

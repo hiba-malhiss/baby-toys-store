@@ -65,8 +65,8 @@ export interface Review {
   name: string;
   avatarUrl?: string;
   comment: string;
-  date: string;
-  orderId: string;
+  date?: string;
+  orderId?: string;
 }
 
 export type InfoCardType = {

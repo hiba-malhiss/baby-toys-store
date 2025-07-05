@@ -8,6 +8,7 @@ import { Icon } from '../Icon/Icon.tsx';
 type InfoCardProps = {
   card: InfoCardType;
   size?: 'medium';
+  fullWidth?: boolean;
 };
 
 const appearanceClassMap: Record<string, string> = {
@@ -24,7 +25,7 @@ const IconColor: Record<string, string> = {
   primary: 'primary',
 };
 
-const InfoCard: React.FC<InfoCardProps> = ({ card, size }) => {
+const InfoCard: React.FC<InfoCardProps> = ({ card, size, fullWidth }) => {
   const { appearance = 'info', icon, title, content } = card;
 
   return (
@@ -33,7 +34,12 @@ const InfoCard: React.FC<InfoCardProps> = ({ card, size }) => {
       spacing="xs"
       align="center"
       justify="center"
-      className={clsx(styles.infoCard, appearanceClassMap[appearance], styles[`infoCard--${size}`])}
+      className={clsx(
+        fullWidth && styles.fullWidth,
+        styles.infoCard,
+        appearanceClassMap[appearance],
+        styles[`infoCard--${size}`]
+      )}
     >
       <Icon
         icon={icon}

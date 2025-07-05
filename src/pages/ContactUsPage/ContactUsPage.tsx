@@ -11,6 +11,7 @@ import { useToast } from '../../components/common/Toast/ToastContext.tsx';
 import { mockSendContactMessage } from '../../mock-data/useMockProductsApi.ts';
 import Heading from '../../components/common/Heading/Heading.tsx';
 import InfoCard from '../../components/common/InfoCard/InfoCard.tsx';
+import { TextArea } from '../../components/common/TextArea/TextArea.tsx';
 
 const CONTACT_INFO = [
   {
@@ -74,9 +75,9 @@ const ContactUsPage: React.FC = () => {
 
   return (
     <PageContainer header="Contact">
-      <Flex spacing="xxl">
+      <Flex spacing="xxl" fullWidth>
         {CONTACT_INFO.map((item) => (
-          <InfoCard key={item.title} card={item} size="medium" />
+          <InfoCard key={item.title} card={item} size="medium" fullWidth />
         ))}
       </Flex>
       <div className={styles.contactUsPage}>
@@ -106,7 +107,7 @@ const ContactUsPage: React.FC = () => {
           />
         </FieldWrapper>
         <FieldWrapper label="Message" error={errors.message} fullWidth>
-          <StringInput
+          <TextArea
             fullWidth
             value={form.message}
             onChange={(val) => handleInput('message', val)}
