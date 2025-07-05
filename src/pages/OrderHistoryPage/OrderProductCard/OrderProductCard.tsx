@@ -48,7 +48,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
             <div className={styles.orderCardCartItemActions}>
               <Button
                 color="secondary-light"
-                onClick={() => onBuyAgain(item)}
+                onClick={() => onBuyAgain(item.product)}
                 aria-label={`Buy again ${item.product.name}`}
               >
                 Buy Again
