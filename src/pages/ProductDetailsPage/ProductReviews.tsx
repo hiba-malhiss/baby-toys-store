@@ -1,5 +1,5 @@
 import React from 'react';
-import FeedbackCard from '../../components/common/FeedbackCard/FeedbackCard.tsx';
+import ReviewCard from '../../components/common/ReviewCard/ReviewCard.tsx';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import { mockFetchProductReviews } from '../../mock-data/useMockProductsApi.ts';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
@@ -33,8 +33,8 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId }) => 
       isLoading={loading}
       staticView="list"
       onPaginationChange={handlePaginationChange}
-      items={reviews.map((feedback, index) => (
-        <FeedbackCard key={`review-${index}`} feedback={feedback} appearance="detailed" />
+      items={reviews.map((review, index) => (
+        <ReviewCard key={`review-${index}`} review={review} appearance="detailed" />
       ))}
     />
   );

@@ -1,7 +1,7 @@
 import ShopNowSection from './ShopNowSection/ShopNowSection.tsx';
 import OurCollectionSection from './OurCollectionSection/OurCollectionSection.tsx';
 import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';
-import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSection.tsx';
+import CustomerReviewsSection from './CustomerReviews/CustomerReviewsSection.tsx';
 import BannersSection from './BannersSection/BannersSection.tsx';
 import RecentPhotoShootsSection from './RecentPhotoShootsSection/RecentPhotoShootsSection.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
@@ -15,7 +15,7 @@ const HomePage = () => {
         <OurCollectionSection />
         <TopPicksSection />
         <BannersSection />
-        <CustomerFeedbacksSection />
+        <CustomerReviewsSection />
         <RecentPhotoShootsSection />
         <PolicyCardsSection />
       </PageContainer>

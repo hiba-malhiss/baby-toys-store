@@ -3,7 +3,7 @@
 ## ✅ **Key Issues Resolved**
 
 ### 1. **Reviews vs Testimonials Clarification**
-- **Product Reviews**: Specific feedback for individual products (`/api/products/:productId/reviews`)
+- **Product Reviews**: Specific Reviews for individual products (`/api/products/:productId/reviews`)
 - **Customer Testimonials**: General positive experiences for homepage marketing (`/api/testimonials`)
 - **Usage**: Homepage shows testimonials, Product pages show product-specific reviews
 
@@ -81,7 +81,7 @@ GET /api/search?q=teddy&limit=10
 - **Updated**: Filter chips show sort when not default
 - **Options**: All homepage sorts + price sorting + rating
 
-### **CustomerFeedbacksSection** ✅
+### **CustomerReviewsSection** ✅
 - **Updated**: Uses `getTestimonials()` instead of reviews
 - **Purpose**: General marketing testimonials, not product-specific
 
@@ -126,7 +126,7 @@ CREATE TABLE testimonials (
 ### **Shop Page Strategy**
 1. **URL Persistence**: Filters in URL for sharing
 2. **Sort Integration**: Homepage sorts available in filters
-3. **Filter Chips**: Visual feedback for active filters
+3. **Filter Chips**: Visual review for active filters
 4. **Page State**: Maintains state on refresh
 
 ### **Product Page Strategy**
@@ -161,7 +161,7 @@ CREATE TABLE testimonials (
 | TopPicksSection | ��� Complete | Grid + View All button |
 | ShopPage | ✅ Complete | URL filters + Sort options |
 | SideFilters | ✅ Complete | Sort By + Initial filters |
-| CustomerFeedbacksSection | ✅ Complete | Testimonials API |
+| CustomerReviewsSection | ✅ Complete | Testimonials API |
 | ProductInfoTabs | ✅ Complete | Product reviews API |
 | useUrlFilters | ✅ Complete | URL state management |
 | useMockProductsApi | ✅ Complete | Full API simulation |

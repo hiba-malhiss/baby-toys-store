@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import Section from '../../../components/layout/Section/Section.tsx';
-import FeedbackCard from '../../../components/common/FeedbackCard/FeedbackCard.tsx';
-import styles from './customer-feedbacks-section.module.scss';
+import ReviewCard from '../../../components/common/ReviewCard/ReviewCard.tsx';
+import styles from './customer-review-section.module.scss';
 import Carousel from '../../../components/common/Carousel/Carousel.tsx';
 import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
-import type { Feedback } from '../../../types/product.types.ts';
+import type { Review } from '../../../types/product.types.ts';
 
-const CustomerFeedbacksSection = () => {
-  const [featuredReviews, setFeaturedReviews] = useState<Feedback[]>([]);
+const CustomerReviewsSection = () => {
+  const [featuredReviews, setFeaturedReviews] = useState<Review[]>([]);
   const [isLoading, setIsLoading] = useState(true); // <-- added loading state
   const { getTestimonials } = useMockProductsApi(5);
 
@@ -27,7 +27,7 @@ const CustomerFeedbacksSection = () => {
       title="Hear from Other Happy Parents"
       subTitle="Customer testimonials"
       compactPadding
-      className={styles.customerFeedbacks}
+      className={styles.customerReviews}
       isLoading={isLoading}
     >
       <Carousel
@@ -40,10 +40,10 @@ const CustomerFeedbacksSection = () => {
           { breakpoint: '900', numVisible: 2 },
           { breakpoint: '600', numVisible: 1 },
         ]}
-        itemTemplate={(feedback) => <FeedbackCard feedback={feedback} fullHeight />}
+        itemTemplate={(review) => <ReviewCard review={review} fullHeight />}
       />
     </Section>
   );
 };
 
-export default CustomerFeedbacksSection;
+export default CustomerReviewsSection;

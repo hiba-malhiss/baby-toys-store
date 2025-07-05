@@ -1,14 +1,14 @@
 import { useCallback } from 'react';
 import { toys } from './toy-card-list.ts';
 import {
-  feedbacks,
+  reviews,
   infoCards,
   photoShoots,
   topPicksRadioOptions,
   unifiedCategories,
 } from './home-page.ts';
 import { description } from './product-details-page.ts';
-import type { CartItem, Feedback } from '../types/product.types.ts';
+import type { CartItem, Review } from '../types/product.types.ts';
 import {
   brandsRadioOptions,
   colorsRadioOptions,
@@ -305,7 +305,7 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
     }, []),
     getTestimonials: useCallback(async () => {
       await delay(MOCK_API_DELAY_MS);
-      return feedbacks;
+      return reviews;
     }, []),
     getHomepageContent: useCallback(async (currencySymbol?: string) => {
       await delay(MOCK_API_DELAY_MS);
@@ -463,7 +463,7 @@ export const mockFetchShippingInfo = async (userEmail: string): Promise<Shipping
 // PRODUCT REVIEWS MOCK
 // -----------------------------
 
-interface ProductReview extends Feedback {
+interface ProductReview extends Review {
   id: string;
   productId: string;
   userEmail: string;
@@ -475,7 +475,7 @@ const REVIEWS_STORAGE_KEY = 'mock-product-reviews';
 export const mockAddProductReview = async (
   userEmail: string,
   productId: string,
-  review: Feedback
+  review: Review
 ) => {
   await delay(MOCK_API_DELAY_MS);
 

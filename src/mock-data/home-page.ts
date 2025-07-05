@@ -1,5 +1,5 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import type { Feedback, InfoCardType } from '../types/product.types.ts';
+import type { Review, InfoCardType } from '../types/product.types.ts';
 import type { RadioOption } from '../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 
 export const photoShoots: string[] = [
@@ -9,7 +9,7 @@ export const photoShoots: string[] = [
   '/assets/images/recent-photo-shoots/pic4.png',
 ];
 
-export const feedbacks: Feedback[] = [
+export const reviews: Review[] = [
   {
     rating: 5,
     name: 'Emily Johnson',

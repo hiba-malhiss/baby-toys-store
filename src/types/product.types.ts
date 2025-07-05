@@ -37,7 +37,7 @@ export interface OrderItem {
   total: number;
 }
 
-export interface Feedback {
+export interface Review {
   rating: number;
   name: string;
   avatarUrl?: string;
