@@ -37,6 +37,7 @@ const CheckoutPage: React.FC = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [placingOrder, setPlacingOrder] = useState(false);
   const [loadingShippingInfo, setLoadingShippingInfo] = useState(false);
+  const [isLoadedFromCloud, setIsLoadedFromCloud] = useState(false);
   const toast = useToast();
   const { currency, shipping } = useStoreConfiguration();
   const navigate = useNavigate();
@@ -50,6 +51,7 @@ const CheckoutPage: React.FC = () => {
         .then((shippingInfo) => {
           if (shippingInfo) {
             setForm(shippingInfo);
+            setIsLoadedFromCloud(true);
           }
         })
         .catch((error) => {
@@ -113,7 +115,7 @@ const CheckoutPage: React.FC = () => {
     <PageContainer isLoading={loadingShippingInfo}>
       <div className={styles.checkoutPage}>
         <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
-          {isLoggedIn && !loadingShippingInfo && (form.firstName || form.lastName) && (
+          {isLoggedIn && isLoadedFromCloud && (
             <Alert icon={faCheck} title="Using your saved shipping information">
               <Button
                 appearance="link"
@@ -165,23 +167,6 @@ const CheckoutPage: React.FC = () => {
           </div>
 
           <div className={styles.checkoutPageFormRow}>
-            <FieldWrapper label="Village or Region" error={errors.region}>
-              <StringInput
-                hasError={!!errors.region}
-                value={form.region}
-                onChange={(val) => handleInput('region', val)}
-              />
-            </FieldWrapper>
-            <FieldWrapper label="Detailed Address" error={errors.address}>
-              <StringInput
-                hasError={!!errors.address}
-                value={form.address}
-                onChange={(val) => handleInput('address', val)}
-              />
-            </FieldWrapper>
-          </div>
-
-          <div className={styles.checkoutPageFormRow}>
             <FieldWrapper label="Town" error={errors.town}>
               <StringInput
                 hasError={!!errors.town}
@@ -189,14 +174,32 @@ const CheckoutPage: React.FC = () => {
                 onChange={(val) => handleInput('town', val)}
               />
             </FieldWrapper>
-            <FieldWrapper label="Phone Number" error={errors.phone}>
+            <FieldWrapper label="Village or Region" error={errors.region}>
               <StringInput
-                hasError={!!errors.phone}
-                value={form.phone}
-                onChange={(val) => handleInput('phone', val)}
+                hasError={!!errors.region}
+                value={form.region}
+                onChange={(val) => handleInput('region', val)}
               />
             </FieldWrapper>
           </div>
+
+          <FieldWrapper label="Detailed Address" error={errors.address}>
+            <StringInput
+              fullWidth
+              hasError={!!errors.address}
+              value={form.address}
+              onChange={(val) => handleInput('address', val)}
+            />
+          </FieldWrapper>
+
+          <FieldWrapper label="Phone Number" error={errors.phone}>
+            <StringInput
+              fullWidth
+              hasError={!!errors.phone}
+              value={form.phone}
+              onChange={(val) => handleInput('phone', val)}
+            />
+          </FieldWrapper>
 
           <Button onClick={handleOrder} fullWidth isLoading={placingOrder}>
             Place Order
