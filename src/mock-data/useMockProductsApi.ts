@@ -118,9 +118,13 @@ export const mockFetchOrdersHistory = async (
   for (const order of allOrders) {
     const productIds = order.cartItems.map((item) => item.productId);
     const products = await Promise.all(productIds.map((id) => toys.find((p) => p.id === id)));
+    const reviews = JSON.parse(localStorage.getItem('mock-product-reviews') || '[]');
     order.cartItems = order.cartItems.map((item, index) => ({
       ...item,
       product: products[index],
+      isReviewed: reviews.some(
+        (r: any) => r.orderId === order.id && r.productId === item.productId
+      ),
     }));
   }
 
@@ -522,6 +526,7 @@ export const mockAddProductReview = async (
     comment: review.comment,
     avatarUrl: review.avatarUrl,
     name: review.name,
+    orderId: review.orderId,
     date: new Date().toISOString(),
   };
 

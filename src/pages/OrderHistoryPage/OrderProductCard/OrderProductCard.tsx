@@ -53,12 +53,14 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
               >
                 Buy Again
               </Button>
-              <Button
-                onClick={() => onAddReview(item)}
-                aria-label={`Add review for ${item.product.name}`}
-              >
-                Add Review
-              </Button>
+              {!item.isReviewed && (
+                <Button
+                  onClick={() => onAddReview(item)}
+                  aria-label={`Add review for ${item.product.name}`}
+                >
+                  Add Review
+                </Button>
+              )}
             </div>
           </div>
         ))}

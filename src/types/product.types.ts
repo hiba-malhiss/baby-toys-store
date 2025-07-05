@@ -33,11 +33,15 @@ export interface CartItem extends CartItemBE {
   product: Product;
 }
 
+export interface OrderCartItem extends CartItem {
+  isReviewed: boolean;
+}
+
 export interface OrderItem {
   id: number;
   email: string;
   date: string; // ISO date string, e.g. '2024-06-30T10:00:00Z'
-  cartItems: CartItem[];
+  cartItems: OrderCartItem[];
   subtotal: number;
   shippingCost: number;
   total: number;
@@ -62,6 +66,7 @@ export interface Review {
   avatarUrl?: string;
   comment: string;
   date: string;
+  orderId: string;
 }
 
 export type InfoCardType = {

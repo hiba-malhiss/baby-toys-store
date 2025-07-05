@@ -24,6 +24,7 @@ const OrderHistoryPage: React.FC = () => {
   const [reviewDialog, setReviewDialog] = useState<{
     open: boolean;
     cartItem: CartItem;
+    orderId: string;
   } | null>(null);
 
   useEffect(() => {
@@ -72,7 +73,7 @@ const OrderHistoryPage: React.FC = () => {
               key={`order-${order.id}-${idx}`}
               order={order}
               onBuyAgain={handleBuyAgain}
-              onAddReview={(p) => setReviewDialog({ open: true, cartItem: p })}
+              onAddReview={(p) => setReviewDialog({ open: true, cartItem: p, orderId: order.id })}
             />
           ))}
           page={page}
@@ -88,6 +89,7 @@ const OrderHistoryPage: React.FC = () => {
         open={!!reviewDialog}
         onClose={() => setReviewDialog(null)}
         product={reviewDialog?.cartItem}
+        orderId={reviewDialog?.orderId}
       />
     </PageContainer>
   );

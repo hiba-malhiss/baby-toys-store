@@ -12,12 +12,19 @@ import { useAuth } from '../../context/AuthContext.tsx';
 
 interface AddReviewDialogProps {
   open: boolean;
+  orderId: string;
   onClose: () => void;
   product?: CartItem | null;
   onSubmitSuccess?: (reviewData: { rating: number; comment: string }) => void;
 }
 
-const AddReviewDialog = ({ open, onClose, product, onSubmitSuccess }: AddReviewDialogProps) => {
+const AddReviewDialog = ({
+  open,
+  onClose,
+  product,
+  onSubmitSuccess,
+  orderId,
+}: AddReviewDialogProps) => {
   const { user } = useAuth();
   const [review, setReview] = useState({ rating: 0, comment: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +43,7 @@ const AddReviewDialog = ({ open, onClose, product, onSubmitSuccess }: AddReviewD
         comment: review.comment,
         name: user?.name,
         avatarUrl: user.avatarUrl || '',
+        orderId,
       });
 
       toast.success('Review submitted!');
@@ -56,12 +64,12 @@ const AddReviewDialog = ({ open, onClose, product, onSubmitSuccess }: AddReviewD
       <Flex direction="vertical" spacing="xxl" fullWidth>
         <Flex>
           <img
-            src={product.mainImage}
-            alt={product.name}
+            src={product.product.mainImage}
+            alt={product.product.name}
             style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 12 }}
           />
           <Heading level="h4" className="bts-marginVxl">
-            {product?.name}
+            {product?.product.name}
           </Heading>
         </Flex>
 
