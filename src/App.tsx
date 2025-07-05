@@ -27,9 +27,7 @@ const App: React.FC = () => {
               <ScrollToTop />
               <Layout>
                 <Routes>
-                  {/* Redirect root "/" to "/home" */}
                   <Route path="/" element={<Navigate to="/home" replace />} />
-
                   <Route path="/home" element={<HomePage />} />
                   <Route path="/shop" element={<ShopPage />} />
                   <Route path="/product-details/:id" element={<ProductDetailsPage />} />

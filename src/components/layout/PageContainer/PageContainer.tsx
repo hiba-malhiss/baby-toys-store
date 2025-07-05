@@ -25,7 +25,6 @@ export const PageContainer = ({
   return (
     <>
       {!isBreadcrumbHidden && <LayoutBreadcrumb className={styles.breadcrumb} />}
-      {isLoading && <BouncingDotsLoader className="bts-paddingVxxl" />}
       <Flex
         fullWidth
         direction="vertical"
@@ -37,6 +36,7 @@ export const PageContainer = ({
             {header}
           </Heading>
         )}
+        {isLoading && <BouncingDotsLoader className="bts-paddingVxxl" />}
         {!isLoading && children}
       </Flex>
     </>
