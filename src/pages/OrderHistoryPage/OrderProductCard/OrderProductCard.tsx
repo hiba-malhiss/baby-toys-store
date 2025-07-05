@@ -4,7 +4,7 @@ import { Button } from '../../../components/common/Button/Button.tsx';
 import styles from './order-product-card.module.scss';
 import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
-import { useNavigate } from 'react-router-dom'; // adjust path if needed
+import { useNavigate } from 'react-router-dom';
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
@@ -26,7 +26,11 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
       <div>
         {order.cartItems.map((item) => (
           <div key={item.productId} className={styles.orderCardCartItem}>
-            <img src={item.mainImage} alt={item.name} className={styles.orderCardCartItemImage} />
+            <img
+              src={item.product.mainImage}
+              alt={item.product.name}
+              className={styles.orderCardCartItemImage}
+            />
             <div className={styles.orderCardCartItemInfo}>
               <Button
                 withoutPadding
@@ -34,22 +38,25 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
                 className={styles.orderCardCartItemName}
                 onClick={() => navigate('/product-details/' + item.productId)}
               >
-                {item.name}
+                {item.product.name}
               </Button>
               <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
             </div>
             <div className={styles.orderCardCartItemPrice}>
-              {formatCurrency(item.price * item.quantity)}
+              {formatCurrency(item.product.price * item.quantity)}
             </div>
             <div className={styles.orderCardCartItemActions}>
               <Button
                 color="secondary-light"
                 onClick={() => onBuyAgain(item)}
-                aria-label={`Buy again ${item.name}`}
+                aria-label={`Buy again ${item.product.name}`}
               >
                 Buy Again
               </Button>
-              <Button onClick={() => onAddReview(item)} aria-label={`Add review for ${item.name}`}>
+              <Button
+                onClick={() => onAddReview(item)}
+                aria-label={`Add review for ${item.product.name}`}
+              >
                 Add Review
               </Button>
             </div>

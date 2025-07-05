@@ -80,6 +80,7 @@ const generateRandomToys = (count = 19): Product[] => {
       rating: parseFloat((seededRandom(seed * 10) * 1.5 + 3.5).toFixed(1)),
       numberOfRatings: Math.floor(seededRandom(seed * 11) * 1000),
       isFavorite: false,
+      quantityInStock: Math.floor(seededRandom(seed * 12) * 20),
       description:
         'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus.',
       featureBullets: [

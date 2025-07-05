@@ -11,9 +11,10 @@ interface CartItemCardProps {
   name: string;
   id: string;
   price: number;
+  quantityInStock: number;
   quantity: number;
   fullWidth?: boolean;
-  onAmountChange: (val: string) => void;
+  onAmountChange: (val: number) => void;
   onRemove: (id: string) => void;
 }
 
@@ -24,6 +25,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   quantity,
   fullWidth,
   onRemove,
+  quantityInStock,
   id,
   onAmountChange,
 }) => {
@@ -35,6 +37,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
         <StringInput
           type="number"
           min={1}
+          max={quantityInStock}
           value={quantity}
           withControls
           onChange={onAmountChange}

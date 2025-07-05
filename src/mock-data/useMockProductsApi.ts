@@ -8,7 +8,7 @@ import {
   unifiedCategories,
 } from './home-page.ts';
 import { description } from './product-details-page.ts';
-import type { CartItem, Review } from '../types/product.types.ts';
+import type { CartItem, Review, OrderItem, CartItemBE } from '../types/product.types.ts';
 import {
   brandsRadioOptions,
   colorsRadioOptions,
@@ -59,13 +59,15 @@ import type { ProductWithFavorite } from '../types/product.types';
 // CLOUD STORAGE MOCKS
 // -----------------------------
 
-export const mockPlaceOrder = async (order: any) => {
+import type { OrderPayload } from '../types/product.types.ts';
+
+export const mockPlaceOrder = async (order: OrderPayload) => {
   await delay(MOCK_API_DELAY_MS);
-  const orders = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+  const orders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
   // Calculate subtotal from cart items
-  const subtotal = order.items.reduce(
-    (sum: number, item: any) => sum + item.price * item.quantity,
+  const subtotal = order.cartItems.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
@@ -81,11 +83,11 @@ export const mockPlaceOrder = async (order: any) => {
     await mockSaveShippingInfo(userEmail, order.shippingInfo);
   }
 
-  const newOrder = {
+  const newOrder: OrderItem = {
     id: Date.now(),
     email: userEmail,
     date: new Date().toISOString(),
-    cartItems: order.items,
+    cartItems: order.cartItems,
     subtotal: subtotal,
     shippingCost: order.shippingCost || 0,
     total: order.total,
@@ -102,19 +104,30 @@ export const mockFetchOrdersHistory = async (
   page: number = 1,
   pageSize: number = 10
 ): Promise<{
-  items: any[];
+  items: OrderItem[];
   page: number;
   totalPages: number;
   totalItems: number;
 }> => {
   await delay(MOCK_API_DELAY_MS);
 
-  const allOrders = JSON.parse(localStorage.getItem('mock-orders') || '[]').filter(
-    (o: any) => o.email === userEmail
+  const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]').filter(
+    (o: OrderItem) => o.email === userEmail
   );
 
+  for (const order of allOrders) {
+    const productIds = order.cartItems.map((item) => item.productId);
+    const products = await Promise.all(productIds.map((id) => toys.find((p) => p.id === id)));
+    order.cartItems = order.cartItems.map((item, index) => ({
+      ...item,
+      product: products[index],
+    }));
+  }
+
   // Sort orders by date (newest first)
-  allOrders.sort((a: any, b: any) => new Date(b.date).getTime() - new Date(a.date).getTime());
+  allOrders.sort(
+    (a: OrderItem, b: OrderItem) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
 
   const totalItems = allOrders.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
@@ -159,13 +172,31 @@ export const mockFetchWishlist = async (
   };
 };
 
-export const mockSaveCartToCloud = async (cartItems: CartItem[]) => {
-  localStorage.setItem('cloud-cart', JSON.stringify(cartItems));
+export const mockSaveCartToCloud = async (cartItems: CartItemBE[]) => {
+  const cartItemsBE: CartItemBE[] = cartItems.map((item) => ({
+    productId: item.productId,
+    quantity: item.quantity,
+  }));
+  localStorage.setItem('cloud-cart', JSON.stringify(cartItemsBE));
 };
 
 export const mockLoadCartFromCloud = async (): Promise<CartItem[]> => {
   const data = localStorage.getItem('cloud-cart');
-  return data ? JSON.parse(data) : [];
+  const cartItemsBE: CartItemBE[] = data ? JSON.parse(data) : [];
+
+  if (cartItemsBE.length === 0) {
+    return [];
+  }
+
+  const productIds = cartItemsBE.map((item) => item.productId);
+  const products = await Promise.all(productIds.map((id) => toys.find((p) => p.id === id)));
+
+  return cartItemsBE.map((item, index) => ({
+    ...item,
+    id: `cart-${item.productId}`,
+    dateAdded: Date.now(),
+    product: products[index],
+  }));
 };
 
 function triggerWishlistChange() {
@@ -217,10 +248,10 @@ export const getShopFilterOptions = async () => {
 // PRODUCTS & HOME DATA (MOCKED)
 // -----------------------------
 
-export function useMockProductsApi<T extends { category?: string }>(pageSize?: number) {
+export function useMockProductsApi(pageSize?: number) {
   const fullItems = toys;
 
-  function extractFilterOptions(field: keyof T): { value: string; label: string }[] {
+  function extractFilterOptions(field: keyof Product): { value: string; label: string }[] {
     const values = Array.from(
       new Set(fullItems.map((item) => item[field] as string).filter(Boolean))
     );
@@ -233,9 +264,9 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
   const fetchProducts = useCallback(
     async (
       page: number,
-      filters = {}
+      filters: Record<string, any> = {}
     ): Promise<{
-      items: any[];
+      items: ProductWithFavorite[];
       page: number;
       totalPages: number;
       totalItems: number;
@@ -285,7 +316,10 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
 
       const totalItems = withFavorite.length;
       const totalPages = Math.ceil(totalItems / pageSize);
-      const paginated = withFavorite.slice((page - 1) * pageSize, page * pageSize);
+      const paginated: ProductWithFavorite[] = withFavorite.slice(
+        (page - 1) * pageSize,
+        page * pageSize
+      );
       return { items: paginated, page, totalPages, totalItems };
     },
     [pageSize]
@@ -380,9 +414,7 @@ export function useMockProductsApi<T extends { category?: string }>(pageSize?: n
 // -----------------------------
 // Helpers
 // -----------------------------
-function sortItems<
-  T extends { price: number; sales?: number; rating?: number; releaseDate?: string },
->(items: T[], sortBy?: string): T[] {
+function sortItems<T extends Product>(items: T[], sortBy?: string): T[] {
   switch (sortBy) {
     case 'best_seller':
       return [...items].sort((a, b) => (b.sales ?? 0) - (a.sales ?? 0));

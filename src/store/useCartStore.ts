@@ -10,7 +10,7 @@ import {
 interface CartState {
   cartItems: CartItem[];
   isShippingCartDrawerOpen: boolean;
-  addToCart: (product: Product | Product[] | CartItem, quantity?: number) => void;
+  addToCart: (product: Product, quantity?: number) => void;
   removeFromCart: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   getTotalItemsInCart: () => number;
@@ -27,20 +27,11 @@ export const useCartStore = create<CartState>()(
       cartItems: [],
       isShippingCartDrawerOpen: false,
 
-      addToCart: (productOrProducts, quantity = 1) => {
+      addToCart: (product, quantity = 1) => {
         if (quantity <= 0) return;
 
         const { cartItems } = get();
-        let updatedItems = cartItems;
-
-        if (Array.isArray(productOrProducts)) {
-          updatedItems = productOrProducts.reduce(
-            (acc, product) => addOrUpdateCartItem(acc, product, quantity),
-            cartItems
-          );
-        } else {
-          updatedItems = addOrUpdateCartItem(cartItems, productOrProducts, quantity);
-        }
+        const updatedItems = addOrUpdateCartItem(cartItems, product, quantity);
 
         set({
           cartItems: updatedItems,
@@ -87,7 +78,7 @@ export const useCartStore = create<CartState>()(
       },
     }),
     {
-      name: 'cart-storage',
+      name: 'cart-storage-store',
       partialize: (state) => ({ cartItems: state.cartItems }),
     }
   )

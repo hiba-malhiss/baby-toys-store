@@ -15,16 +15,22 @@ export type Product = {
   description?: string;
   featureBullets?: string[];
   details?: { label: string; value: string }[];
+  quantityInStock?: number;
 };
 
 export type ProductWithFavorite = Product & { isUserFavorite: boolean };
 
-export interface CartItem {
+// Type for cart item data stored in the backend (or mock storage)
+export type CartItemBE = {
   productId: string;
-  name: string;
-  mainImage: string;
-  price: number;
   quantity: number;
+};
+
+// Rich cart item type used in the frontend, includes full product details
+export interface CartItem extends CartItemBE {
+  id?: string;
+  dateAdded?: number;
+  product: Product;
 }
 
 export interface OrderItem {
@@ -35,6 +41,19 @@ export interface OrderItem {
   subtotal: number;
   shippingCost: number;
   total: number;
+  shippingInfo: ShippingInfo;
+}
+
+export type OrderPayload = Omit<OrderItem, 'id' | 'email' | 'date' | 'subtotal'>;
+
+export interface ShippingInfo {
+  country: string;
+  firstName: string;
+  lastName: string;
+  region: string;
+  address: string;
+  town: string;
+  phone: string;
 }
 
 export interface Review {

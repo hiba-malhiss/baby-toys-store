@@ -11,6 +11,7 @@ export type StringInputSize = 'small' | 'medium' | 'large';
 export interface StringInputProps {
   type?: string;
   min?: string | number;
+  max?: string | number;
   value?: string | number;
   onChange?: (val: string | number) => void;
   placeholder?: string;
@@ -30,6 +31,7 @@ export const StringInput: React.FC<StringInputProps> = ({
   className,
   type = 'text',
   min,
+  max,
   value,
   onChange,
   placeholder = '',
@@ -77,9 +79,12 @@ export const StringInput: React.FC<StringInputProps> = ({
 
     const current = parseFloat(internalValue || String(min ?? '0'));
     const next = current + step;
+
     const minVal = min !== undefined ? parseFloat(String(min)) : undefined;
+    const maxVal = max !== undefined ? parseFloat(String(max)) : undefined;
 
     if (minVal !== undefined && next < minVal) return;
+    if (maxVal !== undefined && next > maxVal) return;
 
     handleChange(next.toString());
   };
@@ -129,6 +134,7 @@ export const StringInput: React.FC<StringInputProps> = ({
         <input
           type={type}
           min={min}
+          max={max}
           step="any"
           disabled={isDisabled}
           placeholder={placeholder}

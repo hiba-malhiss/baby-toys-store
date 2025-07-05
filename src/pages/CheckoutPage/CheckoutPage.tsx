@@ -18,6 +18,7 @@ import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { Alert } from '../../components/common/Alert/Alert.tsx';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import type { OrderItem, OrderPayload } from '../../types/product.types.ts';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
@@ -91,9 +92,9 @@ const CheckoutPage: React.FC = () => {
     if (!validate()) return;
     setPlacingOrder(true);
     try {
-      const orderData = {
+      const orderData: OrderPayload = {
         shippingInfo: form,
-        items: cartItems,
+        cartItems: cartItems,
         total,
         shippingCost,
       };
@@ -206,12 +207,12 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryList}>
             {cartItems.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.productId}>
-                <img src={item.mainImage} alt={item.name} />
+                <img src={item.product.mainImage} alt={item.product.name} />
                 <div>
-                  <div className={styles.checkoutPageSummaryItemName}>{item.name}</div>
+                  <div className={styles.checkoutPageSummaryItemName}>{item.product.name}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
-                <div>{formatCurrency(item.price)}</div>
+                <div>{formatCurrency(item.product.price)}</div>
                 <Divider fullWidth />
               </div>
             ))}

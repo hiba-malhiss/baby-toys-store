@@ -91,6 +91,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
           <StringInput
             type="number"
+            max={product.quantityInStock}
             withControls
             min={1}
             value={quantity}

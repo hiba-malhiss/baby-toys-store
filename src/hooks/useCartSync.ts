@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useCartStore } from '../store/useCartStore';
 import { useAuth } from '../context/AuthContext';
 import { mockSaveCartToCloud, mockLoadCartFromCloud } from '../mock-data/useMockProductsApi';
@@ -7,19 +7,25 @@ export function useCartSync() {
   const { cartItems, clearCart, setCartItems } = useCartStore();
   const { isLoggedIn } = useAuth();
   const prevLoggedIn = useRef(isLoggedIn);
+  const cartItemsBE = useMemo(() => {
+    return cartItems.map((item) => ({
+      productId: item.productId,
+      quantity: item.quantity,
+    }));
+  }, [cartItems]);
 
   // On cart or login state change, save to cloud if logged in
   useEffect(() => {
     if (isLoggedIn) {
       (async () => {
         try {
-          await mockSaveCartToCloud(cartItems);
+          await mockSaveCartToCloud(cartItemsBE);
         } catch (e) {
           console.error('Failed saving cart to cloud', e);
         }
       })();
     }
-  }, [cartItems, isLoggedIn]);
+  }, [cartItemsBE, isLoggedIn]);
 
   // On login, load cloud cart and merge with local
   useEffect(() => {
@@ -27,7 +33,7 @@ export function useCartSync() {
       (async () => {
         try {
           const cloudCart = await mockLoadCartFromCloud();
-          const mergedCart = cloudCart.length ? cloudCart : cartItems;
+          const mergedCart = cloudCart.length ? cloudCart : cartItemsBE;
           setCartItems(mergedCart);
           await mockSaveCartToCloud(mergedCart);
         } catch (e) {
@@ -36,7 +42,7 @@ export function useCartSync() {
       })();
     }
     prevLoggedIn.current = isLoggedIn;
-  }, [isLoggedIn, cartItems, setCartItems]);
+  }, [isLoggedIn, cartItemsBE, setCartItems]);
 
   // On logout, clear local cart (and no cloud sync needed)
   useEffect(() => {

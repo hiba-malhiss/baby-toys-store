@@ -5,7 +5,7 @@ import clsx from 'clsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Divider } from '../../common/Divider/Divider.tsx';
 import type { CartItem } from '../../../types/product.types.ts';
-import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter'; // import your hook
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 
 interface TotalAmountSectionProps {
   items: CartItem[];

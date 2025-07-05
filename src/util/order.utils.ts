@@ -10,12 +10,12 @@ export const calculateOrderSummary = (
   // Validate inputs
   if (!Array.isArray(items)) {
     console.warn('calculateOrderSummary: items must be an array');
-    return { subtotal: '0.00', total: '0.00', shipping: '0.00' };
+    return { subtotal: 0, total: 0, shipping: 0, isFreeShipping: false };
   }
 
   // Calculate subtotal
   const subtotal = items.reduce((acc, item) => {
-    const price = item.price || 0;
+    const price = item.product?.price || 0;
     const quantity = item.quantity || 1;
     return acc + price * quantity;
   }, 0);
@@ -23,7 +23,6 @@ export const calculateOrderSummary = (
   // Handle shipping cost
   let shippingCost = 0;
   if (shipping) {
-    // Apply free shipping logic
     const threshold = shipping.freeThreshold || 0;
     shippingCost = subtotal >= threshold ? 0 : shipping.cost;
   }
@@ -31,9 +30,9 @@ export const calculateOrderSummary = (
   const total = subtotal + shippingCost;
 
   return {
-    subtotal: subtotal.toFixed(2),
-    total: total.toFixed(2),
-    shipping: shippingCost.toFixed(2),
+    subtotal,
+    total,
+    shipping: shippingCost,
     isFreeShipping: shippingCost === 0 && subtotal > 0,
   };
 };
@@ -43,10 +42,8 @@ export const calculateOrderSummary = (
  */
 export const getProductItem = (product: Product, quantity: number = 1): CartItem => {
   return {
+    product,
     productId: product.id,
-    mainImage: product.mainImage,
-    name: product.name,
-    price: product.price,
     quantity: Math.max(quantity || 1, 1), // Ensure minimum quantity of 1
   };
 };
@@ -74,46 +71,11 @@ export const updateCartItemQuantity = (
 };
 
 /**
- * Check if an object is a CartItem
- */
-const isCartItem = (item: any): item is CartItem => {
-  return (
-    item && 
-    typeof item === 'object' && 
-    'productId' in item && 
-    'quantity' in item &&
-    'name' in item &&
-    'price' in item &&
-    'mainImage' in item
-  );
-};
-
-/**
- * Convert CartItem to Product-like object for cart operations
- */
-const cartItemToProduct = (cartItem: CartItem): Product => {
-  return {
-    id: cartItem.productId,
-    name: cartItem.name,
-    mainImage: cartItem.mainImage,
-    price: cartItem.price,
-    // Add default values for required Product fields
-    category: '',
-    brand: '',
-    color: '',
-    material: '',
-    images: [cartItem.mainImage],
-    rating: 0,
-    numberOfRatings: 0,
-  };
-};
-
-/**
  * Add or update item in cart
  */
 export const addOrUpdateCartItem = (
   items: CartItem[],
-  product: Product | CartItem,
+  product: Product,
   quantity: number = 1
 ): CartItem[] => {
   // Validate input
@@ -122,24 +84,16 @@ export const addOrUpdateCartItem = (
     return items;
   }
 
-  // Convert CartItem to Product if needed
-  const productToAdd = isCartItem(product) ? cartItemToProduct(product) : product;
-  const quantityToAdd = isCartItem(product) ? product.quantity : quantity;
-  
-  const existingItemIndex = items.findIndex((item) => item.productId === productToAdd.id);
+  const existingItemIndex = items.findIndex((item) => item.productId === product.id);
 
   if (existingItemIndex >= 0) {
     // Update existing item by adding to the current quantity
     const updatedItems = [...items];
-    const existingItem = updatedItems[existingItemIndex];
-    updatedItems[existingItemIndex] = {
-      ...existingItem,
-      quantity: existingItem.quantity + quantityToAdd,
-    };
+    updatedItems[existingItemIndex].quantity = quantity;
     return updatedItems;
   } else {
     // Add new item
-    const newItem = getProductItem(productToAdd, quantityToAdd);
+    const newItem = getProductItem(product, quantity);
     return [...items, newItem];
   }
 };

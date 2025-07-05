@@ -31,10 +31,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({ items }) => {
               image={item.mainImage}
               name={item.name}
               price={item.price}
+              quantityInStock={item.quantityInStock}
               quantity={quantities[index]}
               onAmountChange={(val) => handleAmountChange(index, val)}
               id={item.productId}
-             onRemove={() => {}}/>
+              onRemove={() => {}}
+            />
             <Divider />
           </React.Fragment>
         ))}

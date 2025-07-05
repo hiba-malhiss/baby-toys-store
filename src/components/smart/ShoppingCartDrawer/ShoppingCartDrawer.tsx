@@ -28,7 +28,6 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
 
   // Use hook to format currency
   const formatCurrency = useCurrencyFormatter(currency?.symbol);
-
   // Calculate order summary
   const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
 
@@ -103,9 +102,10 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
             <CartItemCard
               fullWidth
               id={item.productId}
-              image={item.mainImage || ''}
-              name={item.name}
-              price={item.price}
+              image={item.product.mainImage || ''}
+              name={item.product.name}
+              price={item.product.price}
+              quantityInStock={item.product.quantityInStock}
               quantity={item.quantity}
               onAmountChange={(val) => handleAmountChange(item.productId, val)}
               onRemove={() => removeFromCart(item.productId)}
