@@ -1,6 +1,6 @@
 .checkoutPage {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns:max-content minmax(345px, 1fr);
   gap: 48px;
   margin: 0 auto;
   padding: 48px 0;
@@ -29,6 +29,7 @@
       margin-bottom: auto;
       max-height: 300px;
       overflow: auto;
+      width: 100%;
     }
 
     &-item {
