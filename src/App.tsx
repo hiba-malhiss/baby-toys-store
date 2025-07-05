@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage.tsx';
 import Layout from './components/layout/Layout/Layout.tsx';
+import ScrollToTop from './components/common/ScrollToTop.tsx';
 import './App.scss';
 import { BreadcrumbProvider } from './context/BreadcrumbContext.tsx';
 import ShopPage from './pages/ShopPage/ShopPage.tsx';
@@ -23,6 +24,7 @@ const App: React.FC = () => {
         <BreadcrumbProvider>
           <ToastProvider>
             <BrowserRouter>
+              <ScrollToTop />
               <Layout>
                 <Routes>
                   {/* Redirect root "/" to "/home" */}
