@@ -5,7 +5,6 @@ import CustomerFeedbacksSection from './CustomerFeedbacks/CustomerFeedbacksSecti
 import BannersSection from './BannersSection/BannersSection.tsx';
 import RecentPhotoShootsSection from './RecentPhotoShootsSection/RecentPhotoShootsSection.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
-import NewsletterSection from './NewsletterSection/NewsletterSection.tsx';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 const HomePage = () => {
@@ -19,7 +18,6 @@ const HomePage = () => {
         <CustomerFeedbacksSection />
         <RecentPhotoShootsSection />
         <PolicyCardsSection />
-        <NewsletterSection />
       </PageContainer>
     </>
   );
