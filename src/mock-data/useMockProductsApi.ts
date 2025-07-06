@@ -8,7 +8,7 @@ import {
   unifiedCategories,
 } from './home-page.ts';
 import { description } from './product-details-page.ts';
-import type { CartItem, Review, OrderItem, CartItemBE } from '../types/product.types.ts';
+import type { CartItem, Review, OrderItem, CartItemBE, Product } from '../types/product.types.ts';
 import {
   brandsRadioOptions,
   colorsRadioOptions,
@@ -16,7 +16,7 @@ import {
   materialsRadioOptions,
 } from './shop-page.ts';
 
-export const MOCK_API_DELAY_MS = 1000;
+export const MOCK_API_DELAY_MS = 600;
 
 // Helper to add delay to any promise
 const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
@@ -337,10 +337,6 @@ export function useMockProductsApi(pageSize?: number) {
       await delay(MOCK_API_DELAY_MS);
       return fullItems.find((item) => item.id === id);
     }, []),
-    getRelatedProducts: useCallback(async (productId: string, limit: number = 4) => {
-      await delay(MOCK_API_DELAY_MS);
-      return fullItems.filter((item) => item.id !== productId).slice(0, limit);
-    }, []),
     getTestimonials: useCallback(async () => {
       await delay(MOCK_API_DELAY_MS);
       return reviews;
@@ -586,5 +582,25 @@ export const getPolicies = async () => {
       content:
         'We offer standard and express shipping. Free shipping is available for orders over $150.',
     },
+  };
+};
+
+export const getRelatedProducts = async (productId: string, page = 1, pageSize = 6) => {
+  await delay(MOCK_API_DELAY_MS);
+
+  const related = toys.filter((item) => item.id !== productId);
+
+  const totalItems = related.length;
+  const totalPages = Math.ceil(totalItems / pageSize);
+  const currentPage = Math.min(Math.max(page, 1), totalPages);
+
+  const startIndex = (currentPage - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  return {
+    items: related.slice(startIndex, endIndex),
+    page: currentPage,
+    totalPages,
+    totalItems,
   };
 };

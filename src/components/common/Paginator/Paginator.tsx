@@ -75,10 +75,8 @@ export function Paginator({
   }, [totalPages, currentPage]);
 
   const handleShowMore = useCallback(() => {
-    if (currentPage < totalPages) {
-      setCurrentPage((prev) => prev + 1);
-    }
-  }, [currentPage, totalPages]);
+    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
+  }, [totalPages]);
 
   useEffect(() => {
     if (mode !== 'infinite-scroll' || !showMoreRef.current) return;

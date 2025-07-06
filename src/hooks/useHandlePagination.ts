@@ -66,7 +66,7 @@ export function useHandlePagination<T, F = any>(
     return () => {
       isMounted = false;
     };
-  }, [page, filters, mode]);
+  }, [page, filters]);
 
   const handlePaginationChange = useCallback(
     (newPage: number) => {
