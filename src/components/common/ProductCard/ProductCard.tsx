@@ -86,7 +86,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         leftIcon={faHeart}
         appearance={isHorizontal ? 'outline' : 'link'}
         color="icon"
-        size="xlarge"
+        size={isHorizontal ? 'large' : 'xlarge'}
         isSelected={isFavorite}
         isLoading={isLoadingFavorite}
         onClick={(e) => handleButtonClick(e, onToggleFavorite)}
@@ -96,7 +96,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Button
           leftIcon={faRightLeft}
           appearance="outline"
-          size="xlarge"
+          size="large"
           onClick={(e) => handleButtonClick(e, handleCopyUrl)}
         ></Button>
       )}
