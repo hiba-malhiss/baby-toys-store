@@ -81,7 +81,10 @@ const OrderHistoryPage: React.FC = () => {
 
       <AddReviewDialog
         open={!!reviewDialog}
-        onClose={() => setReviewDialog(null)}
+        onClose={() => {
+          console.log('close');
+          setReviewDialog(null);
+        }}
         cartItem={reviewDialog?.cartItem}
         orderId={reviewDialog?.orderId}
       />

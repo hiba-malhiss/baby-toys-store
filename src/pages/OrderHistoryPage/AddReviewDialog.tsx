@@ -61,7 +61,7 @@ const AddReviewDialog = ({
   if (!cartItem) return null;
 
   return (
-    <Dialog header="Add Review" visible={open} onClose={onClose} modal closable>
+    <Dialog header="Add Review" visible={open} onVisibleChange={onClose} modal closable>
       <Flex direction="vertical" spacing="xxl" fullWidth>
         <Flex>
           <img
