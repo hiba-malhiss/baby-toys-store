@@ -13,7 +13,7 @@ import { HOMEPAGE_TOP_PICKS_LIMIT } from '../../../constants/display.constants.t
 import { TOP_PICS_SORT_OPTIONS } from '../../../constants/filters.constants.ts';
 
 const TopPicksSection = () => {
-  const [selected, setSelected] = useState('featured');
+  const [selected, setSelected] = useState('');
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
