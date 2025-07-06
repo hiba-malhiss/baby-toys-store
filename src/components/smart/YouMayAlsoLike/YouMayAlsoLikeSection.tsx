@@ -12,15 +12,14 @@ interface YouMayAlsoLikeSectionProps {
 }
 
 const PAGE_SIZE = 8;
-const PAGE_NUMBER = 4;
 const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({
   mode = 'carousel',
   className,
 }) => {
-  const { fetchProducts } = useMockProductsApi(PAGE_NUMBER);
+  const { fetchProducts } = useMockProductsApi(PAGE_SIZE);
   const { items, totalSize, page, loading, handlePaginationChange, hasMore } = useHandlePagination(
     (page, filters) => fetchProducts(page, filters),
-    PAGE_NUMBER,
+    PAGE_SIZE,
     false,
     'infinite-scroll'
   );
