@@ -23,5 +23,12 @@ export function useShopFilterOptions() {
     fetchFilterOptions();
   }, []);
 
-  return { colors, brands, materials, priceRange, loading, defaultPriceRange };
+  return {
+    colors,
+    brands,
+    materials,
+    priceRange,
+    loading,
+    defaultPriceRange: defaultPriceRange || [1, 1000],
+  };
 }

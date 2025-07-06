@@ -6,26 +6,28 @@ import { mockFetchWishlist } from '../../mock-data/useMockProductsApi';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
-import { useOfflinePagination } from '../../hooks/useOfflinePagination';
 import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
-import YouMayAlsoLikeSection from '../ShopPage/YouMayAlsoLikeSection';
+import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import { useWishlistStore } from '../../store/useWishlistStore';
+import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 
 const LIST_PAGE_SIZE = 3;
 
 const WishListPage = () => {
   const { isLoggedIn } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
-  const pagination = useOfflinePagination(mockFetchWishlist, LIST_PAGE_SIZE);
-  const { page, totalSize, loading, setPage } = pagination;
+  const { items, page, totalSize, loading, handlePaginationChange } = useHandlePagination(
+    (page) => mockFetchWishlist(page, LIST_PAGE_SIZE),
+    LIST_PAGE_SIZE
+  );
   const { wishlist } = useWishlistStore();
-  const [localItems, setLocalItems] = useState(pagination.items);
+  const [localItems, setLocalItems] = useState(items);
 
   // Sync with pagination (initial load)
   useEffect(() => {
-    setLocalItems(pagination.items);
-  }, [pagination.items]);
-  console.log(wishlist);
+    setLocalItems(items);
+  }, [items]);
+
   // Sync with wishlist store live updates
   useEffect(() => {
     setLocalItems((prev) => {
@@ -72,7 +74,7 @@ const WishListPage = () => {
         page={page}
         pageSize={LIST_PAGE_SIZE}
         totalSize={totalSize}
-        onPaginationChange={setPage}
+        onPaginationChange={handlePaginationChange}
         staticView="flex"
         isLoading={loading}
       />

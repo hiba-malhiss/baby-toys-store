@@ -1,3 +1,5 @@
+import type { RadioOption } from '../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
+
 export const DEFAULT_SORT_OPTION = 'featured';
 
 export const SORT_OPTIONS = [
@@ -7,4 +9,10 @@ export const SORT_OPTIONS = [
   { label: 'Price: Low to High', value: 'price_asc' },
   { label: 'Price: High to Low', value: 'price_desc' },
   { label: 'Rating', value: 'rating' },
+];
+
+export const TOP_PICS_SORT_OPTIONS: RadioOption[] = [
+  { label: 'Featured', value: 'featured' },
+  { label: 'Best seller', value: 'best_seller' },
+  { label: 'New arrivals', value: 'new_arrivals' },
 ];

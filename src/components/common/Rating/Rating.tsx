@@ -7,7 +7,7 @@ import type { IconSize } from '../Icon/icon.constant.ts';
 
 type RatingProps = {
   value: number;
-  size: IconSize;
+  size?: IconSize;
   max?: number;
   className?: string;
   onChange?: (value: number) => void;

@@ -1,45 +1,73 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
 import FieldWrapper from '../../components/common/FieldWrapper/FieldWrapper';
 import { StringInput } from '../../components/common/StringInput/StringInput';
 import { Button } from '../../components/common/Button/Button';
 import Flex from '../../components/common/Flex/Flex';
-import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPhone,
+  faEnvelope,
+  faMapMarkerAlt,
+  faClock,
+  faCalendarAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import styles from './contact-us-page.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../components/common/Toast/ToastContext.tsx';
-import { mockSendContactMessage } from '../../mock-data/useMockProductsApi.ts';
+import {
+  mockFetchContactInfo,
+  mockSendContactMessage,
+} from '../../mock-data/useMockProductsApi.ts';
 import Heading from '../../components/common/Heading/Heading.tsx';
 import InfoCard from '../../components/common/InfoCard/InfoCard.tsx';
 import { TextArea } from '../../components/common/TextArea/TextArea.tsx';
 
-const CONTACT_INFO = [
-  {
+// Mapping config by ID
+const contactInfoConfig: Record<string, { icon: any; appearance: string }> = {
+  'work-days': {
+    icon: faCalendarAlt,
+    appearance: 'secondary',
+  },
+  'work-times': {
+    icon: faClock,
+    appearance: 'secondary',
+  },
+  phone: {
     icon: faPhone,
-    title: 'Phone',
-    content: '+1 234 567 8900',
     appearance: 'primary',
   },
-  {
+  email: {
     icon: faEnvelope,
-    title: 'Email',
-    content: 'support@toystore.com',
     appearance: 'primary',
   },
-  {
+  address: {
     icon: faMapMarkerAlt,
-    title: 'Address',
-    content: '123 Toy Lane, Playtown, USA',
     appearance: 'primary',
   },
-];
+};
 
 const ContactUsPage: React.FC = () => {
   const [form, setForm] = useState({ name: '', email: '', message: '', phone: '' });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [sending, setSending] = useState(false);
+  const [contactInfo, setContactInfo] = useState<any[]>([]);
+
   const toast = useToast();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    mockFetchContactInfo().then((data) => {
+      const enriched = data.map((item) => {
+        const config = contactInfoConfig[item.id] || {};
+        return {
+          ...item,
+          icon: config.icon,
+          appearance: config.appearance,
+        };
+      });
+      setContactInfo(enriched);
+    });
+  }, []);
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -76,8 +104,8 @@ const ContactUsPage: React.FC = () => {
   return (
     <PageContainer header="Contact">
       <Flex spacing="xxl" fullWidth>
-        {CONTACT_INFO.map((item) => (
-          <InfoCard key={item.title} card={item} size="medium" fullWidth />
+        {contactInfo.map((item) => (
+          <InfoCard key={item.id} card={item} size="medium" fullWidth />
         ))}
       </Flex>
       <div className={styles.contactUsPage}>

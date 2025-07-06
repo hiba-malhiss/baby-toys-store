@@ -48,7 +48,12 @@ export interface OrderItem {
   shippingInfo: ShippingInfo;
 }
 
-export type OrderPayload = Omit<OrderItem, 'id' | 'email' | 'date' | 'subtotal'>;
+export interface OrderPayload {
+  cartItems: CartItem[];
+  shippingCost: number;
+  total: number;
+  shippingInfo: ShippingInfo;
+}
 
 export interface ShippingInfo {
   country: string;
@@ -67,6 +72,7 @@ export interface Review {
   comment: string;
   date?: string;
   orderId?: string;
+  productId?: string;
 }
 
 export type InfoCardType = {

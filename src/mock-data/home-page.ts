@@ -63,13 +63,6 @@ export const infoCards: InfoCardType[] = [
   },
 ];
 
-// same as SortOptions values
-export const topPicksRadioOptions: RadioOption[] = [
-  { label: 'Featured', value: 'featured' },
-  { label: 'Best seller', value: 'best_seller' },
-  { label: 'New arrivals', value: 'new_arrivals' },
-];
-
 export interface UnifiedCategory {
   label: string;
   value: string;

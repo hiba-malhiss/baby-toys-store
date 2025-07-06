@@ -1,12 +1,6 @@
 import { useCallback } from 'react';
 import { toys } from './toy-card-list.ts';
-import {
-  reviews,
-  infoCards,
-  photoShoots,
-  topPicksRadioOptions,
-  unifiedCategories,
-} from './home-page.ts';
+import { reviews, infoCards, photoShoots, unifiedCategories } from './home-page.ts';
 import { description } from './product-details-page.ts';
 import type { CartItem, Review, OrderItem, CartItemBE, Product } from '../types/product.types.ts';
 import {
@@ -341,16 +335,15 @@ export function useMockProductsApi(pageSize?: number) {
       await delay(MOCK_API_DELAY_MS);
       return reviews;
     }, []),
-    getHomepageContent: useCallback(async (currencySymbol?: string) => {
+    getHomepageContent: useCallback(async () => {
       await delay(MOCK_API_DELAY_MS);
       const dynamicCards = infoCards.map((card) =>
-        card.title === 'Free Shipping' && currencySymbol
-          ? { ...card, content: `Free shipping for 150${currencySymbol} and up` }
+        card.title === 'Free Shipping'
+          ? { ...card, content: `Free shipping for 150$ and up` }
           : card
       );
       return {
         photoShoots,
-        topPicksOptions: topPicksRadioOptions,
         infoCards: dynamicCards,
         banners: [
           'Discover the Joy of Play',
@@ -372,7 +365,7 @@ export function useMockProductsApi(pageSize?: number) {
       return {
         cost: 0,
         freeThreshold: 150,
-        message: 'Free shipping with over $150',
+        headerMessage: 'Free shipping with over $150',
       };
     }, []),
     globalSearch: useCallback(async () => {
@@ -504,16 +497,12 @@ interface ProductReview extends Review {
 
 const REVIEWS_STORAGE_KEY = 'mock-product-reviews';
 
-export const mockAddProductReview = async (
-  userEmail: string,
-  productId: string,
-  review: Review
-) => {
+export const mockAddProductReview = async (userEmail: string, review: Review) => {
   await delay(MOCK_API_DELAY_MS);
 
   const stored = localStorage.getItem(REVIEWS_STORAGE_KEY);
   const allReviews: ProductReview[] = stored ? JSON.parse(stored) : [];
-
+  const productId = review.productId;
   const newReview: ProductReview = {
     id: `${productId}-${userEmail}-${Date.now()}`,
     productId,
@@ -603,4 +592,41 @@ export const getRelatedProducts = async (productId: string, page = 1, pageSize =
     totalPages,
     totalItems,
   };
+};
+
+export const mockFetchContactInfo = (): Promise<{
+  contactDetails: {
+    iconName: string;
+    title: string;
+    content: string;
+    appearance: string;
+  }[];
+}> => {
+  return Promise.resolve([
+    {
+      title: 'Work days',
+      content: 'Monday to Friday',
+      id: 'work-days',
+    },
+    {
+      title: 'Work times',
+      content: '10am - 6pm (Palestine time)',
+      id: 'work-times',
+    },
+    {
+      title: 'Phone',
+      content: '+1 234 567 8900',
+      id: 'phone',
+    },
+    {
+      title: 'Email',
+      content: 'support@toystore.com',
+      id: 'email',
+    },
+    {
+      title: 'Address',
+      content: '123 Toy Lane, Playtown, USA',
+      id: 'address',
+    },
+  ]);
 };

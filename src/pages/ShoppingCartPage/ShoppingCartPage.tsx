@@ -8,10 +8,10 @@ import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Card from '../../components/common/Card/Card.tsx';
 import { NoDataFound } from '../../components/common/NoDataFound';
 import { useNavigate } from 'react-router-dom';
-import { TotalAmountSection } from '../../components/smart/OrderSummary/TotalAmountSection.tsx';
+import { TotalAmountSection } from '../../components/smart/TotalAmount/TotalAmountSection.tsx';
 import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
-import YouMayAlsoLikeSection from '../ShopPage/YouMayAlsoLikeSection.tsx';
+import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();

@@ -4,6 +4,9 @@ import { StringInput } from '../../common/StringInput/StringInput.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import Dialog from '../../common/Dialog/Dialog.tsx';
 import { useToast } from '../../common/Toast/ToastContext.tsx';
+import Flex from '../../common/Flex/Flex.tsx';
+import { isValidPassword, isValidEmail } from '../../../util/validation.utils.ts';
+import FieldWrapper from '../../common/FieldWrapper/FieldWrapper.tsx';
 
 interface LoginDialogProps {
   open: boolean;
@@ -12,19 +15,52 @@ interface LoginDialogProps {
 
 const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
   const { login } = useAuth();
+  const toast = useToast();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const toast = useToast();
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
+  const resetForm = () => {
+    setEmail('');
+    setPassword('');
     setError('');
+    setEmailError('');
+    setPasswordError('');
+    setLoading(false);
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
+  };
+
+  const handleSubmit = async () => {
+    setError('');
+    setEmailError('');
+    setPasswordError('');
+
+    let valid = true;
+
+    if (!isValidEmail(email)) {
+      setEmailError('Please enter a valid email address');
+      valid = false;
+    }
+
+    if (!isValidPassword(password)) {
+      setPasswordError('Password must be at least 6 characters');
+      valid = false;
+    }
+
+    if (!valid) return;
+
+    setLoading(true);
     try {
       await login(email, password);
-      onClose();
+      handleClose();
     } catch (err: any) {
       toast.error(err.message || 'Login failed');
       setError(err.message || 'Login failed');
@@ -36,9 +72,9 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
   return (
     <Dialog
       visible={open}
-      onHide={onClose}
+      onHide={handleClose}
       onVisibleChange={(val: boolean) => {
-        if (!val) onClose();
+        if (!val) handleClose();
       }}
       header="Login"
       closable
@@ -46,28 +82,39 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
       focusOnShow
       dismissableMask
     >
-      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        <StringInput
-          value={email}
-          onChange={setEmail}
-          placeholder="Email"
-          fullWidth
-          type="text"
-          required
-        />
-        <StringInput
-          value={password}
-          onChange={setPassword}
-          placeholder="Password"
-          fullWidth
-          type="password"
-          required
-        />
-        {error && <div style={{ color: 'red', fontSize: 14, marginTop: 4 }}>{error}</div>}
-        <Button fullWidth isDisabled={loading}>
+      <Flex direction="vertical" spacing="m" fullWidth>
+        <FieldWrapper label="Email" error={emailError} fullWidth required>
+          <StringInput
+            value={email}
+            onChange={(val) => {
+              setEmail(val);
+              setEmailError('');
+            }}
+            placeholder="Email"
+            fullWidth
+            type="text"
+          />
+        </FieldWrapper>
+
+        <FieldWrapper label="Password" error={passwordError} fullWidth required>
+          <StringInput
+            value={password}
+            onChange={(val) => {
+              setPassword(val);
+              setPasswordError('');
+            }}
+            placeholder="Password"
+            fullWidth
+            type="password"
+          />
+        </FieldWrapper>
+
+        {error && <div className="bts-errorMessage">{error}</div>}
+
+        <Button fullWidth isDisabled={loading} onClick={handleSubmit}>
           {loading ? 'Logging in…' : 'Login'}
         </Button>
-      </form>
+      </Flex>
     </Dialog>
   );
 };

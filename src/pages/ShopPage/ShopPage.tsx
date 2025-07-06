@@ -7,11 +7,11 @@ import { SideFilters } from './SideFilters/SideFilters.tsx';
 import { getProductCategories, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants.ts';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
-import YouMayAlsoLikeSection from './YouMayAlsoLikeSection.tsx';
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
 import { SortProductsWithUrl } from './SortProductsWithUrl.tsx';
 import Flex from '../../components/common/Flex/Flex.tsx';
 import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants.ts';
+import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
@@ -69,7 +69,7 @@ const ShopPage = () => {
         }
       />
 
-      <YouMayAlsoLikeSection mode="carousel" />
+      <YouMayAlsoLikeSection mode="carousel" className={styles.shopPageYouMayAlsoLike} />
     </PageContainer>
   );
 };

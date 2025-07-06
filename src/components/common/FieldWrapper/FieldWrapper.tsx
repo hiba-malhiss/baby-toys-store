@@ -7,6 +7,7 @@ interface FieldWrapperProps {
   children: React.ReactNode;
   className?: string;
   fullWidth?: boolean;
+  required?: boolean;
 }
 
 const FieldWrapper: React.FC<FieldWrapperProps> = ({
@@ -15,8 +16,11 @@ const FieldWrapper: React.FC<FieldWrapperProps> = ({
   children,
   className,
   fullWidth,
+  required,
 }) => (
-  <div className={`${styles.fieldWrapper} ${className || ''} ${fullWidth && styles.fullWidth}`}>
+  <div
+    className={`${styles.fieldWrapper} ${className || ''} ${fullWidth && styles.fullWidth} ${required && styles.isRequired}`}
+  >
     <label className={styles.fieldWrapperLabel}>{label}</label>
     {children}
     {error && <div className={styles.fieldWrapperErrorMessage}>{error}</div>}

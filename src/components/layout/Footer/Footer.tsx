@@ -1,12 +1,21 @@
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
 import { Button } from '../../common/Button/Button.tsx';
-import { customerServiceInfo, exploreLinks, socialMediaLinks } from './footer.constants.ts';
+import { footerInfoConfig, exploreLinks, socialMediaLinks } from './footer.constants.ts';
 import Flex from '../../common/Flex/Flex.tsx';
 import Heading from '../../common/Heading/Heading.tsx';
+import { mockFetchContactInfo } from '../../../mock-data/useMockProductsApi.ts';
 
 const Footer = () => {
   const navigate = useNavigate();
+  const [footerInfo, setFooterInfo] = useState<any[]>([]);
+
+  useEffect(() => {
+    mockFetchContactInfo().then((data) => {
+      setFooterInfo(data);
+    });
+  }, []);
 
   return (
     <footer className={styles.footer}>
@@ -52,26 +61,28 @@ const Footer = () => {
         <Heading level="h3" className={styles.footerSectionHeader}>
           Customer Service
         </Heading>
-        <Flex direction="vertical" spacing="s">
-          {customerServiceInfo.map((item, index) =>
-            typeof item === 'string' ? (
-              <p key={index}>{item}</p>
-            ) : (
-              <p key={index}>
-                {item.label}{' '}
-                <Button
-                  key={item.label}
-                  withoutPadding
-                  size="small"
-                  appearance="link"
-                  color="highlighted"
-                  onClick={() => {}}
-                >
-                  {item.value}
-                </Button>
-              </p>
-            )
-          )}
+        <Flex direction="vertical" spacing="s" justify="center">
+          {footerInfo.map((item) => {
+            const config = footerInfoConfig[item.id] || {};
+            if (config.isLink && config.label) {
+              return (
+                <p key={item.id}>
+                  {config.label}{' '}
+                  <Button
+                    withoutPadding
+                    size="small"
+                    appearance="link"
+                    color={config.appearance || 'highlighted'}
+                    onClick={() => window.open(config.link, '_blank')}
+                  >
+                    {item.content}
+                  </Button>
+                </p>
+              );
+            }
+
+            return <p key={item.id}>{item.content}</p>;
+          })}
         </Flex>
       </Flex>
     </footer>

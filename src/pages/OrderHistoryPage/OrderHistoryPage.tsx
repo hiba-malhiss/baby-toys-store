@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
-import BouncingDotsLoader from '../../components/common/BouncingDotsLoader/BouncingDotsLoader';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
 import OrderProductCard from './OrderProductCard/OrderProductCard';
 import AddReviewDialog from './AddReviewDialog';
@@ -10,11 +9,11 @@ import { useCartStore } from '../../store/useCartStore';
 import { useToast } from '../../components/common/Toast/ToastContext';
 import { useHandlePagination } from '../../hooks/useHandlePagination';
 import { mockFetchOrdersHistory } from '../../mock-data/useMockProductsApi';
-import { SHOP_PAGE_SIZE } from '../../constants/display.constants';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { NoDataFound } from '../../components/common/NoDataFound.tsx';
 import type { CartItem } from '../../types/product.types.ts';
 
+const PAGE_SIZE = 2;
 const OrderHistoryPage: React.FC = () => {
   const { user, isLoggedIn } = useAuth();
   const navigate = useNavigate();
@@ -35,17 +34,14 @@ const OrderHistoryPage: React.FC = () => {
 
   const fetchOrderProducts = useCallback(
     async (page: number) => {
-      if (!isLoggedIn || !user) {
-        return { items: [], page: 1, totalPages: 1, totalItems: 0 };
-      }
-      return await mockFetchOrdersHistory(user.email, page, SHOP_PAGE_SIZE);
+      return await mockFetchOrdersHistory(user.email, page, PAGE_SIZE);
     },
     [isLoggedIn, user]
   );
 
   const { items, page, totalSize, loading, handlePaginationChange } = useHandlePagination(
     fetchOrderProducts,
-    SHOP_PAGE_SIZE,
+    PAGE_SIZE,
     false,
     'default'
   );
@@ -57,9 +53,7 @@ const OrderHistoryPage: React.FC = () => {
 
   return (
     <PageContainer header="Order History">
-      {loading && page === 1 ? (
-        <BouncingDotsLoader />
-      ) : items.length === 0 ? (
+      {!loading && items.length === 0 ? (
         <NoDataFound
           icon={faBoxOpen}
           message="No orders found."
@@ -77,7 +71,7 @@ const OrderHistoryPage: React.FC = () => {
             />
           ))}
           page={page}
-          pageSize={SHOP_PAGE_SIZE}
+          pageSize={PAGE_SIZE}
           totalSize={totalSize}
           onPaginationChange={handlePaginationChange}
           staticView="flex"
@@ -88,7 +82,7 @@ const OrderHistoryPage: React.FC = () => {
       <AddReviewDialog
         open={!!reviewDialog}
         onClose={() => setReviewDialog(null)}
-        product={reviewDialog?.cartItem}
+        cartItem={reviewDialog?.cartItem}
         orderId={reviewDialog?.orderId}
       />
     </PageContainer>

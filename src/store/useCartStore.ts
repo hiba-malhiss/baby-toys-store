@@ -18,7 +18,6 @@ interface CartState {
   setCartItems: (items: CartItem[]) => void;
   openShippingCartDrawer: () => void;
   closeShippingCartDrawer: () => void;
-  hasProduct: (productId: string) => boolean;
 }
 
 export const useCartStore = create<CartState>()(
@@ -72,10 +71,6 @@ export const useCartStore = create<CartState>()(
 
       openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
       closeShippingCartDrawer: () => set({ isShippingCartDrawerOpen: false }),
-
-      hasProduct: (productId) => {
-        return get().cartItems.some((item) => item.productId === productId);
-      },
     }),
     {
       name: 'cart-storage-store',

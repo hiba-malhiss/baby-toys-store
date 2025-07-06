@@ -14,9 +14,23 @@ export const socialMediaLinks = [
   { icon: faInstagram, url: '' },
 ];
 
-export const customerServiceInfo = [
-  'Monday to Friday',
-  '10am - 6pm (Palestine time)',
-  { label: 'Call us:', value: '123-456-7868', link: 'tel:1234567868' },
-  { label: 'Email us:', value: 'info@example.com', link: 'mailto:info@example.com' },
-];
+// UI config for each ID
+export const footerInfoConfig: Record<
+  string,
+  { label?: string; isLink?: boolean; appearance?: string; link?: string }
+> = {
+  'work-days': {},
+  'work-times': {},
+  phone: {
+    label: 'Call us: ',
+    isLink: true,
+    link: 'tel:1234567868',
+    appearance: 'highlighted',
+  },
+  email: {
+    label: 'Email us: ',
+    isLink: true,
+    link: 'mailto:info@example.com',
+    appearance: 'highlighted',
+  },
+};

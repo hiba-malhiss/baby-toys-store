@@ -13,7 +13,7 @@ const PoliciesPage: React.FC = () => {
   > | null>({});
   const [loading, setLoading] = useState(true);
   const [searchParams, setSearchParams] = useSearchParams();
-  const selected = searchParams.get('section');
+  const selectedPolicy = searchParams.get('section');
 
   useEffect(() => {
     getPolicies().then((data) => {
@@ -34,8 +34,8 @@ const PoliciesPage: React.FC = () => {
           <Accordion
             key={key}
             header={<Heading level="h4">{policy.title}</Heading>}
-            isOpen={selected === key}
-            defaultOpen={selected === key}
+            isOpen={selectedPolicy === key}
+            defaultOpen={selectedPolicy === key}
             iconPosition="left"
           >
             {policy.content}

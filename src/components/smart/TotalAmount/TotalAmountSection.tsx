@@ -1,5 +1,5 @@
 import React from 'react';
-import styles from './order-summary.module.scss';
+import styles from './total-amount.module.scss';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
 import clsx from 'clsx';
 import Flex from '../../common/Flex/Flex.tsx';

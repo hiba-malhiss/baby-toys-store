@@ -15,7 +15,7 @@ const ProductDetailsPage: React.FC = () => {
   const { setExtraCrumbs } = useBreadcrumb();
   const [product, setProduct] = useState<Product | undefined>();
 
-  const { getProductById } = useMockProductsApi<Product>(PRODUCT_RELATED_PRODUCTS_LIMIT);
+  const { getProductById } = useMockProductsApi(PRODUCT_RELATED_PRODUCTS_LIMIT);
 
   useEffect(() => {
     if (!id || product?.id === id) return;

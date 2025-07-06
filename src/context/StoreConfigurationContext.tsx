@@ -9,6 +9,7 @@ export interface CurrencySettings {
 export interface ShippingSettings {
   cost: number;
   freeThreshold: number;
+  headerMessage: string;
 }
 
 export interface StoreConfiguration {

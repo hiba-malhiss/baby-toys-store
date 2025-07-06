@@ -1,21 +1,23 @@
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useHandlePagination } from '../../../hooks/useHandlePagination.ts';
 import React from 'react';
-import Section from '../../components/layout/Section/Section';
-import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard';
-import Carousel from '../../components/common/Carousel/Carousel';
-import styles from './shop-page.module.scss';
-import type { Product } from '../../types/product.types';
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi';
-import { SHOP_PAGE_SIZE } from '../../constants/display.constants';
-import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
+import Section from '../../layout/Section/Section.tsx';
+import Carousel from '../../common/Carousel/Carousel.tsx';
+import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
+import { ViewSwitcher } from '../../common/ViewSwitcher/ViewSwitcher.tsx';
 
 interface YouMayAlsoLikeSectionProps {
   mode?: 'carousel' | 'flex';
+  className?: string;
 }
 
+const PAGE_SIZE = 8;
 const PAGE_NUMBER = 4;
-const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({ mode = 'carousel' }) => {
-  const { fetchProducts } = useMockProductsApi<Product>(PAGE_NUMBER);
+const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({
+  mode = 'carousel',
+  className,
+}) => {
+  const { fetchProducts } = useMockProductsApi(PAGE_NUMBER);
   const { items, totalSize, page, loading, handlePaginationChange, hasMore } = useHandlePagination(
     (page, filters) => fetchProducts(page, filters),
     PAGE_NUMBER,
@@ -24,11 +26,7 @@ const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({ mode = 'c
   );
 
   return (
-    <Section
-      title="You May Also Like"
-      className={styles.shopPageRelatedProducts}
-      isLoading={loading && page === 1}
-    >
+    <Section title="You May Also Like" className={className} isLoading={loading && page === 1}>
       {mode === 'carousel' ? (
         <Carousel
           className="bts-marginTxxxxl"
@@ -53,7 +51,7 @@ const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({ mode = 'c
           ))}
           className="bts-marginTxxxxl"
           page={page}
-          pageSize={SHOP_PAGE_SIZE}
+          pageSize={PAGE_SIZE}
           totalSize={totalSize}
           onPaginationChange={handlePaginationChange}
           staticView="flex"

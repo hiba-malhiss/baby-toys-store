@@ -46,7 +46,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
     brand: undefined,
     color: undefined,
     material: undefined,
-    priceRange: defaultPriceRange ?? [0, 1000],
+    priceRange: defaultPriceRange,
   };
 
   const { urlFilters, updateUrlFilters } = useUrlFilters<ShopFilters>(
@@ -78,7 +78,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
   const removeFilter = (key: keyof ShopFilters) => {
     if (key === 'priceRange') {
-      handleFilterChange(key, defaultPriceRange ?? [0, 1000]);
+      handleFilterChange(key, defaultPriceRange);
     } else {
       handleFilterChange(key, undefined);
     }
@@ -203,11 +203,11 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
         <Accordion header="Price" withoutPadding>
           <Slider
-            min={priceRange ? priceRange[0] : 0}
-            max={priceRange ? priceRange[1] : 1000}
+            min={priceRange?.[0]}
+            max={priceRange?.[1]}
             step={1}
             range
-            value={urlFilters.priceRange || (defaultPriceRange ?? [0, 1000])}
+            value={urlFilters.priceRange || defaultPriceRange}
             className="bts-marginTxl"
             onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
           />

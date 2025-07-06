@@ -7,22 +7,12 @@ import { Alert } from '../../common/Alert/Alert.tsx';
 const FlashSaleBanner: React.FC = () => {
   const { getFlashSale } = useMockProductsApi();
   const [flashSale, setFlashSale] = useState<any>(null);
-  const [flashSaleEnd, setFlashSaleEnd] = useState<string | null>(null);
-  const [flashSaleTitle, setFlashSaleTitle] = useState('');
-  const [flashSaleMessage, setFlashSaleMessage] = useState('');
-  const [flashSaleIcon, setFlashSaleIcon] = useState(faBolt);
 
   useEffect(() => {
-    getFlashSale().then((data) => {
-      setFlashSale(data);
-      setFlashSaleEnd(data.endTime);
-      setFlashSaleTitle(data.title);
-      setFlashSaleMessage(data.message);
-      setFlashSaleIcon(faBolt);
-    });
+    getFlashSale().then(setFlashSale);
   }, [getFlashSale]);
 
-  const countdown = useCountdown(flashSaleEnd ? new Date(flashSaleEnd) : new Date());
+  const countdown = useCountdown(flashSale?.endTime ? new Date(flashSale.endTime) : new Date());
 
   if (!flashSale || countdown.isExpired) return null;
 
@@ -30,9 +20,9 @@ const FlashSaleBanner: React.FC = () => {
     <Alert
       appearance="flash-sale"
       size="small"
-      title={flashSaleTitle}
-      message={flashSaleMessage}
-      icon={flashSaleIcon}
+      title={flashSale.title}
+      message={flashSale.message}
+      icon={faBolt}
       countdown={formatCountdown(countdown)}
       closable={false}
       isAnimated

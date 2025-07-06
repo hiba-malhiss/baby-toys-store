@@ -14,14 +14,14 @@ interface AddReviewDialogProps {
   open: boolean;
   orderId: string;
   onClose: () => void;
-  product?: CartItem | null;
+  cartItem?: CartItem | null;
   onSubmitSuccess?: (reviewData: { rating: number; comment: string }) => void;
 }
 
 const AddReviewDialog = ({
   open,
   onClose,
-  product,
+  cartItem,
   onSubmitSuccess,
   orderId,
 }: AddReviewDialogProps) => {
@@ -34,16 +34,17 @@ const AddReviewDialog = ({
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!isValid || !product) return;
+    if (!isValid || !cartItem) return;
 
     setSubmitting(true);
     try {
-      await mockAddProductReview(user?.email, product.productId, {
+      await mockAddProductReview(user?.email, {
         rating: review.rating,
         comment: review.comment,
         name: user?.name,
         avatarUrl: user.avatarUrl || '',
         orderId,
+        productId: cartItem.productId,
       });
 
       toast.success('Review submitted!');
@@ -57,19 +58,19 @@ const AddReviewDialog = ({
     }
   };
 
-  if (!product) return null;
+  if (!cartItem) return null;
 
   return (
     <Dialog header="Add Review" visible={open} onClose={onClose} modal closable>
       <Flex direction="vertical" spacing="xxl" fullWidth>
         <Flex>
           <img
-            src={product.product.mainImage}
-            alt={product.product.name}
+            src={cartItem.product.mainImage}
+            alt={cartItem.product.name}
             style={{ width: 100, height: 100, objectFit: 'cover', borderRadius: 12 }}
           />
           <Heading level="h4" className="bts-marginVxl">
-            {product?.product.name}
+            {cartItem?.product.name}
           </Heading>
         </Flex>
 

@@ -16,7 +16,7 @@ import { StringInput } from '../../../components/common/StringInput/StringInput.
 import { useCartStore } from '../../../store/useCartStore';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
-import { useWishlist } from '../../../hooks/useWishlist.ts'; // <-- import hook
+import { useWishlist } from '../../../hooks/useWishlist.ts';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);

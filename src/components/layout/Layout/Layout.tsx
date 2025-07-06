@@ -23,10 +23,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       <Toast />
       <FlashSaleBanner />
       <Flex direction="vertical" spacing="xxl" className={styles.layout}>
-        <div style={{ width: '100%' }}>
+        <Flex direction="vertical" fullWidth>
           <Header />
           {children}
-        </div>
+        </Flex>
         <Footer />
         <ShoppingCartDrawer
           isOpen={isShippingCartDrawerOpen}

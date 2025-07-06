@@ -113,7 +113,7 @@ export const StringInput: React.FC<StringInputProps> = ({
   );
 
   return (
-    <div className={clsx(className)}>
+    <div className={clsx(className, fullWidth && styles.fullWidth)}>
       <div className={containerClass}>
         {type === 'number' && withControls && (
           <Button

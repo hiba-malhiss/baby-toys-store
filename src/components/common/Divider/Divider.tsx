@@ -5,6 +5,7 @@ import styles from './divider.module.scss';
 interface DividerProps {
   className?: string;
   thickness?: string;
+  fullWidth?: boolean;
 }
 
 export const Divider: React.FC<DividerProps> = ({ className, thickness = '1px', fullWidth }) => {

@@ -10,31 +10,15 @@ import type { Product } from '../../../types/product.types.ts';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 
 import { HOMEPAGE_TOP_PICKS_LIMIT } from '../../../constants/display.constants.ts';
+import { TOP_PICS_SORT_OPTIONS } from '../../../constants/filters.constants.ts';
 
 const TopPicksSection = () => {
-  const [topPicksOptions, setTopPicksOptions] = useState([]);
   const [selected, setSelected] = useState('');
   const [items, setItems] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
-  const [optionsLoading, setOptionsLoading] = useState(true);
   const navigate = useNavigate();
 
-  const { fetchProducts, getHomepageContent } =
-    useMockProductsApi<Product>(HOMEPAGE_TOP_PICKS_LIMIT);
-
-  useEffect(() => {
-    getHomepageContent()
-      .then(({ topPicksOptions }) => {
-        setTopPicksOptions(topPicksOptions);
-        setSelected(topPicksOptions[0]?.value || '');
-      })
-      .catch((error) => {
-        console.error('Error fetching homepage content:', error);
-      })
-      .finally(() => {
-        setOptionsLoading(false);
-      });
-  }, [getHomepageContent]);
+  const { fetchProducts } = useMockProductsApi(HOMEPAGE_TOP_PICKS_LIMIT);
 
   useEffect(() => {
     if (!selected) return;
@@ -62,10 +46,10 @@ const TopPicksSection = () => {
   }, [navigate, selected]);
 
   return (
-    <Section title="Top picks for your little ones" isLoading={optionsLoading || loading}>
+    <Section title="Top picks for your little ones" isLoading={loading}>
       <RadioButtonGroup
         className={styles.topPicks}
-        options={topPicksOptions}
+        options={TOP_PICS_SORT_OPTIONS}
         selectedValue={selected}
         name="topPicks"
         onChange={handleSortChange}
@@ -78,7 +62,7 @@ const TopPicksSection = () => {
       </div>
       <Flex justify="center" className="bts-marginTxxxl">
         <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>
-          View All {topPicksOptions.find((opt) => opt.value === selected)?.label}
+          View All {TOP_PICS_SORT_OPTIONS.find((opt) => opt.value === selected)?.label}
         </Button>
       </Flex>
     </Section>

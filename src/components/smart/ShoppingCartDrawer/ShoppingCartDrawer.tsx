@@ -6,7 +6,6 @@ import CartItemCard from '../../common/CartItemCard/CartItemCard.tsx';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Button } from '../../common/Button/Button.tsx';
 import { calculateOrderSummary } from '../../../util/order.utils.ts';
-import { formatQuantity } from '../../../util/format.utils.ts';
 import { useCartStore } from '../../../store/useCartStore';
 import { useNavigate } from 'react-router-dom';
 import { NoDataFound } from '../../common/NoDataFound';
@@ -14,7 +13,7 @@ import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import styles from './shopping-cart-drawer.module.scss';
 import BouncingDotsLoader from '../../common/BouncingDotsLoader/BouncingDotsLoader';
-import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter'; // <-- import hook
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -25,14 +24,10 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer } = useCartStore();
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
-
-  // Use hook to format currency
   const formatCurrency = useCurrencyFormatter(currency?.symbol);
-  // Calculate order summary
   const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
 
-  const handleAmountChange = (productId: string, newVal: string) => {
-    const newQuantity = formatQuantity(newVal);
+  const handleAmountChange = (productId: string, newQuantity: number) => {
     updateQuantity(productId, newQuantity);
   };
 
@@ -47,9 +42,8 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   };
 
   const handleContinueShopping = () => {
-    closeShippingCartDrawer();
     navigate('/shop');
-    setIsOpen(false);
+    handleClose();
   };
 
   if (isLoadingConfigs || !currency || !shipping) {

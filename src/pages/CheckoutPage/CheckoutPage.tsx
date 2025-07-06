@@ -18,7 +18,7 @@ import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import { useAuth } from '../../context/AuthContext.tsx';
 import { Alert } from '../../components/common/Alert/Alert.tsx';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import type { OrderItem, OrderPayload } from '../../types/product.types.ts';
+import type { OrderPayload } from '../../types/product.types.ts';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 

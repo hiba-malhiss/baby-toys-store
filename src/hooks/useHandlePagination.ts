@@ -14,7 +14,7 @@ type FetchFunction<T, F> = (
 export function useHandlePagination<T, F = any>(
   fetchFunction: FetchFunction<T, F>,
   pageSize: number,
-  hasFilters: boolean,
+  hasFilters?: boolean,
   mode: 'default' | 'show-more' | 'infinite-scroll' = 'default'
 ) {
   const [page, setPage] = useState(1);

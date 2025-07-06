@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import styles from './header.module.scss';
 import { faHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { IconColor } from '../../common/Icon/icon.constant';
 import Flex from '../../common/Flex/Flex.tsx';
 import { Icon } from '../../common/Icon/Icon.tsx';
 import { CartButton } from '../../common/CartButton/CartButton.tsx';
@@ -47,8 +48,8 @@ const Header = () => {
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
         <Flex spacing="m" className={styles.headerFreeChipping}>
-          <Icon icon={faTruckFast} color="light" />
-          <span>{shipping?.message}</span>
+          <Icon icon={faTruckFast} color={IconColor.light} />
+          <span>{shipping?.headerMessage}</span>
         </Flex>
         <Flex spacing="xxxxl">
           {isLoggedIn && (
