@@ -99,7 +99,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               image={item.product.mainImage || ''}
               name={item.product.name}
               price={item.product.price}
-              quantityInStock={item.product.quantityInStock}
+              quantityInStock={item.product.availableInStock}
               quantity={item.quantity}
               onAmountChange={(val) => handleAmountChange(item.productId, val)}
               onRemove={() => removeFromCart(item.productId)}

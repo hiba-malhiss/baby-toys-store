@@ -49,7 +49,7 @@ const generateRandomToys = (count = 19): Product[] => {
   return Array.from({ length: count }, (_, index) => {
     // Use index as seed for consistent results
     const seed = index + 1;
-    
+
     const name = getSeededRandom(toyNames, seed);
     const galleryImages = getSeededRandomImages(seed, 4);
     const basePrice = seededRandom(seed * 2) * 30 + 10;
@@ -59,7 +59,7 @@ const generateRandomToys = (count = 19): Product[] => {
       ? parseFloat((price + seededRandom(seed * 4) * 10 + 5).toFixed(2))
       : undefined;
     const labelRandom = seededRandom(seed * 5);
-    const label = oldPrice ? 'SALE' : (labelRandom < 0.3 ? 'NEW' : undefined);
+    const label = oldPrice ? 'SALE' : labelRandom < 0.3 ? 'NEW' : undefined;
 
     // Create consistent ID based on index
     const id = `toy-${index + 1}`;
@@ -80,7 +80,7 @@ const generateRandomToys = (count = 19): Product[] => {
       rating: parseFloat((seededRandom(seed * 10) * 1.5 + 3.5).toFixed(1)),
       numberOfRatings: Math.floor(seededRandom(seed * 11) * 1000),
       isFavorite: false,
-      quantityInStock: Math.floor(seededRandom(seed * 12) * 20),
+      availableInStock: Math.floor(seededRandom(seed * 12) * 20),
       description:
         'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus.',
       featureBullets: [

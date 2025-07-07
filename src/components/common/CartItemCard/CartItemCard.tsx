@@ -5,6 +5,7 @@ import clsx from 'clsx';
 import { Button } from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import ProductQuantityInput from '../../smart/ProductQuantityInput/ProductQuantityInput.tsx';
 
 interface CartItemCardProps {
   image: string;
@@ -34,16 +35,11 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       <img src={image} alt={name} className={styles.cartItemCardImage} />
       <span className={styles.cartItemCardName}>{name}</span>
       <Flex spacing="xs" align="center" className={styles.cartItemCardAmount}>
-        <StringInput
-          type="number"
-          min={1}
-          max={quantityInStock}
-          value={quantity}
-          withControls
+        <ProductQuantityInput
+          availableInStock={quantityInStock}
+          quantity={quantity}
           onChange={onAmountChange}
-          size="small"
-          fullWidth
-        />
+        ></ProductQuantityInput>
         <Button
           leftIcon={faTrashAlt}
           appearance="link"

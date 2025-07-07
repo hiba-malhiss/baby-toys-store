@@ -12,6 +12,7 @@ import { TotalAmountSection } from '../../components/smart/TotalAmount/TotalAmou
 import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
+import ProductQuantityInput from '../../components/smart/ProductQuantityInput/ProductQuantityInput.tsx';
 
 const ShoppingCartPage = () => {
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
@@ -73,16 +74,12 @@ const ShoppingCartPage = () => {
               </Button>
               <div>{formatCurrency(item.product.price)}</div>
               <div className={styles.shoppingCartPageQuantityInput}>
-                <StringInput
-                  type="number"
-                  min={1}
-                  max={item.product.quantityInStock}
-                  value={item.quantity}
-                  withControls
-                  onChange={(quantity) => updateQuantity(item.productId, quantity as number)}
-                  size="small"
+                <ProductQuantityInput
                   fullWidth
-                />
+                  availableInStock={item.product.availableInStock}
+                  quantity={item.quantity}
+                  onChange={(quantity) => updateQuantity(item.productId, quantity as number)}
+                ></ProductQuantityInput>
               </div>
               <div>{formatCurrency(item.product.price * item.quantity)}</div>
               <div>

@@ -15,7 +15,7 @@ export type Product = {
   description?: string;
   featureBullets?: string[];
   details?: { label: string; value: string }[];
-  quantityInStock?: number;
+  availableInStock?: number;
 };
 
 export type ProductWithFavorite = Product & { isUserFavorite: boolean };

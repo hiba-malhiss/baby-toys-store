@@ -1,14 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Popover } from '../Popover/Popover.tsx';
 
+type TooltipMode = 'hover' | 'manual';
+
 type TooltipProps = {
   children: React.ReactElement;
   content: React.ReactNode;
   position?: 'top' | 'bottom' | 'left' | 'right';
   showDelay?: number;
   hideDelay?: number;
-  gap?: number;
   dismissible?: boolean;
+  open?: boolean; // only needed in manual mode
+  mode?: TooltipMode;
 };
 
 export const Tooltip = ({
@@ -17,8 +20,9 @@ export const Tooltip = ({
   position = 'top',
   showDelay = 100,
   hideDelay = 180,
-  gap = 8,
   dismissible = false,
+  mode = 'hover',
+  open: openProp,
 }: TooltipProps) => {
   const targetRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
@@ -31,11 +35,13 @@ export const Tooltip = ({
   };
 
   const handleShow = () => {
+    if (mode === 'manual') return;
     clearTimers();
-    showTimeout.current = window.setTimeout(() => setOpen(true), showDelay);
+    showTimeout.current = window.setTimeout(() => setOpen(!!content), showDelay);
   };
 
   const handleHide = () => {
+    if (mode === 'manual') return;
     clearTimers();
     hideTimeout.current = window.setTimeout(() => setOpen(false), hideDelay);
   };
@@ -60,14 +66,15 @@ export const Tooltip = ({
       {child}
       <Popover
         targetRef={targetRef}
-        open={open}
+        open={mode === 'manual' ? !!openProp : open}
         position={position}
         dismissible={dismissible}
         onClose={() => setOpen(false)}
-        gap={gap}
+        gap={6}
         withArrow
         size="medium"
         appearance="dark"
+        width="max-content"
       >
         {content}
       </Popover>

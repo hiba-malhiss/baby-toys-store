@@ -17,6 +17,7 @@ import { useCartStore } from '../../../store/useCartStore';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
+import ProductQuantityInput from '../../../components/smart/ProductQuantityInput/ProductQuantityInput.tsx';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -89,14 +90,11 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
           ))}
         </Flex>
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
-          <StringInput
-            type="number"
-            max={product.quantityInStock}
-            withControls
-            min={1}
-            value={quantity}
+          <ProductQuantityInput
+            availableInStock={product.availableInStock}
+            quantity={quantity}
             onChange={(val) => setQuantity(Number(val))}
-          />
+          ></ProductQuantityInput>
           <Button
             leftIcon={faShoppingCart}
             onClick={() => {

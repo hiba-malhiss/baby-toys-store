@@ -1,9 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import clsx from 'clsx';
 import styles from './string-input.module.scss';
 import { Icon } from '../Icon/Icon.tsx';
 import { Button } from '../Button/Button.tsx';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Tooltip } from '../Tooltip/Tooltip.tsx';
+import type { IconColor } from '../Icon/icon.constant.ts';
 
 export type IconPosition = 'left' | 'right';
 export type StringInputSize = 'small' | 'medium' | 'large';
@@ -16,9 +18,10 @@ export interface StringInputProps {
   onChange?: (val: string | number) => void;
   placeholder?: string;
   icon?: any;
-  iconColor?: string;
+  iconColor?: IconColor;
   className?: string;
   iconPosition?: IconPosition;
+  maxTooltip?: React.ReactNode;
   isDisabled?: boolean;
   isRounded?: boolean;
   size?: StringInputSize;
@@ -44,7 +47,9 @@ export const StringInput: React.FC<StringInputProps> = ({
   isRounded = false,
   withControls = false,
   hasError,
+  maxTooltip,
 }) => {
+  const [showMaxTooltip, setShowMaxTooltip] = useState(false);
   const [internalValue, setInternalValue] = useState<string>(() => {
     if (value === undefined || value === null) return '';
     return String(value);
@@ -82,6 +87,14 @@ export const StringInput: React.FC<StringInputProps> = ({
 
     const minVal = min !== undefined ? parseFloat(String(min)) : undefined;
     const maxVal = max !== undefined ? parseFloat(String(max)) : undefined;
+
+    const isMax = maxVal !== undefined && current === maxVal;
+
+    if (step > 0 && isMax && maxTooltip) {
+      setShowMaxTooltip(true);
+      setTimeout(() => setShowMaxTooltip(false), 1500); // Auto-hide after 1.5s
+      return;
+    }
 
     if (minVal !== undefined && next < minVal) return;
     if (maxVal !== undefined && next > maxVal) return;
@@ -144,19 +157,21 @@ export const StringInput: React.FC<StringInputProps> = ({
         />
 
         {type === 'number' && withControls && (
-          <Button
-            appearance="link"
-            color="primary"
-            size={size}
-            onClick={(e) => {
-              handleStep(1);
-              e.stopPropagation();
-              e.preventDefault();
-            }}
-            leftIcon={faPlus}
-            isDisabled={isDisabled}
-            className={styles.stringInputIncreaseControl}
-          />
+          <Tooltip content={maxTooltip} position="top" mode="manual" open={showMaxTooltip}>
+            <Button
+              appearance="link"
+              color="primary"
+              size={size}
+              onClick={(e) => {
+                handleStep(1);
+                e.stopPropagation();
+                e.preventDefault();
+              }}
+              leftIcon={faPlus}
+              isDisabled={isDisabled}
+              className={styles.stringInputIncreaseControl}
+            />
+          </Tooltip>
         )}
 
         {icon && <Icon icon={icon} className={clsx(styles.icon)} color={iconColor} size={size} />}
