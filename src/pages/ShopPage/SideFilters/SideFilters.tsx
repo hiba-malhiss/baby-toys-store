@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect } from 'react';
 import Card from '../../../components/common/Card/Card.tsx';
 import RadioButtonGroup, {
   type RadioOption,

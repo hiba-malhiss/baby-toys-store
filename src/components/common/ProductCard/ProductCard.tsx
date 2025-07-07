@@ -21,7 +21,7 @@ export type ProductCardProps = {
   onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
   onAddToCart?: (product: Product) => void;
-  formatCurrency: (amount: number) => string;
+  formatCurrency?: (amount: number) => string;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -140,10 +140,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
             styles.productCardPrice
           )}
         >
-          <span className={styles.productCardInfoPriceNew}>{formatCurrency(product.price)}</span>
+          <span className={styles.productCardInfoPriceNew}>
+            {formatCurrency ? formatCurrency(product.price) : product.price}
+          </span>
           {product.oldPrice && (
             <span className={styles.productCardInfoPriceOld}>
-              {formatCurrency(product.oldPrice)}
+              {formatCurrency ? formatCurrency(product.oldPrice) : product.oldPrice}
             </span>
           )}
         </div>
