@@ -51,6 +51,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       withoutPadding,
       isSelected,
       className,
+      ...rest
     },
     ref
   ) => {
@@ -70,7 +71,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     return (
-      <button ref={ref} className={calculatedClassName} onClick={onClick} disabled={isDisabled}>
+      <button
+        ref={ref}
+        className={calculatedClassName}
+        onClick={onClick}
+        disabled={isDisabled}
+        {...rest}
+      >
         {isLoading ? (
           <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
         ) : (

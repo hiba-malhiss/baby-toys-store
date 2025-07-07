@@ -7,4 +7,59 @@
   user-select: none;
   z-index: 9999;
   overflow: hidden;
+
+  &.popoverWithArrow {
+    overflow: visible;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: white;
+      transform: rotate(45deg);
+      z-index: -1;
+    }
+
+    &.arrow-top::before {
+      bottom: -5px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    &.arrow-bottom::before {
+      top: -5px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+    }
+
+    &.arrow-left::before {
+      right: -5px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+
+    &.arrow-right::before {
+      left: -5px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
+  &--small {
+    padding: 0;
+  }
+
+  &--medium {
+    padding: 8px 10px;
+  }
+
+  &--dark {
+    background-color: $color-text-dark;
+    color: $color-white;
+
+    &.popoverWithArrow:before {
+      background-color: $color-text-dark;
+    }
+  }
 }

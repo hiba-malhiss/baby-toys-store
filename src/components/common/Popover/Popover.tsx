@@ -7,6 +7,7 @@ type Position = 'top' | 'bottom' | 'left' | 'right';
 
 type PopoverProps = {
   targetRef: React.RefObject<HTMLElement>;
+  withArrow: boolean;
   open: boolean;
   onClose?: () => void;
   position?: Position;
@@ -15,6 +16,8 @@ type PopoverProps = {
   width?: string;
   children: React.ReactNode;
   gap: number;
+  size: 'small' | 'medium';
+  appearance: 'dark';
 };
 
 export function Popover({
@@ -23,10 +26,13 @@ export function Popover({
   onClose,
   position = 'bottom',
   dismissible = true,
+  withArrow,
   appendTo = typeof document !== 'undefined' ? document.body : null,
   width,
   children,
   gap = 12,
+  appearance,
+  size,
 }: PopoverProps) {
   const popoverRef = useRef<HTMLDivElement>(null);
   const [style, setStyle] = useState<React.CSSProperties>({});
@@ -142,7 +148,13 @@ export function Popover({
       aria-label="popover"
       aria-labelledby="popover"
       style={style}
-      className={clsx(styles.popover)}
+      className={clsx(
+        styles.popover,
+        withArrow && styles.popoverWithArrow,
+        withArrow && styles[`arrow-${position}`],
+        styles[`popover--${size}`],
+        styles[`popover--${appearance}`]
+      )}
       onClick={(e) => e.stopPropagation()}
     >
       {children}
