@@ -3,15 +3,20 @@ import { useStoreConfiguration } from '../context/StoreConfigurationContext.tsx'
 
 export const useCurrencyFormatter = () => {
   const { currency } = useStoreConfiguration();
-  const symbol = currency?.symbol;
 
   return useCallback(
     (amount: number): string => {
       if (typeof amount !== 'number' || isNaN(amount)) {
-        return `${symbol}0.00`;
+        return new Intl.NumberFormat('en-US', {
+          style: 'currency',
+          currency: currency?.currency || 'USD',
+        }).format(0);
       }
-      return `${symbol}${amount.toFixed(2)}`;
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: currency?.currency || 'USD',
+      }).format(amount);
     },
-    [symbol]
+    [currency?.currency]
   );
 };

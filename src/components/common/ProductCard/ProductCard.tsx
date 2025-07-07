@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
@@ -22,6 +21,7 @@ export type ProductCardProps = {
   onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
   onAddToCart?: (product: Product) => void;
+  formatCurrency: (amount: number) => string;
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
@@ -34,11 +34,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
   fullWidth,
   isFavorite,
   isLoadingFavorite,
+  formatCurrency,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
   const toast = useToast();
-  const { currency } = useStoreConfiguration();
 
   const handleButtonClick = useCallback((e: MouseEvent, handler?: (product: Product) => void) => {
     e.preventDefault();
@@ -140,12 +140,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
             styles.productCardPrice
           )}
         >
-          <span className={styles.productCardInfoPriceNew}>
-            {product.price} {currency?.symbol || ''}
-          </span>
+          <span className={styles.productCardInfoPriceNew}>{formatCurrency(product.price)}</span>
           {product.oldPrice && (
             <span className={styles.productCardInfoPriceOld}>
-              {product.oldPrice} {currency?.symbol || ''}
+              {formatCurrency(product.oldPrice)}
             </span>
           )}
         </div>

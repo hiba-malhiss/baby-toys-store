@@ -4,6 +4,7 @@ import { useCartStore } from '../../../store/useCartStore';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '../../common/Toast/ToastContext.tsx';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
 
 type SmartProductCardProps = ProductCardProps;
 
@@ -12,7 +13,7 @@ const SmartProductCard: React.FC<SmartProductCardProps> = ({ ...props }) => {
   const { addToCart } = useCartStore();
   const toast = useToast();
   const { isFavorite, isLoading, toggleFavorite } = useWishlist(props.product);
-
+  const formatCurrency = useCurrencyFormatter();
   const handleToggleFavorite = async () => {
     await toggleFavorite();
   };
@@ -20,6 +21,7 @@ const SmartProductCard: React.FC<SmartProductCardProps> = ({ ...props }) => {
   return (
     <ProductCard
       {...props}
+      formatCurrency={formatCurrency}
       isFavorite={isFavorite}
       onToggleFavorite={handleToggleFavorite}
       onAddToCart={(product) => {
