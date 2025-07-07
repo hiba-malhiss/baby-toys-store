@@ -19,10 +19,12 @@ import { useAuth } from '../../context/AuthContext.tsx';
 import { Alert } from '../../components/common/Alert/Alert.tsx';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import type { OrderPayload } from '../../types/product.types.ts';
+import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
 const CheckoutPage: React.FC = () => {
+  useCartStockSync();
   const { cartItems, clearCart } = useCartStore();
   const { user, isLoggedIn } = useAuth();
   const [form, setForm] = useState({

@@ -14,6 +14,7 @@ import clsx from 'clsx';
 import styles from './shopping-cart-drawer.module.scss';
 import BouncingDotsLoader from '../../common/BouncingDotsLoader/BouncingDotsLoader';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
+import { useCartStockSync } from '../../../hooks/useCartStockSync.ts';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -26,6 +27,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
   const formatCurrency = useCurrencyFormatter(currency?.symbol);
   const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
+  useCartStockSync();
 
   const handleAmountChange = (productId: string, newQuantity: number) => {
     updateQuantity(productId, newQuantity);

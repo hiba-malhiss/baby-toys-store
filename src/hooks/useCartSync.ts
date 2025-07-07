@@ -3,6 +3,9 @@ import { useCartStore } from '../store/useCartStore';
 import { useAuth } from '../context/AuthContext';
 import { mockSaveCartToCloud, mockLoadCartFromCloud } from '../mock-data/useMockProductsApi';
 
+// 📌 useCartSync handles syncing cart data with the cloud (save/load/merge) based on login state.
+// ✅ Use this hook **once globally** (e.g., in App.tsx) to ensure cart state is preserved across sessions.
+// 🚫 Do NOT use it inside individual pages/components like Cart or Checkout to avoid repeated syncs or overwrites.
 export function useCartSync() {
   const { cartItems, clearCart, setCartItems } = useCartStore();
   const { isLoggedIn } = useAuth();

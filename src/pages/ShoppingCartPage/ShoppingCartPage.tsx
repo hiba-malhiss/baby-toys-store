@@ -2,7 +2,6 @@ import { useStoreConfiguration } from '../../context/StoreConfigurationContext.t
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useCartStore } from '../../store/useCartStore.ts';
-import { StringInput } from '../../components/common/StringInput/StringInput.tsx';
 import { Button } from '../../components/common/Button/Button.tsx';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Card from '../../components/common/Card/Card.tsx';
@@ -13,8 +12,10 @@ import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import ProductQuantityInput from '../../components/smart/ProductQuantityInput/ProductQuantityInput.tsx';
+import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
 
 const ShoppingCartPage = () => {
+  useCartStockSync();
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
   const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();

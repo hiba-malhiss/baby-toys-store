@@ -22,6 +22,19 @@ export const getProductCategories = async () => {
 };
 
 // -----------------------------
+// STOCK MANAGEMENT MOCK LOGIC
+// -----------------------------
+
+export const mockFetchProductAvailability = async (productId: string) => {
+  await delay(MOCK_API_DELAY_MS / 2); // Faster check
+  const product = toys.find((p) => p.id === productId);
+  if (!product) {
+    return { availableStock: 0 };
+  }
+  return { availableStock: product.availableInStock };
+};
+
+// -----------------------------
 // AUTH & CLOUD SYNC MOCK LOGIC
 // -----------------------------
 
@@ -57,6 +70,23 @@ import type { OrderPayload } from '../types/product.types.ts';
 
 export const mockPlaceOrder = async (order: OrderPayload) => {
   await delay(MOCK_API_DELAY_MS);
+
+  // Server-side stock check
+  for (const item of order.cartItems) {
+    const product = toys.find((p) => p.id === item.productId);
+    if (!product || product.availableInStock < item.quantity) {
+      throw new Error(`Not enough stock for product: ${item.product.name}`);
+    }
+  }
+
+  // Decrease stock
+  for (const item of order.cartItems) {
+    const product = toys.find((p) => p.id === item.productId);
+    if (product) {
+      product.availableInStock -= item.quantity;
+    }
+  }
+
   const orders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
   // Calculate subtotal from cart items
@@ -325,6 +355,19 @@ export function useMockProductsApi(pageSize?: number) {
 
   // Simulate a real-world structure
   return {
+    refetchProduct: useCallback(async (productId: string) => {
+      await delay(MOCK_API_DELAY_MS);
+      const product = toys.find((p) => p.id === productId);
+      if (!product) {
+        throw new Error('Product not found');
+      }
+      const favIdsData = localStorage.getItem('cloud-favorites');
+      const favIds: string[] = favIdsData ? JSON.parse(favIdsData) : [];
+      return {
+        ...product,
+        isUserFavorite: favIds.includes(product.id),
+      };
+    }, []),
     fetchProducts,
     fetchPage: fetchProducts,
     getProductById: useCallback(async (id: string) => {

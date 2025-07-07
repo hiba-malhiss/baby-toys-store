@@ -109,3 +109,9 @@ This project is licensed under the MIT License. See the [LICENSE](LICENSE) file 
 
 ## Credits
 - [Design - Figma](https://www.figma.com/community/file/1380032564098282114)
+
+## Sync valid in stock : 
+Shop Page	✅ Yes	Display accurate stock per product Details Page	✅ Yes	Show correct quantity options
+Cart Page	✅ Yes	Validate and adjust quantities if needed
+Checkout Page	✅ Yes	Re-validate before payment
+Place Order (API)	✅ Yes	Final server-side validation
