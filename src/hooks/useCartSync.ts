@@ -10,6 +10,8 @@ export function useCartSync() {
   const { cartItems, clearCart, setCartItems } = useCartStore();
   const { isLoggedIn } = useAuth();
   const prevLoggedIn = useRef(isLoggedIn);
+
+  // Normalize cart for saving
   const cartItemsBE = useMemo(() => {
     return cartItems.map((item) => ({
       productId: item.productId,
@@ -17,7 +19,6 @@ export function useCartSync() {
     }));
   }, [cartItems]);
 
-  // On cart or login state change, save to cloud if logged in
   useEffect(() => {
     if (isLoggedIn) {
       (async () => {
@@ -30,28 +31,47 @@ export function useCartSync() {
     }
   }, [cartItemsBE, isLoggedIn]);
 
-  // On login, load cloud cart and merge with local
+  // Merge cloud and local carts on login
   useEffect(() => {
     if (!prevLoggedIn.current && isLoggedIn) {
       (async () => {
         try {
           const cloudCart = await mockLoadCartFromCloud();
-          const mergedCart = cloudCart.length ? cloudCart : cartItemsBE;
+
+          // Create a map for merging
+          const localMap = new Map(cartItemsBE.map((item) => [item.productId, item.quantity]));
+          for (const cloudItem of cloudCart) {
+            if (localMap.has(cloudItem.productId)) {
+              // Merge quantities
+              const localQty = localMap.get(cloudItem.productId) || 0;
+              localMap.set(cloudItem.productId, localQty + cloudItem.quantity);
+            } else {
+              localMap.set(cloudItem.productId, cloudItem.quantity);
+            }
+          }
+
+          const mergedCart = Array.from(localMap.entries()).map(([productId, quantity]) => ({
+            productId,
+            quantity,
+          }));
+
           setCartItems(mergedCart);
           await mockSaveCartToCloud(mergedCart);
         } catch (e) {
-          console.error('Failed loading or merging cart on login', e);
+          console.error('Failed merging cart on login', e);
         }
       })();
     }
+
     prevLoggedIn.current = isLoggedIn;
   }, [isLoggedIn, cartItemsBE, setCartItems]);
 
-  // On logout, clear local cart (and no cloud sync needed)
+  // 🔄 Clear local cart on logout
   useEffect(() => {
     if (prevLoggedIn.current && !isLoggedIn) {
       clearCart();
     }
+
     prevLoggedIn.current = isLoggedIn;
   }, [isLoggedIn]);
 }

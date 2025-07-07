@@ -75,7 +75,7 @@ export const mockPlaceOrder = async (order: OrderPayload) => {
   for (const item of order.cartItems) {
     const product = toys.find((p) => p.id === item.productId);
     if (!product || product.availableInStock < item.quantity) {
-      throw new Error(`Not enough stock for product: ${item.product.name}`);
+      throw new Error(`Not enough stock for product: ${item.product?.name ?? 'unknown'}`);
     }
   }
 
@@ -95,31 +95,38 @@ export const mockPlaceOrder = async (order: OrderPayload) => {
     0
   );
 
-  // Get user email from auth token
+  // Determine user identifier
   const token = localStorage.getItem('auth_token');
-  let userEmail = 'user@example.com'; // fallback
+  let userIdentifier: string | undefined;
+
   if (token === 'mock-token') {
-    userEmail = 'user@example.com';
+    userIdentifier = 'user@example.com';
+  } else if (order.shippingInfo?.phone) {
+    userIdentifier = order.shippingInfo.phone;
+  } else {
+    throw new Error('Missing user identifier (phone or email) for order');
   }
 
-  // Save shipping information for future use
-  if (order.shippingInfo && userEmail) {
-    await mockSaveShippingInfo(userEmail, order.shippingInfo);
+  // Save shipping info
+  if (order.shippingInfo && userIdentifier) {
+    await mockSaveShippingInfo(userIdentifier, order.shippingInfo);
   }
 
   const newOrder: OrderItem = {
     id: Date.now(),
-    email: userEmail,
+    email: userIdentifier, // Now either email or phone
     date: new Date().toISOString(),
     cartItems: order.cartItems,
-    subtotal: subtotal,
+    subtotal,
     shippingCost: order.shippingCost || 0,
     total: order.total,
     shippingInfo: order.shippingInfo,
   };
+
   orders.push(newOrder);
   localStorage.setItem('mock-orders', JSON.stringify(orders));
-  // Clear cart after order
+
+  // Clear cart
   localStorage.setItem('cloud-cart', '[]');
 };
 
@@ -673,3 +680,21 @@ export const mockFetchContactInfo = (): Promise<{
     },
   ]);
 };
+
+// -----------------------------
+// TODO: Must Have (Core Functionality)
+// -----------------------------
+// [ ] Add coupon system
+// [ ] Handle out-of-stock products gracefully, gray out instead of hard remove from cart
+// [ ] Prevent race condition when placing orders
+// [ ] Add analytics tracking events
+// [ ] Improve search with suggestions/autocomplete
+// [ ] Add profile settings for user (name/email/password)
+
+// -----------------------------
+// TODO: Nice to Have (Optional / Stretch Features)
+// -----------------------------
+// [ ] Support multiple shipping addresses
+// [ ] Add product variant system (color, size, etc.)
+// [ ] Add admin dashboard (orders, products, reviews)
+// [ ] Remind users of abandoned cart after some time
