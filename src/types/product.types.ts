@@ -13,6 +13,7 @@ export type Product = {
   rating: number;
   numberOfRatings: number;
   description?: string;
+  shortDescription?: string;
   featureBullets?: string[];
   details?: { label: string; value: string }[];
   availableInStock?: number;

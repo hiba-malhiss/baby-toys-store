@@ -81,7 +81,7 @@ const generateRandomToys = (count = 19): Product[] => {
       numberOfRatings: Math.floor(seededRandom(seed * 11) * 1000),
       isFavorite: false,
       availableInStock: Math.floor(seededRandom(seed * 12) * 20),
-      description:
+      shortDescription:
         'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus.',
       featureBullets: [
         'Helps develop fine motor skills and problem-solving.Helps develop fine motor skills and problem-solving.',

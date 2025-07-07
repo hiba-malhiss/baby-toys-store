@@ -124,7 +124,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {product.label && !isSmallSize && (
           <Chip label={product.label} className={styles.productCardChip} />
         )}
-        {/* Show buttons on hover only for vertical */}
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
           <img src={product.mainImage} alt={product.name} />
@@ -132,8 +131,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       </Card>
       <div className={styles.productCardInfo}>
         <div className={styles.productCardInfoName}>{product.name}</div>
-        {isHorizontal && product.description && !isSmallSize && (
-          <div className={styles.productCardInfoDescription}>{product.description}</div>
+        {isHorizontal && product.shortDescription && !isSmallSize && (
+          <div className={styles.productCardInfoDescription}>{product.shortDescription}</div>
         )}
         <div
           className={clsx(
