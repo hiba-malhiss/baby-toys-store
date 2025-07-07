@@ -1,5 +1,6 @@
 import React from 'react';
 import { StringInput } from '../../common/StringInput/StringInput.tsx';
+import { useToast } from '../../common/Toast/ToastContext.tsx';
 
 export interface QuantityInputProps {
   availableInStock: number;
@@ -14,8 +15,24 @@ export const ProductQuantityInput: React.FC<QuantityInputProps> = ({
   onChange,
   fullWidth,
 }) => {
+  const toast = useToast();
+
   const handleChange = (val: string | number) => {
-    const parsed = Number(val);
+    if (val === '' || val === null) {
+      onChange?.(1);
+      return;
+    }
+
+    let parsed = Number(val);
+    if (isNaN(parsed) || parsed < 1) {
+      parsed = 1;
+    }
+
+    if (parsed > availableInStock) {
+      parsed = availableInStock;
+      toast.info(`Only ${availableInStock} left in stock`);
+    }
+
     onChange?.(parsed);
   };
 

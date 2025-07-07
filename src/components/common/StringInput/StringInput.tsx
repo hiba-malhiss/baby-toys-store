@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import styles from './string-input.module.scss';
 import { Icon } from '../Icon/Icon.tsx';
@@ -49,29 +49,40 @@ export const StringInput: React.FC<StringInputProps> = ({
   hasError,
   maxTooltip,
 }) => {
-  const [showMaxTooltip, setShowMaxTooltip] = useState(false);
+  // Detect if controlled
+  const isControlled = value !== undefined && onChange !== undefined;
+
+  // Internal state only if uncontrolled
   const [internalValue, setInternalValue] = useState<string>(() => {
-    if (value === undefined || value === null) return '';
-    return String(value);
+    if (!isControlled) {
+      if (value === undefined || value === null) return '';
+      return String(value);
+    }
+    return '';
   });
 
+  // Sync internal state only when uncontrolled and value prop changes
   useEffect(() => {
-    const valStr = value === undefined || value === null ? '' : String(value);
-    if (valStr !== internalValue) {
-      setInternalValue(valStr);
+    if (!isControlled) {
+      const valStr = value === undefined || value === null ? '' : String(value);
+      if (valStr !== internalValue) {
+        setInternalValue(valStr);
+      }
     }
-  }, [value]);
+  }, [value, isControlled]);
+
+  const [showMaxTooltip, setShowMaxTooltip] = useState(false);
 
   const handleChange = (newVal: string) => {
-    setInternalValue(newVal);
+    if (!isControlled) {
+      setInternalValue(newVal);
+    }
 
     if (type === 'number') {
-      // Try to parse as number
       const parsed = parseFloat(newVal);
       if (!isNaN(parsed)) {
         onChange?.(parsed);
       } else {
-        // If empty or invalid number, pass NaN or empty string (optional)
         onChange?.(newVal === '' ? '' : NaN);
       }
     } else {
@@ -82,7 +93,9 @@ export const StringInput: React.FC<StringInputProps> = ({
   const handleStep = (step: number) => {
     if (isDisabled) return;
 
-    const current = parseFloat(internalValue || String(min ?? '0'));
+    // Determine current value: controlled ? value : internalValue
+    const currentValue = isControlled ? String(value ?? '') : internalValue;
+    const current = parseFloat(currentValue || String(min ?? '0'));
     const next = current + step;
 
     const minVal = min !== undefined ? parseFloat(String(min)) : undefined;
@@ -92,7 +105,7 @@ export const StringInput: React.FC<StringInputProps> = ({
 
     if (step > 0 && isMax && maxTooltip) {
       setShowMaxTooltip(true);
-      setTimeout(() => setShowMaxTooltip(false), 1500); // Auto-hide after 1.5s
+      setTimeout(() => setShowMaxTooltip(false), 1500);
       return;
     }
 
@@ -134,9 +147,9 @@ export const StringInput: React.FC<StringInputProps> = ({
             color="primary"
             size={size}
             onClick={(e) => {
-              handleStep(-1);
-              e.stopPropagation();
               e.preventDefault();
+              e.stopPropagation();
+              handleStep(-1);
             }}
             leftIcon={faMinus}
             isDisabled={isDisabled}
@@ -151,7 +164,7 @@ export const StringInput: React.FC<StringInputProps> = ({
           step="any"
           disabled={isDisabled}
           placeholder={placeholder}
-          value={internalValue}
+          value={isControlled ? String(value ?? '') : internalValue}
           onChange={(e) => handleChange(e.target.value)}
           className={clsx(inputClass)}
         />
@@ -163,9 +176,9 @@ export const StringInput: React.FC<StringInputProps> = ({
               color="primary"
               size={size}
               onClick={(e) => {
-                handleStep(1);
-                e.stopPropagation();
                 e.preventDefault();
+                e.stopPropagation();
+                handleStep(1);
               }}
               leftIcon={faPlus}
               isDisabled={isDisabled}
