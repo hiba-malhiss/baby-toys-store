@@ -684,6 +684,7 @@ export const mockFetchContactInfo = (): Promise<{
 // -----------------------------
 // TODO: Must Have (Core Functionality)
 // -----------------------------
+// [ ] Add Order Status Tracking && Allow User to Add Review Only After Delivery (after admin panel support)
 // [ ] Add coupon system
 // [ ] Handle out-of-stock products gracefully, gray out instead of hard remove from cart
 // [ ] Prevent race condition when placing orders
@@ -698,3 +699,18 @@ export const mockFetchContactInfo = (): Promise<{
 // [ ] Add product variant system (color, size, etc.)
 // [ ] Add admin dashboard (orders, products, reviews)
 // [ ] Remind users of abandoned cart after some time
+
+//Add Order Status Tracking & Allow User to Add Review Only After Delivery
+// pending — order placed
+// processing — admin is preparing the order
+// shipped — order sent to delivery
+// delivered — user has received the order
+// cancelled — admin canceled the order
+
+// How to Manage Stock Properly (https://chatgpt.com/c/686bb8d1-f638-8009-8fc9-eeb4df0fc449)
+// 1. Stock Reservation on Order Placement (Pending Status)
+// When a user places an order, reserve the quantity in stock by reducing available stock immediately to prevent overselling.
+// Mark the order as pending — stock is reserved but not yet deducted permanently.
+// 2. Stock Confirmation on Order Processing
+// When admin moves order status from pending → processing, confirm the reservation (stock remains deducted).
+// If admin cancels the order while pending or processing, release the reserved stock back to availability.
