@@ -1,6 +1,5 @@
 import React from 'react';
 import styles from './cart-item-card.module.scss';
-import { StringInput } from '../StringInput/StringInput';
 import clsx from 'clsx';
 import { Button } from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
