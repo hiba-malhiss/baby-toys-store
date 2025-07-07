@@ -4,6 +4,7 @@ import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons
 import clsx from 'clsx';
 import styles from './paginator.module.scss';
 import BouncingDotsLoader from '../BouncingDotsLoader/BouncingDotsLoader.tsx';
+import { useDebounce } from '../../../hooks/useDebounce.ts';
 
 export type PaginationMode = 'default' | 'show-more' | 'infinite-scroll';
 
@@ -32,6 +33,8 @@ export function Paginator({
   const [currentPage, setCurrentPage] = useState(initialPage);
   const prevPageRef = useRef(initialPage);
   const showMoreRef = useRef<HTMLButtonElement | null>(null);
+  const [shouldPaginate, setShouldPaginate] = useState(false);
+  const debouncedShouldPaginate = useDebounce(shouldPaginate, 300);
 
   // Update internal state when initialPage prop changes
   useEffect(() => {
@@ -84,9 +87,7 @@ export function Paginator({
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        if (entry.isIntersecting && !isLoading && hasMore) {
-          handleShowMore();
-        }
+        setShouldPaginate(entry.isIntersecting);
       },
       {
         root: null,
@@ -95,18 +96,28 @@ export function Paginator({
       }
     );
 
-    observer.observe(showMoreRef.current);
+    const node = showMoreRef.current;
+    observer.observe(node);
 
     return () => {
-      if (showMoreRef.current) observer.unobserve(showMoreRef.current);
+      if (node) observer.unobserve(node);
     };
-  }, [mode, isLoading, hasMore, handleShowMore]);
+  }, [mode]);
 
+  // Debounced pagination trigger
+  useEffect(() => {
+    if (debouncedShouldPaginate && !isLoading && hasMore) {
+      handleShowMore();
+    }
+  }, [debouncedShouldPaginate, isLoading, hasMore, handleShowMore]);
+
+  // === Infinite Scroll Mode ===
   if (mode === 'infinite-scroll') {
     if (!hasMore) return null;
+
     return (
       <div className={clsx(className, styles.pagination)}>
-        <BouncingDotsLoader size="medium" ref={showMoreRef}></BouncingDotsLoader>
+        <BouncingDotsLoader size="medium" ref={showMoreRef} />
       </div>
     );
   }
