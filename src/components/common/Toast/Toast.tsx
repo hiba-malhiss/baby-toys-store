@@ -29,7 +29,7 @@ export const Toast = () => {
             onClick={() => removeToast(toast.id)}
             withoutPadding
             size="xsmall"
-          ></Button>
+          />
         </div>
       ))}
     </div>
