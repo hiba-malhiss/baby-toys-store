@@ -1,7 +1,7 @@
 import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
 import { useHandlePagination } from '../../../hooks/useHandlePagination.ts';
 import React from 'react';
-import Section from '../../layout/Section/Section.tsx';
+import Section from '../../shared/Section/Section.tsx';
 import Carousel from '../../common/Carousel/Carousel.tsx';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
 import { ViewSwitcher } from '../../common/ViewSwitcher/ViewSwitcher.tsx';

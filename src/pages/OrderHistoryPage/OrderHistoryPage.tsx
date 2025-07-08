@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
 import OrderProductCard from './OrderProductCard/OrderProductCard';
 import AddReviewDialog from './AddReviewDialog';

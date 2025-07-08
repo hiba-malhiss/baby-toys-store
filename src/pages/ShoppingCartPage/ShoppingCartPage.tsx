@@ -1,17 +1,17 @@
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import styles from './shopping-cart-page.module.scss';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer.tsx';
 import { useCartStore } from '../../store/useCartStore.ts';
 import { Button } from '../../components/common/Button/Button.tsx';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import Card from '../../components/common/Card/Card.tsx';
 import { NoDataFound } from '../../components/common/NoDataFound';
 import { useNavigate } from 'react-router-dom';
-import { TotalAmountSection } from '../../components/smart/TotalAmount/TotalAmountSection.tsx';
+import { TotalAmountSection } from '../../components/shared/TotalAmount/TotalAmountSection.tsx';
 import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
-import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
-import ProductQuantityInput from '../../components/smart/ProductQuantityInput/ProductQuantityInput.tsx';
+import YouMayAlsoLikeSection from '../../components/shared/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
+import ProductQuantityInput from '../../components/shared/ProductQuantityInput/ProductQuantityInput.tsx';
 import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
 
 const ShoppingCartPage = () => {

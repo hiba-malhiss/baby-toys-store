@@ -1,9 +1,9 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Section from '../../../components/layout/Section/Section.tsx';
+import Section from '../../../components/shared/Section/Section.tsx';
 import RadioButtonGroup from '../../../components/common/RadioButtonGroup/RadioButtonGroup.tsx';
 import styles from './top-picks-section.module.scss';
-import SmartProductCard from '../../../components/smart/SmartProductCard/SmartProductCard.tsx';
+import SmartProductCard from '../../../components/shared/SmartProductCard/SmartProductCard.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
 import type { Product } from '../../../types/product.types.ts';

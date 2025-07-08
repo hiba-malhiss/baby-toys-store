@@ -4,7 +4,7 @@ import clsx from 'clsx';
 import { Button } from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import ProductQuantityInput from '../../smart/ProductQuantityInput/ProductQuantityInput.tsx';
+import ProductQuantityInput from '../../shared/ProductQuantityInput/ProductQuantityInput.tsx';
 
 interface CartItemCardProps {
   image: string;

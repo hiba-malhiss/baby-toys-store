@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '../../context/BreadcrumbContext.tsx';
 import React, { useEffect, useState } from 'react';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';
 import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';

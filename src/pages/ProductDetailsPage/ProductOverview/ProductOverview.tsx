@@ -4,7 +4,7 @@ import Flex from '../../../components/common/Flex/Flex.tsx';
 import Heading from '../../../components/common/Heading/Heading.tsx';
 import Rating from '../../../components/common/Rating/Rating.tsx';
 import ExpandableContent from '../../../components/common/ExpandableContent/ExpandableContent.tsx';
-import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
+import { socialMediaLinks } from '../../../components/shared/Footer/footer.constants.ts';
 import { Button } from '../../../components/common/Button/Button.tsx';
 import Card from '../../../components/common/Card/Card.tsx';
 import type { Product } from '../../../types/product.types.ts';
@@ -17,7 +17,7 @@ import { useCartStore } from '../../../store/useCartStore';
 import { useToast } from '../../../components/common/Toast/ToastContext.tsx';
 import { copyTextToClipboard } from '../../../util/clipboard.utils.ts';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
-import ProductQuantityInput from '../../../components/smart/ProductQuantityInput/ProductQuantityInput.tsx';
+import ProductQuantityInput from '../../../components/shared/ProductQuantityInput/ProductQuantityInput.tsx';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);

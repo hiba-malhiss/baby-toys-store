@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher';
 import { NoDataFound } from '../../components/common/NoDataFound';
 import { mockFetchWishlist } from '../../mock-data/useMockProductsApi';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
-import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
-import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
+import SmartProductCard from '../../components/shared/SmartProductCard/SmartProductCard.tsx';
+import YouMayAlsoLikeSection from '../../components/shared/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 

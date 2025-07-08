@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './our-collection-section.module.scss';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import { Button } from '../../../components/common/Button/Button.tsx';
-import Section from '../../../components/layout/Section/Section.tsx';
+import Section from '../../../components/shared/Section/Section.tsx';
 import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 
 const OurCollectionSection = () => {

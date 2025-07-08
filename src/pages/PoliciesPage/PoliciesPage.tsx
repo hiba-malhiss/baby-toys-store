@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer.tsx';
 import { getPolicies } from '../../mock-data/useMockProductsApi.ts';
 import Heading from '../../components/common/Heading/Heading.tsx';
 import { AccordionGroup } from '../../components/common/Accordion/AccordionGroup.tsx';

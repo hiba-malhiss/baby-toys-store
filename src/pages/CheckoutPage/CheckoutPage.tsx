@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styles from './checkout-page.module.scss';
 import { useCartStore } from '../../store/useCartStore';
 import { Button } from '../../components/common/Button/Button';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer';
 import Card from '../../components/common/Card/Card';
 import { StringInput } from '../../components/common/StringInput/StringInput';
 import FieldWrapper from '../../components/common/FieldWrapper/FieldWrapper';

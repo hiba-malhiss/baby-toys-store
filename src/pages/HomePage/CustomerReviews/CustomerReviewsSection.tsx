@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Section from '../../../components/layout/Section/Section.tsx';
+import Section from '../../../components/shared/Section/Section.tsx';
 import ReviewCard from '../../../components/common/ReviewCard/ReviewCard.tsx';
 import styles from './customer-review-section.module.scss';
 import Carousel from '../../../components/common/Carousel/Carousel.tsx';

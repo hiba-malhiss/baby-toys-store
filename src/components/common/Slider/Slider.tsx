@@ -27,7 +27,7 @@ type SliderProps =
 
 const passiveFalseOptions: AddEventListenerOptions = { passive: false };
 
-// Uses percentage positioning for responsive layout,
+// Uses percentage positioning for responsive shared,
 // adapting to different container widths/heights without pixel recalculations on re-size.
 const Slider: React.FC<SliderProps> = ({
   min = 0,

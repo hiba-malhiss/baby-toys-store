@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import styles from './shop-page.module.scss';
 import { type ViewMode, ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard.tsx';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer.tsx';
+import SmartProductCard from '../../components/shared/SmartProductCard/SmartProductCard.tsx';
 import { SideFilters } from './SideFilters/SideFilters.tsx';
 import { getProductCategories, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants.ts';
@@ -11,7 +11,7 @@ import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
 import { SortProductsWithUrl } from './SortProductsWithUrl.tsx';
 import Flex from '../../components/common/Flex/Flex.tsx';
 import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants.ts';
-import YouMayAlsoLikeSection from '../../components/smart/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
+import YouMayAlsoLikeSection from '../../components/shared/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');

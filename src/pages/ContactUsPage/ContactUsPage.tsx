@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer';
 import FieldWrapper from '../../components/common/FieldWrapper/FieldWrapper';
 import { StringInput } from '../../components/common/StringInput/StringInput';
 import { Button } from '../../components/common/Button/Button';

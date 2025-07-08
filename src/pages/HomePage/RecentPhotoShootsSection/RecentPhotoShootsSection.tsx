@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import Section from '../../../components/layout/Section/Section.tsx';
+import Section from '../../../components/shared/Section/Section.tsx';
 import Flex from '../../../components/common/Flex/Flex.tsx';
 import styles from './recent-photo-shoots-section.module.scss';
 import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';

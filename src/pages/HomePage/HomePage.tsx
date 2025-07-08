@@ -5,7 +5,7 @@ import CustomerReviewsSection from './CustomerReviews/CustomerReviewsSection.tsx
 import BannersSection from './BannersSection/BannersSection.tsx';
 import RecentPhotoShootsSection from './RecentPhotoShootsSection/RecentPhotoShootsSection.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/shared/PageContainer/PageContainer.tsx';
 
 const HomePage = () => {
   return (

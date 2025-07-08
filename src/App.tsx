@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage.tsx';
-import Layout from './components/layout/Layout/Layout.tsx';
+import Layout from './components/shared/Layout/Layout.tsx';
 import ScrollToTop from './components/common/ScrollToTop.tsx';
 import './App.scss';
 import { BreadcrumbProvider } from './context/BreadcrumbContext.tsx';

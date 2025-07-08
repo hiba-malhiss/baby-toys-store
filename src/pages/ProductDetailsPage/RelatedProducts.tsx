@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
-import SmartProductCard from '../../components/smart/SmartProductCard/SmartProductCard';
+import SmartProductCard from '../../components/shared/SmartProductCard/SmartProductCard';
 import { getRelatedProducts } from '../../mock-data/useMockProductsApi';
-import Section from '../../components/layout/Section/Section.tsx';
+import Section from '../../components/shared/Section/Section.tsx';
 import { ViewSwitcher } from '../../components/common/ViewSwitcher/ViewSwitcher.tsx';
 import styles from './product-details-page.module.scss';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
