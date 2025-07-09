@@ -10,15 +10,8 @@
 .accordion {
   width: 100%;
 
-  &--leftIcon {
-    .accordion-header {
-      justify-content: start !important;
-      gap: 16px;
-    }
-  }
-
   &.withoutPadding {
-    .accordion-content, .accordion-header {
+    .accordion-content {
       padding: 12px 0;
     }
   }
@@ -31,37 +24,9 @@
     }
   }
 
-  &.isActive .accordion-headerIcon {
-    //transform: rotate(180deg);
-    color: $color-primary-hover;
-  }
-
   &.isDisabled {
     pointer-events: none;
     opacity: 0.5;
-
-    .accordion-header {
-      cursor: not-allowed;
-      color: $color-disabled2;
-    }
-  }
-
-  .accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 20px;
-    font-weight: 500;
-    color: $color-text-primary;
-    background-color: $color-bg-primary;
-    cursor: pointer;
-    user-select: none;
-    border-radius: $radius-md;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  &-headerIcon {
-    transition: transform 0.3s ease;
   }
 
   &-content {

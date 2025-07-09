@@ -1,8 +1,8 @@
-import React, { useState, type ReactNode, type KeyboardEvent } from 'react';
+import React, { useState, type ReactNode } from 'react';
 import styles from './accordion.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
+import { Button } from '../Button/Button.tsx';
 
 interface AccordionProps {
   header: ReactNode;
@@ -39,13 +39,6 @@ export const Accordion: React.FC<AccordionProps> = ({
     }
   };
 
-  const handleKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      handleToggle();
-    }
-  };
-
   return (
     <div
       className={clsx(
@@ -57,28 +50,18 @@ export const Accordion: React.FC<AccordionProps> = ({
         styles[`accordion--${iconPosition}Icon`]
       )}
     >
-      <div
-        className={clsx(styles.accordionHeader)}
+      <Button
         onClick={handleToggle}
-        tabIndex={0}
-        role="button"
-        aria-expanded={isOpen}
-        onKeyDown={handleKeyDown}
+        leftIcon={iconPosition === 'left' && (!isOpen ? faPlus : faMinus)}
+        rightIcon={iconPosition === 'right' && (!isOpen ? faPlus : faMinus)}
+        fullWidth
+        align="between"
+        appearance="link"
+        isSelected={isOpen}
+        withoutPadding
       >
-        {iconPosition === 'left' && (
-          <FontAwesomeIcon
-            icon={!isOpen ? faPlus : faMinus}
-            className={clsx(styles.accordionHeaderIcon, styles.left)}
-          />
-        )}
-        <div>{header}</div>
-        {iconPosition === 'right' && (
-          <FontAwesomeIcon
-            icon={!isOpen ? faPlus : faMinus}
-            className={clsx(styles.accordionHeaderIcon, styles.left)}
-          />
-        )}
-      </div>
+        {header}
+      </Button>
       {isOpen && <div className={styles.accordionContent}>{children}</div>}
     </div>
   );

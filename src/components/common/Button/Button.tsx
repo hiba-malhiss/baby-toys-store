@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { Icon } from '../Icon/Icon.tsx';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import type { IconColor } from '../Icon/icon.constant.ts';
 
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
 export type ButtonColor =
@@ -25,12 +26,14 @@ type ButtonProps = {
   onClick?: MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
   isRounded?: boolean;
+  iconColor?: IconColor;
   withoutPadding?: boolean;
   withAutoHeight?: boolean;
   isSelected?: boolean;
   isLoading?: boolean;
   fullWidth?: boolean;
   className?: string;
+  align?: string;
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -51,6 +54,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       withoutPadding,
       isSelected,
       className,
+      align,
+      iconColor,
       ...rest
     },
     ref
@@ -61,6 +66,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       styles['button--' + size + 'Size'],
       styles['button--' + color + 'Color'],
       styles['button--' + appearance + 'Appearance'],
+      styles['button--' + align + 'Align'],
       isDisabled && styles.isDisabled,
       fullWidth && styles.fullWidth,
       withoutPadding && styles.buttonNoPadding,
@@ -73,6 +79,11 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         ref={ref}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter') {
+            onClick && onClick(e);
+          }
+        }}
         className={calculatedClassName}
         onClick={onClick}
         disabled={isDisabled}
@@ -82,9 +93,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
         ) : (
           <>
-            {leftIcon && <Icon icon={leftIcon} className={styles.buttonIcon} size={size} />}
+            {leftIcon && (
+              <Icon color={iconColor} icon={leftIcon} className={styles.buttonIcon} size={size} />
+            )}
             {children}
-            {rightIcon && <Icon icon={rightIcon} className={styles.buttonIcon} size={size} />}
+            {rightIcon && (
+              <Icon color={iconColor} icon={rightIcon} className={styles.buttonIcon} size={size} />
+            )}
           </>
         )}
       </button>

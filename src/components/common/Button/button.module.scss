@@ -52,6 +52,14 @@
     }
   }
 
+  &--startAlign {
+    justify-content: flex-start;
+  }
+
+  &--betweenAlign {
+    justify-content: space-between;
+  }
+
   /* Sizes */
   &--largeSize {
     font-size: 16px;
@@ -177,7 +185,7 @@
 
   &.isDisabled {
     opacity: 0.5;
-    cursor: not-allowed;
+    cursor: not-allowed !important;
   }
 }
 
@@ -240,8 +248,14 @@ $appearances: (
             text-hover: $color-white,
             text-selected: $color-white,
             bg-default: $color-primary,
-            bg-hover: $color-primary-hover,
+            bg-hover: $color-info-hover,
             bg-selected: $color-primary-dark,
+        ),
+        light: (
+            text-default: $color-text-grey,
+            text-hover: $color-text-grey,
+            bg-default: $color-white,
+            bg-hover: $color-primary-light,
         ),
         accent: (
             text-default: $color-white,
