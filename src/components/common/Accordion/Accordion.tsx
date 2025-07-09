@@ -64,7 +64,6 @@ export const Accordion: React.FC<AccordionProps> = ({
         align={iconPosition === 'left' ? 'start' : 'between'}
         appearance={buttonAppearance}
         color={buttonColor}
-        isSelected={isOpen}
         withoutPadding={withoutHeaderPadding}
       >
         {header}

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { Accordion } from '../Accordion/Accordion.tsx';
 import { AccordionGroup } from '../Accordion/AccordionGroup.tsx';
 import { Button } from '../Button/Button.tsx';
@@ -11,6 +12,7 @@ export type MenuItem = {
   disabled?: boolean;
   items?: MenuItem[];
   command?: () => void;
+  route?: string;
 };
 
 interface PanelMenuProps {
@@ -20,6 +22,9 @@ interface PanelMenuProps {
 }
 
 export const PanelMenu: React.FC<PanelMenuProps> = ({ model, multiple = false }) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
   const renderSubMenu = (items: MenuItem[]) => {
     return items.map((item, idx) => {
       const hasSubmenu = item.items && item.items.length > 0;
@@ -40,14 +45,21 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ model, multiple = false })
       } else {
         return (
           <Button
-            onClick={() => item.command?.()}
+            key={idx}
+            onClick={() => {
+              if (item.route) {
+                navigate(item.route);
+              } else {
+                item.command?.();
+              }
+            }}
             isDisabled={item.disabled}
             leftIcon={item.icon}
             fullWidth
-            key={idx}
             color="light"
             align="start"
             className="bts-marginLxl"
+            isSelected={item.route === location.pathname}
           >
             {item.label}
           </Button>
@@ -64,12 +76,12 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ model, multiple = false })
         if (hasSubmenu) {
           return (
             <Accordion
-              buttonColor="light"
-              buttonAppearance="filled"
               key={index}
               header={item.label}
               disabled={item.disabled}
               withoutPadding
+              buttonColor="light"
+              buttonAppearance="filled"
             >
               <div>{renderSubMenu(item.items!)}</div>
             </Accordion>
@@ -77,13 +89,20 @@ export const PanelMenu: React.FC<PanelMenuProps> = ({ model, multiple = false })
         } else {
           return (
             <Button
-              onClick={() => item.command?.()}
+              key={index}
+              onClick={() => {
+                if (item.route) {
+                  navigate(item.route);
+                } else {
+                  item.command?.();
+                }
+              }}
               isDisabled={item.disabled}
               leftIcon={item.icon}
               fullWidth
-              key={index}
               color="light"
               align="start"
+              isSelected={item.route === location.pathname}
             >
               {item.label}
             </Button>
