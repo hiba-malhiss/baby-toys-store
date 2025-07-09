@@ -55,7 +55,7 @@ export const Accordion: React.FC<AccordionProps> = ({
         leftIcon={iconPosition === 'left' && (!isOpen ? faPlus : faMinus)}
         rightIcon={iconPosition === 'right' && (!isOpen ? faPlus : faMinus)}
         fullWidth
-        align="between"
+        align={iconPosition === 'left' ? 'start' : 'between'}
         appearance="link"
         isSelected={isOpen}
         withoutPadding
