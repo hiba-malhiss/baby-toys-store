@@ -2,7 +2,7 @@ import React, { useState, type ReactNode } from 'react';
 import styles from './accordion.module.scss';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { Button } from '../Button/Button.tsx';
+import { Button, type ButtonAppearance, type ButtonColor } from '../Button/Button.tsx';
 
 interface AccordionProps {
   header: ReactNode;
@@ -10,9 +10,12 @@ interface AccordionProps {
   children: ReactNode;
   isOpen?: boolean;
   withoutPadding?: boolean;
+  withoutHeaderPadding?: boolean;
   onToggle?: () => void;
   defaultOpen?: boolean;
   iconPosition?: 'left' | 'right';
+  buttonAppearance?: ButtonAppearance;
+  buttonColor?: ButtonColor;
 }
 
 export const Accordion: React.FC<AccordionProps> = ({
@@ -23,7 +26,10 @@ export const Accordion: React.FC<AccordionProps> = ({
   onToggle,
   defaultOpen = false,
   withoutPadding = false,
+  withoutHeaderPadding = false,
   iconPosition = 'right',
+  buttonAppearance = 'link',
+  buttonColor = 'primary',
 }) => {
   // If controlled, use controlledIsOpen, else manage local open state
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(defaultOpen);
@@ -56,9 +62,10 @@ export const Accordion: React.FC<AccordionProps> = ({
         rightIcon={iconPosition === 'right' && (!isOpen ? faPlus : faMinus)}
         fullWidth
         align={iconPosition === 'left' ? 'start' : 'between'}
-        appearance="link"
+        appearance={buttonAppearance}
+        color={buttonColor}
         isSelected={isOpen}
-        withoutPadding
+        withoutPadding={withoutHeaderPadding}
       >
         {header}
       </Button>

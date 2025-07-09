@@ -7,6 +7,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import type { IconColor } from '../Icon/icon.constant.ts';
 
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
+export type ButtonAppearance = 'link' | 'filled' | 'outline';
 export type ButtonColor =
   | 'primary'
   | 'accent'
@@ -18,7 +19,7 @@ export type ButtonColor =
 
 type ButtonProps = {
   children?: ReactNode;
-  appearance?: 'link' | 'filled' | 'outline';
+  appearance?: ButtonAppearance;
   color?: ButtonColor;
   size?: ButtonSize;
   leftIcon?: IconDefinition;
@@ -72,37 +73,43 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       withoutPadding && styles.buttonNoPadding,
       withAutoHeight && styles.buttonAutoHeight,
       isSelected && styles.isSelected,
-      children && styles.buttonWithText,
-      className
+      children && styles.buttonWithText
     );
 
     return (
-      <button
-        ref={ref}
-        onKeyDown={(e) => {
-          if (e.key === 'Enter') {
-            onClick && onClick(e);
-          }
-        }}
-        className={calculatedClassName}
-        onClick={onClick}
-        disabled={isDisabled}
-        {...rest}
-      >
-        {isLoading ? (
-          <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
-        ) : (
-          <>
-            {leftIcon && (
-              <Icon color={iconColor} icon={leftIcon} className={styles.buttonIcon} size={size} />
-            )}
-            {children}
-            {rightIcon && (
-              <Icon color={iconColor} icon={rightIcon} className={styles.buttonIcon} size={size} />
-            )}
-          </>
-        )}
-      </button>
+      <div className={clsx(className)}>
+        <button
+          ref={ref}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter') {
+              onClick && onClick(e);
+            }
+          }}
+          className={calculatedClassName}
+          onClick={onClick}
+          disabled={isDisabled}
+          {...rest}
+        >
+          {isLoading ? (
+            <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
+          ) : (
+            <>
+              {leftIcon && (
+                <Icon color={iconColor} icon={leftIcon} className={styles.buttonIcon} size={size} />
+              )}
+              {children}
+              {rightIcon && (
+                <Icon
+                  color={iconColor}
+                  icon={rightIcon}
+                  className={styles.buttonIcon}
+                  size={size}
+                />
+              )}
+            </>
+          )}
+        </button>
+      </div>
     );
   }
 );

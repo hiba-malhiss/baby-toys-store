@@ -106,6 +106,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
               size="xsmall"
               onClick={clearFilters}
               withoutPadding
+              withoutHeaderPadding
             >
               Clear Filters
             </Button>
@@ -127,13 +128,18 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
             )
           )}
           {filtersCount < 1 && (
-            <NoDataFound subtext="No filters applied" align="start" withoutPadding />
+            <NoDataFound
+              subtext="No filters applied"
+              align="start"
+              withoutPadding
+              withoutHeaderPadding
+            />
           )}
         </Flex>
 
         <Divider className="bts-marginTxl" />
 
-        <Accordion header="Category" withoutPadding>
+        <Accordion header="Category" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="category"
             selectedValue={urlFilters.category}
@@ -141,6 +147,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
             direction="vertical"
             align="start"
             spacing="l"
+            className="bts-marginTm"
           >
             {categoriesOptions.map(({ label, value }) => (
               <RadioButton key={value} value={value}>
@@ -150,7 +157,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
           </RadioButtonGroup>
         </Accordion>
 
-        <Accordion header="Color" withoutPadding>
+        <Accordion header="Color" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="color"
             selectedValue={urlFilters.color}
@@ -159,6 +166,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
             align="start"
             spacing="l"
             appearance="color-swatch"
+            className="bts-marginTm"
           >
             <RadioButton key="multi" value="multi" name="color" isRainbow />
             {colors.map(({ value }) => (
@@ -167,7 +175,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
           </RadioButtonGroup>
         </Accordion>
 
-        <Accordion header="Brand" withoutPadding>
+        <Accordion header="Brand" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="brand"
             selectedValue={urlFilters.brand}
@@ -175,6 +183,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
             direction="vertical"
             spacing="l"
             align="start"
+            className="bts-marginTm"
           >
             {brands.map(({ label, value }) => (
               <RadioButton key={value} value={value}>
@@ -184,7 +193,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
           </RadioButtonGroup>
         </Accordion>
 
-        <Accordion header="Material" withoutPadding>
+        <Accordion header="Material" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="material"
             selectedValue={urlFilters.material}
@@ -192,6 +201,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
             direction="vertical"
             spacing="l"
             align="start"
+            className="bts-marginTm"
           >
             {materials.map(({ label, value }) => (
               <RadioButton key={value} value={value}>
@@ -201,14 +211,14 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
           </RadioButtonGroup>
         </Accordion>
 
-        <Accordion header="Price" withoutPadding>
+        <Accordion header="Price" withoutPadding withoutHeaderPadding>
           <Slider
             min={priceRange?.[0]}
             max={priceRange?.[1]}
             step={1}
             range
             value={urlFilters.priceRange || defaultPriceRange}
-            className="bts-marginTxl"
+            className="bts-marginTxxl"
             onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
           />
         </Accordion>

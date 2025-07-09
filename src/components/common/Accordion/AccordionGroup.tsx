@@ -1,5 +1,6 @@
 import React, { type ReactElement, Children, cloneElement, useState } from 'react';
 import styles from './accordion.module.scss';
+import clsx from 'clsx';
 
 interface AccordionProps {
   isOpen?: boolean;
@@ -13,12 +14,14 @@ interface AccordionProps {
 interface AccordionGroupProps {
   children: ReactElement<AccordionProps>[] | ReactElement<AccordionProps>;
   allowMultipleOpen?: boolean; // optional, default false
+  fullWidth?: boolean;
   onChange?: (key: string) => void;
 }
 
 export const AccordionGroup: React.FC<AccordionGroupProps> = ({
   children,
   allowMultipleOpen = false,
+  fullWidth = false,
   onChange,
 }) => {
   // Initialize open state for all accordions; defaultOpen respected if provided
@@ -47,7 +50,7 @@ export const AccordionGroup: React.FC<AccordionGroupProps> = ({
   };
 
   return (
-    <div className={styles.accordionGroup}>
+    <div className={clsx(styles.accordionGroup, fullWidth && styles.fullWidth)}>
       {Children.map(children, (child, index) => {
         if (!React.isValidElement<AccordionProps>(child)) return null;
         const key = child.key ?? index; // fallback if no key is provided

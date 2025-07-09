@@ -20,7 +20,7 @@
 }
 
 @mixin bts-button-hover($color, $background, $border : transparent, $icon-color: $color, $text-underline-decoration: transparent) {
-  &:hover:not(.is-disabled):not(.is-selected):not(.has-error) {
+  &:hover:not(.is-disabled):not(.has-error) {
     background-color: $background;
     color: $color;
     border-color: $border;
