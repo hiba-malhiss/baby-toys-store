@@ -1,6 +1,5 @@
 import Flex from '../Flex/Flex.tsx';
 import React from 'react';
-import BreadcrumbItem from './BreadcrumbItem';
 
 type BreadcrumbProps = {
   children: React.ReactNode;
@@ -17,4 +16,4 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ children, className }) => {
   );
 };
 
-export default BreadcrumbItem;
+export default Breadcrumb;
