@@ -1,6 +1,6 @@
 import React from 'react';
 import StringInput from '../StringInput/StringInput';
-import { useToast } from '../Toast';
+import { useToast } from '../Toast/ToastContext';
 
 export interface QuantityInputProps {
   availableInStock: number;

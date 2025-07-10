@@ -12,6 +12,7 @@ import { ToastProvider } from '@baby-toys/ui-kit/components';
 import { StoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
 import { AuthProvider } from './context/AuthContext.tsx';
 import WishListPage from './pages/WishListPage/WishListPage.tsx';
+import AdminRedirect from './components/features/AdminRedirect/AdminRedirect.tsx';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage.tsx';
 import ContactUsPage from './pages/ContactUsPage/ContactUsPage.tsx';
 import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage.tsx';
@@ -33,6 +34,7 @@ const App: React.FC = () => {
                   <Route path="/product-details/:id" element={<ProductDetailsPage />} />
                   <Route path="/shopping-cart" element={<ShoppingCartPage />} />
                   <Route path="/wish-list" element={<WishListPage />} />
+                  <Route path="/admin" element={<AdminRedirect />} />
                   <Route path="/orders-history" element={<OrderHistoryPage />} />
                   <Route path="/checkout" element={<CheckoutPage />} />
                   <Route path="/contact-us" element={<ContactUsPage />} />
