@@ -1,4 +1,6 @@
 @use '@baby-toys/ui-kit/styles/constants.scss' as *;
+@forward '@baby-toys/ui-kit/styles/spacing';
+@forward '@baby-toys/ui-kit/styles/css-reset';
 
 body {
   margin: 0;

@@ -1,5 +1,7 @@
 .card {
   border: 1px solid $color-border;
+  background-color: $color-white;
+  box-shadow: $shadow-xs;
 
   &.fullWidth {
     width: 100%;

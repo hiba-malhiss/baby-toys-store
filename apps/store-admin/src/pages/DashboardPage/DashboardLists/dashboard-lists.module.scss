@@ -1,0 +1,12 @@
+.listsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: $spacing-lg;
+  margin-bottom: $spacing-xl;
+
+  ul li {
+    padding: 0.25rem 0;
+    font-size: 0.9rem;
+    color: $color-text-primary;
+  }
+}

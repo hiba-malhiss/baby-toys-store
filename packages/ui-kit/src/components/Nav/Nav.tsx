@@ -41,6 +41,7 @@ const Nav: React.FC<NavProps> = ({ config, isActivePath, direction = 'horizontal
               size="medium"
               leftIcon={icon}
               isSelected={isActive}
+              withoutPadding={direction === 'vertical'}
             >
               {label}
             </Button>

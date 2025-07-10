@@ -1,0 +1,29 @@
+.adminLayout {
+  display: flex;
+  height: 100vh;
+  background-color: #f9fafb;
+}
+
+.sidebar {
+  width: 250px;
+  color: #f0f0f0;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: $box-shadow-l;
+
+  .logo {
+    margin-bottom: 32px;
+    max-width: 120px;
+  }
+
+  .nav {
+    flex-grow: 1;
+  }
+}
+
+.mainContent {
+  flex-grow: 1;
+  padding: 32px;
+  overflow-y: auto;
+}

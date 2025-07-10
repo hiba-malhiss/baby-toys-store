@@ -1,0 +1,10 @@
+.chartsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: $spacing-xl;
+  margin-bottom: $spacing-xl;
+}
+
+.chartCard canvas {
+  max-width: 100%;
+}

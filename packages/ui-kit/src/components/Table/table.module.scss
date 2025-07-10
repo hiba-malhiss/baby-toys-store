@@ -36,7 +36,6 @@
 
 .table th.sortable {
   cursor: pointer;
-  color: $color-primary;
   &:hover {
     color: $color-primary-hover;
   }
@@ -59,7 +58,7 @@
 }
 
 .table tbody tr.rowHover:hover {
-  background-color: color.scale($color-bg-secondary, $lightness: -5%);
+  background-color: $color-bg-secondary
 }
 
 .table tbody tr.selected {
@@ -67,7 +66,7 @@
 }
 
 .table tbody tr.selected.rowHover:hover {
-  background-color: color.scale($color-primary-light, $lightness: -5%);
+  background-color: $color-primary-light
 }
 
 .paginatorWrapper {
