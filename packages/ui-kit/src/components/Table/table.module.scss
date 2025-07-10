@@ -1,9 +1,9 @@
 .tableWrapper {
   width: 100%;
   overflow-y: auto;
-  border: 1px solid #e1e4e8;
-  border-radius: 6px;
-  background-color: #fff;
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background-color: $color-bg-primary;
   box-shadow: $shadow-xs;
   display: flex;
   flex-direction: column;
@@ -15,71 +15,71 @@
   border-collapse: separate;
   border-spacing: 0;
   font-size: 15px;
-  color: #24292e;
+  color: $color-text-primary;
 }
 
 .table th,
 .table td {
-  padding: 14px 20px;
-  border-bottom: 1px solid #e1e4e8;
+  padding: $spacing-md $spacing-lg;
+  border-bottom: 1px solid $color-border-light;
 }
 
 .table th {
-  background-color: #f6f8fa;
+  background-color: $color-bg-secondary;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.03em;
   user-select: none;
   position: relative;
+  transition: color $transition-fast;
 }
 
 .table th.sortable {
   cursor: pointer;
-  color: #0366d6;
-  transition: color 0.2s ease;
-}
-
-.table th.sortable:hover {
-  color: #005cc5;
+  color: $color-primary;
+  &:hover {
+    color: $color-primary-hover;
+  }
 }
 
 .sortIcon {
   margin-left: 8px;
   font-size: 14px;
-  color: #6a737d;
+  color: $color-text-muted;
   vertical-align: middle;
+  transition: color $transition-fast;
 }
 
 .table tbody tr {
-  transition: background-color 0.15s ease;
+  transition: background-color $transition-fast;
 }
 
 .table tbody tr.striped:nth-child(even) {
-  background-color: #f6f8fa;
+  background-color: $color-bg-secondary;
 }
 
 .table tbody tr.rowHover:hover {
-  background-color: #e1e4e8;
+  background-color: color.scale($color-bg-secondary, $lightness: -5%);
 }
 
 .table tbody tr.selected {
-  background-color: #c8e1ff;
+  background-color: $color-primary-light;
 }
 
 .table tbody tr.selected.rowHover:hover {
-  background-color: #a5d1ff;
+  background-color: color.scale($color-primary-light, $lightness: -5%);
 }
 
 .paginatorWrapper {
-  margin: 16px;
+  margin: $spacing-md;
 }
 
 .loadingOverlay {
-  padding: 24px;
+  padding: $spacing-lg;
   text-align: center;
   font-weight: 600;
-  color: #586069;
+  color: $color-text-secondary;
   font-size: 16px;
-  background-color: rgba(246, 248, 250, 0.8);
-  border-radius: 0 0 6px 6px;
+  background-color: rgba($color-bg-primary, 0.9);
+  border-radius: 0 0 $radius-md $radius-md;
 }
