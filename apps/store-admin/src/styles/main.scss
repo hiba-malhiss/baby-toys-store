@@ -1,0 +1,10 @@
+@use '@baby-toys/ui-kit/styles/constants.scss' as *;
+
+body {
+  margin: 0;
+  font-family: 'Comfortaa', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: $color-bg-secondary;
+  color: $color-text-primary;
+}

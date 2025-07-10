@@ -60,6 +60,7 @@ const generateRandomToys = (count = 19): Product[] => {
       : undefined;
     const labelRandom = seededRandom(seed * 5);
     const label = oldPrice ? 'SALE' : labelRandom < 0.3 ? 'NEW' : undefined;
+    const sales = Math.floor(seededRandom(seed * 17) * 500); // random sales between 0 and 499
 
     // Create consistent ID based on index
     const id = `toy-${index + 1}`;
@@ -76,6 +77,7 @@ const generateRandomToys = (count = 19): Product[] => {
       images: galleryImages,
       price,
       oldPrice,
+      sales,
       label,
       rating: parseFloat((seededRandom(seed * 10) * 1.5 + 3.5).toFixed(1)),
       numberOfRatings: Math.floor(seededRandom(seed * 11) * 1000),

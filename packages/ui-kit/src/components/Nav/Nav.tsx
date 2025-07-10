@@ -15,13 +15,14 @@ type NavItem = {
 type NavProps = {
   config: NavItem[];
   isActivePath?: (navPath: string, currentPath: string) => boolean;
+  direction: 'horizontal' | 'vertical';
 };
 
-const Nav: React.FC<NavProps> = ({ config, isActivePath }) => {
+const Nav: React.FC<NavProps> = ({ config, isActivePath, direction = 'horizontal' }) => {
   const location = useLocation();
 
   return (
-    <Flex spacing="l">
+    <Flex spacing="l" direction={direction}>
       {config.map(({ path, label, icon }) => {
         const isActive = isActivePath
           ? isActivePath(path, location.pathname)
