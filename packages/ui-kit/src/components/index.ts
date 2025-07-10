@@ -46,6 +46,7 @@ export { default as Tooltip } from './Tooltip/Tooltip';
 export { default as ViewSwitcher } from './ViewSwitcher/ViewSwitcher';
 export { default as TabBarItem } from './TabBar/TabBarItem';
 export { default as Option } from './Select/Option';
+export { default as Table } from './Table/Table';
 export type { ButtonAppearance, ButtonColor, ButtonSize } from './Button/Button';
 export { default as RadioButton } from './RadioButtonGroup/RadioButton';
 export type { RadioOption } from './RadioButtonGroup/RadioButtonGroup';

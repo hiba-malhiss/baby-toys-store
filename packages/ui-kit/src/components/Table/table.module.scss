@@ -1,0 +1,85 @@
+.tableWrapper {
+  width: 100%;
+  overflow-y: auto;
+  border: 1px solid #e1e4e8;
+  border-radius: 6px;
+  background-color: #fff;
+  box-shadow: $shadow-xs;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 15px;
+  color: #24292e;
+}
+
+.table th,
+.table td {
+  padding: 14px 20px;
+  border-bottom: 1px solid #e1e4e8;
+}
+
+.table th {
+  background-color: #f6f8fa;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  user-select: none;
+  position: relative;
+}
+
+.table th.sortable {
+  cursor: pointer;
+  color: #0366d6;
+  transition: color 0.2s ease;
+}
+
+.table th.sortable:hover {
+  color: #005cc5;
+}
+
+.sortIcon {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #6a737d;
+  vertical-align: middle;
+}
+
+.table tbody tr {
+  transition: background-color 0.15s ease;
+}
+
+.table tbody tr.striped:nth-child(even) {
+  background-color: #f6f8fa;
+}
+
+.table tbody tr.rowHover:hover {
+  background-color: #e1e4e8;
+}
+
+.table tbody tr.selected {
+  background-color: #c8e1ff;
+}
+
+.table tbody tr.selected.rowHover:hover {
+  background-color: #a5d1ff;
+}
+
+.paginatorWrapper {
+  margin: 16px;
+}
+
+.loadingOverlay {
+  padding: 24px;
+  text-align: center;
+  font-weight: 600;
+  color: #586069;
+  font-size: 16px;
+  background-color: rgba(246, 248, 250, 0.8);
+  border-radius: 0 0 6px 6px;
+}
