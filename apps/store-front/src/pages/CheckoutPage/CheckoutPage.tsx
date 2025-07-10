@@ -9,7 +9,6 @@ import {
   Select,
   useToast,
 } from '@baby-toys/ui-kit/components';
-import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { calculateOrderSummary } from '../../utils/order.utils';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { mockPlaceOrder, mockFetchShippingInfo } from '../../mock-data/useMockProductsApi.ts';
@@ -22,6 +21,7 @@ import { Alert } from '@baby-toys/ui-kit/components';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import type { OrderPayload } from '../../types/product.types.ts';
 import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 

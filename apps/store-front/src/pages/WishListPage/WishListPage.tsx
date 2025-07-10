@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit/components';
 import { mockFetchWishlist } from '../../mock-data/useMockProductsApi';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
@@ -9,6 +8,7 @@ import SmartProductCard from '../../components/features/SmartProductCard/SmartPr
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 const LIST_PAGE_SIZE = 3;
 

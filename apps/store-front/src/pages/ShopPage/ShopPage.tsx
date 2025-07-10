@@ -3,15 +3,15 @@ import styles from './shop-page.module.scss';
 import { ViewSwitcher, Flex } from '@baby-toys/ui-kit/components';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
-import { SideFilters } from './features/SideFilters/SideFilters.tsx';
 import { getProductCategories, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants.ts';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
-import { SortProductsWithUrl } from './features/SortProductsWithUrl.tsx';
 import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants.ts';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import type { ViewMode } from '@baby-toys/ui-kit/components';
+import { SideFilters } from './SideFilters/SideFilters.tsx';
+import { SortProductsWithUrl } from './SortProductsWithUrl.tsx';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
@@ -27,7 +27,7 @@ const ShopPage = () => {
 
   // Update full filter object when side filters or sortBy change
   useEffect(() => {
-    if (!sideFilters) return;
+    if(!sideFilters) return;
     handleFiltersChange({ ...sideFilters, sortBy });
   }, [sideFilters, sortBy, handleFiltersChange]);
 

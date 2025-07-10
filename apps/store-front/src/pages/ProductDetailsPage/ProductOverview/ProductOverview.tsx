@@ -17,8 +17,8 @@ import clsx from 'clsx';
 import { useCartStore } from '../../../store/useCartStore';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { ProductQuantityInput } from '@baby-toys/ui-kit/components';
-import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
+import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);

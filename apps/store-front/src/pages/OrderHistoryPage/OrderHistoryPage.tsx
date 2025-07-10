@@ -1,15 +1,15 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PageContainer } from '../../components/PageContainer/PageContainer';
 import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit/components';
-import OrderProductCard from './features/OrderProductCard/OrderProductCard';
-import AddReviewDialog from './features/AddReviewDialog';
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore } from '../../store/useCartStore';
 import { useHandlePagination } from '../../hooks/useHandlePagination';
 import { mockFetchOrdersHistory } from '../../mock-data/useMockProductsApi';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import type { CartItem } from '../../types/product.types.ts';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import AddReviewDialog from './AddReviewDialog.tsx';
+import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
 
 const PAGE_SIZE = 2;
 const OrderHistoryPage: React.FC = () => {

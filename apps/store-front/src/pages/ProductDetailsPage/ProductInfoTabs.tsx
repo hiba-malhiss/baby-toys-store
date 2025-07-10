@@ -5,7 +5,7 @@ import styles from './product-details-page.module.scss';
 import { Card } from '@baby-toys/ui-kit/components';
 import { getPolicies, useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import { ExpandableContent } from '@baby-toys/ui-kit/components';
-import { ProductReviews } from './features/ProductReviews.tsx';
+import { ProductReviews } from './ProductReviews.tsx';
 
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
   const [description, setDescription] = useState('');

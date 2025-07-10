@@ -10,13 +10,13 @@ import {
   NoDataFound,
   BouncingDotsLoader,
 } from '@baby-toys/ui-kit/components';
-import { useStoreConfiguration } from '../..//context/StoreConfigurationContext.tsx';
-import { calculateOrderSummary } from '../../utils/order.utils.ts';
-import { useCartStore } from '../../store/useCartStore';
 import styles from './shopping-cart-drawer.module.scss';
-import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
-import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
+import { useCartStore } from '../../../store/useCartStore.ts';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
+import { calculateOrderSummary } from '../../../utils/order.utils.ts';
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
+import { useCartStockSync } from '../../../hooks/useCartStockSync.ts';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;

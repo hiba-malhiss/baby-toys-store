@@ -1,10 +1,10 @@
 import React, { useCallback } from 'react';
-import SmartProductCard from '../../components/SmartProductCard/SmartProductCard';
 import { getRelatedProducts } from '../../mock-data/useMockProductsApi';
 import Section from '../../components/features/Section/Section.tsx';
 import { ViewSwitcher } from '@baby-toys/ui-kit/components';
 import styles from './product-details-page.module.scss';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
+import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
 
 const PAGE_NUMBER = 6;
 const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId }) => {

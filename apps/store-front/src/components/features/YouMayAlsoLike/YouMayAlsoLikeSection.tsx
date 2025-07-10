@@ -1,9 +1,9 @@
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import React from 'react';
 import Section from '../Section/Section.tsx';
 import { Carousel, ViewSwitcher } from '@baby-toys/ui-kit/components';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
+import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useHandlePagination } from '../../../hooks/useHandlePagination.ts';
 
 interface YouMayAlsoLikeSectionProps {
   mode?: 'carousel' | 'flex';
@@ -12,15 +12,15 @@ interface YouMayAlsoLikeSectionProps {
 
 const PAGE_SIZE = 8;
 const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({
-  mode = 'carousel',
-  className,
-}) => {
+                                                                       mode = 'carousel',
+                                                                       className,
+                                                                     }) => {
   const { fetchProducts } = useMockProductsApi(PAGE_SIZE);
   const { items, totalSize, page, loading, handlePaginationChange, hasMore } = useHandlePagination(
     (page, filters) => fetchProducts(page, filters),
     PAGE_SIZE,
     false,
-    'infinite-scroll'
+    'infinite-scroll',
   );
 
   return (

@@ -4,12 +4,12 @@ import { faHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { Icon, IconColor, Flex, CartButton, Button } from '@baby-toys/ui-kit/components';
 
 import styles from './header.module.scss';
-import { useCartStore } from '../../store/useCartStore.ts';
-import { useAuth } from '../../context/AuthContext';
-import { useStoreConfiguration } from '../../context/StoreConfigurationContext';
-import { getProductCategories } from '../../mock-data/useMockProductsApi.ts';
 import SearchInputWithUrl from './SearchInputWithUrl.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
+import { useCartStore } from '../../../store/useCartStore.ts';
+import { useAuth } from '../../../context/AuthContext.tsx';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
+import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
@@ -57,6 +57,16 @@ const Header = () => {
               onClick={() => navigate('/orders-history')}
             >
               My Orders
+            </Button>
+          )}
+          {isLoggedIn && (
+            <Button
+              withoutPadding
+              appearance="link"
+              color="light"
+              onClick={() => navigate('/admin')}
+            >
+              Admin
             </Button>
           )}
           <AuthButtonsWithDialogs />
