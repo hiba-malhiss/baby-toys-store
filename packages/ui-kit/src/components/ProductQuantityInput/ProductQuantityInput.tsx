@@ -1,5 +1,6 @@
 import React from 'react';
-import { StringInput, useToast } from '@baby-toys/ui-kit/components';
+import StringInput from '../StringInput/StringInput';
+import { useToast } from '../Toast';
 
 export interface QuantityInputProps {
   availableInStock: number;

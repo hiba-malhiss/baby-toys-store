@@ -1,6 +1,7 @@
 import React from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 import { baseBreadcrumbs } from './breadcrumb.config.ts';
+import { Link } from 'react-router-dom';
 import { Breadcrumb, BreadcrumbItem } from '@baby-toys/ui-kit/components';
 import { useBreadcrumb } from '@baby-toys/ui-kit/hooks';
 
@@ -38,6 +39,7 @@ const LayoutBreadcrumb: React.FC<LayoutBreadcrumbProps> = ({ className }) => {
             isFirst={index === 0}
             isLast={finalCrumbs.length > 1 && index === finalCrumbs.length - 1}
             item={item}
+            linkComponent={Link}
           />
         );
       })}

@@ -11,7 +11,7 @@ import { TotalAmountSection } from '../../components/TotalAmount/TotalAmountSect
 import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../../components/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
-import ProductQuantityInput from '../../components/ProductQuantityInput/ProductQuantityInput.tsx';
+import { ProductQuantityInput } from '@baby-toys/ui-kit/components';
 import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
 
 const ShoppingCartPage = () => {

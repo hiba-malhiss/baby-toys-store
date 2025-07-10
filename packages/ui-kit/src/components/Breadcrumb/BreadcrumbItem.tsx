@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import type { ComponentType } from 'react';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import clsx from 'clsx';
 
@@ -17,12 +17,14 @@ interface BreadcrumbItemProps {
   isFirst?: boolean;
   isLast?: boolean;
   item: BreadcrumbItemData;
+  linkComponent?: ComponentType<any>;
 }
 
 const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
   isFirst = false,
   isLast = false,
   item,
+  linkComponent: LinkComponent,
 }) => {
   if (!item) return null;
 
@@ -40,7 +42,11 @@ const BreadcrumbItem: React.FC<BreadcrumbItemProps> = ({
       className={clsx(styles.breadcrumbItem, isLast && styles.isLast)}
     >
       {!isFirst && <div className={styles.breadcrumbItemSeparator}>/</div>}
-      {item.path ? <Link to={item.path}>{content}</Link> : content}
+      {LinkComponent && item.path ? (
+        <LinkComponent to={item.path}>{content}</LinkComponent>
+      ) : (
+        <a href={item.path}>{content}</a>
+      )}
     </Flex>
   );
 };

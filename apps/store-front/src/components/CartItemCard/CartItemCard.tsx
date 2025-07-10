@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './cart-item-card.module.scss';
 import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import ProductQuantityInput from '../ProductQuantityInput/ProductQuantityInput.tsx';
+import { ProductQuantityInput } from '@baby-toys/ui-kit/components';
 import { Button, Flex } from '@baby-toys/ui-kit/components';
 
 interface CartItemCardProps {

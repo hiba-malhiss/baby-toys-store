@@ -16,7 +16,7 @@ import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-sv
 import clsx from 'clsx';
 import { useCartStore } from '../../../store/useCartStore';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
-import ProductQuantityInput from '../../../components/ProductQuantityInput/ProductQuantityInput.tsx';
+import { ProductQuantityInput } from '@baby-toys/ui-kit/components';
 import { socialMediaLinks } from '../../../components/Footer/footer.constants.ts';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
 
