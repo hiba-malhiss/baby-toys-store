@@ -1,0 +1,29 @@
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-weight: 500;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
+  font-family: 'Poppins', sans-serif;
+  gap: 6px;
+  font-size: 14px;
+
+  &.hasClose {
+    padding-right: 0;
+  }
+
+  &--primary {
+    background-color: $color-accent;
+    color: $color-white;
+  }
+
+  &--secondary-outline {
+    background-color: $color-white;
+    color: $color-text-grey;
+    border: 1px solid $color-border;
+    border-radius: 15px;
+  }
+}

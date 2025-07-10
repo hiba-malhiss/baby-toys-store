@@ -1,0 +1,4 @@
+.tabBarItem {
+  width: 100%;
+  @include animate-fade-in();
+}

@@ -1,0 +1,67 @@
+.reviewCard {
+  display: grid;
+  grid-template-areas:
+    'rating'
+    'comment'
+    'avatar';
+  gap: 12px;
+  padding: 36px 36px 16px;
+  background-image: url('/assets/images/review-card.svg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+
+  &.withoutPadding {
+    padding: 0;
+  }
+
+  &--fullHeight {
+    height: 100%;
+  }
+
+  &--detailed {
+    gap: 8px;
+    background-image: unset;
+    border: 1px solid $color-border;
+
+    padding: 16px;
+    grid-template-areas:
+      'avatar'
+      'rating'
+      'comment';
+
+    .reviewCard-comment {
+      display: inline-block !important;
+      font-size: 14px;
+    }
+  }
+
+  &-avatarBlock {
+    grid-area: avatar;
+  }
+
+  &-name {
+    font-weight: 600;
+    color: $color-text-review;
+    font-size: 16px;
+  }
+
+  &-date {
+    color: $color-text-review;
+    font-size: 12px;
+  }
+
+  &-rating {
+    grid-area: rating;
+  }
+
+  &-comment {
+    @include line-clamp(4);
+    grid-area: comment;
+    color: $color-text-review;
+    font-size: 16px;
+    margin: 0;
+    width: 100%;
+    line-height: 20px;
+  }
+}

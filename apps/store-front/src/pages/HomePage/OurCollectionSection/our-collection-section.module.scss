@@ -1,0 +1,25 @@
+.ourCollection {
+  margin-top: 30px;
+
+  &-categories {
+    min-height: 178px;
+    gap: 5vw;
+  }
+
+  &-image {
+    height: 130px;
+  }
+}
+
+@media (max-width: 900px) {
+  .ourCollection-categories {
+    height: auto;
+    justify-content: center !important;
+    gap: 16px;
+  }
+  .ourCollection-image {
+    height: 80px;
+    width: auto;
+    margin-bottom: 4px;
+  }
+}

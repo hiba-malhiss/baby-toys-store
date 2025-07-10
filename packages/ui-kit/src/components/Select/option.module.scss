@@ -1,0 +1,32 @@
+.Option {
+  box-sizing: border-box;
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 20px;
+  padding: 10px;
+  text-align: left;
+  height: 40px;
+  background-color: $color-white;
+  color: $color-text-grey;
+
+  &:hover {
+    background-color: $color-secondary-light;
+  }
+
+  &.is-selected {
+    background-color: $color-primary;
+    color: $color-white;
+
+    &:hover {
+      background-color: $color-primary-hover;
+    }
+  }
+
+  &.is-disabled {
+    color: $color-text-muted !important;
+    background-color: $color-secondary-light-hover !important;
+    cursor: not-allowed;
+  }
+}

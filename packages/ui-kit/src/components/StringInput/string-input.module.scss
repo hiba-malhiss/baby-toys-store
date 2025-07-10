@@ -1,0 +1,153 @@
+.fullWidth {
+  width: 100% !important;
+}
+
+.stringInput {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  width: max-content;
+  position: relative;
+
+  &--rightIcon {
+    direction: rtl;
+  }
+
+  &--mediumSize {
+    grid-template-columns: 44px 1fr;
+  }
+
+  &--smallSize {
+    grid-template-columns: 27px 1fr;
+  }
+
+  &--fullWidth {
+    width: 100% !important;
+
+    input {
+      width: 100% !important;
+    }
+  }
+
+  &--withControls {
+    .input {
+      padding-left: 48px !important;
+      padding-right: 48px !important;
+    }
+  }
+
+  // Control buttons (– / +)
+  &-decreaseControl,
+  &-increaseControl {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border-radius: 0;
+  }
+
+  &-decreaseControl {
+    left: 0;
+    border-right: 1px solid $color-border;
+  }
+
+  &-increaseControl {
+    right: 0;
+    border-left: 1px solid $color-border;
+  }
+
+  .icon {
+    grid-column: 1/2;
+    grid-row: 1/2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    margin-left: 1px;
+    margin-right: 1px;
+  }
+
+  &.is-rounded {
+    .icon {
+      border-radius: 26px !important;
+    }
+
+    .input {
+      border-radius: 26px !important;
+    }
+  }
+
+  // Input styles
+  .input {
+    color: $color-text-primary;
+    direction: ltr;
+    grid-column: 1/-1;
+    grid-row: 1/2;
+    width: 100%;
+    @include form-input-base();
+
+    &--largeSize {
+      @include form-input-large();
+    }
+
+    &--mediumSize {
+      @include form-input-medium();
+    }
+
+    &--smallSize {
+      @include form-input-small();
+    }
+
+    &.has-error {
+      border: 1.5px solid $color-error !important;
+    }
+
+    &[type='date'] {
+      padding: 8px 12px 7px 12px;
+      line-height: 21px;
+      width: 200px;
+    }
+
+    &[type='time'] {
+      padding: 8px 12px 7px 12px;
+      line-height: 21px;
+      width: 144px;
+    }
+
+    &:not([type='date']):not([type='time']) {
+      width: 188px;
+    }
+
+    &::placeholder {
+      color: $color-text-muted;
+    }
+
+    &:not(:focus):not(:hover).has-error {
+      border-color: $color-error;
+    }
+
+    &.has-icon {
+      &.mediumSize-leftIcon {
+        padding-left: 44px;
+      }
+
+      &.smallSize-leftIcon {
+        padding-left: 28px;
+      }
+
+      &.mediumSize-rightIcon {
+        padding-right: 44px;
+      }
+
+      &.smallSize-rightIcon {
+        padding-right: 28px;
+      }
+    }
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+}

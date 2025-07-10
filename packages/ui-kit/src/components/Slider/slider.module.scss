@@ -1,0 +1,206 @@
+@use 'sass:color';
+
+// Core sizes
+$track-thickness: 10px;
+$handle-width: 16px;
+$handle-border: 2px;
+$track-extend: 7px;
+$track-border-radius: 4px;
+$h-min-max-gap: 8px;
+$v-min-max-gap: 0px;
+
+// Reduce width by handler size
+$width-shrink: $handle-width;
+$horizontal-slider-width-calc: calc(100% - #{$width-shrink});
+$horizontal-slider-left-offset: calc($width-shrink/2);
+
+// Reduce height by handler size and label size
+$min-max-font-size: 12px;
+$height-shrink: 2 * calc($min-max-font-size + ($handle-width / 2) + ($v-min-max-gap/2));
+$vertical-slider-height-calc: calc(100% - #{$height-shrink});
+
+$center-handler-position: calc(($track-thickness - $handle-width) / 2);
+
+.slider {
+  position: relative;
+  width: 100%;
+  touch-action: none;
+
+  &--horizontal {
+    width: $horizontal-slider-width-calc;
+    left: $horizontal-slider-left-offset;
+
+    .slider-handle {
+      top: $center-handler-position;
+    }
+
+    .slider-filledTrack {
+      height: 100%;
+    }
+  }
+
+  &--vertical {
+    width: $track-thickness;
+    height: $vertical-slider-height-calc;
+    top: $height-shrink;
+
+    .slider-handle {
+      left: $center-handler-position;
+    }
+
+    .slider-track {
+      width: $track-thickness;
+      height: 100%;
+    }
+
+    .slider-filledTrack {
+      width: 100%;
+    }
+
+    .slider-handleLabel {
+      left: 17px;
+      top: -2px;
+    }
+
+    .slider-minMaxLabel {
+      flex-direction: column-reverse;
+      height: calc(100% + #{$height-shrink});
+      width: 100%;
+      margin: 0 8px;
+      top: -1 * calc($height-shrink / 2);
+      align-items: center;
+
+      span:last-child {
+        padding-top: 1px;
+      }
+    }
+  }
+
+  &-isDisabled {
+    cursor: not-allowed;
+  }
+
+  &-track {
+    position: relative;
+    background-color: $color-border;
+    border-radius: $track-border-radius;
+    width: 100%;
+    height: $track-thickness;
+    margin-bottom: $h-min-max-gap;
+    overflow: hidden;
+
+    &-isDisabled {
+      background-color: $color-disabled;
+    }
+  }
+
+  &-filledTrack {
+    position: absolute;
+    background-color: $color-primary;
+    border-radius: $track-border-radius;
+
+    &-isDisabled {
+      background-color: $color-disabled2;
+    }
+  }
+
+  &-handle {
+    z-index: 2;
+    box-sizing: border-box;
+    user-select: none;
+    touch-action: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    position: absolute;
+    width: $handle-width;
+    height: $handle-width;
+    background-color: $color-white;
+    border: $handle-border solid $color-primary;
+    cursor: pointer;
+
+    &-isDisabled {
+      background-color: $color-disabled;
+      border: $handle-border solid color.adjust($color-disabled, $lightness: -10%);
+      cursor: not-allowed;
+    }
+  }
+
+  &-handleLabel {
+    position: absolute;
+    color: $color-text-primary;
+    font-size: 12px;
+    font-weight: bold;
+    white-space: nowrap;
+    pointer-events: none;
+    border: 1px solid $color-border;
+    border-radius: 4px;
+    padding: 2px;
+    background: transparent;
+    top: -23px;
+  }
+
+  &-minMaxLabel {
+    display: flex;
+    justify-content: space-between;
+    font-size: $min-max-font-size;
+    color: $color-text-primary;
+    user-select: none;
+    position: absolute;
+    width: calc(100% + $width-shrink);
+    left: -1 * calc($width-shrink/2);
+  }
+}
+
+// Fill slider track under slider handlers
+.slider {
+  &-range {
+    &:after,
+    &:before {
+      background: $color-border !important;
+    }
+  }
+
+  &:after,
+  &:before {
+    content: ' ';
+    position: absolute;
+    width: 14px;
+    z-index: 1;
+    top: 0;
+    border-radius: $track-border-radius;
+  }
+
+  &:after {
+    height: $track-thickness;
+    left: -$track-extend;
+    background: $color-primary;
+  }
+
+  &:before {
+    height: $track-thickness;
+    right: -$track-extend;
+    background: $color-border;
+  }
+
+  &--vertical {
+    &:before,
+    &:after {
+      width: $track-thickness;
+      height: 14px;
+    }
+
+    &:before {
+      left: 0;
+      top: -$track-extend;
+      width: $track-thickness;
+    }
+
+    &:after {
+      left: 0;
+      top: auto;
+      bottom: -$track-extend;
+    }
+  }
+}

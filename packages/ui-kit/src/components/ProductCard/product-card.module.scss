@@ -1,0 +1,216 @@
+.productCard {
+  cursor: pointer;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+  max-width: 280px;
+  transition:
+    $transition-transform,
+    box-shadow $transition-normal;
+
+  @include animate-fade-in-up();
+
+  &.fullWidth {
+    max-width: 100%;
+
+    .productCard-box {
+      max-width: 100%;
+    }
+  }
+
+  &--Small {
+    gap: 8px !important;
+
+    .productCard-box {
+      height: 84px;
+      width: 84px;
+    }
+  }
+
+  .productCard-rating {
+    padding-top: 6px;
+  }
+
+  &--vertical {
+    .productCard-info {
+      gap: 6px;
+    }
+  }
+
+  &--horizontal {
+    grid-template-columns: max-content 1fr;
+    gap: 36px;
+    align-items: flex-start;
+    max-width: 100%;
+
+    .productCard-info {
+      height: 100%;
+      padding: 8px 0;
+    }
+
+    .productCard-buttons {
+      margin-top: auto;
+      position: static;
+      padding-top: 8px;
+    }
+
+    .productCard-rating {
+      padding-top: 12px;
+    }
+  }
+
+  &-box {
+    position: relative;
+    height: 280px;
+    width: 100%;
+    max-width: 280px;
+    max-height: 360px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  &-chip {
+    position: absolute;
+    top: 13px;
+    z-index: 10;
+    left: 11px;
+  }
+
+  &-buttons {
+    position: absolute;
+    top: 13px;
+    right: 11px;
+    z-index: 10;
+  }
+
+  &-imageWrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+  }
+
+  &-info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    max-width: 500px;
+
+    &-name {
+      @include line-clamp(2);
+      width: 100%;
+      line-height: 20px;
+    }
+
+    &-description {
+      @include line-clamp(5);
+      width: 100%;
+      margin: 16px 0 10px 0;
+      color: $color-text-grey;
+    }
+
+    &-price {
+      display: flex;
+      align-items: end;
+      gap: 8px;
+      margin-top: 6px;
+      margin-bottom: 12px;
+      color: $color-text-primary;
+    }
+
+    &-priceNew {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    &-priceOld {
+      text-decoration: line-through;
+      font-size: 14px;
+      color: $color-text-muted;
+      padding-left: 4px;
+    }
+  }
+
+  &--price {
+    margin-top: 6px;
+  }
+
+  &--withDiscount .productCard-infoPriceNew {
+    color: $color-success-dark;
+  }
+
+  // Remove hover effect from the whole card
+
+  &-box:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-hover;
+    transition:
+      $transition-transform,
+      box-shadow $transition-normal;
+
+    img {
+      transform: scale(1.05);
+      transition: $transition-transform;
+    }
+  }
+
+  // Show buttons on hover for vertical cards
+  &--vertical .productCard-buttons {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: $transition-all;
+  }
+  &--vertical:hover .productCard-buttons {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  // Always show buttons for horizontal cards
+  &--horizontal .productCard-buttons {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  &-buttons {
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: $transition-all;
+  }
+
+  // 📱 GROUPED RESPONSIVE STYLES
+  @media (max-width: 768px) {
+    gap: 16px;
+
+    &--horizontal {
+      grid-template-columns: 1fr;
+    }
+
+    &-box {
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    &-info {
+      max-width: 100%;
+    }
+
+    &-buttons {
+      top: 8px;
+      right: 8px;
+    }
+
+    &-info-description {
+      margin: 12px 0;
+    }
+  }
+}

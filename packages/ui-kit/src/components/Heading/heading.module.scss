@@ -1,0 +1,70 @@
+.heading {
+  display: block;
+
+  &--centerAlign {
+    text-align: center;
+  }
+
+  &--leftAlign {
+    text-align: left;
+  }
+
+  &--rightAlign {
+    text-align: right;
+  }
+
+  &--darkAppearance {
+    color: $color-text-dark;
+  }
+
+  &--lightAppearance {
+    color: $color-text-grey-light;
+  }
+
+  &--whiteAppearance {
+    color: $color-text-light;
+  }
+
+  &--h0Level {
+    font-size: 60px;
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  &--h1Level {
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 1.13;
+  }
+
+  &--h2Level {
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.13;
+  }
+
+  &--h3Level {
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.13;
+  }
+
+  &--h4Level {
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1.13;
+  }
+
+  &--h5Level {
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 20px;
+  }
+
+  &--h6Level {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+}

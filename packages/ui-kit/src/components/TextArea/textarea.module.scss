@@ -1,0 +1,29 @@
+.textarea {
+  @include form-input-base();
+  width: 100%;
+  resize: vertical;
+
+  &--largeSize {
+    @include form-input-large();
+  }
+
+  &--mediumSize {
+    @include form-input-medium();
+  }
+
+  &--smallSize {
+    @include form-input-small();
+  }
+
+  &.has-error {
+    border: 1.5px solid $color-error !important;
+  }
+
+  &.fullWidth {
+    width: 100%;
+  }
+
+  &::placeholder {
+    color: $color-text-muted;
+  }
+}

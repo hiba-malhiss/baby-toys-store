@@ -1,0 +1,79 @@
+.infoCard {
+  border-radius: 20px;
+  min-width: max-content;
+  min-height: 188px;
+  padding: 20px;
+
+  &.fullWidth {
+    width: 100%;
+  }
+
+  .infoCard-title,
+  .infoCard-content {
+    @include line-clamp(2);
+    width: 100%;
+    text-align: center;
+    line-height: 20px;
+  }
+
+  .infoCard-title {
+    font-size: 20px;
+    padding-top: 16px;
+  }
+
+  .infoCard-content {
+    font-size: 16px;
+    color: $color-text-dark;
+  }
+
+  &-medium {
+    .infoCard-title {
+      font-size: 18px;
+    }
+  }
+
+  &-Info {
+    background-color: $color-bg-info;
+
+    .infoCard-title {
+      color: $color-info;
+    }
+  }
+
+  &-Warning {
+    background-color: $color-bg-warning;
+
+    .infoCard-title {
+      color: $color-warning-brand;
+    }
+  }
+
+  &-primary {
+    border: 1px solid $color-border;
+    border-radius: 16px;
+    background-color: $color-white;
+
+    .infoCard-title {
+      color: $color-text-dark;
+    }
+
+    .infoCard-content {
+      color: $color-text-grey;
+      padding-top: 12px;
+    }
+  }
+
+  &-Success {
+    background-color: $color-bg-success;
+
+    .infoCard-title {
+      color: #06c825;
+    }
+  }
+}
+
+@media (max-width: 400px) {
+  .infoCard {
+    min-width: 100%;
+  }
+}

@@ -1,0 +1,139 @@
+@use 'sass:color';
+
+.radioButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  gap: 0.5rem;
+  border-radius: 74px;
+  padding: 12px 20px;
+  user-select: none;
+
+  input {
+    display: none;
+  }
+
+  &--field {
+    padding: 8px 0;
+    color: $color-text-grey;
+
+    .radioButton-box {
+      color: $color-white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 16px;
+      height: 16px;
+      border: 2px solid $color-border;
+      border-radius: 4px;
+      transition:
+        background-color 0.2s,
+        border-color 0.2s;
+    }
+
+    &.is-selected .radioButton-box {
+      background-color: $color-primary;
+      border-color: $color-primary-dark;
+    }
+
+    &:hover .radioButton-box {
+      border-color: $color-primary;
+    }
+  }
+
+  &--secondary {
+    background-color: transparent;
+    color: $color-black;
+
+    &.is-selected {
+      background-color: $color-accent-light;
+    }
+
+    &:hover {
+      background-color: $color-accent-light-hover;
+    }
+  }
+
+  &--link {
+    padding: 0;
+    color: $color-text-primary;
+
+    &.is-selected {
+      color: $color-primary-dark;
+    }
+
+    &:hover {
+      color: $color-primary;
+    }
+  }
+
+  &--link-underline {
+    border-radius: 0;
+    padding-bottom: 8px;
+    border-bottom: 2px solid transparent;
+
+    &.is-selected {
+      border-bottom: 2px solid $color-primary-dark;
+    }
+
+    &:hover {
+      border-bottom: 2px solid $color-primary;
+    }
+  }
+
+  &--color-swatch {
+    background: none;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+    margin: 0 4px 8px 0;
+    border-radius: 0;
+    min-width: 0;
+    min-height: 0;
+
+    input {
+      display: none;
+    }
+
+    .radioButton-box {
+      display: none;
+    }
+
+    .radioButton-swatch {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 2px solid #eee;
+      display: inline-block;
+      transition:
+        border 0.2s,
+        box-shadow 0.2s;
+      box-sizing: border-box;
+      margin: 0;
+      background: var(--swatch-color, #eee);
+    }
+
+    .radioButton-swatch--rainbow {
+      background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    }
+
+    &:hover .radioButton-swatch {
+      border: 2px solid $color-primary;
+      box-shadow: 0 0 5px $color-primary;
+    }
+
+    &.is-selected .radioButton-swatch {
+      border: 2.5px solid $color-primary-dark;
+      box-shadow: 0 0 0 2px color.adjust($color-primary, $alpha: -0.7);
+    }
+  }
+}
+
+.radioButton-swatch--selected {
+  border: 2.5px solid $color-primary-dark;
+  box-shadow: 0 0 0 2px color.adjust($color-primary, $alpha: -0.7);
+}

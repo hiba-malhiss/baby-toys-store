@@ -1,0 +1,42 @@
+.accordionGroup {
+  border: 1px solid $color-border;
+  border-radius: $radius-md;
+  background-color: $color-bg-primary;
+  overflow: hidden;
+  width: 100%;
+  padding: 18px 10px;
+
+  &.fullWidth {
+    width: 100%;
+  }
+}
+
+.accordion {
+  width: 100%;
+
+  &.withoutPadding {
+    .accordion-content {
+      padding: 0;
+    }
+  }
+
+  &.isControlled {
+    .accordion-content {
+      color: $color-text-grey;
+      font-size: 14px;
+      line-height: 20px;
+    }
+  }
+
+  &.isDisabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  &-content {
+    padding: 16px 20px;
+    color: $color-text-grey;
+    background-color: $color-bg-primary;
+    border-radius: 0 0 $radius-md $radius-md;
+  }
+}

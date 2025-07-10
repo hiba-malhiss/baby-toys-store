@@ -1,0 +1,31 @@
+@keyframes bounce {
+  0%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-10px);
+  }
+}
+
+.dot {
+  fill: $color-warning;
+  animation: bounce 1s infinite ease-in-out;
+  transform-origin: center;
+}
+
+.dot:nth-child(2) {
+  fill: $color-accent;
+  animation-delay: 0.17s;
+}
+
+.dot:nth-child(3) {
+  fill: $color-primary;
+  animation-delay: 0.33s;
+}
+
+.dot:nth-child(4) {
+  fill: $color-warning;
+  animation-delay: 0.5s;
+}

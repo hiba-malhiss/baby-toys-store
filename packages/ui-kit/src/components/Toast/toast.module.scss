@@ -1,0 +1,85 @@
+.toastContainer {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 2000;
+  display: grid;
+  gap: 12px;
+  justify-items: center;
+  align-items: center;
+}
+
+.toast {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 12px;
+  align-items: center;
+  min-width: 250px;
+  max-width: 350px;
+  padding: $spacing-sm $spacing-lg;
+  border-left: 5px solid;
+  border-radius: $radius-md;
+  background-color: $color-white;
+  box-shadow: $box-shadow-m;
+  animation:
+    fadeIn 0.3s ease,
+    fadeOut 0.3s ease 2.7s;
+  color: $color-text-primary;
+  font-size: 14px;
+
+  strong,
+  p {
+    white-space: normal;
+    margin: 0;
+    overflow-wrap: break-word;
+  }
+
+  &-success {
+    border-color: $color-success;
+    background-color: $color-bg-success;
+  }
+
+  &-error {
+    border-color: $color-accent;
+    background-color: $color-accent-light;
+  }
+
+  &-info {
+    border-color: $color-info;
+    background-color: $color-bg-info;
+  }
+
+  &-closeButton {
+    grid-column: 3 / 4;
+  }
+
+  strong {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: $color-text-dark;
+  }
+
+  p {
+    color: $color-text-muted;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOut {
+  to {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+}

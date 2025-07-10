@@ -1,0 +1,84 @@
+@keyframes faSpin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.icon {
+  display: inline-block;
+
+  &--largeSize {
+    font-size: 18px;
+  }
+
+  &--mediumSize {
+    font-size: 14px;
+  }
+
+  &--smallSize {
+    font-size: 12px;
+  }
+
+  &--xsmallSize {
+    font-size: 10px;
+  }
+
+  &--xlargeSize {
+    font-size: 24px;
+  }
+
+  &--xxlargeSize {
+    font-size: 36px;
+  }
+
+  &--xxxlargeSize {
+    font-size: 64px;
+  }
+
+  &--pagelargeSize {
+    font-size: 120px;
+  }
+
+  &.isRotating {
+    animation: faSpin 1s infinite linear;
+  }
+
+  &--primaryColor {
+    color: $color-primary;
+  }
+
+  &--lightColor {
+    color: $color-white;
+  }
+
+  &--darkColor {
+    color: $color-text-primary;
+  }
+
+  &--grayColor {
+    color: $color-icon;
+  }
+
+  &--gray-darkColor {
+    color: $color-secondary;
+  }
+
+  &--infoColor {
+    color: $color-info;
+  }
+
+  &--successColor {
+    color: $color-success;
+  }
+
+  &--warningColor {
+    color: $color-warning;
+  }
+
+  &--warning-brandColor {
+    color: $color-warning-brand;
+  }
+}

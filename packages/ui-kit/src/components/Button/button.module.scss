@@ -1,0 +1,312 @@
+@mixin bts-button-default($color, $background, $border: transparent) {
+  background-color: $background;
+  color: $color;
+  border-color: $border;
+}
+
+@mixin bts-button-active($color, $background) {
+  &:active:not(.is-disabled):not(.has-error) {
+    background-color: $background !important;
+    color: $color;
+  }
+}
+
+@mixin bts-button-selected($color, $background, $border: transparent) {
+  &.is-selected {
+    background-color: $background;
+    color: $color;
+    border-color: $border;
+  }
+}
+
+@mixin bts-button-hover(
+  $color,
+  $background,
+  $border: transparent,
+  $icon-color: $color,
+  $text-underline-decoration: transparent
+) {
+  &:hover:not(.is-disabled):not(.has-error) {
+    background-color: $background;
+    color: $color;
+    border-color: $border;
+    text-decoration-color: $text-underline-decoration;
+
+    .button-icon {
+      color: $icon-color;
+    }
+  }
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+  gap: 0.5rem;
+  border-radius: 15px;
+
+  &.fullWidth {
+    width: 100% !important;
+  }
+
+  &:hover {
+    img {
+      transform: scale(1.05);
+    }
+  }
+
+  &--startAlign {
+    justify-content: flex-start;
+  }
+
+  &--betweenAlign {
+    justify-content: space-between;
+  }
+
+  /* Sizes */
+  &--largeSize {
+    font-size: 16px;
+    height: 48px;
+
+    &.button--withText {
+      padding-left: 24px;
+      padding-right: 24px;
+
+      .button-icon {
+        &--left {
+          margin-right: 8px;
+        }
+
+        &--right {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 48px;
+    }
+  }
+
+  &--mediumSize {
+    font-size: 14px;
+    line-height: 18px;
+    min-height: 40px;
+
+    &.button--withText {
+      padding-left: 16px;
+      padding-right: 16px;
+
+      .button-icon {
+        &--left {
+          margin-right: 8px;
+        }
+
+        &--right {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 40px;
+    }
+  }
+
+  &--smallSize {
+    font-size: 16px;
+    line-height: 18px;
+    height: 32px;
+
+    .button-icon {
+      position: relative;
+      top: -1px;
+    }
+
+    &.button--withText {
+      padding-left: 8px;
+      padding-right: 8px;
+
+      .buttonIcon {
+        &--left {
+          margin-right: 4px;
+        }
+
+        &--right {
+          padding-left: 4px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 32px;
+    }
+  }
+
+  &--xsmallSize {
+    @extend .button--smallSize;
+    height: auto;
+  }
+
+  &--xlargeSize,
+  &--xxlargeSize {
+    font-size: 20px;
+    height: 56px;
+
+    &.button--withText {
+      padding-left: 32px;
+      padding-right: 32px;
+
+      .buttonIcon {
+        &--left {
+          margin-right: 8px;
+        }
+
+        &--right {
+          padding-left: 8px;
+        }
+      }
+    }
+
+    &:not(.button--withText) {
+      width: 56px;
+    }
+  }
+
+  /* Utility Modifiers */
+  &--noPadding {
+    padding: 0 !important;
+  }
+
+  &--autoHeight {
+    height: auto !important;
+  }
+
+  &.isRounded {
+    border-radius: 26px !important;
+  }
+
+  &.isDisabled {
+    opacity: 0.5;
+    cursor: not-allowed !important;
+  }
+}
+
+/* Appearance and color */
+$appearances: (
+  link: (
+    primary: (
+      text-default: $color-text-grey,
+      text-hover: $color-primary-hover,
+      text-selected: $color-primary-dark,
+    ),
+    light: (
+      text-default: $color-white,
+      text-hover: $color-accent-light-hover,
+      text-selected: $color-primary,
+    ),
+    icon: (
+      text-default: $color-secondary,
+      text-hover: $color-secondary-dark,
+      text-selected: $color-accent-hover,
+    ),
+    secondary: (
+      text-default: $color-secondary,
+      text-hover: $color-secondary-hover,
+    ),
+    highlighted: (
+      text-default: $color-primary-dark,
+      text-hover: $color-primary-hover,
+    ),
+  ),
+  outline: (
+    primary: (
+      text-default: $color-secondary,
+      text-hover: $color-primary-dark,
+      border-default: $color-secondary,
+      border-hover: $color-primary-dark,
+    ),
+    icon: (
+      text-default: $color-secondary,
+      text-hover: $color-secondary-dark,
+      border-default: $color-secondary,
+      border-hover: $color-secondary-dark,
+      text-selected: $color-accent-hover,
+      border-selected: $color-accent-hover,
+    ),
+    highlighted: (
+      text-default: $color-secondary,
+      border-default: $color-border,
+      text-hover: $color-white,
+      bg-hover: $color-primary-dark,
+      border-hover: $color-primary-dark,
+      text-selected: $color-white,
+      bg-selected: $color-primary-dark,
+      border-selected: $color-primary-dark,
+    ),
+  ),
+  filled: (
+    primary: (
+      text-default: $color-white,
+      text-hover: $color-white,
+      text-selected: $color-white,
+      bg-default: $color-primary,
+      bg-hover: $color-info-hover,
+      bg-selected: $color-primary-dark,
+    ),
+    light: (
+      text-default: $color-text-grey,
+      text-hover: $color-text-grey,
+      bg-default: $color-white,
+      bg-hover: $color-primary-light,
+      text-selected: $color-primary-dark,
+    ),
+    accent: (
+      text-default: $color-white,
+      text-hover: $color-white,
+      text-selected: $color-white,
+      bg-default: $color-accent,
+      bg-hover: $color-accent-hover,
+      bg-selected: $color-accent-hover,
+    ),
+    secondary: (
+      text-default: $color-white,
+      bg-default: $color-secondary,
+      bg-hover: $color-secondary-hover,
+    ),
+    secondary-light: (
+      text-default: $color-text-grey,
+      bg-default: $color-secondary-light,
+      bg-hover: $color-secondary-light-hover,
+    ),
+  ),
+);
+
+@each $appearance, $colorsMap in $appearances {
+  @each $colorName, $styleMap in $colorsMap {
+    .button--#{$colorName}Color.button--#{$appearance}Appearance {
+      @include bts-button-default(
+        map-get($styleMap, text-default),
+        map-get($styleMap, bg-default),
+        map-get($styleMap, border-default)
+      );
+
+      @include bts-button-hover(
+        map-get($styleMap, text-hover),
+        map-get($styleMap, bg-hover),
+        map-get($styleMap, border-hover)
+      );
+
+      @include bts-button-selected(
+        map-get($styleMap, text-selected),
+        map-get($styleMap, bg-selected),
+        map-get($styleMap, border-selected)
+      );
+    }
+  }
+}

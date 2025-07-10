@@ -28,11 +28,11 @@ export default defineConfig({
   },
   css: {
     modules: {
-      localsConvention: 'camelCaseOnly', // allows styles.myClass from .my-class
+      localsConvention: 'camelCase', // allows styles.myClass from .my-class
     },
     preprocessorOptions: {
       scss: {
-        additionalData: `@use '@/styles/colors.scss' as *;`,
+        additionalData: `@use '@/styles/constants.scss' as *;`,
       },
     },
   },

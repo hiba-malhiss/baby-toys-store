@@ -1,0 +1,42 @@
+.banner {
+  padding: 0 5%;
+
+  &-Wrapper {
+    position: relative;
+    width: 48%;
+    min-width: 340px;
+    max-width: 610px;
+    height: 338px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    padding: 18px;
+
+    p {
+      width: 60%;
+      text-align: center;
+      text-shadow: 3px 0 $color-white;
+      font-size: 2.25rem;
+      color: $color-primary;
+    }
+
+    &-center {
+      background-image: url('/assets/images/banners/banner1.png');
+
+      p {
+        text-align: center;
+      }
+    }
+
+    &-topRight {
+      background-position: bottom;
+      background-image: url('/assets/images/banners/banner2.png');
+    }
+  }
+}
+
+@media (max-width: 900px) {
+  .banner-Wrapper {
+    width: 100%;
+  }
+}

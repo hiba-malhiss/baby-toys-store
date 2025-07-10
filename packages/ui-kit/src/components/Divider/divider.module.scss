@@ -1,0 +1,13 @@
+.divider {
+  border: none;
+  border-top-style: solid;
+  width: 100%;
+  opacity: 0.3;
+  border-color: $color-border;
+
+  &.fullWidth {
+    width: 100%;
+    grid-column: 1 / -1;
+    flex-grow: 1;
+  }
+}

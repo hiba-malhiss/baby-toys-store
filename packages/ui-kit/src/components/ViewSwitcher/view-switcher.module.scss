@@ -1,0 +1,59 @@
+.container {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+
+  .hasNoData,
+  .container-flex {
+    width: 100%;
+    flex-wrap: wrap;
+    display: flex;
+    gap: 40px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &--smallGap {
+    .container-list {
+      grid-row-gap: 8px;
+    }
+  }
+
+  &--noneGap {
+    .container-list {
+      grid-row-gap: 0;
+    }
+  }
+
+  &-topBar {
+    flex: 1;
+  }
+
+  &-resultsInfo {
+    white-space: nowrap;
+    font-size: 16px;
+  }
+
+  &-content {
+    margin-bottom: 40px;
+  }
+
+  &-grid {
+    display: grid;
+    grid-row-gap: 28px;
+    grid-column-gap: 20px;
+  }
+
+  &-list {
+    display: grid;
+    grid-row-gap: 28px;
+    grid-template-columns: 1fr;
+  }
+
+  &-paginator {
+    margin-top: auto;
+    justify-self: end;
+  }
+}
