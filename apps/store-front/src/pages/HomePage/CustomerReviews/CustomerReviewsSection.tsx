@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import Section from '../../../components/Section/Section.tsx';
+import Section from '../../../components/features/Section/Section.tsx';
 import { ReviewCard, Carousel } from '@baby-toys/ui-kit/components';
 import styles from './customer-review-section.module.scss';
 import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';

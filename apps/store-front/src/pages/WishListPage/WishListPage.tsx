@@ -5,8 +5,8 @@ import { mockFetchWishlist } from '../../mock-data/useMockProductsApi';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
-import SmartProductCard from '../../components/SmartProductCard/SmartProductCard.tsx';
-import YouMayAlsoLikeSection from '../../components/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
+import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
+import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import { useWishlistStore } from '../../store/useWishlistStore';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 

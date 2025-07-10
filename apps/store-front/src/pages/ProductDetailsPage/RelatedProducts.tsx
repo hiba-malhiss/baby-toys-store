@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import SmartProductCard from '../../components/SmartProductCard/SmartProductCard';
 import { getRelatedProducts } from '../../mock-data/useMockProductsApi';
-import Section from '../../components/Section/Section.tsx';
+import Section from '../../components/features/Section/Section.tsx';
 import { ViewSwitcher } from '@baby-toys/ui-kit/components';
 import styles from './product-details-page.module.scss';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';

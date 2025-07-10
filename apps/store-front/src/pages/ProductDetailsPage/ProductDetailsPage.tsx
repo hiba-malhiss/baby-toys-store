@@ -1,13 +1,13 @@
 import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '@baby-toys/ui-kit/hooks';
 import React, { useEffect, useState } from 'react';
-import { PageContainer } from '../../components/PageContainer/PageContainer.tsx';
-import { ProductInfoTabs } from './ProductInfoTabs.tsx';
-import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { ProductInfoTabs } from './features/ProductInfoTabs.tsx';
+import { ProductOverview } from './features/ProductOverview/ProductOverview.tsx';
 import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
 import type { Product } from '../../types/product.types.ts';
 import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
-import RelatedProducts from './RelatedProducts.tsx';
+import RelatedProducts from './features/RelatedProducts.tsx';
 import { BouncingDotsLoader } from '@baby-toys/ui-kit/components';
 
 const ProductDetailsPage: React.FC = () => {

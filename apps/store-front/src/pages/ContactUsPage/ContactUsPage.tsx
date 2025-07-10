@@ -22,7 +22,7 @@ import {
   FieldWrapper,
   useToast,
 } from '@baby-toys/ui-kit/components';
-import { PageContainer } from '../../components/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 // Mapping config by ID
 const contactInfoConfig: Record<string, { icon: any; appearance: string }> = {

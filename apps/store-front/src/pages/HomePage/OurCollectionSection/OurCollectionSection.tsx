@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './our-collection-section.module.scss';
 import { Flex, Button } from '@baby-toys/ui-kit/components';
-import Section from '../../../components/Section/Section.tsx';
+import Section from '../../../components/features/Section/Section.tsx';
 import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
 
 const OurCollectionSection = () => {

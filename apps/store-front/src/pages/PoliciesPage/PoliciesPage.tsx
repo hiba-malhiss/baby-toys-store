@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PageContainer } from '../../components/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { getPolicies } from '../../mock-data/useMockProductsApi.ts';
 import { Heading, AccordionGroup, Accordion } from '@baby-toys/ui-kit/components';
 
