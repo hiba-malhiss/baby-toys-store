@@ -17,10 +17,10 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className={styles.cardContainer}>
-      <Card className={styles.card} fullHeight>
-        <Flex className={styles.flexContainer} spacing="s">
-          <img src="/assets/images/logo.png" alt="logo" className={styles.logo} />
+    <div className={styles.loginPage}>
+      <Card className={styles.loginPageCard} fullHeight>
+        <Flex className={styles.loginPageContainer} spacing="s">
+          <img src="/assets/images/logo.png" alt="logo" className={styles.loginPageLogo} />
           <Heading tag="h1">Login</Heading>
           <StringInput
             fullWidth
@@ -35,7 +35,7 @@ const LoginPage: React.FC = () => {
             value={password}
             onChange={(value) => setPassword(value as string)}
           />
-          <Button className={styles.button} onClick={handleLogin} fullWidth>
+          <Button onClick={handleLogin} fullWidth>
             Login
           </Button>
         </Flex>

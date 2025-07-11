@@ -25,19 +25,19 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
 
   return (
     <div className={styles.adminLayout}>
-      <aside className={styles.sidebar}>
-        <img src="/assets/images/logo.png" alt="logo" className={styles.logo} />
-        <Nav className={styles.nav} direction="vertical" config={NavConfigs} />
+      <aside className={styles.adminLayoutSidebar}>
+        <img src="/assets/images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
+        <Nav className={styles.adminLayoutNav} direction="vertical" config={NavConfigs} />
         <Button
           onClick={handleLogout}
           appearance="link"
-          className={`${styles.logoutButton} bts-marginTl`}
+          className={`${styles.adminLayoutLogout} bts-marginTl`}
           withoutPadding
         >
           Logout
         </Button>
       </aside>
-      <main className={styles.mainContent}>{children}</main>
+      <main className={styles.adminLayoutContent}>{children}</main>
     </div>
   );
 };

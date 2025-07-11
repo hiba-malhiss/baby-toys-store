@@ -23,7 +23,7 @@ interface DashboardListsProps {
 }
 
 const DashboardLists: React.FC<DashboardListsProps> = ({ lowStock, topSelling, recentOrders }) => (
-  <div className={styles.listsGrid}>
+  <div className={styles.dashboardLists}>
     {lowStock.length > 0 && (
       <Card size="small" header="Low Stock Alerts">
         <ul>

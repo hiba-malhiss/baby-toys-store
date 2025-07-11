@@ -1,3 +1,4 @@
+// TODO: move to ui-kit
 export type Product = {
   id: string;
   name: string;

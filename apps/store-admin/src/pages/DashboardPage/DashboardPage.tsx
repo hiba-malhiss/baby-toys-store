@@ -15,6 +15,7 @@ import DashboardLists from './DashboardLists/DashboardLists.tsx';
 
 import styles from './dashboard-page.module.scss';
 import DashboardCharts from './DashboardCharts/ DashboardCharts.tsx';
+import { Heading } from '@baby-toys/ui-kit/components';
 
 const DashboardPage: React.FC = () => {
   const [stats, setStats] = useState<any>(null);
@@ -59,8 +60,10 @@ const DashboardPage: React.FC = () => {
   return (
     <AdminLayout>
       <div className={styles.dashboard}>
-        <h1 className={styles.title}>Dashboard</h1>
-        <p className={styles.greeting}>Welcome back, Admin!</p>
+        <Heading className="bts-marginBxs">Dashboard</Heading>
+        <Heading level="h4" appearance="light" className="bts-marginBxxl">
+          Welcome back, Admin!
+        </Heading>
 
         <DashboardStats stats={stats} />
         <DashboardCharts

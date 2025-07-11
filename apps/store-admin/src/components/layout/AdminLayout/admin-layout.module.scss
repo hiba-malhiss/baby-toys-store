@@ -1,29 +1,30 @@
 .adminLayout {
   display: flex;
   height: 100vh;
-  background-color: #f9fafb;
-}
+  background-color: $color-bg-secondary;
 
-.sidebar {
-  width: 250px;
-  color: #f0f0f0;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  box-shadow: $box-shadow-l;
+  &-sidebar {
+    width: 250px;
+    color: $color-bg-secondary;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: $box-shadow-l;
+  }
 
-  .logo {
-    margin-bottom: 32px;
+  &-logo {
+    margin: 32px 0;
     max-width: 120px;
   }
 
-  .nav {
+  &-nav {
     flex-grow: 1;
   }
-}
 
-.mainContent {
-  flex-grow: 1;
-  padding: 32px;
-  overflow-y: auto;
+  &-content {
+    flex-grow: 1;
+    padding: 32px;
+    overflow-y: auto;
+  }
+
 }
