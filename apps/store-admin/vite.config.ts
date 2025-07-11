@@ -21,6 +21,7 @@ export default defineConfig({
       '@baby-toys/ui-kit': path.resolve(__dirname, '../../packages/ui-kit/src'),
       '@baby-toys/ui-kit/styles': path.resolve(__dirname, '../../packages/ui-kit/src/styles'),
       '@baby-toys/ui-kit/assets': path.resolve(__dirname, '../../packages/ui-kit/src/assets'),
+      '@mock-data': path.resolve(__dirname, '../../mock-data'),
     },
   },
   css: {

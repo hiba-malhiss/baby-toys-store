@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { getOrderById } from '../../api/useMockAdminApi';
+import { getOrderById } from '@mock-data/useMockAdminApi.ts';
 import { apiClient } from '../../api/apiClient';
 
 const OrderDetailsPage: React.FC = () => {

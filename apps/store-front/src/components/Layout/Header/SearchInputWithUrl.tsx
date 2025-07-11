@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StringInputWithButton } from '@baby-toys/ui-kit/components';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useUrlFilters } from '../../hooks/useUrlFilters.ts';
+import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 
 const parsers = {
   search: (val: string) => val,

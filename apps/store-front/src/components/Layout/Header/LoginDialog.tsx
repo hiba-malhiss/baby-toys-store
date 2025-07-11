@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
 import {
   StringInput,
   Button,
@@ -9,6 +8,7 @@ import {
   FieldWrapper,
 } from '@baby-toys/ui-kit/components';
 import { isValidPassword, isValidEmail } from '@baby-toys/ui-kit/utils';
+import { useAuth } from '../../../context/AuthContext.tsx';
 
 interface LoginDialogProps {
   open: boolean;

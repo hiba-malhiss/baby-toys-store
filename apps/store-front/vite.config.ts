@@ -30,6 +30,7 @@ export default defineConfig({
       '@baby-toys/ui-kit/utils': path.resolve(__dirname, '../../packages/ui-kit/src/utils'),
       '@baby-toys/ui-kit': path.resolve(__dirname, '../../packages/ui-kit/src'),
       '@baby-toys/ui-kit/styles': path.resolve(__dirname, '../../packages/ui-kit/src/styles'),
+      '@mock-data': path.resolve(__dirname, '../../mock-data'),
     },
   },
   css: {

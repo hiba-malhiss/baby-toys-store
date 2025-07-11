@@ -1,7 +1,7 @@
 import React from 'react';
 import { ReviewCard } from '@baby-toys/ui-kit/components';
 import { ViewSwitcher } from '@baby-toys/ui-kit/components';
-import { mockFetchProductReviews } from '../../mock-data/useMockProductsApi.ts';
+import { mockFetchProductReviews } from '@mock-data/useMockProductsApi.ts';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 
 interface ProductReviewsProps {

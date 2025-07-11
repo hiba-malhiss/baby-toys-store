@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import Section from '../../../components/features/Section/Section.tsx';
 import { ReviewCard, Carousel } from '@baby-toys/ui-kit/components';
-import styles from './customer-review-section.module.scss';
-import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
 import type { Review } from '../../../types/product.types.ts';
 
 const CustomerReviewsSection = () => {
@@ -26,7 +25,6 @@ const CustomerReviewsSection = () => {
       title="Hear from Other Happy Parents"
       subTitle="Customer testimonials"
       compactPadding
-      className={styles.customerReviews}
       isLoading={isLoading}
     >
       <Carousel

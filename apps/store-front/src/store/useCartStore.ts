@@ -17,12 +17,16 @@ interface CartState {
   clearCart: () => void;
   setCartItems: (items: CartItem[]) => void;
   openShippingCartDrawer: () => void;
+  isSyncing: boolean;
+  setIsSyncing: (value: boolean) => void;
   closeShippingCartDrawer: () => void;
 }
 
 export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
+      isSyncing: false,
+      setIsSyncing: (value) => set({ isSyncing: value }),
       cartItems: [],
       isShippingCartDrawerOpen: false,
 

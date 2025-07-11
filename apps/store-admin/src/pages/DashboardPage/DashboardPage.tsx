@@ -7,7 +7,7 @@ import {
   getRecentOrders,
   getOrderStatusBreakdown,
   getCategoryDistribution,
-} from '../../api/useMockAdminApi';
+} from '@mock-data/useMockAdminApi.ts';
 import { apiClient } from '../../api/apiClient';
 
 import DashboardStats from './DashboardStats/DashboardStats.tsx';

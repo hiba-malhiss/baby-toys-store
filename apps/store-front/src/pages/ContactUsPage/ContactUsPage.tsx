@@ -8,10 +8,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import styles from './contact-us-page.module.scss';
 import { useNavigate } from 'react-router-dom';
-import {
-  mockFetchContactInfo,
-  mockSendContactMessage,
-} from '../../mock-data/useMockProductsApi.ts';
+import { mockFetchContactInfo, mockSendContactMessage } from '@mock-data/useMockProductsApi.ts';
 import {
   Flex,
   TextArea,

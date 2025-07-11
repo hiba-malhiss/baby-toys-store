@@ -6,7 +6,7 @@ import {
   mockAddToWishlist,
   mockRemoveFromWishlist,
   mockLoadFavoritesFromCloud,
-} from '../mock-data/useMockProductsApi';
+} from '@mock-data/useMockProductsApi';
 import type { Product } from '../types/product.types.ts';
 
 export function useWishlist(product: Product) {

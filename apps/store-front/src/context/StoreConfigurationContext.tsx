@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from 'react';
-import { useMockProductsApi } from '../mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
 
 export interface CurrencySettings {
   currency: string;

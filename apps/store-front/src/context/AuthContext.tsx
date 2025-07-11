@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { mockFetchUserApi, mockLoginApi, mockRegisterApi } from '../mock-data/useMockProductsApi';
+import { mockFetchUserApi, mockLoginApi, mockRegisterApi } from '@mock-data/useMockProductsApi.ts';
 
 export interface User {
   id: string;

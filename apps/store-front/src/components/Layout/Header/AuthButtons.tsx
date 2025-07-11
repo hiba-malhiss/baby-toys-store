@@ -1,9 +1,9 @@
 import React from 'react';
 import LoginDialog from './LoginDialog.tsx';
 import RegisterDialog from './RegisterDialog.tsx';
-import { useAuth } from '../../context/AuthContext';
 import { Button } from '@baby-toys/ui-kit/components';
-import { useLoginDialogStore } from '../../store/useLoginDialogStore.ts';
+import { useAuth } from '../../../context/AuthContext.tsx';
+import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 
 const AuthButtonsWithDialogs: React.FC = () => {
   const { isOpen, open, close } = useLoginDialogStore();

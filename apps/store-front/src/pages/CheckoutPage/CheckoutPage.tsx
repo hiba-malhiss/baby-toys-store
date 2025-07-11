@@ -11,7 +11,7 @@ import {
 } from '@baby-toys/ui-kit/components';
 import { calculateOrderSummary } from '../../utils/order.utils';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
-import { mockPlaceOrder, mockFetchShippingInfo } from '../../mock-data/useMockProductsApi.ts';
+import { mockPlaceOrder, mockFetchShippingInfo } from '@mock-data/useMockProductsApi.ts';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '@baby-toys/ui-kit/components';
 import clsx from 'clsx';

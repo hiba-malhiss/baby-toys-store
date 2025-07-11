@@ -1,5 +1,5 @@
-import { toys } from '../../../store-front/src/mock-data/toy-card-list.ts';
-import type { Product, OrderItem } from '../../../store-front/src/types/product.types.ts';
+import { toys } from './toy-card-list';
+import { OrderItem } from '../apps/store-admin/src/types/product.types';
 
 export const MOCK_API_DELAY_MS = 600;
 

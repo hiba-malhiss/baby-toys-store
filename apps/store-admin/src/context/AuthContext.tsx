@@ -1,10 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { mockLogin } from '../api/useMockAdminApi';
-import {
-  mockFetchUserApi,
-  mockLoginApi,
-  mockRegisterApi,
-} from '../../../store-front/src/mock-data/useMockProductsApi.ts';
+import { mockFetchUserApi, mockLoginApi } from '@mock-data/useMockProductsApi.ts';
 import type { User } from '../../../store-front/src/context/AuthContext.tsx';
 
 interface AuthContextType {

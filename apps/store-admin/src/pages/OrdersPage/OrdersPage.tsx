@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { getOrders, updateOrderStatus } from '../../api/useMockAdminApi';
+import { getOrders, updateOrderStatus } from '@mock-data/useMockAdminApi.ts';
 import { apiClient } from '../../api/apiClient';
 import { Button, Select, Option, Card, Table } from '@baby-toys/ui-kit/components';
 

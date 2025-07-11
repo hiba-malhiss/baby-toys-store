@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '@baby-toys/ui-kit/hooks';
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import { useMockProductsApi } from '../../mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
 import type { Product } from '../../types/product.types.ts';
 import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
 import { BouncingDotsLoader } from '@baby-toys/ui-kit/components';
@@ -18,7 +18,7 @@ const ProductDetailsPage: React.FC = () => {
   const { getProductById } = useMockProductsApi(PRODUCT_RELATED_PRODUCTS_LIMIT);
 
   useEffect(() => {
-    if(!id || product?.id === id) return;
+    if (!id || product?.id === id) return;
 
     getProductById(id).then((data) => {
       setProduct(data);
@@ -28,7 +28,7 @@ const ProductDetailsPage: React.FC = () => {
     return () => setExtraCrumbs(null);
   }, [id, getProductById, setExtraCrumbs]);
 
-  if(!product) {
+  if (!product) {
     return (
       <PageContainer>
         <BouncingDotsLoader size="large" className="bts-paddingVxxxxl" />

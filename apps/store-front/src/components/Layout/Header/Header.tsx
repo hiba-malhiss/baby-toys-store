@@ -9,7 +9,7 @@ import AuthButtonsWithDialogs from './AuthButtons.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
-import { getProductCategories } from '../../../mock-data/useMockProductsApi.ts';
+import { getProductCategories } from '@mock-data/useMockProductsApi.ts';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();

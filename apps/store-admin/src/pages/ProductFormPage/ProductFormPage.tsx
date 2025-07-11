@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { getProductById, addProduct, updateProduct } from '../../api/useMockAdminApi';
+import { getProductById, addProduct, updateProduct } from '@mock-data/useMockAdminApi.ts';
 import { apiClient } from '../../api/apiClient';
 import { StringInput, Button, Flex, TextArea } from '@baby-toys/ui-kit/components';
 

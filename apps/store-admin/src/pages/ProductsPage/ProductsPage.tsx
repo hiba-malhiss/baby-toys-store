@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { getProducts, deleteProduct } from '../../api/useMockAdminApi';
+import { getProducts, deleteProduct } from '@mock-data/useMockAdminApi.ts';
 import { apiClient } from '../../api/apiClient';
 import { Button, Flex, StringInput, Card, Paginator } from '@baby-toys/ui-kit/components';
 
@@ -63,11 +63,7 @@ const ProductsPage: React.FC = () => {
             ))}
           </tbody>
         </table>
-        <Paginator
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={setPage}
-        />
+        <Paginator currentPage={page} totalPages={totalPages} onPageChange={setPage} />
       </Card>
     </AdminLayout>
   );

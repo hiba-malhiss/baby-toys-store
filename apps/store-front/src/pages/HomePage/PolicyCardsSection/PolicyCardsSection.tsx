@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Flex, InfoCard } from '@baby-toys/ui-kit/components';
-import { useMockProductsApi } from '../../../mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
 import type { InfoCardType } from '../../../types/product.types.ts';
 
 const PolicyCardsSection = () => {
