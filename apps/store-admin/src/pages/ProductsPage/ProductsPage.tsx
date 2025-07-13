@@ -1,70 +1,97 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { getProducts, deleteProduct } from '@mock-data/useMockAdminApi.ts';
-import { apiClient } from '../../api/apiClient';
-import { Button, Flex, StringInput, Card, Paginator } from '@baby-toys/ui-kit/components';
+import { deleteProduct } from '@mock-data/useMockAdminApi';
+import { Button, Flex, Table, Heading } from '@baby-toys/ui-kit/components';
+import { useProductsTableColumns } from './useProductsTableColumns.tsx';
+import { useNavigate } from 'react-router-dom';
+import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+
+const PAGE_SIZE = 8;
 
 const ProductsPage: React.FC = () => {
   const [products, setProducts] = useState<any[]>([]);
-  const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [sortField, setSortField] = useState<string | null>(null);
+  const [sortOrder, setSortOrder] = useState<number>(1);
+  const [filters, setFilters] = useState<Record<string, any>>({});
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleDelete = (id: string) => {
+    deleteProduct(id).then(() => {
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      setTotalItems((prev) => prev - 1);
+    });
+  };
+
+  const columns = useProductsTableColumns(handleDelete);
+
+  const { fetchProducts } = useMockProductsApi(PAGE_SIZE);
   const navigate = useNavigate();
 
   useEffect(() => {
-    apiClient.get(getProducts, page, 10, { search }).then((data) => {
-      setProducts(data.items);
-      setTotalPages(data.totalPages);
-    });
-  }, [search, page]);
+    let isMounted = true;
+    setIsLoading(true);
 
-  const handleDelete = (id: string) => {
-    apiClient.delete(deleteProduct, id).then(() => {
-      apiClient.get(getProducts, page, 10, { search }).then((data) => {
-        setProducts(data.items);
-        setTotalPages(data.totalPages);
-      });
-    });
+    const fetchData = async () => {
+      try {
+        const data = await fetchProducts(page, {
+          sortBy: sortField ? `${sortField}:${sortOrder === 1 ? 'asc' : 'desc'}` : undefined,
+          ...filters,
+        });
+
+        if (isMounted) {
+          setProducts(data.items);
+          setTotalItems(data.totalItems);
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [page, sortField, sortOrder, filters, fetchProducts]);
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage);
   };
 
   return (
     <AdminLayout>
-      <Flex justify="between" align="center">
-        <h1>Products</h1>
-        <Button onClick={() => navigate('/product-form/new')}>Add Product</Button>
+      <Flex direction="vertical" spacing="xxl" fullWidth>
+        <Flex justify="between" align="center" fullWidth>
+          <Heading>Products</Heading>
+          <Button onClick={() => navigate('/product-form/new')}>Add Product</Button>
+        </Flex>
+        <Table
+          value={products}
+          columns={columns}
+          paginator
+          rows={PAGE_SIZE}
+          totalRecords={totalItems}
+          sortField={sortField}
+          sortOrder={sortOrder}
+          onSort={({ field, order }) => {
+            setSortField(field);
+            setSortOrder(order);
+            setPage(1);
+          }}
+          onFilterChange={(newFilters) => {
+            setFilters(newFilters);
+            setPage(1);
+          }}
+          onPageChange={handlePageChange}
+          isLoading={isLoading}
+        />
       </Flex>
-      <StringInput
-        placeholder="Search products..."
-        value={search}
-        onChange={(value) => setSearch(value as string)}
-      />
-      <Card>
-        <table>
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Price</th>
-              <th>Stock</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((product) => (
-              <tr key={product.id}>
-                <td>{product.name}</td>
-                <td>{product.price}</td>
-                <td>{product.availableInStock}</td>
-                <td>
-                  <Button onClick={() => navigate(`/product-form/${product.id}`)}>Edit</Button>
-                  <Button onClick={() => handleDelete(product.id)}>Delete</Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <Paginator currentPage={page} totalPages={totalPages} onPageChange={setPage} />
-      </Card>
     </AdminLayout>
   );
 };

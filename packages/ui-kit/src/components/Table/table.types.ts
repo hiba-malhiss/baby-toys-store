@@ -6,6 +6,11 @@ export type Column<T> = {
   body?: (row: T) => React.ReactNode;
 };
 
+export type FilterMetadata = {
+  value: string;
+  matchMode: string;
+};
+
 export type TableProps<T> = {
   value: T[];
   columns: Column<T>[];
@@ -18,10 +23,12 @@ export type TableProps<T> = {
   sortField?: keyof T | null;
   sortOrder?: 1 | -1;
   onSort?: (params: { field: keyof T; order: 1 | -1 }) => void;
+  onFilterChange?: (filters: Record<string, FilterMetadata>) => void;
   scrollable?: boolean;
   scrollHeight?: string | null;
   rowHover?: boolean;
   isLoading?: boolean;
   stripedRows?: boolean;
   children?: React.ReactNode;
+  useLocalSortAndFilter?: boolean;
 };

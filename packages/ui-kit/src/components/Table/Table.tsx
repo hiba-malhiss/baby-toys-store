@@ -1,8 +1,9 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { Paginator, StringInput, Icon } from '../index';
 import { TableProps } from './table.types';
 import styles from './table.module.scss';
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import Overlay from '../Overlay/Overlay';
 
 const Table = ({
   value = [],
@@ -22,6 +23,9 @@ const Table = ({
   isLoading = false,
   stripedRows = false,
   children,
+  onFilterChange = () => {},
+  onPageChange = () => {},
+  useLocalSortAndFilter = false,
 }: TableProps) => {
   const [state, setState] = useState({
     currentPage: 1,
@@ -38,7 +42,53 @@ const Table = ({
   const handleSort = (field: string) => {
     const newSortOrder = state.sortField === field ? state.sortOrder * -1 : 1;
     setState((prev) => ({ ...prev, sortField: field, sortOrder: newSortOrder, currentPage: 1 }));
-    onSort({ field, order: newSortOrder });
+
+    if (useLocalSortAndFilter) {
+      // Local sort
+    } else {
+      onSort({ field, order: newSortOrder });
+    }
+  };
+
+  const handleFilter = (value: string, field: string, matchMode: string) => {
+    const newFilters = {
+      ...state.filters,
+      [field]: { value, matchMode },
+    };
+    setState((prev) => ({ ...prev, filters: newFilters, currentPage: 1 }));
+
+    if (useLocalSortAndFilter) {
+      // Local filter
+    } else {
+      onFilterChange(newFilters);
+    }
+  };
+
+  const applyFilters = (data: any[]) => {
+    if (!useLocalSortAndFilter) return data;
+
+    return data.filter((row) =>
+      Object.entries(state.filters).every(([field, { value }]) =>
+        row[field]?.toString().toLowerCase().includes(value.toLowerCase())
+      )
+    );
+  };
+
+  const applySorting = (data: any[]) => {
+    if (!useLocalSortAndFilter || !state.sortField) return data;
+
+    return [...data].sort((a, b) => {
+      const valA = a[state.sortField];
+      const valB = b[state.sortField];
+      return state.sortOrder * (valA > valB ? 1 : valA < valB ? -1 : 0);
+    });
+  };
+
+  const applyPagination = (data: any[]) => {
+    if (!useLocalSortAndFilter) return data;
+
+    const start = (state.currentPage - 1) * state.rows;
+    return data.slice(start, start + state.rows);
   };
 
   const handleRowClick = (rowData: any) => {
@@ -49,13 +99,11 @@ const Table = ({
       newSelection = state.selection === rowData ? null : rowData;
     } else if (selectionMode === 'multiple') {
       if (Array.isArray(state.selection)) {
-        const selectedIndex = state.selection.findIndex((s) => s === rowData);
-        if (selectedIndex > -1) {
-          newSelection = [...state.selection];
-          newSelection.splice(selectedIndex, 1);
-        } else {
-          newSelection = [...state.selection, rowData];
-        }
+        const index = state.selection.findIndex((s) => s === rowData);
+        newSelection =
+          index > -1
+            ? state.selection.filter((_, i) => i !== index)
+            : [...state.selection, rowData];
       } else {
         newSelection = [rowData];
       }
@@ -63,39 +111,6 @@ const Table = ({
 
     setState((prev) => ({ ...prev, selection: newSelection }));
     onSelectionChange(newSelection);
-  };
-
-  const filter = (value: string, field: string, matchMode: string) => {
-    setState((prev) => ({
-      ...prev,
-      filters: {
-        ...prev.filters,
-        [field]: { value, matchMode },
-      },
-      currentPage: 1,
-    }));
-  };
-
-  const applyFilters = (data: any[]) => {
-    return data.filter((row) =>
-      Object.entries(state.filters).every(([field, { value }]) =>
-        row[field]?.toString().toLowerCase().includes(value.toLowerCase())
-      )
-    );
-  };
-
-  const applySorting = (data: any[]) => {
-    if (!state.sortField) return data;
-    return [...data].sort((a, b) => {
-      const valA = a[state.sortField];
-      const valB = b[state.sortField];
-      return state.sortOrder * (valA > valB ? 1 : valA < valB ? -1 : 0);
-    });
-  };
-
-  const applyPagination = (data: any[]) => {
-    const start = (state.currentPage - 1) * state.rows;
-    return data.slice(start, start + state.rows);
   };
 
   const renderHeader = () => (
@@ -126,26 +141,25 @@ const Table = ({
     );
   };
 
-  const renderFilter = (column: any) => (
+  const renderFilter = (col: any) => (
     <StringInput
       size="small"
-      onChange={(value) => filter(value, column.field, 'contains')}
-      placeholder={`Filter ${column.header}`}
+      onChange={(val) => handleFilter(val, col.field, 'contains')}
+      placeholder={`Filter ${col.header}`}
     />
   );
 
   const isSelected = (rowData: any) => {
     if (!state.selection) return false;
-    if (Array.isArray(state.selection)) {
-      return state.selection.some((s) => s === rowData);
-    }
-    return state.selection === rowData;
+    return Array.isArray(state.selection)
+      ? state.selection.includes(rowData)
+      : state.selection === rowData;
   };
 
   const renderBody = () => {
     let data = applyFilters(value);
     data = applySorting(data);
-    if (paginator) data = applyPagination(data);
+    data = applyPagination(data);
 
     return (
       <tbody>
@@ -172,9 +186,16 @@ const Table = ({
     );
   };
 
-  const handlePageChange = (page: number, pageSize: number) => {
-    setState((prev) => ({ ...prev, currentPage: page, rows: pageSize }));
-  };
+  const handlePageChange = useCallback(
+    (page: number, pageSize: number) => {
+      setState((prev) => ({ ...prev, currentPage: page, rows: pageSize }));
+
+      if (!useLocalSortAndFilter) {
+        onPageChange(page);
+      }
+    },
+    [onPageChange, useLocalSortAndFilter]
+  );
 
   return (
     <div
@@ -185,7 +206,7 @@ const Table = ({
         overflowY: scrollable ? 'auto' : undefined,
       }}
     >
-      {isLoading && <div className={styles.loadingOverlay}>Loading...</div>}
+      {isLoading && <Overlay visible={isLoading} />}
 
       <table ref={tableRef} className={styles.table}>
         {renderHeader()}
