@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useStoreConfiguration } from '../context/StoreConfigurationContext.tsx';
+import { formatNumber } from '@baby-toys/ui-kit/utils';
 
 export const useCurrencyFormatter = () => {
   const { currency } = useStoreConfiguration();
@@ -7,15 +8,9 @@ export const useCurrencyFormatter = () => {
   return useCallback(
     (amount: number): string => {
       if (typeof amount !== 'number' || isNaN(amount)) {
-        return new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: currency?.currency || 'USD',
-        }).format(0);
+        return formatNumber(0, currency?.currency);
       }
-      return new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: currency?.currency || 'USD',
-      }).format(amount);
+      return formatNumber(amount, currency?.currency);
     },
     [currency?.currency]
   );
