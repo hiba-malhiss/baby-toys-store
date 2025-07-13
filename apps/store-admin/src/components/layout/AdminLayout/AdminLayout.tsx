@@ -26,7 +26,7 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <div className={styles.adminLayout}>
       <aside className={styles.adminLayoutSidebar}>
-        <img src="/assets/ui-kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
+        <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
         <Nav className={styles.adminLayoutNav} direction="vertical" config={NavConfigs} />
         <Button
           onClick={handleLogout}

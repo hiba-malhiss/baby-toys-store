@@ -1,6 +1,5 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import type { Review, InfoCardType } from '../types/product.types.ts';
-import type { RadioOption } from '@baby-toys/ui-kit/components';
 
 export const photoShoots: string[] = [
   '/assets/images/recent-photo-shoots/pic1.png',
@@ -30,13 +29,13 @@ export const reviews: Review[] = [
   {
     rating: 5,
     name: 'Noah Davis',
-    avatarUrl: '/assets/images/avatars/avatar3.png',
+    avatarUrl: '/assets/kit-images/avatars/avatar3.png',
     comment: 'Fantastic experience! I’ll definitely order again.',
   },
   {
     rating: 4.2,
     name: 'Sophia Wilson',
-    avatarUrl: '/assets/images/avatars/avatar4.png',
+    avatarUrl: '/assets/kit-images/avatars/avatar4.png',
     comment: 'The website is easy to navigate and delivery was quick.',
   },
 ];

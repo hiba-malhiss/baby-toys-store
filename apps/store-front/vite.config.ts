@@ -19,12 +19,12 @@ export default defineConfig({
           dest: 'assets',
         },
         {
-          src: '../../packages/ui-kit/src/assets/fonts/*',
-          dest: 'assets/fonts',
+          src: '../../packages/ui-kit/src/assets/*',
+          dest: 'assets',
         },
         {
-          src: '../../packages/ui-kit/src/assets/images/*',
-          dest: 'assets/ui-kit-images',
+          src: '../../mock-data/assets/*',
+          dest: 'assets',
         },
       ],
     }),

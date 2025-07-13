@@ -10,7 +10,6 @@ const __dirname = dirname(__filename);
 
 export default defineConfig({
   base: './',
-  publicDir: 'public',
   plugins: [
     react(),
     viteStaticCopy({
@@ -24,8 +23,8 @@ export default defineConfig({
           dest: 'assets',
         },
         {
-          src: '../../packages/ui-kit/src/assets/images/*',
-          dest: 'assets/ui-kit-images',
+          src: '../../mock-data/assets/*',
+          dest: 'assets',
         },
       ],
     }),

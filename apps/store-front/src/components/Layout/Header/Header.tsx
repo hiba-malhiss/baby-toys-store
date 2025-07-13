@@ -75,7 +75,7 @@ const Header = () => {
 
       <Flex className={styles.headerMain} justify="stretch" align="center" wrap fullWidth>
         <img
-          src="/assets/ui-kit-images/logo.png"
+          src="/assets/kit-images/logo.png"
           alt="logo"
           className={styles.headerLogo}
           style={{ cursor: 'pointer' }}
