@@ -18,7 +18,7 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <Flex direction="vertical" className={styles.footerLogo}>
-        <img src="/assets/images/logo.png" alt="logo" />
+        <img src="/assets/ui-kit-images/logo.png" alt="logo" />
         <p className={styles.footerDescription}>
           Bringing you quality products at affordable prices.
         </p>

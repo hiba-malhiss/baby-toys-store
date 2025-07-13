@@ -1,6 +1,13 @@
 @forward '@baby-toys/ui-kit/styles/spacing';
 @forward '@baby-toys/ui-kit/styles/css-reset';
 
+@font-face {
+  font-family: 'Comfortaa';
+  src: url('~@baby-toys/ui-kit/src/assets/fonts/Comfortaa-VariableFont_wght.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   margin: 0;
   font-family: 'Comfortaa', sans-serif;

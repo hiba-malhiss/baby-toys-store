@@ -20,7 +20,7 @@ const LoginPage: React.FC = () => {
     <div className={styles.loginPage}>
       <Card className={styles.loginPageCard} fullHeight>
         <Flex className={styles.loginPageContainer} spacing="s">
-          <img src="/assets/images/logo.png" alt="logo" className={styles.loginPageLogo} />
+          <img src="/assets/ui-kit-images/logo.png" alt="logo" className={styles.loginPageLogo} />
           <Heading tag="h1">Login</Heading>
           <StringInput
             fullWidth

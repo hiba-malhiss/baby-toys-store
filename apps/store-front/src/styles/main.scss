@@ -1,8 +1,6 @@
 body {
-  margin: 0;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: 'Comfortaa', sans-serif !important;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: $color-bg-secondary;
   color: $color-text-primary;
 }

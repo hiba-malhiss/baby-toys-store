@@ -18,18 +18,20 @@ export default defineConfig({
           src: 'src/assets/*',
           dest: 'assets',
         },
+        {
+          src: '../../packages/ui-kit/src/assets/fonts/*',
+          dest: 'assets/fonts',
+        },
+        {
+          src: '../../packages/ui-kit/src/assets/images/*',
+          dest: 'assets/ui-kit-images',
+        },
       ],
     }),
   ],
   resolve: {
     alias: {
-      '@baby-toys/ui-kit/components': path.resolve(
-        __dirname,
-        '../../packages/ui-kit/src/components'
-      ),
-      '@baby-toys/ui-kit/utils': path.resolve(__dirname, '../../packages/ui-kit/src/utils'),
       '@baby-toys/ui-kit': path.resolve(__dirname, '../../packages/ui-kit/src'),
-      '@baby-toys/ui-kit/styles': path.resolve(__dirname, '../../packages/ui-kit/src/styles'),
       '@mock-data': path.resolve(__dirname, '../../mock-data'),
     },
   },
