@@ -19,6 +19,16 @@
   }
 }
 
+@mixin bts-button-disabled($color, $background: transparent, $border: transparent) {
+  &.isDisabled {
+    background-color: $background !important;
+    color: $color !important;
+    border-color: $border !important;
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+  }
+}
+
 @mixin bts-button-hover(
   $color,
   $background,
@@ -44,9 +54,8 @@
   justify-content: center;
   border: 1px solid transparent;
   cursor: pointer;
-  transition:
-    background 0.3s ease,
-    color 0.3s ease;
+  transition: background 0.3s ease,
+  color 0.3s ease;
   gap: 0.5rem;
   border-radius: 15px;
 
@@ -190,122 +199,150 @@
   &.isRounded {
     border-radius: 26px !important;
   }
-
-  &.isDisabled {
-    opacity: 0.5;
-    cursor: not-allowed !important;
-  }
 }
 
 /* Appearance and color */
 $appearances: (
-  link: (
-    primary: (
-      text-default: $color-text-grey,
-      text-hover: $color-primary-hover,
-      text-selected: $color-primary-dark,
+    link: (
+        primary: (
+            text-default: $color-text-grey,
+            text-hover: $color-primary-hover,
+            text-selected: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+        ),
+        light: (
+            text-default: $color-white,
+            text-hover: $color-accent-light-hover,
+            text-selected: $color-primary,
+            text-disabled: $color-disabled-text,
+        ),
+        icon: (
+            text-default: $color-secondary,
+            text-hover: $color-secondary-dark,
+            text-selected: $color-accent-hover,
+            text-disabled: $color-disabled-text,
+        ),
+        secondary: (
+            text-default: $color-secondary,
+            text-hover: $color-secondary-hover,
+            text-disabled: $color-disabled-text,
+        ),
+        highlighted: (
+            text-default: $color-primary-dark,
+            text-hover: $color-primary-hover,
+            text-disabled: $color-disabled-text,
+        ),
     ),
-    light: (
-      text-default: $color-white,
-      text-hover: $color-accent-light-hover,
-      text-selected: $color-primary,
+    outline: (
+        primary: (
+            text-default: $color-secondary,
+            text-hover: $color-primary-dark,
+            border-default: $color-secondary,
+            border-hover: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+            border-disabled: $color-disabled,
+        ),
+        icon: (
+            text-default: $color-secondary,
+            text-hover: $color-secondary-dark,
+            border-default: $color-secondary,
+            border-hover: $color-secondary-dark,
+            text-selected: $color-accent-hover,
+            border-selected: $color-accent-hover,
+            text-disabled: $color-disabled-text,
+            border-disabled: $color-disabled,
+        ),
+        highlighted: (
+            text-default: $color-secondary,
+            border-default: $color-border,
+            text-hover: $color-white,
+            bg-hover: $color-primary-dark,
+            border-hover: $color-primary-dark,
+            text-selected: $color-white,
+            bg-selected: $color-primary-dark,
+            border-selected: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+            border-disabled: $color-disabled,
+            bg-disabled: transparent,
+        ),
     ),
-    icon: (
-      text-default: $color-secondary,
-      text-hover: $color-secondary-dark,
-      text-selected: $color-accent-hover,
+    filled: (
+        primary: (
+            text-default: $color-white,
+            text-hover: $color-white,
+            text-selected: $color-white,
+            bg-default: $color-primary,
+            bg-hover: $color-info-hover,
+            bg-selected: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+            bg-disabled: $color-disabled,
+            border-disabled: $color-disabled,
+        ),
+        light: (
+            text-default: $color-text-grey,
+            text-hover: $color-text-grey,
+            bg-default: $color-white,
+            bg-hover: $color-primary-light,
+            text-selected: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+            bg-disabled: $color-disabled,
+            border-disabled: $color-disabled,
+        ),
+        accent: (
+            text-default: $color-white,
+            text-hover: $color-white,
+            text-selected: $color-white,
+            bg-default: $color-accent,
+            bg-hover: $color-accent-hover,
+            bg-selected: $color-accent-hover,
+            text-disabled: $color-disabled-text,
+            bg-disabled: $color-disabled,
+            border-disabled: $color-disabled,
+        ),
+        secondary: (
+            text-default: $color-white,
+            bg-default: $color-secondary,
+            bg-hover: $color-secondary-hover,
+            text-disabled: $color-disabled-text,
+            bg-disabled: $color-disabled,
+            border-disabled: $color-disabled,
+        ),
+        secondary-light: (
+            text-default: $color-text-grey,
+            bg-default: $color-secondary-light,
+            bg-hover: $color-secondary-light-hover,
+            text-disabled: $color-disabled-text,
+            bg-disabled: $color-disabled,
+            border-disabled: $color-disabled,
+        ),
     ),
-    secondary: (
-      text-default: $color-secondary,
-      text-hover: $color-secondary-hover,
-    ),
-    highlighted: (
-      text-default: $color-primary-dark,
-      text-hover: $color-primary-hover,
-    ),
-  ),
-  outline: (
-    primary: (
-      text-default: $color-secondary,
-      text-hover: $color-primary-dark,
-      border-default: $color-secondary,
-      border-hover: $color-primary-dark,
-    ),
-    icon: (
-      text-default: $color-secondary,
-      text-hover: $color-secondary-dark,
-      border-default: $color-secondary,
-      border-hover: $color-secondary-dark,
-      text-selected: $color-accent-hover,
-      border-selected: $color-accent-hover,
-    ),
-    highlighted: (
-      text-default: $color-secondary,
-      border-default: $color-border,
-      text-hover: $color-white,
-      bg-hover: $color-primary-dark,
-      border-hover: $color-primary-dark,
-      text-selected: $color-white,
-      bg-selected: $color-primary-dark,
-      border-selected: $color-primary-dark,
-    ),
-  ),
-  filled: (
-    primary: (
-      text-default: $color-white,
-      text-hover: $color-white,
-      text-selected: $color-white,
-      bg-default: $color-primary,
-      bg-hover: $color-info-hover,
-      bg-selected: $color-primary-dark,
-    ),
-    light: (
-      text-default: $color-text-grey,
-      text-hover: $color-text-grey,
-      bg-default: $color-white,
-      bg-hover: $color-primary-light,
-      text-selected: $color-primary-dark,
-    ),
-    accent: (
-      text-default: $color-white,
-      text-hover: $color-white,
-      text-selected: $color-white,
-      bg-default: $color-accent,
-      bg-hover: $color-accent-hover,
-      bg-selected: $color-accent-hover,
-    ),
-    secondary: (
-      text-default: $color-white,
-      bg-default: $color-secondary,
-      bg-hover: $color-secondary-hover,
-    ),
-    secondary-light: (
-      text-default: $color-text-grey,
-      bg-default: $color-secondary-light,
-      bg-hover: $color-secondary-light-hover,
-    ),
-  ),
 );
 
 @each $appearance, $colorsMap in $appearances {
   @each $colorName, $styleMap in $colorsMap {
     .button--#{$colorName}Color.button--#{$appearance}Appearance {
       @include bts-button-default(
-        map-get($styleMap, text-default),
-        map-get($styleMap, bg-default),
-        map-get($styleMap, border-default)
+              map-get($styleMap, text-default),
+              map-get($styleMap, bg-default),
+              map-get($styleMap, border-default)
       );
 
       @include bts-button-hover(
-        map-get($styleMap, text-hover),
-        map-get($styleMap, bg-hover),
-        map-get($styleMap, border-hover)
+              map-get($styleMap, text-hover),
+              map-get($styleMap, bg-hover),
+              map-get($styleMap, border-hover)
       );
 
       @include bts-button-selected(
-        map-get($styleMap, text-selected),
-        map-get($styleMap, bg-selected),
-        map-get($styleMap, border-selected)
+              map-get($styleMap, text-selected),
+              map-get($styleMap, bg-selected),
+              map-get($styleMap, border-selected)
+      );
+
+      @include bts-button-disabled(
+              map-get($styleMap, text-disabled),
+              map-get($styleMap, bg-disabled),
+              map-get($styleMap, border-disabled)
       );
     }
   }
