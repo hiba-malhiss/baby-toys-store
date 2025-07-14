@@ -17,4 +17,11 @@
   &--hasError .select-label {
     border: 1.5px solid $color-error !important;
   }
+
+  &.isDisabled {
+    .select-label {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
 }

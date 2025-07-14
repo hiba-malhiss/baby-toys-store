@@ -113,7 +113,7 @@ const Table = ({
     onSelectionChange(newSelection);
   };
 
-  const renderHeader = () => (
+  const renderHeader = useCallback(() => (
     <thead>
       <tr>
         {columns.map((col) => (
@@ -130,7 +130,7 @@ const Table = ({
         ))}
       </tr>
     </thead>
-  );
+  ), [columns, state.sortField, state.sortOrder, state.filters]);
 
   const renderSortIcon = (field: string) => {
     if (state.sortField !== field) return <Icon icon={faSort} className={styles.sortIcon} />;
@@ -141,13 +141,13 @@ const Table = ({
     );
   };
 
-  const renderFilter = (col: any) => (
+  const renderFilter = useCallback((col: any) => (
     <StringInput
       size="small"
       onChange={(val) => handleFilter(val, col.field, 'contains')}
       placeholder={`Filter ${col.header}`}
     />
-  );
+  ), [handleFilter]);
 
   const isSelected = (rowData: any) => {
     if (!state.selection) return false;
@@ -156,7 +156,7 @@ const Table = ({
       : state.selection === rowData;
   };
 
-  const renderBody = () => {
+  const renderBody = useCallback(() => {
     let data = applyFilters(value);
     data = applySorting(data);
     data = applyPagination(data);
@@ -184,7 +184,7 @@ const Table = ({
         })}
       </tbody>
     );
-  };
+  }, [value, state.filters, state.sortField, state.sortOrder, state.currentPage, state.rows, state.selection, selectionMode, rowHover, stripedRows]);
 
   const handlePageChange = useCallback(
     (page: number, pageSize: number) => {

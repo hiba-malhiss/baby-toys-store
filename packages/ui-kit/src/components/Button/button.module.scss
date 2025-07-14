@@ -1,7 +1,8 @@
-@mixin bts-button-default($color, $background, $border: transparent) {
+@mixin bts-button-default($color, $background, $border: transparent, $text-decoration) {
   background-color: $background;
   color: $color;
   border-color: $border;
+  text-decoration: $text-decoration;
 }
 
 @mixin bts-button-active($color, $background) {
@@ -204,6 +205,13 @@
 /* Appearance and color */
 $appearances: (
     link: (
+        underline: (
+            text-default: $color-text-grey,
+            text-hover: $color-primary-hover,
+            text-selected: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+            text-decoration: underline,
+        ),
         primary: (
             text-default: $color-text-grey,
             text-hover: $color-primary-hover,
@@ -324,25 +332,28 @@ $appearances: (
       @include bts-button-default(
               map-get($styleMap, text-default),
               map-get($styleMap, bg-default),
-              map-get($styleMap, border-default)
+              map-get($styleMap, border-default),
+              map-get($styleMap, text-decoration)
       );
 
       @include bts-button-hover(
               map-get($styleMap, text-hover),
               map-get($styleMap, bg-hover),
-              map-get($styleMap, border-hover)
+              map-get($styleMap, border-hover),
+              map-get($styleMap, icon-color),
+              map-get($styleMap, text-decoration),
       );
 
       @include bts-button-selected(
               map-get($styleMap, text-selected),
               map-get($styleMap, bg-selected),
-              map-get($styleMap, border-selected)
+              map-get($styleMap, border-selected),
       );
 
       @include bts-button-disabled(
               map-get($styleMap, text-disabled),
               map-get($styleMap, bg-disabled),
-              map-get($styleMap, border-disabled)
+              map-get($styleMap, border-disabled),
       );
     }
   }
