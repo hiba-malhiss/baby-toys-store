@@ -6,17 +6,19 @@ import { faClose } from '@fortawesome/free-solid-svg-icons';
 
 type ChipProps = {
   label: string;
-  appearance?: 'primary' | 'secondary-outline';
+  appearance?: 'primary' | 'secondary-outline' | 'success';
   className?: string;
+  size?: 'small';
   onClose?: () => void;
 };
 
-const Chip: React.FC<ChipProps> = ({ onClose, label, appearance = 'primary', className }) => {
+const Chip: React.FC<ChipProps> = ({ size, onClose, label, appearance = 'primary', className }) => {
   return (
     <span
       className={clsx(
         styles.chip,
         styles[`chip--${appearance}`],
+        styles[`chip--${size}Size`],
         className,
         onClose && styles.hasClose
       )}

@@ -11,12 +11,22 @@
   gap: 6px;
   font-size: 14px;
 
+  &--smallSize {
+    padding: 0 0.5rem;
+    font-size: 0.75rem;
+  }
+
   &.hasClose {
     padding-right: 0;
   }
 
   &--primary {
     background-color: $color-accent;
+    color: $color-white;
+  }
+
+  &--success {
+    background-color: $color-success;
     color: $color-white;
   }
 
