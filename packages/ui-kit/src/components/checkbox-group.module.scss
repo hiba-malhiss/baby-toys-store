@@ -1,0 +1,13 @@
+.checkboxGroup {
+  display: flex;
+
+  &.vertical {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &.horizontal {
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
