@@ -26,6 +26,7 @@ export type TableProps<T> = {
   onFilterChange?: (filters: Record<string, FilterMetadata>) => void;
   scrollable?: boolean;
   scrollHeight?: string | null;
+  title?: string;
   rowHover?: boolean;
   isLoading?: boolean;
   stripedRows?: boolean;

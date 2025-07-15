@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback } from 'react';
-import { Paginator, StringInput, Icon } from '../index';
+import { Paginator, StringInput, Icon, Card } from '../index';
 import { TableProps } from './table.types';
 import styles from './table.module.scss';
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
@@ -25,6 +25,7 @@ const Table = ({
   children,
   onFilterChange = () => {},
   onPageChange = () => {},
+  title,
   useLocalSortAndFilter = false,
 }: TableProps) => {
   const [state, setState] = useState({
@@ -32,7 +33,6 @@ const Table = ({
     rows,
     sortField,
     sortOrder,
-    selection,
     filters: {},
   });
 
@@ -43,9 +43,7 @@ const Table = ({
     const newSortOrder = state.sortField === field ? state.sortOrder * -1 : 1;
     setState((prev) => ({ ...prev, sortField: field, sortOrder: newSortOrder, currentPage: 1 }));
 
-    if (useLocalSortAndFilter) {
-      // Local sort
-    } else {
+    if (!useLocalSortAndFilter) {
       onSort({ field, order: newSortOrder });
     }
   };
@@ -57,9 +55,7 @@ const Table = ({
     };
     setState((prev) => ({ ...prev, filters: newFilters, currentPage: 1 }));
 
-    if (useLocalSortAndFilter) {
-      // Local filter
-    } else {
+    if (!useLocalSortAndFilter) {
       onFilterChange(newFilters);
     }
   };
@@ -96,64 +92,61 @@ const Table = ({
 
     let newSelection;
     if (selectionMode === 'single') {
-      newSelection = state.selection === rowData ? null : rowData;
+      newSelection = selection === rowData ? null : rowData;
     } else if (selectionMode === 'multiple') {
-      if (Array.isArray(state.selection)) {
-        const index = state.selection.findIndex((s) => s === rowData);
+      if (Array.isArray(selection)) {
+        const index = selection.findIndex((s) => s === rowData);
         newSelection =
-          index > -1
-            ? state.selection.filter((_, i) => i !== index)
-            : [...state.selection, rowData];
+          index > -1 ? selection.filter((_, i) => i !== index) : [...selection, rowData];
       } else {
         newSelection = [rowData];
       }
     }
 
-    setState((prev) => ({ ...prev, selection: newSelection }));
     onSelectionChange(newSelection);
   };
 
-  const renderHeader = useCallback(() => (
-    <thead>
-      <tr>
-        {columns.map((col) => (
-          <th
-            key={col.field}
-            onClick={() => col.sortable && handleSort(col.field)}
-            className={col.sortable ? styles.sortable : undefined}
-            title={col.sortable ? 'Click to sort' : undefined}
-          >
-            <span>{col.header}</span>
-            {col.sortable && renderSortIcon(col.field)}
-            {col.filter && renderFilter(col)}
-          </th>
-        ))}
-      </tr>
-    </thead>
-  ), [columns, state.sortField, state.sortOrder, state.filters]);
+  const renderHeader = useCallback(
+    () => (
+      <thead>
+        <tr>
+          {columns.map((col) => (
+            <th
+              key={col.field}
+              onClick={() => col.sortable && handleSort(col.field)}
+              className={col.sortable ? styles.isSortable : undefined}
+              title={col.sortable ? 'Click to sort' : undefined}
+            >
+              <span className="bts-marginRl">{col.header}</span>
+              {col.sortable && renderSortIcon(col.field)}
+              {col.filter && renderFilter(col)}
+            </th>
+          ))}
+        </tr>
+      </thead>
+    ),
+    [columns, state.sortField, state.sortOrder, state.filters]
+  );
 
   const renderSortIcon = (field: string) => {
-    if (state.sortField !== field) return <Icon icon={faSort} className={styles.sortIcon} />;
-    return state.sortOrder === 1 ? (
-      <Icon icon={faSortUp} className={styles.sortIcon} />
-    ) : (
-      <Icon icon={faSortDown} className={styles.sortIcon} />
-    );
+    if (state.sortField !== field) return <Icon icon={faSort} />;
+    return state.sortOrder === 1 ? <Icon icon={faSortUp} /> : <Icon icon={faSortDown} />;
   };
 
-  const renderFilter = useCallback((col: any) => (
-    <StringInput
-      size="small"
-      onChange={(val) => handleFilter(val, col.field, 'contains')}
-      placeholder={`Filter ${col.header}`}
-    />
-  ), [handleFilter]);
+  const renderFilter = useCallback(
+    (col: any) => (
+      <StringInput
+        size="small"
+        onChange={(val) => handleFilter(val, col.field, 'contains')}
+        placeholder={`Filter ${col.header}`}
+      />
+    ),
+    [handleFilter]
+  );
 
   const isSelected = (rowData: any) => {
-    if (!state.selection) return false;
-    return Array.isArray(state.selection)
-      ? state.selection.includes(rowData)
-      : state.selection === rowData;
+    if (!selection) return false;
+    return Array.isArray(selection) ? selection.includes(rowData) : selection === rowData;
   };
 
   const renderBody = useCallback(() => {
@@ -169,9 +162,9 @@ const Table = ({
             <tr
               key={index}
               onClick={() => handleRowClick(rowData)}
-              className={`${selected ? styles.selected : ''} ${
-                rowHover ? styles.rowHover : ''
-              } ${stripedRows && index % 2 === 1 ? styles.striped : ''}`}
+              className={`${selected ? styles.isSelected : ''} ${
+                rowHover ? styles.withRowHover : ''
+              } ${stripedRows && index % 2 === 1 ? styles.isStriped : ''}`}
               style={{ cursor: selectionMode ? 'pointer' : 'default' }}
             >
               {columns.map((col) => (
@@ -184,7 +177,18 @@ const Table = ({
         })}
       </tbody>
     );
-  }, [value, state.filters, state.sortField, state.sortOrder, state.currentPage, state.rows, state.selection, selectionMode, rowHover, stripedRows]);
+  }, [
+    value,
+    state.filters,
+    state.sortField,
+    state.sortOrder,
+    state.currentPage,
+    state.rows,
+    selection,
+    selectionMode,
+    rowHover,
+    stripedRows,
+  ]);
 
   const handlePageChange = useCallback(
     (page: number, pageSize: number) => {
@@ -198,35 +202,35 @@ const Table = ({
   );
 
   return (
-    <div
-      ref={wrapperRef}
-      className={styles.tableWrapper}
-      style={{
-        height: scrollHeight || undefined,
-        overflowY: scrollable ? 'auto' : undefined,
-      }}
-    >
-      {isLoading && <Overlay visible={isLoading} />}
+    <Card fullWidth header={title}>
+      <div
+        ref={wrapperRef}
+        className={styles.tableWrapper}
+        style={{
+          height: scrollHeight || undefined,
+          overflowY: scrollable ? 'auto' : undefined,
+        }}
+      >
+        {isLoading && <Overlay visible={isLoading} />}
 
-      <table ref={tableRef} className={styles.table}>
-        {renderHeader()}
-        {renderBody()}
-      </table>
+        <table ref={tableRef} className={styles.table}>
+          {renderHeader()}
+          {renderBody()}
+        </table>
 
-      {paginator && (
-        <div className={styles.paginatorWrapper}>
+        {paginator && (
           <Paginator
+            className="bts-marginTxl"
             totalItems={totalRecords}
             pageSize={state.rows}
             initialPage={state.currentPage}
             onPageChange={handlePageChange}
             isLoading={isLoading}
           />
-        </div>
-      )}
-
-      {children}
-    </div>
+        )}
+        {children}
+      </div>
+    </Card>
   );
 };
 
