@@ -1,76 +1,137 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { deleteProduct } from '@mock-data/useMockAdminApi';
-import { Button, Flex, Table, Heading } from '@baby-toys/ui-kit/components';
-import { useProductsTableColumns } from './useProductsTableColumns.tsx';
+import { deleteProduct, deleteProducts } from '@mock-data/useMockAdminApi';
+import { Button, Flex, Table, Heading, ConfirmDialog } from '@baby-toys/ui-kit/components';
+import { useProductsTableColumns } from './useProductsTableColumns';
 import { useNavigate } from 'react-router-dom';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockProductsApi';
+import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { useToast } from '@baby-toys/ui-kit/components';
+import { Product } from '../../types/product.types.ts';
 
 const PAGE_SIZE = 8;
 
 const ProductsPage: React.FC = () => {
-  const [products, setProducts] = useState<any[]>([]);
+  const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<number>(1);
   const [filters, setFilters] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
 
-  const handleDelete = (id: string) => {
-    deleteProduct(id).then(() => {
-      setProducts((prev) => prev.filter((p) => p.id !== id));
-      setTotalItems((prev) => prev - 1);
-    });
-  };
+  const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
+  const [productToDelete, setProductToDelete] = useState<Product | null>(null);
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
 
-  const columns = useProductsTableColumns(handleDelete);
-
-  const { fetchProducts } = useMockProductsApi(PAGE_SIZE);
+  const toast = useToast();
   const navigate = useNavigate();
+  const { fetchProducts } = useMockProductsApi(PAGE_SIZE);
+
+  const fetchData = async () => {
+    setIsLoading(true);
+    try {
+      const data = await fetchProducts(page, {
+        sortBy: sortField ? `${sortField}:${sortOrder === 1 ? 'asc' : 'desc'}` : undefined,
+        ...filters,
+      });
+      setProducts(data.items);
+      setTotalItems(data.totalItems);
+    } catch (error) {
+      console.error('Error fetching products:', error);
+      toast.error('Failed to fetch products.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   useEffect(() => {
-    let isMounted = true;
-    setIsLoading(true);
-
-    const fetchData = async () => {
-      try {
-        const data = await fetchProducts(page, {
-          sortBy: sortField ? `${sortField}:${sortOrder === 1 ? 'asc' : 'desc'}` : undefined,
-          ...filters,
-        });
-
-        if (isMounted) {
-          setProducts(data.items);
-          setTotalItems(data.totalItems);
-        }
-      } catch (error) {
-        console.error('Error fetching products:', error);
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
     fetchData();
+  }, [page, sortField, sortOrder, filters]);
 
-    return () => {
-      isMounted = false;
-    };
-  }, [page, sortField, sortOrder, filters, fetchProducts]);
-
-  const handlePageChange = (newPage: number) => {
-    setPage(newPage);
+  const openConfirmDialog = (product?: Product) => {
+    if (product) {
+      setProductToDelete(product);
+    } else {
+      if (!selectedProducts.length) {
+        toast.info('Please select at least one product to delete.');
+        return;
+      }
+      setProductToDelete(null);
+    }
+    setConfirmDialogVisible(true);
   };
+
+  const handleDelete = async () => {
+    setIsDeleting(true);
+    setConfirmDialogVisible(false);
+    try {
+      if (productToDelete) {
+        await deleteProduct(productToDelete.id);
+        toast.success(`Product "${productToDelete.name}" deleted successfully`);
+      } else {
+        const ids = selectedProducts.map((p) => p.id);
+        if (!ids.length) {
+          toast.info('No products selected to delete.');
+          return;
+        }
+        await deleteProducts(ids);
+        toast.success(`${ids.length} product(s) deleted successfully`);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error('Failed to delete product(s).');
+    } finally {
+      setIsDeleting(false);
+      setProductToDelete(null);
+      setSelectedProducts([]);
+      fetchData();
+    }
+  };
+
+  const columns = useProductsTableColumns(openConfirmDialog);
+
+  const confirmMessage =
+    productToDelete || selectedProducts.length === 1
+      ? `Are you sure you want to delete "${productToDelete?.name || selectedProducts[0].name}"?`
+      : `Are you sure you want to delete ${selectedProducts.length} product(s)?`;
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="xxl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>Products</Heading>
-          <Button onClick={() => navigate('/product-form/new')}>Add Product</Button>
+          <Flex spacing="s">
+            <Button
+              leftIcon={faPlus}
+              color="secondary-light"
+              onClick={() => navigate('/product-form/new')}
+            >
+              Add Product
+            </Button>
+            <Button
+              color="secondary-light"
+              onClick={() => openConfirmDialog()}
+              isDisabled={selectedProducts.length === 0}
+              leftIcon={faTrashAlt}
+            >
+              Delete Selected
+            </Button>
+          </Flex>
         </Flex>
+
+        <ConfirmDialog
+          visible={confirmDialogVisible}
+          onConfirm={handleDelete}
+          onCancel={() => setConfirmDialogVisible(false)}
+          message={confirmMessage}
+          header="Confirm Deletion"
+          confirmLabel="Yes"
+          cancelLabel="No"
+          danger
+        />
+
         <Table
           value={products}
           columns={columns}
@@ -88,8 +149,14 @@ const ProductsPage: React.FC = () => {
             setFilters(newFilters);
             setPage(1);
           }}
-          onPageChange={handlePageChange}
-          isLoading={isLoading}
+          onPageChange={(newPage) => setPage(newPage)}
+          isLoading={isLoading || isDeleting}
+          selectionMode="multiple"
+          selection={selectedProducts}
+          onSelectionChange={(newSelection) => {
+            setSelectedProducts(newSelection || []);
+          }}
+          onRowClick={(e) => navigate(`/product-form/${e.data.id}`)}
         />
       </Flex>
     </AdminLayout>
