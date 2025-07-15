@@ -1,0 +1,45 @@
+.toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 24px;
+  border-radius: 12px;
+  background-color: $color-secondary-light;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
+
+  &.isTrue {
+    background-color: $color-primary;
+  }
+
+  &-thumb {
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: $color-white;
+    transform: translateX(-8px);
+    transition: transform 0.2s ease-in-out;
+  }
+
+  &.isTrue &-thumb {
+    transform: translateX(8px);
+  }
+
+  &--small {
+    width: 32px;
+    height: 20px;
+    border-radius: 10px;
+
+    .toggle-thumb {
+      width: 16px;
+      height: 16px;
+      transform: translateX(-6px);
+    }
+
+    &.isTrue .toggle-thumb {
+      transform: translateX(6px);
+    }
+  }
+}
