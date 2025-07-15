@@ -1,0 +1,159 @@
+import React, { useState, useEffect } from 'react';
+import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
+import {
+  getCategories,
+  addCategory,
+  deleteCategory,
+  updateCategory,
+} from '@mock-data/useMockAdminApi';
+import {
+  Button,
+  Flex,
+  Table,
+  Heading,
+  ConfirmDialog,
+  useToast,
+  StringInput,
+  Dialog,
+  FileUpload,
+  FieldWrapper,
+} from '@baby-toys/ui-kit/components';
+import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+
+const CategoriesPage: React.FC = () => {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [dialogVisible, setDialogVisible] = useState(false);
+  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editingCategoryImage, setEditingCategoryImage] = useState<File | null>(null);
+  const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
+  const toast = useToast();
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    const data = await getCategories();
+    setCategories(data);
+  };
+
+  const openAddDialog = () => {
+    setEditingCategory(null);
+    setEditingCategoryImage(null);
+    setDialogVisible(true);
+  };
+
+  const openEditDialog = (category: any) => {
+    setEditingCategory(category);
+    setEditingCategoryImage(category.image || null);
+    setDialogVisible(true);
+  };
+
+  const handleSaveCategory = async () => {
+    if (editingCategory?.id) {
+      await updateCategory({ ...editingCategory, image: editingCategoryImage });
+      toast.success('Category updated successfully');
+    } else {
+      await addCategory({ name: editingCategory?.name || '', image: editingCategoryImage });
+      toast.success('Category added successfully');
+    }
+    setDialogVisible(false);
+    fetchCategories();
+  };
+
+  const openConfirmDialog = (category: any) => {
+    setCategoryToDelete(category);
+    setConfirmDialogVisible(true);
+  };
+
+  const handleDelete = async () => {
+    if (categoryToDelete) {
+      await deleteCategory(categoryToDelete.id);
+      setConfirmDialogVisible(false);
+      toast.success('Category deleted successfully');
+      fetchCategories();
+    }
+  };
+
+  const columns = [
+    { field: 'name', header: 'Name' },
+    {
+      field: 'image',
+      header: 'Image',
+      body: (row: any) => (
+        <img src={row.image} alt={row.name} style={{ width: 50, height: 50, objectFit: 'cover' }} />
+      ),
+    },
+    {
+      field: 'actions',
+      header: 'Actions',
+      body: (row: any) => (
+        <Flex spacing="m">
+          <Button
+            size="small"
+            leftIcon={faPencil}
+            appearance="outline"
+            onClick={() => openEditDialog(row)}
+          />
+          <Button
+            size="small"
+            appearance="outline"
+            leftIcon={faTrashAlt}
+            onClick={() => openConfirmDialog(row)}
+          />
+        </Flex>
+      ),
+    },
+  ];
+
+  return (
+    <AdminLayout>
+      <Flex direction="vertical" spacing="xxl" fullWidth>
+        <Flex justify="between" fullWidth>
+          <Heading>Categories</Heading>
+          <Button onClick={openAddDialog}>Add Category</Button>
+        </Flex>
+        <Table value={categories} columns={columns} />
+      </Flex>
+      <Dialog
+        visible={dialogVisible}
+        onHide={() => setDialogVisible(false)}
+        header={editingCategory ? 'Edit Category' : 'Add Category'}
+      >
+        <Flex direction="vertical" spacing="m" align="end">
+          <FieldWrapper label="Category name" fullWidth>
+            <StringInput
+              fullWidth
+              value={editingCategory?.name}
+              onChange={(v) => setEditingCategory((prev: any) => ({ ...prev, name: v }))}
+              placeholder="Category name"
+            />
+          </FieldWrapper>
+          <FieldWrapper label="Category icon" fullWidth>
+            <FileUpload
+              fullWidth
+              images={editingCategoryImage ? [editingCategoryImage] : []}
+              onImagesChange={(files) => setEditingCategoryImage(files[0] || null)}
+              mainImage={null}
+              onMainImageChange={() => {}}
+            />
+          </FieldWrapper>
+          <Button onClick={handleSaveCategory} isDisabled={!editingCategory?.name}>
+            {editingCategory?.id ? 'Update' : 'Add'}
+          </Button>
+        </Flex>
+      </Dialog>
+      <ConfirmDialog
+        visible={confirmDialogVisible}
+        onConfirm={handleDelete}
+        onCancel={() => setConfirmDialogVisible(false)}
+        message={`Are you sure you want to delete "${categoryToDelete?.name}" category?`}
+        header="Confirmation"
+        danger
+      />
+    </AdminLayout>
+  );
+};
+
+export default CategoriesPage;

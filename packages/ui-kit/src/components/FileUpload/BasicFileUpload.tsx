@@ -82,6 +82,7 @@ const BasicFileUpload: React.FC<BasicFileUploadProps> = ({
 
       <div className={styles.fileUploadBasicContent}>
         <Button
+          color="secondary-light"
           onClick={() => fileInputRef.current?.click()}
           isDisabled={disabled}
           className={disabled ? styles.fileUploadButtonDisabled : ''}
