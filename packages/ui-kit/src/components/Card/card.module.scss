@@ -2,6 +2,8 @@
   border: 1px solid $color-border;
   background-color: $color-white;
   box-shadow: $shadow-xs;
+  position: relative;
+  overflow: hidden;
 
   &.fullWidth {
     width: 100%;

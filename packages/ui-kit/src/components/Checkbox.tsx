@@ -1,6 +1,8 @@
 import React from 'react';
 import styles from './checkbox.module.scss';
 import clsx from 'clsx';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Icon } from './index';
 
 interface CheckboxProps {
   label?: string;
@@ -17,24 +19,38 @@ const Checkbox: React.FC<CheckboxProps> = ({
   isDisabled = false,
   className,
 }) => {
-  const handleChange = () => {
+  const handleClick = () => {
     if (!isDisabled) {
       onChange?.(!checked);
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (!isDisabled && (e.key === ' ' || e.key === 'Enter')) {
+      e.preventDefault();
+      onChange?.(!checked);
+    }
+  };
+
   return (
-    <label className={clsx(styles.checkbox, className, isDisabled && styles['checkbox--disabled'])}>
-      <input
-        type="checkbox"
-        checked={checked}
-        onChange={handleChange}
-        disabled={isDisabled}
-        className={styles.checkbox__input}
-      />
-      <span className={styles.checkbox__checkmark}></span>
-      {label && <span className={styles.checkbox__label}>{label}</span>}
-    </label>
+    <div
+      role="checkbox"
+      aria-checked={checked}
+      tabIndex={isDisabled ? -1 : 0}
+      className={clsx(
+        styles.checkbox,
+        className,
+        checked && styles.checkboxChecked,
+        isDisabled && styles.checkboxDisabled
+      )}
+      onClick={handleClick}
+      onKeyDown={handleKeyDown}
+    >
+      <span className={styles.checkboxCheckmark}>
+        {checked && <Icon icon={faCheck} className={styles.checkmarkIcon} />}
+      </span>
+      {label && <span className={styles.checkboxLabel}>{label}</span>}
+    </div>
   );
 };
 

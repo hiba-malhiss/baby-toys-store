@@ -6,7 +6,6 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
-      "@baby-toys/types": ["packages/types/src/index.ts"],
       "@baby-toys/ui-kit": ["packages/ui-kit/src/index.ts"]
     }
   },

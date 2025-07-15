@@ -1,53 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { getOrders, updateOrderStatus } from '@mock-data/useMockAdminApi.ts';
-import { apiClient } from '../../api/apiClient';
 import { Button, Select, Option, Card, Table } from '@baby-toys/ui-kit/components';
+import { useOrdersData } from './useOrdersData';
 
 const OrdersPage: React.FC = () => {
-  const [orders, setOrders] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [totalRecords, setTotalRecords] = useState(0);
-
-  // Table control state
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState(1);
-  const [filters, setFilters] = useState<{ [key: string]: string }>({});
-
   const navigate = useNavigate();
-
-  // Fetch data from API with current params
-  const fetchOrders = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = {
-        page,
-        pageSize,
-        sortField,
-        sortOrder,
-        filters,
-      };
-      const response = await apiClient.get(getOrders, { params });
-      setOrders(response.items);
-      setTotalRecords(response.totalRecords);
-    } finally {
-      setLoading(false);
-    }
-  }, [page, pageSize, sortField, sortOrder, filters]);
-
-  useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
-
-  // Handle order status update, then refresh list
-  const handleStatusChange = (orderId: number, status: string) => {
-    apiClient.put(updateOrderStatus, orderId, status).then(() => {
-      fetchOrders();
-    });
-  };
+  const { orders, loading, totalRecords, page, pageSize, sortField, sortOrder, setPage, setPageSize, setSortField, setSortOrder, setFilters, handleStatusChange } = useOrdersData();
 
   // Columns definition for Table component
   const columns = [

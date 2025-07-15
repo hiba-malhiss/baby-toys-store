@@ -3,7 +3,7 @@ import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { Card } from '@baby-toys/ui-kit/components';
+import { Card, Button } from '@baby-toys/ui-kit/components';
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;

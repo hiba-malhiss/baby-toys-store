@@ -54,6 +54,90 @@ export const deleteProduct = async (productId: string) => {
   throw new Error('Product not found');
 };
 
+export const deleteProducts = async (productIds: string[]) => {
+  await delay(MOCK_API_DELAY_MS);
+  productIds.forEach((productId) => {
+    const index = toys.findIndex((p) => p.id === productId);
+    if (index !== -1) {
+      toys.splice(index, 1);
+    }
+  });
+  return { success: true };
+};
+
+// Categories
+const categories = [
+  { id: '1', name: 'Stuffed Animals' },
+  { id: '2', name: 'Wooden Toys' },
+  { id: '3', name: 'Cars & Vehicles' },
+];
+
+export const getCategories = async () => {
+  await delay(MOCK_API_DELAY_MS);
+  return categories;
+};
+
+export const addCategory = async (category: { name: string, image: string }) => {
+  await delay(MOCK_API_DELAY_MS);
+  const newCategory = { ...category, id: Date.now().toString() };
+  categories.push(newCategory);
+  return newCategory;
+};
+
+export const updateCategory = async (category: { id: string, name: string, image: string }) => {
+  await delay(MOCK_API_DELAY_MS);
+  const index = categories.findIndex((c) => c.id === category.id);
+  if (index !== -1) {
+    categories[index] = category;
+    return category;
+  }
+  throw new Error('Category not found');
+};
+
+export const deleteCategory = async (categoryId: string) => {
+  await delay(MOCK_API_DELAY_MS);
+  const index = categories.findIndex((c) => c.id === categoryId);
+  if (index !== -1) {
+    categories.splice(index, 1);
+    return { success: true };
+  }
+  throw new Error('Category not found');
+};
+
+// Brands, Colors, Materials
+const brands = [
+  { value: 'lego', label: 'Lego' },
+  { value: 'disney', label: 'Disney' },
+  { value: 'marvel', label: 'Marvel' },
+];
+
+const colors = [
+  { value: 'red', label: 'Red' },
+  { value: 'blue', label: 'Blue' },
+  { value: 'green', label: 'Green' },
+];
+
+const materials = [
+  { value: 'plastic', label: 'Plastic' },
+  { value: 'wood', label: 'Wood' },
+  { value: 'metal', label: 'Metal' },
+];
+
+export const getBrands = async () => {
+  await delay(MOCK_API_DELAY_MS);
+  return brands;
+};
+
+export const getColors = async () => {
+  await delay(MOCK_API_DELAY_MS);
+  return colors;
+};
+
+export const getMaterials = async () => {
+  await delay(MOCK_API_DELAY_MS);
+  return materials;
+};
+
 // Orders
 export const getOrders = async (page = 1, pageSize = 10, filters: any = {}) => {
   await delay(MOCK_API_DELAY_MS);
@@ -87,6 +171,17 @@ export const updateOrderStatus = async (orderId: number, status: string) => {
 
   if (orderIndex !== -1) {
     allOrders[orderIndex].status = status;
+
+    // Reduce stock if order is shipped
+    if (status === 'shipped') {
+      const order = allOrders[orderIndex];
+      for (const item of order.cartItems) {
+        const product = toys.find((p) => p.id === item.productId);
+        if (product) {
+          product.availableInStock -= item.quantity;
+        }
+      }
+    }
 
     // Release stock if order is cancelled
     if (status === 'cancelled') {

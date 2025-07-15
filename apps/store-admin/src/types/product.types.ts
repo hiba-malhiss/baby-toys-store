@@ -1,11 +1,11 @@
-// TODO: move to ui-kit
 export type Product = {
   id: string;
   name: string;
   category: string;
   brand: string;
-  color: string;
-  material: string;
+  status: string; //TODO: implements
+  color: string[];
+  material: string[];
   mainImage: string;
   images: string[];
   price: number;
@@ -19,8 +19,6 @@ export type Product = {
   details?: { label: string; value: string }[];
   availableInStock?: number;
 };
-
-export type ProductWithFavorite = Product & { isUserFavorite: boolean };
 
 // Type for cart item data stored in the backend (or mock storage)
 export type CartItemBE = {
@@ -76,10 +74,3 @@ export interface Review {
   orderId?: string;
   productId?: string;
 }
-
-export type InfoCardType = {
-  appearance?: 'info' | 'warning' | 'success';
-  icon: any;
-  title: string;
-  content: string;
-};

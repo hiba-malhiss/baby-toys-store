@@ -288,7 +288,7 @@ export function useMockProductsApi(pageSize?: number) {
 
   function extractFilterOptions(field: keyof Product): { value: string; label: string }[] {
     const values = Array.from(
-      new Set(fullItems.map((item) => item[field] as string).filter(Boolean))
+      new Set(fullItems.flatMap((item) => item[field] as string[]).filter(Boolean))
     );
     return values.map((value) => ({
       value,
@@ -332,10 +332,12 @@ export function useMockProductsApi(pageSize?: number) {
         filteredItems = filteredItems.filter((item) => item.brand === filters.brand);
       }
       if (filters.material) {
-        filteredItems = filteredItems.filter((item) => item.material === filters.material);
+        filteredItems = filteredItems.filter((item) =>
+          (item.material as string[]).includes(filters.material)
+        );
       }
       if (filters.color) {
-        filteredItems = filteredItems.filter((item) => item.color === filters.color);
+        filteredItems = filteredItems.filter((item) => (item.color as string[]).includes(filters.color));
       }
 
       // Sorting

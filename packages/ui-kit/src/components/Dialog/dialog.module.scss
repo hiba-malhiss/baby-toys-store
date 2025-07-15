@@ -48,6 +48,7 @@
   font-size: 1.25rem;
   font-weight: 600;
   color: $color-text-primary;
+  padding: 16px 0;
 }
 
 .dialog-header-actions {
@@ -60,4 +61,5 @@
   overflow-y: auto;
   flex-grow: 1;
   color: $color-text-primary;
+  line-height: 20px;
 }
