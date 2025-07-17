@@ -64,7 +64,7 @@ const Footer = () => {
             const config = footerInfoConfig[item.id] || {};
             if (config.isLink && config.label) {
               return (
-                <p key={item.id}>
+                <div key={item.id} className={styles.footerInfoItem}>
                   {config.label}{' '}
                   <Button
                     withoutPadding
@@ -75,7 +75,7 @@ const Footer = () => {
                   >
                     {item.content}
                   </Button>
-                </p>
+                </div>
               );
             }
 

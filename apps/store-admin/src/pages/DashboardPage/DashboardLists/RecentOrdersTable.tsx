@@ -1,14 +1,9 @@
 import React from 'react';
 import { Table } from '@baby-toys/ui-kit/components';
-
-type Order = {
-  id: string | number;
-  email: string;
-  status: string;
-};
+import { OrderItem } from '@baby-toys/types/src';
 
 type RecentOrdersTableProps = {
-  recentOrders: Order[];
+  recentOrders: OrderItem[];
   isLoading?: boolean;
 };
 

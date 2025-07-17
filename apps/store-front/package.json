@@ -13,6 +13,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@baby-toys/types": "workspace:*",
     "zustand": "^5.0.5"
   },
   "devDependencies": {

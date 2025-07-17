@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useCallback } from 'react';
 import { apiClient } from '../../api/apiClient';
 import { getOrders, updateOrderStatus } from '@mock-data/useMockAdminApi';
@@ -45,5 +44,20 @@ export const useOrdersData = () => {
     });
   };
 
-  return { orders, loading, totalRecords, page, pageSize, sortField, sortOrder, filters, setPage, setPageSize, setSortField, setSortOrder, setFilters, handleStatusChange };
+  return {
+    orders,
+    loading,
+    totalRecords,
+    page,
+    pageSize,
+    sortField,
+    sortOrder,
+    filters,
+    setPage,
+    setPageSize,
+    setSortField,
+    setSortOrder,
+    setFilters,
+    handleStatusChange,
+  };
 };

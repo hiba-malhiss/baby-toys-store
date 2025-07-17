@@ -23,8 +23,8 @@ import {
   FileUpload,
   Card,
 } from '@baby-toys/ui-kit/components';
-import { Product } from '../../types/product.types.ts';
 import { KeyValueArrayInput, StringArrayInput } from '@baby-toys/ui-kit/components';
+import { Product } from '@baby-toys/types/src';
 
 const ProductFormPage: React.FC = () => {
   const [product, setProduct] = useState<Partial<Product>>({});

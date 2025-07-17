@@ -2,7 +2,7 @@ import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit/components';
 import { useNavigate } from 'react-router-dom';
 import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
-import { Product } from '../../types/product.types.ts';
+import { Product } from '@baby-toys/types/src';
 
 export const useProductsTableColumns = (handleDelete: (product: Product) => void) => {
   const navigate = useNavigate();

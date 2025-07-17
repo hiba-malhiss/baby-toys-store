@@ -2,24 +2,12 @@ import React from 'react';
 import { Card } from '@baby-toys/ui-kit/components';
 import RecentOrdersTable from './RecentOrdersTable.tsx';
 import styles from './dashboard-lists.module.scss';
-
-interface Product {
-  id: string;
-  name: string;
-  availableInStock?: number;
-  sales?: number;
-}
-
-interface Order {
-  id: number | string;
-  email: string;
-  status: string;
-}
+import { OrderItem, Product } from '@baby-toys/types/src';
 
 interface DashboardListsProps {
   lowStock: Product[];
   topSelling: Product[];
-  recentOrders: Order[];
+  recentOrders: OrderItem[];
 }
 
 const DashboardLists: React.FC<DashboardListsProps> = ({ lowStock, topSelling, recentOrders }) => (

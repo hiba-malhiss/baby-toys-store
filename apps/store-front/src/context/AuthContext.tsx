@@ -1,12 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { mockFetchUserApi, mockLoginApi, mockRegisterApi } from '@mock-data/useMockProductsApi.ts';
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatarUrl?: string;
-}
+import type { User } from '@baby-toys/types/src';
 
 interface AuthContextType {
   user: User | null;

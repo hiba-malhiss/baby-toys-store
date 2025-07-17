@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useMockProductsApi } from '@mock-data/useMockProductsApi';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@baby-toys/ui-kit/components';
-import { Product } from '../../types/product.types.ts';
+import { Product } from '@baby-toys/types/src';
 
 const PAGE_SIZE = 8;
 

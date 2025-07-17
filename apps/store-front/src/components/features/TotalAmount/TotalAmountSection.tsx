@@ -2,7 +2,7 @@ import React from 'react';
 import { Flex, Divider } from '@baby-toys/ui-kit/components';
 import styles from './total-amount.module.scss';
 import clsx from 'clsx';
-import type { CartItem } from '../../../types/product.types.ts';
+import type { CartItem } from '@baby-toys/types';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
 import { calculateOrderSummary } from '../../../utils/order.utils.ts';
 

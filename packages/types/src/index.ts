@@ -1,11 +1,10 @@
-export type Product = {
+export interface Product {
   id: string;
   name: string;
   category: string;
   brand: string;
-  status: string; //TODO: implements
-  color: string[];
-  material: string[];
+  color: string;
+  material: string;
   mainImage: string;
   images: string[];
   price: number;
@@ -18,15 +17,20 @@ export type Product = {
   featureBullets?: string[];
   details?: { label: string; value: string }[];
   availableInStock?: number;
-};
+  published?: boolean;
+  createdAt?: string;
+  updatedAt?: string;
+}
 
-// Type for cart item data stored in the backend (or mock storage)
-export type CartItemBE = {
+export interface ProductWithFavorite extends Product {
+  isUserFavorite: boolean;
+}
+
+export interface CartItemBE {
   productId: string;
   quantity: number;
-};
+}
 
-// Rich cart item type used in the frontend, includes full product details
 export interface CartItem extends CartItemBE {
   id?: string;
   dateAdded?: number;
@@ -40,7 +44,7 @@ export interface OrderCartItem extends CartItem {
 export interface OrderItem {
   id: number;
   email: string;
-  date: string; // ISO date string, e.g. '2024-06-30T10:00:00Z'
+  date: string;
   cartItems: OrderCartItem[];
   subtotal: number;
   shippingCost: number;
@@ -63,6 +67,8 @@ export interface ShippingInfo {
   address: string;
   town: string;
   phone: string;
+  email?: string;
+  zipCode?: string;
 }
 
 export interface Review {
@@ -73,4 +79,49 @@ export interface Review {
   date?: string;
   orderId?: string;
   productId?: string;
+  id?: string;
+}
+
+export interface InfoCardType {
+  appearance?: 'info' | 'warning' | 'success';
+  icon: any;
+  title: string;
+  content: string;
+}
+
+export interface Category {
+  id: string;
+  name: string;
+  image?: string;
+  description?: string;
+  parentId?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface Brand {
+  id: string;
+  name: string;
+  logo?: string;
+  description?: string;
+  website?: string;
+}
+
+export interface Color {
+  id: string;
+  name: string;
+  code: string;
+}
+
+export interface Material {
+  id: string;
+  name: string;
+  description?: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  avatarUrl?: string;
 }

@@ -1,5 +1,5 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import type { Review, InfoCardType } from '../types/product.types.ts';
+import type { Review, InfoCardType, Category } from '../types/product.types.ts';
 
 export const photoShoots: string[] = [
   '/assets/images/recent-photo-shoots/pic1.png',
@@ -62,13 +62,7 @@ export const infoCards: InfoCardType[] = [
   },
 ];
 
-export interface UnifiedCategory {
-  label: string;
-  value: string;
-  image: string | null;
-}
-
-export const unifiedCategories: UnifiedCategory[] = [
+export const unifiedCategories: Category[] = [
   { label: 'Play sets', value: 'play-sets', image: '/assets/icons/play-sets.svg' },
   { label: 'Control Toys', value: 'control-toys', image: '/assets/icons/control-toys.svg' },
   {

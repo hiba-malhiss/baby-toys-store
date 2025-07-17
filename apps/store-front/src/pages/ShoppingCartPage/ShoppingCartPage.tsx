@@ -64,25 +64,25 @@ const ShoppingCartPage = () => {
           {cartItems.map((item) => (
             <div key={item.productId} className={styles.shoppingCartPageTableRow}>
               <div className={styles.shoppingCartPageImage}>
-                <img src={item.product.mainImage} alt={item.product.name} />
+                <img src={item.product?.mainImage} alt={item.product?.name} />
               </div>
               <Button
                 appearance="link"
                 className={styles.shoppingCartPageProductName}
                 onClick={() => navigate('/product-details/' + item.productId)}
               >
-                {item.product.name}
+                {item.product?.name}
               </Button>
-              <div>{formatCurrency(item.product.price)}</div>
+              <div>{formatCurrency(item.product?.price)}</div>
               <div className={styles.shoppingCartPageQuantityInput}>
                 <ProductQuantityInput
                   fullWidth
-                  availableInStock={item.product.availableInStock}
+                  availableInStock={item.product?.availableInStock}
                   quantity={item.quantity}
                   onChange={(quantity) => updateQuantity(item.productId, quantity as number)}
                 ></ProductQuantityInput>
               </div>
-              <div>{formatCurrency(item.product.price * item.quantity)}</div>
+              <div>{formatCurrency(item.product?.price * item.quantity)}</div>
               <div>
                 <Button
                   leftIcon={faTrashAlt}
