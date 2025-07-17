@@ -1,6 +1,127 @@
-import type { Product } from '../types/product.types';
+import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
+import type { Review, InfoCardType, Category, Product, RadioOption } from '../types/product.types';
 
-// Mock data pools
+// from product-details-page.ts
+export const description =
+  '        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor ut' +
+  '              labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation' +
+  '              ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in' +
+  '              reprehenderit \n \n in voluptate velit esse cillum dolore eu fugiat nulla pariatur.' +
+  '              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt' +
+  '              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt' +
+  '              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt' +
+  '              mollit anim id est laborum.';
+
+// from home-page.ts
+export const photoShoots: string[] = [
+  '/assets/images/recent-photo-shoots/pic1.png',
+  '/assets/images/recent-photo-shoots/pic2.png',
+  '/assets/images/recent-photo-shoots/pic3.png',
+  '/assets/images/recent-photo-shoots/pic4.png',
+];
+
+export const reviews: Review[] = [
+  {
+    rating: 5,
+    name: 'Emily Johnson',
+    avatarUrl: '/assets/images/avatars/avatar.png',
+    comment: 'My kids love the toys! Great quality and fast shipping.',
+  },
+  {
+    rating: 4.5,
+    name: 'Liam Smith',
+    avatarUrl: '/assets/images/avatars/avatar2.png',
+    comment: 'Good variety and reasonable prices.',
+  },
+  {
+    rating: 4,
+    name: 'Ava Brown',
+    comment: 'Nice packaging and friendly customer service.',
+  },
+  {
+    rating: 5,
+    name: 'Noah Davis',
+    avatarUrl: '/assets/kit-images/avatars/avatar3.png',
+    comment: 'Fantastic experience! I’ll definitely order again.',
+  },
+  {
+    rating: 4.2,
+    name: 'Sophia Wilson',
+    avatarUrl: '/assets/kit-images/avatars/avatar4.png',
+    comment: 'The website is easy to navigate and delivery was quick.',
+  },
+];
+
+export const infoCards: InfoCardType[] = [
+  {
+    appearance: 'info',
+    icon: faHeadset,
+    title: 'Customer Care',
+    content: '24h hour follow up',
+  },
+  {
+    appearance: 'warning',
+    icon: faTruckFast,
+    title: 'Free Shipping',
+    // content will be injected from UI with currency symbol
+    content: '',
+  },
+  {
+    appearance: 'success',
+    icon: faArrowRotateLeft,
+    title: 'Return',
+    content: 'Within 7 Days',
+  },
+];
+
+export const unifiedCategories: Category[] = [
+  { label: 'Play sets', value: 'play-sets', image: '/assets/icons/play-sets.svg' },
+  { label: 'Control Toys', value: 'control-toys', image: '/assets/icons/control-toys.svg' },
+  {
+    label: 'Educational Toys',
+    value: 'educational-toys',
+    image: '/assets/icons/educational-toys.svg',
+  },
+  {
+    label: 'Eco-Friendly Toys',
+    value: 'eco-friendly-toys',
+    image: '/assets/icons/eco-friendly.svg',
+  },
+  { label: 'Stuffed Toys', value: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
+];
+
+// from shop-page.ts
+export const colorsRadioOptions: RadioOption[] = [
+  { label: 'Red', value: 'red' },
+  { label: 'Blue', value: 'blue' },
+  { label: 'Green', value: 'green' },
+  { label: 'Yellow', value: 'yellow' },
+  { label: 'Pink', value: 'pink' },
+  { label: 'Black', value: 'black' },
+  { label: 'White', value: 'white' },
+];
+
+export const brandsRadioOptions: RadioOption[] = [
+  { label: 'Lego', value: 'lego' },
+  { label: 'Fisher-Price', value: 'fisher-price' },
+  { label: 'VTech', value: 'vtech' },
+  { label: 'Hasbro', value: 'hasbro' },
+  { label: 'Mattel', value: 'mattel' },
+  { label: 'Hot Wheels', value: 'hot-wheels' },
+];
+
+export const materialsRadioOptions: RadioOption[] = [
+  { label: 'Plastic', value: 'plastic' },
+  { label: 'Wood', value: 'wood' },
+  { label: 'Metal', value: 'metal' },
+  { label: 'Fabric', value: 'fabric' },
+  { label: 'Rubber', value: 'rubber' },
+  { label: 'Eco-Friendly', value: 'eco-friendly' },
+];
+
+export const DEFAULT_PRICE: [number, number] = [0, 300];
+
+// from toy-card-list.ts
 const toyNames = [
   'Blocks Shape-Sorting Toy',
   'Stitch Medium Soft Toy',
@@ -106,8 +227,3 @@ const generateRandomToys = (count = 19): Product[] => {
 
 // Generate and export toy list
 export const toys: Product[] = generateRandomToys();
-
-// Get a toy by ID
-export const getProductById = (id: string): Product | undefined => {
-  return toys.find((toy) => toy.id === id);
-};

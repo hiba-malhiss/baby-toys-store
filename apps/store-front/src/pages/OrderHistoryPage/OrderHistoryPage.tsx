@@ -4,7 +4,7 @@ import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit/component
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore } from '../../store/useCartStore';
 import { useHandlePagination } from '../../hooks/useHandlePagination';
-import { mockFetchOrdersHistory } from '@mock-data/useMockProductsApi';
+import { mockFetchOrdersHistory } from '@mock-data/useMockApi';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import type { CartItem } from '../../types/product.types.ts';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';

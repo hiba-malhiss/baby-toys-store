@@ -3,7 +3,7 @@ import { TabBar } from '@baby-toys/ui-kit/components';
 import { TabBarItem } from '@baby-toys/ui-kit/components';
 import styles from './product-details-page.module.scss';
 import { Card } from '@baby-toys/ui-kit/components';
-import { getPolicies, useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { getPolicies, useMockProductsApi } from '@mock-data/useMockApi';
 import { ExpandableContent } from '@baby-toys/ui-kit/components';
 import { ProductReviews } from './ProductReviews.tsx';
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import { getPolicies } from '@mock-data/useMockProductsApi.ts';
+import { getPolicies } from '@mock-data/useMockApi';
 import { Heading, AccordionGroup, Accordion } from '@baby-toys/ui-kit/components';
 
 const PoliciesPage: React.FC = () => {

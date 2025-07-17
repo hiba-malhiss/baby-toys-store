@@ -2,7 +2,7 @@ import React from 'react';
 import Section from '../Section/Section.tsx';
 import { Carousel, ViewSwitcher } from '@baby-toys/ui-kit/components';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockApi';
 import { useHandlePagination } from '../../../hooks/useHandlePagination.ts';
 
 interface YouMayAlsoLikeSectionProps {

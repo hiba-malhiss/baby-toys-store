@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '@baby-toys/ui-kit/hooks';
 import React, { useEffect, useState } from 'react';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockApi';
 import type { Product } from '../../types/product.types.ts';
 import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
 import { BouncingDotsLoader } from '@baby-toys/ui-kit/components';

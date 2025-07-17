@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { deleteProduct, deleteProducts } from '@mock-data/useMockAdminApi';
 import { Button, Flex, Table, Heading, ConfirmDialog } from '@baby-toys/ui-kit/components';
 import { useProductsTableColumns } from './useProductsTableColumns';
 import { useNavigate } from 'react-router-dom';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi';
+import { useMockAdminApi } from '@mock-data/useMockApi';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useToast } from '@baby-toys/ui-kit/components';
 import { Product } from '@baby-toys/types/src';
@@ -12,6 +11,7 @@ import { Product } from '@baby-toys/types/src';
 const PAGE_SIZE = 8;
 
 const ProductsPage: React.FC = () => {
+  const { getProducts, deleteProduct, deleteProducts } = useMockAdminApi();
   const [products, setProducts] = useState<Product[]>([]);
   const [page, setPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -27,12 +27,11 @@ const ProductsPage: React.FC = () => {
 
   const toast = useToast();
   const navigate = useNavigate();
-  const { fetchProducts } = useMockProductsApi(PAGE_SIZE);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setIsLoading(true);
     try {
-      const data = await fetchProducts(page, {
+      const data = await getProducts(page, PAGE_SIZE, {
         sortBy: sortField ? `${sortField}:${sortOrder === 1 ? 'asc' : 'desc'}` : undefined,
         ...filters,
       });
@@ -44,7 +43,7 @@ const ProductsPage: React.FC = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [page, sortField, sortOrder, filters, getProducts, toast]);
 
   useEffect(() => {
     fetchData();

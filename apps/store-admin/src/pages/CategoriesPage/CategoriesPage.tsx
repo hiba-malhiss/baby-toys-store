@@ -1,11 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import {
-  getCategories,
-  addCategory,
-  deleteCategory,
-  updateCategory,
-} from '@mock-data/useMockAdminApi';
+import { useMockAdminApi } from '@mock-data/useMockApi';
 import {
   Button,
   Flex,
@@ -21,6 +16,7 @@ import {
 import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const CategoriesPage: React.FC = () => {
+  const { getCategories, addCategory, deleteCategory, updateCategory } = useMockAdminApi();
   const [categories, setCategories] = useState<any[]>([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<any>(null);
@@ -29,14 +25,14 @@ const CategoriesPage: React.FC = () => {
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
   const toast = useToast();
 
-  useEffect(() => {
-    fetchCategories();
-  }, []);
-
-  const fetchCategories = async () => {
+  const fetchCategories = useCallback(async () => {
     const data = await getCategories();
     setCategories(data);
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const openAddDialog = () => {
     setEditingCategory(null);

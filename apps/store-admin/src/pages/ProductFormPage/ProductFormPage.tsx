@@ -1,15 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import {
-  getProductById,
-  addProduct,
-  updateProduct,
-  getCategories,
-  getColors,
-  getMaterials,
-  getBrands,
-} from '@mock-data/useMockAdminApi';
+import { useMockAdminApi } from '@mock-data/useMockApi';
 import { apiClient } from '../../api/apiClient';
 import {
   StringInput,
@@ -27,6 +19,15 @@ import { KeyValueArrayInput, StringArrayInput } from '@baby-toys/ui-kit/componen
 import { Product } from '@baby-toys/types/src';
 
 const ProductFormPage: React.FC = () => {
+  const {
+    getProductById,
+    addProduct,
+    updateProduct,
+    getCategories,
+    getColors,
+    getMaterials,
+    getBrands,
+  } = useMockAdminApi();
   const [product, setProduct] = useState<Partial<Product>>({});
   const [categories, setCategories] = useState<any[]>([]);
   const [colors, setColors] = useState<any[]>([]);

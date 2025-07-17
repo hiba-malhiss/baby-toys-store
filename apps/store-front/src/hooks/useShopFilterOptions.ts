@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getShopFilterOptions } from '@mock-data/useMockProductsApi';
+import { getShopFilterOptions } from '@mock-data/useMockApi';
 import type { RadioOption } from '@baby-toys/ui-kit/components';
 
 export function useShopFilterOptions() {

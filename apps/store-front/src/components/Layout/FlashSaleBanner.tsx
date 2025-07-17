@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { faBolt } from '@fortawesome/free-solid-svg-icons';
 import { formatCountdown, useCountdown } from '../../hooks/useCountdown.ts';
 import { Alert } from '@baby-toys/ui-kit/components';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockApi';
 
 const FlashSaleBanner: React.FC = () => {
   const { getFlashSale } = useMockProductsApi();

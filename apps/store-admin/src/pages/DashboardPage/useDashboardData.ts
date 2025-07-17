@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '../../api/apiClient';
-import {
-  getDashboardStats,
-  getLowStockProducts,
-  getTopSellingProducts,
-  getRecentOrders,
-  getOrderStatusBreakdown,
-  getCategoryDistribution,
-} from '@mock-data/useMockAdminApi';
+import { useMockAdminApi } from '@mock-data/useMockApi';
 
 export const useDashboardData = () => {
+  const {
+    getDashboardStats,
+    getLowStockProducts,
+    getTopSellingProducts,
+    getRecentOrders,
+    getOrderStatusBreakdown,
+    getCategoryDistribution,
+  } = useMockAdminApi();
   const [stats, setStats] = useState<any>(null);
   const [lowStock, setLowStock] = useState<any[]>([]);
   const [topSelling, setTopSelling] = useState<any[]>([]);
@@ -42,7 +43,14 @@ export const useDashboardData = () => {
       .finally(() => {
         setIsLoading(false);
       });
-  }, []);
+  }, [
+    getDashboardStats,
+    getLowStockProducts,
+    getTopSellingProducts,
+    getRecentOrders,
+    getOrderStatusBreakdown,
+    getCategoryDistribution,
+  ]);
 
   return {
     stats,

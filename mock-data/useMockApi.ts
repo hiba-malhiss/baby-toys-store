@@ -1,14 +1,26 @@
 import { useCallback } from 'react';
-import { toys } from './toy-card-list.ts';
-import { reviews, infoCards, photoShoots, unifiedCategories } from './home-page.ts';
-import { description } from './product-details-page.ts';
-import type { CartItem, Review, OrderItem, CartItemBE, Product } from '../types/product.types.ts';
 import {
+  toys,
+  reviews,
+  infoCards,
+  photoShoots,
+  unifiedCategories,
+  description,
   brandsRadioOptions,
   colorsRadioOptions,
   DEFAULT_PRICE,
   materialsRadioOptions,
-} from './shop-page.ts';
+} from './mock-data';
+import type {
+  CartItem,
+  Review,
+  OrderItem,
+  CartItemBE,
+  Product,
+  ProductWithFavorite,
+  OrderPayload,
+  ShippingInfo,
+} from '../types/product.types';
 
 export const MOCK_API_DELAY_MS = 600;
 
@@ -21,10 +33,7 @@ export const getProductCategories = async () => {
   return unifiedCategories;
 };
 
-// -----------------------------
 // STOCK MANAGEMENT MOCK LOGIC
-// -----------------------------
-
 export const mockFetchProductAvailability = async (productId: string) => {
   await delay(MOCK_API_DELAY_MS / 2); // Faster check
   const product = toys.find((p) => p.id === productId);
@@ -34,10 +43,7 @@ export const mockFetchProductAvailability = async (productId: string) => {
   return { availableStock: product.availableInStock };
 };
 
-// -----------------------------
 // AUTH & CLOUD SYNC MOCK LOGIC
-// -----------------------------
-
 export const mockLoginApi = async (email: string, password: string) => {
   await delay(MOCK_API_DELAY_MS);
   // Demo credentials: user@example.com / password123
@@ -57,17 +63,13 @@ export const mockFetchUserApi = async (token: string) => {
   await delay(MOCK_API_DELAY_MS);
   if (token === 'mock-token') {
     return { id: '1', name: 'Mock User', email: 'user@example.com' };
+  } else if (token === 'mock-admin-token') {
+    return { id: '2', name: 'Mock Admin', email: 'admin@example.com' };
   }
   throw new Error('Invalid token');
 };
 
-import type { ProductWithFavorite } from '../types/product.types';
-// -----------------------------
 // CLOUD STORAGE MOCKS
-// -----------------------------
-
-import type { OrderPayload } from '../types/product.types.ts';
-
 export const mockPlaceOrder = async (order: OrderPayload) => {
   await delay(MOCK_API_DELAY_MS);
 
@@ -89,13 +91,11 @@ export const mockPlaceOrder = async (order: OrderPayload) => {
 
   const orders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
-  // Calculate subtotal from cart items
   const subtotal = order.cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
   );
 
-  // Determine user identifier
   const token = localStorage.getItem('auth_token');
   let userIdentifier: string | undefined;
 
@@ -107,26 +107,24 @@ export const mockPlaceOrder = async (order: OrderPayload) => {
     throw new Error('Missing user identifier (phone or email) for order');
   }
 
-  // Save shipping info
   if (order.shippingInfo && userIdentifier) {
     await mockSaveShippingInfo(userIdentifier, order.shippingInfo);
   }
 
   const newOrder: OrderItem = {
     id: Date.now(),
-    email: userIdentifier, // Now either email or phone
+    email: userIdentifier,
     date: new Date().toISOString(),
     cartItems: order.cartItems,
     subtotal,
     shippingCost: order.shippingCost || 0,
     total: order.total,
     shippingInfo: order.shippingInfo,
+    status: 'pending', // Add default status
   };
 
   orders.push(newOrder);
   localStorage.setItem('mock-orders', JSON.stringify(orders));
-
-  // Clear cart
   localStorage.setItem('cloud-cart', '[]');
 };
 
@@ -159,20 +157,15 @@ export const mockFetchOrdersHistory = async (
     }));
   }
 
-  // Sort orders by date (newest first)
   allOrders.sort(
     (a: OrderItem, b: OrderItem) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
 
   const totalItems = allOrders.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
-
-  // Clamp page within valid bounds
   const currentPage = Math.min(Math.max(page, 1), totalPages);
-
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-
   const items = allOrders.slice(startIndex, endIndex);
 
   return {
@@ -265,10 +258,7 @@ export const mockLoadFavoritesFromCloud = async (): Promise<ProductWithFavorite[
   return toys.filter((p) => favIds.includes(p.id)).map((p) => ({ ...p, isUserFavorite: true }));
 };
 
-// -----------------------------
 // SHOP FILTER OPTIONS
-// -----------------------------
-
 export const getShopFilterOptions = async () => {
   await delay(MOCK_API_DELAY_MS);
   return {
@@ -279,11 +269,8 @@ export const getShopFilterOptions = async () => {
   };
 };
 
-// -----------------------------
-// PRODUCTS & HOME DATA (MOCKED)
-// -----------------------------
-
-export function useMockProductsApi(pageSize?: number) {
+// PRODUCTS & HOME DATA (MOCKED) - Storefront
+export function useMockProductsApi(pageSize: number = 10) {
   const fullItems = toys;
 
   function extractFilterOptions(field: keyof Product): { value: string; label: string }[] {
@@ -310,7 +297,7 @@ export function useMockProductsApi(pageSize?: number) {
 
       let filteredItems = fullItems;
 
-      // Filtering
+      // Filtering logic...
       if (filters.category && filters.category !== 'all') {
         filteredItems = filteredItems.filter((item) => item.category === filters.category);
       }
@@ -340,10 +327,8 @@ export function useMockProductsApi(pageSize?: number) {
         filteredItems = filteredItems.filter((item) => (item.color as string[]).includes(filters.color));
       }
 
-      // Sorting
       filteredItems = sortItems(filteredItems, filters.sortBy);
 
-      // Add isUserFavorite to each product
       const favIdsData = localStorage.getItem('cloud-favorites');
       const favIds: string[] = favIdsData ? JSON.parse(favIdsData) : [];
       const withFavorite = filteredItems.map((item) => ({
@@ -362,7 +347,6 @@ export function useMockProductsApi(pageSize?: number) {
     [pageSize]
   );
 
-  // Simulate a real-world structure
   return {
     refetchProduct: useCallback(async (productId: string) => {
       await delay(MOCK_API_DELAY_MS);
@@ -448,7 +432,7 @@ export function useMockProductsApi(pageSize?: number) {
       await delay(MOCK_API_DELAY_MS);
       return {
         message: 'Limited time deals on select products.',
-        endTime: new Date(Date.now() + 1000 * 60).toISOString(), // 2 hours from now
+        endTime: new Date(Date.now() + 1000 * 60).toISOString(),
         title: 'Flash Sale!',
         icon: 'faBolt',
       };
@@ -456,9 +440,312 @@ export function useMockProductsApi(pageSize?: number) {
   };
 }
 
-// -----------------------------
+// ADMIN API
+export function useMockAdminApi() {
+  const getProducts = async (page = 1, pageSize = 10, filters: any = {}) => {
+    await delay(MOCK_API_DELAY_MS);
+    let filteredItems = [...toys];
+
+    if (filters.search) {
+      const term = filters.search.toLowerCase();
+      filteredItems = filteredItems.filter((item) => item.name.toLowerCase().includes(term));
+    }
+
+    const totalItems = filteredItems.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const paginated = filteredItems.slice((page - 1) * pageSize, page * pageSize);
+
+    return { items: paginated, page, totalPages, totalItems };
+  };
+
+  const getProductById = async (id: string) => {
+    await delay(MOCK_API_DELAY_MS);
+    return toys.find((item) => item.id === id);
+  };
+
+  const addProduct = async (product: Product) => {
+    await delay(MOCK_API_DELAY_MS);
+    const newProduct = { ...product, id: Date.now().toString() };
+    toys.unshift(newProduct);
+    return newProduct;
+  };
+
+  const updateProduct = async (product: Product) => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = toys.findIndex((p) => p.id === product.id);
+    if (index !== -1) {
+      toys[index] = product;
+      return product;
+    }
+    throw new Error('Product not found');
+  };
+
+  const deleteProduct = async (productId: string) => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = toys.findIndex((p) => p.id === productId);
+    if (index !== -1) {
+      toys.splice(index, 1);
+      return { success: true };
+    }
+    throw new Error('Product not found');
+  };
+
+  const deleteProducts = async (productIds: string[]) => {
+    await delay(MOCK_API_DELAY_MS);
+    productIds.forEach((productId) => {
+      const index = toys.findIndex((p) => p.id === productId);
+      if (index !== -1) {
+        toys.splice(index, 1);
+      }
+    });
+    return { success: true };
+  };
+
+  const getCategories = async () => {
+    await delay(MOCK_API_DELAY_MS);
+    return unifiedCategories;
+  };
+
+  const addCategory = async (category: { name: string; image: string }) => {
+    await delay(MOCK_API_DELAY_MS);
+    const newCategory = { ...category, id: Date.now().toString(), name: category.name, image: category.image };
+    unifiedCategories.push(newCategory);
+    return newCategory;
+  };
+
+  const updateCategory = async (category: { id: string; name: string; image: string }) => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = unifiedCategories.findIndex((c) => c.id === category.id);
+    if (index !== -1) {
+      unifiedCategories[index] = { ...unifiedCategories[index], ...category };
+      return unifiedCategories[index];
+    }
+    throw new Error('Category not found');
+  };
+
+  const deleteCategory = async (categoryId: string) => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = unifiedCategories.findIndex((c) => c.id === categoryId);
+    if (index !== -1) {
+      unifiedCategories.splice(index, 1);
+      return { success: true };
+    }
+    throw new Error('Category not found');
+  };
+
+  const getOrders = async (page = 1, pageSize = 10, filters: any = {}) => {
+    await delay(MOCK_API_DELAY_MS);
+    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+
+    let filteredOrders = allOrders;
+
+    if (filters.status) {
+      filteredOrders = filteredOrders.filter((o) => o.status === filters.status);
+    }
+
+    filteredOrders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
+
+    const totalItems = filteredOrders.length;
+    const totalPages = Math.ceil(totalItems / pageSize);
+    const paginated = filteredOrders.slice((page - 1) * pageSize, page * pageSize);
+
+    return { items: paginated, page, totalPages, totalItems };
+  };
+
+  const getOrderById = async (id: number) => {
+    await delay(MOCK_API_DELAY_MS);
+    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+    return allOrders.find((o) => o.id === id);
+  };
+
+  const updateOrderStatus = async (orderId: number, status: string) => {
+    await delay(MOCK_API_DELAY_MS);
+    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+    const orderIndex = allOrders.findIndex((o) => o.id === orderId);
+
+    if (orderIndex !== -1) {
+      allOrders[orderIndex].status = status;
+
+      if (status === 'shipped') {
+        const order = allOrders[orderIndex];
+        for (const item of order.cartItems) {
+          const product = toys.find((p) => p.id === item.productId);
+          if (product) {
+            product.availableInStock -= item.quantity;
+          }
+        }
+      }
+
+      if (status === 'cancelled') {
+        const order = allOrders[orderIndex];
+        for (const item of order.cartItems) {
+          const product = toys.find((p) => p.id === item.productId);
+          if (product) {
+            product.availableInStock += item.quantity;
+          }
+        }
+      }
+
+      localStorage.setItem('mock-orders', JSON.stringify(allOrders));
+      return allOrders[orderIndex];
+    }
+
+    throw new Error('Order not found');
+  };
+
+  const getDashboardStats = async () => {
+    await delay(MOCK_API_DELAY_MS);
+    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+
+    const totalProducts = toys.length;
+    const totalOrders = allOrders.length > 0 ? allOrders.length : 25;
+    const pendingOrders =
+      allOrders.length > 0 ? allOrders.filter((o) => o.status === 'pending').length : 5;
+    const totalRevenue =
+      allOrders.length > 0 ? allOrders.reduce((sum, order) => sum + order.total, 0) : 12500;
+    const lowStockProductsCount = toys.filter((p) => p.availableInStock < 10).length;
+    const totalCustomers =
+      new Set(allOrders.map((o) => o.email)).size > 0
+        ? new Set(allOrders.map((o) => o.email)).size
+        : 15;
+
+    const salesData = Array.from({ length: 30 }, (_, i) => {
+      const date = new Date();
+      date.setDate(date.getDate() - i);
+      return {
+        date: date.toISOString().split('T')[0],
+        sales: Math.floor(Math.random() * 5000) + 1000,
+      };
+    }).reverse();
+
+    const categoryDistribution = toys.reduce((acc, toy) => {
+      acc[toy.category] = (acc[toy.category] || 0) + (toy.sales || 0);
+      return acc;
+    }, {});
+
+    return {
+      totalProducts,
+      totalOrders,
+      pendingOrders,
+      totalRevenue,
+      lowStockProducts: lowStockProductsCount,
+      totalCustomers,
+      salesData,
+      categoryDistribution,
+    };
+  };
+
+  const getLowStockProducts = async (limit = 5) => {
+    await delay(MOCK_API_DELAY_MS);
+    const lowStock = toys.filter((p) => p.availableInStock < 10).slice(0, limit);
+    return lowStock;
+  };
+
+  const getTopSellingProducts = async (limit = 5) => {
+    await delay(MOCK_API_DELAY_MS);
+    const topSelling = [...toys].sort((a, b) => (b.sales ?? 0) - (a.sales ?? 0)).slice(0, limit);
+    return topSelling;
+  };
+
+  const getRecentOrders = async (limit = 5) => {
+    await delay(MOCK_API_DELAY_MS);
+    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+    const recent = allOrders
+      .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+      .slice(0, limit);
+    return recent;
+  };
+
+  const mockAdminLogin = async (username, password) => {
+    await delay(MOCK_API_DELAY_MS);
+    if (username === 'admin' && password === 'password') {
+      return { token: 'mock-admin-token' };
+    }
+    throw new Error('Invalid credentials');
+  };
+
+  const getOrderStatusBreakdown = async (): Promise<Record<string, number>> => {
+    await delay(MOCK_API_DELAY_MS);
+    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
+
+    const statusCounts: Record<string, number> = {
+      pending: 0,
+      processing: 0,
+      shipped: 0,
+      delivered: 0,
+      cancelled: 0,
+    };
+
+    for (const order of allOrders) {
+      const status = order.status ?? 'pending';
+      statusCounts[status] = (statusCounts[status] || 0) + 1;
+    }
+
+    return statusCounts;
+  };
+
+  const getCategoryDistribution = async () => {
+    await delay(MOCK_API_DELAY_MS);
+
+    const categorySalesMap: Record<string, number> = toys.reduce((acc, toy) => {
+      acc[toy.category] = (acc[toy.category] || 0) + (toy.sales || 0);
+      return acc;
+    }, {});
+
+    const totalSales = Object.values(categorySalesMap).reduce((sum, val) => sum + val, 0);
+
+    const categoryDistribution = Object.entries(categorySalesMap).map(
+      ([category, salesCount]) => ({
+        category,
+        salesCount,
+        percentage: totalSales ? Math.round((salesCount / totalSales) * 100) : 0,
+      })
+    );
+
+    return {
+      totalSales,
+      categoryDistribution,
+    };
+  };
+
+  return {
+    getProducts,
+    getProductById,
+    addProduct,
+    updateProduct,
+    deleteProduct,
+    deleteProducts,
+    getCategories,
+    addCategory,
+    updateCategory,
+    deleteCategory,
+    getOrders,
+    getOrderById,
+    updateOrderStatus,
+    getDashboardStats,
+    getLowStockProducts,
+    getTopSellingProducts,
+    getRecentOrders,
+    mockAdminLogin,
+    getOrderStatusBreakdown,
+    getCategoryDistribution,
+    getColors: async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return colorsRadioOptions;
+    },
+    getMaterials: async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return materialsRadioOptions;
+    },
+    getBrands: async () => {
+      await delay(MOCK_API_DELAY_MS);
+      return brandsRadioOptions;
+    },
+  };
+}
+
+
 // Helpers
-// -----------------------------
 function sortItems<T extends Product>(items: T[], sortBy?: string): T[] {
   switch (sortBy) {
     case 'best_seller':
@@ -474,7 +761,7 @@ function sortItems<T extends Product>(items: T[], sortBy?: string): T[] {
     case 'rating':
       return [...items].sort((a, b) => (b.rating ?? 0) - (a.rating ?? 0));
     default:
-      return [...items]; // featured or default
+      return [...items];
   }
 }
 
@@ -487,59 +774,33 @@ export const mockSendContactMessage = async (messageData: {
   email: string;
   message: string;
 }) => {
-  // simulate network delay
   await new Promise((resolve) => setTimeout(resolve, 1200));
-  // You could add logic here to "fail" for testing if you want
-
-  // Save messages to localStorage for demo purposes
   const messages = JSON.parse(localStorage.getItem('mock-contact-messages') || '[]');
   messages.push({ ...messageData, id: Date.now() });
   localStorage.setItem('mock-contact-messages', JSON.stringify(messages));
-
-  return true; // success
+  return true;
 };
 
-// -----------------------------
 // SHIPPING INFORMATION MOCK
-// -----------------------------
-
-interface ShippingInfo {
-  country: string;
-  firstName: string;
-  lastName: string;
-  region: string;
-  address: string;
-  town: string;
-  phone: string;
-}
-
 const SHIPPING_INFO_STORAGE_KEY = 'mock-user-shipping-info';
 
 export const mockSaveShippingInfo = async (userEmail: string, shippingInfo: ShippingInfo) => {
   await delay(MOCK_API_DELAY_MS);
-
   const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
   const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
-
   allShippingInfo[userEmail] = shippingInfo;
   localStorage.setItem(SHIPPING_INFO_STORAGE_KEY, JSON.stringify(allShippingInfo));
-
   return true;
 };
 
 export const mockFetchShippingInfo = async (userEmail: string): Promise<ShippingInfo | null> => {
   await delay(MOCK_API_DELAY_MS);
-
   const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
   const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
-
   return allShippingInfo[userEmail] || null;
 };
 
-// -----------------------------
 // PRODUCT REVIEWS MOCK
-// -----------------------------
-
 interface ProductReview extends Review {
   id: string;
   productId: string;
@@ -551,7 +812,6 @@ const REVIEWS_STORAGE_KEY = 'mock-product-reviews';
 
 export const mockAddProductReview = async (userEmail: string, review: Review) => {
   await delay(MOCK_API_DELAY_MS);
-
   const stored = localStorage.getItem(REVIEWS_STORAGE_KEY);
   const allReviews: ProductReview[] = stored ? JSON.parse(stored) : [];
   const productId = review.productId;
@@ -566,10 +826,8 @@ export const mockAddProductReview = async (userEmail: string, review: Review) =>
     orderId: review.orderId,
     date: new Date().toISOString(),
   };
-
   allReviews.push(newReview);
   localStorage.setItem(REVIEWS_STORAGE_KEY, JSON.stringify(allReviews));
-
   return newReview;
 };
 
@@ -584,19 +842,14 @@ export const mockFetchProductReviews = async (
   totalItems: number;
 }> => {
   await delay(MOCK_API_DELAY_MS);
-
   const stored = localStorage.getItem(REVIEWS_STORAGE_KEY);
   const allReviews: ProductReview[] = stored ? JSON.parse(stored) : [];
-
   const filtered = allReviews.filter((r) => r.productId === productId);
-
   const totalItems = filtered.length;
   const totalPages = Math.max(1, Math.ceil(totalItems / pageSize));
   const currentPage = Math.min(Math.max(page, 1), totalPages);
-
   const start = (currentPage - 1) * pageSize;
   const end = start + pageSize;
-
   return {
     items: filtered.slice(start, end),
     page: currentPage,
@@ -604,9 +857,9 @@ export const mockFetchProductReviews = async (
     totalItems,
   };
 };
+
 export const getPolicies = async () => {
   await delay(MOCK_API_DELAY_MS);
-
   return {
     return: {
       title: 'Return Policy',
@@ -628,16 +881,12 @@ export const getPolicies = async () => {
 
 export const getRelatedProducts = async (productId: string, page = 1, pageSize = 6) => {
   await delay(MOCK_API_DELAY_MS);
-
   const related = toys.filter((item) => item.id !== productId);
-
   const totalItems = related.length;
   const totalPages = Math.ceil(totalItems / pageSize);
   const currentPage = Math.min(Math.max(page, 1), totalPages);
-
   const startIndex = (currentPage - 1) * pageSize;
   const endIndex = startIndex + pageSize;
-
   return {
     items: related.slice(startIndex, endIndex),
     page: currentPage,
@@ -646,14 +895,7 @@ export const getRelatedProducts = async (productId: string, page = 1, pageSize =
   };
 };
 
-export const mockFetchContactInfo = (): Promise<{
-  contactDetails: {
-    iconName: string;
-    title: string;
-    content: string;
-    appearance: string;
-  }[];
-}> => {
+export const mockFetchContactInfo = (): Promise<any> => { // Type was complex, using any for now
   return Promise.resolve([
     {
       title: 'Work days',
@@ -682,37 +924,3 @@ export const mockFetchContactInfo = (): Promise<{
     },
   ]);
 };
-
-// -----------------------------
-// TODO: Must Have (Core Functionality)
-// -----------------------------
-// [ ] Add Order Status Tracking && Allow User to Add Review Only After Delivery (after admin panel support)
-// [ ] Add coupon system
-// [ ] Handle out-of-stock products gracefully, gray out instead of hard remove from cart
-// [ ] Prevent race condition when placing orders
-// [ ] Add analytics tracking events
-// [ ] Improve search with suggestions/autocomplete
-// [ ] Add profile settings for user (name/email/password)
-
-// -----------------------------
-// TODO: Nice to Have (Optional / Stretch Features)
-// -----------------------------
-// [ ] Support multiple shipping addresses
-// [ ] Add product variant system (color, size, etc.)
-// [ ] Add admin dashboard (orders, products, reviews)
-// [ ] Remind users of abandoned cart after some time
-
-//Add Order Status Tracking & Allow User to Add Review Only After Delivery
-// pending — order placed
-// processing — admin is preparing the order
-// shipped — order sent to delivery
-// delivered — user has received the order
-// cancelled — admin canceled the order
-
-// How to Manage Stock Properly (https://chatgpt.com/c/686bb8d1-f638-8009-8fc9-eeb4df0fc449)
-// 1. Stock Reservation on Order Placement (Pending Status)
-// When a user places an order, reserve the quantity in stock by reducing available stock immediately to prevent overselling.
-// Mark the order as pending — stock is reserved but not yet deducted permanently.
-// 2. Stock Confirmation on Order Processing
-// When admin moves order status from pending → processing, confirm the reservation (stock remains deducted).
-// If admin cancels the order while pending or processing, release the reserved stock back to availability.

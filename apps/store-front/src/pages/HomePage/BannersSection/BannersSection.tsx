@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { Flex } from '@baby-toys/ui-kit/components';
 
 import styles from './banners-section.module.scss';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockApi';
 import clsx from 'clsx';
 
 const BannersSection = () => {

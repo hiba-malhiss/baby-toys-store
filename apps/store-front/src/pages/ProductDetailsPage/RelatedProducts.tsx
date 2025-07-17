@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { getRelatedProducts } from '@mock-data/useMockProductsApi';
+import { getRelatedProducts } from '@mock-data/useMockApi';
 import Section from '../../components/features/Section/Section.tsx';
 import { ViewSwitcher } from '@baby-toys/ui-kit/components';
 import styles from './product-details-page.module.scss';

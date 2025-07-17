@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { mockFetchUserApi, mockLoginApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockAdminApi, mockFetchUserApi } from '@mock-data/useMockApi';
 import type { User } from '../../../store-front/src/context/AuthContext.tsx';
 
 interface AuthContextType {
@@ -11,6 +11,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { mockAdminLogin } = useMockAdminApi();
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('auth_token'));
   const [user, setUser] = useState<User | null>(null);
 
@@ -26,7 +27,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   const login = async (email: string, password: string) => {
-    const { token: newToken } = await mockLoginApi(email, password);
+    const { token: newToken } = await mockAdminLogin(email, password);
     localStorage.setItem('auth_token', newToken);
     setToken(newToken);
   };

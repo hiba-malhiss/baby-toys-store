@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
 import { Button, Flex, Heading } from '@baby-toys/ui-kit/components';
 import { footerInfoConfig, exploreLinks, socialMediaLinks } from './footer.constants.ts';
-import { mockFetchContactInfo } from '@mock-data/useMockProductsApi.ts';
+import { mockFetchContactInfo } from '@mock-data/useMockApi';
 
 const Footer = () => {
   const navigate = useNavigate();

@@ -1,8 +1,9 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiClient } from '../../api/apiClient';
-import { getOrders, updateOrderStatus } from '@mock-data/useMockAdminApi';
+import { useMockAdminApi } from '@mock-data/useMockApi';
 
 export const useOrdersData = () => {
+  const { getOrders, updateOrderStatus } = useMockAdminApi();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
@@ -25,13 +26,13 @@ export const useOrdersData = () => {
         sortOrder,
         filters,
       };
-      const response = await apiClient.get(getOrders, { params });
+      const response = await apiClient.get(getOrders, params);
       setOrders(response.items);
       setTotalRecords(response.totalRecords);
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, sortField, sortOrder, filters]);
+  }, [page, pageSize, sortField, sortOrder, filters, getOrders]);
 
   useEffect(() => {
     fetchOrders();

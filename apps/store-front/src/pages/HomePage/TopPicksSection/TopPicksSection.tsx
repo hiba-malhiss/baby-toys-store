@@ -4,7 +4,7 @@ import Section from '../../../components/features/Section/Section.tsx';
 import { Flex, Button, RadioButtonGroup } from '@baby-toys/ui-kit/components';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/features/SmartProductCard/SmartProductCard.tsx';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockApi';
 import type { Product } from '../../../types/product.types.ts';
 
 import { HOMEPAGE_TOP_PICKS_LIMIT } from '../../../constants/display.constants.ts';

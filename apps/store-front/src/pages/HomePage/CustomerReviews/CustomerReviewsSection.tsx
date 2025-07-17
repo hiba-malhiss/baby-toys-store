@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Section from '../../../components/features/Section/Section.tsx';
 import { ReviewCard, Carousel } from '@baby-toys/ui-kit/components';
-import { useMockProductsApi } from '@mock-data/useMockProductsApi.ts';
+import { useMockProductsApi } from '@mock-data/useMockApi';
 import type { Review } from '../../../types/product.types.ts';
 
 const CustomerReviewsSection = () => {
