@@ -20,7 +20,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   useCartSync();
 
   if (isLoadingConfigs) {
-    return <BouncingDotsLoader />;
+    return <BouncingDotsLoader className="bts-marginTxxxl" />;
   }
   return (
     <>

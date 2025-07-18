@@ -41,10 +41,6 @@ export interface CartItemBE {
   quantity: number;
 }
 
-export interface OrderCartItem extends CartItem {
-  isReviewed: boolean;
-}
-
 export interface OrderItem {
   id: number;
   email: string;
