@@ -6,7 +6,6 @@ import {
   photoShoots,
   unifiedCategories,
   description,
-  DEFAULT_PRICE,
   mockColors,
   mockMaterials,
   mockBrands,
@@ -28,7 +27,6 @@ import {
   LoginResponse,
   RegisterResponse,
   User,
-  ShopFilterOptions,
   AdminDashboardStats,
   AdminProduct,
   AdminOrder,
@@ -464,7 +462,39 @@ export function useMockProductsApi(pageSize: number = 10) {
 }
 
 // ADMIN API
-export function useMockAdminApi(): AdminDashboardData {
+export function useMockAdminApi(): {
+  getTopSellingProducts: (limit?: number) => Promise<Product[]>;
+  getBrands: () => Promise<Brand[]>;
+  getOrderById: (id: number) => Promise<OrderItem | undefined>;
+  addProduct: (product: Product) => Promise<Product>;
+  updateProduct: (product: Product) => Promise<Product>;
+  getDashboardStats: () => Promise<AdminDashboardStats>;
+  updateBrand: (brand: {
+    id: string;
+    name: string;
+    logo: string;
+    description?: string;
+  }) => Promise<Brand>;
+  updateCategory: (category: { id: string; name: string; image: string }) => Promise<Category>;
+  mockAdminLogin: (username, password) => Promise<{ token: string }>;
+  getProductById: (id: string) => Promise<Product | undefined>;
+  addCategory: (category: { name: string; image: string }) => Promise<Category>;
+  getRecentOrders: (limit?: number) => Promise<OrderItem[]>;
+  deleteBrand: (brandId: string) => Promise<{ success: boolean }>;
+  getLowStockProducts: (limit?: number) => Promise<Product[]>;
+  getCategories: () => Promise<Category[]>;
+  addBrand: (brand: { name: string; logo: string; description?: string }) => Promise<Brand>;
+  getProducts: (page?: number, pageSize?: number, filters?: any) => Promise<AdminProduct>;
+  deleteProduct: (productId: string) => Promise<{ success: boolean }>;
+  deleteProducts: (productIds: string[]) => Promise<{ success: boolean }>;
+  getOrderStatusBreakdown: () => Promise<Record<string, number>>;
+  deleteCategory: (categoryId: string) => Promise<{ success: boolean }>;
+  getOrders: (page?: number, pageSize?: number, filters?: any) => Promise<AdminOrder>;
+  updateOrderStatus: (orderId: number, status: string) => Promise<OrderItem>;
+  getCategoryDistribution: () => Promise<CategoryDistribution>;
+  getMaterials: () => Promise<Material[]>;
+  getColors: () => Promise<Color[]>;
+} {
   const getProducts = async (page = 1, pageSize = 10, filters: any = {}): Promise<AdminProduct> => {
     await delay(MOCK_API_DELAY_MS);
     let filteredItems = [...toys];
@@ -563,6 +593,50 @@ export function useMockAdminApi(): AdminDashboardData {
       return { success: true };
     }
     throw new Error('Category not found');
+  };
+
+  const getBrands = async (): Promise<Brand[]> => {
+    await delay(MOCK_API_DELAY_MS);
+    return mockBrands;
+  };
+
+  const addBrand = async (brand: {
+    name: string;
+    logo: string;
+    description?: string;
+  }): Promise<Brand> => {
+    await delay(MOCK_API_DELAY_MS);
+    const newBrand: Brand = {
+      ...brand,
+      id: Date.now().toString(),
+    };
+    mockBrands.push(newBrand);
+    return newBrand;
+  };
+
+  const updateBrand = async (brand: {
+    id: string;
+    name: string;
+    logo: string;
+    description?: string;
+  }): Promise<Brand> => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = mockBrands.findIndex((b) => b.id === brand.id);
+    if (index !== -1) {
+      mockBrands[index] = { ...mockBrands[index], ...brand };
+      return mockBrands[index];
+    }
+    throw new Error('Brand not found');
+  };
+
+  const deleteBrand = async (brandId: string): Promise<{ success: boolean }> => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = mockBrands.findIndex((b) => b.id === brandId);
+    if (index !== -1) {
+      mockBrands.splice(index, 1);
+      return { success: true };
+    }
+    throw new Error('Brand not found');
   };
 
   const getOrders = async (page = 1, pageSize = 10, filters: any = {}): Promise<AdminOrder> => {
@@ -765,6 +839,10 @@ export function useMockAdminApi(): AdminDashboardData {
     addCategory,
     updateCategory,
     deleteCategory,
+    getBrands,
+    addBrand,
+    updateBrand,
+    deleteBrand,
     getOrders,
     getOrderById,
     updateOrderStatus,

@@ -8,6 +8,7 @@ const NavConfigs = [
   { label: 'Dashboard', path: '/dashboard' },
   { label: 'Products', path: '/products' },
   { label: 'Categories', path: '/categories' },
+  { label: 'Brands', path: '/brands' },
   { label: 'Orders', path: '/orders' },
   { label: 'Customers', path: '/customers' },
   { label: 'Reviews', path: '/reviews' },

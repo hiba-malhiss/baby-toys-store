@@ -245,9 +245,9 @@ export interface AdminDashboardData {
       percentage: number;
     }[];
   }>;
-  getColors: () => Promise<{ value: string; label: string }[]>;
-  getMaterials: () => Promise<{ value: string; label: string }[]>;
-  getBrands: () => Promise<{ value: string; label: string }[]>;
+  getColors: () => Promise<Color[]>;
+  getMaterials: () => Promise<Material[]>;
+  getBrands: () => Promise<Brand[]>;
 }
 
 export interface ContactMessage {
