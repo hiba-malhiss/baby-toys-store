@@ -21,6 +21,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const userData = await mockFetchUserApi(token);
       setUser(userData);
+      if (userData?.role) {
+        localStorage.setItem('user_role', userData.role);
+      }
     } catch (err) {
       console.error('Auth error:', err);
       logout();
@@ -31,10 +34,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const { token: newToken } = await mockAdminLogin(email, password);
     localStorage.setItem('auth_token', newToken);
     setToken(newToken);
+    await fetchUser();
   };
 
   const logout = () => {
     localStorage.removeItem('auth_token');
+    localStorage.removeItem('user_role');
     setToken(null);
     setUser(null);
   };
