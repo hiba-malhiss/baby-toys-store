@@ -16,6 +16,7 @@ interface AccordionProps {
   iconPosition?: 'left' | 'right';
   buttonAppearance?: ButtonAppearance;
   buttonColor?: ButtonColor;
+  unstyled?: boolean;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
@@ -30,6 +31,7 @@ const Accordion: React.FC<AccordionProps> = ({
   iconPosition = 'right',
   buttonAppearance = 'link',
   buttonColor = 'primary',
+  unstyled,
 }) => {
   // If controlled, use controlledIsOpen, else manage local open state
   const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(defaultOpen);
@@ -53,6 +55,7 @@ const Accordion: React.FC<AccordionProps> = ({
         disabled && styles.isDisabled,
         isControlled && styles.isControlled,
         withoutPadding && styles.withoutPadding,
+        unstyled && styles.unstyled,
         styles[`accordion--${iconPosition}Icon`]
       )}
     >
