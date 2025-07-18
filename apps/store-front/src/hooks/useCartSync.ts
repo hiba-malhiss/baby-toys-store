@@ -11,20 +11,24 @@ export function useCartSync() {
   const { isLoggedIn } = useAuth();
   const prevLoggedIn = useRef(isLoggedIn);
 
-  const cartItemsBE = useMemo(() => {
-    return cartItems.map((item) => ({
-      productId: item.productId,
-      quantity: item.quantity,
-    }));
+  // Map local items by productId
+  const localCartMap = useMemo(() => {
+    const map = new Map();
+    cartItems.forEach((item) => {
+      map.set(item.productId, item);
+    });
+    return map;
   }, [cartItems]);
 
-  // Sync on cart changes
+  // Sync to cloud when cart changes
   useEffect(() => {
     if (isLoggedIn) {
       (async () => {
         try {
           setIsSyncing(true);
-          await mockSaveCartToCloud(cartItemsBE);
+          await mockSaveCartToCloud(
+            cartItems.map((item) => ({ productId: item.productId, quantity: item.quantity }))
+          );
         } catch (e) {
           console.error('Failed saving cart to cloud', e);
         } finally {
@@ -32,9 +36,9 @@ export function useCartSync() {
         }
       })();
     }
-  }, [cartItemsBE, isLoggedIn]);
+  }, [cartItems, isLoggedIn]);
 
-  // Merge local and cloud carts on login
+  // Merge on login: use local item if it exists
   useEffect(() => {
     if (!prevLoggedIn.current && isLoggedIn) {
       (async () => {
@@ -42,20 +46,19 @@ export function useCartSync() {
           setIsSyncing(true);
           const cloudCart = await mockLoadCartFromCloud();
 
-          const localMap = new Map(cartItemsBE.map((item) => [item.productId, item.quantity]));
+          const mergedMap = new Map();
+
+          // Add cloud items first
           for (const cloudItem of cloudCart) {
-            if (localMap.has(cloudItem.productId)) {
-              const localQty = localMap.get(cloudItem.productId) || 0;
-              localMap.set(cloudItem.productId, localQty + cloudItem.quantity);
-            } else {
-              localMap.set(cloudItem.productId, cloudItem.quantity);
-            }
+            mergedMap.set(cloudItem.productId, cloudItem);
           }
 
-          const mergedCart = Array.from(localMap.entries()).map(([productId, quantity]) => ({
-            productId,
-            quantity,
-          }));
+          // Override with local items (keep local quantity + full local object)
+          for (const [productId, localItem] of localCartMap.entries()) {
+            mergedMap.set(productId, localItem);
+          }
+
+          const mergedCart = Array.from(mergedMap.values());
 
           setCartItems(mergedCart);
           await mockSaveCartToCloud(mergedCart);
@@ -68,9 +71,9 @@ export function useCartSync() {
     }
 
     prevLoggedIn.current = isLoggedIn;
-  }, [isLoggedIn, cartItemsBE, setCartItems]);
+  }, [isLoggedIn, localCartMap, setCartItems]);
 
-  // Clear local cart on logout
+  // Clear cart on logout
   useEffect(() => {
     if (prevLoggedIn.current && !isLoggedIn) {
       clearCart();
