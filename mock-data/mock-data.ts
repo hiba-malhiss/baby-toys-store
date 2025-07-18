@@ -75,19 +75,19 @@ export const infoCards: InfoCardType[] = [
 ];
 
 export const unifiedCategories: Category[] = [
-  { label: 'Play sets', value: 'play-sets', image: '/assets/icons/play-sets.svg' },
-  { label: 'Control Toys', value: 'control-toys', image: '/assets/icons/control-toys.svg' },
+  { name: 'Play sets', value: 'play-sets', image: '/assets/icons/play-sets.svg' },
+  { name: 'Control Toys', value: 'control-toys', image: '/assets/icons/control-toys.svg' },
   {
-    label: 'Educational Toys',
+    name: 'Educational Toys',
     value: 'educational-toys',
     image: '/assets/icons/educational-toys.svg',
   },
   {
-    label: 'Eco-Friendly Toys',
+    name: 'Eco-Friendly Toys',
     value: 'eco-friendly-toys',
     image: '/assets/icons/eco-friendly.svg',
   },
-  { label: 'Stuffed Toys', value: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
+  { name: 'Stuffed Toys', value: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
 ];
 
 // from shop-page.ts

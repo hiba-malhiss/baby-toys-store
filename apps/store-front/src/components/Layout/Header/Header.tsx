@@ -108,15 +108,15 @@ const Header = () => {
           >
             All Toys
           </Button>
-          {categories.map(({ label, value }) => (
+          {categories.map(({ name, value }) => (
             <Button
               withoutPadding
-              key={label}
+              key={name}
               size="large"
               appearance="link"
               onClick={() => handleCategoryClick(value)}
             >
-              {label}
+              {name}
             </Button>
           ))}
         </Flex>

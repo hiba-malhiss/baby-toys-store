@@ -42,18 +42,18 @@ const OurCollectionSection = () => {
         className={styles.ourCollectionCategories}
         wrap
       >
-        {categories.map(({ label, image, value }) => (
+        {categories.map(({ name, image, value }) => (
           <Button
             withoutPadding
-            key={label}
+            key={name}
             withAutoHeight
             appearance="link"
             size="large"
             onClick={() => handleCategoryClick(value)}
           >
             <Flex fullHeight direction="vertical" align="center" justify="between" spacing="xl">
-              <img src={image} alt={label} className={styles.ourCollectionImage} />
-              <span>{label}</span>
+              <img src={image} alt={name} className={styles.ourCollectionImage} />
+              <span>{name}</span>
             </Flex>
           </Button>
         ))}

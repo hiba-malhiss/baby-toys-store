@@ -20,21 +20,36 @@ import type {
   ProductWithFavorite,
   OrderPayload,
   ShippingInfo,
-} from '../types/product.types';
+  Category,
+  ProductAvailability,
+  LoginResponse,
+  RegisterResponse,
+  User,
+  ShopFilterOptions,
+  AdminDashboardStats,
+  AdminProduct,
+  AdminOrder,
+  AdminDashboardData,
+  Policy,
+  RelatedProducts,
+  ContactInfo,
+} from '../packages/types/src/index';
 
 export const MOCK_API_DELAY_MS = 600;
 
 // Helper to add delay to any promise
-const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+const delay = (ms: number): Promise<void> => new Promise((res) => setTimeout(res, ms));
 
 // Mocked API to simulate categories fetching
-export const getProductCategories = async () => {
+export const getProductCategories = async (): Promise<Category[]> => {
   await delay(MOCK_API_DELAY_MS);
   return unifiedCategories;
 };
 
 // STOCK MANAGEMENT MOCK LOGIC
-export const mockFetchProductAvailability = async (productId: string) => {
+export const mockFetchProductAvailability = async (
+  productId: string
+): Promise<ProductAvailability> => {
   await delay(MOCK_API_DELAY_MS / 2); // Faster check
   const product = toys.find((p) => p.id === productId);
   if (!product) {
@@ -44,7 +59,7 @@ export const mockFetchProductAvailability = async (productId: string) => {
 };
 
 // AUTH & CLOUD SYNC MOCK LOGIC
-export const mockLoginApi = async (email: string, password: string) => {
+export const mockLoginApi = async (email: string, password: string): Promise<LoginResponse> => {
   await delay(MOCK_API_DELAY_MS);
   // Demo credentials: user@example.com / password123
   if ((email === 'user@example.com' && password === 'password123') || (email && password)) {
@@ -53,13 +68,16 @@ export const mockLoginApi = async (email: string, password: string) => {
   throw new Error('Invalid credentials');
 };
 
-export const mockRegisterApi = async (email: string, password: string) => {
+export const mockRegisterApi = async (
+  email: string,
+  password: string
+): Promise<RegisterResponse> => {
   await delay(MOCK_API_DELAY_MS);
   if (email && password) return { email, token: 'mock-token' };
   throw new Error('Registration failed');
 };
 
-export const mockFetchUserApi = async (token: string) => {
+export const mockFetchUserApi = async (token: string): Promise<User> => {
   await delay(MOCK_API_DELAY_MS);
   if (token === 'mock-token') {
     return { id: '1', name: 'Mock User', email: 'user@example.com' };
@@ -70,7 +88,7 @@ export const mockFetchUserApi = async (token: string) => {
 };
 
 // CLOUD STORAGE MOCKS
-export const mockPlaceOrder = async (order: OrderPayload) => {
+export const mockPlaceOrder = async (order: OrderPayload): Promise<void> => {
   await delay(MOCK_API_DELAY_MS);
 
   // Server-side stock check
@@ -200,7 +218,7 @@ export const mockFetchWishlist = async (
   };
 };
 
-export const mockSaveCartToCloud = async (cartItems: CartItemBE[]) => {
+export const mockSaveCartToCloud = async (cartItems: CartItemBE[]): Promise<void> => {
   const cartItemsBE: CartItemBE[] = cartItems.map((item) => ({
     productId: item.productId,
     quantity: item.quantity,
@@ -227,11 +245,11 @@ export const mockLoadCartFromCloud = async (): Promise<CartItem[]> => {
   }));
 };
 
-function triggerWishlistChange() {
+function triggerWishlistChange(): void {
   localStorage.setItem('cloud-favorites-timestamp', Date.now().toString());
 }
 
-export const mockAddToWishlist = async (productId: string) => {
+export const mockAddToWishlist = async (productId: string): Promise<void> => {
   const data = localStorage.getItem('cloud-favorites');
   const favs: string[] = data ? JSON.parse(data) : [];
 
@@ -242,7 +260,7 @@ export const mockAddToWishlist = async (productId: string) => {
   }
 };
 
-export const mockRemoveFromWishlist = async (productId: string) => {
+export const mockRemoveFromWishlist = async (productId: string): Promise<void> => {
   const data = localStorage.getItem('cloud-favorites');
   const favs: string[] = data ? JSON.parse(data) : [];
 
@@ -259,7 +277,7 @@ export const mockLoadFavoritesFromCloud = async (): Promise<ProductWithFavorite[
 };
 
 // SHOP FILTER OPTIONS
-export const getShopFilterOptions = async () => {
+export const getShopFilterOptions = async (): Promise<ShopFilterOptions> => {
   await delay(MOCK_API_DELAY_MS);
   return {
     colors: colorsRadioOptions,
@@ -324,7 +342,9 @@ export function useMockProductsApi(pageSize: number = 10) {
         );
       }
       if (filters.color) {
-        filteredItems = filteredItems.filter((item) => (item.color as string[]).includes(filters.color));
+        filteredItems = filteredItems.filter((item) =>
+          (item.color as string[]).includes(filters.color)
+        );
       }
 
       filteredItems = sortItems(filteredItems, filters.sortBy);
@@ -441,8 +461,8 @@ export function useMockProductsApi(pageSize: number = 10) {
 }
 
 // ADMIN API
-export function useMockAdminApi() {
-  const getProducts = async (page = 1, pageSize = 10, filters: any = {}) => {
+export function useMockAdminApi(): AdminDashboardData {
+  const getProducts = async (page = 1, pageSize = 10, filters: any = {}): Promise<AdminProduct> => {
     await delay(MOCK_API_DELAY_MS);
     let filteredItems = [...toys];
 
@@ -458,19 +478,19 @@ export function useMockAdminApi() {
     return { items: paginated, page, totalPages, totalItems };
   };
 
-  const getProductById = async (id: string) => {
+  const getProductById = async (id: string): Promise<Product | undefined> => {
     await delay(MOCK_API_DELAY_MS);
     return toys.find((item) => item.id === id);
   };
 
-  const addProduct = async (product: Product) => {
+  const addProduct = async (product: Product): Promise<Product> => {
     await delay(MOCK_API_DELAY_MS);
     const newProduct = { ...product, id: Date.now().toString() };
     toys.unshift(newProduct);
     return newProduct;
   };
 
-  const updateProduct = async (product: Product) => {
+  const updateProduct = async (product: Product): Promise<Product> => {
     await delay(MOCK_API_DELAY_MS);
     const index = toys.findIndex((p) => p.id === product.id);
     if (index !== -1) {
@@ -480,7 +500,7 @@ export function useMockAdminApi() {
     throw new Error('Product not found');
   };
 
-  const deleteProduct = async (productId: string) => {
+  const deleteProduct = async (productId: string): Promise<{ success: boolean }> => {
     await delay(MOCK_API_DELAY_MS);
     const index = toys.findIndex((p) => p.id === productId);
     if (index !== -1) {
@@ -490,7 +510,7 @@ export function useMockAdminApi() {
     throw new Error('Product not found');
   };
 
-  const deleteProducts = async (productIds: string[]) => {
+  const deleteProducts = async (productIds: string[]): Promise<{ success: boolean }> => {
     await delay(MOCK_API_DELAY_MS);
     productIds.forEach((productId) => {
       const index = toys.findIndex((p) => p.id === productId);
@@ -501,19 +521,28 @@ export function useMockAdminApi() {
     return { success: true };
   };
 
-  const getCategories = async () => {
+  const getCategories = async (): Promise<Category[]> => {
     await delay(MOCK_API_DELAY_MS);
     return unifiedCategories;
   };
 
-  const addCategory = async (category: { name: string; image: string }) => {
+  const addCategory = async (category: { name: string; image: string }): Promise<Category> => {
     await delay(MOCK_API_DELAY_MS);
-    const newCategory = { ...category, id: Date.now().toString(), name: category.name, image: category.image };
+    const newCategory = {
+      ...category,
+      id: Date.now().toString(),
+      name: category.name,
+      image: category.image,
+    };
     unifiedCategories.push(newCategory);
     return newCategory;
   };
 
-  const updateCategory = async (category: { id: string; name: string; image: string }) => {
+  const updateCategory = async (category: {
+    id: string;
+    name: string;
+    image: string;
+  }): Promise<Category> => {
     await delay(MOCK_API_DELAY_MS);
     const index = unifiedCategories.findIndex((c) => c.id === category.id);
     if (index !== -1) {
@@ -523,7 +552,7 @@ export function useMockAdminApi() {
     throw new Error('Category not found');
   };
 
-  const deleteCategory = async (categoryId: string) => {
+  const deleteCategory = async (categoryId: string): Promise<{ success: boolean }> => {
     await delay(MOCK_API_DELAY_MS);
     const index = unifiedCategories.findIndex((c) => c.id === categoryId);
     if (index !== -1) {
@@ -533,7 +562,7 @@ export function useMockAdminApi() {
     throw new Error('Category not found');
   };
 
-  const getOrders = async (page = 1, pageSize = 10, filters: any = {}) => {
+  const getOrders = async (page = 1, pageSize = 10, filters: any = {}): Promise<AdminOrder> => {
     await delay(MOCK_API_DELAY_MS);
     const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
@@ -552,13 +581,13 @@ export function useMockAdminApi() {
     return { items: paginated, page, totalPages, totalItems };
   };
 
-  const getOrderById = async (id: number) => {
+  const getOrderById = async (id: number): Promise<OrderItem | undefined> => {
     await delay(MOCK_API_DELAY_MS);
     const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
     return allOrders.find((o) => o.id === id);
   };
 
-  const updateOrderStatus = async (orderId: number, status: string) => {
+  const updateOrderStatus = async (orderId: number, status: string): Promise<OrderItem> => {
     await delay(MOCK_API_DELAY_MS);
     const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
     const orderIndex = allOrders.findIndex((o) => o.id === orderId);
@@ -593,7 +622,7 @@ export function useMockAdminApi() {
     throw new Error('Order not found');
   };
 
-  const getDashboardStats = async () => {
+  const getDashboardStats = async (): Promise<AdminDashboardStats> => {
     await delay(MOCK_API_DELAY_MS);
     const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
@@ -609,14 +638,7 @@ export function useMockAdminApi() {
         ? new Set(allOrders.map((o) => o.email)).size
         : 15;
 
-    const salesData = Array.from({ length: 30 }, (_, i) => {
-      const date = new Date();
-      date.setDate(date.getDate() - i);
-      return {
-        date: date.toISOString().split('T')[0],
-        sales: Math.floor(Math.random() * 5000) + 1000,
-      };
-    }).reverse();
+    const salesData = generateSalesData();
 
     const categoryDistribution = toys.reduce((acc, toy) => {
       acc[toy.category] = (acc[toy.category] || 0) + (toy.sales || 0);
@@ -635,19 +657,19 @@ export function useMockAdminApi() {
     };
   };
 
-  const getLowStockProducts = async (limit = 5) => {
+  const getLowStockProducts = async (limit = 5): Promise<Product[]> => {
     await delay(MOCK_API_DELAY_MS);
     const lowStock = toys.filter((p) => p.availableInStock < 10).slice(0, limit);
     return lowStock;
   };
 
-  const getTopSellingProducts = async (limit = 5) => {
+  const getTopSellingProducts = async (limit = 5): Promise<Product[]> => {
     await delay(MOCK_API_DELAY_MS);
     const topSelling = [...toys].sort((a, b) => (b.sales ?? 0) - (a.sales ?? 0)).slice(0, limit);
     return topSelling;
   };
 
-  const getRecentOrders = async (limit = 5) => {
+  const getRecentOrders = async (limit = 5): Promise<OrderItem[]> => {
     await delay(MOCK_API_DELAY_MS);
     const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
     const recent = allOrders
@@ -656,7 +678,12 @@ export function useMockAdminApi() {
     return recent;
   };
 
-  const mockAdminLogin = async (username, password) => {
+  const mockAdminLogin = async (
+    username,
+    password
+  ): Promise<{
+    token: string;
+  }> => {
     await delay(MOCK_API_DELAY_MS);
     if (username === 'admin' && password === 'password') {
       return { token: 'mock-admin-token' };
@@ -684,7 +711,14 @@ export function useMockAdminApi() {
     return statusCounts;
   };
 
-  const getCategoryDistribution = async () => {
+  const getCategoryDistribution = async (): Promise<{
+    totalSales: number;
+    categoryDistribution: {
+      category: string;
+      salesCount: number;
+      percentage: number;
+    }[];
+  }> => {
     await delay(MOCK_API_DELAY_MS);
 
     const categorySalesMap: Record<string, number> = toys.reduce((acc, toy) => {
@@ -694,13 +728,11 @@ export function useMockAdminApi() {
 
     const totalSales = Object.values(categorySalesMap).reduce((sum, val) => sum + val, 0);
 
-    const categoryDistribution = Object.entries(categorySalesMap).map(
-      ([category, salesCount]) => ({
-        category,
-        salesCount,
-        percentage: totalSales ? Math.round((salesCount / totalSales) * 100) : 0,
-      })
-    );
+    const categoryDistribution = Object.entries(categorySalesMap).map(([category, salesCount]) => ({
+      category,
+      salesCount,
+      percentage: totalSales ? Math.round((salesCount / totalSales) * 100) : 0,
+    }));
 
     return {
       totalSales,
@@ -744,7 +776,6 @@ export function useMockAdminApi() {
   };
 }
 
-
 // Helpers
 function sortItems<T extends Product>(items: T[], sortBy?: string): T[] {
   switch (sortBy) {
@@ -769,11 +800,26 @@ function capitalize(value: string) {
   return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
+const generateSalesData = () => {
+  const salesData: { date: string; sales: number }[] = [];
+  const endDate = new Date();
+  const startDate = new Date();
+  startDate.setDate(endDate.getDate() - 29);
+
+  for (let d = startDate; d <= endDate; d.setDate(d.getDate() + 1)) {
+    salesData.push({
+      date: d.toISOString().split('T')[0],
+      sales: Math.floor(Math.random() * (5000 - 1000 + 1)) + 1000,
+    });
+  }
+  return salesData;
+};
+
 export const mockSendContactMessage = async (messageData: {
   name: string;
   email: string;
   message: string;
-}) => {
+}): Promise<boolean> => {
   await new Promise((resolve) => setTimeout(resolve, 1200));
   const messages = JSON.parse(localStorage.getItem('mock-contact-messages') || '[]');
   messages.push({ ...messageData, id: Date.now() });
@@ -784,7 +830,10 @@ export const mockSendContactMessage = async (messageData: {
 // SHIPPING INFORMATION MOCK
 const SHIPPING_INFO_STORAGE_KEY = 'mock-user-shipping-info';
 
-export const mockSaveShippingInfo = async (userEmail: string, shippingInfo: ShippingInfo) => {
+export const mockSaveShippingInfo = async (
+  userEmail: string,
+  shippingInfo: ShippingInfo
+): Promise<boolean> => {
   await delay(MOCK_API_DELAY_MS);
   const stored = localStorage.getItem(SHIPPING_INFO_STORAGE_KEY);
   const allShippingInfo: Record<string, ShippingInfo> = stored ? JSON.parse(stored) : {};
@@ -810,7 +859,10 @@ interface ProductReview extends Review {
 
 const REVIEWS_STORAGE_KEY = 'mock-product-reviews';
 
-export const mockAddProductReview = async (userEmail: string, review: Review) => {
+export const mockAddProductReview = async (
+  userEmail: string,
+  review: Review
+): Promise<ProductReview> => {
   await delay(MOCK_API_DELAY_MS);
   const stored = localStorage.getItem(REVIEWS_STORAGE_KEY);
   const allReviews: ProductReview[] = stored ? JSON.parse(stored) : [];
@@ -858,7 +910,7 @@ export const mockFetchProductReviews = async (
   };
 };
 
-export const getPolicies = async () => {
+export const getPolicies = async (): Promise<Policy> => {
   await delay(MOCK_API_DELAY_MS);
   return {
     return: {
@@ -879,7 +931,11 @@ export const getPolicies = async () => {
   };
 };
 
-export const getRelatedProducts = async (productId: string, page = 1, pageSize = 6) => {
+export const getRelatedProducts = async (
+  productId: string,
+  page = 1,
+  pageSize = 6
+): Promise<RelatedProducts> => {
   await delay(MOCK_API_DELAY_MS);
   const related = toys.filter((item) => item.id !== productId);
   const totalItems = related.length;
@@ -895,7 +951,8 @@ export const getRelatedProducts = async (productId: string, page = 1, pageSize =
   };
 };
 
-export const mockFetchContactInfo = (): Promise<any> => { // Type was complex, using any for now
+export const mockFetchContactInfo = (): Promise<ContactInfo[]> => {
+  // Type was complex, using any for now
   return Promise.resolve([
     {
       title: 'Work days',

@@ -150,9 +150,9 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
             spacing="l"
             className="bts-marginTm"
           >
-            {categoriesOptions.map(({ label, value }) => (
+            {categoriesOptions.map(({ name, value }) => (
               <RadioButton key={value} value={value}>
-                {label}
+                {name}
               </RadioButton>
             ))}
           </RadioButtonGroup>

@@ -22,7 +22,7 @@ const ShopPage = () => {
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange } =
     useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE, true);
   const header =
-    categoriesOptions.find((option) => option.value === sideFilters?.category)?.label ||
+    categoriesOptions.find((option) => option.value === sideFilters?.category)?.name ||
     'All Categories';
 
   // Update full filter object when side filters or sortBy change
