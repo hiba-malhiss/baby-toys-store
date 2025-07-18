@@ -30,7 +30,6 @@ import {
   AdminDashboardStats,
   AdminProduct,
   AdminOrder,
-  AdminDashboardData,
   Policy,
   RelatedProducts,
   ContactInfo,
@@ -495,6 +494,65 @@ export function useMockAdminApi(): {
   getMaterials: () => Promise<Material[]>;
   getColors: () => Promise<Color[]>;
 } {
+  // COLORS
+  const getColors = () => {
+    return mockColors;
+  };
+
+  const addColor = (newColor: Color) => {
+    const exists = mockColors.some(
+      (color) => color.name === newColor.name || color.code === newColor.code
+    );
+    if (!exists) {
+      mockColors.push({ id: Date.now(), ...newColor });
+    }
+    return mockColors;
+  };
+
+  const deleteColor = (id: string) => {
+    const index = mockColors.findIndex((color) => color.id === id);
+    if (index !== -1) {
+      mockColors.splice(index, 1);
+    }
+    return mockColors;
+  };
+
+  const updateColor = (updatedColor: Color) => {
+    const index = mockColors.findIndex((color) => color.id === updatedColor.id);
+    if (index !== -1) {
+      mockColors[index] = { ...mockColors[index], ...updatedColor };
+    }
+    return mockColors;
+  };
+
+  const getMaterials = () => {
+    return mockMaterials;
+  };
+
+  const addMaterial = (newMaterial: Material) => {
+    const exists = mockMaterials.some((mat) => mat.name === newMaterial.name);
+    if (!exists) {
+      mockMaterials.push({ id: Date.now(), ...newMaterial });
+    }
+    return mockMaterials;
+  };
+
+  const deleteMaterial = (id: string) => {
+    const index = mockMaterials.findIndex((mat) => mat.id === id);
+    if (index !== -1) {
+      mockMaterials.splice(index, 1);
+    }
+    return mockMaterials;
+  };
+
+  const updateMaterial = (updatedMaterial: Material) => {
+    const index = mockMaterials.findIndex((mat) => mat.id === updatedMaterial.id);
+    if (index !== -1) {
+      mockMaterials[index] = { ...mockMaterials[index], ...updatedMaterial };
+    }
+    return mockMaterials;
+  };
+
   const getProducts = async (page = 1, pageSize = 10, filters: any = {}): Promise<AdminProduct> => {
     await delay(MOCK_API_DELAY_MS);
     let filteredItems = [...toys];
@@ -829,6 +887,14 @@ export function useMockAdminApi(): {
   };
 
   return {
+    getColors,
+    addColor,
+    deleteColor,
+    updateColor,
+    getMaterials,
+    addMaterial,
+    deleteMaterial,
+    updateMaterial,
     getProducts,
     getProductById,
     addProduct,

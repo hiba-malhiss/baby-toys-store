@@ -18,6 +18,7 @@ export { default as FieldWrapper } from './FieldWrapper/FieldWrapper';
 export { default as Flex } from './Flex/Flex';
 export { default as Heading } from './Heading/Heading';
 export { default as Icon } from './Icon/Icon';
+export { default as ColorPicker } from './ColorPicker/ColorPicker';
 export { IconColor, IconSize } from './Icon/icon.constant';
 export { default as ImageGallery } from './ImageGallery/ImageGallery';
 export { default as ImageMagnifierPopover } from './ImageMagnifierPopover/ImageMagnifierPopover';

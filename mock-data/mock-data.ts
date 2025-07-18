@@ -1,6 +1,6 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import type { Review, InfoCardType, Category, Product, RadioOption } from '../types/product.types';
-import { Brand, Color } from '@baby-toys/types/src';
+import { Brand, Color, Material } from '@baby-toys/types/src';
 
 // from product-details-page.ts
 export const description =
@@ -127,7 +127,7 @@ export const mockColors: Color[] = [
 ];
 
 // Materials mock data
-export const mockMaterials = [
+export const mockMaterials: Material[] = [
   { id: '1', name: 'Plastic', description: 'Durable and lightweight material' },
   { id: '2', name: 'Wood', description: 'Natural and eco-friendly material' },
   { id: '3', name: 'Fabric', description: 'Soft and safe for all ages' },

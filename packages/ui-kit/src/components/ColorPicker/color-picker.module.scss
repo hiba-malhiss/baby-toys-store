@@ -1,0 +1,72 @@
+.colorPicker {
+  position: relative;
+  display: inline-block;
+
+
+  &-preview {
+    width: 32px;
+    height: 32px;
+    border: 1px solid $color-border;
+    border-radius: $radius-sm;
+    cursor: pointer;
+  }
+
+  &-panel {
+    position: absolute;
+    top: 40px;
+    left: 0;
+    padding: $spacing-sm;
+    background: $color-bg-primary;
+    box-shadow: $shadow-md;
+    border-radius: $radius-md;
+    z-index: $z-popover;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &-selector {
+    width: 200px;
+    height: 150px;
+    position: relative;
+    cursor: crosshair;
+    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0)),
+    linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+    border-radius: $radius-sm;
+  }
+
+  &-handle {
+    width: 12px;
+    height: 12px;
+    background: $color-white;
+    border: 2px solid $color-black;
+    border-radius: $radius-full;
+    position: absolute;
+    transform: translate(-6px, -6px);
+    pointer-events: none;
+  }
+
+  &-hueSlider {
+    width: 200px;
+    height: 16px;
+    background: linear-gradient(
+            to right,
+            red, yellow, lime, cyan, blue, magenta, red
+    );
+    position: relative;
+    cursor: pointer;
+    border-radius: $radius-xs;
+  }
+
+  &-hueHandle {
+    width: 10px;
+    height: 20px;
+    background: $color-white;
+    border: 1px solid $color-text-dark;
+    position: absolute;
+    left: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+  }
+
+}

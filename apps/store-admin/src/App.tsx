@@ -9,6 +9,8 @@ import ProductsPage from './pages/ProductsPage/ProductsPage.tsx';
 import OrdersPage from './pages/OrdersPage/OrdersPage.tsx';
 import CategoriesPage from './pages/CategoriesPage/CategoriesPage.tsx';
 import BrandsPage from './pages/BrandsPage/BrandsPage.tsx';
+import ColorsPage from './pages/ColorsPage/ColorsPage';
+import MaterialsPage from './pages/MaterialsPage/MaterialsPage';
 import { AdminStoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { ToastProvider } from '@baby-toys/ui-kit/components';
@@ -74,6 +76,22 @@ const App: React.FC = () => {
                 element={
                   <PrivateRoute>
                     <BrandsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/colors"
+                element={
+                  <PrivateRoute>
+                    <ColorsPage />
+                  </PrivateRoute>
+                }
+              />
+              <Route
+                path="/materials"
+                element={
+                  <PrivateRoute>
+                    <MaterialsPage />
                   </PrivateRoute>
                 }
               />
