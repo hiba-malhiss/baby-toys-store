@@ -12,14 +12,16 @@ import {
   Dialog,
   FileUpload,
   FieldWrapper,
+  TextArea,
 } from '@baby-toys/ui-kit/components';
 import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Category } from '@baby-toys/types/src';
 
 const CategoriesPage: React.FC = () => {
   const { getCategories, addCategory, deleteCategory, updateCategory } = useMockAdminApi();
   const [categories, setCategories] = useState<any[]>([]);
   const [dialogVisible, setDialogVisible] = useState(false);
-  const [editingCategory, setEditingCategory] = useState<any>(null);
+  const [editingCategory, setEditingCategory] = useState<Category>(null);
   const [editingCategoryImage, setEditingCategoryImage] = useState<File | null>(null);
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
@@ -81,6 +83,7 @@ const CategoriesPage: React.FC = () => {
         <img src={row.image} alt={row.name} style={{ height: 50, objectFit: 'cover' }} />
       ),
     },
+    { field: 'description', header: 'Description' },
     {
       field: 'actions',
       header: 'Actions',
@@ -124,6 +127,14 @@ const CategoriesPage: React.FC = () => {
               value={editingCategory?.name}
               onChange={(v) => setEditingCategory((prev: any) => ({ ...prev, name: v }))}
               placeholder="Category name"
+            />
+          </FieldWrapper>
+          <FieldWrapper label="Category description" fullWidth>
+            <TextArea
+              fullWidth
+              value={editingCategory?.description}
+              onChange={(v) => setEditingCategory((prev: any) => ({ ...prev, description: v }))}
+              placeholder="Add a description..."
             />
           </FieldWrapper>
           <FieldWrapper label="Category icon" fullWidth>
