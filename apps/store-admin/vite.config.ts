@@ -32,6 +32,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@baby-toys/ui-kit': path.resolve(__dirname, '../../packages/ui-kit/src'),
+      '@baby-toys/types': path.resolve(__dirname, '../../packages/types'),
       '@mock-data': path.resolve(__dirname, '../../mock-data'),
     },
   },

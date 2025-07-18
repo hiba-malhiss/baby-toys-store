@@ -78,7 +78,7 @@ const CategoriesPage: React.FC = () => {
       field: 'image',
       header: 'Image',
       body: (row: any) => (
-        <img src={row.image} alt={row.name} style={{ width: 50, height: 50, objectFit: 'cover' }} />
+        <img src={row.image} alt={row.name} style={{ height: 50, objectFit: 'cover' }} />
       ),
     },
     {
