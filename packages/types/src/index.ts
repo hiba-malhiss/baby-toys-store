@@ -4,14 +4,10 @@ export interface Product {
   price: number;
   description: string;
   image: string;
-  category: string;
-  brand: string;
   availableInStock: number;
   rating: number;
   releaseDate: string;
   sales: number;
-  material: string[];
-  color: string[];
   mainImage: string;
   images: string[];
   oldPrice?: number;
@@ -20,9 +16,12 @@ export interface Product {
   shortDescription?: string;
   featureBullets?: string[];
   details?: { label: string; value: string }[];
-  published?: boolean;
   createdAt?: string;
   updatedAt?: string;
+  categoryId: string;
+  brandId: string;
+  materialIds: string[];
+  colorId: string[];
 }
 
 export interface ProductWithFavorite extends Product {
@@ -104,7 +103,6 @@ export interface Category {
   name: string;
   image: string;
   description?: string;
-  parentId?: string | null;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -165,12 +163,7 @@ export interface ShopFilterOptions {
   colors: { value: string; label: string }[];
   brands: { value: string; label: string }[];
   materials: { value: string; label: string }[];
-  priceRange: { min: number; max: number };
-}
-
-export interface ProductDescription {
-  title: string;
-  content: string;
+  priceRange: [number, number];
 }
 
 export interface CurrencySettings {
@@ -262,7 +255,7 @@ export interface AdminDashboardData {
 }
 
 export interface ContactMessage {
-  id: number;
+  id?: number;
   name: string;
   email: string;
   message: string;
@@ -279,6 +272,17 @@ export interface RelatedProducts {
   page: number;
   totalPages: number;
   totalItems: number;
+}
+
+export interface CategoryDistributionItem {
+  category: string;
+  salesCount: number;
+  percentage: number;
+}
+
+export interface CategoryDistribution {
+  totalSales: number;
+  categoryDistributions: CategoryDistributionItem[];
 }
 
 export interface ContactInfo {

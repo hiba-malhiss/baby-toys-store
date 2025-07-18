@@ -1,5 +1,6 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
 import type { Review, InfoCardType, Category, Product, RadioOption } from '../types/product.types';
+import { Brand, Color } from '@baby-toys/types/src';
 
 // from product-details-page.ts
 export const description =
@@ -75,50 +76,65 @@ export const infoCards: InfoCardType[] = [
 ];
 
 export const unifiedCategories: Category[] = [
-  { name: 'Play sets', value: 'play-sets', image: '/assets/icons/play-sets.svg' },
-  { name: 'Control Toys', value: 'control-toys', image: '/assets/icons/control-toys.svg' },
+  { name: 'Play sets', id: 'play-sets', image: '/assets/icons/play-sets.svg' },
+  { name: 'Control Toys', id: 'control-toys', image: '/assets/icons/control-toys.svg' },
   {
     name: 'Educational Toys',
-    value: 'educational-toys',
+    id: 'educational-toys',
     image: '/assets/icons/educational-toys.svg',
   },
   {
     name: 'Eco-Friendly Toys',
-    value: 'eco-friendly-toys',
+    id: 'eco-friendly-toys',
     image: '/assets/icons/eco-friendly.svg',
   },
-  { name: 'Stuffed Toys', value: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
+  { name: 'Stuffed Toys', id: 'stuffed-toys', image: '/assets/icons/stuffed-toys.svg' },
+];
+
+// Brands mock data
+export const mockBrands: Brand[] = [
+  {
+    id: '1',
+    name: 'Lego',
+    logo: '/brands/lego.png',
+    description: 'Building blocks and construction toys',
+    website: 'https://www.lego.com',
+  },
+  {
+    id: '2',
+    name: 'Fisher-Price',
+    logo: '/brands/fisher-price.png',
+    description: 'Early childhood learning toys',
+    website: 'https://www.fisher-price.com',
+  },
+  {
+    id: '3',
+    name: 'Melissa & Doug',
+    logo: '/brands/melissa-doug.png',
+    description: 'Wooden educational toys',
+    website: 'https://www.melissaanddoug.com',
+  },
+];
+
+// Colors mock data
+export const mockColors: Color[] = [
+  { id: '1', name: 'Red', code: '#FF0000' },
+  { id: '2', name: 'Blue', code: '#0000FF' },
+  { id: '3', name: 'Green', code: '#00FF00' },
+  { id: '4', name: 'Yellow', code: '#FFFF00' },
+  { id: '5', name: 'Black', code: '#000000' },
+  { id: '6', name: 'White', code: '#FFFFFF' },
+];
+
+// Materials mock data
+export const mockMaterials = [
+  { id: '1', name: 'Plastic', description: 'Durable and lightweight material' },
+  { id: '2', name: 'Wood', description: 'Natural and eco-friendly material' },
+  { id: '3', name: 'Fabric', description: 'Soft and safe for all ages' },
+  { id: '4', name: 'Metal', description: 'Sturdy and long-lasting' },
 ];
 
 // from shop-page.ts
-export const colorsRadioOptions: RadioOption[] = [
-  { label: 'Red', value: 'red' },
-  { label: 'Blue', value: 'blue' },
-  { label: 'Green', value: 'green' },
-  { label: 'Yellow', value: 'yellow' },
-  { label: 'Pink', value: 'pink' },
-  { label: 'Black', value: 'black' },
-  { label: 'White', value: 'white' },
-];
-
-export const brandsRadioOptions: RadioOption[] = [
-  { label: 'Lego', value: 'lego' },
-  { label: 'Fisher-Price', value: 'fisher-price' },
-  { label: 'VTech', value: 'vtech' },
-  { label: 'Hasbro', value: 'hasbro' },
-  { label: 'Mattel', value: 'mattel' },
-  { label: 'Hot Wheels', value: 'hot-wheels' },
-];
-
-export const materialsRadioOptions: RadioOption[] = [
-  { label: 'Plastic', value: 'plastic' },
-  { label: 'Wood', value: 'wood' },
-  { label: 'Metal', value: 'metal' },
-  { label: 'Fabric', value: 'fabric' },
-  { label: 'Rubber', value: 'rubber' },
-  { label: 'Eco-Friendly', value: 'eco-friendly' },
-];
-
 export const DEFAULT_PRICE: [number, number] = [0, 300];
 
 // from toy-card-list.ts
@@ -134,8 +150,6 @@ const toyNames = [
   'Learning Laptop',
 ];
 
-const brands = ['GUND', 'LEGO', 'Fisher-Price', 'Melissa & Doug', 'Hot Wheels'];
-const materials = ['Plastic', 'Wood', 'Cotton', 'Metal', 'Rubber'];
 const ageGroups = ['1-3 years', '3-5 years', '5-7 years', '7+ years'];
 const dimensions = ['10 x 8 x 4 inches', '12 x 10 x 6 inches', '8 x 6 x 3 inches'];
 const weights = ['0.5 lbs', '1.2 lbs', '0.8 lbs', '1.0 lbs'];
@@ -183,44 +197,74 @@ const generateRandomToys = (count = 19): Product[] => {
     const label = oldPrice ? 'SALE' : labelRandom < 0.3 ? 'NEW' : undefined;
     const sales = Math.floor(seededRandom(seed * 17) * 500); // random sales between 0 and 499
 
-    // Create consistent ID based on index
+    // Generate a unique ID for each product
     const id = `toy-${index + 1}`;
 
-    // Assign all required top-level fields
+    // Select random references
+    const brandId = getSeededRandom(mockBrands, seed * 6)?.id || '';
+    const categoryId = getSeededRandom(unifiedCategories, seed * 7)?.id || '';
+
+    // Select 1-2 random materials
+    const materialCount = Math.max(1, Math.floor(seededRandom(seed * 8) * 2));
+    const materialIds = Array.from(
+      { length: materialCount },
+      (_, i) =>
+        mockMaterials[Math.floor(seededRandom(seed * (9 + i)) * mockMaterials.length)]?.id || ''
+    ).filter(Boolean);
+
+    // Select 1 random color
+    const colorId = mockColors[Math.floor(seededRandom(seed * 12) * mockColors.length)]?.id || '';
+
+    const brand = mockBrands.find((b) => b.id === brandId);
+    const category = unifiedCategories.find((c) => c.id === categoryId);
+    const materialsList = materialIds
+      .map((id) => mockMaterials.find((m) => m.id === id)?.name)
+      .filter(Boolean);
+    const colorName = mockColors.find((c) => c.id === colorId)?.name || '';
+
     return {
       id,
       name,
-      category: getSeededRandom(categories, seed * 6),
-      brand: getSeededRandom(brands, seed * 7),
-      color: getSeededRandom(colors, seed * 8),
-      material: getSeededRandom(materials, seed * 9),
-      mainImage: galleryImages[0],
-      images: galleryImages,
       price,
       oldPrice,
-      sales,
       label,
-      rating: parseFloat((seededRandom(seed * 10) * 1.5 + 3.5).toFixed(1)),
-      numberOfRatings: Math.floor(seededRandom(seed * 11) * 1000),
-      isFavorite: false,
-      availableInStock: Math.floor(seededRandom(seed * 12) * 20),
-      shortDescription:
-        'Duis ultricies lacus sed turpis tincidunt id aliquet risus feugiat in ante metus dictum at tempor commodo ullamcorper a lacus.',
+      rating: parseFloat((3 + seededRandom(seed * 20) * 2).toFixed(1)), // 3.0-5.0
+      numberOfRatings: Math.floor(seededRandom(seed * 21) * 500), // 0-500
+      description:
+        `${name} is a wonderful toy that provides hours of fun and learning. ` +
+        `Suitable for ${getSeededRandom(ageGroups, seed * 22)}. ` +
+        `Dimensions: ${getSeededRandom(dimensions, seed * 23)}. ` +
+        `Weight: ${getSeededRandom(weights, seed * 24)}.`,
+      shortDescription: `Perfect for ${getSeededRandom(ageGroups, seed * 25)}. ${getSeededRandom(dimensions, seed * 26)}.`,
       featureBullets: [
-        'Helps develop fine motor skills and problem-solving.Helps develop fine motor skills and problem-solving.',
-        'Bright colors and durable materials for long-lasting play.Bright colors and durable materials for long-lasting play.',
-        'Safe and educational — ideal for early learners.Safe and educational — ideal for early learners.',
-        'Perfect gift for birthdays or holidays. Perfect gift for birthdays or holidays.',
-        'Perfect gift for birthdays or holidays. Perfect gift for birthdays or holidays.',
-        'Perfect gift for birthdays or holidays. Perfect gift for birthdays or holidays.',
+        `Suitable for ${getSeededRandom(ageGroups, seed * 27)}`,
+        materialsList.length > 0 ? `Made of ${materialsList.join(', ')}` : 'High-quality materials',
+        'Encourages creativity and learning',
+        'Safe and durable construction',
+        'Bright colors and durable materials for long-lasting play.',
+        'Perfect gift for birthdays or holidays.',
       ],
       details: [
-        { label: 'Brand Name', value: getSeededRandom(brands, seed * 12) },
-        { label: 'Material', value: getSeededRandom(materials, seed * 13) },
-        { label: 'Recommended Age', value: getSeededRandom(ageGroups, seed * 14) },
-        { label: 'Dimensions', value: getSeededRandom(dimensions, seed * 15) },
-        { label: 'Weight', value: getSeededRandom(weights, seed * 16) },
+        { label: 'Brand', value: brand?.name || '' },
+        { label: 'Material', value: materialsList.join(', ') || 'Various' },
+        { label: 'Color', value: colorName || 'N/A' },
+        { label: 'Age Range', value: getSeededRandom(ageGroups, seed * 30) },
+        { label: 'Category', value: category?.name || 'Toys' },
       ],
+      categoryId,
+      brandId,
+      materialIds,
+      colorId,
+      mainImage: galleryImages[0],
+      images: galleryImages,
+      availableInStock: Math.floor(seededRandom(seed * 35) * 100), // 0-100
+      sales,
+      releaseDate: new Date(
+        Date.now() - Math.floor(seededRandom(seed * 36) * 1000 * 60 * 60 * 24 * 365 * 2)
+      ) // Within last 2 years
+        .toISOString()
+        .split('T')[0],
+      isFavorite: false,
     };
   });
 };

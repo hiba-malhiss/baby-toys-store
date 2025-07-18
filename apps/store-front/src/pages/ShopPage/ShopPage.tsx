@@ -12,17 +12,18 @@ import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouM
 import type { ViewMode } from '@baby-toys/ui-kit/components';
 import { SideFilters } from './SideFilters/SideFilters.tsx';
 import { SortProductsWithUrl } from './SortProductsWithUrl.tsx';
+import type { Category } from '@baby-toys/types';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
   const [sideFilters, setSideFilters] = useState<ShopFilters>();
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_OPTION);
-  const [categoriesOptions, setCategoriesOptions] = useState([]);
+  const [categoriesOptions, setCategoriesOptions] = useState<Category[]>([]);
   const { fetchProducts } = useMockProductsApi(SHOP_PAGE_SIZE);
   const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange } =
     useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE, true);
   const header =
-    categoriesOptions.find((option) => option.value === sideFilters?.category)?.name ||
+    categoriesOptions.find((option) => option.id === sideFilters?.categoryId)?.name ||
     'All Categories';
 
   // Update full filter object when side filters or sortBy change

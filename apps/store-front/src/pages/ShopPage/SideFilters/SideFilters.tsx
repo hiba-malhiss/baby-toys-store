@@ -11,20 +11,19 @@ import {
   Accordion,
   BouncingDotsLoader,
   NoDataFound,
-  type RadioOption,
 } from '@baby-toys/ui-kit/components';
 import { useShopFilterOptions } from '../../../hooks/useShopFilterOptions';
-import { getActiveFiltersCount, getFilterChips } from '../side-filters.utils.ts';
-import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
+import { useFilterChips } from '../shop-page.utils.ts';
 import styles from './side-filters.module.scss';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 import { type ShopFilters, urlFilterParsers } from './side-filters.utils.ts';
 import { useDebounce } from '@baby-toys/ui-kit/hooks';
+import type { Category } from '@baby-toys/types';
 
 type SideFiltersProps = {
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
-  categoriesOptions?: RadioOption[];
+  categoriesOptions?: Category[];
 };
 
 export const SideFilters: React.FC<SideFiltersProps> = ({
@@ -32,21 +31,19 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   onFiltersChange,
   categoriesOptions = [],
 }) => {
-  const { currency } = useStoreConfiguration();
   const {
     colors,
     brands,
     materials,
-    priceRange,
     defaultPriceRange,
     loading: filterLoading,
   } = useShopFilterOptions();
 
   const defaultFilters: ShopFilters = {
-    category: undefined,
-    brand: undefined,
-    color: undefined,
-    material: undefined,
+    categoryId: undefined,
+    brandId: undefined,
+    colorId: undefined,
+    materialId: undefined,
     priceRange: defaultPriceRange,
   };
 
@@ -55,6 +52,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
     defaultFilters
   );
 
+  const filterChips = useFilterChips(urlFilters, defaultFilters);
+  const filtersCount = filterChips.length;
   const debouncedFilters = useDebounce(urlFilters, 400);
 
   useEffect(() => {
@@ -69,11 +68,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
   const clearFilters = () => {
     updateUrlFilters({
-      category: undefined,
-      brand: undefined,
-      color: undefined,
-      material: undefined,
-      priceRange: defaultPriceRange,
+      ...defaultFilters,
     });
   };
 
@@ -84,8 +79,6 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
       handleFilterChange(key, undefined);
     }
   };
-
-  const filtersCount = getActiveFiltersCount(urlFilters, defaultFilters);
 
   if (filterLoading) {
     return (
@@ -107,7 +100,6 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
               size="xsmall"
               onClick={clearFilters}
               withoutPadding
-              withoutHeaderPadding
             >
               Clear Filters
             </Button>
@@ -118,16 +110,14 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
     >
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex wrap spacing="m" fullWidth className={styles.sideFilterChipsContainer}>
-          {getFilterChips(urlFilters, currency?.symbol || '', defaultFilters).map(
-            ({ key, label }) => (
-              <Chip
-                key={key}
-                appearance="secondary-outline"
-                label={label}
-                onClose={() => removeFilter(key)}
-              />
-            )
-          )}
+          {filterChips.map(({ key, label }) => (
+            <Chip
+              key={key}
+              appearance="secondary-outline"
+              label={label}
+              onClose={() => removeFilter(key)}
+            />
+          ))}
           {filtersCount < 1 && (
             <NoDataFound
               subtext="No filters applied"
@@ -143,15 +133,15 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Category" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="category"
-            selectedValue={urlFilters.category}
-            onChange={(val) => handleFilterChange('category', val)}
+            selectedValue={urlFilters.categoryId}
+            onChange={(val) => handleFilterChange('categoryId', val)}
             direction="vertical"
             align="start"
             spacing="l"
             className="bts-marginTm"
           >
-            {categoriesOptions.map(({ name, value }) => (
-              <RadioButton key={value} value={value}>
+            {categoriesOptions.map(({ name, id }) => (
+              <RadioButton key={id} value={id}>
                 {name}
               </RadioButton>
             ))}
@@ -161,8 +151,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Color" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="color"
-            selectedValue={urlFilters.color}
-            onChange={(val) => handleFilterChange('color', val)}
+            selectedValue={urlFilters.colorId}
+            onChange={(val) => handleFilterChange('colorId', val)}
             direction="horizontal"
             align="start"
             spacing="l"
@@ -179,8 +169,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Brand" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="brand"
-            selectedValue={urlFilters.brand}
-            onChange={(val) => handleFilterChange('brand', val)}
+            selectedValue={urlFilters.brandId}
+            onChange={(val) => handleFilterChange('brandId', val)}
             direction="vertical"
             spacing="l"
             align="start"
@@ -197,8 +187,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
         <Accordion header="Material" withoutPadding withoutHeaderPadding>
           <RadioButtonGroup
             name="material"
-            selectedValue={urlFilters.material}
-            onChange={(val) => handleFilterChange('material', val)}
+            selectedValue={urlFilters.materialId}
+            onChange={(val) => handleFilterChange('materialId', val)}
             direction="vertical"
             spacing="l"
             align="start"
@@ -214,8 +204,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
 
         <Accordion header="Price" withoutPadding withoutHeaderPadding>
           <Slider
-            min={priceRange?.[0]}
-            max={priceRange?.[1]}
+            min={defaultPriceRange?.[0]}
+            max={defaultPriceRange?.[1]}
             step={1}
             range
             value={urlFilters.priceRange || defaultPriceRange}

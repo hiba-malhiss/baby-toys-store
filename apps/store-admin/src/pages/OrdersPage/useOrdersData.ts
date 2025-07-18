@@ -1,10 +1,11 @@
 import { useState, useEffect, useCallback } from 'react';
 import { apiClient } from '../../api/apiClient';
 import { useMockAdminApi } from '@mock-data/useMockApi';
+import { OrderItem } from '@baby-toys/types/src';
 
 export const useOrdersData = () => {
   const { getOrders, updateOrderStatus } = useMockAdminApi();
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
 
@@ -13,7 +14,7 @@ export const useOrdersData = () => {
   const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState(1);
-  const [filters, setFilters] = useState<{ [key: string]: string }>({});
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
   // Fetch data from API with current params
   const fetchOrders = useCallback(async () => {

@@ -16,7 +16,7 @@ import {
   Card,
 } from '@baby-toys/ui-kit/components';
 import { KeyValueArrayInput, StringArrayInput } from '@baby-toys/ui-kit/components';
-import { Product } from '@baby-toys/types/src';
+import { Brand, Category, Color, Material, Product } from '@baby-toys/types/src';
 
 const ProductFormPage: React.FC = () => {
   const {
@@ -29,10 +29,10 @@ const ProductFormPage: React.FC = () => {
     getBrands,
   } = useMockAdminApi();
   const [product, setProduct] = useState<Partial<Product>>({});
-  const [categories, setCategories] = useState<any[]>([]);
-  const [colors, setColors] = useState<any[]>([]);
-  const [materials, setMaterials] = useState<any[]>([]);
-  const [brands, setBrands] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [colors, setColors] = useState<Color[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
+  const [brands, setBrands] = useState<Brand[]>([]);
   const [images, setImages] = useState<File[]>([]);
   const [mainImage, setMainImage] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -227,14 +227,13 @@ const ProductFormPage: React.FC = () => {
 
               <FieldWrapper fullWidth label="Brand">
                 <Select
-                  multiple
                   fullWidth
-                  value={product.brand || []}
-                  onChange={(v) => handleChange('brand', v)}
+                  value={product.brandId || []}
+                  onChange={(v) => handleChange('brandId', v)}
                 >
-                  {brands.map((cat) => (
-                    <Option key={cat.value} value={cat.value}>
-                      {cat.label}
+                  {brands.map((brand) => (
+                    <Option key={brand.id} value={brand.id}>
+                      {brand.name}
                     </Option>
                   ))}
                 </Select>
@@ -242,14 +241,13 @@ const ProductFormPage: React.FC = () => {
 
               <FieldWrapper fullWidth label="Color">
                 <Select
-                  multiple
                   fullWidth
-                  value={product.color || []}
-                  onChange={(v) => handleChange('color', v)}
+                  value={product.colorId || []}
+                  onChange={(v) => handleChange('colorId', v)}
                 >
-                  {colors.map((cat) => (
-                    <Option key={cat.value} value={cat.value}>
-                      {cat.label}
+                  {colors.map((color) => (
+                    <Option key={color.id} value={color.id}>
+                      {color.name} - {color.code}
                     </Option>
                   ))}
                 </Select>
@@ -259,12 +257,12 @@ const ProductFormPage: React.FC = () => {
                 <Select
                   multiple
                   fullWidth
-                  value={product.material || []}
-                  onChange={(v) => handleChange('material', v)}
+                  value={product.materialIds || []}
+                  onChange={(v) => handleChange('materialIds', v)}
                 >
-                  {materials.map((cat) => (
-                    <Option key={cat.value} value={cat.value}>
-                      {cat.label}
+                  {materials.map((mat) => (
+                    <Option key={mat.id} value={mat.id}>
+                      {mat.name}
                     </Option>
                   ))}
                 </Select>

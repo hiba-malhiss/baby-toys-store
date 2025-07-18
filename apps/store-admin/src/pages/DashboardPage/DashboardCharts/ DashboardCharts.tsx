@@ -5,7 +5,6 @@ import {
   generateLineChartData,
   generatePieChartData,
   generateOrderStatusChartData,
-  type CategoryDistributionItem,
 } from '../dashboard.utils';
 import styles from './dashboard-charts.module.scss';
 
@@ -21,6 +20,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { CategoryDistributionItem } from '@baby-toys/types/src';
 
 ChartJS.register(
   CategoryScale,

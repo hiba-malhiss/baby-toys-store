@@ -19,12 +19,12 @@ import { Category } from '@baby-toys/types/src';
 
 const CategoriesPage: React.FC = () => {
   const { getCategories, addCategory, deleteCategory, updateCategory } = useMockAdminApi();
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editingCategory, setEditingCategory] = useState<Category>(null);
   const [editingCategoryImage, setEditingCategoryImage] = useState<File | null>(null);
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
-  const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
+  const [categoryToDelete, setCategoryToDelete] = useState<Category | null>(null);
   const toast = useToast();
 
   const fetchCategories = useCallback(async () => {
@@ -42,7 +42,7 @@ const CategoriesPage: React.FC = () => {
     setDialogVisible(true);
   };
 
-  const openEditDialog = (category: any) => {
+  const openEditDialog = (category: Category) => {
     setEditingCategory(category);
     setEditingCategoryImage(category.image || null);
     setDialogVisible(true);
@@ -60,7 +60,7 @@ const CategoriesPage: React.FC = () => {
     fetchCategories();
   };
 
-  const openConfirmDialog = (category: any) => {
+  const openConfirmDialog = (category: Category) => {
     setCategoryToDelete(category);
     setConfirmDialogVisible(true);
   };
@@ -79,7 +79,7 @@ const CategoriesPage: React.FC = () => {
     {
       field: 'image',
       header: 'Image',
-      body: (row: any) => (
+      body: (row: Category) => (
         <img src={row.image} alt={row.name} style={{ height: 50, objectFit: 'cover' }} />
       ),
     },
@@ -87,7 +87,7 @@ const CategoriesPage: React.FC = () => {
     {
       field: 'actions',
       header: 'Actions',
-      body: (row: any) => (
+      body: (row: Category) => (
         <Flex spacing="m">
           <Button
             size="small"

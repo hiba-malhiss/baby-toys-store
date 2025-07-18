@@ -3,10 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, Select, Option, Card, Table } from '@baby-toys/ui-kit/components';
 import { useOrdersData } from './useOrdersData';
+import { OrderItem } from '@baby-toys/types/src';
 
 const OrdersPage: React.FC = () => {
   const navigate = useNavigate();
-  const { orders, loading, totalRecords, page, pageSize, sortField, sortOrder, setPage, setPageSize, setSortField, setSortOrder, setFilters, handleStatusChange } = useOrdersData();
+  const {
+    orders,
+    loading,
+    totalRecords,
+    pageSize,
+    sortField,
+    sortOrder,
+    setPage,
+    setPageSize,
+    setSortField,
+    setSortOrder,
+    setFilters,
+    handleStatusChange,
+  } = useOrdersData();
 
   // Columns definition for Table component
   const columns = [
@@ -16,13 +30,13 @@ const OrdersPage: React.FC = () => {
       field: 'date',
       header: 'Date',
       sortable: true,
-      body: (row: any) => new Date(row.date).toLocaleDateString(),
+      body: (row: OrderItem) => new Date(row.date).toLocaleDateString(),
     },
     { field: 'total', header: 'Total', sortable: true },
     {
       field: 'status',
       header: 'Status',
-      body: (row: any) => (
+      body: (row: OrderItem) => (
         <Select
           value={row.status}
           onChange={(value) => handleStatusChange(row.id, value as string)}

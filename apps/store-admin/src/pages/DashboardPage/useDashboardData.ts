@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 import { apiClient } from '../../api/apiClient';
 import { useMockAdminApi } from '@mock-data/useMockApi';
+import {
+  AdminDashboardStats,
+  CategoryDistributionItem,
+  OrderItem,
+  Product,
+} from '@baby-toys/types/src';
 
 export const useDashboardData = () => {
   const {
@@ -11,14 +17,12 @@ export const useDashboardData = () => {
     getOrderStatusBreakdown,
     getCategoryDistribution,
   } = useMockAdminApi();
-  const [stats, setStats] = useState<any>(null);
-  const [lowStock, setLowStock] = useState<any[]>([]);
-  const [topSelling, setTopSelling] = useState<any[]>([]);
-  const [recentOrders, setRecentOrders] = useState<any[]>([]);
-  const [orderStatusData, setOrderStatusData] = useState<any>(null);
-  const [categoryDistribution, setCategoryDistribution] = useState<
-    { category: string; salesCount: number; percentage: number }[]
-  >([]);
+  const [stats, setStats] = useState<AdminDashboardStats | null>(null);
+  const [lowStock, setLowStock] = useState<Product[]>([]);
+  const [topSelling, setTopSelling] = useState<Product[]>([]);
+  const [recentOrders, setRecentOrders] = useState<OrderItem[]>([]);
+  const [orderStatusData, setOrderStatusData] = useState<Record<string, number>>({});
+  const [categoryDistribution, setCategoryDistribution] = useState<CategoryDistributionItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -29,8 +33,18 @@ export const useDashboardData = () => {
       { api: getRecentOrders, setter: setRecentOrders },
       { api: getOrderStatusBreakdown, setter: setOrderStatusData },
       {
-        api: getCategoryDistribution,
-        setter: (data: any) => setCategoryDistribution(data.categoryDistribution),
+        api: async () => {
+          try {
+            const response = await getCategoryDistribution();
+            return response?.categoryDistributions || [];
+          } catch (error) {
+            console.error('Error fetching category distribution:', error);
+            return [];
+          }
+        },
+        setter: (data: CategoryDistributionItem[]) => {
+          setCategoryDistribution(Array.isArray(data) ? data : []);
+        },
       },
     ];
 

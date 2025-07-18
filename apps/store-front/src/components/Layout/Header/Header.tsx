@@ -9,10 +9,11 @@ import { useCartStore } from '../../../store/useCartStore.ts';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import { getProductCategories } from '@mock-data/useMockApi';
+import type { Category } from '@baby-toys/types';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
-  const [categories, setCategories] = useState<any[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const navigate = useNavigate();
   const location = useLocation();
   const { shipping } = useStoreConfiguration();
@@ -108,13 +109,13 @@ const Header = () => {
           >
             All Toys
           </Button>
-          {categories.map(({ name, value }) => (
+          {categories.map(({ name, id }) => (
             <Button
               withoutPadding
               key={name}
               size="large"
               appearance="link"
-              onClick={() => handleCategoryClick(value)}
+              onClick={() => handleCategoryClick(id)}
             >
               {name}
             </Button>

@@ -17,7 +17,7 @@ const ProductsPage: React.FC = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [sortField, setSortField] = useState<string | null>(null);
   const [sortOrder, setSortOrder] = useState<number>(1);
-  const [filters, setFilters] = useState<Record<string, any>>({});
+  const [filters, setFilters] = useState<Record<string, string | number | boolean>>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
 

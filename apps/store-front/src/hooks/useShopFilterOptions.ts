@@ -1,34 +1,49 @@
-import { useState, useEffect } from 'react';
-import { getShopFilterOptions } from '@mock-data/useMockApi';
+import { useMemo } from 'react';
 import type { RadioOption } from '@baby-toys/ui-kit/components';
+import { useStoreConfiguration } from '../context/StoreConfigurationContext';
 
 export function useShopFilterOptions() {
-  const [colors, setColors] = useState<RadioOption[]>([]);
-  const [brands, setBrands] = useState<RadioOption[]>([]);
-  const [materials, setMaterials] = useState<RadioOption[]>([]);
-  const [priceRange, setPriceRange] = useState<[number, number]>();
-  const [defaultPriceRange, setDefaultPriceRange] = useState<[number, number]>();
-  const [loading, setLoading] = useState(true);
+  const {
+    colors: allColors,
+    brands: allBrands,
+    materials: allMaterials,
+    priceRange,
+    isLoadingConfigs,
+  } = useStoreConfiguration();
 
-  useEffect(() => {
-    const fetchFilterOptions = async () => {
-      const { colors, brands, materials, priceRange } = await getShopFilterOptions();
-      setColors(colors);
-      setBrands(brands);
-      setMaterials(materials);
-      setPriceRange(priceRange);
-      setDefaultPriceRange(priceRange);
-      setLoading(false);
-    };
-    fetchFilterOptions();
-  }, []);
+  // Map the configuration data to RadioOption format
+  const colors = useMemo<RadioOption[]>(
+    () =>
+      allColors.map((color) => ({
+        label: color.name,
+        value: color.code,
+      })),
+    [allColors]
+  );
+
+  const brands = useMemo<RadioOption[]>(
+    () =>
+      allBrands.map((brand) => ({
+        label: brand.name,
+        value: brand.id,
+      })),
+    [allBrands]
+  );
+
+  const materials = useMemo<RadioOption[]>(
+    () =>
+      allMaterials.map((material) => ({
+        label: material.name,
+        value: material.id,
+      })),
+    [allMaterials]
+  );
 
   return {
     colors,
     brands,
     materials,
-    priceRange,
-    loading,
-    defaultPriceRange: defaultPriceRange || [1, 1000],
+    loading: isLoadingConfigs,
+    defaultPriceRange: priceRange,
   };
 }

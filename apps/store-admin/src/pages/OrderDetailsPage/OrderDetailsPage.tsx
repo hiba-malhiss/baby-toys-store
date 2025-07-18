@@ -3,10 +3,11 @@ import { useParams } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 import { apiClient } from '../../api/apiClient';
+import { OrderItem } from '@baby-toys/types/src';
 
 const OrderDetailsPage: React.FC = () => {
   const { getOrderById } = useMockAdminApi();
-  const [order, setOrder] = useState<any>({});
+  const [order, setOrder] = useState<OrderItem | null>(null);
   const { id } = useParams();
 
   useEffect(() => {

@@ -1,8 +1,8 @@
 export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> = {
-  category: (v) => v,
-  brand: (v) => v,
-  color: (v) => v,
-  material: (v) => v,
+  categoryId: (v) => v,
+  brandId: (v) => v,
+  colorId: (v) => v,
+  materialId: (v) => v,
   priceRange: (v) => {
     try {
       const parsed = JSON.parse(v);
@@ -20,9 +20,9 @@ export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> =
 };
 
 export type ShopFilters = {
-  category?: string;
-  color?: string;
-  brand?: string;
-  material?: string;
+  categoryId?: string;
+  colorId?: string;
+  brandId?: string;
+  materialId?: string;
   priceRange?: [number, number];
 };

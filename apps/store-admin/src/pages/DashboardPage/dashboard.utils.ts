@@ -1,14 +1,9 @@
 import { ChartData } from 'chart.js';
+import { CategoryDistributionItem } from '@baby-toys/types/src';
 
 interface SalesData {
   date: string;
   sales: number;
-}
-
-interface CategoryDistributionItem {
-  category: string;
-  salesCount: number;
-  percentage: number;
 }
 
 type OrderStatusData = Record<string, number>;

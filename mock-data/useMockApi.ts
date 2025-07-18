@@ -6,13 +6,16 @@ import {
   photoShoots,
   unifiedCategories,
   description,
-  brandsRadioOptions,
-  colorsRadioOptions,
   DEFAULT_PRICE,
-  materialsRadioOptions,
+  mockColors,
+  mockMaterials,
+  mockBrands,
 } from './mock-data';
-import type {
+import {
+  Brand,
   CartItem,
+  Color,
+  Material,
   Review,
   OrderItem,
   CartItemBE,
@@ -33,6 +36,9 @@ import type {
   Policy,
   RelatedProducts,
   ContactInfo,
+  CategoryDistribution,
+  ContactMessage,
+  CategoryDistributionItem,
 } from '../packages/types/src/index';
 
 export const MOCK_API_DELAY_MS = 600;
@@ -279,30 +285,24 @@ export const mockLoadFavoritesFromCloud = async (): Promise<ProductWithFavorite[
   return toys.filter((p) => favIds.includes(p.id)).map((p) => ({ ...p, isUserFavorite: true }));
 };
 
-// SHOP FILTER OPTIONS
-export const getShopFilterOptions = async (): Promise<ShopFilterOptions> => {
+export const getPriceRange = async (): Promise<[number, number]> => {
   await delay(MOCK_API_DELAY_MS);
-  return {
-    colors: colorsRadioOptions,
-    brands: brandsRadioOptions,
-    materials: materialsRadioOptions,
-    priceRange: DEFAULT_PRICE,
-  };
+
+  if (toys.length === 0) {
+    return [0, 1000]; // Default range if no products
+  }
+
+  const prices = toys.map((toy) => toy.price);
+  const min = Math.floor(Math.min(...prices));
+  const max = Math.ceil(Math.max(...prices));
+
+  // Round to nearest 100 for nice filter values
+  return [Math.floor(min / 100) * 100, Math.ceil(max / 100) * 100];
 };
 
 // PRODUCTS & HOME DATA (MOCKED) - Storefront
 export function useMockProductsApi(pageSize: number = 10) {
   const fullItems = toys;
-
-  function extractFilterOptions(field: keyof Product): { value: string; label: string }[] {
-    const values = Array.from(
-      new Set(fullItems.flatMap((item) => item[field] as string[]).filter(Boolean))
-    );
-    return values.map((value) => ({
-      value,
-      label: capitalize(value),
-    }));
-  }
 
   const fetchProducts = useCallback(
     async (
@@ -316,16 +316,16 @@ export function useMockProductsApi(pageSize: number = 10) {
     }> => {
       await delay(MOCK_API_DELAY_MS);
 
-      let filteredItems = fullItems;
+      let filteredItems: Product[] = fullItems;
 
       // Filtering logic...
       if (filters.category && filters.category !== 'all') {
-        filteredItems = filteredItems.filter((item) => item.category === filters.category);
+        filteredItems = filteredItems.filter((item) => item.categoryId === filters.category);
       }
       if (filters.search) {
         const term = filters.search.toLowerCase();
         filteredItems = filteredItems.filter((item) =>
-          [item.name, item.description, item.category].some((field) =>
+          [item.name, item.description, item.categoryId].some((field) =>
             field?.toLowerCase().includes(term)
           )
         );
@@ -337,16 +337,16 @@ export function useMockProductsApi(pageSize: number = 10) {
         filteredItems = filteredItems.filter((item) => item.price <= filters.priceMax!);
       }
       if (filters.brand) {
-        filteredItems = filteredItems.filter((item) => item.brand === filters.brand);
+        filteredItems = filteredItems.filter((item) => item.brandId === filters.brand);
       }
       if (filters.material) {
         filteredItems = filteredItems.filter((item) =>
-          (item.material as string[]).includes(filters.material)
+          (item.materialIds as string[]).includes(filters.material)
         );
       }
       if (filters.color) {
         filteredItems = filteredItems.filter((item) =>
-          (item.color as string[]).includes(filters.color)
+          (item.colorId as string[]).includes(filters.color)
         );
       }
 
@@ -435,22 +435,22 @@ export function useMockProductsApi(pageSize: number = 10) {
       await delay(MOCK_API_DELAY_MS);
       return { products: [], suggestions: [], categories: [] };
     }, []),
-    getBrands: useCallback(async () => {
+    getColors: async (): Promise<Color[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return extractFilterOptions('brand');
-    }, []),
-    getColors: useCallback(async () => {
+      return mockColors;
+    },
+    getMaterials: async (): Promise<Material[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return extractFilterOptions('color');
-    }, []),
-    getMaterials: useCallback(async () => {
+      return mockMaterials;
+    },
+    getBrands: async (): Promise<Brand[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return extractFilterOptions('material');
-    }, []),
-    getCategoriesOptions: useCallback(async () => {
+      return mockBrands;
+    },
+    getCategories: async (): Promise<Category[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return extractFilterOptions('category');
-    }, []),
+      return unifiedCategories;
+    },
     getFlashSale: useCallback(async () => {
       await delay(MOCK_API_DELAY_MS);
       return {
@@ -714,32 +714,43 @@ export function useMockAdminApi(): AdminDashboardData {
     return statusCounts;
   };
 
-  const getCategoryDistribution = async (): Promise<{
-    totalSales: number;
-    categoryDistribution: {
-      category: string;
-      salesCount: number;
-      percentage: number;
-    }[];
-  }> => {
+  const getCategoryDistribution = async (): Promise<CategoryDistribution> => {
     await delay(MOCK_API_DELAY_MS);
 
-    const categorySalesMap: Record<string, number> = toys.reduce((acc, toy) => {
-      acc[toy.category] = (acc[toy.category] || 0) + (toy.sales || 0);
-      return acc;
-    }, {});
+    // Get all categories to map values to names
+    const categories = await getProductCategories();
+    const categoryMap = new Map(categories.map((cat) => [cat.id, cat]));
 
-    const totalSales = Object.values(categorySalesMap).reduce((sum, val) => sum + val, 0);
+    // Group sales by category value
+    const categorySalesMap: Record<string, { name: string; sales: number }> = {};
 
-    const categoryDistribution = Object.entries(categorySalesMap).map(([category, salesCount]) => ({
-      category,
-      salesCount,
-      percentage: totalSales ? Math.round((salesCount / totalSales) * 100) : 0,
-    }));
+    toys.forEach((toy) => {
+      const category = categoryMap.get(toy.categoryId);
+      const categoryName = category?.name || 'Uncategorized';
+
+      if (!categorySalesMap[toy.categoryId]) {
+        categorySalesMap[toy.categoryId] = {
+          name: categoryName,
+          sales: toy.sales || 0,
+        };
+      }
+
+      categorySalesMap[toy.categoryId].sales += toy.sales || 0;
+    });
+
+    const totalSales = Object.values(categorySalesMap).reduce((sum, { sales }) => sum + sales, 0);
+
+    const categoryDistributions: CategoryDistributionItem[] = Object.entries(categorySalesMap).map(
+      ([categoryId, { name, sales }]) => ({
+        category: name,
+        salesCount: sales,
+        percentage: totalSales ? Math.round((sales / totalSales) * 100) : 0,
+      })
+    );
 
     return {
       totalSales,
-      categoryDistribution,
+      categoryDistributions,
     };
   };
 
@@ -764,17 +775,17 @@ export function useMockAdminApi(): AdminDashboardData {
     mockAdminLogin,
     getOrderStatusBreakdown,
     getCategoryDistribution,
-    getColors: async () => {
+    getColors: async (): Promise<Color[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return colorsRadioOptions;
+      return mockColors;
     },
-    getMaterials: async () => {
+    getMaterials: async (): Promise<Material[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return materialsRadioOptions;
+      return mockMaterials;
     },
-    getBrands: async () => {
+    getBrands: async (): Promise<Brand[]> => {
       await delay(MOCK_API_DELAY_MS);
-      return brandsRadioOptions;
+      return mockBrands;
     },
   };
 }
@@ -818,11 +829,7 @@ const generateSalesData = () => {
   return salesData;
 };
 
-export const mockSendContactMessage = async (messageData: {
-  name: string;
-  email: string;
-  message: string;
-}): Promise<boolean> => {
+export const mockSendContactMessage = async (messageData: ContactMessage): Promise<boolean> => {
   await new Promise((resolve) => setTimeout(resolve, 1200));
   const messages = JSON.parse(localStorage.getItem('mock-contact-messages') || '[]');
   messages.push({ ...messageData, id: Date.now() });
