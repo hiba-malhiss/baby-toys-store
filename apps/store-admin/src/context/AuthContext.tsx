@@ -1,11 +1,12 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useMockAdminApi, mockFetchUserApi } from '@mock-data/useMockApi';
-import type { User } from '../../../store-front/src/context/AuthContext.tsx';
-
+import { User } from '@baby-toys/types/src';
+export type UserRole = 'admin' | 'customer';
 interface AuthContextType {
   token: string | null;
   login: (username: string, password: string) => Promise<void>;
   logout: () => void;
+  hasPermission: (role: UserRole) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -38,13 +39,25 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setUser(null);
   };
 
+  const hasPermission = (requiredRole: UserRole): boolean => {
+    const role = localStorage.getItem('user_role');
+    if (!user || !role) {
+      return false;
+    }
+    return role === requiredRole;
+  };
+
   useEffect(() => {
     if (token && !user) {
       fetchUser();
     }
   }, [token, fetchUser]);
 
-  return <AuthContext.Provider value={{ token, login, logout }}>{children}</AuthContext.Provider>;
+  return (
+    <AuthContext.Provider value={{ token, login, logout, hasPermission }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {

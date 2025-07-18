@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { mockFetchUserApi, mockLoginApi, mockRegisterApi } from '@mock-data/useMockApi';
-import type { User } from '@baby-toys/types/src';
+import type { User, UserRole } from '@baby-toys/types/src';
 
 interface AuthContextType {
   user: User | null;
@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  hasPermission: (role: UserRole) => boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -30,8 +31,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, [token]);
 
   const login = async (email: string, password: string) => {
-    const { token: newToken } = await mockLoginApi(email, password);
+    const { token: newToken, role } = await mockLoginApi(email, password);
     localStorage.setItem('auth_token', newToken);
+    localStorage.setItem('user_role', role);
     setToken(newToken);
   };
 
@@ -53,8 +55,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, [token, fetchUser]);
 
+  const hasPermission = (requiredRole: UserRole): boolean => {
+    const role = localStorage.getItem('user_role');
+    if (!user || !role) {
+      return false;
+    }
+    return role === requiredRole;
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, isLoggedIn, login, register, logout }}>
+    <AuthContext.Provider
+      value={{ user, token, isLoggedIn, login, register, logout, hasPermission }}
+    >
       {children}
     </AuthContext.Provider>
   );

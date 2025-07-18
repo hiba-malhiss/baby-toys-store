@@ -129,11 +129,14 @@ export interface Material {
   description?: string;
 }
 
+export type UserRole = 'admin' | 'customer';
+
 export interface User {
   id: string;
   name: string;
   email: string;
   avatarUrl?: string;
+  role: UserRole;
 }
 
 export interface ProductAvailability {
@@ -143,6 +146,7 @@ export interface ProductAvailability {
 export interface LoginResponse {
   email: string;
   token: string;
+  role: UserRole;
 }
 
 export interface RegisterResponse {

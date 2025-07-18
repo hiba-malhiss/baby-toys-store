@@ -62,8 +62,11 @@ export const mockFetchProductAvailability = async (
 export const mockLoginApi = async (email: string, password: string): Promise<LoginResponse> => {
   await delay(MOCK_API_DELAY_MS);
   // Demo credentials: user@example.com / password123
+  if (email === 'admin@example.com' && password === 'password') {
+    return { email, token: 'mock-admin-token', role: 'admin' };
+  }
   if ((email === 'user@example.com' && password === 'password123') || (email && password)) {
-    return { email, token: 'mock-token' };
+    return { email, token: 'mock-token', role: 'customer' };
   }
   throw new Error('Invalid credentials');
 };
@@ -80,9 +83,9 @@ export const mockRegisterApi = async (
 export const mockFetchUserApi = async (token: string): Promise<User> => {
   await delay(MOCK_API_DELAY_MS);
   if (token === 'mock-token') {
-    return { id: '1', name: 'Mock User', email: 'user@example.com' };
+    return { id: '1', name: 'Mock User', email: 'user@example.com', role: 'customer' };
   } else if (token === 'mock-admin-token') {
-    return { id: '2', name: 'Mock Admin', email: 'admin@example.com' };
+    return { id: '2', name: 'Mock Admin', email: 'admin@example.com', role: 'admin' };
   }
   throw new Error('Invalid token');
 };
