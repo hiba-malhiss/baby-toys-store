@@ -490,6 +490,14 @@ export function useMockAdminApi(): {
   updateOrderStatus: (orderId: number, status: string) => Promise<OrderItem>;
   getCategoryDistribution: () => Promise<CategoryDistribution>;
   getCustomers: () => Promise<User[]>;
+  getReviews: () => Promise<Review[]>;
+  deleteReview: (reviewId: string) => Promise<{ success: boolean }>;
+  getHomepageContent: () => Promise<any>;
+  updateHomepageContent: (data: any) => Promise<any>;
+  getCurrencySettings: () => Promise<any>;
+  updateCurrencySettings: (data: any) => Promise<any>;
+  getShippingSettings: () => Promise<any>;
+  updateShippingSettings: (data: any) => Promise<any>;
   getMaterials: () => Promise<Material[]>;
   getColors: () => Promise<Color[]>;
   deleteOrder: (orderId: number) => Promise<{ success: boolean }>;
@@ -979,6 +987,59 @@ export function useMockAdminApi(): {
         email: order.email,
         role: 'customer',
       }));
+    },
+    getReviews: async (): Promise<Review[]> => {
+      await delay(MOCK_API_DELAY_MS);
+      return reviews;
+    },
+    deleteReview: async (reviewId: string): Promise<{ success: boolean }> => {
+      await delay(MOCK_API_DELAY_MS);
+      const index = reviews.findIndex((r) => r.id === reviewId);
+      if (index !== -1) {
+        reviews.splice(index, 1);
+        return { success: true };
+      }
+      return { success: false };
+    },
+    getHomepageContent: async (): Promise<any> => {
+      await delay(MOCK_API_DELAY_MS);
+      return {
+        banners: [
+          'Discover the Joy of Play',
+          'Flash sale 30%',
+          'Extra discount for loyal customers',
+        ],
+      };
+    },
+    updateHomepageContent: async (data: any): Promise<any> => {
+      await delay(MOCK_API_DELAY_MS);
+      // In a real app, you would save this to a database.
+      console.log('Updated homepage content:', data);
+      return data;
+    },
+    getCurrencySettings: async (): Promise<any> => {
+      await delay(MOCK_API_DELAY_MS);
+      return { currency: 'USD', symbol: '$' };
+    },
+    updateCurrencySettings: async (data: any): Promise<any> => {
+      await delay(MOCK_API_DELAY_MS);
+      // In a real app, you would save this to a database.
+      console.log('Updated currency settings:', data);
+      return data;
+    },
+    getShippingSettings: async (): Promise<any> => {
+      await delay(MOCK_API_DELAY_MS);
+      return {
+        cost: 0,
+        freeThreshold: 150,
+        headerMessage: 'Free shipping with over $150',
+      };
+    },
+    updateShippingSettings: async (data: any): Promise<any> => {
+      await delay(MOCK_API_DELAY_MS);
+      // In a real app, you would save this to a database.
+      console.log('Updated shipping settings:', data);
+      return data;
     },
     getColors: async (): Promise<Color[]> => {
       await delay(MOCK_API_DELAY_MS);
