@@ -122,7 +122,7 @@ const ProductFormPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="xl">
+      <Flex direction="vertical" spacing="m">
         <Heading>{id === 'new' ? 'Add' : 'Edit'} Product</Heading>
         <Flex spacing="xl" fullWidth align="stretch">
           <Card fullWidth>

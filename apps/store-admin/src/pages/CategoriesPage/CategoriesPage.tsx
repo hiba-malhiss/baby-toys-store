@@ -108,7 +108,7 @@ const CategoriesPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="xxl" fullWidth>
+      <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
           <Heading>Categories</Heading>
           <Button onClick={openAddDialog}>Add Category</Button>

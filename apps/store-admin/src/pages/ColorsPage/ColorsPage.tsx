@@ -127,7 +127,7 @@ const ColorsPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="xxl" fullWidth>
+      <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
           <Heading>Colors</Heading>
           <Button onClick={openAddDialog}>Add Color</Button>

@@ -125,7 +125,7 @@ const BrandsPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="xxl" fullWidth>
+      <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
           <Heading>Brands</Heading>
           <Button onClick={openAddDialog}>Add Brand</Button>

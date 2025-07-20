@@ -8,7 +8,15 @@ import { Heading } from '@baby-toys/ui-kit/components';
 import { useDashboardData } from './useDashboardData';
 
 const DashboardPage: React.FC = () => {
-  const { stats, lowStock, topSelling, recentOrders, orderStatusData, categoryDistribution, isLoading } = useDashboardData();
+  const {
+    stats,
+    lowStock,
+    topSelling,
+    recentOrders,
+    orderStatusData,
+    categoryDistribution,
+    isLoading,
+  } = useDashboardData();
 
   if (isLoading) {
     return null;
@@ -17,7 +25,7 @@ const DashboardPage: React.FC = () => {
   return (
     <AdminLayout>
       <div className={styles.dashboard}>
-        <Heading className="bts-marginBxs">Dashboard</Heading>
+        <Heading className="bts-marginBm">Dashboard</Heading>
         <Heading level="h4" appearance="light" className="bts-marginBxxl">
           Welcome back, Admin!
         </Heading>

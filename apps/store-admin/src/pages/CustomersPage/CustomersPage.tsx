@@ -36,7 +36,7 @@ const CustomersPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Heading className="bts-marginBxs">Customers</Heading>
+      <Heading className="bts-marginBm">Customers</Heading>
       <Table value={customers} columns={columns} isLoading={loading} />
     </AdminLayout>
   );
