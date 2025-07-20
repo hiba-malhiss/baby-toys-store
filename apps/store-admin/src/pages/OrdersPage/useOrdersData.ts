@@ -41,16 +41,6 @@ export const useOrdersData = () => {
     };
   }, [page, pageSize, filters]);
 
-  // Handle order status update, then refresh list
-  const handleStatusChange = async (orderId: number, status: string) => {
-    try {
-      await updateOrderStatus(orderId, status);
-      fetchOrders(); // Refresh the list to show the updated status
-    } catch (error) {
-      console.error('Failed to update order status:', error);
-    }
-  };
-
   return {
     orders,
     loading,
@@ -65,6 +55,5 @@ export const useOrdersData = () => {
     setSortField,
     setSortOrder,
     setFilters,
-    handleStatusChange,
   };
 };
