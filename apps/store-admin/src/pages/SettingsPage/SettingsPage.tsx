@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Card, StringInput, Button, Flex } from '@baby-toys/ui-kit/components';
+import {
+  Heading,
+  Card,
+  StringInput,
+  Button,
+  Flex,
+  FieldWrapper,
+} from '@baby-toys/ui-kit/components';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 
 const SettingsPage: React.FC = () => {
@@ -58,72 +65,127 @@ const SettingsPage: React.FC = () => {
         <Button onClick={handleSave}>Save Changes</Button>
       </Flex>
       <Flex direction="vertical" spacing="xxl">
-        <Card header="Homepage Content">
-          <StringInput
-            label="Banner 1"
-            value={homepageContent.banners[0]}
-            onChange={(val) =>
-              handleHomepageContentChange('banners', [
-                val,
-                homepageContent.banners[1],
-                homepageContent.banners[2],
-              ])
-            }
-          />
-          <StringInput
-            label="Banner 2"
-            value={homepageContent.banners[1]}
-            onChange={(val) =>
-              handleHomepageContentChange('banners', [
-                homepageContent.banners[0],
-                val,
-                homepageContent.banners[2],
-              ])
-            }
-          />
-          <StringInput
-            label="Banner 3"
-            value={homepageContent.banners[2]}
-            onChange={(val) =>
-              handleHomepageContentChange('banners', [
-                homepageContent.banners[0],
-                homepageContent.banners[1],
-                val,
-              ])
-            }
-          />
+        <Card header="Homepage Content" fullWidth>
+          <Heading level={3} className="bts-marginBm">Banners</Heading>
+          <Flex direction="vertical" spacing="m" className="bts-marginBxxl">
+            {homepageContent.banners?.map((banner: string, index: number) => (
+              <FieldWrapper key={index} label={`Banner ${index + 1}`}>
+                <StringInput
+                  value={banner}
+                  onChange={(val) => {
+                    const newBanners = [...homepageContent.banners];
+                    newBanners[index] = val;
+                    handleHomepageContentChange('banners', newBanners);
+                  }}
+                />
+              </FieldWrapper>
+            ))}
+          </Flex>
+
+          <Heading level={3} className="bts-marginBm">Info Cards</Heading>
+          <Flex direction="column" spacing="m" className="bts-marginBxxl">
+            {homepageContent.infoCards?.map((card: any, index: number) => (
+              <Card key={index} className="bts-marginBm">
+                <FieldWrapper label="Title" className="bts-marginBm">
+                  <StringInput
+                    value={card.title}
+                    onChange={(val) => {
+                      const newCards = [...homepageContent.infoCards];
+                      newCards[index] = { ...card, title: val };
+                      handleHomepageContentChange('infoCards', newCards);
+                    }}
+                  />
+                </FieldWrapper>
+                <FieldWrapper label="Content">
+                  <StringInput
+                    value={card.content}
+                    onChange={(val) => {
+                      const newCards = [...homepageContent.infoCards];
+                      newCards[index] = { ...card, content: val };
+                      handleHomepageContentChange('infoCards', newCards);
+                    }}
+                  />
+                </FieldWrapper>
+              </Card>
+            ))}
+          </Flex>
+
+          <Heading level={3} className="bts-marginBm">Photo Shoots</Heading>
+          <Flex direction="column" spacing="m">
+            {homepageContent.photoShoots?.map((shoot: any, index: number) => (
+              <Card key={index} className="bts-marginBm">
+                <FieldWrapper label="Title" className="bts-marginBm">
+                  <StringInput
+                    value={shoot.title}
+                    onChange={(val) => {
+                      const newShoots = [...homepageContent.photoShoots];
+                      newShoots[index] = { ...shoot, title: val };
+                      handleHomepageContentChange('photoShoots', newShoots);
+                    }}
+                  />
+                </FieldWrapper>
+                <FieldWrapper label="Description" className="bts-marginBm">
+                  <StringInput
+                    value={shoot.description}
+                    onChange={(val) => {
+                      const newShoots = [...homepageContent.photoShoots];
+                      newShoots[index] = { ...shoot, description: val };
+                      handleHomepageContentChange('photoShoots', newShoots);
+                    }}
+                  />
+                </FieldWrapper>
+                <FieldWrapper label="Image URL">
+                  <StringInput
+                    value={shoot.image}
+                    onChange={(val) => {
+                      const newShoots = [...homepageContent.photoShoots];
+                      newShoots[index] = { ...shoot, image: val };
+                      handleHomepageContentChange('photoShoots', newShoots);
+                    }}
+                  />
+                </FieldWrapper>
+              </Card>
+            ))}
+          </Flex>
         </Card>
-        <Card header="Currency Settings">
-          <StringInput
-            label="Currency"
-            value={currencySettings.currency}
-            onChange={(val) => handleCurrencySettingsChange('currency', val)}
-          />
-          <StringInput
-            label="Symbol"
-            value={currencySettings.symbol}
-            onChange={(val) => handleCurrencySettingsChange('symbol', val)}
-          />
-        </Card>
-        <Card header="Shipping Settings">
-          <StringInput
-            label="Cost"
-            type="number"
-            value={shippingSettings.cost}
-            onChange={(val) => handleShippingSettingsChange('cost', Number(val))}
-          />
-          <StringInput
-            label="Free Shipping Threshold"
-            type="number"
-            value={shippingSettings.freeThreshold}
-            onChange={(val) => handleShippingSettingsChange('freeThreshold', Number(val))}
-          />
-          <StringInput
-            label="Header Message"
-            value={shippingSettings.headerMessage}
-            onChange={(val) => handleShippingSettingsChange('headerMessage', val)}
-          />
-        </Card>
+        <Flex spacing="xxl" fullWidth align="stretch">
+          <Card header="Shipping Settings" fullWidth>
+            <FieldWrapper label="Cost" className="bts-marginBxxl">
+              <StringInput
+                type="number"
+                value={shippingSettings.cost}
+                onChange={(val) => handleShippingSettingsChange('cost', Number(val))}
+              />
+            </FieldWrapper>
+            <FieldWrapper label="Free Shipping Threshold" className="bts-marginBxxl">
+              <StringInput
+                type="number"
+                value={shippingSettings.freeThreshold}
+                onChange={(val) => handleShippingSettingsChange('freeThreshold', Number(val))}
+              />
+            </FieldWrapper>
+            <FieldWrapper label="Header Message">
+              <StringInput
+                value={shippingSettings.headerMessage}
+                onChange={(val) => handleShippingSettingsChange('headerMessage', val)}
+              />
+            </FieldWrapper>
+          </Card>
+          <Card header="Currency Settings" fullWidth>
+            <FieldWrapper label="Currency" className="bts-marginBxxl">
+              <StringInput
+                value={currencySettings.currency}
+                onChange={(val) => handleCurrencySettingsChange('currency', val)}
+              />
+            </FieldWrapper>
+            <FieldWrapper label="Symbol">
+              <StringInput
+                value={currencySettings.symbol}
+                onChange={(val) => handleCurrencySettingsChange('symbol', val)}
+              />
+            </FieldWrapper>
+          </Card>
+        </Flex>
       </Flex>
     </AdminLayout>
   );

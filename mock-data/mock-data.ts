@@ -1,5 +1,5 @@
 import { faHeadset, faTruckFast, faArrowRotateLeft } from '@fortawesome/free-solid-svg-icons';
-import type { Review, InfoCardType, Category, Product, RadioOption } from '../types/product.types';
+import type { Review, InfoCardType, Category, Product } from '../types/product.types';
 import { Brand, Color, Material } from '@baby-toys/types/src';
 
 // from product-details-page.ts
@@ -27,6 +27,17 @@ export const reviews: Review[] = [
     name: 'Emily Johnson',
     avatarUrl: '/assets/images/avatars/avatar.png',
     comment: 'My kids love the toys! Great quality and fast shipping.',
+  },
+  {
+    avatarUrl: '',
+    comment: 'so beautiful !!!',
+    date: '2025-07-13T20:47:49.568Z',
+    id: 'toy-1-user@example.com-1752439669568',
+    name: 'Mock User',
+    orderId: 1752439560617,
+    productId: 'toy-1',
+    rating: 4,
+    userEmail: 'user@example.com',
   },
   {
     rating: 4.5,

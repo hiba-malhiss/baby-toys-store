@@ -3,8 +3,14 @@ import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { Card, Button, Badge } from '@baby-toys/ui-kit/components';
-import { statusColorMap } from 'store-admin/src/pages/OrderDetailsPage/OrderDetailsPage.tsx';
+import { Card, Button, Chip } from '@baby-toys/ui-kit/components';
+
+export const statusColorMap: Record<string, string> = {
+  pending: 'warning',
+  processing: 'info',
+  shipped: 'success',
+  delivered: 'primary',
+};
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
@@ -20,8 +26,12 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
     <Card fullWidth size="small" className={styles.orderCard}>
       <header className={styles.orderCardHeader}>
         <div>Order #{order.id}</div>
-        <Badge value={order.status} severity={statusColorMap[order.status]} />
         <div>{formatDate(order.date)}</div>
+        <Chip
+          label={order.status}
+          severity={statusColorMap[order.status]}
+          className={styles.orderCardStatus}
+        />
       </header>
 
       <div>
@@ -54,7 +64,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
               >
                 Buy Again
               </Button>
-              {!item.isReviewed && (
+              {!item.isReviewed && order.status === 'delivered' && (
                 <Button
                   onClick={() => onAddReview(item)}
                   aria-label={`Add review for ${item.product.name}`}

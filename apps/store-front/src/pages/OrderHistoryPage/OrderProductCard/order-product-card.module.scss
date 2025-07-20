@@ -9,6 +9,10 @@
     color: $color-text-grey-light;
   }
 
+  &-status {
+    margin-left: auto;
+  }
+
   &-cartItem {
     display: flex;
     align-items: center;

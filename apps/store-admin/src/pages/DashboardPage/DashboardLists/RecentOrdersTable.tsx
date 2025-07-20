@@ -19,7 +19,7 @@ const RecentOrdersTable: React.FC<RecentOrdersTableProps> = ({
 }) => {
   return (
     <Table
-      headers="Recent Orders"
+      title="Recent Orders"
       value={recentOrders}
       columns={recentOrdersColumns}
       paginator={true}

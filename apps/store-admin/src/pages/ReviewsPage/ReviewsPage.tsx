@@ -28,7 +28,7 @@ const ReviewsPage: React.FC = () => {
 
   const columns = [
     { field: 'product.name', header: 'Product' },
-    { field: 'user.name', header: 'User' },
+    { field: 'name', header: 'User' },
     { field: 'rating', header: 'Rating' },
     { field: 'comment', header: 'Comment' },
     {
