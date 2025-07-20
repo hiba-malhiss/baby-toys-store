@@ -1,12 +1,23 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Select, Option, Card, Table } from '@baby-toys/ui-kit/components';
+import {
+  Button,
+  Select,
+  Option,
+  Heading,
+  Table,
+  StringInput,
+  Flex,
+  Chip,
+} from '@baby-toys/ui-kit/components';
 import { useOrdersData } from './useOrdersData';
 import { OrderItem } from '@baby-toys/types/src';
+import { orderStatusOptions, statusColorMap } from './orders-page.utils.ts';
 
 const OrdersPage: React.FC = () => {
   const navigate = useNavigate();
+  const tableRef = useRef<any>(null);
   const {
     orders,
     loading,
@@ -14,18 +25,18 @@ const OrdersPage: React.FC = () => {
     pageSize,
     sortField,
     sortOrder,
+    filters,
     setPage,
     setPageSize,
     setSortField,
     setSortOrder,
     setFilters,
-    handleStatusChange,
   } = useOrdersData();
 
   // Columns definition for Table component
   const columns = [
     { field: 'id', header: 'Order ID', sortable: true },
-    { field: 'email', header: 'Customer', sortable: true, filter: true },
+    { field: 'email', header: 'Customer (Email / Phone)', sortable: true },
     {
       field: 'date',
       header: 'Date',
@@ -34,26 +45,34 @@ const OrdersPage: React.FC = () => {
     },
     { field: 'total', header: 'Total', sortable: true },
     {
+      field: 'shippingInfo.town',
+      header: 'City',
+      sortable: true,
+      body: (row: OrderItem) => row.shippingInfo?.town,
+    },
+    {
+      field: 'shippingInfo.country',
+      header: 'Country',
+      sortable: true,
+      body: (row: OrderItem) => row.shippingInfo?.country,
+    },
+    {
       field: 'status',
       header: 'Status',
-      body: (row: OrderItem) => (
-        <Select
-          value={row.status}
-          onChange={(value) => handleStatusChange(row.id, value as string)}
-        >
-          <Option value="pending">Pending</Option>
-          <Option value="processing">Processing</Option>
-          <Option value="shipped">Shipped</Option>
-          <Option value="delivered">Delivered</Option>
-          <Option value="cancelled">Cancelled</Option>
-        </Select>
-      ),
+      body: (row: OrderItem) => <Chip label={row.status} color={statusColorMap[row.status]} />,
     },
     {
       field: 'actions',
       header: 'Actions',
       body: (row: any) => (
-        <Button onClick={() => navigate(`/order-details/${row.id}`)}>Details</Button>
+        <Flex spacing="m">
+          <Button appearance="outline" onClick={() => navigate(`/order-details/${row.id}`)}>
+            Details
+          </Button>
+          <Button appearance="outline" onClick={() => navigate(`/order-edit/${row.id}`)}>
+            Edit
+          </Button>
+        </Flex>
       ),
     },
   ];
@@ -70,19 +89,47 @@ const OrdersPage: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const handleFilterChange = (newFilters: { [key: string]: { value: string } }) => {
-    const flatFilters = Object.fromEntries(
-      Object.entries(newFilters).map(([k, v]) => [k, v.value])
-    );
-    setFilters(flatFilters);
-    setPage(1);
+  const onFilter = (field: string, value: any, resetPagination = false) => {
+    if (tableRef.current && resetPagination) {
+      tableRef.current.resetPagination();
+    }
+    setFilters({ ...filters, [field]: value });
   };
 
   return (
     <AdminLayout>
-      <h1>Orders</h1>
-      <Card>
+      <Flex direction="vertical" spacing="xxl" fullWidth>
+        <Flex justify="between" fullWidth>
+          <Heading>Orders</Heading>
+          <Flex spacing="xl">
+            <Select
+              placeholder="Filter by status"
+              onChange={(value) => onFilter('status', value, true)}
+              style={{ marginRight: '1rem' }}
+            >
+              {orderStatusOptions.map(({ label, value }) => (
+                <Option key={value || 'all'} value={value}>
+                  {label}
+                </Option>
+              ))}
+            </Select>
+            <StringInput
+              placeholder="Search by customer email/phone"
+              onInput={(e) => onFilter('email', (e.target as HTMLInputElement).value, true)}
+              style={{ width: '250px', marginRight: '1rem' }}
+            />
+            <StringInput
+              placeholder="Search by city"
+              onInput={(e) => onFilter('city', (e.target as HTMLInputElement).value, true)}
+              style={{ width: '250px' }}
+            />
+            <Button appearance="outline" onClick={() => {}}>
+              Search
+            </Button>
+          </Flex>
+        </Flex>
         <Table
+          ref={tableRef}
           value={orders}
           columns={columns}
           paginator
@@ -91,17 +138,10 @@ const OrdersPage: React.FC = () => {
           sortField={sortField}
           sortOrder={sortOrder}
           onSort={handleSort}
-          loading={loading}
-          scrollable
-          scrollHeight={400}
-          onSelectionChange={() => {}}
-          selectionMode={null}
-          rowHover
-          stripedRows
-          onFilterChange={handleFilterChange}
+          isLoading={loading}
           onPageChange={handlePageChange}
         />
-      </Card>
+      </Flex>
     </AdminLayout>
   );
 };

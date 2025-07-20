@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback } from 'react';
-import { apiClient } from '../../api/apiClient';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 import { OrderItem } from '@baby-toys/types/src';
 
@@ -12,38 +11,44 @@ export const useOrdersData = () => {
   // Table control state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [sortField, setSortField] = useState<string | null>(null);
-  const [sortOrder, setSortOrder] = useState(1);
-  const [filters, setFilters] = useState<Record<string, string>>({});
+  const [sortField, setSortField] = useState<string>('date');
+  const [sortOrder, setSortOrder] = useState(-1); // Default to descending for date
+  const [filters, setFilters] = useState<Record<string, any>>({});
 
   // Fetch data from API with current params
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
-      const params = {
-        page,
-        pageSize,
-        sortField,
-        sortOrder,
-        filters,
-      };
-      const response = await apiClient.get(getOrders, params);
+      // The mock getOrders function expects filters directly
+      const response = await getOrders(page, pageSize, filters);
       setOrders(response.items);
-      setTotalRecords(response.totalRecords);
+      setTotalRecords(response.totalItems);
+    } catch (error) {
+      console.error('Failed to fetch orders:', error);
     } finally {
       setLoading(false);
     }
-  }, [page, pageSize, sortField, sortOrder, filters, getOrders]);
+  }, []);
 
   useEffect(() => {
-    fetchOrders();
-  }, [fetchOrders]);
+    // Debounce fetching to avoid excessive API calls on filter changes
+    const handler = setTimeout(() => {
+      fetchOrders();
+    }, 500);
+
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [page, pageSize, filters]);
 
   // Handle order status update, then refresh list
-  const handleStatusChange = (orderId: number, status: string) => {
-    apiClient.put(updateOrderStatus, orderId, status).then(() => {
-      fetchOrders();
-    });
+  const handleStatusChange = async (orderId: number, status: string) => {
+    try {
+      await updateOrderStatus(orderId, status);
+      fetchOrders(); // Refresh the list to show the updated status
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+    }
   };
 
   return {

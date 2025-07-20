@@ -10,6 +10,7 @@ import {
   mockMaterials,
   mockBrands,
 } from './mock-data';
+import { mockOrders } from './orders';
 import {
   Brand,
   CartItem,
@@ -113,8 +114,6 @@ export const mockPlaceOrder = async (order: OrderPayload): Promise<void> => {
     }
   }
 
-  const orders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
-
   const subtotal = order.cartItems.reduce(
     (sum, item) => sum + item.product.price * item.quantity,
     0
@@ -147,8 +146,7 @@ export const mockPlaceOrder = async (order: OrderPayload): Promise<void> => {
     status: 'pending', // Add default status
   };
 
-  orders.push(newOrder);
-  localStorage.setItem('mock-orders', JSON.stringify(orders));
+  mockOrders.push(newOrder);
   localStorage.setItem('cloud-cart', '[]');
 };
 
@@ -164,9 +162,7 @@ export const mockFetchOrdersHistory = async (
 }> => {
   await delay(MOCK_API_DELAY_MS);
 
-  const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]').filter(
-    (o: OrderItem) => o.email === userEmail
-  );
+  const allOrders: OrderItem[] = mockOrders.filter((o: OrderItem) => o.email === userEmail);
 
   for (const order of allOrders) {
     const productIds = order.cartItems.map((item) => item.productId);
@@ -465,6 +461,7 @@ export function useMockAdminApi(): {
   getTopSellingProducts: (limit?: number) => Promise<Product[]>;
   getBrands: () => Promise<Brand[]>;
   getOrderById: (id: number) => Promise<OrderItem | undefined>;
+  updateOrder: (order: OrderItem) => Promise<OrderItem>;
   addProduct: (product: Product) => Promise<Product>;
   updateProduct: (product: Product) => Promise<Product>;
   getDashboardStats: () => Promise<AdminDashboardStats>;
@@ -493,6 +490,13 @@ export function useMockAdminApi(): {
   getCategoryDistribution: () => Promise<CategoryDistribution>;
   getMaterials: () => Promise<Material[]>;
   getColors: () => Promise<Color[]>;
+  deleteOrder: (orderId: number) => Promise<{ success: boolean }>;
+  updateOrderItem: (
+    orderId: number,
+    itemId: string,
+    quantity: number
+  ) => Promise<OrderItem | undefined>;
+  deleteOrderItem: (orderId: number, itemId: string) => Promise<OrderItem | undefined>;
 } {
   // COLORS
   const getColors = () => {
@@ -699,12 +703,15 @@ export function useMockAdminApi(): {
 
   const getOrders = async (page = 1, pageSize = 10, filters: any = {}): Promise<AdminOrder> => {
     await delay(MOCK_API_DELAY_MS);
-    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
-
-    let filteredOrders = allOrders;
+    let filteredOrders = [...mockOrders];
 
     if (filters.status) {
       filteredOrders = filteredOrders.filter((o) => o.status === filters.status);
+    }
+
+    if (filters.email) {
+      const searchTerm = filters.email.toLowerCase();
+      filteredOrders = filteredOrders.filter((o) => o.email.toLowerCase().includes(searchTerm));
     }
 
     filteredOrders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
@@ -718,20 +725,18 @@ export function useMockAdminApi(): {
 
   const getOrderById = async (id: number): Promise<OrderItem | undefined> => {
     await delay(MOCK_API_DELAY_MS);
-    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
-    return allOrders.find((o) => o.id === id);
+    return mockOrders.find((o) => o.id === id);
   };
 
   const updateOrderStatus = async (orderId: number, status: string): Promise<OrderItem> => {
     await delay(MOCK_API_DELAY_MS);
-    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
-    const orderIndex = allOrders.findIndex((o) => o.id === orderId);
+    const orderIndex = mockOrders.findIndex((o) => o.id === orderId);
 
     if (orderIndex !== -1) {
-      allOrders[orderIndex].status = status;
+      mockOrders[orderIndex].status = status;
 
       if (status === 'shipped') {
-        const order = allOrders[orderIndex];
+        const order = mockOrders[orderIndex];
         for (const item of order.cartItems) {
           const product = toys.find((p) => p.id === item.productId);
           if (product) {
@@ -741,7 +746,7 @@ export function useMockAdminApi(): {
       }
 
       if (status === 'cancelled') {
-        const order = allOrders[orderIndex];
+        const order = mockOrders[orderIndex];
         for (const item of order.cartItems) {
           const product = toys.find((p) => p.id === item.productId);
           if (product) {
@@ -750,27 +755,73 @@ export function useMockAdminApi(): {
         }
       }
 
-      localStorage.setItem('mock-orders', JSON.stringify(allOrders));
-      return allOrders[orderIndex];
+      return mockOrders[orderIndex];
     }
 
     throw new Error('Order not found');
   };
 
+  const updateOrder = async (order: OrderItem): Promise<OrderItem> => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = mockOrders.findIndex((o) => o.id === order.id);
+    if (index !== -1) {
+      mockOrders[index] = order;
+      return order;
+    }
+    throw new Error('Order not found');
+  };
+
+  const deleteOrder = async (orderId: number): Promise<{ success: boolean }> => {
+    await delay(MOCK_API_DELAY_MS);
+    const index = mockOrders.findIndex((o) => o.id === orderId);
+    if (index !== -1) {
+      mockOrders.splice(index, 1);
+      return { success: true };
+    }
+    return { success: false };
+  };
+
+  const updateOrderItem = async (
+    orderId: number,
+    itemId: string,
+    quantity: number
+  ): Promise<OrderItem | undefined> => {
+    await delay(MOCK_API_DELAY_MS);
+    const order = mockOrders.find((o) => o.id === orderId);
+    if (order) {
+      const item = order.cartItems.find((i) => i.id === itemId);
+      if (item) {
+        item.quantity = quantity;
+      }
+    }
+    return order;
+  };
+
+  const deleteOrderItem = async (
+    orderId: number,
+    itemId: string
+  ): Promise<OrderItem | undefined> => {
+    await delay(MOCK_API_DELAY_MS);
+    const order = mockOrders.find((o) => o.id === orderId);
+    if (order) {
+      order.cartItems = order.cartItems.filter((i) => i.id !== itemId);
+    }
+    return order;
+  };
+
   const getDashboardStats = async (): Promise<AdminDashboardStats> => {
     await delay(MOCK_API_DELAY_MS);
-    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
     const totalProducts = toys.length;
-    const totalOrders = allOrders.length > 0 ? allOrders.length : 25;
+    const totalOrders = mockOrders.length > 0 ? mockOrders.length : 25;
     const pendingOrders =
-      allOrders.length > 0 ? allOrders.filter((o) => o.status === 'pending').length : 5;
+      mockOrders.length > 0 ? mockOrders.filter((o) => o.status === 'pending').length : 5;
     const totalRevenue =
-      allOrders.length > 0 ? allOrders.reduce((sum, order) => sum + order.total, 0) : 12500;
+      mockOrders.length > 0 ? mockOrders.reduce((sum, order) => sum + order.total, 0) : 12500;
     const lowStockProductsCount = toys.filter((p) => p.availableInStock < 10).length;
     const totalCustomers =
-      new Set(allOrders.map((o) => o.email)).size > 0
-        ? new Set(allOrders.map((o) => o.email)).size
+      new Set(mockOrders.map((o) => o.email)).size > 0
+        ? new Set(mockOrders.map((o) => o.email)).size
         : 15;
 
     const salesData = generateSalesData();
@@ -806,8 +857,7 @@ export function useMockAdminApi(): {
 
   const getRecentOrders = async (limit = 5): Promise<OrderItem[]> => {
     await delay(MOCK_API_DELAY_MS);
-    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
-    const recent = allOrders
+    const recent = mockOrders
       .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
       .slice(0, limit);
     return recent;
@@ -828,7 +878,6 @@ export function useMockAdminApi(): {
 
   const getOrderStatusBreakdown = async (): Promise<Record<string, number>> => {
     await delay(MOCK_API_DELAY_MS);
-    const allOrders: OrderItem[] = JSON.parse(localStorage.getItem('mock-orders') || '[]');
 
     const statusCounts: Record<string, number> = {
       pending: 0,
@@ -838,7 +887,7 @@ export function useMockAdminApi(): {
       cancelled: 0,
     };
 
-    for (const order of allOrders) {
+    for (const order of mockOrders) {
       const status = order.status ?? 'pending';
       statusCounts[status] = (statusCounts[status] || 0) + 1;
     }
@@ -911,7 +960,11 @@ export function useMockAdminApi(): {
     deleteBrand,
     getOrders,
     getOrderById,
+    updateOrder,
     updateOrderStatus,
+    deleteOrder,
+    updateOrderItem,
+    deleteOrderItem,
     getDashboardStats,
     getLowStockProducts,
     getTopSellingProducts,

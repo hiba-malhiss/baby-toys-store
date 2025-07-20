@@ -64,6 +64,14 @@ const App: React.FC = () => {
                 }
               />
               <Route
+                path="/order-edit/:id"
+                element={
+                  <PrivateRoute>
+                    <OrderDetailsPage isEdit />
+                  </PrivateRoute>
+                }
+              />
+              <Route
                 path="/categories"
                 element={
                   <PrivateRoute>

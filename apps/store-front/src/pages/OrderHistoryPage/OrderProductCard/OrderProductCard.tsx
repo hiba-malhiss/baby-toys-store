@@ -3,7 +3,8 @@ import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { Card, Button } from '@baby-toys/ui-kit/components';
+import { Card, Button, Badge } from '@baby-toys/ui-kit/components';
+import { statusColorMap } from 'store-admin/src/pages/OrderDetailsPage/OrderDetailsPage.tsx';
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
@@ -19,6 +20,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
     <Card fullWidth size="small" className={styles.orderCard}>
       <header className={styles.orderCardHeader}>
         <div>Order #{order.id}</div>
+        <Badge value={order.status} severity={statusColorMap[order.status]} />
         <div>{formatDate(order.date)}</div>
       </header>
 

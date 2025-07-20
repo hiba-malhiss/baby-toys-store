@@ -1,0 +1,8 @@
+.orderDetails-items {
+  flex-grow: 1;
+
+  & > *:not(:last-child) {
+    border-bottom: 1px solid $color-border-light;
+    margin-bottom: 18px;
+  }
+}
