@@ -1,26 +1,37 @@
 import { useState, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 import { OrderItem } from '@baby-toys/types/src';
 
 export const useOrdersData = () => {
-  const { getOrders, updateOrderStatus } = useMockAdminApi();
+  const { getOrders } = useMockAdminApi();
   const [orders, setOrders] = useState<OrderItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalRecords, setTotalRecords] = useState(0);
 
-  // Table control state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState<string>('date');
-  const [sortOrder, setSortOrder] = useState(-1); // Default to descending for date
-  const [filters, setFilters] = useState<Record<string, any>>({});
+  const [sortOrder, setSortOrder] = useState(-1);
 
-  // Fetch data from API with current params
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const [filters, setFilters] = useState<Record<string, any>>(() => {
+    const params: Record<string, any> = {};
+    searchParams.forEach((value, key) => {
+      params[key] = value;
+    });
+    return params;
+  });
+
+  const [pendingFilters, setPendingFilters] = useState<Record<string, any>>(filters);
+
   const fetchOrders = useCallback(async () => {
     setLoading(true);
     try {
-      // The mock getOrders function expects filters directly
-      const response = await getOrders(page, pageSize, filters);
+      const cleanFilters = Object.fromEntries(Object.entries(filters).filter(([_, v]) => v !== ''));
+
+      const response = await getOrders(page, pageSize, cleanFilters);
       setOrders(response.items);
       setTotalRecords(response.totalItems);
     } catch (error) {
@@ -28,18 +39,21 @@ export const useOrdersData = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [filters, page, pageSize, getOrders]);
 
   useEffect(() => {
-    // Debounce fetching to avoid excessive API calls on filter changes
-    const handler = setTimeout(() => {
-      fetchOrders();
-    }, 500);
+    const newSearchParams = new URLSearchParams();
+    Object.entries(filters).forEach(([key, value]) => {
+      if (value) {
+        newSearchParams.set(key, String(value));
+      } else {
+        newSearchParams.delete(key);
+      }
+    });
+    setSearchParams(newSearchParams);
 
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [page, pageSize, filters]);
+    fetchOrders();
+  }, [filters, page, pageSize, setSearchParams]);
 
   return {
     orders,
@@ -50,10 +64,12 @@ export const useOrdersData = () => {
     sortField,
     sortOrder,
     filters,
+    pendingFilters,
     setPage,
     setPageSize,
     setSortField,
     setSortOrder,
     setFilters,
+    setPendingFilters,
   };
 };

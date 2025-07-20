@@ -26,14 +26,15 @@ const OrdersPage: React.FC = () => {
     sortField,
     sortOrder,
     filters,
+    pendingFilters,
     setPage,
     setPageSize,
     setSortField,
     setSortOrder,
     setFilters,
+    setPendingFilters,
   } = useOrdersData();
 
-  // Columns definition for Table component
   const columns = [
     { field: 'id', header: 'Order ID', sortable: true },
     { field: 'email', header: 'Customer (Email / Phone)', sortable: true },
@@ -77,7 +78,6 @@ const OrdersPage: React.FC = () => {
     },
   ];
 
-  // Table event handlers
   const handleSort = ({ field, order }: { field: string; order: number }) => {
     setSortField(field);
     setSortOrder(order);
@@ -89,13 +89,6 @@ const OrdersPage: React.FC = () => {
     setPageSize(newPageSize);
   };
 
-  const onFilter = (field: string, value: any, resetPagination = false) => {
-    if (tableRef.current && resetPagination) {
-      tableRef.current.resetPagination();
-    }
-    setFilters({ ...filters, [field]: value });
-  };
-
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="xxl" fullWidth>
@@ -104,7 +97,8 @@ const OrdersPage: React.FC = () => {
           <Flex spacing="xl">
             <Select
               placeholder="Filter by status"
-              onChange={(value) => onFilter('status', value, true)}
+              value={pendingFilters.status || ''}
+              onChange={(value) => setPendingFilters({ ...pendingFilters, status: value })}
               style={{ marginRight: '1rem' }}
             >
               {orderStatusOptions.map(({ label, value }) => (
@@ -113,21 +107,43 @@ const OrdersPage: React.FC = () => {
                 </Option>
               ))}
             </Select>
+
             <StringInput
               placeholder="Search by customer email/phone"
-              onInput={(e) => onFilter('email', (e.target as HTMLInputElement).value, true)}
+              value={pendingFilters.email || ''}
+              onInput={(e) =>
+                setPendingFilters({
+                  ...pendingFilters,
+                  email: (e.target as HTMLInputElement).value,
+                })
+              }
               style={{ width: '250px', marginRight: '1rem' }}
             />
+
             <StringInput
               placeholder="Search by city"
-              onInput={(e) => onFilter('city', (e.target as HTMLInputElement).value, true)}
+              value={pendingFilters.city || ''}
+              onInput={(e) =>
+                setPendingFilters({
+                  ...pendingFilters,
+                  city: (e.target as HTMLInputElement).value,
+                })
+              }
               style={{ width: '250px' }}
             />
-            <Button appearance="outline" onClick={() => {}}>
+
+            <Button
+              appearance="outline"
+              onClick={() => {
+                setFilters({ ...pendingFilters });
+                setPage(1);
+              }}
+            >
               Search
             </Button>
           </Flex>
         </Flex>
+
         <Table
           ref={tableRef}
           value={orders}

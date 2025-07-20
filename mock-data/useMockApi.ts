@@ -489,6 +489,7 @@ export function useMockAdminApi(): {
   getOrders: (page?: number, pageSize?: number, filters?: any) => Promise<AdminOrder>;
   updateOrderStatus: (orderId: number, status: string) => Promise<OrderItem>;
   getCategoryDistribution: () => Promise<CategoryDistribution>;
+  getCustomers: () => Promise<User[]>;
   getMaterials: () => Promise<Material[]>;
   getColors: () => Promise<Color[]>;
   deleteOrder: (orderId: number) => Promise<{ success: boolean }>;
@@ -715,6 +716,13 @@ export function useMockAdminApi(): {
       filteredOrders = filteredOrders.filter((o) => o.email.toLowerCase().includes(searchTerm));
     }
 
+    if (filters.city) {
+      const searchTerm = filters.city.toLowerCase();
+      filteredOrders = filteredOrders.filter((o) =>
+        o.shippingInfo?.town?.toLowerCase().includes(searchTerm)
+      );
+    }
+
     filteredOrders.sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
     const totalItems = filteredOrders.length;
@@ -735,16 +743,6 @@ export function useMockAdminApi(): {
 
     if (orderIndex !== -1) {
       mockOrders[orderIndex].status = status;
-
-      if (status === 'shipped') {
-        const order = mockOrders[orderIndex];
-        for (const item of order.cartItems) {
-          const product = toys.find((p) => p.id === item.productId);
-          if (product) {
-            product.availableInStock -= item.quantity;
-          }
-        }
-      }
 
       if (status === 'cancelled') {
         const order = mockOrders[orderIndex];
@@ -973,6 +971,15 @@ export function useMockAdminApi(): {
     mockAdminLogin,
     getOrderStatusBreakdown,
     getCategoryDistribution,
+    getCustomers: async (): Promise<User[]> => {
+      await delay(MOCK_API_DELAY_MS);
+      return mockOrders.map((order) => ({
+        id: order.email,
+        name: `${order.shippingInfo.firstName} ${order.shippingInfo.lastName}`,
+        email: order.email,
+        role: 'customer',
+      }));
+    },
     getColors: async (): Promise<Color[]> => {
       await delay(MOCK_API_DELAY_MS);
       return mockColors;
