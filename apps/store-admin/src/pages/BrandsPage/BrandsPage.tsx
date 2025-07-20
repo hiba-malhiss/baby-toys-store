@@ -14,7 +14,7 @@ import {
   FieldWrapper,
   TextArea,
 } from '@baby-toys/ui-kit/components';
-import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import type { Brand } from '@baby-toys/types';
 
 const BrandsPage: React.FC = () => {
@@ -108,7 +108,7 @@ const BrandsPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPencil}
+            leftIcon={faPen}
             appearance="outline"
             onClick={() => openEditDialog(row)}
           />

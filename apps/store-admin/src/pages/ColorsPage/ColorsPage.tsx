@@ -13,7 +13,7 @@ import {
   FieldWrapper,
   ColorPicker,
 } from '@baby-toys/ui-kit/components';
-import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Color } from '@baby-toys/types/src';
 
 const ColorsPage: React.FC = () => {
@@ -50,9 +50,9 @@ const ColorsPage: React.FC = () => {
         await updateColor(editingColor);
         toast.success('Color updated successfully');
       } else {
-        await addColor({ 
-          name: editingColor?.name || '', 
-          code: editingColor?.code || '#000000' 
+        await addColor({
+          name: editingColor?.name || '',
+          code: editingColor?.code || '#000000',
         });
         toast.success('Color added successfully');
       }
@@ -110,7 +110,7 @@ const ColorsPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPencil}
+            leftIcon={faPen}
             appearance="outline"
             onClick={() => openEditDialog(row)}
           />

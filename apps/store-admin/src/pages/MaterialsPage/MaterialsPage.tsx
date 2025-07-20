@@ -13,7 +13,7 @@ import {
   FieldWrapper,
   TextArea,
 } from '@baby-toys/ui-kit/components';
-import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Material } from '@baby-toys/types/src';
 
 const MaterialsPage: React.FC = () => {
@@ -97,7 +97,7 @@ const MaterialsPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPencil}
+            leftIcon={faPen}
             appearance="outline"
             onClick={() => openEditDialog(row)}
           />
@@ -143,10 +143,7 @@ const MaterialsPage: React.FC = () => {
               placeholder="Add a description..."
             />
           </FieldWrapper>
-          <Button 
-            onClick={handleSaveMaterial} 
-            isDisabled={!editingMaterial?.name}
-          >
+          <Button onClick={handleSaveMaterial} isDisabled={!editingMaterial?.name}>
             {editingMaterial?.id ? 'Update' : 'Add'}
           </Button>
         </Flex>

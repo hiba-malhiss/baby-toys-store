@@ -1,6 +1,6 @@
 import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit/components';
 import { useNavigate } from 'react-router-dom';
-import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { Product } from '@baby-toys/types/src';
 import { formatProductReferences } from '../../utils/productUtils.ts';
@@ -95,7 +95,7 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faPencil}
+            leftIcon={faPen}
             onClick={() => navigate(`/product-form/${row.id}`)}
           />
           <Button

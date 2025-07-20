@@ -14,7 +14,7 @@ import {
   FieldWrapper,
   TextArea,
 } from '@baby-toys/ui-kit/components';
-import { faPencil, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Category } from '@baby-toys/types/src';
 
 const CategoriesPage: React.FC = () => {
@@ -91,7 +91,7 @@ const CategoriesPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPencil}
+            leftIcon={faPen}
             appearance="outline"
             onClick={() => openEditDialog(row)}
           />
