@@ -994,23 +994,46 @@ export function useMockAdminApi(): {
     },
     deleteReview: async (reviewId: string): Promise<{ success: boolean }> => {
       await delay(MOCK_API_DELAY_MS);
-      const index = reviews.findIndex((r) => r.id === reviewId);
+      // First try to find by ID
+      let index = reviews.findIndex((r) => r.id === reviewId);
+      
+      // If not found by ID, try to find by name and comment (fallback for reviews without IDs)
+      if (index === -1) {
+        // Extract name and comment from the generated ID format: 'name-comment...'
+        const match = reviewId.match(/^(.+?)-(.+)$/);
+        if (match) {
+          const [, name, partialComment] = match;
+          index = reviews.findIndex(r => 
+            r.name === name && 
+            r.comment && 
+            r.comment.startsWith(partialComment)
+          );
+        }
+      }
+
       if (index !== -1) {
         reviews.splice(index, 1);
         return { success: true };
       }
       return { success: false };
     },
-    getHomepageContent: async (): Promise<any> => {
+    getHomepageContent: useCallback(async () => {
       await delay(MOCK_API_DELAY_MS);
+      const dynamicCards = infoCards.map((card) =>
+        card.title === 'Free Shipping'
+          ? { ...card, content: `Free shipping for 150$ and up` }
+          : card
+      );
       return {
+        photoShoots,
+        infoCards: dynamicCards,
         banners: [
           'Discover the Joy of Play',
           'Flash sale 30%',
           'Extra discount for loyal customers',
         ],
       };
-    },
+    }, []),
     updateHomepageContent: async (data: any): Promise<any> => {
       await delay(MOCK_API_DELAY_MS);
       // In a real app, you would save this to a database.

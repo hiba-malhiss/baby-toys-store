@@ -7,6 +7,9 @@ import {
   Button,
   Flex,
   FieldWrapper,
+  FileUpload,
+  TextArea,
+  Icon,
 } from '@baby-toys/ui-kit/components';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 
@@ -60,92 +63,79 @@ const SettingsPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex justify="between" className="bts-marginBxxl">
+      <Flex justify="between" className="bts-marginBm">
         <Heading>Settings</Heading>
         <Button onClick={handleSave}>Save Changes</Button>
       </Flex>
       <Flex direction="vertical" spacing="xxl">
         <Card header="Homepage Content" fullWidth>
-          <Heading level={3} className="bts-marginBm">Banners</Heading>
-          <Flex direction="vertical" spacing="m" className="bts-marginBxxl">
-            {homepageContent.banners?.map((banner: string, index: number) => (
-              <FieldWrapper key={index} label={`Banner ${index + 1}`}>
-                <StringInput
-                  value={banner}
-                  onChange={(val) => {
-                    const newBanners = [...homepageContent.banners];
-                    newBanners[index] = val;
-                    handleHomepageContentChange('banners', newBanners);
-                  }}
-                />
-              </FieldWrapper>
-            ))}
-          </Flex>
+          <Flex spacing="xxl" fullWidth>
+            <Flex direction="column" spacing="m" className="bts-marginBxxl">
+              <Heading level="h3" className="bts-marginBm">
+                Info Cards
+              </Heading>
+              {homepageContent.infoCards?.map((card: any, index: number) => (
+                <React.Fragment key={index}>
+                  <FieldWrapper
+                    label={
+                      <>
+                        Title <Icon icon={card.icon} />
+                      </>
+                    }
+                    className="bts-marginBm"
+                  >
+                    <StringInput
+                      value={card.title}
+                      onChange={(val) => {
+                        const newCards = [...homepageContent.infoCards];
+                        newCards[index] = { ...card, title: val };
+                        handleHomepageContentChange('infoCards', newCards);
+                      }}
+                    />
+                  </FieldWrapper>
+                  <FieldWrapper label="Content">
+                    <TextArea
+                      value={card.content}
+                      onChange={(val) => {
+                        const newCards = [...homepageContent.infoCards];
+                        newCards[index] = { ...card, content: val };
+                        handleHomepageContentChange('infoCards', newCards);
+                      }}
+                    />
+                  </FieldWrapper>
+                </React.Fragment>
+              ))}
+            </Flex>
+            <Flex direction="vertical" spacing="m" className="bts-marginBxxl">
+              <Heading level="h3" className="bts-marginBm">
+                Banners
+              </Heading>
+              {homepageContent.banners?.map((banner: string, index: number) => (
+                <FieldWrapper key={index} label={`Banner ${index + 1}`}>
+                  <TextArea
+                    value={banner}
+                    onChange={(val) => {
+                      const newBanners = [...homepageContent.banners];
+                      newBanners[index] = val;
+                      handleHomepageContentChange('banners', newBanners);
+                    }}
+                  />
+                </FieldWrapper>
+              ))}
+            </Flex>
 
-          <Heading level={3} className="bts-marginBm">Info Cards</Heading>
-          <Flex direction="column" spacing="m" className="bts-marginBxxl">
-            {homepageContent.infoCards?.map((card: any, index: number) => (
-              <Card key={index} className="bts-marginBm">
-                <FieldWrapper label="Title" className="bts-marginBm">
-                  <StringInput
-                    value={card.title}
-                    onChange={(val) => {
-                      const newCards = [...homepageContent.infoCards];
-                      newCards[index] = { ...card, title: val };
-                      handleHomepageContentChange('infoCards', newCards);
-                    }}
-                  />
-                </FieldWrapper>
-                <FieldWrapper label="Content">
-                  <StringInput
-                    value={card.content}
-                    onChange={(val) => {
-                      const newCards = [...homepageContent.infoCards];
-                      newCards[index] = { ...card, content: val };
-                      handleHomepageContentChange('infoCards', newCards);
-                    }}
-                  />
-                </FieldWrapper>
-              </Card>
-            ))}
-          </Flex>
-
-          <Heading level={3} className="bts-marginBm">Photo Shoots</Heading>
-          <Flex direction="column" spacing="m">
-            {homepageContent.photoShoots?.map((shoot: any, index: number) => (
-              <Card key={index} className="bts-marginBm">
-                <FieldWrapper label="Title" className="bts-marginBm">
-                  <StringInput
-                    value={shoot.title}
-                    onChange={(val) => {
-                      const newShoots = [...homepageContent.photoShoots];
-                      newShoots[index] = { ...shoot, title: val };
-                      handleHomepageContentChange('photoShoots', newShoots);
-                    }}
-                  />
-                </FieldWrapper>
-                <FieldWrapper label="Description" className="bts-marginBm">
-                  <StringInput
-                    value={shoot.description}
-                    onChange={(val) => {
-                      const newShoots = [...homepageContent.photoShoots];
-                      newShoots[index] = { ...shoot, description: val };
-                      handleHomepageContentChange('photoShoots', newShoots);
-                    }}
-                  />
-                </FieldWrapper>
-                <FieldWrapper label="Image URL">
-                  <StringInput
-                    value={shoot.image}
-                    onChange={(val) => {
-                      const newShoots = [...homepageContent.photoShoots];
-                      newShoots[index] = { ...shoot, image: val };
-                      handleHomepageContentChange('photoShoots', newShoots);
-                    }}
-                  />
-                </FieldWrapper>
-              </Card>
-            ))}
+            <Flex direction="column" spacing="m">
+              <Heading level="h3" className="bts-marginBm">
+                Photo Shoots
+              </Heading>
+              <FileUpload
+                fullWidth
+                images={homepageContent.photoShoots}
+                onImagesChange={(files) => handleHomepageContentChange('photoShoots', files)}
+                mainImage={null}
+                onMainImageChange={() => {}}
+              />
+            </Flex>
           </Flex>
         </Card>
         <Flex spacing="xxl" fullWidth align="stretch">
