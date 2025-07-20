@@ -126,10 +126,9 @@ $transition-slow: 0.35s ease-in-out;
 
 // Common transition properties
 $transition-all: all $transition-normal;
-$transition-colors:
-  color $transition-fast,
-  background-color $transition-fast,
-  border-color $transition-fast;
+$transition-colors: color $transition-fast,
+background-color $transition-fast,
+border-color $transition-fast;
 $transition-transform: transform $transition-normal;
 $transition-opacity: opacity $transition-fast;
 
@@ -271,9 +270,8 @@ $header-min-height: 215px;
   outline: none;
   width: 100%;
   line-height: 1;
-  transition:
-    $transition-colors,
-    box-shadow $transition-fast;
+  transition: $transition-colors,
+  box-shadow $transition-fast;
 
   &:active:not(.is-disabled) {
     border-color: $color-primary;
@@ -326,9 +324,8 @@ $header-min-height: 215px;
 
 // Hover effects
 @mixin hover-lift() {
-  transition:
-    $transition-transform,
-    box-shadow $transition-normal;
+  transition: $transition-transform,
+  box-shadow $transition-normal;
 
   &:hover {
     transform: translateY(-2px);
@@ -386,6 +383,10 @@ $box-shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
   font-size: 12px;
   margin-top: 4px;
   margin-left: 2px;
+}
+
+.bts-bold {
+  font-weight: bold;
 }
 
 @font-face {

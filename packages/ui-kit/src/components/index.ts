@@ -50,6 +50,7 @@ export { default as Option } from './Select/Option';
 export { default as Toggle } from './Toggle/Toggle';
 export { default as ConfirmDialog } from './ConfirmDialog/ConfirmDialog';
 export { default as Table } from './Table/Table';
+export { default as Timeline } from './Timeline/Timeline';
 export type { ButtonAppearance, ButtonColor, ButtonSize } from './Button/Button';
 export { default as RadioButton } from './RadioButtonGroup/RadioButton';
 export { default as KeyValueArrayInput } from './ArrayInput/KeyValueArrayInput';
