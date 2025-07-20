@@ -122,8 +122,9 @@ export const mockPlaceOrder = async (order: OrderPayload): Promise<void> => {
   const token = localStorage.getItem('auth_token');
   let userIdentifier: string | undefined;
 
-  if (token === 'mock-token') {
-    userIdentifier = 'user@example.com';
+  if (token) {
+    const user = await mockFetchUserApi(token);
+    userIdentifier = user.email;
   } else if (order.shippingInfo?.phone) {
     userIdentifier = order.shippingInfo.phone;
   } else {
