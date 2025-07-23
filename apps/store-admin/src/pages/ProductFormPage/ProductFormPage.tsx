@@ -12,7 +12,7 @@ import {
   Option,
   FieldWrapper,
   Heading,
-  FileUpload,
+  ImageUploader,
   Card,
 } from '@baby-toys/ui-kit/components';
 import { KeyValueArrayInput, StringArrayInput } from '@baby-toys/ui-kit/components';
@@ -189,10 +189,14 @@ const ProductFormPage: React.FC = () => {
           <Card fullWidth>
             <Flex direction="vertical" spacing="xxl" fullWidth>
               <FieldWrapper fullWidth label="Upload images">
-                <FileUpload
+                <ImageUploader
+                  existingImages={images.map((img) =>
+                    typeof img === 'string'
+                      ? img
+                      : { url: URL.createObjectURL(img), name: img.name, size: img.size }
+                  )}
+                  onImagesChange={(files) => setImages(files)}
                   multiple
-                  onSelect={(e) => setImages(e.files)}
-                  onRemove={(e) => setImages(images.filter((f) => f.name !== e.file.name))}
                 />
               </FieldWrapper>
 

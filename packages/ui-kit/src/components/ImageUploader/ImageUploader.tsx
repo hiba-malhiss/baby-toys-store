@@ -21,14 +21,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImagesChange,
   multiple = false,
 }) => {
-  // Local previews contain both uploaded files and existing URLs
   const [previewImages, setPreviewImages] = useState<
     { file: File | null; url: string; name: string; size: number }[]
   >([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Initialize previewImages from existingImages on mount or when they change
   useEffect(() => {
     const existingPreviews = existingImages.map((img) => {
       let url = '';
@@ -47,9 +45,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     setPreviewImages(existingPreviews);
   }, [existingImages]);
 
-  // When files are selected or dropped
   const addFiles = (files: File[]) => {
-    // Map files to preview objects
     const newPreviews = files.map((file) => ({
       file,
       url: URL.createObjectURL(file),
@@ -57,7 +53,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       size: file.size,
     }));
 
-    // If multiple allowed, append, else replace
     setPreviewImages((prev) => (multiple ? [...prev, ...newPreviews] : newPreviews));
     onImagesChange?.(
       multiple ? [...previewImages.map((p) => p.file!).filter(Boolean), ...files] : files
@@ -67,7 +62,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
     addFiles(files);
-    e.target.value = ''; // reset input to allow same file upload again
+    e.target.value = '';
   };
 
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
@@ -84,12 +79,10 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const handleDragLeave = () => setIsDragging(false);
 
-  // Remove image by index
   const handleRemove = (index: number) => {
     setPreviewImages((prev) => {
       const newPreviews = [...prev];
       newPreviews.splice(index, 1);
-      // Pass only Files back to onImagesChange
       const files = newPreviews.map((p) => p.file).filter(Boolean) as File[];
       onImagesChange?.(files);
       return newPreviews;
@@ -98,7 +91,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   return (
     <div className={styles.imageUploaderContainer}>
-      <div className={styles.imageUploaderHeader}>
+      <div>
         <Button onClick={() => fileInputRef.current?.click()}>
           Upload {multiple ? 'Images' : 'Image'}
         </Button>
@@ -125,7 +118,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             Drag & drop images here or click to upload
           </div>
         ) : (
-          <div className={styles.imageUploaderFileList}>
+          <div>
             {previewImages.map(({ url, name, size }, index) => (
               <div className={styles.imageUploaderFile} key={url + index}>
                 <img
@@ -134,18 +127,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                   className={styles.imageUploaderThumbnail}
                   loading="lazy"
                 />
-                <div className={styles.imageInfo}>
-                  <span className={styles.imageName} title={name}>
-                    {name.length > 20 ? name.slice(0, 17) + '...' : name}
-                  </span>
-                  <span className={styles.imageSize}>{(size / 1024).toFixed(1)} KB</span>
+                <div className={styles.imageUploaderName} title={name}>
+                  {name.length > 20 ? name.slice(0, 17) + '...' : name}
                 </div>
+                <div className={styles.imageUploaderSize}>{(size / 1024).toFixed(1)} KB</div>
                 <Button
                   appearance="link"
                   onClick={() => handleRemove(index)}
                   leftIcon={faTrashAlt}
                   withoutPadding
-                ></Button>
+                />
               </div>
             ))}
           </div>

@@ -10,7 +10,7 @@ import {
   useToast,
   StringInput,
   Dialog,
-  FileUpload,
+  ImageUploader,
   FieldWrapper,
   TextArea,
 } from '@baby-toys/ui-kit/components';
@@ -138,14 +138,25 @@ const CategoriesPage: React.FC = () => {
             />
           </FieldWrapper>
           <FieldWrapper label="Category icon" fullWidth>
-            <FileUpload
-              fullWidth
-              images={editingCategoryImage ? [editingCategoryImage] : []}
+            <ImageUploader
+              existingImages={
+                editingCategoryImage
+                  ? typeof editingCategoryImage === 'string'
+                    ? [editingCategoryImage]
+                    : [
+                        {
+                          url: URL.createObjectURL(editingCategoryImage),
+                          name: editingCategoryImage.name,
+                          size: editingCategoryImage.size,
+                        },
+                      ]
+                  : []
+              }
               onImagesChange={(files) => setEditingCategoryImage(files[0] || null)}
-              mainImage={null}
-              onMainImageChange={() => {}}
+              multiple={false}
             />
           </FieldWrapper>
+
           <Button onClick={handleSaveCategory} isDisabled={!editingCategory?.name}>
             {editingCategory?.id ? 'Update' : 'Add'}
           </Button>
@@ -159,6 +170,7 @@ const CategoriesPage: React.FC = () => {
         header="Confirmation"
         danger
       />
+      ;
     </AdminLayout>
   );
 };

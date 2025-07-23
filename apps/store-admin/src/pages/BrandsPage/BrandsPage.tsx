@@ -10,7 +10,7 @@ import {
   useToast,
   StringInput,
   Dialog,
-  FileUpload,
+  ImageUploader,
   FieldWrapper,
   TextArea,
 } from '@baby-toys/ui-kit/components';
@@ -174,12 +174,10 @@ const BrandsPage: React.FC = () => {
             />
           </FieldWrapper>
           <FieldWrapper label="Logo" fullWidth>
-            <FileUpload
-              fullWidth
-              images={logoFile ? [logoFile] : editingBrand?.logo ? [editingBrand.logo] : []}
+            <ImageUploader
+              existingImages={editingBrand?.logo ? [editingBrand.logo] : []}
               onImagesChange={(files) => setLogoFile(files[0] || null)}
-              mainImage={null}
-              onMainImageChange={() => {}}
+              multiple={false}
             />
           </FieldWrapper>
           <Button onClick={handleSaveBrand} isDisabled={!editingBrand?.name}>

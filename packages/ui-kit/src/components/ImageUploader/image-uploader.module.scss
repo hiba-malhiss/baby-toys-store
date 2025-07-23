@@ -1,5 +1,3 @@
-@use 'sass:color';
-
 .imageUploader {
   &-container {
     display: flex;
@@ -8,7 +6,7 @@
     font-family: 'Comfortaa', sans-serif;
   }
 
-  &-ceader {
+  &-header {
     display: flex;
     justify-content: flex-start;
   }
@@ -42,13 +40,6 @@
     width: 100%;
     user-select: none;
     pointer-events: none;
-  }
-
-  &-fileList {
-    display: flex;
-    flex-wrap: wrap;
-    gap: $spacing-md;
-    width: 100%;
   }
 
   &-file {
