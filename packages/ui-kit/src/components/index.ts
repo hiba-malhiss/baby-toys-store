@@ -58,5 +58,4 @@ export { default as KeyValueArrayInput } from './ArrayInput/KeyValueArrayInput';
 export { default as StringArrayInput } from './ArrayInput/StringArrayInput';
 export type { RadioOption } from './RadioButtonGroup/RadioButtonGroup';
 export type { BreadcrumbItemData } from './Breadcrumb/BreadcrumbItem.tsx';
-export { default as FileUpload } from './FileUpload/FileUpload';
 export { default as ProgressBar } from './ProgressBar/ProgressBar';
