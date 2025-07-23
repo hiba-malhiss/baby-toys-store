@@ -1,5 +1,5 @@
 import React from 'react';
-import { Menu, Button, Toast } from '@baby-toys/ui-kit/components';
+import { Menu, Button, Toast, BouncingDotsLoader } from '@baby-toys/ui-kit/components';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useAuth } from '../../../context/AuthContext.tsx';
@@ -22,7 +22,10 @@ const menuItems = [
   { label: 'Settings', route: '/settings' },
 ];
 
-const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const AdminLayout: React.FC<{ children: React.ReactNodem; isLoading?: boolean }> = ({
+  children,
+  isLoading,
+}) => {
   const { logout } = useAuth();
   const navigate = useNavigate();
 
@@ -47,7 +50,9 @@ const AdminLayout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
             Logout
           </Button>
         </aside>
-        <main className={styles.adminLayoutContent}>{children}</main>
+        <main className={styles.adminLayoutContent}>
+          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl" /> : children}
+        </main>
       </div>
     </>
   );
