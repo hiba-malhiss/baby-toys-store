@@ -92,7 +92,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   return (
     <div className={styles.imageUploaderContainer}>
       <div>
-        <Button onClick={() => fileInputRef.current?.click()}>
+        <Button onClick={() => fileInputRef.current?.click()} color="secondary-light">
           Upload {multiple ? 'Images' : 'Image'}
         </Button>
         <input
