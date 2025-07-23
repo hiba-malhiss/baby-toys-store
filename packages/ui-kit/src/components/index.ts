@@ -44,6 +44,7 @@ export { default as TextArea } from './TextArea/TextArea';
 export { default as Toast } from './Toast/Toast';
 export { ToastProvider, useToast } from './Toast/ToastContext';
 export { default as Tooltip } from './Tooltip/Tooltip';
+export { default as ImageUploader } from './ImageUploader/ImageUploader';
 export { default as ViewSwitcher } from './ViewSwitcher/ViewSwitcher';
 export { default as TabBarItem } from './TabBar/TabBarItem';
 export { default as Option } from './Select/Option';

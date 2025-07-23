@@ -7,7 +7,7 @@ import {
   Button,
   Flex,
   FieldWrapper,
-  FileUpload,
+  ImageUploader,
   TextArea,
   Icon,
 } from '@baby-toys/ui-kit/components';
@@ -128,12 +128,10 @@ const SettingsPage: React.FC = () => {
               <Heading level="h3" className="bts-marginBm">
                 Photo Shoots
               </Heading>
-              <FileUpload
-                fullWidth
-                images={homepageContent.photoShoots}
+              <ImageUploader
+                existingImages={homepageContent.photoShoots || []}
                 onImagesChange={(files) => handleHomepageContentChange('photoShoots', files)}
-                mainImage={null}
-                onMainImageChange={() => {}}
+                multiple={true}
               />
             </Flex>
           </Flex>
