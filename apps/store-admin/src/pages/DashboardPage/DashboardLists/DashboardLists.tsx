@@ -26,13 +26,15 @@ const DashboardLists: React.FC<DashboardListsProps> = ({ lowStock, topSelling, r
 
     {topSelling.length > 0 && (
       <Card size="small" header="Top Selling Products">
-        <ul>
-          {topSelling.map((product) => (
-            <li key={product.id}>
-              {product.name} ({product.sales} sales)
-            </li>
-          ))}
-        </ul>
+        {topSelling.map((product) => (
+          <li key={product.id} className={styles.topProductItem}>
+            <img src={product.mainImage} alt={product.name} className={styles.productImage} />
+            <div className={styles.productDetails}>
+              <div className={styles.productName}>{product.name}</div>
+              <div className={styles.productSales}>{product.sales} sales</div>
+            </div>
+          </li>
+        ))}
       </Card>
     )}
 
