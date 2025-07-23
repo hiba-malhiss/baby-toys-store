@@ -118,28 +118,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             Drag & drop images here or click to upload
           </div>
         ) : (
-          <div>
-            {previewImages.map(({ url, name, size }, index) => (
-              <div className={styles.imageUploaderFile} key={url + index}>
-                <img
-                  src={url}
-                  alt={name}
-                  className={styles.imageUploaderThumbnail}
-                  loading="lazy"
-                />
-                <div className={styles.imageUploaderName} title={name}>
-                  {name.length > 20 ? name.slice(0, 17) + '...' : name}
-                </div>
-                <div className={styles.imageUploaderSize}>{(size / 1024).toFixed(1)} KB</div>
-                <Button
-                  appearance="link"
-                  onClick={() => handleRemove(index)}
-                  leftIcon={faTrashAlt}
-                  withoutPadding
-                />
+          previewImages.map(({ url, name, size }, index) => (
+            <div className={styles.imageUploaderFile} key={url + index}>
+              <img src={url} alt={name} className={styles.imageUploaderThumbnail} loading="lazy" />
+              <div className={styles.imageUploaderName} title={name}>
+                {name.length > 20 ? name.slice(0, 17) + '...' : name}
               </div>
-            ))}
-          </div>
+              <div className={styles.imageUploaderSize}>{(size / 1024).toFixed(1)} KB</div>
+              <Button
+                appearance="link"
+                onClick={() => handleRemove(index)}
+                leftIcon={faTrashAlt}
+                withoutPadding
+              />
+            </div>
+          ))
         )}
       </div>
     </div>
