@@ -1,0 +1,56 @@
+import { useState, type ReactNode } from 'react';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { Button, Drawer, Flex } from '@baby-toys/ui-kit/components';
+import styles from './header.module.scss';
+import { useNavigate } from 'react-router-dom';
+
+interface BurgerMenuProps {
+  authButtons: ReactNode;
+}
+
+const BurgerMenu = ({ authButtons }: BurgerMenuProps) => {
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
+  const toggleMenu = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const handleClose = () => {
+    setIsOpen(false);
+  };
+
+  return (
+    <div className={styles.burgerMenu}>
+      <Button
+        appearance="link"
+        color="light"
+        size="large"
+        leftIcon={faBars}
+        onClick={toggleMenu}
+        className={styles.burgerIcon}
+      ></Button>
+      <Drawer
+        visible={isOpen}
+        onClose={handleClose}
+        position="right"
+        appendTo={document.body}
+        header={
+          <img
+            src="/assets/kit-images/logo.png"
+            alt="logo"
+            className={styles.headerLogo}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/')}
+          />
+        }
+      >
+        <Flex align="center" direction="vertical" spacing="s">
+          {authButtons}
+        </Flex>
+      </Drawer>
+    </div>
+  );
+};
+
+export default BurgerMenu;

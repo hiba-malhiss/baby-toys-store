@@ -26,7 +26,7 @@ const PolicyCardsSection = () => {
   }
 
   return (
-    <Flex spacing="xxl" align="center" fullWidth justify="center">
+    <Flex spacing="xxl" align="center" fullWidth justify="center" isResponsive>
       {infoCards.map((card, index) => (
         <InfoCard key={index} card={card} fullWidth />
       ))}

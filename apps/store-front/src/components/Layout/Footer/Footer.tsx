@@ -55,7 +55,7 @@ const Footer = () => {
         </Flex>
       </Flex>
 
-      <Flex direction="vertical">
+      <Flex direction="vertical" className={styles.footerCustomerService}>
         <Heading level="h3" className={styles.footerSectionHeader}>
           Customer Service
         </Heading>

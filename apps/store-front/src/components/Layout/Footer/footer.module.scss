@@ -43,13 +43,17 @@
   }
 }
 
-@media (max-width: 630px) {
+@media (max-width: 768px) {
   .footer {
-    padding: 24px 8px;
+    padding: 32px 20px;
     font-size: 0.9rem;
   }
   .footer-description {
     font-size: 0.95rem;
     padding-bottom: 16px;
+  }
+
+  .footer-customerService {
+    display: none;
   }
 }

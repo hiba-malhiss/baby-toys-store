@@ -10,6 +10,8 @@ import { useAuth } from '../../../context/AuthContext.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import { getProductCategories } from '@mock-data/useMockApi';
 import type { Category } from '@baby-toys/types';
+import clsx from 'clsx';
+import BurgerMenu from './BurgerMenu.tsx';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
@@ -41,6 +43,32 @@ const Header = () => {
 
   const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
 
+  const authButtons = (isDarkMode = true) => (
+    <>
+      {isLoggedIn && (
+        <Button
+          fullWidth
+          appearance="link"
+          color={isDarkMode ? 'light' : 'primary'}
+          onClick={() => navigate('/orders-history')}
+        >
+          My Orders
+        </Button>
+      )}
+      {isLoggedIn && (
+        <Button
+          fullWidth
+          appearance="link"
+          color={isDarkMode ? 'light' : 'primary'}
+          onClick={() => navigate('/admin')}
+        >
+          Admin
+        </Button>
+      )}
+      <AuthButtonsWithDialogs isDarkMode={isDarkMode} />
+    </>
+  );
+
   return (
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
@@ -48,39 +76,22 @@ const Header = () => {
           <Icon icon={faTruckFast} color={IconColor.light} />
           <span>{shipping?.headerMessage}</span>
         </Flex>
-        <Flex spacing="xxxxl">
-          {isLoggedIn && (
-            <Button
-              withoutPadding
-              appearance="link"
-              color="light"
-              onClick={() => navigate('/orders-history')}
-            >
-              My Orders
-            </Button>
-          )}
-          {isLoggedIn && (
-            <Button
-              withoutPadding
-              appearance="link"
-              color="light"
-              onClick={() => navigate('/admin')}
-            >
-              Admin
-            </Button>
-          )}
-          <AuthButtonsWithDialogs />
-        </Flex>
+        <div className="bts-hideOnMobile">
+          <Flex spacing="xxxxl">{authButtons(true)}</Flex>
+        </div>
+        <BurgerMenu authButtons={authButtons(false)} />
       </Flex>
 
       <Flex className={styles.headerMain} justify="stretch" align="center" wrap fullWidth>
-        <img
-          src="/assets/kit-images/logo.png"
-          alt="logo"
-          className={styles.headerLogo}
-          style={{ cursor: 'pointer' }}
-          onClick={() => navigate('/')}
-        />
+        <div className="bts-hideOnMobile">
+          <img
+            src="/assets/kit-images/logo.png"
+            alt="logo"
+            className={styles.headerLogo}
+            style={{ cursor: 'pointer' }}
+            onClick={() => navigate('/')}
+          />
+        </div>
 
         <div className={styles.headerSearch}>
           <SearchInputWithUrl />
@@ -100,7 +111,13 @@ const Header = () => {
       </Flex>
 
       {!isShopPage && (
-        <Flex fullWidth spacing="xxxl" wrap justify="center" align="center">
+        <Flex
+          fullWidth
+          spacing="xxxl"
+          justify="center"
+          align="center"
+          className={clsx(styles.headerCategories, 'bts-hideScrollbar')}
+        >
           <Button
             size="large"
             withoutPadding

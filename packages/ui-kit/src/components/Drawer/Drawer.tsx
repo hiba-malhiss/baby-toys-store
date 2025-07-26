@@ -87,6 +87,7 @@ const Drawer: React.FC<DrawerProps> = ({
             <Button
               appearance="link"
               color="secondary"
+              size="large"
               onClick={onClose}
               leftIcon={faTimes}
               className={styles.drawerCloseBtn}

@@ -7,6 +7,14 @@
   min-height: $header-min-height;
   box-shadow: 0 2px 4px 0 rgba($color-text-primary, 0.03);
 
+  &-categories {
+    overflow: auto;
+
+    button {
+      min-width: max-content;
+    }
+  }
+
   &-announcement {
     background-image: url('/assets/images/wave.svg');
     background-position: center;
@@ -40,7 +48,7 @@
     font-size: 0.95rem;
   }
   .header-main {
-    padding: 0 24px;
+    padding: 8px;
     justify-content: center;
   }
   .header-logo {
@@ -61,5 +69,15 @@
 
   .header-logo {
     height: 32px;
+  }
+}
+
+.burgerMenu {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .burgerMenu {
+    display: block;
   }
 }

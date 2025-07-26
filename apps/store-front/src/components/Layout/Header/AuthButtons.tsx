@@ -5,7 +5,7 @@ import { Button } from '@baby-toys/ui-kit/components';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 
-const AuthButtonsWithDialogs: React.FC = () => {
+const AuthButtonsWithDialogs: React.FC = ({ isDarkMode }: { isDarkMode?: boolean }) => {
   const { isOpen, open, close } = useLoginDialogStore();
   const [isRegisterOpen, setRegisterOpen] = React.useState(false);
   const { isLoggedIn, logout } = useAuth();
@@ -14,20 +14,30 @@ const AuthButtonsWithDialogs: React.FC = () => {
     <>
       {!isLoggedIn ? (
         <>
-          <Button withoutPadding appearance="link" color="light" onClick={open}>
+          <Button
+            withoutPadding
+            appearance="link"
+            color={isDarkMode ? 'light' : 'primary'}
+            onClick={open}
+          >
             Login
           </Button>
           <Button
             withoutPadding
             appearance="link"
-            color="light"
+            color={isDarkMode ? 'light' : 'primary'}
             onClick={() => setRegisterOpen(true)}
           >
             Register
           </Button>
         </>
       ) : (
-        <Button withoutPadding appearance="link" color="light" onClick={logout}>
+        <Button
+          withoutPadding
+          appearance="link"
+          color={isDarkMode ? 'light' : 'primary'}
+          onClick={logout}
+        >
           Logout
         </Button>
       )}
