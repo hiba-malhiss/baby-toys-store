@@ -9,8 +9,9 @@ interface IconProps {
   size?: IconSize;
   color?: IconColor;
   isRotating?: boolean;
-  isSpinning?: boolean; // New prop
+  isSpinning?: boolean;
   className?: string;
+  badge?: string | number;
 }
 
 const Icon = ({
@@ -20,6 +21,7 @@ const Icon = ({
   isRotating = false,
   isSpinning = false,
   className,
+  badge,
 }: IconProps) => {
   const [svgHtml, setSvgHtml] = useState('');
 
@@ -30,22 +32,18 @@ const Icon = ({
 
   const iconClass = useMemo(
     () =>
-      clsx(
-        styles.icon,
-        styles[`icon--${color}Color`],
-        styles[`icon--${size}Size`],
-        {
-          [styles.isRotating]: isRotating,
-        },
-        {
-          'fa-spin': isSpinning,
-        }
-      ),
+      clsx(styles.icon, styles[`icon--${color}Color`], styles[`icon--${size}Size`], {
+        [styles.isRotating]: isRotating,
+        'fa-spin': isSpinning,
+      }),
     [color, size, isRotating, isSpinning]
   );
 
   return (
-    <span className={clsx(className, iconClass)} dangerouslySetInnerHTML={{ __html: svgHtml }} />
+    <span className={clsx(styles.iconWrapper, className)}>
+      <span className={iconClass} dangerouslySetInnerHTML={{ __html: svgHtml }} />
+      {!!badge && <span className={styles.iconBadge}>{badge}</span>}
+    </span>
   );
 };
 

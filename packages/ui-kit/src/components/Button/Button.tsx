@@ -35,6 +35,7 @@ type ButtonProps = {
   isLoading?: boolean;
   fullWidth?: boolean;
   className?: string;
+  iconBadge?: string;
   align?: string;
 };
 
@@ -58,6 +59,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       className,
       align,
       iconColor,
+      iconBadge,
       ...rest
     },
     ref
@@ -96,7 +98,13 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           ) : (
             <>
               {leftIcon && (
-                <Icon color={iconColor} icon={leftIcon} className={styles.buttonIcon} size={size} />
+                <Icon
+                  color={iconColor}
+                  icon={leftIcon}
+                  className={styles.buttonIcon}
+                  size={size}
+                  badge={iconBadge}
+                />
               )}
               {children}
               {rightIcon && (
@@ -105,6 +113,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                   icon={rightIcon}
                   className={styles.buttonIcon}
                   size={size}
+                  badge={iconBadge}
                 />
               )}
             </>

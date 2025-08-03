@@ -8,7 +8,6 @@ export { default as BreadcrumbItem } from './Breadcrumb/BreadcrumbItem';
 export { default as Button } from './Button/Button';
 export { default as Card } from './Card/Card';
 export { default as Carousel } from './Carousel/Carousel';
-export { default as CartButton } from './CartButton/CartButton';
 export { default as Chip } from './Chip/Chip';
 export { default as Dialog } from './Dialog/Dialog';
 export { default as Divider } from './Divider/Divider';

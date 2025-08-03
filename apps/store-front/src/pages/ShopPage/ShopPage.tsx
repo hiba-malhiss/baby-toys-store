@@ -64,7 +64,13 @@ const ShopPage = () => {
         onPaginationChange={handlePaginationChange}
         minColWidth={250}
         topBar={
-          <Flex>
+          <Flex className={styles.topBar}>
+            <SideFilters
+              isDrawer
+              className={styles.shopPageFilterIcon}
+              categoriesOptions={categoriesOptions}
+              onFiltersChange={setSideFilters}
+            />
             <SortProductsWithUrl onSort={setSortBy} />
           </Flex>
         }

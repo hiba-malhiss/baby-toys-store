@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
-import { faHeart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
-import { Icon, IconColor, Flex, CartButton, Button } from '@baby-toys/ui-kit/components';
+import { faHeart, faShoppingCart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { Icon, IconColor, Flex, Button } from '@baby-toys/ui-kit/components';
 import styles from './header.module.scss';
 import SearchInputWithUrl from './SearchInputWithUrl.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
@@ -98,7 +98,15 @@ const Header = () => {
         </div>
 
         <Flex spacing="xl" align="center">
-          <CartButton itemCount={getTotalItemsInCart()} />
+          <Button
+            appearance="link"
+            size="xlarge"
+            withoutPadding
+            iconColor={IconColor.grayDark}
+            iconBadge={getTotalItemsInCart()}
+            leftIcon={faShoppingCart}
+            onClick={() => navigate('/shopping-cart')}
+          />
           <Button
             appearance="link"
             size="xlarge"

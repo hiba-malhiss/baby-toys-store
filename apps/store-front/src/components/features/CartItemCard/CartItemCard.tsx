@@ -45,7 +45,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           onClick={() => onRemove(id)}
         ></Button>
       </Flex>
-      <span className={styles.cartItemCardPrice}>{price}</span>
+      <span className={styles.cartItemCardPrice}>${(price * quantity).toFixed(2)}</span>
     </div>
   );
 };

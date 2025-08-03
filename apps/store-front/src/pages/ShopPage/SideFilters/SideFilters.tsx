@@ -11,6 +11,7 @@ import {
   Accordion,
   BouncingDotsLoader,
   NoDataFound,
+  Drawer,
 } from '@baby-toys/ui-kit/components';
 import { useShopFilterOptions } from '../../../hooks/useShopFilterOptions';
 import { useFilterChips } from '../shop-page.utils.ts';
@@ -19,18 +20,14 @@ import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 import { type ShopFilters, urlFilterParsers } from './side-filters.utils.ts';
 import { useDebounce } from '@baby-toys/ui-kit/hooks';
 import type { Category } from '@baby-toys/types';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
 
-type SideFiltersProps = {
+export const SideFilters: React.FC<{
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
   categoriesOptions?: Category[];
-};
-
-export const SideFilters: React.FC<SideFiltersProps> = ({
-  className,
-  onFiltersChange,
-  categoriesOptions = [],
-}) => {
+  isDrawer?: boolean;
+}> = ({ className, onFiltersChange, categoriesOptions = [], isDrawer = false }) => {
   const {
     colors,
     brands,
@@ -56,6 +53,8 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   const filtersCount = filterChips.length;
   const debouncedFilters = useDebounce(urlFilters, 400);
 
+  const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
+
   useEffect(() => {
     if (!filterLoading) {
       onFiltersChange(debouncedFilters);
@@ -67,9 +66,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
   };
 
   const clearFilters = () => {
-    updateUrlFilters({
-      ...defaultFilters,
-    });
+    updateUrlFilters({ ...defaultFilters });
   };
 
   const removeFilter = (key: keyof ShopFilters) => {
@@ -80,11 +77,148 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
     }
   };
 
+  const content = (
+    <Flex direction="vertical" spacing="m" fullWidth>
+      <Flex wrap spacing="m" fullWidth className={styles.sideFilterChipsContainer}>
+        {filterChips.map(({ key, label }) => (
+          <Chip
+            key={key}
+            appearance="secondary-outline"
+            label={label}
+            onClose={() => removeFilter(key)}
+          />
+        ))}
+        {filtersCount < 1 && (
+          <NoDataFound
+            subtext="No filters applied"
+            align="start"
+            withoutPadding
+            withoutHeaderPadding
+          />
+        )}
+      </Flex>
+
+      <Divider className="bts-marginTxl" />
+
+      <Accordion header="Category" withoutPadding withoutHeaderPadding>
+        <RadioButtonGroup
+          name="category"
+          selectedValue={urlFilters.categoryId}
+          onChange={(val) => handleFilterChange('categoryId', val)}
+          direction="vertical"
+          align="start"
+          spacing="l"
+          className="bts-marginTm"
+        >
+          {categoriesOptions.map(({ name, id }) => (
+            <RadioButton key={id} value={id}>
+              {name}
+            </RadioButton>
+          ))}
+        </RadioButtonGroup>
+      </Accordion>
+
+      <Accordion header="Color" withoutPadding withoutHeaderPadding>
+        <RadioButtonGroup
+          name="color"
+          selectedValue={urlFilters.colorId}
+          onChange={(val) => handleFilterChange('colorId', val)}
+          direction="horizontal"
+          align="start"
+          spacing="l"
+          appearance="color-swatch"
+          className="bts-marginTm"
+        >
+          <RadioButton key="multi" value="multi" name="color" isRainbow />
+          {colors.map(({ value }) => (
+            <RadioButton key={value} value={value} name="color" swatchColor={value} />
+          ))}
+        </RadioButtonGroup>
+      </Accordion>
+
+      <Accordion header="Brand" withoutPadding withoutHeaderPadding>
+        <RadioButtonGroup
+          name="brand"
+          selectedValue={urlFilters.brandId}
+          onChange={(val) => handleFilterChange('brandId', val)}
+          direction="vertical"
+          spacing="l"
+          align="start"
+          className="bts-marginTm"
+        >
+          {brands.map(({ label, value }) => (
+            <RadioButton key={value} value={value}>
+              {label}
+            </RadioButton>
+          ))}
+        </RadioButtonGroup>
+      </Accordion>
+
+      <Accordion header="Material" withoutPadding withoutHeaderPadding>
+        <RadioButtonGroup
+          name="material"
+          selectedValue={urlFilters.materialId}
+          onChange={(val) => handleFilterChange('materialId', val)}
+          direction="vertical"
+          spacing="l"
+          align="start"
+          className="bts-marginTm"
+        >
+          {materials.map(({ label, value }) => (
+            <RadioButton key={value} value={value}>
+              {label}
+            </RadioButton>
+          ))}
+        </RadioButtonGroup>
+      </Accordion>
+
+      <Accordion header="Price" withoutPadding withoutHeaderPadding>
+        <Slider
+          min={defaultPriceRange?.[0]}
+          max={defaultPriceRange?.[1]}
+          step={1}
+          range
+          value={urlFilters.priceRange || defaultPriceRange}
+          className="bts-marginTxxl"
+          onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
+        />
+      </Accordion>
+    </Flex>
+  );
+
   if (filterLoading) {
     return (
       <Card className={className} header="Filters">
         <BouncingDotsLoader size="medium" />
       </Card>
+    );
+  }
+
+  if (isDrawer) {
+    return (
+      <>
+        <div className={className}>
+          <Button
+            appearance="link"
+            color="secondary"
+            size="xlarge"
+            leftIcon={faFilter}
+            withoutPadding
+            isSelected={filtersCount > 0}
+            iconBadge={filtersCount}
+            onClick={() => setIsDrawerOpen(true)}
+          />
+        </div>
+        <Drawer
+          visible={isDrawerOpen}
+          onClose={() => setIsDrawerOpen(false)}
+          position="right"
+          appendTo={document.body}
+          header={<span>Filters ({filtersCount})</span>}
+        >
+          {content}
+        </Drawer>
+      </>
     );
   }
 
@@ -108,112 +242,7 @@ export const SideFilters: React.FC<SideFiltersProps> = ({
       }
       className={className}
     >
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex wrap spacing="m" fullWidth className={styles.sideFilterChipsContainer}>
-          {filterChips.map(({ key, label }) => (
-            <Chip
-              key={key}
-              appearance="secondary-outline"
-              label={label}
-              onClose={() => removeFilter(key)}
-            />
-          ))}
-          {filtersCount < 1 && (
-            <NoDataFound
-              subtext="No filters applied"
-              align="start"
-              withoutPadding
-              withoutHeaderPadding
-            />
-          )}
-        </Flex>
-
-        <Divider className="bts-marginTxl" />
-
-        <Accordion header="Category" withoutPadding withoutHeaderPadding>
-          <RadioButtonGroup
-            name="category"
-            selectedValue={urlFilters.categoryId}
-            onChange={(val) => handleFilterChange('categoryId', val)}
-            direction="vertical"
-            align="start"
-            spacing="l"
-            className="bts-marginTm"
-          >
-            {categoriesOptions.map(({ name, id }) => (
-              <RadioButton key={id} value={id}>
-                {name}
-              </RadioButton>
-            ))}
-          </RadioButtonGroup>
-        </Accordion>
-
-        <Accordion header="Color" withoutPadding withoutHeaderPadding>
-          <RadioButtonGroup
-            name="color"
-            selectedValue={urlFilters.colorId}
-            onChange={(val) => handleFilterChange('colorId', val)}
-            direction="horizontal"
-            align="start"
-            spacing="l"
-            appearance="color-swatch"
-            className="bts-marginTm"
-          >
-            <RadioButton key="multi" value="multi" name="color" isRainbow />
-            {colors.map(({ value }) => (
-              <RadioButton key={value} value={value} name="color" swatchColor={value} />
-            ))}
-          </RadioButtonGroup>
-        </Accordion>
-
-        <Accordion header="Brand" withoutPadding withoutHeaderPadding>
-          <RadioButtonGroup
-            name="brand"
-            selectedValue={urlFilters.brandId}
-            onChange={(val) => handleFilterChange('brandId', val)}
-            direction="vertical"
-            spacing="l"
-            align="start"
-            className="bts-marginTm"
-          >
-            {brands.map(({ label, value }) => (
-              <RadioButton key={value} value={value}>
-                {label}
-              </RadioButton>
-            ))}
-          </RadioButtonGroup>
-        </Accordion>
-
-        <Accordion header="Material" withoutPadding withoutHeaderPadding>
-          <RadioButtonGroup
-            name="material"
-            selectedValue={urlFilters.materialId}
-            onChange={(val) => handleFilterChange('materialId', val)}
-            direction="vertical"
-            spacing="l"
-            align="start"
-            className="bts-marginTm"
-          >
-            {materials.map(({ label, value }) => (
-              <RadioButton key={value} value={value}>
-                {label}
-              </RadioButton>
-            ))}
-          </RadioButtonGroup>
-        </Accordion>
-
-        <Accordion header="Price" withoutPadding withoutHeaderPadding>
-          <Slider
-            min={defaultPriceRange?.[0]}
-            max={defaultPriceRange?.[1]}
-            step={1}
-            range
-            value={urlFilters.priceRange || defaultPriceRange}
-            className="bts-marginTxxl"
-            onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
-          />
-        </Accordion>
-      </Flex>
+      {content}
     </Card>
   );
 };

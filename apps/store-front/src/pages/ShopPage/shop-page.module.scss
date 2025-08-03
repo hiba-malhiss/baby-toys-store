@@ -25,4 +25,23 @@
     min-width: 200px;
     width: auto;
   }
+
+  &-filterIcon {
+    display: none;
+  }
+
+}
+
+@media (max-width: 768px) {
+  .shopPage {
+    grid-template-columns: 1fr;
+  }
+
+  .shopPage-rightSide {
+    display: none;
+  }
+
+  .shopPage-filterIcon {
+    display: block;
+  }
 }
