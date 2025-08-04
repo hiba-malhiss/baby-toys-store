@@ -225,7 +225,7 @@ export const SideFilters: React.FC<{
   return (
     <Card
       header={
-        <Flex justify="between" align="center" fullWidth>
+        <Flex justify="between" align="center" fullWidth spacing="l">
           <span>Filters {filtersCount > 0 && `(${filtersCount})`}</span>
           {filtersCount > 0 && (
             <Button

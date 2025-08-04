@@ -34,7 +34,7 @@ const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({
           orientation="horizontal"
           showNavigation
           responsiveOptions={[
-            { breakpoint: '900', numVisible: 3 },
+            { breakpoint: '1000', numVisible: 3 },
             { breakpoint: '600', numVisible: 2 },
             { breakpoint: '400', numVisible: 1 },
           ]}

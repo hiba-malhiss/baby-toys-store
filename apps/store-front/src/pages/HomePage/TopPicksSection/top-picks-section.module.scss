@@ -10,12 +10,12 @@
   gap: 24px;
   margin-bottom: 32px;
 
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-medium) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     gap: 16px;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: $breakpoint-small) {
     grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
