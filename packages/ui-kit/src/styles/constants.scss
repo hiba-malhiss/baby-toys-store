@@ -406,7 +406,7 @@ $box-shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
 .bts-hideScrollbar {
   overflow: auto;
   scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+  -ms-overflow-style: none; /* IE and Edge */
 }
 
 .bts-hideScrollbar::-webkit-scrollbar {

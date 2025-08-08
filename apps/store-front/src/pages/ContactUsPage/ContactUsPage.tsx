@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import {
-  faPhone,
-  faEnvelope,
-  faMapMarkerAlt,
-  faClock,
-  faCalendarAlt,
-} from '@fortawesome/free-solid-svg-icons';
+import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './contact-us-page.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { mockFetchContactInfo, mockSendContactMessage } from '@mock-data/useMockApi';
 import {
-  Flex,
   TextArea,
   InfoCard,
   Heading,
@@ -23,14 +16,6 @@ import { PageContainer } from '../../components/layout/PageContainer/PageContain
 
 // Mapping config by ID
 const contactInfoConfig: Record<string, { icon: any; appearance: string }> = {
-  'work-days': {
-    icon: faCalendarAlt,
-    appearance: 'secondary',
-  },
-  'work-times': {
-    icon: faClock,
-    appearance: 'secondary',
-  },
   phone: {
     icon: faPhone,
     appearance: 'primary',
@@ -56,14 +41,17 @@ const ContactUsPage: React.FC = () => {
 
   useEffect(() => {
     mockFetchContactInfo().then((data) => {
-      const enriched = data.map((item) => {
-        const config = contactInfoConfig[item.id] || {};
-        return {
-          ...item,
-          icon: config.icon,
-          appearance: config.appearance,
-        };
-      });
+      const enriched = data
+        .map((item) => {
+          if (!contactInfoConfig[item.id]) return null;
+          const config = contactInfoConfig[item.id] || {};
+          return {
+            ...item,
+            icon: config.icon,
+            appearance: config.appearance,
+          };
+        })
+        .filter(Boolean);
       setContactInfo(enriched);
     });
   }, []);
@@ -102,11 +90,11 @@ const ContactUsPage: React.FC = () => {
 
   return (
     <PageContainer header="Contact">
-      <Flex spacing="xxl" fullWidth wrap>
+      <div className={styles.contactUsPageCards}>
         {contactInfo.map((item) => (
           <InfoCard key={item.id} card={item} size="medium" fullWidth />
         ))}
-      </Flex>
+      </div>
       <div className={styles.contactUsPage}>
         <Heading level="h2">Contact us</Heading>
         <FieldWrapper label="Name" error={errors.name} fullWidth>
