@@ -125,33 +125,35 @@ const Header = () => {
       </Flex>
 
       {!isShopPage && (
-        <Flex
-          fullWidth
-          spacing="xxxl"
-          justify="center"
-          align="center"
-          className={clsx(styles.headerCategories, 'bts-hideScrollbar')}
-        >
-          <Button
-            size="large"
-            withoutPadding
-            appearance="link"
-            onClick={() => handleCategoryClick()}
+        <div className={clsx('bts-paddingLs bts-paddingRs')}>
+          <Flex
+            fullWidth
+            spacing="xxxl"
+            justify="center"
+            align="center"
+            className={clsx(styles.headerCategories, 'bts-hideScrollbar')}
           >
-            All Toys
-          </Button>
-          {categories.map(({ name, id }) => (
             <Button
-              withoutPadding
-              key={name}
               size="large"
+              withoutPadding
               appearance="link"
-              onClick={() => handleCategoryClick(id)}
+              onClick={() => handleCategoryClick()}
             >
-              {name}
+              All Toys
             </Button>
-          ))}
-        </Flex>
+            {categories.map(({ name, id }) => (
+              <Button
+                withoutPadding
+                key={name}
+                size="large"
+                appearance="link"
+                onClick={() => handleCategoryClick(id)}
+              >
+                {name}
+              </Button>
+            ))}
+          </Flex>
+        </div>
       )}
     </header>
   );
