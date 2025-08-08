@@ -29,7 +29,7 @@
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: $breakpoint-large) {
   .footer {
     font-size: 0.95rem;
     gap: 20px;
@@ -43,7 +43,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: $breakpoint-medium) {
   .footer {
     padding: 32px 20px;
     font-size: 0.9rem;

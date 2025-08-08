@@ -413,13 +413,14 @@ $box-shadow-xl: 0 16px 20px 0 rgba($color-text-primary, 0.24);
   display: none; /* Chrome, Safari and Opera */
 }
 
-@media (max-width: 768px) {
+$breakpoint-small: 576px;
+$breakpoint-medium: 768px;
+$breakpoint-large: 992px;
+$breakpoint-xlarge: 1200px;
+
+@media (max-width: $breakpoint-medium) {
   .bts-hideOnMobile {
     display: none;
   }
 }
 
-$breakpoint-small: 576px;
-$breakpoint-medium: 768px;
-$breakpoint-large: 992px;
-$breakpoint-xlarge: 1200px;

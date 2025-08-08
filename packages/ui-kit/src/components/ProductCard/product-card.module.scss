@@ -188,7 +188,7 @@
   }
 
   // 📱 GROUPED RESPONSIVE STYLES
-  @media (max-width: 768px) {
+  @media (max-width: $breakpoint-medium) {
     gap: 16px;
 
     &--horizontal {
