@@ -158,6 +158,7 @@ const CheckoutPage: React.FC = () => {
               <StringInput
                 hasError={!!errors.firstName}
                 value={form.firstName}
+                fullWidth
                 onChange={(val) => handleInput('firstName', val)}
               />
             </FieldWrapper>
@@ -165,6 +166,7 @@ const CheckoutPage: React.FC = () => {
               <StringInput
                 hasError={!!errors.lastName}
                 value={form.lastName}
+                fullWidth
                 onChange={(val) => handleInput('lastName', val)}
               />
             </FieldWrapper>
@@ -175,6 +177,7 @@ const CheckoutPage: React.FC = () => {
               <StringInput
                 hasError={!!errors.town}
                 value={form.town}
+                fullWidth
                 onChange={(val) => handleInput('town', val)}
               />
             </FieldWrapper>
@@ -182,6 +185,7 @@ const CheckoutPage: React.FC = () => {
               <StringInput
                 hasError={!!errors.region}
                 value={form.region}
+                fullWidth
                 onChange={(val) => handleInput('region', val)}
               />
             </FieldWrapper>

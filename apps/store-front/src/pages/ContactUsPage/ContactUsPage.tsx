@@ -102,7 +102,7 @@ const ContactUsPage: React.FC = () => {
 
   return (
     <PageContainer header="Contact">
-      <Flex spacing="xxl" fullWidth>
+      <Flex spacing="xxl" fullWidth wrap>
         {contactInfo.map((item) => (
           <InfoCard key={item.id} card={item} size="medium" fullWidth />
         ))}

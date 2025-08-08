@@ -72,7 +72,7 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
-        <Flex spacing="m" className={styles.headerFreeChipping}>
+        <Flex spacing="m">
           <Icon icon={faTruckFast} color={IconColor.light} />
           <span>{shipping?.headerMessage}</span>
         </Flex>

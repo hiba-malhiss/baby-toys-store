@@ -69,3 +69,20 @@
     }
   }
 }
+
+@media (max-width: $breakpoint-large) {
+  .checkoutPage {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 32px 0;
+  }
+}
+
+@media (max-width: $breakpoint-small) {
+  .checkoutPage {
+    &-form-row {
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+  }
+}

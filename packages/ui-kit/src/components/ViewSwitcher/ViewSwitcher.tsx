@@ -165,6 +165,7 @@ function ViewSwitcher({
           key="header-buttons"
           justify="between"
           align="center"
+          wrap
           className={clsx('bts-marginBxxxl')}
         >
           <Flex>

@@ -10,8 +10,9 @@
   box-shadow: $box-shadow-m;
   display: flex;
   flex-direction: column;
-  max-width: 450px;
-  min-width: 300px;
+  max-width: 400px;
+  min-width: 250px;
+  width: 100%;
 
   &-header {
     padding: 24px;
