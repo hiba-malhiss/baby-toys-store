@@ -5,7 +5,10 @@ import { Button } from '@baby-toys/ui-kit/components';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 
-const AuthButtonsWithDialogs: React.FC = ({ isDarkMode }: { isDarkMode?: boolean }) => {
+const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: () => void }> = ({
+  isDarkMode,
+  onAfterClick,
+}) => {
   const { isOpen, open, close } = useLoginDialogStore();
   const [isRegisterOpen, setRegisterOpen] = React.useState(false);
   const { isLoggedIn, logout } = useAuth();
@@ -18,7 +21,10 @@ const AuthButtonsWithDialogs: React.FC = ({ isDarkMode }: { isDarkMode?: boolean
             withoutPadding
             appearance="link"
             color={isDarkMode ? 'light' : 'primary'}
-            onClick={open}
+            onClick={() => {
+              open();
+              onAfterClick?.();
+            }}
           >
             Login
           </Button>
@@ -26,7 +32,10 @@ const AuthButtonsWithDialogs: React.FC = ({ isDarkMode }: { isDarkMode?: boolean
             withoutPadding
             appearance="link"
             color={isDarkMode ? 'light' : 'primary'}
-            onClick={() => setRegisterOpen(true)}
+            onClick={() => {
+              setRegisterOpen(true);
+              onAfterClick?.();
+            }}
           >
             Register
           </Button>
@@ -36,7 +45,10 @@ const AuthButtonsWithDialogs: React.FC = ({ isDarkMode }: { isDarkMode?: boolean
           withoutPadding
           appearance="link"
           color={isDarkMode ? 'light' : 'primary'}
-          onClick={logout}
+          onClick={() => {
+            logout();
+            onAfterClick?.();
+          }}
         >
           Logout
         </Button>

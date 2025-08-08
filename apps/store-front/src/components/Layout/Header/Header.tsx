@@ -43,14 +43,17 @@ const Header = () => {
 
   const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
 
-  const authButtons = (isDarkMode = true) => (
+  const authButtons = (isDarkMode = true, onAfterClick?: () => void) => (
     <>
       {isLoggedIn && (
         <Button
           fullWidth
           appearance="link"
           color={isDarkMode ? 'light' : 'primary'}
-          onClick={() => navigate('/orders-history')}
+          onClick={() => {
+            navigate('/orders-history');
+            onAfterClick?.();
+          }}
         >
           My Orders
         </Button>
@@ -60,12 +63,15 @@ const Header = () => {
           fullWidth
           appearance="link"
           color={isDarkMode ? 'light' : 'primary'}
-          onClick={() => navigate('/admin')}
+          onClick={() => {
+            navigate('/admin');
+            onAfterClick?.();
+          }}
         >
           Admin
         </Button>
       )}
-      <AuthButtonsWithDialogs isDarkMode={isDarkMode} />
+      <AuthButtonsWithDialogs isDarkMode={isDarkMode} onAfterClick={onAfterClick} />
     </>
   );
 
@@ -79,7 +85,7 @@ const Header = () => {
         <div className="bts-hideOnMobile">
           <Flex spacing="xxxxl">{authButtons(true)}</Flex>
         </div>
-        <BurgerMenu authButtons={authButtons(false)} />
+        <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>
 
       <Flex className={styles.headerMain} justify="stretch" align="center" wrap fullWidth>

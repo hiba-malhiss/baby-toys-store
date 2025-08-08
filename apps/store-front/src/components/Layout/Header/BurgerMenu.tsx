@@ -5,7 +5,7 @@ import styles from './header.module.scss';
 import { useNavigate } from 'react-router-dom';
 
 interface BurgerMenuProps {
-  authButtons: ReactNode;
+  authButtons: (onClose: () => void) => ReactNode;
 }
 
 const BurgerMenu = ({ authButtons }: BurgerMenuProps) => {
@@ -46,7 +46,7 @@ const BurgerMenu = ({ authButtons }: BurgerMenuProps) => {
         }
       >
         <Flex align="center" direction="vertical" spacing="s">
-          {authButtons}
+          {authButtons(handleClose)}
         </Flex>
       </Drawer>
     </div>
