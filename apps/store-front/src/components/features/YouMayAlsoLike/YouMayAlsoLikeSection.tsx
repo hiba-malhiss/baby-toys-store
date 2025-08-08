@@ -4,6 +4,7 @@ import { Carousel, ViewSwitcher } from '@baby-toys/ui-kit/components';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
 import { useMockProductsApi } from '@mock-data/useMockApi';
 import { useHandlePagination } from '../../../hooks/useHandlePagination.ts';
+import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints';
 
 interface YouMayAlsoLikeSectionProps {
   mode?: 'carousel' | 'flex';
@@ -34,9 +35,9 @@ const YouMayAlsoLikeSection: React.FC<YouMayAlsoLikeSectionProps> = ({
           orientation="horizontal"
           showNavigation
           responsiveOptions={[
-            { breakpoint: '1000', numVisible: 3 },
-            { breakpoint: '600', numVisible: 2 },
-            { breakpoint: '400', numVisible: 1 },
+            { breakpoint: BREAKPOINTS.large, numVisible: 3 },
+            { breakpoint: BREAKPOINTS.medium, numVisible: 2 },
+            { breakpoint: BREAKPOINTS.small, numVisible: 1 },
           ]}
           itemTemplate={(product) => (
             <SmartProductCard fullWidth product={product} direction="vertical" />

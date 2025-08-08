@@ -3,6 +3,7 @@ import Carousel from '../Carousel/Carousel';
 import ImageMagnifierPopover from '../ImageMagnifierPopover/ImageMagnifierPopover';
 import styles from './image-gallery.module.scss';
 import clsx from 'clsx';
+import { BREAKPOINTS } from '../../constants/breakpoints';
 
 type ImageGalleryProps = {
   images: string[];
@@ -23,9 +24,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, productName }) => {
         numVisible={3}
         orientation="horizontal"
         responsiveOptions={[
-          { breakpoint: '900', numVisible: 3 },
-          { breakpoint: '600', numVisible: 2 },
-          { breakpoint: '400', numVisible: 1 },
+          { breakpoint: BREAKPOINTS.large, numVisible: 3 },
+          { breakpoint: BREAKPOINTS.medium, numVisible: 2 },
+          { breakpoint: BREAKPOINTS.small, numVisible: 1 },
         ]}
         itemTemplate={(img) => (
           <div

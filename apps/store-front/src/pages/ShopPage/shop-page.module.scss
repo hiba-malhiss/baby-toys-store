@@ -34,7 +34,7 @@
 
 @media (max-width: $breakpoint-large) {
   .shopPage {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
   }
 
   .shopPage-rightSide {

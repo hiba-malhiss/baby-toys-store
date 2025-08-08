@@ -3,6 +3,7 @@ import Section from '../../../components/features/Section/Section.tsx';
 import { ReviewCard, Carousel } from '@baby-toys/ui-kit/components';
 import { useMockProductsApi } from '@mock-data/useMockApi';
 import type { Review } from '../../../types/product.types.ts';
+import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints';
 
 const CustomerReviewsSection = () => {
   const [featuredReviews, setFeaturedReviews] = useState<Review[]>([]);
@@ -33,9 +34,9 @@ const CustomerReviewsSection = () => {
         orientation="horizontal"
         showNavigation
         responsiveOptions={[
-          { breakpoint: '1400', numVisible: 3 },
-          { breakpoint: '900', numVisible: 2 },
-          { breakpoint: '600', numVisible: 1 },
+          { breakpoint: BREAKPOINTS.large, numVisible: 3 },
+          { breakpoint: BREAKPOINTS.medium, numVisible: 2 },
+          { breakpoint: BREAKPOINTS.small, numVisible: 1 },
         ]}
         itemTemplate={(review) => <ReviewCard review={review} fullHeight />}
       />
