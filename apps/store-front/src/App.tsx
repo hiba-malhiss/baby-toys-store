@@ -10,17 +10,20 @@ import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage.ts
 import ShoppingCartPage from './pages/ShoppingCartPage/ShoppingCartPage.tsx';
 import { ToastProvider } from '@baby-toys/ui-kit/components';
 import { StoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
-import { AuthProvider } from './context/AuthContext.tsx';
 import WishListPage from './pages/WishListPage/WishListPage.tsx';
 import AdminRedirect from './components/features/AdminRedirect/AdminRedirect.tsx';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage.tsx';
 import ContactUsPage from './pages/ContactUsPage/ContactUsPage.tsx';
 import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage.tsx';
 import PoliciesPage from './pages/PoliciesPage/PoliciesPage.tsx';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { AuthProvider } from "./context/AuthContext.tsx";
 
+const queryClient = new QueryClient();
 const App: React.FC = () => {
   return (
     <StoreConfigurationProvider>
+      <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <BreadcrumbProvider>
           <ToastProvider>
@@ -46,6 +49,7 @@ const App: React.FC = () => {
           </ToastProvider>
         </BreadcrumbProvider>
       </AuthProvider>
+      </QueryClientProvider>
     </StoreConfigurationProvider>
   );
 };

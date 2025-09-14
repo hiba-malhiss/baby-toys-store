@@ -1,9 +1,9 @@
 import React from 'react';
-import LoginDialog from './LoginDialog.tsx';
-import RegisterDialog from './RegisterDialog.tsx';
 import { Button } from '@baby-toys/ui-kit/components';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
+import RegisterDialog from '../../RegisterDialog/RegisterDialog.tsx';
+import LoginDialog from '../../LoginDialog/LoginDialog.tsx';
 
 const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: () => void }> = ({
   isDarkMode,

@@ -291,6 +291,12 @@ $header-min-height: 215px;
     background-color: $color-disabled;
     color: $color-disabled-text;
     cursor: not-allowed;
+
+    &:-webkit-autofill {
+      box-shadow: 0 0 0 1000px $color-disabled inset;
+      -webkit-text-fill-color: $color-disabled-text;
+      caret-color: $color-disabled-text;
+    }
   }
 }
 

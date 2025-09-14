@@ -1,22 +1,20 @@
 import React, { useState } from 'react';
 import {
-  Dialog,
   StringInput,
   Button,
+  Dialog,
   useToast,
   Flex,
   FieldWrapper,
 } from '@baby-toys/ui-kit/components';
 import { isValidPassword, isValidEmail } from '@baby-toys/ui-kit/utils';
-import { useAuth } from '../../../context/AuthContext.tsx';
 
-interface RegisterDialogProps {
+interface LoginDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
-const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
-  const { register } = useAuth();
+const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose }) => {
   const toast = useToast();
 
   const [email, setEmail] = useState('');
@@ -61,11 +59,11 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
 
     setLoading(true);
     try {
-      await register(email, password);
+      //await login(email, password);
       handleClose();
     } catch (err: any) {
-      toast.error(err.message || 'Registration failed');
-      setError(err.message || 'Registration failed');
+      toast.error(err.message || 'Login failed');
+      setError(err.message || 'Login failed');
     } finally {
       setLoading(false);
     }
@@ -78,7 +76,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       onVisibleChange={(val: boolean) => {
         if (!val) handleClose();
       }}
-      header="Register"
+      header="Login"
       closable
       modal
       focusOnShow
@@ -114,11 +112,11 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
         {error && <div className="bts-errorMessage">{error}</div>}
 
         <Button fullWidth isDisabled={loading} onClick={handleSubmit}>
-          {loading ? 'Registering…' : 'Register'}
+          {loading ? 'Logging in…' : 'Login'}
         </Button>
       </Flex>
     </Dialog>
   );
 };
 
-export default RegisterDialog;
+export default LoginDialog;

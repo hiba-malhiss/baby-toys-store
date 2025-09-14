@@ -1,71 +1,48 @@
-import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { mockFetchUserApi, mockLoginApi, mockRegisterApi } from '@mock-data/useMockApi';
-import type { User, UserRole } from '@baby-toys/types/src';
+import React, { createContext, useContext, useCallback } from 'react';
+import { useFetchProfile, type User, USER_ROLE } from '../api/authApi';
+import api, { clearAccessToken, getAccessToken } from '../api/axiosConfig';
 
 interface AuthContextType {
   user: User | null;
-  token: string | null;
-  isLoggedIn: boolean;
-  login: (email: string, password: string) => Promise<void>;
-  register: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  hasPermission: (role: UserRole) => boolean;
+  hasPermission: (role?: USER_ROLE | USER_ROLE[]) => boolean;
+  isAuthenticated: boolean;
+  isLoading: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [token, setToken] = useState<string | null>(() => localStorage.getItem('auth_token'));
-  const [user, setUser] = useState<User | null>(null);
-  const isLoggedIn = !!token && !!user;
+  const { data: user, isLoading } = useFetchProfile();
 
-  const fetchUser = useCallback(async () => {
-    if (!token) return;
-    try {
-      const userData = await mockFetchUserApi(token);
-      setUser(userData);
-    } catch (err) {
-      console.error('Auth error:', err);
-      logout();
-    }
-  }, [token]);
+  const logout = useCallback(() => {
+    api.post('/api/auth/logout').finally(() => {
+      clearAccessToken();
+      window.location.reload(); // simple option to reset state
+    });
+  }, []);
 
-  const login = async (email: string, password: string) => {
-    const { token: newToken, role } = await mockLoginApi(email, password);
-    localStorage.setItem('auth_token', newToken);
-    localStorage.setItem('user_role', role);
-    setToken(newToken);
-  };
+  const hasPermission = useCallback(
+    (role?: USER_ROLE | USER_ROLE[]): boolean => {
+      const requiredRole = role || USER_ROLE.CUSTOMER;
+      if(!user) return false;
+      if(Array.isArray(requiredRole)) return requiredRole.includes(user.role as USER_ROLE);
+      return user.role === requiredRole;
+    },
+    [user],
+  );
 
-  const register = async (email: string, password: string) => {
-    const { token: newToken } = await mockRegisterApi(email, password);
-    localStorage.setItem('auth_token', newToken);
-    setToken(newToken);
-  };
-
-  const logout = () => {
-    localStorage.removeItem('auth_token');
-    setToken(null);
-    setUser(null);
-  };
-
-  useEffect(() => {
-    if (token && !user) {
-      fetchUser();
-    }
-  }, [token, fetchUser]);
-
-  const hasPermission = (requiredRole: UserRole): boolean => {
-    const role = localStorage.getItem('user_role');
-    if (!user || !role) {
-      return false;
-    }
-    return role === requiredRole;
-  };
+  const token = getAccessToken();
 
   return (
     <AuthContext.Provider
-      value={{ user, token, isLoggedIn, login, register, logout, hasPermission }}
+      value={{
+        user: user ?? null,
+        logout,
+        hasPermission,
+        isAuthenticated: !!token && !!user,
+        isLoading,
+      }}
     >
       {children}
     </AuthContext.Provider>
@@ -74,8 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  if(!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };
