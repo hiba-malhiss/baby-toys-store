@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
+import { useForm, useController } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Dialog,
@@ -18,47 +18,6 @@ interface RegisterDialogProps {
   onClose: () => void;
 }
 
-// Remove generic, just type for RegisterRequest
-const FormField = React.memo(function FormField({
-                                                  name,
-                                                  control,
-                                                  errors,
-                                                  label,
-                                                  type = 'text',
-                                                  autoComplete,
-                                                  disabled,
-                                                }: {
-  name: keyof RegisterRequest;
-  control: any;
-  errors: any;
-  label: string;
-  type?: string;
-  autoComplete?: string;
-  disabled?: boolean;
-}){
-  const error = errors[name]?.message as string | undefined;
-
-  return (
-    <FieldWrapper label={label} error={error} fullWidth>
-      <Controller
-        name={name as string}
-        control={control}
-        render={({ field }) => (
-          <StringInput
-            {...field}
-            type={type}
-            placeholder={label}
-            fullWidth
-            autoComplete={autoComplete}
-            hasError={!!error}
-            isDisabled={disabled}
-          />
-        )}
-      />
-    </FieldWrapper>
-  );
-});
-
 const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
   const toast = useToast();
   const [registeredEmail, setRegisteredEmail] = useState('');
@@ -68,10 +27,11 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { isValid, isSubmitting },
     reset,
   } = useForm<RegisterRequest>({
     mode: 'onChange',
+    reValidateMode: 'onChange',
     defaultValues: {
       email: '',
       password: '',
@@ -95,8 +55,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       handleClose();
     } catch(error: any) {
       toast.error(
-        error.message ||
-        'Registration failed. Please check your details and try again.',
+        error.message || 'Registration failed. Please check your details and try again.'
       );
     }
   };
@@ -116,36 +75,54 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
             <Flex direction="horizontal" spacing="m" fullWidth>
-              <FormField
-                name="firstName"
-                control={control}
-                errors={errors}
-                label="First Name"
-                autoComplete="given-name"
-                disabled={isSubmitting || registerMutation.isPending}
-              />
-              <FormField
-                name="lastName"
-                control={control}
-                errors={errors}
-                label="Last Name"
-                autoComplete="family-name"
-                disabled={isSubmitting || registerMutation.isPending}
-              />
+              {['firstName', 'lastName'].map((name) => {
+                const { field, fieldState: { error } } = useController({
+                  name: name as keyof RegisterRequest,
+                  control,
+                });
+
+                const config = registerFields.find((f) => f.name === name);
+
+                return (
+                  <FieldWrapper
+                    key={name}
+                    label={config?.label || name}
+                    error={error?.message}
+                    fullWidth
+                  >
+                    <StringInput
+                      {...field}
+                      placeholder={config?.label || name}
+                      fullWidth
+                      autoComplete={config?.autoComplete}
+                      hasError={!!error}
+                      isDisabled={isSubmitting || registerMutation.isPending}
+                    />
+                  </FieldWrapper>
+                );
+              })}
             </Flex>
 
-            {registerFields.slice(2).map((f) => (
-              <FormField
-                key={f.name as string}
-                name={f.name}
-                control={control}
-                errors={errors}
-                label={f.label}
-                type={f.type}
-                autoComplete={f.autoComplete}
-                disabled={isSubmitting || registerMutation.isPending}
-              />
-            ))}
+            {registerFields.slice(2).map((f) => {
+              const { field, fieldState: { error } } = useController({
+                name: f.name,
+                control,
+              });
+
+              return (
+                <FieldWrapper key={f.name as string} label={f.label} error={error?.message} fullWidth>
+                  <StringInput
+                    {...field}
+                    type={f.type || 'text'}
+                    placeholder={f.label}
+                    fullWidth
+                    autoComplete={f.autoComplete}
+                    hasError={!!error}
+                    isDisabled={isSubmitting || registerMutation.isPending}
+                  />
+                </FieldWrapper>
+              );
+            })}
 
             <Button
               type="submit"

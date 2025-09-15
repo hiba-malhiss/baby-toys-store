@@ -18,37 +18,43 @@ import OrderHistoryPage from './pages/OrderHistoryPage/OrderHistoryPage.tsx';
 import PoliciesPage from './pages/PoliciesPage/PoliciesPage.tsx';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext.tsx";
+import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
+import LocationAwareToast from "./components/LocationAwareToast.tsx";
 
 const queryClient = new QueryClient();
+
 const App: React.FC = () => {
   return (
     <StoreConfigurationProvider>
       <QueryClientProvider client={queryClient}>
-      <AuthProvider>
-        <BreadcrumbProvider>
-          <ToastProvider>
-            <BrowserRouter>
-              <ScrollToTop />
-              <Layout>
-                <Routes>
-                  <Route path="/" element={<Navigate to="/home" replace />} />
-                  <Route path="/home" element={<HomePage />} />
-                  <Route path="/shop" element={<ShopPage />} />
-                  <Route path="/product-details/:id" element={<ProductDetailsPage />} />
-                  <Route path="/shopping-cart" element={<ShoppingCartPage />} />
-                  <Route path="/wish-list" element={<WishListPage />} />
-                  <Route path="/admin" element={<AdminRedirect />} />
-                  <Route path="/orders-history" element={<OrderHistoryPage />} />
-                  <Route path="/checkout" element={<CheckoutPage />} />
-                  <Route path="/contact-us" element={<ContactUsPage />} />
-                  <Route path="/policies" element={<PoliciesPage />} />
-                  <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-              </Layout>
-            </BrowserRouter>
-          </ToastProvider>
-        </BreadcrumbProvider>
-      </AuthProvider>
+        <AuthProvider>
+          <BreadcrumbProvider>
+            <ToastProvider>
+              <BrowserRouter>
+                <LocationAwareToast>
+                  <ScrollToTop />
+                  <Layout>
+                    <Routes>
+                      <Route path="/" element={<Navigate to="/home" replace />} />
+                      <Route path="/home" element={<HomePage />} />
+                      <Route path="/shop" element={<ShopPage />} />
+                      <Route path="/product-details/:id" element={<ProductDetailsPage />} />
+                      <Route path="/shopping-cart" element={<ShoppingCartPage />} />
+                      <Route path="/wish-list" element={<WishListPage />} />
+                      <Route path="/admin" element={<AdminRedirect />} />
+                      <Route path="/orders-history" element={<OrderHistoryPage />} />
+                      <Route path="/checkout" element={<CheckoutPage />} />
+                      <Route path="/contact-us" element={<ContactUsPage />} />
+                      <Route path="/policies" element={<PoliciesPage />} />
+                      <Route path="/verify-email" element={<VerifyEmailPage />} />
+                      <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+                  </Layout>
+                </LocationAwareToast>
+              </BrowserRouter>
+            </ToastProvider>
+          </BreadcrumbProvider>
+        </AuthProvider>
       </QueryClientProvider>
     </StoreConfigurationProvider>
   );

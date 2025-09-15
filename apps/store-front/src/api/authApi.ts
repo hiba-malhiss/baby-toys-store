@@ -68,4 +68,22 @@ export const useFetchProfile = () =>
       const response = await api.get<User>('/users/profile');
       return response.data;
     },
+    retry: 1,
+  });
+
+export interface VerifyEmailResponse {
+  message: string;
+}
+
+export const useVerifyEmail = (token: string) =>
+  useQuery<VerifyEmailResponse, AxiosError<{ message: string }>>({
+    queryKey: ['verifyEmail', token],
+    queryFn: async() => {
+      const response = await api.get<VerifyEmailResponse>('/api/auth/verify-email', {
+        params: { token },
+      });
+      return response.data;
+    },
+    enabled: !!token,
+    retry: 0
   });
