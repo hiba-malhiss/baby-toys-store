@@ -92,3 +92,50 @@ export const useVerifyEmail = (token: string) =>
     enabled: !!token,
     retry: 0
   });
+
+export interface ForgotPasswordRequest {
+  email: string;
+}
+
+export interface ForgotPasswordResponse {
+  message: string;
+}
+
+export const useForgotPassword = () =>
+  useMutation<ForgotPasswordResponse, AxiosError<{ message?: string }>, ForgotPasswordRequest>({
+    mutationKey: ['forgotPassword'],
+    mutationFn: async (payload) => {
+      const res = await api.post<ForgotPasswordResponse>(
+        '/api/auth/password/forgot',
+        payload
+      );
+      return res.data;
+    },
+  });
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
+export const useResetPassword = () =>
+  useMutation<{ message: string }, AxiosError<{ message?: string }>, ResetPasswordRequest>({
+    mutationKey: ['resetPassword'],
+    mutationFn: async (data) => {
+      const res = await api.post('/api/auth/password/reset', data);
+      return res.data;
+    },
+  });
+
+export const useValidateResetToken = (token: string) =>
+  useQuery<{ message: string }, AxiosError<{ message?: string }>>({
+    queryKey: ['validateResetToken', token],
+    queryFn: async () => {
+      const res = await api.get('/api/auth/password/validate-token', {
+        params: { token },
+      });
+      return res.data;
+    },
+    enabled: !!token,
+    retry: 0,
+  });

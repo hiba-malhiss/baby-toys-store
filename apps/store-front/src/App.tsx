@@ -19,6 +19,7 @@ import PoliciesPage from './pages/PoliciesPage/PoliciesPage.tsx';
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "./context/AuthContext.tsx";
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
+import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from "./components/LocationAwareToast.tsx";
 
 export const queryClient = new QueryClient();
@@ -47,6 +48,7 @@ const App: React.FC = () => {
                       <Route path="/contact-us" element={<ContactUsPage />} />
                       <Route path="/policies" element={<PoliciesPage />} />
                       <Route path="/verify-email" element={<VerifyEmailPage />} />
+                      <Route path="/reset-password" element={<ResetPasswordPage />} />
                       <Route path="*" element={<Navigate to="/" replace />} />
                     </Routes>
                   </Layout>

@@ -11,6 +11,7 @@ import {
 } from '@baby-toys/ui-kit/components';
 import { type LoginRequest, useLogin } from '../../api/authApi';
 import { loginFields, loginSchema } from './loginDialog.helpers';
+import ForgotPasswordDialog from '../ResetPassword/ForgotPasswordDialog.tsx';
 
 interface LoginDialogProps {
   open: boolean;
@@ -18,13 +19,14 @@ interface LoginDialogProps {
   onSuccess?: () => void;
 }
 
-const LoginDialog: React.FC<LoginDialogProps> = ({ 
-  open, 
-  onClose,
-  onSuccess 
+const LoginDialog: React.FC<LoginDialogProps> = ({
+ open,
+ onClose,
+ onSuccess,
 }) => {
   const toast = useToast();
   const loginMutation = useLogin();
+  const [forgotOpen, setForgotOpen] = React.useState(false);
 
   const {
     control,
@@ -46,70 +48,89 @@ const LoginDialog: React.FC<LoginDialogProps> = ({
     onClose();
   }, [onClose, reset]);
 
-  const onSubmit = async (data: LoginRequest) => {
+  const onSubmit = async(data: LoginRequest) => {
     try {
       const response = await loginMutation.mutateAsync(data);
       toast.success(response.message || 'Login successful!');
       handleClose();
       onSuccess?.();
-    } catch (error: any) {
+    } catch(error: any) {
       toast.error(
-        error.response?.data?.message || 'Login failed. Please check your credentials and try again.'
+        error.response?.data?.message || 'Login failed. Please check your credentials and try again.',
       );
     }
   };
 
   return (
-    <Dialog
-      visible={open}
-      onHide={handleClose}
-      header="Login to Your Account"
-      closable={!isSubmitting && !loginMutation.isPending}
-      modal
-      focusOnShow
-      dismissableMask={!isSubmitting && !loginMutation.isPending}
-      aria-label="Login form"
-    >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex direction="vertical" spacing="m" fullWidth>
-          {loginFields.map((field) => {
-            const { field: inputField, fieldState: { error } } = useController({
-              name: field.name as keyof LoginRequest,
-              control,
-            });
+    <>
+      <Dialog
+        visible={open}
+        onHide={handleClose}
+        header="Login to Your Account"
+        closable={!isSubmitting && !loginMutation.isPending}
+        modal
+        focusOnShow
+        dismissableMask={!isSubmitting && !loginMutation.isPending}
+        aria-label="Login form"
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Flex direction="vertical" spacing="m" fullWidth>
+            {loginFields.map((field) => {
+              const { field: inputField, fieldState: { error } } = useController({
+                name: field.name as keyof LoginRequest,
+                control,
+              });
 
-            return (
-              <FieldWrapper 
-                key={field.name} 
-                label={field.label} 
-                error={error?.message} 
-                fullWidth
-              >
-                <StringInput
-                  {...inputField}
-                  type={field.type || 'text'}
-                  placeholder={field.label}
+              return (
+                <FieldWrapper
+                  key={field.name}
+                  label={field.label}
+                  error={error?.message}
                   fullWidth
-                  autoComplete={field.autoComplete}
-                  hasError={!!error}
-                  isDisabled={isSubmitting || loginMutation.isPending}
-                />
-              </FieldWrapper>
-            );
-          })}
+                >
+                  <StringInput
+                    {...inputField}
+                    type={field.type || 'text'}
+                    placeholder={field.label}
+                    fullWidth
+                    autoComplete={field.autoComplete}
+                    hasError={!!error}
+                    isDisabled={isSubmitting || loginMutation.isPending}
+                  />
+                </FieldWrapper>
+              );
+            })}
+            <Flex spacing="m" fullWidth justify="end">
+              <Button
+                appearance="link"
+                color="underline"
+                fullWidth
+                onClick={() => {
+                  handleClose();
+                  setForgotOpen(true);
+                }}
+              >
+                Forgot Password?
+              </Button>
+              <Button
+                type="submit"
+                fullWidth
+                isDisabled={!isValid || isSubmitting || loginMutation.isPending}
+                aria-label="Login to account"
+                isLoading={isSubmitting || loginMutation.isPending}
+              >
+                Login
+              </Button>
+            </Flex>
 
-          <Button
-            type="submit"
-            fullWidth
-            isDisabled={!isValid || isSubmitting || loginMutation.isPending}
-            aria-label="Login to account"
-            isLoading={isSubmitting || loginMutation.isPending}
-          >
-            Login
-          </Button>
-        </Flex>
-      </form>
-    </Dialog>
+          </Flex>
+        </form>
+      </Dialog>
+      <ForgotPasswordDialog
+        open={forgotOpen}
+        onClose={() => setForgotOpen(false)}
+      />
+    </>
   );
 };
 

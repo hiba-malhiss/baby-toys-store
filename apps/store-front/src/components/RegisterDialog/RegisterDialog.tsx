@@ -140,6 +140,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       <VerificationDialog
         visible={verifyDialogVisible}
         email={registeredEmail}
+        variant="register"
         onClose={() => setVerifyDialogVisible(false)}
       />
     </>
