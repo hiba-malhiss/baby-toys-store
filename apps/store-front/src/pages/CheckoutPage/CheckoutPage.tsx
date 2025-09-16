@@ -28,7 +28,7 @@ const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 const CheckoutPage: React.FC = () => {
   useCartStockSync();
   const { cartItems, clearCart } = useCartStore();
-  const { user, isLoggedIn } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const [form, setForm] = useState({
     country: '',
     firstName: '',
@@ -49,7 +49,7 @@ const CheckoutPage: React.FC = () => {
 
   // Load saved shipping information when user is logged in
   useEffect(() => {
-    if (isLoggedIn && user?.email) {
+    if (isAuthenticated && user?.email) {
       setLoadingShippingInfo(true);
       mockFetchShippingInfo(user.email)
         .then((shippingInfo) => {
@@ -119,7 +119,7 @@ const CheckoutPage: React.FC = () => {
     <PageContainer isLoading={loadingShippingInfo}>
       <div className={styles.checkoutPage}>
         <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
-          {isLoggedIn && isLoadedFromCloud && (
+          {isAuthenticated && isLoadedFromCloud && (
             <Alert icon={faCheck} title="Using your saved shipping information">
               <Button
                 appearance="link"

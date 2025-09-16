@@ -13,7 +13,7 @@ import { PageContainer } from '../../components/layout/PageContainer/PageContain
 const LIST_PAGE_SIZE = 3;
 
 const WishListPage = () => {
-  const { isLoggedIn } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
   const { items, page, totalSize, loading, handlePaginationChange } = useHandlePagination(
     (page) => mockFetchWishlist(page, LIST_PAGE_SIZE),
@@ -37,7 +37,7 @@ const WishListPage = () => {
   }, [wishlist]);
 
   const renderContent = () => {
-    if (!isLoggedIn && !loading) {
+    if (!isAuthenticated && !loading) {
       return (
         <NoDataFound
           icon={faInbox}

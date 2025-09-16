@@ -13,7 +13,7 @@ import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
 
 const PAGE_SIZE = 2;
 const OrderHistoryPage: React.FC = () => {
-  const { user, isLoggedIn } = useAuth();
+  const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
   const { addToCart } = useCartStore();
@@ -25,16 +25,16 @@ const OrderHistoryPage: React.FC = () => {
   } | null>(null);
 
   useEffect(() => {
-    if (!isLoggedIn || !user) {
+    if (!isAuthenticated || !user) {
       navigate('/');
     }
-  }, [isLoggedIn, user, navigate]);
+  }, [isAuthenticated, user, navigate]);
 
   const fetchOrderProducts = useCallback(
     async (page: number) => {
       return await mockFetchOrdersHistory(user.email, page, PAGE_SIZE);
     },
-    [isLoggedIn, user]
+    [isAuthenticated, user]
   );
 
   const { items, page, totalSize, loading, handlePaginationChange } = useHandlePagination(

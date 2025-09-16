@@ -10,7 +10,7 @@ import {
 import type { Product } from '../types/product.types.ts';
 
 export function useWishlist(product: Product) {
-  const { isLoggedIn } = useAuth();
+  const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
   const {
     wishlist,
@@ -23,7 +23,7 @@ export function useWishlist(product: Product) {
   } = useWishlistStore();
 
   const fetchWishlist = useCallback(async () => {
-    if (!isLoggedIn || isLoaded) return;
+    if (!isAuthenticated || isLoaded) return;
     setLoading(true);
     try {
       const cloudWishlist = await mockLoadFavoritesFromCloud();
@@ -32,7 +32,7 @@ export function useWishlist(product: Product) {
       console.error('Failed to fetch wishlist', error);
       setLoading(false);
     }
-  }, [isLoggedIn, isLoaded, setLoading, setWishlist]);
+  }, [isAuthenticated, isLoaded, setLoading, setWishlist]);
 
   useEffect(() => {
     fetchWishlist();
@@ -41,7 +41,7 @@ export function useWishlist(product: Product) {
   const isFavorite = wishlist.some((p) => p.id === product.id); // ✅ fix
 
   const toggleFavorite = async () => {
-    if (!isLoggedIn) {
+    if (!isAuthenticated) {
       openLoginDialog();
       return;
     }

@@ -18,18 +18,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const logout = useCallback(() => {
     api.post('/api/auth/logout').finally(() => {
       clearAccessToken();
-      window.location.reload(); // simple option to reset state
+      window.location.reload();
     });
   }, []);
 
   const hasPermission = useCallback(
     (role?: USER_ROLE | USER_ROLE[]): boolean => {
       const requiredRole = role || USER_ROLE.CUSTOMER;
-      if(!user) return false;
-      if(Array.isArray(requiredRole)) return requiredRole.includes(user.role as USER_ROLE);
+      if (!user) return false;
+      if (Array.isArray(requiredRole)) return requiredRole.includes(user.role as USER_ROLE);
       return user.role === requiredRole;
     },
-    [user],
+    [user]
   );
 
   const token = getAccessToken();
@@ -51,6 +51,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if(!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (!context) throw new Error('useAuth must be used within an AuthProvider');
   return context;
 };

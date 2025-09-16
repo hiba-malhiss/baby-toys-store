@@ -8,8 +8,8 @@ import { mockSaveCartToCloud, mockLoadCartFromCloud } from '@mock-data/useMockAp
 // 🚫 Do NOT use it inside individual pages/components like Cart or Checkout to avoid repeated syncs or overwrites.
 export function useCartSync() {
   const { cartItems, clearCart, setCartItems, setIsSyncing } = useCartStore();
-  const { isLoggedIn } = useAuth();
-  const prevLoggedIn = useRef(isLoggedIn);
+  const { isAuthenticated } = useAuth();
+  const prevLoggedIn = useRef(isAuthenticated);
 
   // Map local items by productId
   const localCartMap = useMemo(() => {
@@ -22,7 +22,7 @@ export function useCartSync() {
 
   // Sync to cloud when cart changes
   useEffect(() => {
-    if (isLoggedIn) {
+    if (isAuthenticated) {
       (async () => {
         try {
           setIsSyncing(true);
@@ -36,11 +36,11 @@ export function useCartSync() {
         }
       })();
     }
-  }, [cartItems, isLoggedIn]);
+  }, [cartItems, isAuthenticated]);
 
   // Merge on login: use local item if it exists
   useEffect(() => {
-    if (!prevLoggedIn.current && isLoggedIn) {
+    if (!prevLoggedIn.current && isAuthenticated) {
       (async () => {
         try {
           setIsSyncing(true);
@@ -70,15 +70,15 @@ export function useCartSync() {
       })();
     }
 
-    prevLoggedIn.current = isLoggedIn;
-  }, [isLoggedIn, localCartMap, setCartItems]);
+    prevLoggedIn.current = isAuthenticated;
+  }, [isAuthenticated, localCartMap, setCartItems]);
 
   // Clear cart on logout
   useEffect(() => {
-    if (prevLoggedIn.current && !isLoggedIn) {
+    if (prevLoggedIn.current && !isAuthenticated) {
       clearCart();
     }
 
-    prevLoggedIn.current = isLoggedIn;
-  }, [isLoggedIn]);
+    prevLoggedIn.current = isAuthenticated;
+  }, [isAuthenticated]);
 }

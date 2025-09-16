@@ -19,7 +19,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { shipping } = useStoreConfiguration();
-  const { isLoggedIn } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   useEffect(() => {
     getProductCategories().then((data) => {
@@ -45,7 +45,7 @@ const Header = () => {
 
   const authButtons = (isDarkMode = true, onAfterClick?: () => void) => (
     <>
-      {isLoggedIn && (
+      {isAuthenticated && (
         <Button
           fullWidth
           appearance="link"
@@ -58,7 +58,7 @@ const Header = () => {
           My Orders
         </Button>
       )}
-      {isLoggedIn && (
+      {isAuthenticated && (
         <Button
           fullWidth
           appearance="link"
@@ -83,7 +83,7 @@ const Header = () => {
           <span>{shipping?.headerMessage}</span>
         </Flex>
         <div className="bts-hideOnMobile">
-          <Flex spacing="xxxxl">{authButtons(true)}</Flex>
+          <Flex spacing="xxl">{authButtons(true)}</Flex>
         </div>
         <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>

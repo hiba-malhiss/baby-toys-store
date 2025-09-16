@@ -11,11 +11,11 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
 }) => {
   const { isOpen, open, close } = useLoginDialogStore();
   const [isRegisterOpen, setRegisterOpen] = React.useState(false);
-  const { isLoggedIn, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
 
   return (
     <>
-      {!isLoggedIn ? (
+      {!isAuthenticated ? (
         <>
           <Button
             withoutPadding
