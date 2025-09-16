@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { Menu, Button, Toast, BouncingDotsLoader } from '@baby-toys/ui-kit/components';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
-import { useAuth } from '../../../context/AuthContext.tsx';
+import { useLogout } from '../../../api/authApi.ts';
 
 const menuItems = [
   { label: 'Dashboard', route: '/dashboard' },
@@ -26,13 +26,17 @@ const AdminLayout: React.FC<{ children: React.ReactNodem; isLoading?: boolean }>
   children,
   isLoading,
 }) => {
-  const { logout } = useAuth();
   const navigate = useNavigate();
+  const { mutateAsync: logoutApi } = useLogout();
 
-  const handleLogout = () => {
-    logout();
-    navigate('/login');
-  };
+  const logout = useCallback(async () => {
+    try {
+      await logoutApi();
+      navigate('/login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  }, [logoutApi]);
 
   return (
     <>
@@ -42,7 +46,7 @@ const AdminLayout: React.FC<{ children: React.ReactNodem; isLoading?: boolean }>
           <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
           <Menu model={menuItems} spacing="s" className={styles.adminLayoutNav} />
           <Button
-            onClick={handleLogout}
+            onClick={logout}
             appearance="link"
             className={`${styles.adminLayoutLogout} bts-marginTl`}
             withoutPadding

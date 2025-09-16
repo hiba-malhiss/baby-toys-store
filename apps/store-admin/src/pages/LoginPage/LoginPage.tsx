@@ -1,43 +1,102 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StringInput, Button, Flex, Heading, Card } from '@baby-toys/ui-kit/components';
-import { useAuth } from '../../context/AuthContext.tsx';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
+import { StringInput, Button, Flex, Heading, Card, useToast } from '@baby-toys/ui-kit/components';
+import { useFetchProfile, useLogin, useLogout, USER_ROLE } from '../../api/authApi';
+import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import styles from './login-page.module.scss';
+import { setAccessToken } from '../../api/axiosConfig.ts';
+
+// Zod schema for validation
+const loginSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(6, 'Password must be at least 6 characters'),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
 
 const LoginPage: React.FC = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const { login } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
+  const loginMutation = useLogin();
+  const logoutMutation = useLogout();
+  const userQuery = useFetchProfile();
 
-  const handleLogin = () => {
-    login(username, password).then(() => {
+  const { control, handleSubmit, formState } = useForm<LoginFormData>({
+    mode: 'onBlur',
+    resolver: zodResolver(loginSchema),
+    defaultValues: { email: '', password: '' },
+  });
+
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const response = await loginMutation.mutateAsync(data);
+      // Backend must enforce role security
+      if (response?.role !== USER_ROLE.ADMIN) {
+        toast.error('Access denied. Admin privileges required.');
+        await logoutMutation.mutateAsync(); // clean cookies
+        return;
+      }
+      setAccessToken(response.accessToken);
+      await userQuery.refetch();
+      toast.success(response.message || 'Login successful!');
       navigate('/dashboard');
-    });
+    } catch (error: any) {
+      // Better error handling for network/backend errors
+      const message =
+        error.response?.data?.message ||
+        error.message ||
+        'Login failed. Please check your credentials and try again.';
+      toast.error(message);
+    }
   };
+
+  const isSubmitting = formState.isSubmitting || loginMutation.isPending || userQuery.isLoading;
 
   return (
     <div className={styles.loginPage}>
-      <Card className={styles.loginPageCard} fullHeight>
-        <Flex className={styles.loginPageContainer} spacing="s">
+      <Card className={styles.loginPageCard}>
+        <Flex direction="vertical" spacing="m" className={styles.loginPageContainer}>
           <img src="/assets/kit-images/logo.png" alt="logo" className={styles.loginPageLogo} />
-          <Heading tag="h1">Login</Heading>
-          <StringInput
-            fullWidth
-            placeholder="Username"
-            value={username}
-            onChange={(value) => setUsername(value as string)}
-          />
-          <StringInput
-            fullWidth
-            placeholder="Password"
-            type="password"
-            value={password}
-            onChange={(value) => setPassword(value as string)}
-          />
-          <Button onClick={handleLogin} fullWidth>
-            Login
-          </Button>
+          <Heading tag="h1" align="center">
+            Admin Login
+          </Heading>
+
+          <form onSubmit={handleSubmit(onSubmit)} className={styles.loginPageLoginForm}>
+            <Flex direction="vertical" spacing="m">
+              <FormFieldWrapper name="email" control={control} label="Email" fullWidth>
+                <StringInput
+                  type="email"
+                  placeholder="Enter your email"
+                  autoComplete="username"
+                  disabled={isSubmitting}
+                  fullWidth
+                />
+              </FormFieldWrapper>
+
+              <FormFieldWrapper name="password" control={control} label="Password" fullWidth>
+                <StringInput
+                  type="password"
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  disabled={isSubmitting}
+                  fullWidth
+                />
+              </FormFieldWrapper>
+
+              <Button
+                type="submit"
+                fullWidth
+                isDisabled={!formState.isValid || isSubmitting}
+                isLoading={isSubmitting}
+                aria-label="Login to admin panel"
+              >
+                Login
+              </Button>
+            </Flex>
+          </form>
         </Flex>
       </Card>
     </div>
