@@ -16,6 +16,11 @@ export interface User {
   role: USER_ROLE;
 }
 
+export interface LoginRequest {
+  email: string;
+  password: string;
+}
+
 export interface LoginResponse {
   accessToken: string;
   message: string;
@@ -45,7 +50,7 @@ export const useRegister = () =>
   });
 
 export const useLogin = () =>
-  useMutation<LoginResponse, AxiosError<{ message: string }>, { email: string; password: string }>({
+  useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
     mutationKey: ['login'],
     mutationFn: async(credentials) => {
       const response = await api.post<LoginResponse>('/api/auth/login', credentials);
