@@ -21,7 +21,7 @@ import { AuthProvider } from "./context/AuthContext.tsx";
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import LocationAwareToast from "./components/LocationAwareToast.tsx";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
