@@ -24,7 +24,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
     formState: { errors, isValid, isSubmitting },
     reset,
   } = useForm<FormData>({
-    mode: 'onChange',
+    mode: 'onBlur',
     resolver: zodResolver(schema),
     defaultValues: { email: '' },
   });

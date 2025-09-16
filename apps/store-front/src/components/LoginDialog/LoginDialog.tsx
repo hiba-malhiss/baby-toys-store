@@ -1,17 +1,11 @@
-import React, { useCallback } from 'react';
-import { useForm, useController } from 'react-hook-form';
+import React, { useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Dialog,
-  StringInput,
-  Button,
-  Flex,
-  FieldWrapper,
-  useToast,
-} from '@baby-toys/ui-kit/components';
+import { Dialog, StringInput, Button, Flex, useToast } from '@baby-toys/ui-kit/components';
 import { type LoginRequest, useLogin } from '../../api/authApi';
 import { loginFields, loginSchema } from './loginDialog.helpers';
 import ForgotPasswordDialog from '../ResetPassword/ForgotPasswordDialog.tsx';
+import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
 
 interface LoginDialogProps {
   open: boolean;
@@ -19,14 +13,10 @@ interface LoginDialogProps {
   onSuccess?: () => void;
 }
 
-const LoginDialog: React.FC<LoginDialogProps> = ({
- open,
- onClose,
- onSuccess,
-}) => {
+const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) => {
   const toast = useToast();
   const loginMutation = useLogin();
-  const [forgotOpen, setForgotOpen] = React.useState(false);
+  const [forgotOpen, setForgotOpen] = useState(false);
 
   const {
     control,
@@ -34,8 +24,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({
     formState: { isValid, isSubmitting },
     reset,
   } = useForm<LoginRequest>({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
     defaultValues: {
       email: '',
       password: '',
@@ -48,15 +37,16 @@ const LoginDialog: React.FC<LoginDialogProps> = ({
     onClose();
   }, [onClose, reset]);
 
-  const onSubmit = async(data: LoginRequest) => {
+  const onSubmit = async (data: LoginRequest) => {
     try {
       const response = await loginMutation.mutateAsync(data);
       toast.success(response.message || 'Login successful!');
       handleClose();
       onSuccess?.();
-    } catch(error: any) {
+    } catch (error: any) {
       toast.error(
-        error.response?.data?.message || 'Login failed. Please check your credentials and try again.',
+        error.response?.data?.message ||
+          'Login failed. Please check your credentials and try again.'
       );
     }
   };
@@ -75,31 +65,25 @@ const LoginDialog: React.FC<LoginDialogProps> = ({
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
-            {loginFields.map((field) => {
-              const { field: inputField, fieldState: { error } } = useController({
-                name: field.name as keyof LoginRequest,
-                control,
-              });
-
-              return (
-                <FieldWrapper
-                  key={field.name}
-                  label={field.label}
-                  error={error?.message}
+            {loginFields.map((field) => (
+              <FormFieldWrapper
+                key={field.name}
+                name={field.name}
+                control={control}
+                label={field.label}
+                required
+                fullWidth
+              >
+                <StringInput
+                  type={field.type || 'text'}
+                  placeholder={field.label}
+                  autoComplete={field.autoComplete}
                   fullWidth
-                >
-                  <StringInput
-                    {...inputField}
-                    type={field.type || 'text'}
-                    placeholder={field.label}
-                    fullWidth
-                    autoComplete={field.autoComplete}
-                    hasError={!!error}
-                    isDisabled={isSubmitting || loginMutation.isPending}
-                  />
-                </FieldWrapper>
-              );
-            })}
+                  isDisabled={isSubmitting || loginMutation.isPending}
+                />
+              </FormFieldWrapper>
+            ))}
+
             <Flex spacing="m" fullWidth justify="end">
               <Button
                 appearance="link"
@@ -112,6 +96,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({
               >
                 Forgot Password?
               </Button>
+
               <Button
                 type="submit"
                 fullWidth
@@ -122,14 +107,11 @@ const LoginDialog: React.FC<LoginDialogProps> = ({
                 Login
               </Button>
             </Flex>
-
           </Flex>
         </form>
       </Dialog>
-      <ForgotPasswordDialog
-        open={forgotOpen}
-        onClose={() => setForgotOpen(false)}
-      />
+
+      <ForgotPasswordDialog open={forgotOpen} onClose={() => setForgotOpen(false)} />
     </>
   );
 };

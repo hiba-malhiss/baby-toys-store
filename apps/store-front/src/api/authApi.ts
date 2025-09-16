@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import api from './axiosConfig';
+import api, { clearAccessToken } from './axiosConfig';
+import { queryClient } from '../App.tsx';
 
 export enum USER_ROLE {
   CUSTOMER = 'ROLE_CUSTOMER',
@@ -43,7 +44,7 @@ export interface RegisterRequest {
 export const useRegister = () =>
   useMutation<{ accessToken: string }, AxiosError<{ message?: string }>, RegisterRequest>({
     mutationKey: ['register'],
-    mutationFn: async(data: RegisterRequest) => {
+    mutationFn: async (data: RegisterRequest) => {
       const response = await api.post<{ accessToken: string }>('/api/auth/register', data);
       return response.data;
     },
@@ -52,7 +53,7 @@ export const useRegister = () =>
 export const useLogin = () =>
   useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
     mutationKey: ['login'],
-    mutationFn: async(credentials) => {
+    mutationFn: async (credentials) => {
       const response = await api.post<LoginResponse>('/api/auth/login', credentials);
       return response.data;
     },
@@ -61,15 +62,17 @@ export const useLogin = () =>
 export const useLogout = () =>
   useMutation<void, AxiosError>({
     mutationKey: ['logout'],
-    mutationFn: async() => {
+    mutationFn: async () => {
       await api.post('/api/auth/logout');
+      clearAccessToken();
+      queryClient.clear();
     },
   });
 
 export const useFetchProfile = () =>
   useQuery<User, AxiosError>({
     queryKey: ['profile'],
-    queryFn: async() => {
+    queryFn: async () => {
       const response = await api.get<User>('/users/profile');
       return response.data;
     },
@@ -83,14 +86,14 @@ export interface VerifyEmailResponse {
 export const useVerifyEmail = (token: string) =>
   useQuery<VerifyEmailResponse, AxiosError<{ message: string }>>({
     queryKey: ['verifyEmail', token],
-    queryFn: async() => {
+    queryFn: async () => {
       const response = await api.get<VerifyEmailResponse>('/api/auth/verify-email', {
         params: { token },
       });
       return response.data;
     },
     enabled: !!token,
-    retry: 0
+    retry: 0,
   });
 
 export interface ForgotPasswordRequest {
@@ -105,10 +108,7 @@ export const useForgotPassword = () =>
   useMutation<ForgotPasswordResponse, AxiosError<{ message?: string }>, ForgotPasswordRequest>({
     mutationKey: ['forgotPassword'],
     mutationFn: async (payload) => {
-      const res = await api.post<ForgotPasswordResponse>(
-        '/api/auth/password/forgot',
-        payload
-      );
+      const res = await api.post<ForgotPasswordResponse>('/api/auth/password/forgot', payload);
       return res.data;
     },
   });

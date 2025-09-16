@@ -1,17 +1,11 @@
 import React, { useCallback, useState } from 'react';
-import { useForm, useController } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Dialog,
-  StringInput,
-  Button,
-  Flex,
-  FieldWrapper,
-  useToast,
-} from '@baby-toys/ui-kit/components';
+import { Dialog, StringInput, Button, Flex, useToast } from '@baby-toys/ui-kit/components';
 import { type RegisterRequest, useRegister } from '../../api/authApi.ts';
 import VerificationDialog from './VerificationDialog';
 import { registerFields, registerSchema } from './registerDialog.helpers.ts';
+import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
 
 interface RegisterDialogProps {
   open: boolean;
@@ -30,8 +24,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
     formState: { isValid, isSubmitting },
     reset,
   } = useForm<RegisterRequest>({
-    mode: 'onChange',
-    reValidateMode: 'onChange',
+    mode: 'onBlur',
     defaultValues: {
       email: '',
       password: '',
@@ -47,16 +40,14 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
     onClose();
   }, [onClose, reset]);
 
-  const onSubmit = async(data: RegisterRequest) => {
+  const onSubmit = async (data: RegisterRequest) => {
     try {
       await registerMutation.mutateAsync(data);
-      setVerifyDialogVisible(true);
       setRegisteredEmail(data.email);
+      setVerifyDialogVisible(true);
       handleClose();
-    } catch(error: any) {
-      toast.error(
-        error.message || 'Registration failed. Please check your details and try again.'
-      );
+    } catch (error: any) {
+      toast.error(error.message || 'Registration failed. Please check your details and try again.');
     }
   };
 
@@ -76,51 +67,46 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
           <Flex direction="vertical" spacing="m" fullWidth>
             <Flex direction="horizontal" spacing="m" fullWidth>
               {['firstName', 'lastName'].map((name) => {
-                const { field, fieldState: { error } } = useController({
-                  name: name as keyof RegisterRequest,
-                  control,
-                });
-
-                const config = registerFields.find((f) => f.name === name);
-
+                const fieldConfig = registerFields.find((f) => f.name === name)!;
                 return (
-                  <FieldWrapper
+                  <FormFieldWrapper
                     key={name}
-                    label={config?.label || name}
-                    error={error?.message}
+                    name={name}
+                    control={control}
+                    label={fieldConfig.label}
+                    required
                     fullWidth
                   >
                     <StringInput
-                      {...field}
-                      placeholder={config?.label || name}
+                      placeholder={fieldConfig.label}
+                      autoComplete={fieldConfig.autoComplete}
                       fullWidth
-                      autoComplete={config?.autoComplete}
-                      hasError={!!error}
                       isDisabled={isSubmitting || registerMutation.isPending}
                     />
-                  </FieldWrapper>
+                  </FormFieldWrapper>
                 );
               })}
             </Flex>
 
-            {registerFields.slice(2).map((f) => {
-              const { field, fieldState: { error } } = useController({
-                name: f.name,
-                control,
-              });
-
+            {['email', 'password', 'phoneNumber'].map((name) => {
+              const fieldConfig = registerFields.find((f) => f.name === name)!;
               return (
-                <FieldWrapper key={f.name as string} label={f.label} error={error?.message} fullWidth>
+                <FormFieldWrapper
+                  key={name}
+                  name={name}
+                  control={control}
+                  label={fieldConfig.label}
+                  required={name !== 'phoneNumber'} // optional field
+                  fullWidth
+                >
                   <StringInput
-                    {...field}
-                    type={f.type || 'text'}
-                    placeholder={f.label}
+                    type={fieldConfig.type || 'text'}
+                    placeholder={fieldConfig.label}
+                    autoComplete={fieldConfig.autoComplete}
                     fullWidth
-                    autoComplete={f.autoComplete}
-                    hasError={!!error}
                     isDisabled={isSubmitting || registerMutation.isPending}
                   />
-                </FieldWrapper>
+                </FormFieldWrapper>
               );
             })}
 

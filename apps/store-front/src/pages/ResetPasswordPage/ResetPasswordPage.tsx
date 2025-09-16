@@ -29,7 +29,7 @@ const ResetPasswordPage: React.FC = () => {
     formState: { errors, isSubmitting },
   } = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
-    mode: 'onChange',
+    mode: 'onBlur',
   });
 
   useEffect(() => {

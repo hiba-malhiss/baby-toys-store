@@ -16,6 +16,7 @@ export interface StringInputProps {
   max?: string | number;
   value?: string | number;
   onChange?: (val: string | number) => void;
+  onBlur?: () => void;
   placeholder?: string;
   icon?: any;
   iconColor?: IconColor;
@@ -48,6 +49,7 @@ const StringInput: React.FC<StringInputProps> = ({
   withControls = false,
   hasError,
   maxTooltip,
+  onBlur,
 }) => {
   // Detect if controlled
   const isControlled = value !== undefined && onChange !== undefined;
@@ -166,6 +168,7 @@ const StringInput: React.FC<StringInputProps> = ({
           placeholder={placeholder}
           value={isControlled ? String(value ?? '') : internalValue}
           onChange={(e) => handleChange(e.target.value)}
+          onBlur={onBlur}
           className={clsx(inputClass)}
         />
 
