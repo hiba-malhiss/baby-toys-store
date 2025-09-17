@@ -15,6 +15,20 @@
   border-spacing: 0;
   font-size: 15px;
   color: $color-text-primary;
+  
+  .emptyMessage {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: $color-text-secondary;
+    font-style: italic;
+    
+    &Content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  }
 
   th,
   td {

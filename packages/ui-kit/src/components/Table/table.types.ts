@@ -32,4 +32,5 @@ export type TableProps<T> = {
   stripedRows?: boolean;
   children?: React.ReactNode;
   useLocalSortAndFilter?: boolean;
+  emptyMessage?: string | React.ReactNode;
 };

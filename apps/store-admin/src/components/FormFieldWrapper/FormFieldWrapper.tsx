@@ -35,6 +35,7 @@ function FormFieldWrapper<T extends FieldValues>({
         >
           {React.cloneElement(children, {
             ...field,
+            fullWidth: fullWidth,
             hasError: fieldState.error?.message,
             id: name,
           })}

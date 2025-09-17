@@ -24,6 +24,7 @@ const Table = forwardRef(
       rowHover = false,
       isLoading = false,
       stripedRows = false,
+      emptyMessage,
       children,
       onFilterChange = () => {},
       onPageChange = () => {},
@@ -163,9 +164,30 @@ const Table = forwardRef(
       return Array.isArray(selection) ? selection.includes(rowData) : selection === rowData;
     };
 
+    const renderEmptyMessage = useCallback(() => (
+      <tbody>
+        <tr>
+          <td colSpan={columns.length} className={styles.emptyMessage}>
+            {typeof emptyMessage === 'string' ? (
+              <div className={styles.emptyMessageContent}>
+                {emptyMessage || 'No records found'}
+              </div>
+            ) : (
+              emptyMessage || <div className={styles.emptyMessageContent}>No records found</div>
+            )}
+          </td>
+        </tr>
+      </tbody>
+    ), [columns.length, emptyMessage]);
+
     const renderBody = useCallback(() => {
       let data = applyFilters(value);
       data = applySorting(data);
+      
+      if (data.length === 0) {
+        return renderEmptyMessage();
+      }
+      
       data = applyPagination(data);
 
       return (
