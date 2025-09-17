@@ -80,7 +80,7 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
             <ColorPicker />
           </FormFieldWrapper>
 
-          <Button type="submit" loading={isSubmitting} disabled={isSubmitting} fullWidth>
+          <Button type="submit" isLoading={isSubmitting} isDisabled={isSubmitting} fullWidth>
             {color ? 'Update' : 'Create'}
           </Button>
         </Flex>

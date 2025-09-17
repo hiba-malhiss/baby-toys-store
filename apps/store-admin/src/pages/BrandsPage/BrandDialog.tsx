@@ -104,7 +104,11 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
           <FormFieldWrapper name="logoUrl" control={control} label="Logo URL" fullWidth>
             <ImageUploader onFileSelect={handleImageUpload} previewUrl={brand?.logoUrl} />
           </FormFieldWrapper>
-          <Button onClick={handleSubmit(onSubmit)} loading={isSubmitting} disabled={isSubmitting}>
+          <Button
+            onClick={handleSubmit(onSubmit)}
+            isLoading={isSubmitting}
+            isDisabled={isSubmitting}
+          >
             {brand ? 'Update' : 'Create'}
           </Button>
         </Flex>

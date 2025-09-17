@@ -121,6 +121,18 @@ export interface Material {
   id: string;
   name: string;
   description?: string;
+  createdAt?: string;
+  updatedAt?: string;
+}
+
+export interface MaterialCreateDto {
+  name: string;
+  description?: string;
+}
+
+export interface MaterialUpdateDto {
+  name?: string;
+  description?: string;
 }
 
 export type UserRole = 'admin' | 'customer';

@@ -108,7 +108,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
               disabled={isSubmitting}
             />
           </FormFieldWrapper>
-          <Button type="submit" loading={isSubmitting}>
+          <Button type="submit" isLoading={isSubmitting}>
             {category ? 'Update' : 'Create'} Category
           </Button>
         </Flex>
