@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './color-picker.module.scss';
 
 type HSV = { h: number; s: number; v: number };
@@ -7,6 +7,7 @@ type Props = {
   value: string; // hex code, e.g. "#FF00AA"
   onChange: (hex: string) => void;
   inline?: boolean;
+  readOnly?: boolean; // new prop
 };
 
 const hexToHSV = (hex: string): HSV => {
@@ -66,7 +67,7 @@ const hsvToHex = ({ h, s, v }: HSV): string => {
   return `#${[r, g, b].map((x) => x.toString(16).padStart(2, '0')).join('')}`;
 };
 
-export default function ColorPicker({ value, onChange, inline = false }: Props) {
+export default function ColorPicker({ value, onChange, inline = false, readOnly = false }: Props) {
   const initialHSV = hexToHSV(value);
   const [hsv, setHSV] = useState<HSV>(initialHSV);
   const [showPanel, setShowPanel] = useState(false);
@@ -79,6 +80,7 @@ export default function ColorPicker({ value, onChange, inline = false }: Props) 
   };
 
   const handleColorSelect = (e: React.MouseEvent) => {
+    if (readOnly) return; // prevent interaction
     const rect = selectorRef.current?.getBoundingClientRect();
     if (!rect) return;
     const x = e.clientX - rect.left;
@@ -89,6 +91,7 @@ export default function ColorPicker({ value, onChange, inline = false }: Props) 
   };
 
   const handleHueSelect = (e: React.MouseEvent) => {
+    if (readOnly) return; // prevent interaction
     const rect = hueRef.current?.getBoundingClientRect();
     if (!rect) return;
     const x = e.clientX - rect.left;
@@ -100,22 +103,13 @@ export default function ColorPicker({ value, onChange, inline = false }: Props) 
     setHSV(hexToHSV(value));
   }, [value]);
 
-  const handleStyle = {
-    left: `${hsv.s * 100}%`,
-    top: `${(1 - hsv.v) * 100}%`,
-  };
-
-  const hueHandleStyle = {
-    left: `${(hsv.h / 360) * 100}%`,
-  };
-
   return (
     <div className={styles.colorPicker}>
       {!inline && (
         <div
           className={styles.colorPickerPreview}
-          style={{ backgroundColor: value }}
-          onClick={() => setShowPanel(!showPanel)}
+          style={{ backgroundColor: value, cursor: readOnly ? 'not-allowed' : 'pointer' }}
+          onClick={() => !readOnly && setShowPanel(!showPanel)}
         />
       )}
       {(inline || showPanel) && (
@@ -124,7 +118,10 @@ export default function ColorPicker({ value, onChange, inline = false }: Props) 
             ref={selectorRef}
             className={styles.colorPickerSelector}
             onClick={handleColorSelect}
-            style={{ backgroundColor: `hsl(${hsv.h}, 100%, 50%)` }}
+            style={{
+              backgroundColor: `hsl(${hsv.h}, 100%, 50%)`,
+              cursor: readOnly ? 'not-allowed' : 'crosshair',
+            }}
           >
             <div
               className={styles.colorPickerHandle}
@@ -134,7 +131,12 @@ export default function ColorPicker({ value, onChange, inline = false }: Props) 
               }}
             />
           </div>
-          <div ref={hueRef} className={styles.colorPickerHueSlider} onClick={handleHueSelect}>
+          <div
+            ref={hueRef}
+            className={styles.colorPickerHueSlider}
+            onClick={handleHueSelect}
+            style={{ cursor: readOnly ? 'not-allowed' : 'pointer' }}
+          >
             <div
               className={styles.colorPickerHueHandle}
               style={{ left: `${(hsv.h / 360) * 100}%` }}

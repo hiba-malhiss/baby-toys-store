@@ -35,7 +35,7 @@ const CategoriesPage: React.FC = () => {
   if (isLoading) {
     return (
       <AdminLayout>
-        <Flex justify="center" className="py-10">
+        <Flex justify="center">
           <BouncingDotsLoader />
         </Flex>
       </AdminLayout>
