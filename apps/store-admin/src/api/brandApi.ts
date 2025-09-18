@@ -67,3 +67,25 @@ export const useDeleteBrand = () => {
     },
   });
 };
+
+export const useUploadBrandImage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Brand, AxiosError, { id: number; file: File }>({
+    mutationFn: async ({ id, file }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await api.post(`/api/admin/brands/${id}/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['brands'] });
+      queryClient.invalidateQueries({ queryKey: ['brands', data.id] });
+    },
+  });
+};

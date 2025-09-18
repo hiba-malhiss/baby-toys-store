@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { Brand } from '../../api/types/brand';
 import { brandSchema, type BrandFormValues } from './brands.helper';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
-import { useCreateBrand, useUpdateBrand } from '../../api/brandApi';
+import { useCreateBrand, useUpdateBrand, useUploadBrandImage } from '../../api/brandApi';
 
 interface BrandDialogProps {
   visible: boolean;
@@ -26,23 +26,10 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
   const toast = useToast();
   const createBrand = useCreateBrand();
   const updateBrand = useUpdateBrand();
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const uploadImageMutation = useUploadBrandImage();
 
-  useEffect(() => {
-    if (brand) {
-      reset({
-        name: brand.name || '',
-        description: brand.description || '',
-        logoUrl: brand.logoUrl || '',
-      });
-    } else {
-      reset({
-        name: '',
-        description: '',
-        logoUrl: '',
-      });
-    }
-  }, [brand]);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(brand?.logoUrl || null);
 
   const {
     control,
@@ -58,35 +45,49 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     },
   });
 
+  useEffect(() => {
+    return () => imagePreview && URL.revokeObjectURL(imagePreview);
+  }, [imagePreview]);
+
+  useEffect(() => {
+    reset({
+      name: brand?.name || '',
+      description: brand?.description || '',
+      logoUrl: brand?.logoUrl || '',
+    });
+    setImagePreview(brand?.logoUrl || null);
+    setImageFile(null);
+  }, [brand, reset]);
+
   const onSubmit = async (data: BrandFormValues) => {
     try {
-      const brandData = {
-        ...data,
-        // Here you would typically upload the image file to a storage service
-        // and get the URL to save with the brand
-        logoUrl: data.logoUrl,
-      };
+      const brandData = { ...data, logoUrl: data.logoUrl };
+      let result: Brand;
 
       if (brand) {
-        await updateBrand.mutateAsync({ ...brandData, id: brand.id });
-        toast.success('Brand updated successfully');
+        result = await updateBrand.mutateAsync({ ...brandData, id: brand.id });
       } else {
-        await createBrand.mutateAsync(brandData);
-        toast.success('Brand created successfully');
+        result = await createBrand.mutateAsync(brandData);
       }
 
+      if (imageFile) {
+        try {
+          await uploadImageMutation.mutateAsync({ id: result.id, file: imageFile });
+        } catch (err) {
+          console.error('Image upload failed:', err);
+          toast.warning('Brand saved, but image upload failed');
+        }
+      }
+
+      toast.success(`Brand ${brand ? 'updated' : 'created'} successfully`);
       onSuccess();
       onHide();
       reset();
-    } catch (error) {
+      setImageFile(null);
+      setImagePreview(null);
+    } catch (err) {
       toast.error(`Failed to ${brand ? 'update' : 'create'} brand`);
     }
-  };
-
-  const handleImageUpload = (file: File | null) => {
-    setImageFile(file);
-    // Here you would typically upload the file to a storage service
-    // and get the URL to save with the brand
   };
 
   return (
@@ -101,15 +102,28 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
             <TextArea placeholder="Enter brand description" rows={3} />
           </FormFieldWrapper>
 
-          <FormFieldWrapper name="logoUrl" control={control} label="Logo URL" fullWidth>
-            <ImageUploader onFileSelect={handleImageUpload} previewUrl={brand?.logoUrl} />
+          <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>
+            <ImageUploader
+              value={imagePreview ? [imagePreview] : []}
+              onChange={(files) => {
+                const f = files[0] || null;
+                setImageFile(f instanceof File ? f : null);
+                if (f instanceof File) {
+                  setImagePreview(URL.createObjectURL(f));
+                } else if (typeof f === 'string') {
+                  setImagePreview(f);
+                }
+              }}
+            />
           </FormFieldWrapper>
+
           <Button
-            onClick={handleSubmit(onSubmit)}
-            isLoading={isSubmitting}
-            isDisabled={isSubmitting}
+            type="submit"
+            isLoading={isSubmitting || uploadImageMutation.isPending}
+            isDisabled={isSubmitting || uploadImageMutation.isPending}
+            fullWidth
           >
-            {brand ? 'Update' : 'Create'}
+            {brand ? 'Update Brand' : 'Create Brand'}
           </Button>
         </Flex>
       </form>

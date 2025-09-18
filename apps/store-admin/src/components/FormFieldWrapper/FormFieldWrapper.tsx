@@ -4,7 +4,7 @@ import { FieldWrapper } from '@baby-toys/ui-kit/components';
 
 interface FormFieldWrapperProps<T extends FieldValues> {
   name: string;
-  control: Control<T>;
+  control?: Control<T>;
   children: ReactElement;
   label: string;
   className?: string;
@@ -21,27 +21,37 @@ function FormFieldWrapper<T extends FieldValues>({
   fullWidth,
   required,
 }: FormFieldWrapperProps<T>) {
+  if (control) {
+    // Use Controller only if control is provided
+    return (
+      <Controller
+        name={name}
+        control={control}
+        render={({ field, fieldState }) => (
+          <FieldWrapper
+            label={label}
+            error={fieldState.error?.message}
+            className={className}
+            fullWidth={fullWidth}
+            required={required}
+          >
+            {React.cloneElement(children, {
+              ...field,
+              fullWidth: fullWidth,
+              hasError: fieldState.error?.message,
+              id: name,
+            })}
+          </FieldWrapper>
+        )}
+      />
+    );
+  }
+
+  // If no control, render children directly
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field, fieldState }) => (
-        <FieldWrapper
-          label={label}
-          error={fieldState.error?.message}
-          className={className}
-          fullWidth={fullWidth}
-          required={required}
-        >
-          {React.cloneElement(children, {
-            ...field,
-            fullWidth: fullWidth,
-            hasError: fieldState.error?.message,
-            id: name,
-          })}
-        </FieldWrapper>
-      )}
-    />
+    <FieldWrapper label={label} className={className} fullWidth={fullWidth} required={required}>
+      {React.cloneElement(children, { fullWidth })}
+    </FieldWrapper>
   );
 }
 

@@ -91,6 +91,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           className={calculatedClassName}
           onClick={onClick}
           disabled={isDisabled}
+          type="button"
           {...rest}
         >
           {isLoading ? (
