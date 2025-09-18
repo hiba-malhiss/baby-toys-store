@@ -116,8 +116,8 @@ const BrandsPage: React.FC = () => {
         onConfirm={handleDelete}
         title="Delete Brand"
         message={`Are you sure you want to delete "${brandToDelete?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
       />
     </AdminLayout>
   );

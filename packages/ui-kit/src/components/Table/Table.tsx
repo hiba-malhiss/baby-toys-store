@@ -199,7 +199,7 @@ const Table = forwardRef(
             const selected = isSelected(rowData);
             return (
               <tr
-                key={index}
+                key={rowData?.id || index}
                 onClick={() => handleRowClick(rowData)}
                 className={`${selected ? styles.isSelected : ''} ${
                   rowHover ? styles.withRowHover : ''

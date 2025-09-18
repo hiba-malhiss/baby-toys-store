@@ -61,9 +61,30 @@ export const useDeleteCategory = () => {
     mutationFn: async (id) => {
       await api.delete(`/api/admin/categories/${id}`);
     },
-    onSuccess: (_, id) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      queryClient.removeQueries({ queryKey: ['categories', id] });
+    },
+  });
+};
+
+export const useUploadCategoryImage = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation<Category, AxiosError, { id: number; file: File }>({
+    mutationFn: async ({ id, file }) => {
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await api.post(`/api/admin/categories/${id}/image`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      });
+      return response.data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['categories', data.id] });
     },
   });
 };

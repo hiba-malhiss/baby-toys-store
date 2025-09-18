@@ -65,6 +65,7 @@ const CategoriesPage: React.FC = () => {
         <Table
           value={categories}
           columns={[
+            { header: 'Image', field: 'imageUrl', type: 'image' },
             { header: 'Name', field: 'name' },
             { header: 'Description', field: 'description' },
             {
@@ -105,8 +106,8 @@ const CategoriesPage: React.FC = () => {
         onConfirm={handleDelete}
         header="Confirm Delete"
         message={`Are you sure you want to delete “${categoryToDelete?.name}”?`}
-        acceptLabel="Delete"
-        rejectLabel="Cancel"
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
       />
     </AdminLayout>
   );

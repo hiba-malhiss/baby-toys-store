@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Dialog,
   StringInput,
@@ -13,7 +13,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import type { Category } from '../../api/types/category';
 import { categorySchema } from './categories.helper.ts';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
-import { useCreateCategory, useUpdateCategory } from '../../api/categoryApi';
+import {
+  useCreateCategory,
+  useUpdateCategory,
+  useUploadCategoryImage,
+} from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit/components';
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
@@ -34,27 +38,37 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   const toast = useToast();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
+  const uploadCategoryImage = useUploadCategoryImage();
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(category?.imageUrl || null);
 
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid },
     reset,
+    getValues,
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
     defaultValues: {
       name: category?.name || '',
       description: category?.description || '',
+      imageUrl: category?.imageUrl || '',
     },
   });
+
+  useEffect(() => {
+    return () => imagePreview && URL.revokeObjectURL(imagePreview);
+  }, [imagePreview]);
 
   // Reset form whenever dialog closes or category changes
   React.useEffect(() => {
     reset({
       name: category?.name || '',
       description: category?.description || '',
+      imageUrl: category?.imageUrl || '',
     });
+    setImagePreview(category?.imageUrl || null);
     setImageFile(null);
   }, [category, reset, visible]);
 
@@ -65,20 +79,48 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         imageUrl: category?.imageUrl,
       };
 
+      let result;
       if (category?.id) {
-        await updateCategory.mutateAsync({ ...categoryData, id: category.id });
-        toast.success('Category updated successfully');
+        result = await updateCategory.mutateAsync({ ...categoryData, id: category.id });
       } else {
-        await createCategory.mutateAsync(categoryData);
-        toast.success('Category created successfully');
+        result = await createCategory.mutateAsync(categoryData);
       }
 
+      // Upload image if a new file was selected
+      if (imageFile) {
+        try {
+          await uploadCategoryImage.mutateAsync({
+            id: result.id,
+            file: imageFile,
+          });
+        } catch (error) {
+          console.error('Error uploading image:', error);
+          toast.error('Category saved, but there was an error uploading the image');
+        }
+      }
+
+      toast.success(`Category ${category ? 'updated' : 'created'} successfully`);
       onSuccess();
       onHide();
-      return true;
+      setImageFile(null);
+      setImagePreview(null);
     } catch (err: any) {
       toast.error(err?.message || 'Failed to save category');
-      return false;
+    }
+  };
+
+  const handleImageChange = (files) => {
+    const f = files[0] || null;
+
+    if (f instanceof File) {
+      setImageFile(f);
+      const preview = URL.createObjectURL(f);
+      setImagePreview(preview);
+      reset({ ...getValues(), imageUrl: '' });
+    } else {
+      setImageFile(null);
+      setImagePreview(null);
+      reset({ ...getValues(), imageUrl: '' });
     }
   };
 
@@ -101,14 +143,13 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
             <TextArea rows={4} disabled={isSubmitting} />
           </FormFieldWrapper>
 
-          <FormFieldWrapper name="image" control={control as any} label="Image" fullWidth>
+          <FormFieldWrapper name="imageUrl" label="Image" fullWidth>
             <ImageUploader
-              onFileSelect={setImageFile}
-              defaultImage={category?.imageUrl}
-              disabled={isSubmitting}
+              value={imagePreview ? [imagePreview] : []}
+              onChange={handleImageChange}
             />
           </FormFieldWrapper>
-          <Button type="submit" isLoading={isSubmitting}>
+          <Button type="submit" isLoading={isSubmitting} isDisabled={!isValid}>
             {category ? 'Update' : 'Create'} Category
           </Button>
         </Flex>

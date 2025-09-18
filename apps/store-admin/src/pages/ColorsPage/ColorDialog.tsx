@@ -36,7 +36,7 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid },
     reset,
   } = useForm<ColorFormValues>({
     resolver: zodResolver(colorSchema),
@@ -80,7 +80,12 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
             <ColorPicker />
           </FormFieldWrapper>
 
-          <Button type="submit" isLoading={isSubmitting} isDisabled={isSubmitting} fullWidth>
+          <Button
+            type="submit"
+            isLoading={isSubmitting}
+            isDisabled={isSubmitting || !isValid}
+            fullWidth
+          >
             {color ? 'Update' : 'Create'}
           </Button>
         </Flex>

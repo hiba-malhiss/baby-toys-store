@@ -20,7 +20,12 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
   const updateMutation = useUpdateMaterial();
   const isSubmitting = createMutation.isPending || updateMutation.isPending;
 
-  const { control, handleSubmit, reset } = useForm<MaterialFormValues>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isValid },
+  } = useForm<MaterialFormValues>({
     resolver: zodResolver(materialSchema),
     defaultValues: {
       name: material?.name || '',
@@ -68,7 +73,7 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
           <Button
             onClick={handleSubmit(onSubmit)}
             isLoading={isSubmitting}
-            isDisabled={isSubmitting}
+            isDisabled={isSubmitting || !isValid}
           >
             {material ? 'Update' : 'Create'}
           </Button>

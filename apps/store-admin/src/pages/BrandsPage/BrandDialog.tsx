@@ -34,7 +34,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
   const {
     control,
     handleSubmit,
-    formState: { isSubmitting },
+    formState: { isSubmitting, isValid },
     reset,
     getValues,
   } = useForm<BrandFormValues>({
@@ -128,7 +128,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
           <Button
             type="submit"
             isLoading={isSubmitting || uploadImageMutation.isPending}
-            isDisabled={isSubmitting || uploadImageMutation.isPending}
+            isDisabled={isSubmitting || uploadImageMutation.isPending || !isValid}
             fullWidth
           >
             {brand ? 'Update Brand' : 'Create Brand'}

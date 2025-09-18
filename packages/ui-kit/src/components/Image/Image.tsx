@@ -34,7 +34,9 @@ export const Image: React.FC<ImageProps> = ({
       disableBaseUrl ||
       !imageSrc ||
       imageSrc.startsWith('http') ||
-      imageSrc.startsWith('data:')
+      imageSrc.startsWith('data:') ||
+      imageSrc.startsWith('file:') ||
+      imageSrc.startsWith('blob:')
     ) {
       return imageSrc;
     }
