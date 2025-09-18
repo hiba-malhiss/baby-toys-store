@@ -66,7 +66,7 @@ const ReviewsPage: React.FC = () => {
           appearance="outline"
           leftIcon={faTrashAlt}
           onClick={() => handleDeleteClick(row)}
-          disabled={loading}
+          isDisabled={loading}
         >
           {loading &&
           selectedReviewId === (row.id || `${row.name}-${row.comment?.substring(0, 20)}`)

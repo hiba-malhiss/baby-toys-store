@@ -108,7 +108,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
 
   const footer = (
     <Button
-      type="submit"
+      onClick={handleSubmit(onSubmit)}
       isLoading={isSubmitting || uploadImageMutation.isPending}
       isDisabled={isSubmitting || uploadImageMutation.isPending || !isValid}
       fullWidth
@@ -118,30 +118,36 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
   );
 
   return (
-    <Dialog 
-      visible={visible} 
-      onHide={onHide} 
+    <Dialog
+      visible={visible}
+      onHide={onHide}
       header={brand ? 'Edit Brand' : 'Add New Brand'}
       footer={footer}
     >
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <Flex direction="vertical" spacing="m" fullwidth>
-          <FormFieldWrapper name="name" control={control} label="Brand Name" required fullWidth>
-            <StringInput placeholder="Enter brand name" />
-          </FormFieldWrapper>
+      <Flex direction="vertical" spacing="m" fullwidth>
+        <FormFieldWrapper name="name" control={control} label="Brand Name" required fullWidth>
+          <StringInput
+            placeholder="Enter brand name"
+            isDisabled={isSubmitting || uploadImageMutation.isPending}
+          />
+        </FormFieldWrapper>
 
-          <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-            <TextArea placeholder="Enter brand description" rows={3} />
-          </FormFieldWrapper>
+        <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
+          <TextArea
+            placeholder="Enter brand description"
+            rows={3}
+            isDisabled={isSubmitting || uploadImageMutation.isPending}
+          />
+        </FormFieldWrapper>
 
-          <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>
-            <ImageUploader
-              value={imagePreview ? [imagePreview] : []}
-              onChange={handleImageChange}
-            />
-          </FormFieldWrapper>
-        </Flex>
-      </form>
+        <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>
+          <ImageUploader
+            value={imagePreview ? [imagePreview] : []}
+            onChange={handleImageChange}
+            isDisabled={isSubmitting || uploadImageMutation.isPending}
+          />
+        </FormFieldWrapper>
+      </Flex>
     </Dialog>
   );
 };

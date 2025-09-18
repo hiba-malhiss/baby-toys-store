@@ -71,7 +71,7 @@ const LoginPage: React.FC = () => {
                   type="email"
                   placeholder="Enter your email"
                   autoComplete="username"
-                  disabled={isSubmitting}
+                  isDisabled={isSubmitting}
                   fullWidth
                 />
               </FormFieldWrapper>
@@ -81,7 +81,7 @@ const LoginPage: React.FC = () => {
                   type="password"
                   placeholder="Enter your password"
                   autoComplete="current-password"
-                  disabled={isSubmitting}
+                  isDisabled={isSubmitting}
                   fullWidth
                 />
               </FormFieldWrapper>

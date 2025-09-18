@@ -125,11 +125,11 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   };
 
   const footer = (
-    <Button 
-      type="submit" 
-      isLoading={isSubmitting} 
+    <Button
+      isLoading={isSubmitting}
       isDisabled={!isValid}
       fullWidth
+      onClick={handleSubmit(submitForm)}
     >
       {category ? 'Update' : 'Create'} Category
     </Button>
@@ -145,24 +145,23 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       header={category ? 'Edit Category' : 'Add New Category'}
       footer={footer}
     >
-      <form onSubmit={handleSubmit(submitForm)}>
-        <Flex direction="vertical" spacing="m" fullwidth>
-          <FormFieldWrapper name="name" control={control} label="Name" required fullWidth>
-            <StringInput disabled={isSubmitting} />
-          </FormFieldWrapper>
+      <Flex direction="vertical" spacing="m" fullwidth>
+        <FormFieldWrapper name="name" control={control} label="Name" required fullWidth>
+          <StringInput disabled={isSubmitting} />
+        </FormFieldWrapper>
 
-          <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-            <TextArea rows={4} disabled={isSubmitting} />
-          </FormFieldWrapper>
+        <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
+          <TextArea rows={4} disabled={isSubmitting} />
+        </FormFieldWrapper>
 
-          <FormFieldWrapper name="imageUrl" label="Image" fullWidth>
-            <ImageUploader
-              value={imagePreview ? [imagePreview] : []}
-              onChange={handleImageChange}
-            />
-          </FormFieldWrapper>
-        </Flex>
-      </form>
+        <FormFieldWrapper name="imageUrl" label="Image" fullWidth>
+          <ImageUploader
+            value={imagePreview ? [imagePreview] : []}
+            onChange={handleImageChange}
+            isDisabled={isSubmitting}
+          />
+        </FormFieldWrapper>
+      </Flex>
     </Dialog>
   );
 };
