@@ -4,62 +4,69 @@ import styles from './image-uploader.module.scss';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Button } from '../index';
 
-interface ExistingImageObject {
-  url: string;
-  name?: string;
-  size?: number;
-}
-
 interface ImageUploaderProps {
-  existingImages?: (string | ExistingImageObject)[];
-  onImagesChange?: (files: File[]) => void;
+  value?: (File | string)[];
+  onChange?: (files: (File | string)[]) => void;
   multiple?: boolean;
 }
 
+interface PreviewImage {
+  file: File | null;
+  url: string;
+}
+
 const ImageUploader: React.FC<ImageUploaderProps> = ({
-  existingImages = [],
-  onImagesChange,
+  value = [],
+  onChange,
   multiple = false,
 }) => {
-  const [previewImages, setPreviewImages] = useState<
-    { file: File | null; url: string; name: string; size: number }[]
-  >([]);
+  const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  /** Keep track of the last value we applied to state */
+  const lastValueRef = useRef<(File | string)[]>([]);
+
+  // ---- Sync with parent value only if it really changed ----
   useEffect(() => {
-    const existingPreviews = existingImages.map((img) => {
-      let url = '';
-      let name = 'image';
-      let size = 0;
-      if (typeof img === 'string') {
-        url = img;
-        name = url.split('/').pop() || 'image';
-      } else if (typeof img === 'object' && img.url) {
-        url = img.url;
-        name = img.name || url.split('/').pop() || 'image';
-        size = img.size || 0;
-      }
-      return { file: null, url, name, size };
-    });
-    setPreviewImages(existingPreviews);
-  }, [existingImages]);
+    const arr = Array.isArray(value) ? value : [];
+
+    // shallow compare by reference + length + string names for Files
+    const isSame =
+      arr.length === lastValueRef.current.length &&
+      arr.every((v, i) => {
+        const prev = lastValueRef.current[i];
+        if (v instanceof File && prev instanceof File) return v === prev;
+        return v === prev;
+      });
+
+    if (!isSame) {
+      const previews = arr.map((v) => ({
+        file: v instanceof File ? v : null,
+        url: v instanceof File ? URL.createObjectURL(v) : v,
+      }));
+      setPreviewImages(previews);
+      lastValueRef.current = arr; // remember for next check
+    }
+  }, [value]);
+  // ---------------------------------------------------------
 
   const addFiles = (files: File[]) => {
-    const newPreviews = files.map((file) => ({
-      file,
-      url: URL.createObjectURL(file),
-      name: file.name,
-      size: file.size,
-    }));
-
-    setPreviewImages((prev) => (multiple ? [...prev, ...newPreviews] : newPreviews));
-    onImagesChange?.(
-      multiple ? [...previewImages.map((p) => p.file!).filter(Boolean), ...files] : files
-    );
+    const newPreviews = files.map((file) => ({ file, url: URL.createObjectURL(file) }));
+    const updatedPreviews = multiple ? [...previewImages, ...newPreviews] : newPreviews;
+    setPreviewImages(updatedPreviews);
+    onChange?.(updatedPreviews.map((p) => p.file || p.url));
+    lastValueRef.current = updatedPreviews.map((p) => p.file || p.url);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleRemove = (index: number) => {
+    const newPreviews = previewImages.filter((_, i) => i !== index);
+    setPreviewImages(newPreviews);
+    onChange?.(newPreviews.map((p) => p.file || p.url));
+    lastValueRef.current = newPreviews.map((p) => p.file || p.url);
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files ? Array.from(e.target.files) : [];
     addFiles(files);
     e.target.value = '';
@@ -68,67 +75,49 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
-    const files = Array.from(e.dataTransfer.files).filter((file) => file.type.startsWith('image/'));
+    const files = Array.from(e.dataTransfer.files).filter((f) => f.type.startsWith('image/'));
     addFiles(files);
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
-    e.preventDefault();
-    setIsDragging(true);
-  };
-
-  const handleDragLeave = () => setIsDragging(false);
-
-  const handleRemove = (index: number) => {
-    setPreviewImages((prev) => {
-      const newPreviews = [...prev];
-      newPreviews.splice(index, 1);
-      const files = newPreviews.map((p) => p.file).filter(Boolean) as File[];
-      onImagesChange?.(files);
-      return newPreviews;
-    });
   };
 
   return (
     <div className={styles.imageUploaderContainer}>
-      <div>
-        <Button onClick={() => fileInputRef.current?.click()} color="secondary-light">
+      <div className={styles.imageUploaderHeader}>
+        <Button type="button" onClick={() => fileInputRef.current?.click()} color="secondary-light">
           Upload {multiple ? 'Images' : 'Image'}
         </Button>
         <input
           type="file"
           multiple={multiple}
           accept="image/*"
-          onChange={handleImageChange}
           ref={fileInputRef}
+          onChange={handleFileChange}
           hidden
         />
       </div>
 
       <div
-        className={classNames(styles.imageUploaderContent, {
-          [styles.isDragover]: isDragging,
-        })}
+        className={classNames(styles.imageUploaderContent, { [styles.isDragover]: isDragging })}
+        onDragOver={(e) => {
+          e.preventDefault();
+          setIsDragging(true);
+        }}
+        onDragLeave={() => setIsDragging(false)}
         onDrop={handleDrop}
-        onDragOver={handleDragOver}
-        onDragLeave={handleDragLeave}
       >
         {previewImages.length === 0 ? (
           <div className={styles.imageUploaderEmpty}>
             Drag & drop images here or click to upload
           </div>
         ) : (
-          previewImages.map(({ url, name, size }, index) => (
+          previewImages.map(({ url }, index) => (
             <div className={styles.imageUploaderFile} key={url + index}>
-              <img src={url} alt={name} className={styles.imageUploaderThumbnail} loading="lazy" />
-              <div className={styles.imageUploaderName} title={name}>
-                {name.length > 20 ? name.slice(0, 17) + '...' : name}
-              </div>
-              <div className={styles.imageUploaderSize}>{(size / 1024).toFixed(1)} KB</div>
+              <img src={url} alt={`preview-${index}`} className={styles.imageUploaderThumbnail} />
               <Button
+                type="button"
                 appearance="link"
                 onClick={() => handleRemove(index)}
                 leftIcon={faTrashAlt}
+                className={styles.imageUploaderRemove}
                 withoutPadding
               />
             </div>
