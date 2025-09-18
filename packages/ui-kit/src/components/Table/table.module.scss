@@ -9,6 +9,33 @@
   height: 100%;
 }
 
+.cellImageWrapper {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.cellImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 6px;
+}
+
+.cellPlaceholder {
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-text-secondary;
+  background-color: #f0f0f0;
+  font-style: italic;
+  border-radius: 4px;
+}
+
 .table {
   width: 100%;
   border-collapse: separate;
@@ -34,6 +61,7 @@
   td {
     padding: 0.75rem 1rem;
     border-bottom: 1px solid $color-border-light;
+    vertical-align: middle;
   }
 
   th {

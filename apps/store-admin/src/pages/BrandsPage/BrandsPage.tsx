@@ -67,14 +67,7 @@ const BrandsPage: React.FC = () => {
             {
               header: 'Logo',
               field: 'logoUrl',
-              body: (row) =>
-                row.logoUrl ? (
-                  <img src={row.logoUrl} alt={row.name} className="h-10 w-10 object-contain" />
-                ) : (
-                  <div className="h-10 w-10 bg-gray-100 flex items-center justify-center text-gray-400">
-                    No Logo
-                  </div>
-                ),
+              type: 'image',
             },
             {
               header: 'Name',

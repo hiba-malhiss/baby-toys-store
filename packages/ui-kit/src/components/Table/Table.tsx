@@ -1,5 +1,5 @@
 import React, { useState, useRef, useCallback, forwardRef, useImperativeHandle } from 'react';
-import { Paginator, StringInput, Icon, Card } from '../index';
+import { Paginator, StringInput, Icon, Card, Image } from '../index';
 import { TableProps } from './table.types';
 import styles from './table.module.scss';
 import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
@@ -164,30 +164,33 @@ const Table = forwardRef(
       return Array.isArray(selection) ? selection.includes(rowData) : selection === rowData;
     };
 
-    const renderEmptyMessage = useCallback(() => (
-      <tbody>
-        <tr>
-          <td colSpan={columns.length} className={styles.emptyMessage}>
-            {typeof emptyMessage === 'string' ? (
-              <div className={styles.emptyMessageContent}>
-                {emptyMessage || 'No records found'}
-              </div>
-            ) : (
-              emptyMessage || <div className={styles.emptyMessageContent}>No records found</div>
-            )}
-          </td>
-        </tr>
-      </tbody>
-    ), [columns.length, emptyMessage]);
+    const renderEmptyMessage = useCallback(
+      () => (
+        <tbody>
+          <tr>
+            <td colSpan={columns.length} className={styles.emptyMessage}>
+              {typeof emptyMessage === 'string' ? (
+                <div className={styles.emptyMessageContent}>
+                  {emptyMessage || 'No records found'}
+                </div>
+              ) : (
+                emptyMessage || <div className={styles.emptyMessageContent}>No records found</div>
+              )}
+            </td>
+          </tr>
+        </tbody>
+      ),
+      [columns.length, emptyMessage]
+    );
 
     const renderBody = useCallback(() => {
       let data = applyFilters(value);
       data = applySorting(data);
-      
+
       if (data.length === 0) {
         return renderEmptyMessage();
       }
-      
+
       data = applyPagination(data);
 
       return (
@@ -205,7 +208,39 @@ const Table = forwardRef(
               >
                 {columns.map((col) => (
                   <td key={col.field} data-label={col.header}>
-                    {col.body ? col.body(rowData) : rowData[col.field]}
+                    {col.body ? (
+                      col.body(rowData)
+                    ) : col.type === 'image' ? (
+                      <div className={styles.cellImageWrapper}>
+                        {rowData[col.field] ? (
+                          <Image
+                            src={rowData[col.field]}
+                            alt={rowData.name || 'image'}
+                            className={styles.cellImage}
+                          />
+                        ) : (
+                          <div className={styles.cellPlaceholder}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="24"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="#999"
+                              strokeWidth="2"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            >
+                              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                              <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      rowData[col.field]
+                    )}
                   </td>
                 ))}
               </tr>

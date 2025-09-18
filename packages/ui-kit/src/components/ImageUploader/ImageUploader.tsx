@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'clsx';
 import styles from './image-uploader.module.scss';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button } from '../index';
+import { Button, Image } from '../index';
 
 interface ImageUploaderProps {
   value?: (File | string)[];
@@ -111,7 +111,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         ) : (
           previewImages.map(({ url }, index) => (
             <div className={styles.imageUploaderFile} key={url + index}>
-              <img src={url} alt={`preview-${index}`} className={styles.imageUploaderThumbnail} />
+              <Image src={url} alt={`preview-${index}`} className={styles.imageUploaderThumbnail} />
               <Button
                 type="button"
                 appearance="link"

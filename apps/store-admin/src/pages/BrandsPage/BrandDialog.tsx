@@ -36,6 +36,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     handleSubmit,
     formState: { isSubmitting },
     reset,
+    getValues,
   } = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
     defaultValues: {
@@ -90,6 +91,21 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     }
   };
 
+  const handleImageChange = (files) => {
+    const f = files[0] || null;
+
+    if (f instanceof File) {
+      setImageFile(f);
+      const preview = URL.createObjectURL(f);
+      setImagePreview(preview);
+      reset({ ...getValues(), logoUrl: '' }); // clear previous URL
+    } else {
+      setImageFile(null);
+      setImagePreview(null);
+      reset({ ...getValues(), logoUrl: '' }); // clear previous URL
+    }
+  };
+
   return (
     <Dialog visible={visible} onHide={onHide} header={brand ? 'Edit Brand' : 'Add New Brand'}>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -105,15 +121,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
           <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>
             <ImageUploader
               value={imagePreview ? [imagePreview] : []}
-              onChange={(files) => {
-                const f = files[0] || null;
-                setImageFile(f instanceof File ? f : null);
-                if (f instanceof File) {
-                  setImagePreview(URL.createObjectURL(f));
-                } else if (typeof f === 'string') {
-                  setImagePreview(f);
-                }
-              }}
+              onChange={handleImageChange}
             />
           </FormFieldWrapper>
 
