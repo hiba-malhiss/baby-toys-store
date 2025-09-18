@@ -56,11 +56,24 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      form="material-form"
+      isLoading={isSubmitting}
+      isDisabled={isSubmitting || !isValid}
+      fullWidth
+    >
+      {material ? 'Update' : 'Create'}
+    </Button>
+  );
+
   return (
     <Dialog
       visible={visible}
       onHide={onClose}
       header={material ? 'Edit Material' : 'Add New Material'}
+      footer={footer}
     >
       <form id="material-form" onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m" fullwidth>
@@ -70,13 +83,6 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
           <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
             <TextArea rows={4} disabled={isSubmitting} />
           </FormFieldWrapper>
-          <Button
-            onClick={handleSubmit(onSubmit)}
-            isLoading={isSubmitting}
-            isDisabled={isSubmitting || !isValid}
-          >
-            {material ? 'Update' : 'Create'}
-          </Button>
         </Flex>
       </form>
     </Dialog>

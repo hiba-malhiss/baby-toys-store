@@ -19,6 +19,7 @@ import Button from '../Button/Button.tsx';
 const Dialog = forwardRef((props: any, ref) => {
   const {
     header,
+    footer,
     modal = false,
     closeOnEscape = true,
     dismissibleMask,
@@ -200,6 +201,7 @@ const Dialog = forwardRef((props: any, ref) => {
           </div>
         )}
         <div className={styles.dialogContent}>{children}</div>
+        {footer && <div className={styles.dialogFooter}>{footer}</div>}
       </div>
     </div>,
     appendTo

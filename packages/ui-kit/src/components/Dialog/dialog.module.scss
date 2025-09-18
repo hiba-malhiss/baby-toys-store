@@ -64,3 +64,11 @@
   color: $color-text-primary;
   line-height: 20px;
 }
+
+.dialog-footer {
+  padding: $spacing-md $spacing-lg;
+  background-color: $color-bg-secondary;
+  border-top: 1px solid $color-border-light;
+  display: flex;
+  justify-content: end;
+}

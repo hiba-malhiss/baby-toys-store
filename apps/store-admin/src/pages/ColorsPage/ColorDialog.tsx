@@ -68,8 +68,24 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      isLoading={isSubmitting}
+      isDisabled={isSubmitting || !isValid}
+      fullWidth
+    >
+      {color ? 'Update' : 'Create'}
+    </Button>
+  );
+
   return (
-    <Dialog visible={visible} onHide={onHide} header={color ? 'Edit Color' : 'Add New Color'}>
+    <Dialog 
+      visible={visible} 
+      onHide={onHide} 
+      header={color ? 'Edit Color' : 'Add New Color'}
+      footer={footer}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m" fullwidth>
           <FormFieldWrapper name="name" control={control} label="Color Name" required fullWidth>
@@ -79,15 +95,6 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
           <FormFieldWrapper name="code" control={control} label="Color Code" required fullWidth>
             <ColorPicker />
           </FormFieldWrapper>
-
-          <Button
-            type="submit"
-            isLoading={isSubmitting}
-            isDisabled={isSubmitting || !isValid}
-            fullWidth
-          >
-            {color ? 'Update' : 'Create'}
-          </Button>
         </Flex>
       </form>
     </Dialog>

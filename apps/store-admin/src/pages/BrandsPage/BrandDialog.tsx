@@ -106,8 +106,24 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      isLoading={isSubmitting || uploadImageMutation.isPending}
+      isDisabled={isSubmitting || uploadImageMutation.isPending || !isValid}
+      fullWidth
+    >
+      {brand ? 'Update Brand' : 'Create Brand'}
+    </Button>
+  );
+
   return (
-    <Dialog visible={visible} onHide={onHide} header={brand ? 'Edit Brand' : 'Add New Brand'}>
+    <Dialog 
+      visible={visible} 
+      onHide={onHide} 
+      header={brand ? 'Edit Brand' : 'Add New Brand'}
+      footer={footer}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m" fullwidth>
           <FormFieldWrapper name="name" control={control} label="Brand Name" required fullWidth>
@@ -124,15 +140,6 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
               onChange={handleImageChange}
             />
           </FormFieldWrapper>
-
-          <Button
-            type="submit"
-            isLoading={isSubmitting || uploadImageMutation.isPending}
-            isDisabled={isSubmitting || uploadImageMutation.isPending || !isValid}
-            fullWidth
-          >
-            {brand ? 'Update Brand' : 'Create Brand'}
-          </Button>
         </Flex>
       </form>
     </Dialog>

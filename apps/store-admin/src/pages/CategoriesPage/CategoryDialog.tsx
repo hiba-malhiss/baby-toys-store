@@ -124,6 +124,17 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     }
   };
 
+  const footer = (
+    <Button 
+      type="submit" 
+      isLoading={isSubmitting} 
+      isDisabled={!isValid}
+      fullWidth
+    >
+      {category ? 'Update' : 'Create'} Category
+    </Button>
+  );
+
   return (
     <Dialog
       visible={visible}
@@ -132,6 +143,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         setImageFile(null);
       }}
       header={category ? 'Edit Category' : 'Add New Category'}
+      footer={footer}
     >
       <form onSubmit={handleSubmit(submitForm)}>
         <Flex direction="vertical" spacing="m" fullwidth>
@@ -149,9 +161,6 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
               onChange={handleImageChange}
             />
           </FormFieldWrapper>
-          <Button type="submit" isLoading={isSubmitting} isDisabled={!isValid}>
-            {category ? 'Update' : 'Create'} Category
-          </Button>
         </Flex>
       </form>
     </Dialog>
