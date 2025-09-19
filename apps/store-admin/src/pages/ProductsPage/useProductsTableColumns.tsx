@@ -96,7 +96,7 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
             size="small"
             appearance="outline"
             leftIcon={faPen}
-            onClick={() => navigate(`/product-form/${row.id}`)}
+            onClick={() => navigate(`/edit-product/${row.id}`)}
           />
           <Button
             size="small"

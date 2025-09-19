@@ -56,7 +56,15 @@ const App: React.FC = () => {
                   }
                 />
                 <Route
-                  path="/product-form/:id"
+                  path="/add-product"
+                  element={
+                    <PrivateRoute>
+                      <ProductFormPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/edit-product/:id"
                   element={
                     <PrivateRoute>
                       <ProductFormPage />

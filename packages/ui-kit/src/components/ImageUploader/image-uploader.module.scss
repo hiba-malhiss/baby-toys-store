@@ -3,13 +3,8 @@
     display: flex;
     flex-direction: column;
     gap: $spacing-md;
-    font-family: 'Comfortaa', sans-serif;
     width: 100%;
-  }
-
-  &-header {
-    display: flex;
-    justify-content: flex-start;
+    font-family: 'Comfortaa', sans-serif;
   }
 
   &-content {
@@ -17,16 +12,14 @@
     border-radius: $radius-sm;
     padding: $spacing-md;
     min-height: 150px;
-
     display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
     gap: $spacing-md;
-
-    transition: $transition-colors;
-    position: relative;
     cursor: pointer;
+    position: relative;
+    transition: $transition-colors;
 
     &.isDragover {
       border-color: $color-primary;
@@ -34,27 +27,36 @@
     }
   }
 
+  .uploadButton {
+    margin-bottom: $spacing-sm;
+  }
+
   &-empty {
     color: $color-text-muted;
     font-size: 0.95rem;
     text-align: center;
-    width: 100%;
-    user-select: none;
     pointer-events: none;
+  }
+
+  &-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacing-md;
+    width: 100%;
   }
 
   &-file {
     width: 140px;
-    background: $color-bg-primary;
-    border-radius: $radius-xs;
-    overflow: hidden;
-    box-shadow: $box-shadow-s;
+    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-bottom: $spacing-sm;
-    gap: $spacing-sm;
-    position: relative;
+    padding-bottom: $spacing-xs;
+    gap: 0.25rem;
+    border-radius: $radius-xs;
+    overflow: hidden;
+    background: $color-bg-primary;
+    box-shadow: $box-shadow-s;
 
     &:hover {
       box-shadow: $box-shadow-m;
@@ -69,52 +71,31 @@
     background-color: $color-bg-tertiary;
   }
 
-  &-info {
-    width: 100%;
-    padding: $spacing-xs $spacing-sm;
-
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.2rem;
-
-    font-size: 0.8rem;
-    color: $color-text-grey-dark;
-  }
-
-  &-name {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-    text-align: center;
-  }
-
-  &-size {
-    color: $color-text-muted;
+  &-remove, &-star {
+    position: absolute;
+    top: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: $transition-fast;
   }
 
   &-remove {
-    background: transparent;
-    border: none;
+    right: 4px;
     color: $color-error;
-    cursor: pointer;
-    font-size: 1rem;
-    margin-top: $spacing-xs;
-
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    transition: color $transition-fast;
 
     &:hover {
       color: $color-error-hover;
     }
+  }
 
-    &:focus-visible {
-      outline: 2px solid $color-error;
-      outline-offset: 2px;
+  &-star {
+    left: 4px;
+    color: gold;
+
+    &.activeStar {
+      color: gold;
     }
   }
 }

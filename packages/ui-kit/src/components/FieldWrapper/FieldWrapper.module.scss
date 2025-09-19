@@ -10,6 +10,10 @@
   &.isRequired {
     .fieldWrapper-label:after {
       content: ' *';
+      font-size: 20px;
+      position: relative;
+      top: 5px;
+      color: $color-error-dark;
     }
   }
 

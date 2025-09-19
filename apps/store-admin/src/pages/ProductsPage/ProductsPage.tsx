@@ -105,7 +105,7 @@ const ProductsPage: React.FC = () => {
             <Button
               leftIcon={faPlus}
               color="secondary-light"
-              onClick={() => navigate('/product-form/new')}
+              onClick={() => navigate('/add-product')}
             >
               Add Product
             </Button>
@@ -155,7 +155,7 @@ const ProductsPage: React.FC = () => {
           onSelectionChange={(newSelection) => {
             setSelectedProducts(newSelection || []);
           }}
-          onRowClick={(e) => navigate(`/product-form/${e.data.id}`)}
+          onRowClick={(e) => navigate(`/edit-product/${e.data.id}`)}
         />
       </Flex>
     </AdminLayout>

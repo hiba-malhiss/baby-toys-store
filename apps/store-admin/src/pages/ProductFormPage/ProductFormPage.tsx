@@ -1,290 +1,169 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { useMockAdminApi } from '@mock-data/useMockApi';
-import { apiClient } from '../../api/apiClient';
+import React from 'react';
+import { Flex, Heading, Button, Card } from '@baby-toys/ui-kit/components';
 import {
   StringInput,
-  Button,
-  Flex,
   TextArea,
+  StringArrayInput,
+  KeyValueArrayInput,
   Select,
   Option,
-  FieldWrapper,
-  Heading,
   ImageUploader,
-  Card,
 } from '@baby-toys/ui-kit/components';
-import { KeyValueArrayInput, StringArrayInput } from '@baby-toys/ui-kit/components';
-import { Brand, Category, Color, Material, Product } from '@baby-toys/types/src';
+import { useProductForm } from './useProductForm';
+import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
+import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 
 const ProductFormPage: React.FC = () => {
   const {
-    getProductById,
-    addProduct,
-    updateProduct,
-    getCategories,
-    getColors,
-    getMaterials,
-    getBrands,
-  } = useMockAdminApi();
-  const [product, setProduct] = useState<Partial<Product>>({});
-  const [categories, setCategories] = useState<Category[]>([]);
-  const [colors, setColors] = useState<Color[]>([]);
-  const [materials, setMaterials] = useState<Material[]>([]);
-  const [brands, setBrands] = useState<Brand[]>([]);
-  const [images, setImages] = useState<File[]>([]);
-  const [mainImage, setMainImage] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errors, setErrors] = useState<Partial<Product>>({});
-  const [isFormValid, setIsFormValid] = useState(false);
-  const { id } = useParams();
-  const navigate = useNavigate();
+    control,
+    handleSubmit,
+    isSubmitting,
+    isLoadingProduct,
+    categories,
+    brands,
+    colors,
+    materials,
+    isEditMode,
+    imageUploaderProps,
+    mainImageUploaderProps,
+    isDeletingImage,
+  } = useProductForm();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      const [categoriesData, colorsData, materialsData, brandsData, productData] =
-        await Promise.all([
-          apiClient.get(getCategories),
-          apiClient.get(getColors),
-          apiClient.get(getMaterials),
-          apiClient.get(getBrands),
-          id !== 'new' ? apiClient.get(getProductById, id) : Promise.resolve({ images: [] }),
-        ]);
-
-      setCategories(categoriesData);
-      setColors(colorsData);
-      setMaterials(materialsData);
-      setBrands(brandsData);
-      setProduct(productData);
-
-      if (productData.images?.length) {
-        setImages(productData.images);
-        const main =
-          productData.mainImage && productData.images.find((i) => i.name === productData.mainImage);
-        setMainImage(main || null);
-      }
-
-      setIsLoading(false);
-    };
-
-    fetchData();
-  }, [id]);
-
-  useEffect(() => {
-    // Only checks required fields for enabling submit button
-    const valid =
-      !!product.name &&
-      !!product.price &&
-      !!product.categoryId &&
-      !!product.availableInStock &&
-      !!product.shortDescription;
-    setIsFormValid(valid);
-  }, [product]);
-
-  const handleChange = (field: keyof Product, value: any) => {
-    setProduct((prev) => ({ ...prev, [field]: value }));
-  };
-
-  const validate = () => {
-    const newErrors: Partial<Product> = {};
-    if (!product.name) newErrors.name = 'Name is required';
-    if (!product.price) newErrors.price = 'Price is required';
-    if (!product.categoryId) newErrors.categoryId = 'Category is required';
-    if (!product.availableInStock) newErrors.availableInStock = 'Stock is required';
-    if (!product.shortDescription) newErrors.shortDescription = 'Short description is required';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async () => {
-    if (!validate()) return;
-
-    const productData = {
-      ...product,
-      images,
-      mainImage: mainImage?.name || '',
-    };
-
-    if (id === 'new') {
-      await apiClient.post(addProduct, productData);
-    } else {
-      await apiClient.put(updateProduct, productData);
-    }
-
-    navigate('/products');
-  };
-
-  if (isLoading) {
-    return <AdminLayout>Loading...</AdminLayout>;
-  }
+  if (isLoadingProduct) return <AdminLayout>Loading...</AdminLayout>;
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="m">
-        <Heading>{id === 'new' ? 'Add' : 'Edit'} Product</Heading>
+        <Heading>{isEditMode ? `Edit Product` : 'Add Product'}</Heading>
         <Flex spacing="xl" fullWidth align="stretch">
+          {/* Left Card - Product Details */}
           <Card fullWidth>
             <Flex direction="vertical" spacing="xxl" fullWidth>
-              <FieldWrapper fullWidth label="Product name" error={errors.name}>
-                <StringInput
-                  fullWidth
-                  value={product.name || ''}
-                  onChange={(v) => handleChange('name', v)}
-                  placeholder="Enter product name"
-                />
-              </FieldWrapper>
+              <FormFieldWrapper
+                name="name"
+                control={control}
+                label="Product name"
+                fullWidth
+                required
+              >
+                <StringInput placeholder="Enter product name" disabled={isDeletingImage} />
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Short Description" error={errors.shortDescription}>
-                <TextArea
-                  value={product.shortDescription || ''}
-                  onChange={(v) => handleChange('shortDescription', v)}
-                  placeholder="Enter a short description"
-                />
-              </FieldWrapper>
+              <FormFieldWrapper
+                name="shortDescription"
+                control={control}
+                label="Short Description"
+                fullWidth
+                required
+              >
+                <TextArea placeholder="Enter a short description" disabled={isDeletingImage} />
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Description" error={errors.description}>
-                <TextArea
-                  value={product.description || ''}
-                  onChange={(v) => handleChange('description', v)}
-                  placeholder="Enter a full description"
-                />
-              </FieldWrapper>
-              <FieldWrapper fullWidth label="Product Details">
+              <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
+                <TextArea placeholder="Enter a full description" disabled={isDeletingImage} />
+              </FormFieldWrapper>
+
+              <FormFieldWrapper name="details" control={control} label="Product Details" fullWidth>
                 <KeyValueArrayInput
-                  value={product.details || []}
-                  min={1}
-                  onChange={(v) => handleChange('details', v)}
-                  fields={[
-                    { key: 'label', placeholder: 'Label (e.g. Weight)' },
-                    { key: 'value', placeholder: 'Value (e.g. 2kg)' },
-                  ]}
+                  keyPlaceholder="Label"
+                  valuePlaceholder="Value"
                   addButtonText="Add detail"
-                  fullwidth
-                />
-              </FieldWrapper>
-              <FieldWrapper fullWidth label="Feature Bullets">
-                <StringArrayInput
-                  fullwidth
-                  value={product.featureBullets || ['']}
-                  onChange={(v) => handleChange('featureBullets', v)}
-                  placeholder="Add feature bullet"
-                  addButtonText="Add feature bullet"
-                  min={1}
-                />
-              </FieldWrapper>
-
-              <FieldWrapper fullWidth label="Price" error={errors.price}>
-                <StringInput
-                  type="number"
                   fullWidth
-                  value={product.price || ''}
-                  onChange={(v) => handleChange('price', Number(v))}
+                  disabled={isDeletingImage}
                 />
-              </FieldWrapper>
+              </FormFieldWrapper>
+
+              <FormFieldWrapper
+                name="featureBullets"
+                control={control}
+                label="Feature Bullets"
+                fullWidth
+              >
+                <StringArrayInput
+                  placeholder="Add bullet"
+                  addButtonText="Add bullet"
+                  min={1}
+                  fullWidth
+                  disabled={isDeletingImage}
+                />
+              </FormFieldWrapper>
+
+              <FormFieldWrapper name="price" control={control} label="Price" fullWidth required>
+                <StringInput type="number" disabled={isDeletingImage} />
+              </FormFieldWrapper>
+
+              <FormFieldWrapper
+                name="stockQuantity"
+                control={control}
+                label="Stock Quantity"
+                fullWidth
+                required
+              >
+                <StringInput type="number" disabled={isDeletingImage} />
+              </FormFieldWrapper>
             </Flex>
           </Card>
 
+          {/* Right Card - Images & Meta */}
           <Card fullWidth>
             <Flex direction="vertical" spacing="xxl" fullWidth>
-              <FieldWrapper fullWidth label="Upload images">
-                <ImageUploader
-                  existingImages={images.map((img) =>
-                    typeof img === 'string'
-                      ? img
-                      : { url: URL.createObjectURL(img), name: img.name, size: img.size }
-                  )}
-                  onImagesChange={(files) => setImages(files)}
-                  multiple
-                />
-              </FieldWrapper>
+              {/* Main Image */}
+              <FormFieldWrapper label="Main Image" fullWidth isDisabled={isDeletingImage} required>
+                <ImageUploader {...mainImageUploaderProps} />
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Select main image">
-                <Select
-                  fullWidth
-                  value={mainImage?.name || ''}
-                  isDisabled={!images.length}
-                  onChange={(v) => setMainImage(images.find((f) => f.name === v) || null)}
-                >
-                  {images.map((file) => (
-                    <Option key={file.name} value={file.name}>
-                      {file.name}
-                    </Option>
-                  ))}
-                </Select>
-              </FieldWrapper>
+              {/* Gallery Images */}
+              <FormFieldWrapper label="Gallery Images" fullWidth isDisabled={isDeletingImage}>
+                <ImageUploader {...imageUploaderProps} />
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Category" error={errors.categoryId}>
-                <Select
-                  fullWidth
-                  value={product.categoryId || ''}
-                  onChange={(v) => handleChange('categoryId', v)}
-                >
+              {/* Category */}
+              <FormFieldWrapper name="categoryId" control={control} label="Category" fullWidth>
+                <Select fullWidth disabled={isDeletingImage}>
                   {categories.map((cat) => (
                     <Option key={cat.id} value={cat.id}>
                       {cat.name}
                     </Option>
                   ))}
                 </Select>
-              </FieldWrapper>
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Brand">
-                <Select
-                  fullWidth
-                  value={product.brandId || []}
-                  onChange={(v) => handleChange('brandId', v)}
-                >
-                  {brands.map((brand) => (
-                    <Option key={brand.id} value={brand.id}>
-                      {brand.name}
+              {/* Brand */}
+              <FormFieldWrapper name="brandId" control={control} label="Brand" fullWidth>
+                <Select fullWidth disabled={isDeletingImage}>
+                  {brands.map((b) => (
+                    <Option key={b.id} value={b.id}>
+                      {b.name}
                     </Option>
                   ))}
                 </Select>
-              </FieldWrapper>
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Color">
-                <Select
-                  fullWidth
-                  value={product.colorId || []}
-                  onChange={(v) => handleChange('colorId', v)}
-                >
-                  {colors.map((color) => (
-                    <Option key={color.id} value={color.id}>
-                      {color.name} - {color.code}
+              {/* Colors */}
+              <FormFieldWrapper name="colorIds" control={control} label="Colors" fullWidth>
+                <Select multiple fullWidth disabled={isDeletingImage}>
+                  {colors.map((c) => (
+                    <Option key={c.id} value={c.id}>
+                      {c.name} - {c.code}
                     </Option>
                   ))}
                 </Select>
-              </FieldWrapper>
+              </FormFieldWrapper>
 
-              <FieldWrapper fullWidth label="Material">
-                <Select
-                  multiple
-                  fullWidth
-                  value={product.materialIds || []}
-                  onChange={(v) => handleChange('materialIds', v)}
-                >
-                  {materials.map((mat) => (
-                    <Option key={mat.id} value={mat.id}>
-                      {mat.name}
+              {/* Materials */}
+              <FormFieldWrapper name="materialIds" control={control} label="Materials" fullWidth>
+                <Select multiple fullWidth disabled={isDeletingImage}>
+                  {materials.map((m) => (
+                    <Option key={m.id} value={m.id}>
+                      {m.name}
                     </Option>
                   ))}
                 </Select>
-              </FieldWrapper>
-
-              <FieldWrapper fullWidth label="Available In Stock" error={errors.availableInStock}>
-                <StringInput
-                  type="number"
-                  fullWidth
-                  value={product.availableInStock || ''}
-                  onChange={(v) => handleChange('availableInStock', Number(v))}
-                />
-              </FieldWrapper>
+              </FormFieldWrapper>
             </Flex>
           </Card>
         </Flex>
-
-        <Button onClick={handleSubmit} isDisabled={!isFormValid}>
+        <Button onClick={handleSubmit} isDisabled={isSubmitting || isDeletingImage}>
           Submit
         </Button>
       </Flex>
