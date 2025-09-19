@@ -1,0 +1,12 @@
+.productsPage {
+  &-colorIndecator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 1px solid #d3d3d3;
+  }
+
+  &-addButton {
+    flex-shrink: 0;
+  }
+}

@@ -84,7 +84,7 @@ const MaterialsPage: React.FC = () => {
         visible={confirmDialogVisible}
         onCancel={() => setConfirmDialogVisible(false)}
         onConfirm={handleDelete}
-        title="Delete Material"
+        header="Delete Material"
         message={`Are you sure you want to delete "${materialToDelete?.name}"? This action cannot be undone.`}
         confirmLabel="Delete"
         cancelLabel="Cancel"

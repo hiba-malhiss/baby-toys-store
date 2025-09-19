@@ -118,7 +118,7 @@ const ColorsPage: React.FC = () => {
         visible={confirmDialogVisible}
         onCancel={() => setConfirmDialogVisible(false)}
         onConfirm={handleDelete}
-        title="Delete Color"
+        header="Delete Color"
         message={`Are you sure you want to delete "${colorToDelete?.name}"? This action cannot be undone.`}
         confirmText="Delete"
         cancelText="Cancel"

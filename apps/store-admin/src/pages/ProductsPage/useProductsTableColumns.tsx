@@ -1,91 +1,92 @@
 import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit/components';
 import { useNavigate } from 'react-router-dom';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
-import { Product } from '@baby-toys/types/src';
-import { formatProductReferences } from '../../utils/productUtils.ts';
+import { Product } from '../../api/types/product.ts';
+import styles from './ProductsPage.module.scss';
 
 export const useProductsTableColumns = (handleDelete: (product: Product) => void) => {
   const navigate = useNavigate();
-  const { currency, brands, categories, colors, materials } = useAdminStoreConfiguration();
-
-  const getFormattedReferences = (product: Product) => {
-    return formatProductReferences(product, { brands, categories, colors, materials });
-  };
 
   return [
     {
       field: 'mainImage',
       header: 'Image',
-      body: (row: Product) => (
-        <img
-          src={row.mainImage}
-          alt={row.name}
-          style={{ width: 50, height: 50, objectFit: 'cover' }}
-        />
-      ),
+      type: 'image',
     },
+    { field: 'name', header: 'Name', sortable: true },
     {
-      field: 'name',
-      header: 'Name',
-      sortable: true,
-    },
-    {
-      field: 'brandId',
+      field: 'brandName',
       header: 'Brand',
       sortable: true,
-      body: (row: Product) => getFormattedReferences(row).brand,
+      body: (row: Product) => row.brandName || '-',
     },
     {
-      field: 'colorId',
-      header: 'Colors',
-      body: (row: Product) => getFormattedReferences(row).colors,
-    },
-    {
-      field: 'materialIds',
-      header: 'Materials',
-      body: (row: Product) => getFormattedReferences(row).materials,
-    },
-    {
-      field: 'category',
+      field: 'categoryName',
       header: 'Category',
       sortable: true,
-      body: (row: Product) => getFormattedReferences(row).category,
+      body: (row: Product) => row.categoryName || '-',
     },
     {
-      field: 'brand',
-      header: 'Brand',
-      body: (row: Product) => getFormattedReferences(row).brand,
+      field: 'colorCodes',
+      header: 'Colors',
+      body: (row: Product) =>
+        row.colorCodes && row.colorCodes.length > 0 ? (
+          <div style={{ display: 'flex', gap: 4 }}>
+            {row.colorCodes.map((code) => (
+              <div
+                key={code}
+                className={styles.productsPageColorIndecator}
+                style={{
+                  backgroundColor: code,
+                }}
+                title={code}
+              />
+            ))}
+          </div>
+        ) : (
+          '-'
+        ),
+    },
+    {
+      field: 'materialNames',
+      header: 'Materials',
+      body: (row: Product) => (row.materialNames?.length ? row.materialNames.join(', ') : '-'),
     },
     {
       field: 'price',
       header: 'Price',
       sortable: true,
-      body: (row: Product) => `${row.price} ${currency?.symbol || ''}`,
+      body: (row: Product) => `$${row.price}`,
     },
     {
-      field: 'availableInStock',
+      field: 'stockQuantity',
       header: 'Stock',
       sortable: true,
       body: (row: Product) => (
         <Chip
-          label={row.availableInStock > 0 ? 'In Stock' : 'Out of Stock'}
-          variant={row.availableInStock > 0 ? 'success' : 'danger'}
+          label={row.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}
+          variant={row.stockQuantity > 0 ? 'success' : 'danger'}
         />
       ),
     },
     {
       field: 'rating',
       header: 'Rating',
-      body: (row: Product) => (
-        <Flex spacing="xs">
-          <Rating value={row.rating} /> <span>({row.numberOfRatings || 0})</span>
-        </Flex>
-      ),
+      body: (row: Product) =>
+        row.rating ? (
+          <Flex spacing="xs">
+            <Rating value={row.rating} />
+            <span>({row.numberOfRatings || 0})</span>
+          </Flex>
+        ) : (
+          <span>-</span>
+        ),
     },
     {
-      field: 'label',
-      header: 'Label',
+      field: 'releaseDate',
+      header: 'Release Date',
+      sortable: true,
+      body: (row: Product) => row.releaseDate || '-',
     },
     {
       field: 'actions',
@@ -102,11 +103,11 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
             size="small"
             appearance="outline"
             leftIcon={faTrashAlt}
+            variant="danger"
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(row);
             }}
-            variant="danger"
           />
         </Flex>
       ),

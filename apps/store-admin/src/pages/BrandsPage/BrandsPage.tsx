@@ -114,7 +114,7 @@ const BrandsPage: React.FC = () => {
         visible={confirmDialogVisible}
         onCancel={() => setConfirmDialogVisible(false)}
         onConfirm={handleDelete}
-        title="Delete Brand"
+        header="Delete Brand"
         message={`Are you sure you want to delete "${brandToDelete?.name}"? This action cannot be undone.`}
         confirmLabel="Delete"
         cancelLabel="Cancel"

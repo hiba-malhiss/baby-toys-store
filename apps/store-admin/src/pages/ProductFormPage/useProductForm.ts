@@ -25,8 +25,7 @@ export const useProductForm = () => {
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const { id: productId } = useParams<{ id?: string }>();
-  const { data: productData, isLoading: isLoadingProduct } = useProduct(productId);
-  const product = productData?.data;
+  const { data: product, isLoading: isLoadingProduct } = useProduct(productId);
   const { data: categories = [] } = useCategories();
   const { data: brands = [] } = useBrands();
   const { data: colors = [] } = useColors();

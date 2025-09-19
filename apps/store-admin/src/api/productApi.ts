@@ -4,10 +4,47 @@ import { useToast } from '@baby-toys/ui-kit/components';
 import api from './axiosConfig';
 import { Product, CreateProductRequest, UpdateProductRequest } from './types/product';
 
-export const useProducts = () =>
-  useQuery<Product[]>({
-    queryKey: ['products'],
-    queryFn: async () => (await api.get('/api/products')).data,
+/** ---- Shared Types ---- */
+interface ApiResponse<T> {
+  success: boolean;
+  message: string;
+  data: T;
+}
+
+interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}
+
+export interface UseProductsParams {
+  page?: number;
+  size?: number;
+  sortBy?: string;
+  sortDirection?: 'asc' | 'desc' | 'ASC' | 'DESC';
+  categoryId?: number;
+  brandId?: number;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
+/** ---- Queries ---- */
+export const useProducts = (params?: UseProductsParams) =>
+  useQuery<PaginatedResponse<Product>>({
+    queryKey: ['products', params],
+    queryFn: async () => {
+      const { data } = await api.get<ApiResponse<PaginatedResponse<Product>>>('/api/products', {
+        params: {
+          ...params,
+          // Spring expects 0-based page and upper-case sort direction
+          sortDirection: params?.sortDirection?.toString().toUpperCase(),
+        },
+      });
+      return data.data;
+    },
+    keepPreviousData: true,
   });
 
 export const useProduct = (id?: number) => {
@@ -15,77 +52,135 @@ export const useProduct = (id?: number) => {
   const toast = useToast();
 
   return useQuery<Product>({
-    queryKey: ['products', id],
+    queryKey: ['product', id],
+    enabled: !!id,
+    retry: false,
     queryFn: async () => {
       try {
-        return (await api.get(`/api/products/${id}`)).data;
-      } catch (error: any) {
+        const { data } = await api.get<ApiResponse<Product>>(`/api/products/${id}`);
+        return data.data;
+      } catch (err) {
         toast.error('Product not found');
         navigate('/products');
-        throw error;
+        throw err;
       }
     },
-    enabled: !!id,
-    retry: false, // Don't retry on 404
   });
 };
 
+/** ---- Mutations ---- */
 export const useCreateProduct = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (data: CreateProductRequest) =>
-      (await api.post('/api/admin/products', data)).data,
-    onSuccess: () => queryClient.invalidateQueries(['products']),
+    mutationFn: async (payload: CreateProductRequest) => {
+      const { data } = await api.post<ApiResponse<Product>>('/api/admin/products', payload);
+      return data.data;
+    },
+    onSuccess: () => qc.invalidateQueries(['products']),
   });
 };
 
 export const useUpdateProduct = () => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
+  const navigate = useNavigate();
+  const toast = useToast();
+  
   return useMutation({
-    mutationFn: async ({ id, ...data }: UpdateProductRequest) =>
-      (await api.put(`/api/admin/products/${id}`, data)).data,
-    onSuccess: () => queryClient.invalidateQueries(['products']),
+    mutationFn: async ({ id, ...payload }: UpdateProductRequest & { id: number }) => {
+      const { data } = await api.put<ApiResponse<Product>>(`/api/admin/products/${id}`, payload);
+      return data.data;
+    },
+    onSuccess: (data) => {
+      qc.invalidateQueries(['products']);
+      toast.success('Product updated successfully');
+      navigate('/products');
+    },
+    onError: () => {
+      toast.error('Failed to update product');
+    }
   });
 };
 
-// Separate APIs for images
+export const useDeleteProduct = () => {
+  const qc = useQueryClient();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      const { data } = await api.delete<ApiResponse<void>>(`/api/admin/products/${id}`);
+      return data.data;
+    },
+    onSuccess: () => {
+      toast.success('Product deleted successfully');
+      qc.invalidateQueries(['products']);
+      navigate('/products');
+    },
+    onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to delete product'),
+  });
+};
+
+/** ---- Image helpers ---- */
 export const uploadMainImage = async (productId: number, file: File) => {
   const formData = new FormData();
   formData.append('file', file);
-  return (
-    await api.post(`/api/admin/products/${productId}/main-image`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-  ).data;
+  const { data } = await api.post<ApiResponse<string>>(
+    `/api/admin/products/${productId}/main-image`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  );
+  return data.data;
 };
 
 export const uploadProductImage = async (productId: number, file: File) => {
   const formData = new FormData();
   formData.append('file', file);
-  return (
-    await api.post(`/api/admin/products/${productId}/images`, formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    })
-  ).data;
+  const { data } = await api.post<ApiResponse<string>>(
+    `/api/admin/products/${productId}/images`,
+    formData,
+    { headers: { 'Content-Type': 'multipart/form-data' } }
+  );
+  return data.data;
+};
+
+export const useDeleteProducts = () => {
+  const qc = useQueryClient();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: async (ids: number[]) => {
+      const { data } = await api.delete<ApiResponse<void>>('/api/admin/products/batch', {
+        data: ids
+      });
+      return data.data;
+    },
+    onSuccess: () => {
+      toast.success('Products deleted successfully');
+      qc.invalidateQueries(['products']);
+      navigate('/products');
+    },
+    onError: (e: any) => {
+      toast.error(e?.response?.data?.message || 'Failed to delete products');
+    }
+  });
 };
 
 export const useDeleteProductImage = (productId: number) => {
-  const queryClient = useQueryClient();
+  const qc = useQueryClient();
   const toast = useToast();
-
   return useMutation({
     mutationFn: async (imageUrl: string) => {
-      const response = await api.delete(`/api/admin/products/${productId}/images`, {
-        params: { imageUrl },
-      });
-      return response.data;
+      const { data } = await api.delete<ApiResponse<void>>(
+        `/api/admin/products/${productId}/images`,
+        { params: { imageUrl } }
+      );
+      return data.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries(['products', productId]);
+      qc.invalidateQueries(['product', productId]);
       toast.success('Image deleted successfully');
     },
-    onError: () => {
-      toast.error('Failed to delete image');
-    },
+    onError: () => toast.error('Failed to delete image'),
   });
 };

@@ -6,15 +6,30 @@ export interface Product {
   price: number;
   stockQuantity: number;
   releaseDate?: string;
-  mainImage?: string;
+  mainImage?: string | null;
   images?: string[];
   featureBullets?: string[];
   details?: Record<string, string>;
   isActive?: boolean;
-  categoryId?: number;
-  brandId?: number;
+
+  // Relations (IDs)
+  categoryId?: number | null;
+  brandId?: number | null;
   materialIds?: number[];
   colorIds?: number[];
+
+  // Human-readable relation names from the API
+  categoryName?: string | null;
+  brandName?: string | null;
+  materialNames?: string[];
+  colorCodes?: string[];
+
+  // Optional extra data
+  oldPrice?: number | null;
+  rating?: number | null;
+  numberOfRatings?: number | null;
+  sales?: number | null;
+
   createdAt?: string;
   updatedAt?: string;
 }
@@ -39,4 +54,4 @@ export interface CreateProductRequest {
 
 export interface UpdateProductRequest extends CreateProductRequest {
   id: number;
-} 
+}
