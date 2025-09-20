@@ -9,9 +9,6 @@ interface ImageUploaderProps {
   onImagesChange?: (files: (File | string)[]) => void;
   multiple?: boolean;
   onBackendDelete?: (imageUrl: string) => Promise<void>;
-  maxFileSizeMB?: number;
-  maxImages?: number;
-  accept?: string;
 }
 
 export interface PreviewImage {
@@ -22,9 +19,8 @@ export interface PreviewImage {
   progress?: number;
 }
 
-const DEFAULT_MAX_IMAGES = 10;
-const DEFAULT_MAX_FILE_SIZE_MB = 5;
-const DEFAULT_ACCEPT = 'image/*';
+const MAX_IMAGES = 10;
+const MAX_FILE_SIZE_MB = 5;
 const BASE_URL = 'http://localhost:8080'; // adjust as needed
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
@@ -32,9 +28,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImagesChange,
   multiple = true,
   onBackendDelete,
-  maxFileSizeMB = DEFAULT_MAX_FILE_SIZE_MB,
-  maxImages = DEFAULT_MAX_IMAGES,
-  accept = DEFAULT_ACCEPT,
 }) => {
   const toast = useToast();
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
@@ -72,32 +65,21 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   }, [previewImages]);
 
   const addFiles = (files: File[]) => {
-    const validFiles = files.filter((f) => {
-      if (accept !== '*/*' && !f.type.match(accept.replace('*', '.*'))) {
-        toast.error(`Invalid file type: ${f.name}. Only ${accept} are allowed.`);
-        return false;
+    const validFiles = files.filter((f) => f.type.startsWith('image/'));
+    validFiles.forEach((f) => {
+      if (f.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
+        toast.error(`${f.name} exceeds ${MAX_FILE_SIZE_MB}MB`);
       }
-      return true;
     });
 
-    // Check file size
-    const oversizedFiles = validFiles.filter((f) => f.size / 1024 / 1024 > maxFileSizeMB);
-    if (oversizedFiles.length > 0) {
-      toast.error(
-        `The following files exceed the maximum size of ${maxFileSizeMB}MB: ${oversizedFiles
-          .map((f) => f.name)
-          .join(', ')}`
-      );
-    }
-
-    const remainingSlots = maxImages - previewImages.length;
+    const remainingSlots = MAX_IMAGES - previewImages.length;
     if (validFiles.length > remainingSlots) {
-      toast.error(`You can only upload up to ${maxImages} images`);
+      toast.error(`You can only upload up to ${MAX_IMAGES} images`);
     }
 
     const toAdd = validFiles
       .slice(0, remainingSlots)
-      .filter((f) => f.size / 1024 / 1024 <= maxFileSizeMB);
+      .filter((f) => f.size / 1024 / 1024 <= MAX_FILE_SIZE_MB);
 
     const newPreviews = toAdd.map((file) => ({
       file,
@@ -180,7 +162,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         <input
           type="file"
           multiple={multiple}
-          accept={accept}
+          accept="image/*"
           ref={fileInputRef}
           onChange={handleFileChange}
           hidden

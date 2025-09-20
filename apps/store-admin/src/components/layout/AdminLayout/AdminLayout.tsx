@@ -19,6 +19,7 @@ const menuItems = [
   { label: 'Orders', route: '/orders' },
   { label: 'Customers', route: '/customers' },
   { label: 'Reviews', route: '/reviews' },
+  { label: 'Home page content', route: '/homepage' },
   { label: 'Settings', route: '/settings' },
 ];
 
