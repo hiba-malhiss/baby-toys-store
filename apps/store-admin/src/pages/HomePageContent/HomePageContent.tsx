@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Card,
   Flex,
-  Heading,
+  Accordion,
   StringInput,
   TextArea,
   Button,
@@ -21,65 +21,84 @@ const HomePageContent: React.FC = () => {
     handleSubmit,
     isLoading,
     isSubmitting,
+    errors,
   } = useHomePageContentForm();
 
-  if (isLoading) return <div>Loading...</div>;
-
   return (
-    <AdminLayout>
+    <AdminLayout isLoading={isLoading}>
       <Card header="Homepage Content" fullWidth>
-        <Flex spacing="xxl" fullWidth wrap>
-          {/* Info Cards */}
-          <Flex direction="column" spacing="m">
-            <Heading level="h3">Info Cards</Heading>
+        <Flex direction="column" spacing="xxl" fullWidth>
+          <Accordion
+            header="Info Cards"
+            buttonAppearance="outline"
+            buttonColor={errors?.infoCards && 'error'}
+          >
             {infoCards.map((card, i) => (
-              <React.Fragment key={card.id || i}>
-                <FormFieldWrapper name={`infoCards.${i}.title`} control={control} label="Title">
-                  <StringInput />
-                </FormFieldWrapper>
+              <Card key={card.id || i} fullWidth variant="outlined" className="bts-marginTm">
+                <Flex direction="column" spacing="m" fullWidth>
+                  <FormFieldWrapper
+                    name={`infoCards.${i}.icon`}
+                    control={control}
+                    label="Icon"
+                    fullWidth
+                  >
+                    <StringInput />
+                  </FormFieldWrapper>
+                  <FormFieldWrapper
+                    name={`infoCards.${i}.title`}
+                    control={control}
+                    label="Title"
+                    fullWidth
+                  >
+                    <StringInput />
+                  </FormFieldWrapper>
+                  <FormFieldWrapper
+                    fullWidth
+                    name={`infoCards.${i}.subtitle`}
+                    control={control}
+                    label="Subtitle"
+                  >
+                    <TextArea />
+                  </FormFieldWrapper>
+                </Flex>
+              </Card>
+            ))}
+          </Accordion>
+
+          <Accordion
+            header="Hero Banners"
+            buttonAppearance="outline"
+            buttonColor={errors?.heroBanners && 'error'}
+          >
+            <Flex direction="column" spacing="m" fullWidth>
+              {heroBanners.map((banner, i) => (
                 <FormFieldWrapper
-                  name={`infoCards.${i}.subtitle`}
+                  fullWidth
+                  key={banner.id || i}
+                  name={`heroBanners.${i}.text`}
                   control={control}
-                  label="Subtitle"
+                  label={`Banner ${i + 1}`}
                 >
                   <TextArea />
                 </FormFieldWrapper>
-                <FormFieldWrapper name={`infoCards.${i}.icon`} control={control} label="Icon">
-                  <StringInput />
-                </FormFieldWrapper>
-              </React.Fragment>
-            ))}
-          </Flex>
+              ))}
+            </Flex>
+          </Accordion>
 
-          {/* Hero Banners */}
-          <Flex direction="column" spacing="m">
-            <Heading level="h3">Hero Banners</Heading>
-            {heroBanners.map((banner, i) => (
-              <FormFieldWrapper
-                key={banner.id || i}
-                name={`heroBanners.${i}.text`}
-                control={control}
-                label={`Banner ${i + 1}`}
-              >
-                <TextArea />
-              </FormFieldWrapper>
-            ))}
-          </Flex>
-
-          {/* Gallery */}
-          <FormFieldWrapper label="Gallery Images">
+          <Accordion header="Gallery Images" buttonAppearance="outline">
             <ImageUploader
               {...galleryUploaderProps}
               maxFileSizeMB={10}
               accept="image/jpeg,image/png,image/webp"
+              showPreview
             />
-          </FormFieldWrapper>
-        </Flex>
+          </Accordion>
 
-        <Flex justify="flex-end" className="bts-marginTxl">
-          <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>
-            Save Changes
-          </Button>
+          <Flex justify="flex-end" className="bts-marginTxl">
+            <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>
+              Save All Changes
+            </Button>
+          </Flex>
         </Flex>
       </Card>
     </AdminLayout>

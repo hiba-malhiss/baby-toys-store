@@ -11,6 +11,7 @@ interface AccordionProps {
   isOpen?: boolean;
   withoutPadding?: boolean;
   withoutHeaderPadding?: boolean;
+  hasError?: boolean;
   onToggle?: () => void;
   defaultOpen?: boolean;
   iconPosition?: 'left' | 'right';
@@ -64,6 +65,7 @@ const Accordion: React.FC<AccordionProps> = ({
         leftIcon={iconPosition === 'left' && (!isOpen ? faPlus : faMinus)}
         rightIcon={iconPosition === 'right' && (!isOpen ? faPlus : faMinus)}
         fullWidth
+        iconColor={buttonColor === 'error' ? 'error' : ''}
         align={iconPosition === 'left' ? 'start' : 'between'}
         appearance={buttonAppearance}
         color={buttonColor}

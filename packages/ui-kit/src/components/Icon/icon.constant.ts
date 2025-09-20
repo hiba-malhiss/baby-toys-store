@@ -19,4 +19,5 @@ export enum IconColor {
   warning = 'warning',
   info = 'info',
   success = 'success',
+  error = 'error',
 }

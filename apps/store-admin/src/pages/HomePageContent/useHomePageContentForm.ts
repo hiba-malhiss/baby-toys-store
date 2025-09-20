@@ -27,7 +27,7 @@ export const useHomePageContentForm = () => {
     control,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isSubmitting, errors },
   } = useForm<HomePageFormValues>({
     resolver: zodResolver(homePageSchema),
     mode: 'onChange',
@@ -135,6 +135,7 @@ export const useHomePageContentForm = () => {
     galleryImages: galleryImageFields,
     galleryUploaderProps,
     isLoading,
+    errors,
     isSubmitting: isSubmitting || isProcessing || isDeletingImage,
   };
 };

@@ -16,6 +16,7 @@ export type ButtonColor =
   | 'icon'
   | 'highlighted'
   | 'underline'
+  | 'error'
   | 'secondary-light';
 
 type ButtonProps = {

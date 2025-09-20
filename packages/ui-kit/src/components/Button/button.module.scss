@@ -273,6 +273,14 @@ $appearances: (
             border-disabled: $color-disabled,
             bg-disabled: transparent,
         ),
+        error: (
+            text-default: $color-error,
+            text-hover: $color-error,
+            border-default: $color-error,
+            border-hover: $color-error,
+            text-disabled: $color-disabled-text,
+            border-disabled: $color-error,
+        ),
     ),
     filled: (
         primary: (
