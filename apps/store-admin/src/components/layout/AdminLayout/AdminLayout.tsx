@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Menu, Button, Toast, BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { Menu, Button, Toast, BouncingDotsLoader, Mask } from '@baby-toys/ui-kit/components';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';
@@ -23,10 +23,11 @@ const menuItems = [
   { label: 'Settings', route: '/settings' },
 ];
 
-const AdminLayout: React.FC<{ children: React.ReactNodem; isLoading?: boolean }> = ({
-  children,
-  isLoading,
-}) => {
+const AdminLayout: React.FC<{
+  children: React.ReactNodem;
+  isLoading?: boolean;
+  isMaskLoading?: boolean;
+}> = ({ children, isLoading, isMaskLoading }) => {
   const navigate = useNavigate();
   const { mutateAsync: logoutApi } = useLogout();
 
@@ -41,6 +42,7 @@ const AdminLayout: React.FC<{ children: React.ReactNodem; isLoading?: boolean }>
 
   return (
     <>
+      <Mask visible={isMaskLoading} />
       <Toast />
       <div className={styles.adminLayout}>
         <aside className={styles.adminLayoutSidebar}>

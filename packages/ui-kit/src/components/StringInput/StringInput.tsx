@@ -15,7 +15,7 @@ export interface StringInputProps {
   min?: string | number;
   max?: string | number;
   value?: string | number;
-  onChange?: (val: string | number) => void;
+  onChange?: (val: string | number, byControls: boolean) => void;
   onBlur?: () => void;
   placeholder?: string;
   icon?: any;
@@ -75,7 +75,7 @@ const StringInput: React.FC<StringInputProps> = ({
 
   const [showMaxTooltip, setShowMaxTooltip] = useState(false);
 
-  const handleChange = (newVal: string) => {
+  const handleChange = (newVal: string, byControls: boolean = false) => {
     if (!isControlled) {
       setInternalValue(newVal);
     }
@@ -83,12 +83,12 @@ const StringInput: React.FC<StringInputProps> = ({
     if (type === 'number') {
       const parsed = parseFloat(newVal);
       if (!isNaN(parsed)) {
-        onChange?.(parsed);
+        onChange?.(parsed, byControls);
       } else {
-        onChange?.(newVal === '' ? '' : NaN);
+        onChange?.(newVal === '' ? '' : NaN, byControls);
       }
     } else {
-      onChange?.(newVal);
+      onChange?.(newVal, byControls);
     }
   };
 
@@ -114,7 +114,7 @@ const StringInput: React.FC<StringInputProps> = ({
     if (minVal !== undefined && next < minVal) return;
     if (maxVal !== undefined && next > maxVal) return;
 
-    handleChange(next.toString());
+    handleChange(next.toString(), true);
   };
 
   const containerClass = clsx(

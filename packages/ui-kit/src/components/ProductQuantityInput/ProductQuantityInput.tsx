@@ -7,17 +7,19 @@ export interface QuantityInputProps {
   quantity?: number;
   fullWidth?: boolean;
   onChange?: (val: number) => void;
+  onBlur?: (val: number) => void;
 }
 
 export const ProductQuantityInput: React.FC<QuantityInputProps> = ({
   availableInStock,
   quantity = 1,
   onChange,
+  onBlur,
   fullWidth,
 }) => {
   const toast = useToast();
 
-  const handleChange = (val: string | number) => {
+  const handleChange = (val: string | number, byControls = false) => {
     if (val === '' || val === null) {
       onChange?.(1);
       return;
@@ -33,7 +35,7 @@ export const ProductQuantityInput: React.FC<QuantityInputProps> = ({
       toast.info(`Only ${availableInStock} left in stock`);
     }
 
-    onChange?.(parsed);
+    onChange?.(parsed, byControls);
   };
 
   return (
@@ -46,6 +48,7 @@ export const ProductQuantityInput: React.FC<QuantityInputProps> = ({
       value={quantity}
       maxTooltip={`Only ${availableInStock} left in stock`}
       onChange={handleChange}
+      onBlur={onBlur}
     />
   );
 };

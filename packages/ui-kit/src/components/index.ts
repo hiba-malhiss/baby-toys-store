@@ -60,3 +60,4 @@ export type { BreadcrumbItemData } from './Breadcrumb/BreadcrumbItem.tsx';
 export { default as ProgressBar } from './ProgressBar/ProgressBar';
 export { default as Text } from './Text/Text';
 export { default as Image } from './Image/Image';
+export { default as Mask } from './Mask/Mask';

@@ -1,153 +1,76 @@
-import React, { useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Button,
-  Select,
-  Option,
   Heading,
   Table,
-  StringInput,
   Flex,
   Chip,
+  ConfirmDialog,
+  StringInputWithButton,
 } from '@baby-toys/ui-kit/components';
-import { useOrdersData } from './useOrdersData';
-import { OrderItem } from '@baby-toys/types/src';
-import { orderStatusOptions, statusColorMap } from './orders-page.utils.ts';
+import { useOrdersPage } from './useOrdersPage';
+import styles from './orders-page.module.scss';
+import { faEye, faPen, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const OrdersPage: React.FC = () => {
-  const navigate = useNavigate();
-  const tableRef = useRef<any>(null);
   const {
     orders,
-    loading,
     totalRecords,
     pageSize,
     sortField,
     sortOrder,
-    filters,
-    pendingFilters,
-    setPage,
-    setPageSize,
-    setSortField,
-    setSortOrder,
-    setFilters,
-    setPendingFilters,
-  } = useOrdersData();
+    loading,
+    columns,
+    confirmVisible,
+    orderToDelete,
+    handleSort,
+    handlePageChange,
+    confirmDelete,
+    cancelDelete,
+    handleSearch,
+  } = useOrdersPage();
 
-  const columns = [
-    { field: 'id', header: 'Order ID', sortable: true },
-    { field: 'email', header: 'Customer (Email / Phone)', sortable: true },
-    {
-      field: 'date',
-      header: 'Date',
-      sortable: true,
-      body: (row: OrderItem) => new Date(row.date).toLocaleDateString(),
-    },
-    { field: 'total', header: 'Total', sortable: true },
-    {
-      field: 'shippingInfo.town',
-      header: 'City',
-      sortable: true,
-      body: (row: OrderItem) => row.shippingInfo?.town,
-    },
-    {
-      field: 'shippingInfo.country',
-      header: 'Country',
-      sortable: true,
-      body: (row: OrderItem) => row.shippingInfo?.country,
-    },
-    {
-      field: 'status',
-      header: 'Status',
-      body: (row: OrderItem) => <Chip label={row.status} color={statusColorMap[row.status]} />,
-    },
-    {
-      field: 'actions',
-      header: 'Actions',
-      body: (row: any) => (
-        <Flex spacing="m">
-          <Button appearance="outline" onClick={() => navigate(`/order-details/${row.id}`)}>
-            Details
-          </Button>
-          <Button appearance="outline" onClick={() => navigate(`/order-edit/${row.id}`)}>
-            Edit
-          </Button>
-        </Flex>
-      ),
-    },
-  ];
+  function renderCell(row: any, col: any) {
+    switch (col.field) {
+      case 'status':
+        return <Chip label={row.status} appearance={col.body(row).color} />;
 
-  const handleSort = ({ field, order }: { field: string; order: number }) => {
-    setSortField(field);
-    setSortOrder(order);
-    setPage(1);
-  };
+      case 'actions': {
+        const { onDetails, onEdit, onDelete } = col.body(row);
+        return (
+          <Flex spacing="m">
+            <Button size="small" appearance="outline" leftIcon={faEye} onClick={onDetails} />
+            <Button size="small" leftIcon={faPen} appearance="outline" onClick={onEdit} />
+            <Button size="small" appearance="outline" leftIcon={faTrashAlt} onClick={onDelete} />
+          </Flex>
+        );
+      }
 
-  const handlePageChange = (newPage: number, newPageSize: number) => {
-    setPage(newPage);
-    setPageSize(newPageSize);
-  };
+      default:
+        return col.body ? col.body(row) : null;
+    }
+  }
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" fullWidth>
+        <Flex justify="between" align="center" fullWidth>
           <Heading>Orders</Heading>
-          <Flex spacing="xl">
-            <Select
-              placeholder="Filter by status"
-              value={pendingFilters.status || ''}
-              onChange={(value) => setPendingFilters({ ...pendingFilters, status: value })}
-              style={{ marginRight: '1rem' }}
-            >
-              {orderStatusOptions.map(({ label, value }) => (
-                <Option key={value || 'all'} value={value}>
-                  {label}
-                </Option>
-              ))}
-            </Select>
-
-            <StringInput
-              placeholder="Search by customer email/phone"
-              value={pendingFilters.email || ''}
-              onInput={(e) =>
-                setPendingFilters({
-                  ...pendingFilters,
-                  email: (e.target as HTMLInputElement).value,
-                })
-              }
-              style={{ width: '250px', marginRight: '1rem' }}
-            />
-
-            <StringInput
-              placeholder="Search by city"
-              value={pendingFilters.city || ''}
-              onInput={(e) =>
-                setPendingFilters({
-                  ...pendingFilters,
-                  city: (e.target as HTMLInputElement).value,
-                })
-              }
-              style={{ width: '250px' }}
-            />
-
-            <Button
-              appearance="outline"
-              onClick={() => {
-                setFilters({ ...pendingFilters });
-                setPage(1);
-              }}
-            >
-              Search
-            </Button>
-          </Flex>
+          <StringInputWithButton
+            placeholder="Search by order number..."
+            buttonIcon={faSearch}
+            className={styles.orderPageSearch}
+            onClear={() => handleSearch('')}
+            onClick={(searchQuery) => handleSearch(searchQuery)}
+          />
         </Flex>
-
         <Table
-          ref={tableRef}
           value={orders}
-          columns={columns}
+          columns={columns.map((col) => ({
+            ...col,
+            body: col.body ? (row: any) => renderCell(row, col) : undefined,
+          }))}
           paginator
           rows={pageSize}
           totalRecords={totalRecords}
@@ -156,6 +79,13 @@ const OrdersPage: React.FC = () => {
           onSort={handleSort}
           isLoading={loading}
           onPageChange={handlePageChange}
+        />
+        <ConfirmDialog
+          visible={confirmVisible}
+          header="Delete Order"
+          message={`Are you sure you want to delete order #${orderToDelete?.orderNumber || orderToDelete?.id}?`}
+          onConfirm={confirmDelete}
+          onCancel={cancelDelete}
         />
       </Flex>
     </AdminLayout>

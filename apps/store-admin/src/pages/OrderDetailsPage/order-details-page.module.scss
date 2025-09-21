@@ -1,8 +1,102 @@
-.orderDetails-items {
-  flex-grow: 1;
+.orderDetails {
+  &-headerRow {
+    margin-bottom: 24px;
+  }
 
-  & > *:not(:last-child) {
-    border-bottom: 1px solid $color-border-light;
-    margin-bottom: 18px;
+  &-orderDate {
+    font-size: 14px;
+    color: $color-text-grey-light;
+  }
+
+  &-pageContent {
+    align-items: flex-start;
+  }
+
+  &-status {
+    width: 200px;
+  }
+
+  &-items {
+    flex-grow: 1;
+    background: $color-bg-primary;
+    border-radius: $radius-lg;
+    padding: $spacing-lg;
+
+    & > *:not(:last-child) {
+      border-bottom: 1px solid $color-border-light;
+      margin-bottom: $spacing-md;
+      padding-bottom: $spacing-md;
+    }
+  }
+
+  &-cartItemCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &-cartItemImage {
+    width: 56px;
+    height: 56px;
+    object-fit: cover;
+    border-radius: $radius-sm;
+    box-shadow: $shadow-sm;
+  }
+
+  &-cartItemCardName {
+    font-weight: 600;
+    font-size: 15px;
+    color: $color-text-primary;
+  }
+
+  &-unitPrice {
+    font-size: 13px;
+    color: $color-text-grey-light;
+    padding-top: 4px;
+    font-weight: 500;
+  }
+
+  &-quantityLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: $color-text-secondary;
+  }
+
+  &-cartItemCardPrice {
+    font-weight: 600;
+    font-size: 15px;
+    color: $color-text-dark;
+  }
+
+  &-totalRow {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: $spacing-md;
+  }
+
+  &-couponRow {
+    margin-bottom: $spacing-md;
+  }
+
+  &-couponDetails {
+    font-size: 14px;
+    color: $color-text-secondary;
+  }
+
+  &-noCoupon {
+    font-size: 13px;
+    color: $color-text-muted;
+    margin-bottom: $spacing-sm;
+  }
+
+  &-discount {
+    color: $color-error-dark;
+    font-weight: 600;
+  }
+
+  &-totalSummary {
+    font-size: 18px;
+    font-weight: 700;
+    color: $color-primary-dark;
   }
 }

@@ -36,4 +36,41 @@
     border: 1px solid $color-border;
     border-radius: 16px;
   }
+
+  &--primary {
+    background-color: $color-accent;
+    color: $color-white;
+  }
+
+  &--success {
+    background-color: $color-success;
+    color: $color-white;
+  }
+
+  &--secondary-outline {
+    background-color: $color-white;
+    color: $color-text-grey;
+    border: 1px solid $color-border;
+    border-radius: 16px;
+  }
+
+  &--warning {
+    background-color: $color-warning-dark;
+    color: $color-white;
+  }
+
+  &--secondary {
+    background-color: $color-text-grey-light;
+    color: $color-white;
+  }
+
+  &--info {
+    background-color: $color-info-dark;
+    color: $color-white;
+  }
+
+  &--danger {
+    background-color: $color-error-dark;
+    color: $color-white;
+  }
 }
