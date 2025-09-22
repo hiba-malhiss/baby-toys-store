@@ -11,7 +11,6 @@ export interface Coupon {
   validUntil?: string;
   maxUses?: number;
   currentUses?: number;
-  isActive?: boolean;
 }
 
 export interface CreateCouponRequest {
@@ -25,7 +24,6 @@ export interface CreateCouponRequest {
   validFrom: string;
   validUntil?: string;
   maxUses?: number;
-  isActive?: boolean;
 }
 
 export interface UpdateCouponRequest {
@@ -39,5 +37,4 @@ export interface UpdateCouponRequest {
   validFrom?: string;
   validUntil?: string;
   maxUses?: number;
-  isActive?: boolean;
 }

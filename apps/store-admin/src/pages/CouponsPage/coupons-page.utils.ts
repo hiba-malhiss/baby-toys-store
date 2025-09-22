@@ -11,7 +11,6 @@ export const couponSchema = z
     validFrom: z.date({ message: 'Valid from date is required' }),
     validUntil: z.date().nullable().optional(),
     maxUses: z.number().min(0).optional().or(z.literal(null)),
-    isActive: z.boolean().optional(),
   })
   .refine(
     (data) => {

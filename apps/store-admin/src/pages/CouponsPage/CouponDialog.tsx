@@ -70,7 +70,6 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
       validFrom: new Date(),
       validUntil: null,
       maxUses: null,
-      isActive: true,
     },
   });
 
@@ -90,7 +89,6 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
         validFrom: new Date(coupon.validFrom),
         validUntil: coupon.validUntil ? new Date(coupon.validUntil) : null,
         maxUses: coupon.maxUses ?? null,
-        isActive: coupon.isActive ?? true,
       });
     } else {
       reset();
@@ -113,7 +111,6 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
         ? moment(data.validUntil).format('YYYY-MM-DD[T]HH:mm:ss')
         : undefined,
       maxUses: data.maxUses ?? undefined,
-      isActive: data.isActive ?? undefined,
     };
 
     try {
