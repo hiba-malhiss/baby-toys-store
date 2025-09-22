@@ -2,15 +2,14 @@ import React, { useState } from 'react';
 import StringInput, { type StringInputProps } from '../StringInput/StringInput';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './string-input-with-button.module.scss';
-import Button from '../Button/Button.tsx';
 import clsx from 'clsx';
-import { fa0 } from '@fortawesome/free-solid-svg-icons';
 
-interface StringInputWithButtonProps extends Omit<StringInputProps, 'onChange' | 'value'> {
+interface StringInputWithButtonProps extends Omit<StringInputProps, never> {
   buttonIcon: IconDefinition;
   onClick: (value: string) => void;
   onClear?: () => void;
   value?: string;
+  onChange?: (value: string) => void;
 }
 
 const StringInputWithButton: React.FC<StringInputWithButtonProps> = ({
@@ -19,34 +18,34 @@ const StringInputWithButton: React.FC<StringInputWithButtonProps> = ({
   className,
   value: externalValue,
   onClear,
+  onChange,
   ...rest
 }) => {
   const [inputValue, setInputValue] = useState(externalValue || '');
 
   const handleButtonClick = () => {
-    onClick(inputValue);
+    onClick((externalValue ?? inputValue) || '');
   };
 
   return (
     <div className={clsx(className, styles.stringInputWithButton)}>
       <StringInput
         {...rest}
-        value={inputValue}
+        value={externalValue ?? inputValue}
         onChange={(value) => {
-          setInputValue(value);
-          if (!value?.length) {
+          const strVal = String(value ?? '');
+          setInputValue(strVal);
+          onChange?.(strVal);
+          if (!strVal.length) {
             onClear?.();
           }
         }}
         fullWidth
-        icon={fa0}
+        // New approach: render action as right icon with background and click handler
+        iconRight={buttonIcon}
+        withIconBackground
+        onIconClick={handleButtonClick}
         iconPosition="right"
-      />
-      <Button
-        rightIcon={buttonIcon}
-        onClick={handleButtonClick}
-        isDisabled={rest.isDisabled}
-        className={styles.stringInputWithButtonButton}
       />
     </div>
   );

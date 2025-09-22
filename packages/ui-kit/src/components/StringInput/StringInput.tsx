@@ -19,9 +19,13 @@ export interface StringInputProps {
   onBlur?: () => void;
   placeholder?: string;
   icon?: any;
+  iconRight?: any;
+  onIconClick?: (e: React.MouseEvent) => void;
   iconColor?: IconColor;
   className?: string;
   iconPosition?: IconPosition;
+  // Render the icon container with a background (button-like look)
+  withIconBackground?: boolean;
   maxTooltip?: React.ReactNode;
   isDisabled?: boolean;
   isRounded?: boolean;
@@ -29,6 +33,7 @@ export interface StringInputProps {
   fullWidth?: boolean;
   hasError?: boolean;
   withControls?: boolean;
+  readOnly?: boolean;
 }
 
 const StringInput: React.FC<StringInputProps> = ({
@@ -40,6 +45,9 @@ const StringInput: React.FC<StringInputProps> = ({
   onChange,
   placeholder = '',
   icon,
+  iconRight,
+  onIconClick,
+  withIconBackground = false,
   iconColor,
   iconPosition = 'left',
   isDisabled = false,
@@ -50,6 +58,7 @@ const StringInput: React.FC<StringInputProps> = ({
   hasError,
   maxTooltip,
   onBlur,
+  readOnly = false,
 }) => {
   // Detect if controlled
   const isControlled = value !== undefined && onChange !== undefined;
@@ -75,20 +84,31 @@ const StringInput: React.FC<StringInputProps> = ({
 
   const [showMaxTooltip, setShowMaxTooltip] = useState(false);
 
+  // Resolve icon props for backward compatibility
+  const resolvedIcon = iconRight ?? icon;
+  const resolvedIconPosition: IconPosition = iconRight ? 'right' : iconPosition;
+
   const handleChange = (newVal: string, byControls: boolean = false) => {
     if (!isControlled) {
       setInternalValue(newVal);
     }
 
     if (type === 'number') {
-      const parsed = parseFloat(newVal);
+      const trimmed = newVal.trim();
+      if (trimmed === '') {
+        // Emit null for cleared numeric inputs
+        onChange?.(null as any);
+        return;
+      }
+      const parsed = parseFloat(trimmed);
       if (!isNaN(parsed)) {
-        onChange?.(parsed, byControls);
+        onChange?.(parsed as any);
       } else {
-        onChange?.(newVal === '' ? '' : NaN, byControls);
+        // Keep previous behavior for other non-numeric cases
+        onChange?.(NaN as any);
       }
     } else {
-      onChange?.(newVal, byControls);
+      onChange?.(newVal as any);
     }
   };
 
@@ -120,7 +140,7 @@ const StringInput: React.FC<StringInputProps> = ({
   const containerClass = clsx(
     styles.stringInput,
     styles[`stringInput--${size}Size`],
-    styles[`stringInput--${iconPosition}Icon`],
+    styles[`stringInput--${resolvedIconPosition}Icon`],
     isRounded && styles.isRounded,
     {
       [styles.stringWithControls]: withControls,
@@ -132,10 +152,10 @@ const StringInput: React.FC<StringInputProps> = ({
   const inputClass = clsx(
     styles.input,
     styles[`input--${size}Size`],
-    styles[`${size}Size-${iconPosition}Icon`],
+    styles[`${size}Size-${resolvedIconPosition}Icon`],
     {
       [styles.isDisabled]: isDisabled,
-      [styles.hasIcon]: icon,
+      [styles.hasIcon]: resolvedIcon,
       [styles.hasError]: !!hasError,
     }
   );
@@ -165,6 +185,7 @@ const StringInput: React.FC<StringInputProps> = ({
           max={max}
           step="any"
           disabled={isDisabled}
+          readOnly={readOnly}
           placeholder={placeholder}
           value={isControlled ? String(value ?? '') : internalValue}
           onChange={(e) => handleChange(e.target.value)}
@@ -190,7 +211,27 @@ const StringInput: React.FC<StringInputProps> = ({
           </Tooltip>
         )}
 
-        {icon && <Icon icon={icon} className={clsx(styles.icon)} color={iconColor} size={size} />}
+        {resolvedIcon && (
+          <div
+            className={clsx(
+              styles.icon,
+              withIconBackground && styles.iconButton,
+              withIconBackground && styles[`iconButton--${size}Size`]
+            )}
+            onClick={(e) => {
+              if (isDisabled) return;
+              if (onIconClick) {
+                e.preventDefault();
+                e.stopPropagation();
+                onIconClick(e);
+              }
+            }}
+            role={onIconClick ? 'button' : undefined}
+            aria-disabled={isDisabled}
+          >
+            <Icon icon={resolvedIcon} className={clsx(styles.icon)} color={iconColor} size={size} />
+          </div>
+        )}
       </div>
     </div>
   );

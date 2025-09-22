@@ -67,6 +67,11 @@ $color-bg-avatar: #ccc8c8;
 $color-bg-photo: #b9b9b9;
 $color-bg-overlay: rgba(0, 0, 0, 0.5);
 
+// Base background
+$color-bg: $color-bg-primary;
+// Hover background for subtle button/icon hovers
+$color-bg-hover: $color-secondary-light;
+
 // ===== BORDER & UTILITY COLORS =====
 $color-border: #e2e8f0;
 $color-border-light: #e9ecef;

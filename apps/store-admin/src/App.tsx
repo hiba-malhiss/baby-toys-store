@@ -19,6 +19,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AdminStoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { ToastProvider, Toast } from '@baby-toys/ui-kit/components';
+import CouponsPage from './pages/CouponsPage/CouponsPage.tsx';
 
 export const queryClient = new QueryClient();
 
@@ -101,6 +102,14 @@ const App: React.FC = () => {
                   element={
                     <PrivateRoute>
                       <BrandsPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/coupons"
+                  element={
+                    <PrivateRoute>
+                      <CouponsPage />
                     </PrivateRoute>
                   }
                 />
