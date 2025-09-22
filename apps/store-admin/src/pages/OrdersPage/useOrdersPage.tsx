@@ -1,10 +1,12 @@
-import { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDeleteOrder, useAdminOrders } from '../../api/ordersApi';
 import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
 import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
+import { Chip, Flex, Button } from '@baby-toys/ui-kit/components';
+import { faEye, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export const useOrdersPage = () => {
   const navigate = useNavigate();
@@ -14,6 +16,7 @@ export const useOrdersPage = () => {
   const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
 
   const [orderNumber, setOrderNumber] = useState();
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState<string>('createdAt');
@@ -26,6 +29,7 @@ export const useOrdersPage = () => {
     sortBy: sortField,
     sortDirection: sortOrder === 1 ? 'ASC' : 'DESC',
     orderNumber,
+    status: statusFilter,
   });
 
   const orders = useMemo(() => data?.content ?? [], [data]);
@@ -60,24 +64,36 @@ export const useOrdersPage = () => {
       {
         field: 'status',
         header: 'Status',
-        body: (row: Order) => ({
-          type: 'chip',
-          label: row.status,
-          color: statusColorMap[row.status],
-        }),
+        body: (row: Order) => <Chip label={row.status} appearance={statusColorMap[row.status]} />,
       },
       {
         field: 'actions',
         header: 'Actions',
-        body: (row: Order) => ({
-          type: 'actions',
-          onDetails: () => navigate(`/order-details/${row.id}`),
-          onEdit: () => navigate(`/order-edit/${row.id}`),
-          onDelete: () => {
-            setOrderToDelete(row);
-            setConfirmVisible(true);
-          },
-        }),
+        body: (row: Order) => (
+          <Flex spacing="m">
+            <Button
+              size="small"
+              appearance="outline"
+              leftIcon={faEye}
+              onClick={() => navigate(`/order-details/${row.id}`)}
+            />
+            <Button
+              size="small"
+              appearance="outline"
+              leftIcon={faPen}
+              onClick={() => navigate(`/order-edit/${row.id}`)}
+            />
+            <Button
+              size="small"
+              appearance="outline"
+              leftIcon={faTrashAlt}
+              onClick={() => {
+                setOrderToDelete(row);
+                setConfirmVisible(true);
+              }}
+            />
+          </Flex>
+        ),
       },
     ],
     [navigate, currency]
@@ -98,6 +114,10 @@ export const useOrdersPage = () => {
     setOrderNumber(value);
     setPage(1);
   };
+  const selectStatus = (status?: string) => {
+    setStatusFilter(status);
+    setPage(1);
+  };
 
   return {
     orders,
@@ -114,5 +134,7 @@ export const useOrdersPage = () => {
     confirmDelete,
     cancelDelete,
     handleSearch,
+    statusFilter,
+    setStatusFilter: selectStatus,
   };
 };

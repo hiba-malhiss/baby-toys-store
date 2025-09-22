@@ -94,7 +94,7 @@ const HomePageContent: React.FC = () => {
             />
           </Accordion>
 
-          <Flex justify="flex-end" className="bts-marginTxl">
+          <Flex justify="flex-end">
             <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>
               Save All Changes
             </Button>

@@ -1,17 +1,17 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
-  Button,
   Heading,
   Table,
   Flex,
-  Chip,
   ConfirmDialog,
   StringInput,
+  RadioButtonGroup,
 } from '@baby-toys/ui-kit/components';
-import { useOrdersPage } from './useOrdersPage';
+import { useOrdersPage } from './useOrdersPage.tsx';
 import styles from './orders-page.module.scss';
-import { faEye, faPen, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { orderStatusOptions } from './orders-page.utils';
 
 const OrdersPage: React.FC = () => {
   const [searchValue, setSearchValue] = React.useState('');
@@ -30,54 +30,58 @@ const OrdersPage: React.FC = () => {
     confirmDelete,
     cancelDelete,
     handleSearch,
+    statusFilter,
+    setStatusFilter,
   } = useOrdersPage();
 
-  function renderCell(row: any, col: any) {
-    switch (col.field) {
-      case 'status':
-        return <Chip label={row.status} appearance={col.body(row).color} />;
-
-      case 'actions': {
-        const { onDetails, onEdit, onDelete } = col.body(row);
-        return (
-          <Flex spacing="m">
-            <Button size="small" appearance="outline" leftIcon={faEye} onClick={onDetails} />
-            <Button size="small" leftIcon={faPen} appearance="outline" onClick={onEdit} />
-            <Button size="small" appearance="outline" leftIcon={faTrashAlt} onClick={onDelete} />
-          </Flex>
-        );
+  // Debounced search on typing
+  React.useEffect(() => {
+    const id = setTimeout(() => {
+      if (searchValue && searchValue.trim().length > 0) {
+        handleSearch(searchValue.trim());
       }
-
-      default:
-        return col.body ? col.body(row) : null;
-    }
-  }
+    }, 300);
+    return () => clearTimeout(id);
+  }, [searchValue, handleSearch]);
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>Orders</Heading>
-          <StringInput
-            placeholder="Search by order number..."
-            className={styles.orderPageSearch}
-            value={searchValue}
-            onChange={(val) => {
-              const v = String(val ?? '');
-              setSearchValue(v);
-              if (!v.length) handleSearch('');
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearch(searchValue.trim());
             }}
-            iconRight={faSearch}
-            withIconBackground
-            onIconClick={() => handleSearch(searchValue)}
-          />
+          >
+            <StringInput
+              placeholder="Search by order number..."
+              className={styles.orderPageSearch}
+              value={searchValue}
+              onChange={(val) => {
+                const v = String(val ?? '');
+                setSearchValue(v);
+                if (!v.length) handleSearch('');
+              }}
+              iconRight={faSearch}
+              withIconBackground
+              onIconClick={() => handleSearch(searchValue.trim())}
+            />
+          </form>
         </Flex>
+
+        <RadioButtonGroup
+          name="orders-status-filter"
+          options={[{ label: 'All', value: '' }, ...orderStatusOptions] as any}
+          selectedValue={statusFilter ?? ''}
+          onChange={(value) => setStatusFilter(value || undefined)}
+          spacing="m"
+          appearance="chip"
+        />
         <Table
           value={orders}
-          columns={columns.map((col) => ({
-            ...col,
-            body: col.body ? (row: any) => renderCell(row, col) : undefined,
-          }))}
+          columns={columns}
           paginator
           rows={pageSize}
           totalRecords={totalRecords}

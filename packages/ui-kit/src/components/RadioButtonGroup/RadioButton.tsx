@@ -10,7 +10,7 @@ interface RadioButtonProps {
   value: string;
   isSelected?: boolean;
   onChange?: (value: string) => void;
-  appearance?: 'link' | 'secondary' | 'link-underline' | 'field' | 'color-swatch';
+  appearance?: 'link' | 'chip' | 'link-underline' | 'field' | 'color-swatch';
   className?: string;
   swatchColor?: string;
   isRainbow?: boolean;

@@ -5,7 +5,6 @@ import {
   Table,
   Heading,
   ConfirmDialog,
-  Paginator,
   StringInput,
 } from '@baby-toys/ui-kit/components';
 import { faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -17,7 +16,6 @@ import styles from './ProductsPage.module.scss';
 const ProductsPage: React.FC = () => {
   const [searchValue, setSearchValue] = React.useState('');
   const {
-    page,
     rowsPerPage,
     sortField,
     products,
@@ -97,21 +95,14 @@ const ProductsPage: React.FC = () => {
           emptyMessage="No products found"
           bordered
           striped
+          paginator
+          rows={rowsPerPage}
+          totalRecords={totalItems}
+          onPageChange={(newPage: number, newSize: number) => {
+            setPage(newPage);
+            if (newSize !== rowsPerPage) setRowsPerPage(newSize);
+          }}
         />
-
-        {/* Pagination */}
-        <Flex fullWidth justify="center">
-          <Paginator
-            totalItems={totalItems}
-            pageSize={rowsPerPage}
-            initialPage={page}
-            isLoading={isLoading}
-            onPageChange={(newPage, newSize) => {
-              setPage(newPage);
-              if (newSize !== rowsPerPage) setRowsPerPage(newSize);
-            }}
-          />
-        </Flex>
 
         {/* Delete confirmation */}
         <ConfirmDialog

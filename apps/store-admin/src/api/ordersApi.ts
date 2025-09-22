@@ -8,6 +8,7 @@ export interface UseAdminOrdersParams {
   size?: number;
   sortBy?: string;
   orderNumber?: string;
+  status?: OrderStatus;
   sortDirection?: 'ASC' | 'DESC' | 'asc' | 'desc';
 }
 
@@ -27,6 +28,7 @@ export const useAdminOrders = (params?: UseAdminOrdersParams) =>
           sortBy: params?.sortBy ?? 'createdAt',
           sortDirection: toUpper(params?.sortDirection ?? 'DESC'),
           orderNumber: params?.orderNumber,
+          status: params?.status,
         },
       });
       return data.data;

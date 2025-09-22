@@ -51,7 +51,7 @@ const TopPicksSection = () => {
         selectedValue={selected}
         name="topPicks"
         onChange={handleSortChange}
-        appearance="secondary"
+        appearance="chip"
       />
       <div className={styles.topPicksGrid}>
         {items.map((toy, index) => (
