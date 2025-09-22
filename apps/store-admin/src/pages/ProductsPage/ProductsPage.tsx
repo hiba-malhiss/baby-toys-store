@@ -6,7 +6,7 @@ import {
   Heading,
   ConfirmDialog,
   Paginator,
-  StringInputWithButton,
+  StringInput,
 } from '@baby-toys/ui-kit/components';
 import { faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -15,6 +15,7 @@ import { useProductsPage } from './useProductsPage';
 import styles from './ProductsPage.module.scss';
 
 const ProductsPage: React.FC = () => {
+  const [searchValue, setSearchValue] = React.useState('');
   const {
     page,
     rowsPerPage,
@@ -50,11 +51,17 @@ const ProductsPage: React.FC = () => {
         <Flex justify="between" align="center" fullWidth>
           <Heading level="h1">Products</Heading>
           <Flex align="center" spacing="xl">
-            <StringInputWithButton
+            <StringInput
               placeholder="Search products..."
-              buttonIcon={faSearch}
-              onClear={() => handleSearch('')}
-              onClick={(searchQuery) => handleSearch(searchQuery)}
+              value={searchValue}
+              onChange={(val) => {
+                const v = String(val ?? '');
+                setSearchValue(v);
+                if (!v.length) handleSearch('');
+              }}
+              iconRight={faSearch}
+              withIconBackground
+              onIconClick={() => handleSearch(searchValue)}
             />
             <Button
               onClick={navigateToCreate}

@@ -6,7 +6,7 @@ import {
   Table,
   Heading,
   ConfirmDialog,
-  StringInputWithButton,
+  StringInput,
 } from '@baby-toys/ui-kit/components';
 import { faPlus, faPen, faTrashAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import useCouponsPage from './useCouponsPage';
@@ -108,13 +108,20 @@ const CouponsPage: React.FC = () => {
         <Flex justify="between" align="center" fullWidth>
           <Heading level="h1">Coupons</Heading>
           <Flex align="center" spacing="xl">
-            <StringInputWithButton
+            <StringInput
               placeholder="Search by code..."
-              buttonIcon={faSearch}
-              onClear={() => handleSearch('')}
               value={searchInput}
-              onChange={(val) => setSearchInput(val)}
-              onClick={() => handleSearch(searchInput)}
+              onChange={(val) => {
+                const v = String(val ?? '');
+                setSearchInput(v);
+                if (!v.length) {
+                  handleSearch('');
+                }
+              }}
+              iconRight={faSearch}
+              withIconBackground
+              onIconClick={() => handleSearch(searchInput)}
+              fullWidth
             />
             <Button onClick={openAddDialog} leftIcon={faPlus} className={styles.couponsPageAddBtn}>
               Add Coupon

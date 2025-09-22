@@ -74,6 +74,7 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
     },
   });
 
+  // trigger re-render on value change
   const watchDiscountAmount = watch('discountAmount');
   const watchDiscountPercent = watch('discountPercent');
 

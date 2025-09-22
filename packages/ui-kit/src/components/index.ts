@@ -37,7 +37,6 @@ export { default as Select } from './Select/Select';
 export { default as SkeletonProductCard } from './Skeleton/SkeletonProductCard';
 export { default as Slider } from './Slider/Slider';
 export { default as StringInput } from './StringInput/StringInput';
-export { default as StringInputWithButton } from './StringInputWithButton/StringInputWithButton';
 export { default as TabBar } from './TabBar/TabBar';
 export { default as TextArea } from './TextArea/TextArea';
 export { default as Toast } from './Toast/Toast';

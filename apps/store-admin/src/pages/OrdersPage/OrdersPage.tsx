@@ -7,13 +7,14 @@ import {
   Flex,
   Chip,
   ConfirmDialog,
-  StringInputWithButton,
+  StringInput,
 } from '@baby-toys/ui-kit/components';
 import { useOrdersPage } from './useOrdersPage';
 import styles from './orders-page.module.scss';
 import { faEye, faPen, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const OrdersPage: React.FC = () => {
+  const [searchValue, setSearchValue] = React.useState('');
   const {
     orders,
     totalRecords,
@@ -57,12 +58,18 @@ const OrdersPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>Orders</Heading>
-          <StringInputWithButton
+          <StringInput
             placeholder="Search by order number..."
-            buttonIcon={faSearch}
             className={styles.orderPageSearch}
-            onClear={() => handleSearch('')}
-            onClick={(searchQuery) => handleSearch(searchQuery)}
+            value={searchValue}
+            onChange={(val) => {
+              const v = String(val ?? '');
+              setSearchValue(v);
+              if (!v.length) handleSearch('');
+            }}
+            iconRight={faSearch}
+            withIconBackground
+            onIconClick={() => handleSearch(searchValue)}
           />
         </Flex>
         <Table

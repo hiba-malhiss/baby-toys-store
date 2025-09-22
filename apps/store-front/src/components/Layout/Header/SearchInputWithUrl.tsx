@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { StringInputWithButton } from '@baby-toys/ui-kit/components';
+import { StringInput } from '@baby-toys/ui-kit/components';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 
@@ -23,14 +23,14 @@ const SearchInputWithUrl = () => {
 
   return (
     <form onSubmit={handleSearch} aria-label="Product Search Form">
-      <StringInputWithButton
+      <StringInput
         placeholder="Search products..."
-        buttonIcon={faSearch}
         fullWidth
         value={urlFilters?.search}
-        onChange={(val) => updateUrlFilters({ search: val })}
+        onChange={(val) => updateUrlFilters({ search: String(val ?? '') })}
+        iconRight={faSearch}
+        withIconBackground
         onIconClick={handleSearch}
-        onClick={handleSearch}
       />
     </form>
   );

@@ -2,13 +2,13 @@ import { z } from 'zod';
 
 export const couponSchema = z
   .object({
-    code: z.string().min(1, 'Code is required'),
+    code: z.string().min(5, 'Code must be at least 5 characters'),
     description: z.string().optional(),
     discountAmount: z.number().min(0).optional().or(z.literal(null)),
     discountPercent: z.number().min(0).max(100).optional().or(z.literal(null)),
     maxDiscount: z.number().min(0).optional().or(z.literal(null)),
     minOrderAmount: z.number().min(0).optional().or(z.literal(null)),
-    validFrom: z.date({ required_error: 'Valid from date is required' }),
+    validFrom: z.date({ message: 'Valid from date is required' }),
     validUntil: z.date().nullable().optional(),
     maxUses: z.number().min(0).optional().or(z.literal(null)),
     isActive: z.boolean().optional(),
