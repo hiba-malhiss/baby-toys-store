@@ -1,23 +1,22 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
-  Card,
   Chip,
   Select,
   Option,
   Button,
   Flex,
   Heading,
-  StringInput,
   ConfirmDialog,
 } from '@baby-toys/ui-kit/components';
 import styles from './order-details-page.module.scss';
-import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
-import { orderStatusOptions, statusColorMap } from '../OrdersPage/orders-page.utils.ts';
+import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext';
+import { statusColorMap, orderStatusOptions } from '../OrdersPage/orders-page.utils';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { OrderStatus } from '../../api/types/order.ts';
-import { useOrderDetails } from './useOrderDetails.ts';
-import { OrderItems } from './OrderItems.tsx';
+import { OrderStatus } from '../../api/types/order';
+import { useOrderDetails } from './useOrderDetails';
+import { OrderItems } from './OrderItems';
+import { CouponAndSummary } from './CouponAndSummary.tsx';
 
 interface OrderDetailsPageProps {
   isEdit?: boolean;
@@ -28,29 +27,33 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
     order,
     isLoading,
     navigate,
-    confirmVisible,
-    setConfirmVisible,
     couponInput,
     setCouponInput,
     localQuantities,
     handleLocalQuantityChange,
     handleQuantityUpdate,
-    handleStatusChange,
+    handleStatusSelectChange,
     handleApplyCoupon,
     handleRemoveCoupon,
     handleDeleteItem,
-    setConfirmDeleteItemId,
-    confirmDeleteItemId,
-    isMaskLoading,
-    deleteOrder,
+    itemIdToDelete,
+    isMutating,
+    setItemIdToDelete,
+    selectValue,
+    allowedOptions,
+    canEditOrder,
+    statusConfirmVisible,
+    pendingStatus,
+    confirmStatusChange,
+    cancelStatusChange,
   } = useOrderDetails();
 
   const { currency } = useAdminStoreConfiguration();
 
   return (
-    <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMaskLoading}>
+    <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMutating}>
       {/* Header */}
-      <Flex justify="between" className={styles.orderDetailsHeaderRow}>
+      <Flex justify="between" align="center" className={styles.orderDetailsHeaderRow}>
         <Flex direction="vertical" spacing="xs">
           <Heading>
             {isEdit
@@ -63,22 +66,34 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
         </Flex>
 
         {isEdit ? (
-          <Select
-            className={styles.orderDetailsStatus}
-            value={order?.status}
-            isDisabled={
-              order?.status === OrderStatus.CANCELLED || order?.status === OrderStatus.DELIVERED
-            }
-            onChange={(val) => handleStatusChange(val as OrderStatus)}
-          >
-            {orderStatusOptions.map(({ label, value }) => (
-              <Option key={value} value={value}>
-                {label}
-              </Option>
-            ))}
-          </Select>
+          <Flex direction="vertical" spacing="xs" align="end">
+            <Select
+              className={styles.orderDetailsStatus}
+              value={selectValue}
+              isDisabled={allowedOptions.length === 0}
+              onChange={(val) => handleStatusSelectChange(val as OrderStatus)}
+            >
+              {order?.status && (
+                <Option key={`current-${order.status}`} value={order.status}>
+                  {`Current: ${
+                    orderStatusOptions.find((o) => o.value === order.status)?.label || order.status
+                  }`}
+                </Option>
+              )}
+              {allowedOptions.map(({ label, value }) => (
+                <Option key={value} value={value}>
+                  {label}
+                </Option>
+              ))}
+            </Select>
+          </Flex>
         ) : (
-          <Chip label={order?.status} appearance={statusColorMap[order?.status]} />
+          <Flex align="center" spacing="m">
+            <Chip label={order?.status} appearance={statusColorMap[order?.status]} />
+            <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
+              Edit Order
+            </Button>
+          </Flex>
         )}
       </Flex>
 
@@ -86,82 +101,37 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
       <Flex spacing="xxl" align="start" className={styles.orderDetailsPageContent} fullHeight>
         <OrderItems
           order={order}
-          isEdit={isEdit}
+          isEdit={Boolean(isEdit && canEditOrder)}
+          showHeaderActions={false}
           currency={currency}
           navigate={navigate}
           localQuantities={localQuantities}
           handleLocalQuantityChange={handleLocalQuantityChange}
           handleQuantityUpdate={handleQuantityUpdate}
-          confirmDeleteItemId={confirmDeleteItemId}
-          setConfirmDeleteItemId={setConfirmDeleteItemId}
+          itemIdToDelete={itemIdToDelete}
           handleDeleteItem={handleDeleteItem}
-          setConfirmVisible={setConfirmVisible}
+          setItemIdToDelete={setItemIdToDelete}
         />
-
-        {/* Coupon & Summary */}
-        <Card header={<Heading level="h3">Coupon & Summary</Heading>}>
-          <Flex spacing="xl" direction="vertical">
-            {isEdit && (
-              <Flex spacing="m" align="center" className={styles.couponRow}>
-                <StringInput
-                  placeholder="Coupon code"
-                  value={couponInput}
-                  onChange={(value) => setCouponInput(value)}
-                />
-                <Button onClick={handleApplyCoupon} isDisabled={!couponInput?.trim()}>
-                  Apply
-                </Button>
-                {order?.couponCode && (
-                  <Button appearance="outline" color="secondary" onClick={handleRemoveCoupon}>
-                    Remove ({order?.couponCode})
-                  </Button>
-                )}
-              </Flex>
-            )}
-
-            {order?.couponCode ? (
-              <Flex spacing="s" justify="between" className={styles.orderDetailsCouponDetails}>
-                <span>Coupon Applied:</span>
-                <span className={styles.couponCode}>{order?.couponCode}</span>
-              </Flex>
-            ) : (
-              <span className={styles.orderDetailsNoCoupon}>No coupon applied</span>
-            )}
-
-            <Flex spacing="s" justify="between">
-              <strong>Subtotal:</strong>
-              <span>
-                {order?.subtotal} {currency?.symbol}
-              </span>
-            </Flex>
-            <Flex spacing="s" justify="between">
-              <strong>Discount:</strong>
-              <span className={styles.orderDetailsDiscount}>
-                - {order?.discountAmount} {currency?.symbol}
-              </span>
-            </Flex>
-            <Flex spacing="s" justify="between" className={styles.orderDetailsTotalSummary}>
-              <strong>Total:</strong>
-              <span>
-                {order?.total} {currency?.symbol}
-              </span>
-            </Flex>
-          </Flex>
-        </Card>
+        <CouponAndSummary
+          isEdit={Boolean(isEdit && canEditOrder)}
+          couponInput={couponInput}
+          setCouponInput={setCouponInput}
+          order={order}
+          currency={currency}
+          handleApplyCoupon={handleApplyCoupon}
+          handleRemoveCoupon={handleRemoveCoupon}
+          canEditOrder={canEditOrder}
+        />
       </Flex>
 
-      {/* Delete Order Confirmation */}
       <ConfirmDialog
-        visible={confirmVisible}
-        header="Delete Order"
-        message={`Are you sure you want to delete order #${order?.orderNumber || order?.id}?`}
-        onConfirm={() => {
-          deleteOrder.mutate(order?.id, {
-            onSuccess: () => navigate('/orders'),
-          });
-          setConfirmVisible(false);
-        }}
-        onCancel={() => setConfirmVisible(false)}
+        visible={statusConfirmVisible}
+        header="Change Order Status"
+        message={
+          pendingStatus ? `Are you sure you want to change the status to "${pendingStatus}"?` : ''
+        }
+        onConfirm={confirmStatusChange}
+        onCancel={cancelStatusChange}
       />
     </AdminLayout>
   );

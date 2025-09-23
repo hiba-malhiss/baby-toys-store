@@ -97,18 +97,18 @@ const StringInput: React.FC<StringInputProps> = ({
       const trimmed = newVal.trim();
       if (trimmed === '') {
         // Emit null for cleared numeric inputs
-        onChange?.(null as any);
+        onChange?.(null as any, byControls);
         return;
       }
       const parsed = parseFloat(trimmed);
       if (!isNaN(parsed)) {
-        onChange?.(parsed as any);
+        onChange?.(parsed as any, byControls);
       } else {
         // Keep previous behavior for other non-numeric cases
-        onChange?.(NaN as any);
+        onChange?.(NaN as any, byControls);
       }
     } else {
-      onChange?.(newVal as any);
+      onChange?.(newVal as any, byControls);
     }
   };
 

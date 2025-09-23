@@ -9,133 +9,125 @@ import {
 } from '@baby-toys/ui-kit/components';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './order-details-page.module.scss';
+import { NavigateFunction } from 'react-router-dom';
+import { Order } from '../../api/types/order';
 
 interface OrderItemsProps {
-  order: any;
+  order: Order;
   isEdit?: boolean;
-  currency: any;
-  navigate: any;
+  showHeaderActions?: boolean;
+  currency: { symbol: string };
+  navigate: NavigateFunction;
   localQuantities: Record<number, number>;
   handleLocalQuantityChange: (id: number, qty: number, byControls: boolean) => void;
   handleQuantityUpdate: (id: number) => void;
-  confirmDeleteItemId: number | null;
-  setConfirmDeleteItemId: (id: number | null) => void;
+  itemIdToDelete: number | null;
+  setItemIdToDelete: (id: number | null) => void;
   handleDeleteItem: (id: number) => void;
-  setConfirmVisible: (visible: boolean) => void;
 }
 
 export const OrderItems: React.FC<OrderItemsProps> = ({
   order,
   isEdit,
+  showHeaderActions,
   currency,
   navigate,
   localQuantities,
   handleLocalQuantityChange,
   handleQuantityUpdate,
-  confirmDeleteItemId,
-  setConfirmDeleteItemId,
+  itemIdToDelete,
+  setItemIdToDelete,
   handleDeleteItem,
-  setConfirmVisible,
-}) => {
-  return (
-    <Card
-      header={
-        <Flex justify="between" fullWidth align="center">
-          <Heading level="h3">Order Items</Heading>
-          {!isEdit && (
-            <Flex spacing="s">
-              <Button
-                leftIcon={faPen}
-                appearance="outline"
-                onClick={() => navigate(`/order-edit/${order?.id}`)}
-              />
-              <Button
-                appearance="outline"
-                leftIcon={faTrashAlt}
-                onClick={() => setConfirmVisible(true)}
-              />
-            </Flex>
+}) => (
+  <Card
+    header={
+      <Flex justify="between" fullWidth align="center">
+        <Heading level="h3">Order Items</Heading>
+        {showHeaderActions && (
+          <Button
+            leftIcon={faPen}
+            appearance="outline"
+            onClick={() => navigate(`/order-edit/${order.id}`)}
+          />
+        )}
+      </Flex>
+    }
+    className={styles.orderDetailsItems}
+  >
+    {order.items.map((item) => (
+      <Flex
+        key={item.id}
+        align="center"
+        justify="between"
+        className={styles.orderDetailsCartItemCard}
+      >
+        <Flex align="center" spacing="m">
+          {item.mainImage && (
+            <img
+              src={item.mainImage}
+              alt={item.productName ?? 'Product image'}
+              className={styles.orderDetailsCartItemImage}
+            />
+          )}
+          <Flex direction="vertical">
+            <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
+            <span className={styles.orderDetailsUnitPrice}>
+              Unit: {item?.pricePerUnit} {currency?.symbol}
+            </span>
+          </Flex>
+        </Flex>
+
+        <Flex align="center" spacing="s">
+          {isEdit ? (
+            <ProductQuantityInput
+              quantity={localQuantities[item.id] ?? item.quantity}
+              onChange={(value, byControls) =>
+                handleLocalQuantityChange(item.id, parseInt(value, 10), byControls)
+              }
+              onBlur={() => handleQuantityUpdate(item.id)}
+            />
+          ) : (
+            <div className={styles.orderDetailsQuantityLabel}>{item.quantity}</div>
+          )}
+
+          {isEdit && (
+            <Button
+              appearance="outline"
+              color="error"
+              leftIcon={faTrashAlt}
+              onClick={() => setItemIdToDelete(item.id)}
+            />
           )}
         </Flex>
-      }
-      className={styles.orderDetailsItems}
-    >
-      {order?.items.map((item: any) => (
-        <Flex
-          key={item.id}
-          align="center"
-          justify="between"
-          className={styles.orderDetailsCartItemCard}
-        >
-          <Flex align="center" spacing="m">
-            {item.mainImage && (
-              <img
-                src={item.mainImage}
-                alt={item.productName}
-                className={styles.orderDetailsCartItemImage}
-              />
-            )}
-            <Flex direction="vertical">
-              <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
-              <span className={styles.orderDetailsUnitPrice}>
-                Unit: {item.pricePerUnit} {currency?.symbol}
-              </span>
-            </Flex>
-          </Flex>
 
-          <Flex align="center" spacing="m">
-            {isEdit ? (
-              <ProductQuantityInput
-                quantity={localQuantities[item.id] ?? item.quantity}
-                onChange={(value, byControls) =>
-                  handleLocalQuantityChange(item.id, parseInt(value, 10), byControls)
-                }
-                onBlur={() => handleQuantityUpdate(item.id)}
-              />
-            ) : (
-              <div className={styles.orderDetailsQuantityLabel}>{item.quantity}</div>
-            )}
-
-            {isEdit && (
-              <Button
-                appearance="outline"
-                color="error"
-                leftIcon={faTrashAlt}
-                onClick={() => setConfirmDeleteItemId(item.id)}
-              />
-            )}
-          </Flex>
-
-          <span className={styles.orderDetailsCartItemCardPrice}>
-            {item.totalPrice} {currency?.symbol}
-          </span>
-        </Flex>
-      ))}
-
-      <Flex justify="between" className={styles.orderDetailsTotalRow}>
-        <span>Total</span>
-        <span>
-          {order?.total} {currency?.symbol}
+        <span className={styles.orderDetailsCartItemCardPrice}>
+          {item.totalPrice} {currency?.symbol}
         </span>
       </Flex>
+    ))}
 
-      {/* Delete Item Confirmation */}
-      <ConfirmDialog
-        visible={confirmDeleteItemId !== null}
-        header="Delete Item"
-        message={
-          confirmDeleteItemId
-            ? `Are you sure you want to delete "${
-                order?.items.find((i: any) => i.id === confirmDeleteItemId)?.productName
-              }" from the order?`
-            : ''
-        }
-        onConfirm={() => {
-          if (confirmDeleteItemId) handleDeleteItem(confirmDeleteItemId);
-          setConfirmDeleteItemId(null);
-        }}
-        onCancel={() => setConfirmDeleteItemId(null)}
-      />
-    </Card>
-  );
-};
+    <Flex justify="between" className={styles.orderDetailsTotalRow}>
+      <span>Total</span>
+      <span>
+        {order.total} {currency?.symbol}
+      </span>
+    </Flex>
+
+    <ConfirmDialog
+      visible={itemIdToDelete !== null}
+      header="Delete Item"
+      message={
+        itemIdToDelete
+          ? `Are you sure you want to delete "${
+              order.items.find((i) => i.id === itemIdToDelete)?.productName
+            }" from the order?`
+          : ''
+      }
+      onConfirm={() => {
+        if (itemIdToDelete) handleDeleteItem(itemIdToDelete);
+        setItemIdToDelete(null);
+      }}
+      onCancel={() => setItemIdToDelete(null)}
+    />
+  </Card>
+);

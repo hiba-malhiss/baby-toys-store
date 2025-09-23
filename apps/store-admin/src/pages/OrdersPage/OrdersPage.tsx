@@ -14,7 +14,6 @@ import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { orderStatusOptions } from './orders-page.utils';
 
 const OrdersPage: React.FC = () => {
-  const [searchValue, setSearchValue] = React.useState('');
   const {
     orders,
     totalRecords,
@@ -32,17 +31,9 @@ const OrdersPage: React.FC = () => {
     handleSearch,
     statusFilter,
     setStatusFilter,
+    searchValue,
+    setSearchValue,
   } = useOrdersPage();
-
-  // Debounced search on typing
-  React.useEffect(() => {
-    const id = setTimeout(() => {
-      if (searchValue && searchValue.trim().length > 0) {
-        handleSearch(searchValue.trim());
-      }
-    }, 300);
-    return () => clearTimeout(id);
-  }, [searchValue, handleSearch]);
 
   return (
     <AdminLayout>
@@ -59,10 +50,9 @@ const OrdersPage: React.FC = () => {
               placeholder="Search by order number..."
               className={styles.orderPageSearch}
               value={searchValue}
-              onChange={(val) => {
-                const v = String(val ?? '');
+              onChange={(v) => {
                 setSearchValue(v);
-                if (!v.length) handleSearch('');
+                if (!v?.trim() && searchValue) handleSearch('');
               }}
               iconRight={faSearch}
               withIconBackground

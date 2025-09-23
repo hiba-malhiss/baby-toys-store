@@ -14,6 +14,7 @@ export const useOrdersPage = () => {
 
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
+  const [searchValue, setSearchValue] = React.useState('');
 
   const [orderNumber, setOrderNumber] = useState();
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
@@ -114,6 +115,7 @@ export const useOrdersPage = () => {
     setOrderNumber(value);
     setPage(1);
   };
+
   const selectStatus = (status?: string) => {
     setStatusFilter(status);
     setPage(1);
@@ -136,5 +138,7 @@ export const useOrdersPage = () => {
     handleSearch,
     statusFilter,
     setStatusFilter: selectStatus,
+    searchValue,
+    setSearchValue,
   };
 };
