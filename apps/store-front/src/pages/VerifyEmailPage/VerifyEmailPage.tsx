@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Button } from '@baby-toys/ui-kit/components';
+import { Button } from '@baby-toys/ui-kit';
 import { useVerifyEmail } from '../../api/authApi';
 import styles from './VerifyEmailPage.module.scss';
-import { BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { BouncingDotsLoader } from '@baby-toys/ui-kit';
 
 export const VerifyEmailPage: React.FC = () => {
   const [searchParams] = useSearchParams();

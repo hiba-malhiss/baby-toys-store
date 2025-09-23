@@ -6,7 +6,7 @@ import {
   Button,
   ProductQuantityInput,
   ConfirmDialog,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './order-details-page.module.scss';
 import { NavigateFunction } from 'react-router-dom';

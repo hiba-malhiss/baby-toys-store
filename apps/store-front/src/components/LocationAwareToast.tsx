@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useLocation } from "react-router-dom";
-import { useToast } from "@baby-toys/ui-kit/components";
+import { useToast } from "@baby-toys/ui-kit";
 
 const LocationAwareToast: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();

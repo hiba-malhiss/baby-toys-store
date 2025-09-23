@@ -3,7 +3,7 @@ import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { Card, Button, Chip } from '@baby-toys/ui-kit/components';
+import { Card, Button, Chip } from '@baby-toys/ui-kit';
 
 export const statusColorMap: Record<string, string> = {
   pending: 'warning',

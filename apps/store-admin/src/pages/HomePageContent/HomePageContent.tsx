@@ -7,7 +7,7 @@ import {
   TextArea,
   Button,
   ImageUploader,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';

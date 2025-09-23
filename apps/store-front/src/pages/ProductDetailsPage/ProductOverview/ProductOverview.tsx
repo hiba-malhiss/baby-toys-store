@@ -8,7 +8,7 @@ import {
   Button,
   Card,
   useToast,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import type { Product } from '../../../types/product.types.ts';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './product-overview.module.scss';
@@ -16,7 +16,7 @@ import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-sv
 import clsx from 'clsx';
 import { useCartStore } from '../../../store/useCartStore';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
-import { ProductQuantityInput } from '@baby-toys/ui-kit/components';
+import { ProductQuantityInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
 import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
 

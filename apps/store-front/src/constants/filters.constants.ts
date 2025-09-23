@@ -1,4 +1,4 @@
-import type { RadioOption } from '@baby-toys/ui-kit/components';
+import type { RadioOption } from '@baby-toys/ui-kit';
 
 export const DEFAULT_SORT_OPTION = 'featured';
 

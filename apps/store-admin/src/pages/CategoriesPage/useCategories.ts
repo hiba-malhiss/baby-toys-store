@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 import { Category } from '../../api/types/category';
 import { useCategories as useCategoriesQuery, useDeleteCategory } from '../../api/categoryApi';
 

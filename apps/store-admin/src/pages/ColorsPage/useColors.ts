@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 import { Color } from '../../api/types/color';
 import { useColors, useDeleteColor } from '../../api/colorApi';
 

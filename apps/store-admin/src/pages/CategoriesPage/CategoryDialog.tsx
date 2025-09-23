@@ -6,7 +6,7 @@ import {
   ImageUploader,
   Button,
   useToast,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,7 +18,7 @@ import {
   useUpdateCategory,
   useUploadCategoryImage,
 } from '../../api/categoryApi';
-import { Flex } from '@baby-toys/ui-kit/components';
+import { Flex } from '@baby-toys/ui-kit';
 
 type CategoryFormValues = z.infer<typeof categorySchema>;
 

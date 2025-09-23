@@ -5,7 +5,7 @@ import { PageContainer } from '../../components/layout/PageContainer/PageContain
 import { useMockProductsApi } from '@mock-data/useMockApi';
 import type { Product } from '../../types/product.types.ts';
 import { PRODUCT_RELATED_PRODUCTS_LIMIT } from '../../constants/display.constants.ts';
-import { BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { BouncingDotsLoader } from '@baby-toys/ui-kit';
 import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';
 import RelatedProducts from './RelatedProducts.tsx';

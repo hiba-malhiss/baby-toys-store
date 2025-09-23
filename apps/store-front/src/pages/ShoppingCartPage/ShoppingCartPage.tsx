@@ -2,16 +2,16 @@ import { useStoreConfiguration } from '../../context/StoreConfigurationContext.t
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useCartStore } from '../../store/useCartStore.ts';
-import { Button } from '@baby-toys/ui-kit/components';
+import { Button } from '@baby-toys/ui-kit';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Card } from '@baby-toys/ui-kit/components';
-import { NoDataFound } from '@baby-toys/ui-kit/components';
+import { Card } from '@baby-toys/ui-kit';
+import { NoDataFound } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { TotalAmountSection } from '../../components/features/TotalAmount/TotalAmountSection.tsx';
 import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
-import { ProductQuantityInput } from '@baby-toys/ui-kit/components';
+import { ProductQuantityInput } from '@baby-toys/ui-kit';
 import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
 
 const ShoppingCartPage = () => {

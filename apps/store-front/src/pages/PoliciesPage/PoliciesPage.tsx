@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { getPolicies } from '@mock-data/useMockApi';
-import { Heading, AccordionGroup, Accordion } from '@baby-toys/ui-kit/components';
+import { Heading, AccordionGroup, Accordion } from '@baby-toys/ui-kit';
 
 const PoliciesPage: React.FC = () => {
   const [policies, setPolicies] = useState<Record<

@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 import { Coupon } from '../../api/types/coupon';
 import { useCoupons, useDeleteCoupon } from '../../api/couponApi';
 

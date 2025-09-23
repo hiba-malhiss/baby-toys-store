@@ -1,11 +1,11 @@
 import { useState } from 'react';
-import { Dialog } from '@baby-toys/ui-kit/components';
-import { Button } from '@baby-toys/ui-kit/components';
-import { Rating } from '@baby-toys/ui-kit/components';
-import { useToast } from '@baby-toys/ui-kit/components';
-import { Flex } from '@baby-toys/ui-kit/components';
-import { Heading } from '@baby-toys/ui-kit/components';
-import { TextArea } from '@baby-toys/ui-kit/components';
+import { Dialog } from '@baby-toys/ui-kit';
+import { Button } from '@baby-toys/ui-kit';
+import { Rating } from '@baby-toys/ui-kit';
+import { useToast } from '@baby-toys/ui-kit';
+import { Flex } from '@baby-toys/ui-kit';
+import { Heading } from '@baby-toys/ui-kit';
+import { TextArea } from '@baby-toys/ui-kit';
 import type { CartItem } from '../../types/product.types.ts';
 import { mockAddProductReview } from '@mock-data/useMockApi';
 import { useAuth } from '../../context/AuthContext.tsx';

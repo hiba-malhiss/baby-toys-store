@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Menu, Button, Toast, BouncingDotsLoader, Mask } from '@baby-toys/ui-kit/components';
+import { Menu, Button, Toast, BouncingDotsLoader, Mask } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';

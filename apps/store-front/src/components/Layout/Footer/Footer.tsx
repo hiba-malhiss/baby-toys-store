@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
-import { Button, Flex, Heading } from '@baby-toys/ui-kit/components';
+import { Button, Flex, Heading } from '@baby-toys/ui-kit';
 import { footerInfoConfig, exploreLinks, socialMediaLinks } from './footer.constants.ts';
 import { mockFetchContactInfo } from '@mock-data/useMockApi';
 

@@ -1,6 +1,6 @@
 import { useState, type ReactNode } from 'react';
 import { faBars } from '@fortawesome/free-solid-svg-icons';
-import { Button, Drawer, Flex } from '@baby-toys/ui-kit/components';
+import { Button, Drawer, Flex } from '@baby-toys/ui-kit';
 import styles from './header.module.scss';
 import { useNavigate } from 'react-router-dom';
 

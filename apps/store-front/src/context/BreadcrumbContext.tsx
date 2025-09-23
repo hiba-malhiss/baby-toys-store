@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import type { BreadcrumbItemData } from '@baby-toys/ui-kit/components';
+import type { BreadcrumbItemData } from '@baby-toys/ui-kit';
 
 interface BreadcrumbContextType {
   extraCrumbs: BreadcrumbItemData[] | null;

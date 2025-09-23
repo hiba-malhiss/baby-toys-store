@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button } from '@baby-toys/ui-kit/components';
+import { Button } from '@baby-toys/ui-kit';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 import RegisterDialog from '../../RegisterDialog/RegisterDialog.tsx';

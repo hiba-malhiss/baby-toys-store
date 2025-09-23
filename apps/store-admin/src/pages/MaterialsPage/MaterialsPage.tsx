@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Flex, Table, Heading, ConfirmDialog } from '@baby-toys/ui-kit/components';
+import { Button, Flex, Table, Heading, ConfirmDialog } from '@baby-toys/ui-kit';
 import { faPen, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
 import { Material } from '@baby-toys/types/src';
 import useMaterials from './useMaterials';

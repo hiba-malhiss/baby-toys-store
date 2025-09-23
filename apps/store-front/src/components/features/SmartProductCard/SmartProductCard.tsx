@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProductCard, useToast, type ProductCardProps } from '@baby-toys/ui-kit/components';
+import { ProductCard, useToast, type ProductCardProps } from '@baby-toys/ui-kit';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';

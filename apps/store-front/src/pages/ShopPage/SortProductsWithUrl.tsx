@@ -1,5 +1,5 @@
 import React from 'react';
-import { Select, Option } from '@baby-toys/ui-kit/components';
+import { Select, Option } from '@baby-toys/ui-kit';
 import styles from './shop-page.module.scss';
 import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from '../../constants/filters.constants.ts';
 import { useUrlFilters } from '../../hooks/useUrlFilters'; // adjust path as needed

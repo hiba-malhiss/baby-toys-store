@@ -1,6 +1,6 @@
 import React from 'react';
-import { ReviewCard } from '@baby-toys/ui-kit/components';
-import { ViewSwitcher } from '@baby-toys/ui-kit/components';
+import { ReviewCard } from '@baby-toys/ui-kit';
+import { ViewSwitcher } from '@baby-toys/ui-kit';
 import { mockFetchProductReviews } from '@mock-data/useMockApi';
 import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 

@@ -12,7 +12,7 @@ import {
   BouncingDotsLoader,
   NoDataFound,
   Drawer,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useShopFilterOptions } from '../../../hooks/useShopFilterOptions';
 import { useFilterChips } from '../shop-page.utils.ts';
 import styles from './side-filters.module.scss';

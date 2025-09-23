@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './order-details-page.module.scss';
 import { faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button, Card, Flex, Heading, StringInput } from '@baby-toys/ui-kit/components';
+import { Button, Card, Flex, Heading, StringInput } from '@baby-toys/ui-kit';
 
 export const CouponAndSummary: React.FC<{
   isEdit: boolean;

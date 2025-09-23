@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import classNames from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button, Image, useToast } from '@baby-toys/ui-kit/components';
+import { Button, Image, useToast } from '@baby-toys/ui-kit';
 import styles from './image-uploader.module.scss';
 
 interface ImageUploaderProps {

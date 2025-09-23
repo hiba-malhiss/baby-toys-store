@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { TabBar } from '@baby-toys/ui-kit/components';
-import { TabBarItem } from '@baby-toys/ui-kit/components';
+import { TabBar } from '@baby-toys/ui-kit';
+import { TabBarItem } from '@baby-toys/ui-kit';
 import styles from './product-details-page.module.scss';
-import { Card } from '@baby-toys/ui-kit/components';
+import { Card } from '@baby-toys/ui-kit';
 import { getPolicies, useMockProductsApi } from '@mock-data/useMockApi';
-import { ExpandableContent } from '@baby-toys/ui-kit/components';
+import { ExpandableContent } from '@baby-toys/ui-kit';
 import { ProductReviews } from './ProductReviews.tsx';
 
 export const ProductInfoTabs = ({ productId }: { productId?: string }) => {

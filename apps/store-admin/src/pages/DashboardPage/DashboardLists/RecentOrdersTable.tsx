@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table } from '@baby-toys/ui-kit/components';
+import { Table } from '@baby-toys/ui-kit';
 import { OrderItem } from '@baby-toys/types/src';
 
 type RecentOrdersTableProps = {

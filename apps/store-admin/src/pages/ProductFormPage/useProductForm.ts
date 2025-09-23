@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 import { defaultProductValues, productSchema } from './product.helper';
 import {
   useCreateProduct,

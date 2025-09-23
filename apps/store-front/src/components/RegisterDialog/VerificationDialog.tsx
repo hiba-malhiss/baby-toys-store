@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dialog, Button, Icon, IconColor, IconSize } from '@baby-toys/ui-kit/components';
+import { Dialog, Button, Icon, IconColor, IconSize } from '@baby-toys/ui-kit';
 import { faCheckCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
 import styles from './VerificationDialog.module.scss';
 

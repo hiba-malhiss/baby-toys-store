@@ -1,5 +1,5 @@
 import React, { type ReactNode } from 'react';
-import { Flex, Toast, BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { Flex, Toast, BouncingDotsLoader } from '@baby-toys/ui-kit';
 import Footer from './Footer/Footer.tsx';
 import styles from './layout.module.scss';
 import { useCartStore } from '../../store/useCartStore.ts';

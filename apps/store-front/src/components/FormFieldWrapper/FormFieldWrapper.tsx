@@ -1,6 +1,6 @@
 import React, { type ReactElement } from 'react';
 import { Controller, type Control, type FieldValues } from 'react-hook-form';
-import { FieldWrapper } from '@baby-toys/ui-kit/components';
+import { FieldWrapper } from '@baby-toys/ui-kit';
 
 interface FormFieldWrapperProps<T extends FieldValues> {
   name: string;

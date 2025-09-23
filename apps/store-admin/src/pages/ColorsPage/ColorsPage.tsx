@@ -9,7 +9,7 @@ import {
   Alert,
   ColorPicker,
   BouncingDotsLoader,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Color } from '../../api/types/color';
 import useColorsPage from './useColors';

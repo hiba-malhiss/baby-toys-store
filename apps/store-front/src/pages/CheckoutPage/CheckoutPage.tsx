@@ -8,16 +8,16 @@ import {
   FieldWrapper,
   Select,
   useToast,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { calculateOrderSummary } from '../../utils/order.utils';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { mockPlaceOrder, mockFetchShippingInfo } from '@mock-data/useMockApi';
 import { useNavigate } from 'react-router-dom';
-import { Divider } from '@baby-toys/ui-kit/components';
+import { Divider } from '@baby-toys/ui-kit';
 import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import { useAuth } from '../../context/AuthContext.tsx';
-import { Alert } from '@baby-toys/ui-kit/components';
+import { Alert } from '@baby-toys/ui-kit';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import type { OrderPayload } from '../../types/product.types.ts';
 import { useCartStockSync } from '../../hooks/useCartStockSync.ts';

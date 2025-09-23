@@ -1,5 +1,5 @@
 import React from 'react';
-import { StringInput, Button, Flex } from '@baby-toys/ui-kit/components';
+import { StringInput, Button, Flex } from '@baby-toys/ui-kit';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 export interface KeyValuePair {

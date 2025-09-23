@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, BouncingDotsLoader, Heading } from '@baby-toys/ui-kit/components';
+import { Flex, BouncingDotsLoader, Heading } from '@baby-toys/ui-kit';
 import styles from './page-container.module.scss';
 import LayoutBreadcrumb from './LayoutBreadcrumb/LayoutBreadcrumb.tsx';
 

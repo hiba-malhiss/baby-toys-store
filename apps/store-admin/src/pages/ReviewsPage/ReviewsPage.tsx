@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Table, Button, ConfirmDialog } from '@baby-toys/ui-kit/components';
+import { Heading, Table, Button, ConfirmDialog } from '@baby-toys/ui-kit';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 import { Review } from '@baby-toys/types/src';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';

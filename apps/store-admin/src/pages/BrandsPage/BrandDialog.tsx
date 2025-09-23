@@ -7,7 +7,7 @@ import {
   Button,
   useToast,
   Flex,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Brand } from '../../api/types/brand';

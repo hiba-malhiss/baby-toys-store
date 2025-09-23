@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit/components';
+import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit';
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore } from '../../store/useCartStore';
 import { useHandlePagination } from '../../hooks/useHandlePagination';

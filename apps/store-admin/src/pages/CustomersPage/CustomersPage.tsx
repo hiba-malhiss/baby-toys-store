@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Table, Button } from '@baby-toys/ui-kit/components';
+import { Heading, Table, Button } from '@baby-toys/ui-kit';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 import { User } from '@baby-toys/types/src';
 import { useNavigate } from 'react-router-dom';

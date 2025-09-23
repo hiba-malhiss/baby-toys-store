@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@baby-toys/ui-kit/components';
+import { Card } from '@baby-toys/ui-kit';
 import styles from './dashboard-stats.module.scss';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
 import { useAdminStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';

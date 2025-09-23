@@ -1,6 +1,6 @@
 import React from 'react';
 import { CartItem } from '@baby-toys/types/src';
-import { Flex, Button, ProductQuantityInput } from '@baby-toys/ui-kit/components';
+import { Flex, Button, ProductQuantityInput } from '@baby-toys/ui-kit';
 import styles from './cart-item-admin.module.scss';
 import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';

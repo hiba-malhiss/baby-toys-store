@@ -4,7 +4,7 @@ import DashboardStats from './DashboardStats/DashboardStats.tsx';
 import DashboardLists from './DashboardLists/DashboardLists.tsx';
 import styles from './dashboard-page.module.scss';
 import DashboardCharts from './DashboardCharts/ DashboardCharts.tsx';
-import { Heading, BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { Heading, BouncingDotsLoader } from '@baby-toys/ui-kit';
 import { useDashboardData } from './useDashboardData';
 
 const DashboardPage: React.FC = () => {

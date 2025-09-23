@@ -2,7 +2,7 @@ import React from 'react';
 import { matchPath, useLocation } from 'react-router-dom';
 import { baseBreadcrumbs } from './breadcrumb.config.ts';
 import { Link } from 'react-router-dom';
-import { Breadcrumb, BreadcrumbItem } from '@baby-toys/ui-kit/components';
+import { Breadcrumb, BreadcrumbItem } from '@baby-toys/ui-kit';
 import { useBreadcrumb } from '@baby-toys/ui-kit/hooks';
 
 type LayoutBreadcrumbProps = {

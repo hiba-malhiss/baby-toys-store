@@ -8,7 +8,7 @@ import {
   Flex,
   Heading,
   ConfirmDialog,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import styles from './order-details-page.module.scss';
 import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext';
 import { statusColorMap, orderStatusOptions } from '../OrdersPage/orders-page.utils';

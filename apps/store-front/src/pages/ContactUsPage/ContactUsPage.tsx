@@ -11,7 +11,7 @@ import {
   StringInput,
   FieldWrapper,
   useToast,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 // Mapping config by ID

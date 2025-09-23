@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Heading, Button, Card } from '@baby-toys/ui-kit/components';
+import { Flex, Heading, Button, Card } from '@baby-toys/ui-kit';
 import {
   StringInput,
   TextArea,
@@ -8,7 +8,7 @@ import {
   Select,
   Option,
   ImageUploader,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useProductForm } from './useProductForm';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';

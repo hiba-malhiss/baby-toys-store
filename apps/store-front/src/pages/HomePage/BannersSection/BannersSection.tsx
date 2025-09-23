@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Flex } from '@baby-toys/ui-kit/components';
+import { Flex } from '@baby-toys/ui-kit';
 
 import styles from './banners-section.module.scss';
 import { useMockProductsApi } from '@mock-data/useMockApi';

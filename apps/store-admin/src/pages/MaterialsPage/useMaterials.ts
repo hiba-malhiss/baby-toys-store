@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 import { Material } from '@baby-toys/types/src';
 import { useMaterials as useMaterialsQuery, useDeleteMaterial } from '../../api/materialApi';
 

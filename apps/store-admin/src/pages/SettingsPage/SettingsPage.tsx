@@ -10,7 +10,7 @@ import {
   ImageUploader,
   TextArea,
   Icon,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useMockAdminApi } from '@mock-data/useMockApi';
 
 const SettingsPage: React.FC = () => {

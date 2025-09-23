@@ -8,7 +8,7 @@ import {
   Flex,
   BouncingDotsLoader,
   useToast,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';

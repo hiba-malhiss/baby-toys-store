@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { useCartStore } from '../store/useCartStore';
 import { mockFetchProductAvailability } from '@mock-data/useMockApi';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 
 // 📌 useCartStockSync is a hook for validating cart item quantities against actual product stock.
 // ❗ It should only be used in shopping-related flows (e.g., Cart, Checkout, Drawer),

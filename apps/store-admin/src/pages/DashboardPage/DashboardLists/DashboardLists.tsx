@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@baby-toys/ui-kit/components';
+import { Card } from '@baby-toys/ui-kit';
 import RecentOrdersTable from './RecentOrdersTable.tsx';
 import styles from './dashboard-lists.module.scss';
 import { OrderItem, Product } from '@baby-toys/types/src';

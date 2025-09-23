@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Flex, InfoCard } from '@baby-toys/ui-kit/components';
+import { Flex, InfoCard } from '@baby-toys/ui-kit';
 import { useMockProductsApi } from '@mock-data/useMockApi';
 import type { InfoCardType } from '../../../types/product.types.ts';
 

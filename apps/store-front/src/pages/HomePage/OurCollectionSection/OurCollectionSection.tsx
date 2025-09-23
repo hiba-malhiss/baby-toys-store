@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './our-collection-section.module.scss';
-import { Flex, Button } from '@baby-toys/ui-kit/components';
+import { Flex, Button } from '@baby-toys/ui-kit';
 import Section from '../../../components/features/Section/Section.tsx';
 import { getProductCategories } from '@mock-data/useMockApi';
 

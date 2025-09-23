@@ -1,8 +1,8 @@
 import styles from './section.module.scss';
-import { Flex } from '@baby-toys/ui-kit/components';
+import { Flex } from '@baby-toys/ui-kit';
 import React, { type ReactNode } from 'react';
 import clsx from 'clsx';
-import { Heading, BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { Heading, BouncingDotsLoader } from '@baby-toys/ui-kit';
 
 interface SectionProps {
   children?: ReactNode;

@@ -1,6 +1,6 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { BouncingDotsLoader } from '@baby-toys/ui-kit/components';
+import { BouncingDotsLoader } from '@baby-toys/ui-kit';
 
 interface Props {
   children: JSX.Element;

@@ -9,7 +9,7 @@ import {
   Button,
   NoDataFound,
   BouncingDotsLoader,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import styles from './shopping-cart-drawer.module.scss';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';

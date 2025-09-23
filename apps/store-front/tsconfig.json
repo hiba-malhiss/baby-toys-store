@@ -8,6 +8,7 @@
     "skipLibCheck": true,
     "paths": {
       "@baby-toys/ui-kit": ["../../packages/ui-kit/src"],
+      "@baby-toys/ui-kit/*": ["../../packages/ui-kit/src/*"],
       "@baby-toys/types": ["../../packages/types/src"]
     },
 

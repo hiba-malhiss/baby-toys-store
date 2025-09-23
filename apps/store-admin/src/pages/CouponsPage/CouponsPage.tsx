@@ -7,7 +7,7 @@ import {
   Heading,
   ConfirmDialog,
   StringInput,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { faPlus, faPen, faTrashAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import useCouponsPage from './useCouponsPage';
 import CouponDialog from './CouponDialog';

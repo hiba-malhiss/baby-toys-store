@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { faHeart, faShoppingCart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
-import { Icon, IconColor, Flex, Button } from '@baby-toys/ui-kit/components';
+import { Icon, IconColor, Flex, Button } from '@baby-toys/ui-kit';
 import styles from './header.module.scss';
 import SearchInputWithUrl from './SearchInputWithUrl.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';

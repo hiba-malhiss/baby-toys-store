@@ -8,7 +8,7 @@ import {
   ConfirmDialog,
   Alert,
   BouncingDotsLoader,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Category } from '../../api/types/category';
 import useCategories from './useCategories';

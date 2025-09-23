@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit/components';
+import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit';
 import { mockFetchWishlist } from '@mock-data/useMockApi';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../context/AuthContext';

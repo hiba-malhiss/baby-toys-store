@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import type { RadioOption } from '@baby-toys/ui-kit/components';
+import type { RadioOption } from '@baby-toys/ui-kit';
 import { useStoreConfiguration } from '../context/StoreConfigurationContext';
 
 export function useShopFilterOptions() {

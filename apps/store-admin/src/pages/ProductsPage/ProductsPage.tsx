@@ -6,7 +6,7 @@ import {
   Heading,
   ConfirmDialog,
   StringInput,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useProductsTableColumns } from './useProductsTableColumns';

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useToast } from '@baby-toys/ui-kit/components';
+import { useToast } from '@baby-toys/ui-kit';
 import { Brand } from '../../api/types/brand';
 import { useBrands as useBrandsQuery, useDeleteBrand } from '../../api/brandApi';
 

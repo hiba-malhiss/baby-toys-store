@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card } from '@baby-toys/ui-kit/components';
+import { Card } from '@baby-toys/ui-kit';
 import { Line, Pie, Doughnut } from 'react-chartjs-2';
 import {
   generateLineChartData,

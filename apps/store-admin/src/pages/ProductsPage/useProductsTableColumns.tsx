@@ -1,4 +1,4 @@
-import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit/components';
+import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../api/types/product.ts';

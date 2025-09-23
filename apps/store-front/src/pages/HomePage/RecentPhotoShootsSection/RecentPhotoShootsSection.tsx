@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Section from '../../../components/features/Section/Section.tsx';
-import { Flex } from '@baby-toys/ui-kit/components';
+import { Flex } from '@baby-toys/ui-kit';
 import styles from './recent-photo-shoots-section.module.scss';
 import { useMockProductsApi } from '@mock-data/useMockApi';
 

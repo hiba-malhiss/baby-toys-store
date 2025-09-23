@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Dialog, StringInput, Button, Flex, useToast } from '@baby-toys/ui-kit/components';
+import { Dialog, StringInput, Button, Flex, useToast } from '@baby-toys/ui-kit';
 import { type RegisterRequest, useRegister } from '../../api/authApi.ts';
 import VerificationDialog from './VerificationDialog';
 import { registerFields, registerSchema } from './registerDialog.helpers.ts';

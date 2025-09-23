@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, Divider } from '@baby-toys/ui-kit/components';
+import { Flex, Divider } from '@baby-toys/ui-kit';
 import styles from './total-amount.module.scss';
 import clsx from 'clsx';
 import type { CartItem } from '@baby-toys/types';

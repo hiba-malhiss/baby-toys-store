@@ -7,7 +7,7 @@ import {
   ConfirmDialog,
   StringInput,
   RadioButtonGroup,
-} from '@baby-toys/ui-kit/components';
+} from '@baby-toys/ui-kit';
 import { useOrdersPage } from './useOrdersPage.tsx';
 import styles from './orders-page.module.scss';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';

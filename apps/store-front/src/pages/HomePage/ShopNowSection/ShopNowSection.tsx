@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './shop-now-section.module.scss';
-import { Flex, Button } from '@baby-toys/ui-kit/components';
+import { Flex, Button } from '@baby-toys/ui-kit';
 
 const ShopNowSection = () => {
   const navigate = useNavigate();

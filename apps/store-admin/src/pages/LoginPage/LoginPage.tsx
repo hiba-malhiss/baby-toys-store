@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { StringInput, Button, Flex, Heading, Card, useToast } from '@baby-toys/ui-kit/components';
+import { StringInput, Button, Flex, Heading, Card, useToast } from '@baby-toys/ui-kit';
 import { useFetchProfile, useLogin, useLogout, USER_ROLE } from '../../api/authApi';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import styles from './login-page.module.scss';

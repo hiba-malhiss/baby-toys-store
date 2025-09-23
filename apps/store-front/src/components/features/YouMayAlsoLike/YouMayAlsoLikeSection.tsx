@@ -1,6 +1,6 @@
 import React from 'react';
 import Section from '../Section/Section.tsx';
-import { Carousel, ViewSwitcher } from '@baby-toys/ui-kit/components';
+import { Carousel, ViewSwitcher } from '@baby-toys/ui-kit';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
 import { useMockProductsApi } from '@mock-data/useMockApi';
 import { useHandlePagination } from '../../../hooks/useHandlePagination.ts';

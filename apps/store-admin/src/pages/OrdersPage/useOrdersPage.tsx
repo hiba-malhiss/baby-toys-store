@@ -5,7 +5,7 @@ import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
 import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
-import { Chip, Flex, Button } from '@baby-toys/ui-kit/components';
+import { Chip, Flex, Button } from '@baby-toys/ui-kit';
 import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 
 export const useOrdersPage = () => {

@@ -1,7 +1,7 @@
 import { useState, useCallback, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Section from '../../../components/features/Section/Section.tsx';
-import { Flex, Button, RadioButtonGroup } from '@baby-toys/ui-kit/components';
+import { Flex, Button, RadioButtonGroup } from '@baby-toys/ui-kit';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/features/SmartProductCard/SmartProductCard.tsx';
 import { useMockProductsApi } from '@mock-data/useMockApi';
