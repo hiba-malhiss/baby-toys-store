@@ -111,6 +111,7 @@ const CouponsPage: React.FC = () => {
             <StringInput
               placeholder="Search by code..."
               value={searchInput}
+              className={styles.couponsPageSearch}
               onChange={(val) => {
                 const v = String(val ?? '');
                 setSearchInput(v);

@@ -45,6 +45,7 @@ const OrdersPage: React.FC = () => {
             <StringInput
               placeholder="Search by order number..."
               className={styles.orderPageSearch}
+              fullWidth
               value={searchValue}
               onChange={(v) => {
                 setSearchValue(v);

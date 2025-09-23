@@ -52,6 +52,8 @@ const ProductsPage: React.FC = () => {
             <StringInput
               placeholder="Search products..."
               value={searchValue}
+              className={styles.productsPagePageSearch}
+              fullWidth
               onChange={(val) => {
                 const v = String(val ?? '');
                 setSearchValue(v);
