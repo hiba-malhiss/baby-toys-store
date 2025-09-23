@@ -22,12 +22,8 @@ const OrdersPage: React.FC = () => {
     sortOrder,
     loading,
     columns,
-    confirmVisible,
-    orderToDelete,
     handleSort,
     handlePageChange,
-    confirmDelete,
-    cancelDelete,
     handleSearch,
     statusFilter,
     setStatusFilter,
@@ -80,13 +76,6 @@ const OrdersPage: React.FC = () => {
           onSort={handleSort}
           isLoading={loading}
           onPageChange={handlePageChange}
-        />
-        <ConfirmDialog
-          visible={confirmVisible}
-          header="Delete Order"
-          message={`Are you sure you want to delete order #${orderToDelete?.orderNumber || orderToDelete?.id}?`}
-          onConfirm={confirmDelete}
-          onCancel={cancelDelete}
         />
       </Flex>
     </AdminLayout>

@@ -46,21 +46,6 @@ export const useAdminOrder = (orderId?: number) =>
   });
 
 // Mutations
-export const useDeleteOrder = () => {
-  const qc = useQueryClient();
-  const toast = useToast();
-  return useMutation({
-    mutationFn: async (orderId: number) => {
-      const { data } = await api.delete<ApiEnvelope<void>>(`/api/admin/orders/${orderId}`);
-      return data.data;
-    },
-    onSuccess: () => {
-      toast.success('Order deleted');
-      qc.invalidateQueries(['admin-orders']);
-    },
-    onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to delete order'),
-  });
-};
 
 export const useRemoveOrderItem = (orderId: number) => {
   const qc = useQueryClient();

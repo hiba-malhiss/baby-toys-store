@@ -1,21 +1,16 @@
 import React, { useState, useMemo, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useDeleteOrder, useAdminOrders } from '../../api/ordersApi';
+import { useAdminOrders } from '../../api/ordersApi';
 import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
 import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { Chip, Flex, Button } from '@baby-toys/ui-kit/components';
-import { faEye, faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 
 export const useOrdersPage = () => {
   const navigate = useNavigate();
-  const deleteOrder = useDeleteOrder();
-
-  const [confirmVisible, setConfirmVisible] = useState(false);
-  const [orderToDelete, setOrderToDelete] = useState<Order | null>(null);
   const [searchValue, setSearchValue] = React.useState('');
-
   const [orderNumber, setOrderNumber] = useState();
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
@@ -84,32 +79,12 @@ export const useOrdersPage = () => {
               leftIcon={faPen}
               onClick={() => navigate(`/order-edit/${row.id}`)}
             />
-            <Button
-              size="small"
-              appearance="outline"
-              leftIcon={faTrashAlt}
-              onClick={() => {
-                setOrderToDelete(row);
-                setConfirmVisible(true);
-              }}
-            />
           </Flex>
         ),
       },
     ],
     [navigate, currency]
   );
-
-  const confirmDelete = useCallback(() => {
-    if (orderToDelete) deleteOrder.mutate(orderToDelete.id);
-    setConfirmVisible(false);
-    setOrderToDelete(null);
-  }, [orderToDelete, deleteOrder]);
-
-  const cancelDelete = useCallback(() => {
-    setConfirmVisible(false);
-    setOrderToDelete(null);
-  }, []);
 
   const handleSearch = (value: string) => {
     setOrderNumber(value);
@@ -129,12 +104,8 @@ export const useOrdersPage = () => {
     sortOrder,
     loading: isLoading,
     columns,
-    confirmVisible,
-    orderToDelete,
     handleSort,
     handlePageChange,
-    confirmDelete,
-    cancelDelete,
     handleSearch,
     statusFilter,
     setStatusFilter: selectStatus,
