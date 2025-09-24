@@ -1,13 +1,14 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { Material, MaterialCreateDto, MaterialUpdateDto } from '@baby-toys/types/src';
 import api from './axiosConfig';
+import { ApiEnvelope } from './types/common';
 
 export const useMaterials = () => {
   return useQuery<Material[]>({
     queryKey: ['materials'],
     queryFn: async () => {
-      const response = await api.get('/api/materials');
-      return response.data;
+      const response = await api.get<ApiEnvelope<Material[]>>('/api/materials');
+      return response.data.data;
     },
   });
 };
@@ -16,8 +17,8 @@ export const useMaterial = (id: string) => {
   return useQuery<Material>({
     queryKey: ['materials', id],
     queryFn: async () => {
-      const response = await api.get(`/api/materials/${id}`);
-      return response.data;
+      const response = await api.get<ApiEnvelope<Material>>(`/api/materials/${id}`);
+      return response.data.data;
     },
     enabled: !!id,
   });
@@ -28,8 +29,8 @@ export const useCreateMaterial = () => {
 
   return useMutation({
     mutationFn: async (data: MaterialCreateDto) => {
-      const response = await api.post('/api/admin/materials', data);
-      return response.data;
+      const response = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/materials', data);
+      return response.data.data.id;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
@@ -42,8 +43,8 @@ export const useUpdateMaterial = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...data }: { id: string } & MaterialUpdateDto) => {
-      const response = await api.put(`/api/admin/materials/${id}`, data);
-      return response.data;
+      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/materials/${id}`, data);
+      return response.data.data.id;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });
@@ -56,7 +57,8 @@ export const useDeleteMaterial = () => {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      await api.delete(`/api/admin/materials/${id}`);
+      const res = await api.delete<ApiEnvelope<{ id: number }>>(`/api/admin/materials/${id}`);
+      return res.data.data.id;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['materials'] });

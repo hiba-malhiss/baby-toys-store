@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
 import { Product, CreateProductRequest, UpdateProductRequest } from './types/product';
-
-/** ---- Shared Types ---- */
-interface ApiResponse<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
+import { ApiEnvelope } from './types/common';
 
 interface PaginatedResponse<T> {
   content: T[];
@@ -35,7 +29,7 @@ export const useProducts = (params?: UseProductsParams) =>
   useQuery<PaginatedResponse<Product>>({
     queryKey: ['products', params],
     queryFn: async () => {
-      const { data } = await api.get<ApiResponse<PaginatedResponse<Product>>>('/api/products', {
+      const { data } = await api.get<ApiEnvelope<PaginatedResponse<Product>>>('/api/products', {
         params: {
           ...params,
           // Spring expects 0-based page and upper-case sort direction
@@ -57,7 +51,7 @@ export const useProduct = (id?: number) => {
     retry: false,
     queryFn: async () => {
       try {
-        const { data } = await api.get<ApiResponse<Product>>(`/api/products/${id}`);
+        const { data } = await api.get<ApiEnvelope<Product>>(`/api/products/${id}`);
         return data.data;
       } catch (err) {
         toast.error('Product not found');
@@ -73,8 +67,8 @@ export const useCreateProduct = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: CreateProductRequest) => {
-      const { data } = await api.post<ApiResponse<Product>>('/api/admin/products', payload);
-      return data.data;
+      const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/products', payload);
+      return data.data.id;
     },
     onSuccess: () => qc.invalidateQueries(['products']),
   });
@@ -87,10 +81,10 @@ export const useUpdateProduct = () => {
   
   return useMutation({
     mutationFn: async ({ id, ...payload }: UpdateProductRequest & { id: number }) => {
-      const { data } = await api.put<ApiResponse<Product>>(`/api/admin/products/${id}`, payload);
-      return data.data;
+      const { data } = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/products/${id}`, payload);
+      return data.data.id;
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       qc.invalidateQueries(['products']);
       toast.success('Product updated successfully');
       navigate('/products');
@@ -108,8 +102,8 @@ export const useDeleteProduct = () => {
 
   return useMutation({
     mutationFn: async (id: number) => {
-      const { data } = await api.delete<ApiResponse<void>>(`/api/admin/products/${id}`);
-      return data.data;
+      const { data } = await api.delete<ApiEnvelope<{ id: number }>>(`/api/admin/products/${id}`);
+      return data.data.id;
     },
     onSuccess: () => {
       toast.success('Product deleted successfully');
@@ -124,7 +118,7 @@ export const useDeleteProduct = () => {
 export const uploadMainImage = async (productId: number, file: File) => {
   const formData = new FormData();
   formData.append('file', file);
-  const { data } = await api.post<ApiResponse<string>>(
+  const { data } = await api.post<ApiEnvelope<{ id: number; imageUrl: string }>>(
     `/api/admin/products/${productId}/main-image`,
     formData,
     { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -135,7 +129,7 @@ export const uploadMainImage = async (productId: number, file: File) => {
 export const uploadProductImage = async (productId: number, file: File) => {
   const formData = new FormData();
   formData.append('file', file);
-  const { data } = await api.post<ApiResponse<string>>(
+  const { data } = await api.post<ApiEnvelope<{ id: number; imageUrl: string }>>(
     `/api/admin/products/${productId}/images`,
     formData,
     { headers: { 'Content-Type': 'multipart/form-data' } }
@@ -150,10 +144,10 @@ export const useDeleteProducts = () => {
 
   return useMutation({
     mutationFn: async (ids: number[]) => {
-      const { data } = await api.delete<ApiResponse<void>>('/api/admin/products/batch', {
+      const { data } = await api.delete<ApiEnvelope<{ count: number }>>('/api/admin/products/batch', {
         data: ids
       });
-      return data.data;
+      return data.data.count;
     },
     onSuccess: () => {
       toast.success('Products deleted successfully');
@@ -171,11 +165,11 @@ export const useDeleteProductImage = (productId: number) => {
   const toast = useToast();
   return useMutation({
     mutationFn: async (imageUrl: string) => {
-      const { data } = await api.delete<ApiResponse<void>>(
+      const { data } = await api.delete<ApiEnvelope<{ id: number }>>(
         `/api/admin/products/${productId}/images`,
         { params: { imageUrl } }
       );
-      return data.data;
+      return data.data.id;
     },
     onSuccess: () => {
       qc.invalidateQueries(['product', productId]);

@@ -54,7 +54,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
     }
     className={styles.orderDetailsItems}
   >
-    {order.items.map((item) => (
+    {order?.items?.map((item) => (
       <Flex
         key={item.id}
         align="center"

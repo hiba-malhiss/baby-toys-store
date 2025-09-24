@@ -108,11 +108,11 @@ export const useProductForm = () => {
         mainImage: mainImageUrl || '',
       };
 
-      const result = productId
+      const returnedId = productId
         ? await updateProduct.mutateAsync({ id: productId, ...payload })
         : await createProduct.mutateAsync(payload);
 
-      const newProductId = productId || result.data.id;
+      const newProductId = productId || returnedId;
 
       if (mainImageFile) {
         await uploadMainImage(newProductId, mainImageFile);

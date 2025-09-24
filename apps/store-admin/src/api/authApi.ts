@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import api, { clearAccessToken } from './axiosConfig';
+import { ApiEnvelope } from './types/common';
 import { queryClient } from '../App.tsx';
 
 export enum USER_ROLE {
@@ -51,8 +52,8 @@ export const useFetchProfile = () =>
   useQuery<User, AxiosError>({
     queryKey: ['profile'],
     queryFn: async () => {
-      const response = await api.get<User>('/users/profile');
-      return response.data;
+      const response = await api.get<ApiEnvelope<User>>('/users/profile');
+      return response.data.data;
     },
     retry: 1,
   });
