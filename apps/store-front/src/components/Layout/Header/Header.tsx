@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { faHeart, faShoppingCart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
 import { Icon, IconColor, Flex, Button } from '@baby-toys/ui-kit';
@@ -8,31 +7,22 @@ import AuthButtonsWithDialogs from './AuthButtons.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
-import { getProductCategories } from '@mock-data/useMockApi';
-import type { Category } from '@baby-toys/types';
+import { useCategories } from '../../../api/categoryApi';
 import clsx from 'clsx';
 import BurgerMenu from './BurgerMenu.tsx';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
-  const [categories, setCategories] = useState<Category[]>([]);
+  const { data: categories = [] } = useCategories();
   const navigate = useNavigate();
   const location = useLocation();
   const { shipping } = useStoreConfiguration();
   const { isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    getProductCategories().then((data) => {
-      setCategories(data);
-    });
-  }, []);
-
   const handleCategoryClick = (category?: string) => {
     const params = new URLSearchParams(location.search);
     if (category) {
       params.set('category', category);
-    } else {
-      params.delete('category');
     }
 
     navigate({
