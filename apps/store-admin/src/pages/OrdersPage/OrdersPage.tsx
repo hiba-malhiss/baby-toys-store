@@ -29,34 +29,34 @@ const OrdersPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>Orders</Heading>
-          <StringInput
-            placeholder="Search by order number or user ID..."
-            className={styles.orderPageSearch}
-            fullWidth
-            value={searchValue}
-            onChange={(v) => {
-              setSearchValue(v);
-              if (!v?.trim() && searchValue) handleSearch('');
-            }}
-            iconRight={faSearch}
-            withIconBackground
-            onIconClick={() => handleSearch(searchValue.trim())}
-          />
+          <Flex spacing="m">
+            <Select
+              value={statusFilter ?? ''}
+              className={styles.orderPageStatus}
+              onChange={(value) => setStatusFilter((value as string) || undefined)}
+            >
+              <Option value="">All</Option>
+              {orderStatusOptions.map((opt) => (
+                <Option key={opt.value} value={opt.value}>
+                  {opt.label}
+                </Option>
+              ))}
+            </Select>
+            <StringInput
+              placeholder="Search by order number or user ID..."
+              className={styles.orderPageSearch}
+              fullWidth
+              value={searchValue}
+              onChange={(v) => {
+                setSearchValue(v);
+                if (!v?.trim() && searchValue) handleSearch('');
+              }}
+              iconRight={faSearch}
+              withIconBackground
+              onIconClick={() => handleSearch(searchValue.trim())}
+            />
+          </Flex>
         </Flex>
-
-        <Select
-          value={statusFilter ?? ''}
-          className={styles.orderPageSearch}
-          onChange={(value) => setStatusFilter((value as string) || undefined)}
-        >
-          <Option value="">All</Option>
-          {orderStatusOptions.map((opt) => (
-            <Option key={opt.value} value={opt.value}>
-              {opt.label}
-            </Option>
-          ))}
-        </Select>
-
         <Table
           value={orders}
           columns={columns}
