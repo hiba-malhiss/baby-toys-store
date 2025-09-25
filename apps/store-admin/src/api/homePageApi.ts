@@ -9,7 +9,7 @@ export const useHomePageContent = () => {
     queryKey: [HOME_PAGE_QUERY_KEY],
     queryFn: async () => {
       const { data } = await api.get('/api/homepage');
-      return data.data;
+      return data;
     },
   });
 };

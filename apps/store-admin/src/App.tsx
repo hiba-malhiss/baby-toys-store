@@ -13,7 +13,6 @@ import ColorsPage from './pages/ColorsPage/ColorsPage';
 import MaterialsPage from './pages/MaterialsPage/MaterialsPage';
 import CustomersPage from './pages/CustomersPage/CustomersPage';
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
-import SettingsPage from './pages/SettingsPage/SettingsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { AdminStoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
@@ -142,14 +141,6 @@ const App: React.FC = () => {
                   element={
                     <PrivateRoute>
                       <ReviewsPage />
-                    </PrivateRoute>
-                  }
-                />
-                <Route
-                  path="/settings"
-                  element={
-                    <PrivateRoute>
-                      <SettingsPage />
                     </PrivateRoute>
                   }
                 />
