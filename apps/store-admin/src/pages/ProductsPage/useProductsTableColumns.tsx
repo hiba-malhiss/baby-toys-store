@@ -1,13 +1,40 @@
-import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit';
+import { Button, Flex, Chip, Rating, useToast } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../api/types/product.ts';
 import styles from './ProductsPage.module.scss';
+import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
 
 export const useProductsTableColumns = (handleDelete: (product: Product) => void) => {
   const navigate = useNavigate();
+  const toast = useToast();
 
   return [
+    {
+      field: 'id',
+      header: 'ID',
+      body: (row: Product) => (
+        <Flex spacing="s" align="center">
+          <span>#{row.id}</span>
+          <Button
+            size="medium"
+            appearance="link"
+            leftIcon={faCopy}
+            aria-label="Copy product ID"
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (row.id == null) return;
+              try {
+                await copyTextToClipboard(String(row.id));
+                toast.success('Product ID copied');
+              } catch {
+                toast.error('Failed to copy');
+              }
+            }}
+          />
+        </Flex>
+      ),
+    },
     {
       field: 'mainImage',
       header: 'Image',
