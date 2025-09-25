@@ -16,16 +16,6 @@ export const useColors = () =>
     },
   });
 
-export const useColor = (id: string | number) =>
-  useQuery<Color>({
-    queryKey: ['colors', id],
-    queryFn: async () => {
-      const res = await api.get<ApiEnvelope<Color>>(`${BASE_URL}/${id}`);
-      return res.data.data;
-    },
-    enabled: !!id,
-  });
-
 // ---------- Mutations ----------
 export const useCreateColor = () => {
   const queryClient = useQueryClient();

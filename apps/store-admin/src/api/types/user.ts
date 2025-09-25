@@ -12,5 +12,5 @@ export interface UseAdminUsersParams {
   page?: number;
   size?: number;
   sortBy?: string;
-  sortDirection?: 'ASC' | 'DESC' | 'asc' | 'desc';
+  sortDirection?: 'ASC' | 'DESC';
 }

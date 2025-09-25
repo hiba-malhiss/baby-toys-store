@@ -21,6 +21,12 @@
     flex-grow: 1;
   }
 
+  &-logout {
+    display: flex;
+    flex: 1;
+    align-items: end;
+  }
+
   &-content {
     flex-grow: 1;
     padding: 32px;

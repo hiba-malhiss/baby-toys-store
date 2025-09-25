@@ -49,7 +49,7 @@ export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: 
       />
       <StringInput placeholder="User ID" value={userInput} onChange={(v) => setUserInput(v)} />
       <Button
-        appearance="outline"
+        appearance="filled"
         onClick={() =>
           onChange({
             productId: productInput,
@@ -61,20 +61,8 @@ export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: 
       >
         Search
       </Button>
-
-      <Button
-        appearance="outline"
-        onClick={() => {
-          setProductInput('');
-          setUserInput('');
-          onChange({ productId: '', userId: '', rating: '', status: '' });
-        }}
-      >
-        Reset
-      </Button>
-
       <Select
-        className={styles.wideSelect}
+        className={styles.reviewPageSelect}
         value={rating}
         onChange={(v) =>
           onChange({
@@ -91,6 +79,17 @@ export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: 
           </Option>
         ))}
       </Select>
+      <Button
+        appearance="filled"
+        color="secondary"
+        onClick={() => {
+          setProductInput('');
+          setUserInput('');
+          onChange({ productId: '', userId: '', rating: '', status: '' });
+        }}
+      >
+        Reset All
+      </Button>
     </Flex>
   );
 };

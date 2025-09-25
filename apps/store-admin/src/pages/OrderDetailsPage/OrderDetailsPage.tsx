@@ -10,13 +10,13 @@ import {
   ConfirmDialog,
 } from '@baby-toys/ui-kit';
 import styles from './order-details-page.module.scss';
-import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext';
 import { statusColorMap, orderStatusOptions } from '../OrdersPage/orders-page.utils';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { OrderStatus } from '../../api/types/order';
 import { useOrderDetails } from './useOrderDetails';
 import { OrderItems } from './OrderItems';
 import { CouponAndSummary } from './CouponAndSummary.tsx';
+import currency from '../../config/currency';
 
 interface OrderDetailsPageProps {
   isEdit?: boolean;
@@ -48,7 +48,6 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
     cancelStatusChange,
   } = useOrderDetails();
 
-  const { currency } = useAdminStoreConfiguration();
 
   return (
     <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMutating}>

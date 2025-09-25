@@ -26,6 +26,7 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+import currency from '../../config/currency';
 
 const ChartCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <Card className={styles.chartCard}>
@@ -37,6 +38,19 @@ const ChartCard: React.FC<{ title: string; children: React.ReactNode }> = ({ tit
 const DashboardPage: React.FC = () => {
   const { data, isLoading } = useAdminDashboard();
 
+  // Using your theme colors
+  const palette = {
+    primary: '#1096b5',
+    primaryDark: '#0f83b2',
+    accent: '#f26c62',
+    secondary: '#7f7f7f',
+    success: '#25bf0c',
+    warning: '#feb705',
+    info: '#12aee0',
+    danger: '#e74c3c',
+    light: '#f8f9fa',
+  };
+
   const salesOverTime = useMemo(
     () => ({
       labels: data?.salesOverTime?.labels ?? [],
@@ -44,8 +58,8 @@ const DashboardPage: React.FC = () => {
         {
           label: 'Revenue',
           data: (data?.salesOverTime?.data as number[]) ?? [],
-          borderColor: '#7f56d9',
-          backgroundColor: 'rgba(127, 86, 217, 0.2)',
+          borderColor: palette.primary,
+          backgroundColor: 'rgba(16, 150, 181, 0.15)',
           fill: true,
           tension: 0.3,
         },
@@ -61,7 +75,8 @@ const DashboardPage: React.FC = () => {
         {
           label: 'Revenue',
           data: (data?.categoryDistribution?.data as number[]) ?? [],
-          backgroundColor: '#12B76A',
+          backgroundColor: palette.accent,
+          borderRadius: 4,
         },
       ],
     }),
@@ -71,7 +86,14 @@ const DashboardPage: React.FC = () => {
   const statusBreakdown = useMemo(() => {
     const labels = data?.orderStatusBreakdown?.labels ?? [];
     const series = (data?.orderStatusBreakdown?.data as number[]) ?? [];
-    const colors = ['#7f56d9', '#12B76A', '#F79009', '#F04438', '#175CD3', '#6E59A5'];
+    const colors = [
+      palette.primary,
+      palette.success,
+      palette.warning,
+      palette.danger,
+      palette.info,
+      palette.accent,
+    ];
     return {
       labels,
       datasets: [
@@ -90,7 +112,8 @@ const DashboardPage: React.FC = () => {
         {
           label: 'Qty',
           data: (data?.topSellingProducts?.data as number[]) ?? [],
-          backgroundColor: '#175CD3',
+          backgroundColor: palette.info,
+          borderRadius: 4,
         },
       ],
     }),
@@ -108,12 +131,12 @@ const DashboardPage: React.FC = () => {
 
       {!isLoading && data && (
         <>
-          {/* Tiles */}
+          {/* KPI Tiles */}
           <div className={styles.kpiGrid}>
             <KPI label="Total Products" value={data.totalProducts} />
             <KPI label="Total Orders" value={data.totalOrders} />
             <KPI label="Pending Orders" value={data.pendingOrders} />
-            <KPI label="Revenue (This Month)" value={`$${data.revenueThisMonth}`} />
+            <KPI label="Revenue (This Month)" value={`${currency.symbol}${data.revenueThisMonth}`} />
             <KPI label="Total Customers" value={data.totalCustomers} />
           </div>
 

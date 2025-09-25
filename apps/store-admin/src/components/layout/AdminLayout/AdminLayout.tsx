@@ -49,10 +49,10 @@ const AdminLayout: React.FC<{
           <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
           <Menu model={menuItems} spacing="s" className={styles.adminLayoutNav} />
           <Button
+            fullWidth
             onClick={logout}
-            appearance="link"
+            appearance="outline"
             className={`${styles.adminLayoutLogout} bts-marginTl`}
-            withoutPadding
           >
             Logout
           </Button>

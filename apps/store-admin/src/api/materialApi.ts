@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { Material, MaterialCreateDto, MaterialUpdateDto } from '@baby-toys/types/src';
+import { Material, MaterialCreateDto, MaterialUpdateDto } from './types/material';
 import api from './axiosConfig';
 import { ApiEnvelope } from './types/common';
 
@@ -10,17 +10,6 @@ export const useMaterials = () => {
       const response = await api.get<ApiEnvelope<Material[]>>('/api/materials');
       return response.data.data;
     },
-  });
-};
-
-export const useMaterial = (id: string) => {
-  return useQuery<Material>({
-    queryKey: ['materials', id],
-    queryFn: async () => {
-      const response = await api.get<ApiEnvelope<Material>>(`/api/materials/${id}`);
-      return response.data.data;
-    },
-    enabled: !!id,
   });
 };
 
@@ -43,7 +32,10 @@ export const useUpdateMaterial = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...data }: { id: string } & MaterialUpdateDto) => {
-      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/materials/${id}`, data);
+      const response = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/materials/${id}`,
+        data
+      );
       return response.data.data.id;
     },
     onSuccess: () => {

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Product } from '@baby-toys/types/src';
+import type { Product } from '../../api/types/product';
 import { useProducts, useDeleteProduct, useDeleteProducts } from '../../api/productApi';
 
 export const useProductsPage = () => {

@@ -14,17 +14,6 @@ export const useBrands = () => {
   });
 };
 
-export const useBrand = (id: number) => {
-  return useQuery<Brand, AxiosError>({
-    queryKey: ['brands', id],
-    queryFn: async () => {
-      const response = await api.get<ApiEnvelope<Brand>>(`/api/brands/${id}`);
-      return response.data.data;
-    },
-    enabled: !!id,
-  });
-};
-
 export const useCreateBrand = () => {
   const queryClient = useQueryClient();
 
@@ -45,7 +34,10 @@ export const useUpdateBrand = () => {
   return useMutation<number, AxiosError, Brand>({
     mutationFn: async (brand) => {
       const { id, ...updateData } = brand;
-      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/brands/${id}`, updateData);
+      const response = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/brands/${id}`,
+        updateData
+      );
       return response.data.data.id;
     },
     onSuccess: (_, variables) => {

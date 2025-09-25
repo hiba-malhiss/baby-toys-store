@@ -2,6 +2,7 @@ import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { faPen, faTrashAlt, faStar } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../api/types/product.ts';
+import currency from '../../config/currency';
 import styles from './ProductsPage.module.scss';
 import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
 
@@ -20,7 +21,6 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
             successMessage="Product ID copied"
             ariaLabel="Copy product ID"
             appearance="link"
-            size="medium"
           />
         </Flex>
       ),
@@ -73,7 +73,7 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
       field: 'price',
       header: 'Price',
       sortable: true,
-      body: (row: Product) => `$${row.price}`,
+      body: (row: Product) => `${currency.symbol}${row.price}`,
     },
     {
       field: 'stockQuantity',

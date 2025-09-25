@@ -14,23 +14,15 @@ export const useCategories = () => {
   });
 };
 
-export const useCategory = (id: number) => {
-  return useQuery<Category, AxiosError>({
-    queryKey: ['categories', id],
-    queryFn: async () => {
-      const response = await api.get<ApiEnvelope<Category>>(`/api/categories/${id}`);
-      return response.data.data;
-    },
-    enabled: !!id,
-  });
-};
-
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
 
   return useMutation<number, AxiosError, Omit<Category, 'id'>>({
     mutationFn: async (category) => {
-      const response = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/categories', category);
+      const response = await api.post<ApiEnvelope<{ id: number }>>(
+        '/api/admin/categories',
+        category
+      );
       return response.data.data.id;
     },
     onSuccess: () => {
@@ -45,7 +37,10 @@ export const useUpdateCategory = () => {
   return useMutation<number, AxiosError, Category>({
     mutationFn: async (category) => {
       const { id, ...updateData } = category;
-      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/categories/${id}`, updateData);
+      const response = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/categories/${id}`,
+        updateData
+      );
       return response.data.data.id;
     },
     onSuccess: (_, id) => {

@@ -22,18 +22,12 @@ export default defineConfig({
           src: '../../packages/ui-kit/src/assets/*',
           dest: 'assets',
         },
-        {
-          src: '../../mock-data/assets/*',
-          dest: 'assets',
-        },
       ],
     }),
   ],
   resolve: {
     alias: {
       '@baby-toys/ui-kit': path.resolve(__dirname, '../../packages/ui-kit/src'),
-      '@baby-toys/types': path.resolve(__dirname, '../../packages/types'),
-      '@mock-data': path.resolve(__dirname, '../../mock-data'),
     },
   },
   css: {

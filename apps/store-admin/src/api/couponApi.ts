@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { CouponDto, CreateCouponRequest, UpdateCouponRequest } from './types/coupon';
+import { Coupon, CreateCouponRequest, UpdateCouponRequest } from './types/coupon';
 import api from './axiosConfig';
 import { ApiEnvelope } from './types/common';
 
@@ -15,10 +15,15 @@ export const useCoupons = (params: {
   useQuery({
     queryKey: ['coupons', params],
     queryFn: async () => {
-      const res = await api.get<ApiEnvelope<{ content: CouponDto[]; totalElements: number; totalPages: number; size: number; number: number }>>(
-        ADMIN_BASE_URL,
-        { params }
-      );
+      const res = await api.get<
+        ApiEnvelope<{
+          content: Coupon[];
+          totalElements: number;
+          totalPages: number;
+          size: number;
+          number: number;
+        }>
+      >(ADMIN_BASE_URL, { params });
       return res.data.data;
     },
   });

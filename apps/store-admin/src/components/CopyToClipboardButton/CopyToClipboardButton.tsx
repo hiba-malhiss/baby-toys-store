@@ -17,7 +17,7 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
   value,
   successMessage = 'Copied',
   errorMessage = 'Failed to copy',
-  size = 'small',
+  size = 'xsmall',
   appearance = 'ghost',
   stopPropagation = true,
   ariaLabel = 'Copy to clipboard',

@@ -3,21 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
 import { Product, CreateProductRequest, UpdateProductRequest } from './types/product';
-import { ApiEnvelope } from './types/common';
-
-interface PaginatedResponse<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-}
+import { ApiEnvelope, Page } from './types/common';
 
 export interface UseProductsParams {
   page?: number;
   size?: number;
   sortBy?: string;
-  sortDirection?: 'asc' | 'desc' | 'ASC' | 'DESC';
+  sortDirection?: 'ASC' | 'DESC';
   categoryId?: number;
   brandId?: number;
   minPrice?: number;
@@ -26,10 +18,10 @@ export interface UseProductsParams {
 
 /** ---- Queries ---- */
 export const useProducts = (params?: UseProductsParams) =>
-  useQuery<PaginatedResponse<Product>>({
+  useQuery<Page<Product>>({
     queryKey: ['products', params],
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<PaginatedResponse<Product>>>('/api/products', {
+      const { data } = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
         params: {
           ...params,
           // Spring expects 0-based page and upper-case sort direction
@@ -78,10 +70,13 @@ export const useUpdateProduct = () => {
   const qc = useQueryClient();
   const navigate = useNavigate();
   const toast = useToast();
-  
+
   return useMutation({
     mutationFn: async ({ id, ...payload }: UpdateProductRequest & { id: number }) => {
-      const { data } = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/products/${id}`, payload);
+      const { data } = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/products/${id}`,
+        payload
+      );
       return data.data.id;
     },
     onSuccess: () => {
@@ -91,7 +86,7 @@ export const useUpdateProduct = () => {
     },
     onError: () => {
       toast.error('Failed to update product');
-    }
+    },
   });
 };
 
@@ -144,9 +139,12 @@ export const useDeleteProducts = () => {
 
   return useMutation({
     mutationFn: async (ids: number[]) => {
-      const { data } = await api.delete<ApiEnvelope<{ count: number }>>('/api/admin/products/batch', {
-        data: ids
-      });
+      const { data } = await api.delete<ApiEnvelope<{ count: number }>>(
+        '/api/admin/products/batch',
+        {
+          data: ids,
+        }
+      );
       return data.data.count;
     },
     onSuccess: () => {
@@ -156,7 +154,7 @@ export const useDeleteProducts = () => {
     },
     onError: (e: any) => {
       toast.error(e?.response?.data?.message || 'Failed to delete products');
-    }
+    },
   });
 };
 

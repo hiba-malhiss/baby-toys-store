@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useToast } from '@baby-toys/ui-kit';
-import { Material } from '@baby-toys/types/src';
+import type { Material } from '../../api/types/material';
 import { useMaterials as useMaterialsQuery, useDeleteMaterial } from '../../api/materialApi';
 
 export const useMaterials = () => {

@@ -4,7 +4,6 @@ import { useAdminOrders } from '../../api/ordersApi';
 import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
-import { useAdminStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { Chip, Flex, Button } from '@baby-toys/ui-kit';
 import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 
@@ -18,7 +17,6 @@ export const useOrdersPage = () => {
   const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<-1 | 1>(-1);
-  const { currency } = useAdminStoreConfiguration();
 
   useEffect(() => {
     const qp = searchParams.get('query') || '';
@@ -64,7 +62,7 @@ export const useOrdersPage = () => {
         field: 'total',
         header: 'Total',
         sortable: true,
-        body: (row: Order) => formatNumber(row.total, currency?.currency),
+        body: (row: Order) => formatNumber(row.total),
       },
       {
         field: 'status',
@@ -92,7 +90,7 @@ export const useOrdersPage = () => {
         ),
       },
     ],
-    [navigate, currency]
+    [navigate]
   );
 
   const handleSearch = (value: string) => {

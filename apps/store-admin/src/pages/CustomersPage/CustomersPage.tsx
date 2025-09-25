@@ -71,7 +71,6 @@ const CustomersPage: React.FC = () => {
               successMessage="User ID copied"
               ariaLabel="Copy user ID"
               appearance="link"
-              size="medium"
             />
           </Flex>
         ),
@@ -88,7 +87,6 @@ const CustomersPage: React.FC = () => {
               successMessage="Email copied"
               ariaLabel="Copy email"
               appearance="link"
-              size="small"
             />
           </Flex>
         ),

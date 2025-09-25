@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Dialog, StringInput, TextArea, Button, useToast } from '@baby-toys/ui-kit';
-import { Material } from '@baby-toys/types/src';
+import type { Material } from '../../api/types/material';
 import { Flex } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';

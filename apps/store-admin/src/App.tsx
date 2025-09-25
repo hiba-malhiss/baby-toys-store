@@ -15,7 +15,6 @@ import CustomersPage from './pages/CustomersPage/CustomersPage';
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { AdminStoreConfigurationProvider } from './context/StoreConfigurationContext.tsx';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { ToastProvider, Toast } from '@baby-toys/ui-kit';
 import CouponsPage from './pages/CouponsPage/CouponsPage.tsx';
@@ -24,12 +23,11 @@ export const queryClient = new QueryClient();
 
 const App: React.FC = () => {
   return (
-    <AdminStoreConfigurationProvider>
-      <QueryClientProvider client={queryClient}>
-        <ToastProvider>
-          <Toast />
-          <AuthProvider>
-            <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <ToastProvider>
+        <Toast />
+        <AuthProvider>
+          <BrowserRouter>
               <Routes>
                 <Route path="/login" element={<LoginPage />} />
                 <Route
@@ -158,7 +156,6 @@ const App: React.FC = () => {
           </AuthProvider>
         </ToastProvider>
       </QueryClientProvider>
-    </AdminStoreConfigurationProvider>
   );
 };
 
