@@ -1,0 +1,19 @@
+.kpi {
+  text-align: center;
+  padding: 1rem;
+  background-color: $color-white;
+  border-radius: $radius-md;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.06);
+}
+
+.kpiLabel {
+  font-size: 0.9rem;
+  color: $color-text-grey;
+  margin-bottom: 0.5rem;
+}
+
+.kpiValue {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: $color-text-primary;
+}
