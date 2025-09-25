@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from './axiosConfig';
-import type { ApiEnvelope } from './types/common';
-import type { Page } from './types/order';
+import type { ApiEnvelope, Page } from './types/common';
 import type { ReviewDto, UseAdminReviewsParams } from './types/review';
 import { useToast } from '@baby-toys/ui-kit';
 

@@ -1,5 +1,5 @@
-import React, { useState, useMemo, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useMemo, useCallback, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAdminOrders } from '../../api/ordersApi';
 import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
@@ -10,8 +10,9 @@ import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 
 export const useOrdersPage = () => {
   const navigate = useNavigate();
-  const [searchValue, setSearchValue] = React.useState('');
-  const [orderNumber, setOrderNumber] = useState();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchValue, setSearchValue] = React.useState(searchParams.get('query') || '');
+  const [query, setQuery] = useState<string | undefined>(searchParams.get('query') || undefined);
   const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
@@ -19,12 +20,20 @@ export const useOrdersPage = () => {
   const [sortOrder, setSortOrder] = useState<-1 | 1>(-1);
   const { currency } = useAdminStoreConfiguration();
 
+  useEffect(() => {
+    const qp = searchParams.get('query') || '';
+    const spStatus = searchParams.get('status') || undefined;
+    setSearchValue(qp);
+    setQuery(qp || undefined);
+    setStatusFilter(spStatus || undefined);
+  }, [searchParams]);
+
   const { data, isLoading } = useAdminOrders({
     page,
     size: pageSize,
     sortBy: sortField,
     sortDirection: sortOrder === 1 ? 'ASC' : 'DESC',
-    orderNumber,
+    query,
     status: statusFilter,
   });
 
@@ -87,13 +96,21 @@ export const useOrdersPage = () => {
   );
 
   const handleSearch = (value: string) => {
-    setOrderNumber(value);
+    setQuery(value || undefined);
     setPage(1);
+    const params: Record<string, string> = {};
+    if (value) params.query = value;
+    if (statusFilter) params.status = statusFilter;
+    setSearchParams(params, { replace: true });
   };
 
   const selectStatus = (status?: string) => {
     setStatusFilter(status);
     setPage(1);
+    const params: Record<string, string> = {};
+    if (status) params.status = status;
+    if (query) params.query = query;
+    setSearchParams(params, { replace: true });
   };
 
   return {

@@ -1,13 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import {
-  Heading,
-  Table,
-  Flex,
-  ConfirmDialog,
-  StringInput,
-  RadioButtonGroup,
-} from '@baby-toys/ui-kit';
+import { Heading, Table, Flex, StringInput, Select, Option } from '@baby-toys/ui-kit';
 import { useOrdersPage } from './useOrdersPage.tsx';
 import styles from './orders-page.module.scss';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
@@ -36,36 +29,34 @@ const OrdersPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>Orders</Heading>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleSearch(searchValue.trim());
+          <StringInput
+            placeholder="Search by order number or user ID..."
+            className={styles.orderPageSearch}
+            fullWidth
+            value={searchValue}
+            onChange={(v) => {
+              setSearchValue(v);
+              if (!v?.trim() && searchValue) handleSearch('');
             }}
-          >
-            <StringInput
-              placeholder="Search by order number..."
-              className={styles.orderPageSearch}
-              fullWidth
-              value={searchValue}
-              onChange={(v) => {
-                setSearchValue(v);
-                if (!v?.trim() && searchValue) handleSearch('');
-              }}
-              iconRight={faSearch}
-              withIconBackground
-              onIconClick={() => handleSearch(searchValue.trim())}
-            />
-          </form>
+            iconRight={faSearch}
+            withIconBackground
+            onIconClick={() => handleSearch(searchValue.trim())}
+          />
         </Flex>
 
-        <RadioButtonGroup
-          name="orders-status-filter"
-          options={[{ label: 'All', value: '' }, ...orderStatusOptions] as any}
-          selectedValue={statusFilter ?? ''}
-          onChange={(value) => setStatusFilter(value || undefined)}
-          spacing="m"
-          appearance="chip"
-        />
+        <Select
+          value={statusFilter ?? ''}
+          className={styles.orderPageSearch}
+          onChange={(value) => setStatusFilter((value as string) || undefined)}
+        >
+          <Option value="">All</Option>
+          {orderStatusOptions.map((opt) => (
+            <Option key={opt.value} value={opt.value}>
+              {opt.label}
+            </Option>
+          ))}
+        </Select>
+
         <Table
           value={orders}
           columns={columns}

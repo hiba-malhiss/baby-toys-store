@@ -4,3 +4,11 @@ export interface ApiEnvelope<T> {
   message?: string;
   errors?: string[];
 }
+
+export interface Page<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+}

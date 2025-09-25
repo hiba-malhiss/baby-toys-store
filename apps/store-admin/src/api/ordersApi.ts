@@ -1,13 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
-import type { ApiEnvelope, Page, Order, OrderStatus } from './types/order';
+import type { ApiEnvelope, Page } from './types/common';
+import type { Order, OrderStatus } from './types/order';
 
 export interface UseAdminOrdersParams {
   page?: number;
   size?: number;
   sortBy?: string;
-  orderNumber?: string;
+  query?: string;
   status?: OrderStatus;
   sortDirection?: 'ASC' | 'DESC' | 'asc' | 'desc';
 }
@@ -27,7 +28,7 @@ export const useAdminOrders = (params?: UseAdminOrdersParams) =>
           size: params?.size ?? 10,
           sortBy: params?.sortBy ?? 'createdAt',
           sortDirection: toUpper(params?.sortDirection ?? 'DESC'),
-          orderNumber: params?.orderNumber,
+          query: params?.query,
           status: params?.status,
         },
       });

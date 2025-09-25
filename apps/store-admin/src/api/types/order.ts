@@ -28,17 +28,3 @@ export interface Order {
   couponCode?: string | null;
   items: OrderItem[];
 }
-
-export interface ApiEnvelope<T> {
-  success: boolean;
-  message: string;
-  data: T;
-}
-
-export interface Page<T> {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  size: number;
-  number: number;
-}

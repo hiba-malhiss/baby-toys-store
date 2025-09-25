@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Button,
-  Flex,
-  Table,
-  Heading,
-  ConfirmDialog,
-  StringInput,
-} from '@baby-toys/ui-kit';
+import { Button, Flex, Table, Heading, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
 import { faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useProductsTableColumns } from './useProductsTableColumns';
@@ -50,7 +43,7 @@ const ProductsPage: React.FC = () => {
           <Heading level="h1">Products</Heading>
           <Flex align="center" spacing="xl">
             <StringInput
-              placeholder="Search products..."
+              placeholder="Search products by name or id"
               value={searchValue}
               className={styles.productsPagePageSearch}
               fullWidth

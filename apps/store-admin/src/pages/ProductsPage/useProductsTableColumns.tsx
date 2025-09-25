@@ -1,13 +1,12 @@
-import { Button, Flex, Chip, Rating, useToast } from '@baby-toys/ui-kit';
+import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { faPen, faTrashAlt, faCopy } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt, faStar } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../api/types/product.ts';
 import styles from './ProductsPage.module.scss';
-import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
+import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
 
 export const useProductsTableColumns = (handleDelete: (product: Product) => void) => {
   const navigate = useNavigate();
-  const toast = useToast();
 
   return [
     {
@@ -16,21 +15,12 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
       body: (row: Product) => (
         <Flex spacing="s" align="center">
           <span>#{row.id}</span>
-          <Button
-            size="medium"
+          <CopyToClipboardButton
+            value={row.id}
+            successMessage="Product ID copied"
+            ariaLabel="Copy product ID"
             appearance="link"
-            leftIcon={faCopy}
-            aria-label="Copy product ID"
-            onClick={async (e) => {
-              e.stopPropagation();
-              if (row.id == null) return;
-              try {
-                await copyTextToClipboard(String(row.id));
-                toast.success('Product ID copied');
-              } catch {
-                toast.error('Failed to copy');
-              }
-            }}
+            size="medium"
           />
         </Flex>
       ),
@@ -125,6 +115,15 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
             appearance="outline"
             leftIcon={faPen}
             onClick={() => navigate(`/edit-product/${row.id}`)}
+          />
+          <Button
+            size="small"
+            appearance="outline"
+            leftIcon={faStar}
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/reviews?productId=${row.id}`);
+            }}
           />
           <Button
             size="small"
