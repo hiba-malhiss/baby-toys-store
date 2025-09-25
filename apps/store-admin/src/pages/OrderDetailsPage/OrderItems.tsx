@@ -87,7 +87,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
               onBlur={() => handleQuantityUpdate(item.id)}
             />
           ) : (
-            <div className={styles.orderDetailsQuantityLabel}>{item.quantity}</div>
+            <div className={styles.orderDetailsQuantityLabel}>Qty {item.quantity}</div>
           )}
 
           {isEdit && (
@@ -106,8 +106,8 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
       </Flex>
     ))}
 
-    <Flex justify="between" className={styles.orderDetailsTotalRow}>
-      <span>Total</span>
+    <Flex justify="end" spacing="m" className={styles.orderDetailsTotalRow}>
+      <span>Total:</span>
       <span>
         {order.total} {currency?.symbol}
       </span>

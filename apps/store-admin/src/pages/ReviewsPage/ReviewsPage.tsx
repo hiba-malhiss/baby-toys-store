@@ -121,8 +121,10 @@ export default function ReviewsPage() {
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
-        <Heading>Reviews</Heading>
-        <ReviewsFilters {...filters} onChange={applyFilters} />
+        <Flex justify="between" fullWidth>
+          <Heading>Reviews</Heading>
+          <ReviewsFilters {...filters} onChange={applyFilters} />
+        </Flex>
         <Table
           value={data?.content ?? []}
           columns={columns}

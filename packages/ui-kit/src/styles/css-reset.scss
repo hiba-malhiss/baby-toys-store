@@ -193,8 +193,3 @@ table {
 * {
   box-sizing: border-box;
 }
-
-// TODO: remove this when replace mock data
-[src*='img'] {
-  clip-path: inset(4px) !important;
-}
