@@ -288,19 +288,18 @@ const Table = forwardRef(
             {renderHeader()}
             {renderBody()}
           </table>
-
-          {paginator && (
-            <Paginator
-              className="bts-marginTxl"
-              totalItems={totalRecords}
-              pageSize={state.rows}
-              initialPage={state.currentPage}
-              onPageChange={handlePageChange}
-              isLoading={isLoading}
-            />
-          )}
-          {children}
         </div>
+        {paginator && (
+          <Paginator
+            className="bts-marginTxl"
+            totalItems={totalRecords}
+            pageSize={state.rows}
+            initialPage={state.currentPage}
+            onPageChange={handlePageChange}
+            isLoading={isLoading}
+          />
+        )}
+        {children}
       </Card>
     );
   }
