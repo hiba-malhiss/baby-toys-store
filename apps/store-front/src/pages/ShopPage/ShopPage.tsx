@@ -12,6 +12,7 @@ import { SortProductsWithUrl } from './SortProductsWithUrl.tsx';
 import { useProductsQuery } from '../../api/productsApi';
 import { useCategories } from '../../api/catalogApi.ts';
 import type { ViewMode } from '@baby-toys/ui-kit/components/ViewSwitcher/ViewSwitcher.tsx';
+import { useUrlFilters } from '../../hooks/useUrlFilters.ts';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
@@ -19,6 +20,10 @@ const ShopPage = () => {
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_OPTION);
   const [page, setPage] = useState(1);
   const { data: categories = [] } = useCategories();
+  const { urlFilters: searchFilters } = useUrlFilters<{ query?: string }>({ query: (v) => v }, {}, [
+    'query',
+  ]);
+  const query = (searchFilters?.query || '').trim();
   const {
     data: productsData,
     isLoading,
@@ -27,7 +32,7 @@ const ShopPage = () => {
     page,
     size: SHOP_PAGE_SIZE,
     sortBy,
-    filters: sideFilters,
+    filters: { ...(sideFilters || {}), query: query || undefined },
   });
   const items = productsData?.items || [];
   const totalSize = productsData?.totalItems || 0;
@@ -39,7 +44,7 @@ const ShopPage = () => {
   // Reset to page 1 on filter/sort change
   useEffect(() => {
     setPage(1);
-  }, [sideFilters, sortBy]);
+  }, [sideFilters, sortBy, query]);
 
   return (
     <PageContainer className={styles.shopPage}>

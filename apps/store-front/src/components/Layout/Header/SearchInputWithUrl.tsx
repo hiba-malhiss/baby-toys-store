@@ -1,23 +1,28 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StringInput } from '@baby-toys/ui-kit';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 
 const parsers = {
-  search: (val: string) => val,
+  query: (val: string) => val,
 };
 const SearchInputWithUrl = () => {
   const navigate = useNavigate();
-  const { urlFilters, updateUrlFilters } = useUrlFilters(parsers, {}, ['search']);
+  const { urlFilters, updateUrlFilters } = useUrlFilters(parsers, {}, ['query']);
+  const [value, setValue] = useState<string>(urlFilters?.query ?? '');
+
+  useEffect(() => {
+    setValue(urlFilters?.query ?? '');
+  }, [urlFilters?.query]);
 
   const handleSearch = (e?: React.FormEvent | React.KeyboardEvent) => {
     if (e) e.preventDefault();
-    const trimmed = (urlFilters?.search ?? '').trim();
-    updateUrlFilters({ search: trimmed || undefined });
+    const trimmed = (value ?? '').trim();
+    updateUrlFilters({ query: trimmed || undefined });
     navigate({
       pathname: '/shop',
-      search: trimmed ? `?search=${encodeURIComponent(trimmed)}` : '',
+      search: trimmed ? `?query=${encodeURIComponent(trimmed)}` : '',
     });
   };
 
@@ -26,8 +31,15 @@ const SearchInputWithUrl = () => {
       <StringInput
         placeholder="Search products..."
         fullWidth
-        value={urlFilters?.search}
-        onChange={(val) => updateUrlFilters({ search: String(val ?? '') })}
+        value={value}
+        onChange={(val) => {
+          const next = String(val ?? '');
+          setValue(next);
+          if (next.trim() === '') {
+            updateUrlFilters({ query: undefined });
+            navigate({ pathname: '/shop' });
+          }
+        }}
         iconRight={faSearch}
         withIconBackground
         onIconClick={handleSearch}
