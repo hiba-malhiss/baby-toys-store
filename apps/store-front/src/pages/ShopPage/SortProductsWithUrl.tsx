@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Select, Option } from '@baby-toys/ui-kit';
 import styles from './shop-page.module.scss';
 import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from '../../constants/filters.constants.ts';
@@ -22,7 +22,7 @@ export const SortProductsWithUrl: React.FC<SortProductsProps> = ({ onSort }) => 
 
   const { sortBy } = urlFilters;
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (sortBy) {
       onSort?.(sortBy);
     }

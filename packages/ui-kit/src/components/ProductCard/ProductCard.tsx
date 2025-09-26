@@ -4,19 +4,28 @@ import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
 import { faHeart, faCartShopping, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import type { Product } from '../../../types/product.types.ts';
 import Card from '../Card/Card.tsx';
 import Button from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
-import { copyTextToClipboard } from '../../utils/clipboard.utils.ts';
+import { copyTextToClipboard } from '../../utils';
 import { useToast } from '../Toast/ToastContext.tsx';
 
+export type Product = {
+  id: string | number;
+  name: string;
+  shortDescription?: string;
+  price: number;
+  oldPrice?: number;
+  rating: number;
+  label?: string;
+  mainImage: string;
+  isFavorite?: boolean;
+};
 export type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
   size?: 'small';
   product: Product;
   fullWidth?: boolean;
-  isFavorite?: boolean;
   isLoadingFavorite?: boolean;
   onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
@@ -32,7 +41,6 @@ const ProductCard: React.FC<ProductCardProps> = ({
   direction = 'vertical',
   onClick,
   fullWidth,
-  isFavorite,
   isLoadingFavorite,
   formatCurrency,
 }) => {
@@ -87,10 +95,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         appearance={isHorizontal ? 'outline' : 'link'}
         color="icon"
         size={isHorizontal ? 'large' : 'xlarge'}
-        isSelected={isFavorite}
+        isSelected={product.isFavorite}
         isLoading={isLoadingFavorite}
         onClick={(e) => handleButtonClick(e, onToggleFavorite)}
-        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        aria-label={product.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       />
       {direction === 'horizontal' && (
         <Button

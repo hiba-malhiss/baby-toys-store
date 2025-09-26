@@ -136,7 +136,10 @@ const DashboardPage: React.FC = () => {
             <KPI label="Total Products" value={data.totalProducts} />
             <KPI label="Total Orders" value={data.totalOrders} />
             <KPI label="Pending Orders" value={data.pendingOrders} />
-            <KPI label="Revenue (This Month)" value={`${currency.symbol}${data.revenueThisMonth}`} />
+            <KPI
+              label="Revenue (This Month)"
+              value={`${currency.symbol}${data.revenueThisMonth}`}
+            />
             <KPI label="Total Customers" value={data.totalCustomers} />
           </div>
 

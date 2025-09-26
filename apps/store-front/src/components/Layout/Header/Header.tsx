@@ -7,7 +7,7 @@ import AuthButtonsWithDialogs from './AuthButtons.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
-import { useCategories } from '../../../api/categoryApi';
+import { useCategories } from '../../../api/catalogApi.ts';
 import clsx from 'clsx';
 import BurgerMenu from './BurgerMenu.tsx';
 
@@ -22,7 +22,9 @@ const Header = () => {
   const handleCategoryClick = (category?: string) => {
     const params = new URLSearchParams(location.search);
     if (category) {
-      params.set('category', category);
+      params.set('categoryId', String(category));
+    } else {
+      params.delete('categoryId');
     }
 
     navigate({

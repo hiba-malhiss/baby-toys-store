@@ -1,5 +1,6 @@
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
 import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
+import { useBrands, useCategories, useColors, useMaterials } from '../../api/catalogApi.ts';
 
 const isEqual = (value1: any, value2: any): boolean => {
   if (Array.isArray(value1) && Array.isArray(value2)) {
@@ -13,8 +14,11 @@ export const useFilterChips = (
   filters: ShopFilters,
   defaultFilters: Record<string, any>
 ): { key: keyof ShopFilters; label: string }[] => {
-  const { currency, getCategoryName, getBrandName, getColorName, getMaterialName } =
-    useStoreConfiguration();
+  const { currency } = useStoreConfiguration();
+  const { data: categories = [] } = useCategories();
+  const { data: brands = [] } = useBrands();
+  const { data: colors = [] } = useColors();
+  const { data: materials = [] } = useMaterials();
 
   const currencySymbol = currency?.symbol || '';
 
@@ -38,31 +42,33 @@ export const useFilterChips = (
         break;
 
       case 'categoryId':
-        chips.push({
-          key: 'categoryId',
-          label: getCategoryName(value),
-        });
+        {
+          const name =
+            categories.find((c) => String(c.id) === String(value))?.name || String(value);
+          chips.push({ key: 'categoryId', label: name });
+        }
         break;
 
       case 'brandId':
-        chips.push({
-          key: 'brandId',
-          label: getBrandName(value),
-        });
+        {
+          const name = brands.find((b) => String(b.id) === String(value))?.name || String(value);
+          chips.push({ key: 'brandId', label: name });
+        }
         break;
 
       case 'colorId':
-        chips.push({
-          key: 'colorId',
-          label: getColorName(value),
-        });
+        {
+          const color = colors.find((c) => String(c.id) === String(value));
+          const label = color?.name || color?.code || String(value);
+          chips.push({ key: 'colorId', label });
+        }
         break;
 
       case 'materialId':
-        chips.push({
-          key: 'materialId',
-          label: getMaterialName(value),
-        });
+        {
+          const name = materials.find((m) => String(m.id) === String(value))?.name || String(value);
+          chips.push({ key: 'materialId', label: name });
+        }
         break;
 
       default:

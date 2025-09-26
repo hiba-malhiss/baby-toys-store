@@ -13,35 +13,32 @@ import {
   NoDataFound,
   Drawer,
 } from '@baby-toys/ui-kit';
-import { useShopFilterOptions } from '../../../hooks/useShopFilterOptions';
 import { useFilterChips } from '../shop-page.utils.ts';
 import styles from './side-filters.module.scss';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 import { type ShopFilters, urlFilterParsers } from './side-filters.utils.ts';
 import { useDebounce } from '@baby-toys/ui-kit/hooks';
-import type { Category } from '@baby-toys/types';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { useBrands, useCategories, useColors, useMaterials } from '../../../api/catalogApi.ts';
+import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 
 export const SideFilters: React.FC<{
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
-  categoriesOptions?: Category[];
   isDrawer?: boolean;
-}> = ({ className, onFiltersChange, categoriesOptions = [], isDrawer = false }) => {
-  const {
-    colors,
-    brands,
-    materials,
-    defaultPriceRange,
-    loading: filterLoading,
-  } = useShopFilterOptions();
+}> = ({ className, onFiltersChange, isDrawer = false }) => {
+  const { data: categories = [], isLoading: loadingCategories } = useCategories();
+  const { data: brands = [], isLoading: loadingBrands } = useBrands();
+  const { data: colors = [], isLoading: loadingColors } = useColors();
+  const { data: materials = [], isLoading: loadingMaterials } = useMaterials();
+  const { priceRange } = useStoreConfiguration();
 
   const defaultFilters: ShopFilters = {
     categoryId: undefined,
     brandId: undefined,
     colorId: undefined,
     materialId: undefined,
-    priceRange: defaultPriceRange,
+    priceRange: priceRange,
   };
 
   const { urlFilters, updateUrlFilters } = useUrlFilters<ShopFilters>(
@@ -56,10 +53,18 @@ export const SideFilters: React.FC<{
   const [isDrawerOpen, setIsDrawerOpen] = React.useState(false);
 
   useEffect(() => {
+    const filterLoading = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
     if (!filterLoading) {
       onFiltersChange(debouncedFilters);
     }
-  }, [debouncedFilters, onFiltersChange]);
+  }, [
+    debouncedFilters,
+    onFiltersChange,
+    loadingCategories,
+    loadingBrands,
+    loadingColors,
+    loadingMaterials,
+  ]);
 
   const handleFilterChange = (key: keyof ShopFilters, value: any) => {
     updateUrlFilters({ [key]: value });
@@ -71,7 +76,7 @@ export const SideFilters: React.FC<{
 
   const removeFilter = (key: keyof ShopFilters) => {
     if (key === 'priceRange') {
-      handleFilterChange(key, defaultPriceRange);
+      handleFilterChange(key, priceRange);
     } else {
       handleFilterChange(key, undefined);
     }
@@ -110,8 +115,8 @@ export const SideFilters: React.FC<{
           spacing="l"
           className="bts-marginTm"
         >
-          {categoriesOptions.map(({ name, id }) => (
-            <RadioButton key={id} value={id}>
+          {categories.map(({ name, id }) => (
+            <RadioButton key={id} value={String(id)}>
               {name}
             </RadioButton>
           ))}
@@ -129,9 +134,8 @@ export const SideFilters: React.FC<{
           appearance="color-swatch"
           className="bts-marginTm"
         >
-          <RadioButton key="multi" value="multi" name="color" isRainbow />
-          {colors.map(({ value }) => (
-            <RadioButton key={value} value={value} name="color" swatchColor={value} />
+          {colors.map(({ id, code }) => (
+            <RadioButton key={id} value={String(id)} name="color" swatchColor={code} />
           ))}
         </RadioButtonGroup>
       </Accordion>
@@ -146,9 +150,9 @@ export const SideFilters: React.FC<{
           align="start"
           className="bts-marginTm"
         >
-          {brands.map(({ label, value }) => (
-            <RadioButton key={value} value={value}>
-              {label}
+          {brands.map(({ id, name }) => (
+            <RadioButton key={id} value={String(id)}>
+              {name}
             </RadioButton>
           ))}
         </RadioButtonGroup>
@@ -164,9 +168,9 @@ export const SideFilters: React.FC<{
           align="start"
           className="bts-marginTm"
         >
-          {materials.map(({ label, value }) => (
-            <RadioButton key={value} value={value}>
-              {label}
+          {materials.map(({ id, name }) => (
+            <RadioButton key={id} value={String(id)}>
+              {name}
             </RadioButton>
           ))}
         </RadioButtonGroup>
@@ -174,11 +178,11 @@ export const SideFilters: React.FC<{
 
       <Accordion header="Price" withoutPadding withoutHeaderPadding>
         <Slider
-          min={defaultPriceRange?.[0]}
-          max={defaultPriceRange?.[1]}
+          min={priceRange?.[0]}
+          max={priceRange?.[1]}
           step={1}
           range
-          value={urlFilters.priceRange || defaultPriceRange}
+          value={urlFilters.priceRange || priceRange}
           className="bts-marginTxxl"
           onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
         />
@@ -186,7 +190,8 @@ export const SideFilters: React.FC<{
     </Flex>
   );
 
-  if (filterLoading) {
+  const isLoadingFilters = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
+  if (isLoadingFilters) {
     return (
       <Card className={className} header="Filters">
         <BouncingDotsLoader size="medium" />

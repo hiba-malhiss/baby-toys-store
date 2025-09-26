@@ -8,7 +8,6 @@ export const SORT_OPTIONS = [
   { label: 'New Arrivals', value: 'createdAt' },
   { label: 'Price: Low to High', value: 'price_asc' },
   { label: 'Price: High to Low', value: 'price_desc' },
-  { label: 'Rating', value: 'rating' },
 ];
 
 export const TOP_PICS_SORT_OPTIONS: RadioOption[] = [

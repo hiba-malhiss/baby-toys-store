@@ -22,7 +22,7 @@ const TopPicksSection = () => {
   }, []);
 
   const handleViewAll = useCallback(() => {
-    navigate(`/shop?sortBy=${encodeURIComponent(selected)}&sortDirection=DESC`);
+    navigate(`/shop?sortBy=${encodeURIComponent(selected)}`);
   }, [navigate, selected]);
 
   return (

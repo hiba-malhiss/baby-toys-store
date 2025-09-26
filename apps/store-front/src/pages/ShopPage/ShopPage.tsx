@@ -3,51 +3,50 @@ import styles from './shop-page.module.scss';
 import { ViewSwitcher, Flex } from '@baby-toys/ui-kit';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
-import { getProductCategories, useMockProductsApi } from '@mock-data/useMockApi';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants.ts';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
 import { DEFAULT_SORT_OPTION } from '../../constants/filters.constants.ts';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
-import type { ViewMode } from '@baby-toys/ui-kit';
 import { SideFilters } from './SideFilters/SideFilters.tsx';
 import { SortProductsWithUrl } from './SortProductsWithUrl.tsx';
-import type { Category } from '@baby-toys/types';
+import { useProductsQuery } from '../../api/productsApi';
+import { useCategories } from '../../api/catalogApi.ts';
+import type { ViewMode } from '@baby-toys/ui-kit/components/ViewSwitcher/ViewSwitcher.tsx';
 
 const ShopPage = () => {
   const [view, setView] = useState<ViewMode>('grid');
   const [sideFilters, setSideFilters] = useState<ShopFilters>();
   const [sortBy, setSortBy] = useState<string>(DEFAULT_SORT_OPTION);
-  const [categoriesOptions, setCategoriesOptions] = useState<Category[]>([]);
-  const { fetchProducts } = useMockProductsApi(SHOP_PAGE_SIZE);
-  const { items, totalSize, page, loading, handlePaginationChange, handleFiltersChange } =
-    useHandlePagination((page, filters) => fetchProducts(page, filters), SHOP_PAGE_SIZE, true);
+  const [page, setPage] = useState(1);
+  const { data: categories = [] } = useCategories();
+  const {
+    data: productsData,
+    isLoading,
+    isFetching,
+  } = useProductsQuery({
+    page,
+    size: SHOP_PAGE_SIZE,
+    sortBy,
+    filters: sideFilters,
+  });
+  const items = productsData?.items || [];
+  const totalSize = productsData?.totalItems || 0;
+
   const header =
-    categoriesOptions.find((option) => option.id === sideFilters?.categoryId)?.name ||
+    categories.find((option) => String(option.id) === String(sideFilters?.categoryId))?.name ||
     'All Categories';
 
-  // Update full filter object when side filters or sortBy change
+  // Reset to page 1 on filter/sort change
   useEffect(() => {
-    if (!sideFilters) return;
-    handleFiltersChange({ ...sideFilters, sortBy });
-  }, [sideFilters, sortBy, handleFiltersChange]);
-
-  useEffect(() => {
-    getProductCategories()
-      .then((data) => setCategoriesOptions(data))
-      .catch((error) => console.error('Error fetching categories:', error));
-  }, []);
+    setPage(1);
+  }, [sideFilters, sortBy]);
 
   return (
     <PageContainer className={styles.shopPage}>
-      <SideFilters
-        className={styles.shopPageRightSide}
-        categoriesOptions={categoriesOptions}
-        onFiltersChange={setSideFilters}
-      />
+      <SideFilters className={styles.shopPageRightSide} onFiltersChange={setSideFilters} />
 
       <ViewSwitcher
-        isLoading={loading}
+        isLoading={isLoading || isFetching}
         className={styles.shopPageCollection}
         header={header}
         page={page}
@@ -61,21 +60,19 @@ const ShopPage = () => {
           />
         ))}
         onViewChange={setView}
-        onPaginationChange={handlePaginationChange}
+        onPaginationChange={(newPage) => setPage(newPage)}
         minColWidth={250}
         topBar={
           <Flex className={styles.topBar}>
             <SideFilters
               isDrawer
               className={styles.shopPageFilterIcon}
-              categoriesOptions={categoriesOptions}
               onFiltersChange={setSideFilters}
             />
             <SortProductsWithUrl onSort={setSortBy} />
           </Flex>
         }
       />
-
       <YouMayAlsoLikeSection mode="carousel" className={styles.shopPageYouMayAlsoLike} />
     </PageContainer>
   );

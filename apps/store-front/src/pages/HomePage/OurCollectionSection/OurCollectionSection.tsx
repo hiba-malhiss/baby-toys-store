@@ -2,7 +2,7 @@ import { useNavigate } from 'react-router-dom';
 import styles from './our-collection-section.module.scss';
 import { Flex, Button } from '@baby-toys/ui-kit';
 import Section from '../../../components/features/Section/Section.tsx';
-import { useCategories } from '../../../api/categoryApi';
+import { useCategories } from '../../../api/catalogApi.ts';
 
 const OurCollectionSection = () => {
   const { data: categories = [], isLoading } = useCategories();
@@ -10,7 +10,7 @@ const OurCollectionSection = () => {
 
   const handleCategoryClick = (category: string) => {
     // Navigate to shop page with category filter
-    navigate(`/shop?category=${encodeURIComponent(category)}`);
+    navigate(`/shop?categoryId=${encodeURIComponent(category)}`);
   };
 
   return (
