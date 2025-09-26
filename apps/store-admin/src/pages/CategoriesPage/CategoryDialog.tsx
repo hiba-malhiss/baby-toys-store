@@ -6,6 +6,8 @@ import {
   ImageUploader,
   Button,
   useToast,
+  Select,
+  Option,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -54,6 +56,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       name: category?.name || '',
       description: category?.description || '',
       imageUrl: category?.imageUrl || '',
+      isMain: category?.isMain ?? false,
     },
   });
 
@@ -67,6 +70,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       name: category?.name || '',
       description: category?.description || '',
       imageUrl: category?.imageUrl || '',
+      isMain: category?.isMain ?? false,
     });
     setImagePreview(category?.imageUrl || null);
     setImageFile(null);
@@ -148,6 +152,13 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       <Flex direction="vertical" spacing="m" fullwidth>
         <FormFieldWrapper name="name" control={control} label="Name" required fullWidth>
           <StringInput disabled={isSubmitting} />
+        </FormFieldWrapper>
+
+        <FormFieldWrapper name="isMain" control={control} label="Is Main" fullWidth>
+          <Select>
+            <Option value={true as any}>Yes</Option>
+            <Option value={false as any}>No</Option>
+          </Select>
         </FormFieldWrapper>
 
         <FormFieldWrapper name="description" control={control} label="Description" fullWidth>

@@ -4,4 +4,5 @@ export const categorySchema = z.object({
   name: z.string().min(1, 'Name is required'),
   description: z.string().max(500, 'Description must be under 500 characters').optional(),
   imageUrl: z.string().optional(),
+  isMain: z.boolean().optional(),
 });

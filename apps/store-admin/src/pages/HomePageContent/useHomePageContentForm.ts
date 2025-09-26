@@ -34,9 +34,9 @@ export const useHomePageContentForm = () => {
     defaultValues: {
       heroBanners: [{ text: '' }, { text: '' }],
       infoCards: [
-        { title: '', subtitle: '', icon: '' },
-        { title: '', subtitle: '', icon: '' },
-        { title: '', subtitle: '', icon: '' },
+        { title: '', subtitle: '', icon: '', appearance: 'primary' },
+        { title: '', subtitle: '', icon: '', appearance: 'primary' },
+        { title: '', subtitle: '', icon: '', appearance: 'primary' },
       ],
       galleryImages: [],
     },
@@ -51,11 +51,12 @@ export const useHomePageContentForm = () => {
     if (data) {
       reset({
         heroBanners: data.heroBanners || [{ text: '' }, { text: '' }],
-        infoCards: data.infoCards || [
-          { title: '', subtitle: '', icon: '' },
-          { title: '', subtitle: '', icon: '' },
-          { title: '', subtitle: '', icon: '' },
-        ],
+        infoCards: data.infoCards?.map((c) => ({
+          title: c.title ?? '',
+          subtitle: c.subtitle ?? '',
+          icon: c.icon ?? '',
+          appearance: (c as any).appearance ?? 'primary',
+        })) || [],
         galleryImages: data.galleryImages || [],
       });
       setExistingImages(data.galleryImages?.map((img) => img.imageUrl) || []);

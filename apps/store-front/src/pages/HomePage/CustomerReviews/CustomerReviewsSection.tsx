@@ -1,25 +1,10 @@
-import { useEffect, useState } from 'react';
 import Section from '../../../components/features/Section/Section.tsx';
 import { ReviewCard, Carousel } from '@baby-toys/ui-kit';
-import { useMockProductsApi } from '@mock-data/useMockApi';
-import type { Review } from '../../../types/product.types.ts';
+import { useHighlightedReviews } from '../../../api/reviewsApi';
 import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints';
 
 const CustomerReviewsSection = () => {
-  const [featuredReviews, setFeaturedReviews] = useState<Review[]>([]);
-  const [isLoading, setIsLoading] = useState(true); // <-- added loading state
-  const { getTestimonials } = useMockProductsApi(5);
-
-  useEffect(() => {
-    setIsLoading(true);
-    getTestimonials(5)
-      .then((data) => {
-        setFeaturedReviews(data);
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
-  }, [getTestimonials]);
+  const { data: featuredReviews = [], isLoading } = useHighlightedReviews();
 
   return (
     <Section

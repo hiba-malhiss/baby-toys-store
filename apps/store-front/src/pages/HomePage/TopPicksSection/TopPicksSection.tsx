@@ -1,50 +1,32 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Section from '../../../components/features/Section/Section.tsx';
 import { Flex, Button, RadioButtonGroup } from '@baby-toys/ui-kit';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/features/SmartProductCard/SmartProductCard.tsx';
-import { useMockProductsApi } from '@mock-data/useMockApi';
-import type { Product } from '../../../types/product.types.ts';
+import { useTopPicks } from '../../../api/productApi';
 
 import { HOMEPAGE_TOP_PICKS_LIMIT } from '../../../constants/display.constants.ts';
-import { TOP_PICS_SORT_OPTIONS } from '../../../constants/filters.constants.ts';
+import {
+  DEFAULT_SORT_OPTION,
+  TOP_PICS_SORT_OPTIONS,
+} from '../../../constants/filters.constants.ts';
 
 const TopPicksSection = () => {
-  const [selected, setSelected] = useState('featured');
-  const [items, setItems] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [selected, setSelected] = useState(DEFAULT_SORT_OPTION);
   const navigate = useNavigate();
-
-  const { fetchProducts } = useMockProductsApi(HOMEPAGE_TOP_PICKS_LIMIT);
-
-  useEffect(() => {
-    if (!selected) return;
-
-    setLoading(true);
-    fetchProducts(1, { sortBy: selected })
-      .then(({ items }) => {
-        setItems(items);
-      })
-      .catch((error) => {
-        console.error('Error fetching top picks:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [selected, fetchProducts]);
+  const { data: items = [], isLoading } = useTopPicks(selected as any, HOMEPAGE_TOP_PICKS_LIMIT);
 
   const handleSortChange = useCallback((val: string) => {
     setSelected(val);
   }, []);
 
   const handleViewAll = useCallback(() => {
-    // Navigate to shop page with the selected sort filter
-    navigate(`/shop?sortBy=${selected}`);
+    navigate(`/shop?sortBy=${encodeURIComponent(selected)}&sortDirection=DESC`);
   }, [navigate, selected]);
 
   return (
-    <Section title="Top picks for your little ones" isLoading={loading}>
+    <Section title="Top picks for your little ones" isLoading={isLoading}>
       <RadioButtonGroup
         className={styles.topPicks}
         options={TOP_PICS_SORT_OPTIONS}
@@ -55,7 +37,7 @@ const TopPicksSection = () => {
       />
       <div className={styles.topPicksGrid}>
         {items.map((toy, index) => (
-          <SmartProductCard key={toy.id || `product-${toy.label}-${index}`} product={toy} />
+          <SmartProductCard key={toy.id || `product-${index}`} product={toy} />
         ))}
       </div>
       <Flex justify="center" className="bts-marginTxxxl">

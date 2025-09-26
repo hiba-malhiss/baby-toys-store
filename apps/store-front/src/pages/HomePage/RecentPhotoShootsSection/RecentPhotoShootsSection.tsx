@@ -1,42 +1,24 @@
-import { useState, useEffect } from 'react';
+import { Flex, Image } from '@baby-toys/ui-kit';
 import Section from '../../../components/features/Section/Section.tsx';
-import { Flex } from '@baby-toys/ui-kit';
+import { useHomePageContent } from '../../../api/homepageApi';
+import type { GalleryImageDto } from '../../../api/types/homepage';
 import styles from './recent-photo-shoots-section.module.scss';
-import { useMockProductsApi } from '@mock-data/useMockApi';
 
 const RecentPhotoShoots = () => {
-  const [photoShoots, setPhotoShoots] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { getHomepageContent } = useMockProductsApi(10);
-
-  useEffect(() => {
-    getHomepageContent()
-      .then(({ photoShoots }) => {
-        setPhotoShoots(photoShoots);
-      })
-      .catch((error) => {
-        console.error('Error fetching photo shoots:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [getHomepageContent]);
+  const { data, isLoading } = useHomePageContent();
+  const gallery = (data?.galleryImages || []) as GalleryImageDto[];
 
   return (
     <Section
       title="Recent photo Shoots"
       subTitle="Check gallery"
       compactPadding
-      isLoading={loading}
+      isLoading={isLoading}
     >
       <Flex wrap justify="center">
-        {photoShoots.map((src, index) => (
-          <div key={index} className={styles.recentPhotoShootsImageWrapper}>
-            <img
-              src={src}
-              alt={`Photo shoot ${index + 1}`}
-              className={styles.recentPhotoShootsImage}
-            />
+        {gallery.map((img, index) => (
+          <div key={img.imageUrl ?? index} className={styles.recentPhotoShootsImageWrapper}>
+            <Image src={img.imageUrl} alt={img.caption} className={styles.recentPhotoShootsImage} />
           </div>
         ))}
       </Flex>

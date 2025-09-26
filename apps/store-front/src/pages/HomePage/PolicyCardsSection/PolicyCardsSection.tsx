@@ -1,35 +1,26 @@
-import { useState, useEffect } from 'react';
 import { Flex, InfoCard } from '@baby-toys/ui-kit';
-import { useMockProductsApi } from '@mock-data/useMockApi';
-import type { InfoCardType } from '../../../types/product.types.ts';
+import { useHomePageContent } from '../../../api/homepageApi';
+import type { InfoCardDto } from '../../../api/types/homepage';
 
 const PolicyCardsSection = () => {
-  const [infoCards, setInfoCards] = useState<InfoCardType[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { getHomepageContent } = useMockProductsApi(10);
+  const { data, isLoading } = useHomePageContent();
+  const infoCards = (data?.infoCards ?? []) as InfoCardDto[];
 
-  useEffect(() => {
-    getHomepageContent()
-      .then(({ infoCards }) => {
-        setInfoCards(infoCards);
-      })
-      .catch((error) => {
-        console.error('Error fetching info cards:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, [getHomepageContent]);
-
-  if (loading) {
+  if (isLoading) {
     return null;
   }
 
   return (
     <Flex spacing="xxl" align="center" fullWidth justify="center" isResponsive>
-      {infoCards.map((card, index) => (
-        <InfoCard key={index} card={card} fullWidth />
-      ))}
+      {infoCards.map((card, index) => {
+        const adapted = {
+          appearance: card.appearance,
+          iconName: card.icon,
+          title: card.title,
+          content: card.subtitle,
+        } as any;
+        return <InfoCard key={card.id ?? index} card={adapted} fullWidth />;
+      })}
     </Flex>
   );
 };

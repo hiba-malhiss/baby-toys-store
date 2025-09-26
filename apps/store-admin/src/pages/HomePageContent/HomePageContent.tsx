@@ -7,6 +7,8 @@ import {
   TextArea,
   Button,
   ImageUploader,
+  Select,
+  Option,
 } from '@baby-toys/ui-kit';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -51,6 +53,19 @@ const HomePageContent: React.FC = () => {
                     fullWidth
                   >
                     <StringInput />
+                  </FormFieldWrapper>
+                  <FormFieldWrapper
+                    name={`infoCards.${i}.appearance`}
+                    control={control}
+                    label="Appearance"
+                    fullWidth
+                  >
+                    <Select>
+                      <Option value="info">info</Option>
+                      <Option value="warning">warning</Option>
+                      <Option value="success">success</Option>
+                      <Option value="primary">primary</Option>
+                    </Select>
                   </FormFieldWrapper>
                   <FormFieldWrapper
                     fullWidth

@@ -26,7 +26,7 @@ const IconColor: Record<string, string> = {
 };
 
 const InfoCard: React.FC<InfoCardProps> = ({ card, size, fullWidth }) => {
-  const { appearance = 'info', icon, title, content } = card;
+  const { appearance = 'info', iconName, icon, title, content } = card;
 
   return (
     <Flex
@@ -43,6 +43,7 @@ const InfoCard: React.FC<InfoCardProps> = ({ card, size, fullWidth }) => {
     >
       <Icon
         icon={icon}
+        iconName={iconName}
         color={IconColor[appearance]}
         size={size == 'medium' ? 'xxlarge' : 'xxxlarge'}
       />

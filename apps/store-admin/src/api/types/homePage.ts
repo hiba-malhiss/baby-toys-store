@@ -8,6 +8,7 @@ export interface InfoCardDto {
   title: string;
   subtitle: string;
   icon: string;
+  appearance?: 'info' | 'warning' | 'success' | 'primary';
 }
 
 export interface GalleryImageDto {

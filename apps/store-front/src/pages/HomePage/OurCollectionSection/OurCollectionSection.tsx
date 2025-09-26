@@ -1,27 +1,12 @@
-import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './our-collection-section.module.scss';
 import { Flex, Button } from '@baby-toys/ui-kit';
 import Section from '../../../components/features/Section/Section.tsx';
-import { getProductCategories } from '@mock-data/useMockApi';
+import { useCategories } from '../../../api/categoryApi';
 
 const OurCollectionSection = () => {
-  const [categories, setCategories] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
+  const { data: categories = [], isLoading } = useCategories();
   const navigate = useNavigate();
-
-  useEffect(() => {
-    getProductCategories()
-      .then((data) => {
-        setCategories(data.filter((cat: any) => cat.image));
-      })
-      .catch((error) => {
-        console.error('Error fetching categories:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
 
   const handleCategoryClick = (category: string) => {
     // Navigate to shop page with category filter
@@ -33,7 +18,7 @@ const OurCollectionSection = () => {
       title="Find The Perfect Toy"
       subTitle="Our Collections"
       className={styles.ourCollection}
-      isLoading={loading}
+      isLoading={isLoading}
     >
       <Flex
         fullWidth
@@ -42,21 +27,27 @@ const OurCollectionSection = () => {
         className={styles.ourCollectionCategories}
         wrap
       >
-        {categories.map(({ name, image, id }) => (
-          <Button
-            withoutPadding
-            key={name}
-            withAutoHeight
-            appearance="link"
-            size="large"
-            onClick={() => handleCategoryClick(id)}
-          >
-            <Flex fullHeight direction="vertical" align="center" justify="between" spacing="xl">
-              <img src={image} alt={name} className={styles.ourCollectionImage} />
-              <span>{name}</span>
-            </Flex>
-          </Button>
-        ))}
+        {categories
+          .filter((cat) => cat.isMain)
+          .map((cat: any) => (
+            <Button
+              withoutPadding
+              key={cat.name}
+              withAutoHeight
+              appearance="link"
+              size="large"
+              onClick={() => handleCategoryClick(cat.id)}
+            >
+              <Flex fullHeight direction="vertical" align="center" justify="between" spacing="xl">
+                <img
+                  src={cat.image || '/assets/educational-toys.svg'}
+                  alt={cat.name}
+                  className={styles.ourCollectionImage}
+                />
+                <span>{cat.name}</span>
+              </Flex>
+            </Button>
+          ))}
       </Flex>
     </Section>
   );

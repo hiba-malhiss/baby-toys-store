@@ -1,25 +1,14 @@
-import { useEffect, useState } from 'react';
 import { Flex } from '@baby-toys/ui-kit';
-
 import styles from './banners-section.module.scss';
-import { useMockProductsApi } from '@mock-data/useMockApi';
 import clsx from 'clsx';
+import { useHomePageContent } from '../../../api/homepageApi';
+import type { HeroBannerDto } from '../../../api/types/homepage';
 
 const BannersSection = () => {
-  const [banners, setBanners] = useState<string[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const { getHomepageContent } = useMockProductsApi(10);
+  const { data, isLoading } = useHomePageContent();
+  const heroBanners = (data?.heroBanners || []) as HeroBannerDto[];
 
-  useEffect(() => {
-    setIsLoading(true);
-    getHomepageContent()
-      .then((data) => setBanners(data.banners))
-      .finally(() => setIsLoading(false));
-  }, [getHomepageContent]);
-
-  if (isLoading) {
-    return null;
-  }
+  if (isLoading || heroBanners.length === 0) return null;
 
   return (
     <Flex spacing="xxl" fullWidth className={styles.banner} wrap justify="center">
@@ -28,14 +17,14 @@ const BannersSection = () => {
         justify="center"
         className={clsx(styles.bannerWrapper, styles.bannerWrapperCenter)}
       >
-        <p>{banners[0] || ''}</p>
+        <p>{heroBanners[0]?.text || ''}</p>
       </Flex>
       <Flex
         align="center"
         justify="end"
         className={clsx(styles.bannerWrapper, styles.bannerWrapperTopRight)}
       >
-        <p>{banners.slice(1).join(', ')}</p>
+        <p>{heroBanners[1]?.text || ''}</p>
       </Flex>
     </Flex>
   );

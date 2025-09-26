@@ -8,6 +8,7 @@ export const infoCardSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   subtitle: z.string().min(1, 'Subtitle is required'),
   icon: z.string().min(1, 'Icon is required'),
+  appearance: z.enum(['info', 'warning', 'success', 'primary']).optional(),
 });
 
 export const galleryImageSchema = z.object({});

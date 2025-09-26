@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
-import { icon as faIcon } from '@fortawesome/fontawesome-svg-core';
+import { icon as faIcon, IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import clsx from 'clsx';
 import { IconColor, IconSize } from './icon.constant.ts';
 import styles from './icon.module.scss';
 
 interface IconProps {
-  icon: any;
+  icon?: IconDefinition;
+  iconName?: string;
   size?: IconSize;
   color?: IconColor;
   isRotating?: boolean;
@@ -14,7 +15,13 @@ interface IconProps {
   badge?: string | number;
 }
 
+export async function loadSolidIcon(name: string): Promise<IconDefinition | undefined> {
+  const mod = await import('@fortawesome/free-solid-svg-icons');
+  return (mod as Record<string, IconDefinition>)[name];
+}
+
 const Icon = ({
+  iconName,
   icon,
   size = IconSize.medium,
   color,
@@ -25,10 +32,26 @@ const Icon = ({
 }: IconProps) => {
   const [svgHtml, setSvgHtml] = useState('');
 
+  // Load the icon module only when iconName changes
   useEffect(() => {
-    const svg = faIcon(icon)?.html?.join('\n') || '';
-    setSvgHtml(svg);
-  }, [icon]);
+    let cancelled = false;
+
+    if (icon) {
+      const svg = faIcon(icon)?.html?.join('\n') || '';
+      setSvgHtml(svg);
+    } else {
+      loadSolidIcon(iconName).then((def) => {
+        if (!cancelled) {
+          const svg = faIcon(def)?.html?.join('\n') ?? '';
+          setSvgHtml(svg);
+        }
+      });
+    }
+
+    return () => {
+      cancelled = true;
+    };
+  }, [iconName]);
 
   const iconClass = useMemo(
     () =>
