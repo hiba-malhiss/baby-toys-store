@@ -3,6 +3,7 @@ import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { ShopFilters } from '../pages/ShopPage/SideFilters/side-filters.utils';
 import type { Product } from './types/product.ts';
+import { normalizeProduct } from './normalizers/productNormalizer';
 
 export type ProductsQuery = {
   page: number;
@@ -80,16 +81,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
       });
       const data = res.data.data;
       return {
-        items: (data?.content || []).map((dto: Product) => ({
-          id: dto.id,
-          name: dto.name,
-          shortDescription: dto.shortDescription,
-          mainImage: dto.mainImage,
-          price: Number(dto.price ?? 0),
-          oldPrice: dto.oldPrice != null ? Number(dto.oldPrice) : undefined,
-          rating: Number(dto.averageRating ?? 0),
-          isFavorite: dto.inWishlist,
-        })),
+        items: (data?.content || []).map((dto: Product) => normalizeProduct(dto)),
         page: (data?.number ?? zeroBasedPage) + 1,
         totalPages: data?.totalPages ?? 0,
         totalItems: data?.totalElements ?? 0,

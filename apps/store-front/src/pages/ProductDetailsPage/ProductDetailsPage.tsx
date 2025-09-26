@@ -9,11 +9,14 @@ import { BouncingDotsLoader } from '@baby-toys/ui-kit';
 import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';
 import RelatedProducts from './RelatedProducts.tsx';
+import { useQueryClient } from '@tanstack/react-query';
+import { highlightsQueryKey, highlightsQueryFn } from '../../api/highlightsApi';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const { setExtraCrumbs } = useBreadcrumb();
   const [product, setProduct] = useState<Product | undefined>();
+  const queryClient = useQueryClient();
 
   const { getProductById } = useMockProductsApi(PRODUCT_RELATED_PRODUCTS_LIMIT);
 
@@ -27,6 +30,15 @@ const ProductDetailsPage: React.FC = () => {
 
     return () => setExtraCrumbs(null);
   }, [id, getProductById, setExtraCrumbs]);
+
+  // Prefetch highlights for quicker You May Also Like load
+  useEffect(() => {
+    queryClient.prefetchQuery({
+      queryKey: highlightsQueryKey(1, 12),
+      queryFn: highlightsQueryFn(1, 12),
+      staleTime: 30_000,
+    });
+  }, [queryClient]);
 
   if (!product) {
     return (

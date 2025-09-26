@@ -8,7 +8,7 @@ type FetchFunction<T, F> = (
   items: T[];
   page: number;
   totalPages: number;
-  totalItems: number;
+  totalElements: number;
 }>;
 
 export function useHandlePagination<T, F = any>(
@@ -43,7 +43,7 @@ export function useHandlePagination<T, F = any>(
     const fetchData = async () => {
       setLoading(items.length == 0 || mode === 'default');
       try {
-        const { items: pagedItems, totalItems } = await fetchFunctionRef.current(page, filters);
+        const { items: pagedItems, totalElements } = await fetchFunctionRef.current(page, filters);
         if (!isMounted) return;
 
         setItems((prevItems) => {
@@ -53,7 +53,7 @@ export function useHandlePagination<T, F = any>(
           return pagedItems;
         });
 
-        setTotalSize(totalItems);
+        setTotalSize(totalElements);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
