@@ -4,8 +4,8 @@ export const exploreLinks = [
   { label: 'Shop', path: '/shop' },
   { label: 'Wish List', path: '/wish-list' },
   { label: 'Contact Us', path: '/contact-us' },
-  { label: 'Return Policy', path: '/policies?section=return' },
-  { label: 'Shipping Policy', path: '/policies?section=shipping' },
+  { label: 'Return Policy', path: '/policies?section=returnPolicy' },
+  { label: 'Shipping Policy', path: '/policies?section=shippingPolicy' },
 ];
 
 export const socialMediaLinks = [

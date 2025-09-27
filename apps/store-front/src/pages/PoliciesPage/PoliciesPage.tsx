@@ -1,42 +1,52 @@
-import React, { useEffect, useState } from 'react';
+import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import { getPolicies } from '@mock-data/useMockApi';
-import { Heading, AccordionGroup, Accordion } from '@baby-toys/ui-kit';
+import { AccordionGroup, Accordion } from '@baby-toys/ui-kit';
+import { useStoreSettings } from '../../api/settingsApi';
 
 const PoliciesPage: React.FC = () => {
-  const [policies, setPolicies] = useState<Record<
-    string,
-    { title: string; content: string }
-  > | null>({});
-  const [loading, setLoading] = useState(true);
+  const { data: settings, isLoading } = useStoreSettings();
   const [searchParams, setSearchParams] = useSearchParams();
-  const selectedPolicy = searchParams.get('section');
+  const selectedPolicy = searchParams.get('section') || '';
 
-  useEffect(() => {
-    getPolicies().then((data) => {
-      setPolicies(data);
-      setLoading(false);
-    });
-  }, []);
+  const policies = useMemo(
+    () => [
+      {
+        key: 'returnPolicy',
+        title: 'Return Policy',
+        content: settings?.policies?.returnPolicy || '',
+      },
+      {
+        key: 'shippingPolicy',
+        title: 'Shipping Policy',
+        content: settings?.policies?.shippingPolicy || '',
+      },
+      {
+        key: 'cancelPolicy',
+        title: 'Cancel Policy',
+        content: settings?.policies?.cancelPolicy || '',
+      },
+    ],
+    [settings?.policies]
+  );
 
   const handleAccordionToggle = (key: string) => {
-    const current = searchParams.get('section');
+    const current = searchParams.get('section') || '';
     setSearchParams({ section: current === key ? '' : key });
   };
 
   return (
-    <PageContainer header="Policies" isLoading={loading || !policies} className="bts-marginBxxl">
-      <AccordionGroup onChange={(key) => handleAccordionToggle(key)}>
-        {Object.entries(policies).map(([key, policy]) => (
+    <PageContainer header="Policies" isLoading={isLoading} className="bts-marginBxxl">
+      <AccordionGroup activeKey={selectedPolicy} onChange={(key) => handleAccordionToggle(key)}>
+        {policies.map(({ key, title, content }) => (
           <Accordion
             key={key}
-            header={<Heading level="h4">{policy.title}</Heading>}
+            header={title}
             isOpen={selectedPolicy === key}
             defaultOpen={selectedPolicy === key}
             iconPosition="left"
           >
-            {policy.content}
+            {content}
           </Accordion>
         ))}
       </AccordionGroup>

@@ -17,6 +17,7 @@ interface AccordionGroupProps {
   fullWidth?: boolean;
   unstyled?: boolean;
   onChange?: (key: string) => void;
+  activeKey?: string;
 }
 
 const AccordionGroup: React.FC<AccordionGroupProps> = ({
@@ -25,6 +26,7 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
   fullWidth = false,
   onChange,
   unstyled,
+  activeKey,
 }) => {
   // Initialize open state for all accordions; defaultOpen respected if provided
   const [openIndexes, setOpenIndexes] = useState<boolean[]>(
@@ -32,6 +34,15 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
   );
 
   const toggleIndex = (index: number, key: string | number | null) => {
+    // If controlled, just emit onChange and let parent update activeKey
+    if (activeKey !== undefined) {
+      if (onChange && key !== null) {
+        const isCurrentlyOpen = String(key) === activeKey;
+        onChange(isCurrentlyOpen ? '' : String(key));
+      }
+      return;
+    }
+
     setOpenIndexes((prev) => {
       const isCurrentlyOpen = prev[index];
       if (!isCurrentlyOpen && onChange && key !== null) {
@@ -61,9 +72,14 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
     >
       {Children.map(children, (child, index) => {
         if (!React.isValidElement<AccordionProps>(child)) return null;
-        const key = child.key ?? index; // fallback if no key is provided
+        const key = child.key ?? index;
+        const isControlled = activeKey !== undefined && !allowMultipleOpen;
+        const derivedIsOpen = isControlled
+          ? String(key) === activeKey
+          : openIndexes[index] || false;
+
         return cloneElement(child, {
-          isOpen: openIndexes[index] || false,
+          isOpen: derivedIsOpen,
           onToggle: () => toggleIndex(index, key),
         });
       })}

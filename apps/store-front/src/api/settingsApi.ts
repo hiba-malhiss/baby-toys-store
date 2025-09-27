@@ -1,20 +1,36 @@
 import { useQuery } from '@tanstack/react-query';
 import api from './axiosConfig';
 
-export type StoreSettingsGrouped = {
-  general?: Record<string, string>;
-  contact?: Record<string, string>;
-  policies?: Record<string, string>;
+export type StoreSettings = {
+  general: {
+    currency: string;
+    currencySymbol: string;
+    timezone: string;
+    priceRangeMin: string;
+    priceRangeMax: string;
+  };
+  contact: {
+    workDays: string;
+    workTimes: string;
+    phone: string;
+    email: string;
+    address: string;
+  };
+  policies: {
+    cancelPolicy: string;
+    returnPolicy: string;
+    shippingPolicy: string;
+  };
 };
 
 export const useStoreSettings = () =>
-  useQuery<StoreSettingsGrouped>({
+  useQuery<StoreSettings>({
     queryKey: ['storeFront', 'storeSettings'],
     queryFn: async () => {
-      const { data } = await api.get<{ data: StoreSettingsGrouped }>(
+      const { data } = await api.get<{ data: StoreSettings }>(
         '/api/store-settings'
       );
-      return data.data || {};
+      return data.data as StoreSettings;
     },
     staleTime: 60_000,
   });
