@@ -83,6 +83,7 @@ const ProductFormPage: React.FC = () => {
                   placeholder="Add bullet"
                   addButtonText="Add bullet"
                   min={1}
+                  max={10}
                   fullWidth
                   disabled={isDeletingImage}
                 />

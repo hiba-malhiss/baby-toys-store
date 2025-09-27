@@ -4,6 +4,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@baby-toys/ui-kit';
 import { defaultProductValues, productSchema } from './product.helper';
+import { useWatch } from 'react-hook-form';
 import {
   useCreateProduct,
   useUpdateProduct,
@@ -50,6 +51,24 @@ export const useProductForm = () => {
     defaultValues: defaultProductValues,
   });
 
+  // Max constraints for counters
+  const MAX = {
+    name: 255,
+    shortDescription: 500,
+    description: 2000,
+    featureBullet: 255,
+    featureBulletsCount: 10,
+    detailsLabel: 100,
+    detailsValue: 500,
+    images: 10,
+  } as const;
+
+  // Live watchers for counters
+  const watchName = useWatch({ control, name: 'name' });
+  const watchShortDescription = useWatch({ control, name: 'shortDescription' });
+  const watchDescription = useWatch({ control, name: 'description' });
+  const watchFeatureBullets = useWatch({ control, name: 'featureBullets' });
+
   // Pre-fill form when editing
   useEffect(() => {
     if (product) {
@@ -95,15 +114,30 @@ export const useProductForm = () => {
         return;
       }
 
+      // Sanitize and trim to backend limits
+      const name = (data.name || '').trim().slice(0, MAX.name);
+      const shortDescription = (data.shortDescription || '').trim().slice(0, MAX.shortDescription);
+      const description = (data.description || '').trim().slice(0, MAX.description);
+
+      const featureBullets = (data.featureBullets || [])
+        .map((f) => (f || '').trim().slice(0, MAX.featureBullet))
+        .filter(Boolean)
+        .slice(0, MAX.featureBulletsCount);
+
       const detailsObject = (data.details || []).reduce<Record<string, string>>((acc, item) => {
-        if (item?.label) acc[item.label] = String(item.value || '');
+        const key = (item?.label || '').trim().slice(0, MAX.detailsLabel);
+        const val = (String(item?.value || '')).trim().slice(0, MAX.detailsValue);
+        if (key) acc[key] = val;
         return acc;
       }, {});
 
       const payload = {
         ...data,
-        featureBullets: data.featureBullets.map((f) => f.trim()).filter(Boolean),
-        images: existingImages,
+        name,
+        shortDescription,
+        description,
+        featureBullets,
+        images: existingImages.slice(0, MAX.images),
         details: detailsObject,
         mainImage: mainImageUrl || '',
       };
@@ -123,8 +157,9 @@ export const useProductForm = () => {
       }
 
       toast.success(`Product ${productId ? 'updated' : 'created'} successfully`);
-    } catch (err) {
-      toast.error('Failed to save product');
+    } catch (err: any) {
+      const backendMsg = err?.response?.data?.message || err?.message || 'Failed to save product';
+      toast.error(backendMsg);
     }
   };
 
@@ -205,5 +240,13 @@ export const useProductForm = () => {
     isDeletingImage,
     imageUploaderProps,
     mainImageUploaderProps,
+    // counters data
+    counters: {
+      watchName,
+      watchShortDescription,
+      watchDescription,
+      watchFeatureBullets,
+      MAX,
+    },
   };
 };

@@ -14,6 +14,7 @@ export interface UseProductsParams {
   brandId?: number;
   minPrice?: number;
   maxPrice?: number;
+  query?: string;
 }
 
 /** ---- Queries ---- */
@@ -21,7 +22,7 @@ export const useProducts = (params?: UseProductsParams) =>
   useQuery<Page<Product>>({
     queryKey: [
       'products',
-      Math.max(0, (params?.page ?? 1) - 1),
+      params?.page ?? 0,
       params?.size ?? 10,
       params?.sortBy ?? '',
       (params?.sortDirection ?? '').toString().toUpperCase(),
@@ -29,6 +30,7 @@ export const useProducts = (params?: UseProductsParams) =>
       params?.brandId ?? '',
       params?.minPrice ?? '',
       params?.maxPrice ?? '',
+      params?.query ?? '',
     ],
     queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
@@ -73,6 +75,10 @@ export const useCreateProduct = () => {
       return data.data.id;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
+    onError: (e: any) => {
+      // surface backend message
+      throw new Error(e?.response?.data?.message || 'Failed to create product');
+    },
   });
 };
 
@@ -94,8 +100,8 @@ export const useUpdateProduct = () => {
       toast.success('Product updated successfully');
       navigate('/products');
     },
-    onError: () => {
-      toast.error('Failed to update product');
+    onError: (e: any) => {
+      toast.error(e?.response?.data?.message || 'Failed to update product');
     },
   });
 };
