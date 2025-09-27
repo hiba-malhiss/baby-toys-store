@@ -2,7 +2,7 @@ import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { Product } from './types/product';
 import { normalizeProduct } from './normalizers/productNormalizer';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery, keepPreviousData } from '@tanstack/react-query';
 
 export async function fetchHighlights(page: number, size: number) {
   const zeroBasedPage = Math.max(0, (page || 1) - 1);
@@ -35,7 +35,7 @@ export function useHighlightsQuery(page: number, size: number) {
   return useQuery({
     queryKey: highlightsQueryKey(page, size),
     queryFn: highlightsQueryFn(page, size),
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
 }
@@ -44,6 +44,7 @@ export function useHighlightsInfiniteQuery(size: number) {
   return useInfiniteQuery({
     queryKey: ['highlights', size],
     queryFn: ({ pageParam = 1 }) => fetchHighlights(pageParam, size),
+    initialPageParam: 1,
     getNextPageParam: (lastPage) =>
       lastPage.page < lastPage.totalPages ? lastPage.page + 1 : undefined,
     staleTime: 30_000,

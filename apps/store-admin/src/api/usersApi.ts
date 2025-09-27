@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { AdminUser, UseAdminUsersParams } from './types/user';
@@ -9,8 +9,15 @@ function toUpper(val?: string) {
 
 export const useAdminUsers = (params?: UseAdminUsersParams) =>
   useQuery<Page<AdminUser>>({
-    queryKey: ['admin-users', params],
-    keepPreviousData: true,
+    queryKey: [
+      'admin-users',
+      Math.max(0, (params?.page ?? 1) - 1),
+      params?.size ?? 10,
+      params?.sortBy ?? 'createdAt',
+      toUpper(params?.sortDirection ?? 'DESC'),
+      params?.query ?? '',
+    ],
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Page<AdminUser>>>('/api/admin/users', {
         params: {

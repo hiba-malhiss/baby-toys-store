@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { ReviewDto, UseAdminReviewsParams } from './types/review';
@@ -10,8 +10,18 @@ function toUpper(val?: string) {
 
 export const useAdminReviews = (params?: UseAdminReviewsParams) =>
   useQuery<Page<ReviewDto>>({
-    queryKey: ['admin-reviews', params],
-    keepPreviousData: true,
+    queryKey: [
+      'admin-reviews',
+      Math.max(0, (params?.page ?? 1) - 1),
+      params?.size ?? 10,
+      params?.sortBy ?? 'createdAt',
+      toUpper(params?.sortDirection ?? 'DESC'),
+      params?.productId ?? '',
+      params?.userId ?? '',
+      params?.rating ?? '',
+      params?.status ?? '',
+    ],
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Page<ReviewDto>>>('/api/admin/reviews', {
         params: {
@@ -39,7 +49,7 @@ export const useHideReview = () => {
     },
     onSuccess: () => {
       toast.success('Review hidden');
-      qc.invalidateQueries(['admin-reviews']);
+      qc.invalidateQueries({ queryKey: ['admin-reviews'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to hide review'),
   });
@@ -57,7 +67,7 @@ export const useUnhideReview = () => {
     },
     onSuccess: () => {
       toast.success('Review unhidden');
-      qc.invalidateQueries(['admin-reviews']);
+      qc.invalidateQueries({ queryKey: ['admin-reviews'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to unhide review'),
   });

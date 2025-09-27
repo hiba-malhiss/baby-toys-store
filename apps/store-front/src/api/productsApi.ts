@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { ShopFilters } from '../pages/ShopPage/SideFilters/side-filters.utils';
@@ -87,7 +87,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
         totalItems: data?.totalElements ?? 0,
       };
     },
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
     staleTime: 30_000,
   });
 }

@@ -22,7 +22,15 @@ import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from "./components/LocationAwareToast.tsx";
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 30_000,
+      gcTime: 5 * 60 * 1000,
+      refetchOnWindowFocus: false,
+    },
+  },
+});
 
 const App: React.FC = () => {
   return (

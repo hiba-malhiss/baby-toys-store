@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
@@ -19,8 +19,16 @@ function toUpper(val?: string) {
 
 export const useAdminOrders = (params?: UseAdminOrdersParams) =>
   useQuery<Page<Order>>({
-    queryKey: ['admin-orders', params],
-    keepPreviousData: true,
+    queryKey: [
+      'admin-orders',
+      Math.max(0, (params?.page ?? 1) - 1),
+      params?.size ?? 10,
+      params?.sortBy ?? 'createdAt',
+      toUpper(params?.sortDirection ?? 'DESC'),
+      params?.query ?? '',
+      params?.status ?? '',
+    ],
+    placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Page<Order>>>('/api/admin/orders', {
         params: {
@@ -61,7 +69,7 @@ export const useRemoveOrderItem = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Item removed');
       qc.setQueryData(['admin-order', orderId], updated);
-      qc.invalidateQueries(['admin-orders']);
+      qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to remove item'),
   });
@@ -81,7 +89,7 @@ export const useUpdateOrderItemQuantity = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Quantity updated');
       qc.setQueryData(['admin-order', orderId], updated);
-      qc.invalidateQueries(['admin-orders']);
+      qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to update quantity'),
   });
@@ -102,7 +110,7 @@ export const useApplyOrderCoupon = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Coupon applied');
       qc.setQueryData(['admin-order', orderId], updated);
-      qc.invalidateQueries(['admin-orders']);
+      qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to apply coupon'),
   });
@@ -119,7 +127,7 @@ export const useRemoveOrderCoupon = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Coupon removed');
       qc.setQueryData(['admin-order', orderId], updated);
-      qc.invalidateQueries(['admin-orders']);
+      qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to remove coupon'),
   });
@@ -138,7 +146,7 @@ export const useUpdateOrderStatus = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Status updated');
       qc.setQueryData(['admin-order', orderId], updated);
-      qc.invalidateQueries(['admin-orders']);
+      qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to update status'),
   });

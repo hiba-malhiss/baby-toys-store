@@ -1,4 +1,4 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
@@ -19,7 +19,17 @@ export interface UseProductsParams {
 /** ---- Queries ---- */
 export const useProducts = (params?: UseProductsParams) =>
   useQuery<Page<Product>>({
-    queryKey: ['products', params],
+    queryKey: [
+      'products',
+      Math.max(0, (params?.page ?? 1) - 1),
+      params?.size ?? 10,
+      params?.sortBy ?? '',
+      (params?.sortDirection ?? '').toString().toUpperCase(),
+      params?.categoryId ?? '',
+      params?.brandId ?? '',
+      params?.minPrice ?? '',
+      params?.maxPrice ?? '',
+    ],
     queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
         params: {
@@ -30,7 +40,7 @@ export const useProducts = (params?: UseProductsParams) =>
       });
       return data.data;
     },
-    keepPreviousData: true,
+    placeholderData: keepPreviousData,
   });
 
 export const useProduct = (id?: number) => {
@@ -62,7 +72,7 @@ export const useCreateProduct = () => {
       const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/products', payload);
       return data.data.id;
     },
-    onSuccess: () => qc.invalidateQueries(['products']),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
   });
 };
 
@@ -80,7 +90,7 @@ export const useUpdateProduct = () => {
       return data.data.id;
     },
     onSuccess: () => {
-      qc.invalidateQueries(['products']);
+      qc.invalidateQueries({ queryKey: ['products'] });
       toast.success('Product updated successfully');
       navigate('/products');
     },
@@ -102,7 +112,7 @@ export const useDeleteProduct = () => {
     },
     onSuccess: () => {
       toast.success('Product deleted successfully');
-      qc.invalidateQueries(['products']);
+      qc.invalidateQueries({ queryKey: ['products'] });
       navigate('/products');
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to delete product'),
@@ -149,7 +159,7 @@ export const useDeleteProducts = () => {
     },
     onSuccess: () => {
       toast.success('Products deleted successfully');
-      qc.invalidateQueries(['products']);
+      qc.invalidateQueries({ queryKey: ['products'] });
       navigate('/products');
     },
     onError: (e: any) => {
@@ -170,7 +180,7 @@ export const useDeleteProductImage = (productId: number) => {
       return data.data.id;
     },
     onSuccess: () => {
-      qc.invalidateQueries(['product', productId]);
+      qc.invalidateQueries({ queryKey: ['product', productId] });
       toast.success('Image deleted successfully');
     },
     onError: () => toast.error('Failed to delete image'),
