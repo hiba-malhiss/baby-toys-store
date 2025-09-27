@@ -19,6 +19,7 @@ const menuItems = [
   { label: 'Orders', route: '/orders' },
   { label: 'Coupons', route: '/coupons' },
   { label: 'Customers', route: '/customers' },
+  { label: 'Contact Messages', route: '/contact-messages' },
   { label: 'Reviews', route: '/reviews' },
   { label: 'Home page content', route: '/homepage' },
   { label: 'Store settings', route: '/settings' },

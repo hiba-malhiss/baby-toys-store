@@ -19,6 +19,7 @@ import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { ToastProvider, Toast } from '@baby-toys/ui-kit';
 import CouponsPage from './pages/CouponsPage/CouponsPage.tsx';
+import ContactMessagesPage from './pages/ContactMessagesPage/ContactMessagesPage';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -148,6 +149,14 @@ const App: React.FC = () => {
                   element={
                     <PrivateRoute>
                       <ReviewsPage />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/contact-messages"
+                  element={
+                    <PrivateRoute>
+                      <ContactMessagesPage />
                     </PrivateRoute>
                   }
                 />

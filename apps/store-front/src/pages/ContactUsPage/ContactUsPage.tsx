@@ -1,92 +1,77 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './contact-us-page.module.scss';
 import { useNavigate } from 'react-router-dom';
-import { mockFetchContactInfo, mockSendContactMessage } from '@mock-data/useMockApi';
-import {
-  TextArea,
-  InfoCard,
-  Heading,
-  Button,
-  StringInput,
-  FieldWrapper,
-  useToast,
-} from '@baby-toys/ui-kit';
+import { TextArea, InfoCard, Heading, Button, StringInput, useToast } from '@baby-toys/ui-kit';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-
-// Mapping config by ID
-const contactInfoConfig: Record<string, { icon: any; appearance: string }> = {
-  phone: {
-    icon: faPhone,
-    appearance: 'primary',
-  },
-  email: {
-    icon: faEnvelope,
-    appearance: 'primary',
-  },
-  address: {
-    icon: faMapMarkerAlt,
-    appearance: 'primary',
-  },
-};
+import { useStoreSettings } from '../../api/settingsApi';
+import { useSendContactMessage } from '../../api/contactApi';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
+import { contactSchema, type ContactFormValues } from './contact-us.helper';
 
 const ContactUsPage: React.FC = () => {
-  const [form, setForm] = useState({ name: '', email: '', message: '', phone: '' });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [sending, setSending] = useState(false);
-  const [contactInfo, setContactInfo] = useState<any[]>([]);
+  const { control, handleSubmit, reset } = useForm<ContactFormValues>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: { name: '', email: '', phone: '', subject: '', message: '' },
+  });
+  const { data: settings } = useStoreSettings();
+  const sendMutation = useSendContactMessage();
 
   const toast = useToast();
   const navigate = useNavigate();
+  const contactInfo = useMemo(() => {
+    const contact = settings?.contact || {};
+    const raw = [
+      {
+        id: 'phone',
+        title: 'Phone',
+        content: contact.phone,
+        icon: faPhone,
+        appearance: 'primary',
+      },
+      {
+        id: 'email',
+        title: 'Email',
+        content: contact.email,
+        icon: faEnvelope,
+        appearance: 'primary',
+      },
+      {
+        id: 'address',
+        title: 'Address',
+        content: contact.address,
+        icon: faMapMarkerAlt,
+        appearance: 'primary',
+      },
+    ];
+    return raw.filter((i) => i.content);
+  }, [settings?.contact]);
 
-  useEffect(() => {
-    mockFetchContactInfo().then((data) => {
-      const enriched = data
-        .map((item) => {
-          if (!contactInfoConfig[item.id]) return null;
-          const config = contactInfoConfig[item.id] || {};
-          return {
-            ...item,
-            icon: config.icon,
-            appearance: config.appearance,
-          };
-        })
-        .filter(Boolean);
-      setContactInfo(enriched);
-    });
-  }, []);
-
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!form.name) newErrors.name = 'Name is required';
-    if (!form.email) newErrors.email = 'Email is required';
-    if (!form.message) newErrors.message = 'Message is required';
-    if (!form.phone) newErrors.phone = 'Phone Number is required';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleInput = (name: string, value: string) => {
-    setForm((prev) => ({ ...prev, [name]: value }));
-    setErrors((prev) => ({ ...prev, [name]: undefined }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-
-    setSending(true);
-
-    try {
-      await mockSendContactMessage(form);
-      toast.success('Thank you for reaching out!');
-      navigate('/home');
-    } catch (error) {
-      toast.error('Failed to send message. Please try again.');
-    } finally {
-      setSending(false);
-    }
-  };
+  const onSubmit = handleSubmit(async (values) => {
+    sendMutation.mutate(
+      {
+        name: values.name,
+        email: values.email || undefined,
+        phoneNumber: values.phone || undefined,
+        subject: values.subject,
+        message: values.message,
+      },
+      {
+        onSuccess: () => {
+          toast.success('Thank you for reaching out!');
+          reset();
+          navigate('/home');
+        },
+        onError: (error: any) => {
+          toast.error(
+            error?.response?.data?.message || 'Failed to send message. Please try again later.'
+          );
+        },
+      }
+    );
+  });
 
   return (
     <PageContainer header="Contact">
@@ -95,44 +80,27 @@ const ContactUsPage: React.FC = () => {
           <InfoCard key={item.id} card={item} size="medium" fullWidth />
         ))}
       </div>
-      <div className={styles.contactUsPage}>
+      <form className={styles.contactUsPage} onSubmit={onSubmit}>
         <Heading level="h2">Contact us</Heading>
-        <FieldWrapper label="Name" error={errors.name} fullWidth>
-          <StringInput
-            fullWidth
-            value={form.name}
-            onChange={(val) => handleInput('name', val)}
-            placeholder="Enter your name"
-          />
-        </FieldWrapper>
-        <FieldWrapper label="Email" error={errors.email} fullWidth>
-          <StringInput
-            fullWidth
-            value={form.email}
-            onChange={(val) => handleInput('email', val)}
-            placeholder="Enter your email"
-          />
-        </FieldWrapper>
-        <FieldWrapper label="Phone Number" error={errors.phone} fullWidth>
-          <StringInput
-            fullWidth
-            value={form.phone}
-            onChange={(val) => handleInput('phone', val)}
-            placeholder="Enter your phone number"
-          />
-        </FieldWrapper>
-        <FieldWrapper label="Message" error={errors.message} fullWidth>
-          <TextArea
-            fullWidth
-            value={form.message}
-            onChange={(val) => handleInput('message', val)}
-            placeholder="Enter your message"
-          />
-        </FieldWrapper>
-        <Button onClick={handleSubmit} isLoading={sending} aria-label="Send Message">
+        <FormFieldWrapper control={control} name="name" label="Name" required fullWidth>
+          <StringInput fullWidth placeholder="Enter your name" />
+        </FormFieldWrapper>
+        <FormFieldWrapper control={control} name="subject" label="Subject" required fullWidth>
+          <StringInput fullWidth placeholder="Enter subject" />
+        </FormFieldWrapper>
+        <FormFieldWrapper control={control} name="email" label="Email" fullWidth>
+          <StringInput fullWidth placeholder="Enter your email" />
+        </FormFieldWrapper>
+        <FormFieldWrapper control={control} name="phone" label="Phone Number" fullWidth>
+          <StringInput fullWidth placeholder="Enter your phone number" />
+        </FormFieldWrapper>
+        <FormFieldWrapper control={control} name="message" label="Message" required fullWidth>
+          <TextArea fullWidth placeholder="Enter your message" />
+        </FormFieldWrapper>
+        <Button type="submit" isLoading={sendMutation.isPending} aria-label="Send Message">
           Send Message
         </Button>
-      </div>
+      </form>
     </PageContainer>
   );
 };
