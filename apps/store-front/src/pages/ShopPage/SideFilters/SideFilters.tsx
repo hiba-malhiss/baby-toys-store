@@ -20,7 +20,7 @@ import { type ShopFilters, urlFilterParsers } from './side-filters.utils.ts';
 import { useDebounce } from '@baby-toys/ui-kit/hooks';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useBrands, useCategories, useColors, useMaterials } from '../../../api/catalogApi.ts';
-import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
+import { useStoreSettings } from '../../../api/settingsApi';
 
 export const SideFilters: React.FC<{
   className?: string;
@@ -31,7 +31,11 @@ export const SideFilters: React.FC<{
   const { data: brands = [], isLoading: loadingBrands } = useBrands();
   const { data: colors = [], isLoading: loadingColors } = useColors();
   const { data: materials = [], isLoading: loadingMaterials } = useMaterials();
-  const { priceRange } = useStoreConfiguration();
+  const { data: settings } = useStoreSettings();
+  const priceRange: [number, number] = [
+    Number(settings?.general?.priceRangeMin ?? 0),
+    Number(settings?.general?.priceRangeMax ?? 0),
+  ];
 
   const defaultFilters: ShopFilters = {
     categoryId: undefined,

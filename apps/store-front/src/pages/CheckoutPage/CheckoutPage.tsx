@@ -1,3 +1,4 @@
+import { useStoreSettings } from '../../api/settingsApi';
 import React, { useState, useEffect } from 'react';
 import styles from './checkout-page.module.scss';
 import { useCartStore } from '../../store/useCartStore';
@@ -10,7 +11,6 @@ import {
   useToast,
 } from '@baby-toys/ui-kit';
 import { calculateOrderSummary } from '../../utils/order.utils';
-import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { mockPlaceOrder, mockFetchShippingInfo } from '@mock-data/useMockApi';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '@baby-toys/ui-kit';
@@ -43,9 +43,10 @@ const CheckoutPage: React.FC = () => {
   const [loadingShippingInfo, setLoadingShippingInfo] = useState(false);
   const [isLoadedFromCloud, setIsLoadedFromCloud] = useState(false);
   const toast = useToast();
-  const { currency, shipping } = useStoreConfiguration();
+  const { data: settings } = useStoreSettings();
   const navigate = useNavigate();
-  const formatCurrency = useCurrencyFormatter(currency?.symbol);
+  const symbol = settings?.general?.currencySymbol;
+  const formatCurrency = useCurrencyFormatter(symbol);
 
   // Load saved shipping information when user is logged in
   useEffect(() => {
@@ -68,12 +69,11 @@ const CheckoutPage: React.FC = () => {
   }, []);
 
   // Calculate order summary (returns numbers)
-  const {
-    subtotal,
-    total,
-    shipping: shippingCost,
-    isFreeShipping,
-  } = calculateOrderSummary(cartItems, shipping);
+  const neutralShipping = { cost: 0, freeThreshold: 0 };
+  const { subtotal, total, shipping: shippingCost, isFreeShipping } = calculateOrderSummary(
+    cartItems,
+    neutralShipping
+  );
 
   const handleInput = (name: string, value: string | number) => {
     setForm((prev) => ({ ...prev, [name]: String(value) }));

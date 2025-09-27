@@ -6,7 +6,6 @@ import SearchInputWithUrl from './SearchInputWithUrl.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
 import { useAuth } from '../../../context/AuthContext.tsx';
-import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import { useCategories } from '../../../api/catalogApi.ts';
 import clsx from 'clsx';
 import BurgerMenu from './BurgerMenu.tsx';
@@ -16,7 +15,6 @@ const Header = () => {
   const { data: categories = [] } = useCategories();
   const navigate = useNavigate();
   const location = useLocation();
-  const { shipping } = useStoreConfiguration();
   const { isAuthenticated } = useAuth();
 
   const handleCategoryClick = (category?: string) => {
@@ -72,7 +70,7 @@ const Header = () => {
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
         <Flex spacing="m">
           <Icon icon={faTruckFast} color={IconColor.light} />
-          <span>{shipping?.headerMessage}</span>
+          <span>Welcome to Baby Toy Store</span>
         </Flex>
         <div className="bts-hideOnMobile">
           <Flex spacing="xxl">{authButtons(true)}</Flex>

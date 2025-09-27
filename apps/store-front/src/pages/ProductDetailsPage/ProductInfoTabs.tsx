@@ -1,47 +1,13 @@
-import { useState, useEffect } from 'react';
-import { TabBar } from '@baby-toys/ui-kit';
-import { TabBarItem } from '@baby-toys/ui-kit';
+import React from 'react';
+import { TabBar, TabBarItem, Card, ExpandableContent } from '@baby-toys/ui-kit';
 import styles from './product-details-page.module.scss';
-import { Card } from '@baby-toys/ui-kit';
-import { getPolicies, useMockProductsApi } from '@mock-data/useMockApi';
-import { ExpandableContent } from '@baby-toys/ui-kit';
 import { ProductReviews } from './ProductReviews.tsx';
+import type { UiProduct } from '../../api/normalizers/productNormalizer';
+import { useStoreSettings } from '../../api/settingsApi';
 
-export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
-  const [description, setDescription] = useState('');
-  const [descriptionLoading, setDescriptionLoading] = useState(true);
-  const [policies, setPolicies] = useState<Record<
-    string,
-    { title: string; content: string }
-  > | null>(null);
-  const [policiesLoading, setPoliciesLoading] = useState(true);
-
-  const { getProductDescription } = useMockProductsApi();
-
-  useEffect(() => {
-    if (!productId) return;
-
-    getProductDescription(productId)
-      .then(setDescription)
-      .catch((error) => {
-        console.error('Error fetching product description:', error);
-      })
-      .finally(() => {
-        setDescriptionLoading(false);
-      });
-  }, [productId, getProductDescription]);
-
-  // Load policies
-  useEffect(() => {
-    getPolicies()
-      .then(setPolicies)
-      .catch((error) => {
-        console.error('Error fetching policies:', error);
-      })
-      .finally(() => {
-        setPoliciesLoading(false);
-      });
-  }, []);
+export const ProductInfoTabs: React.FC<{ product: UiProduct }> = ({ product }) => {
+  const { id, shortDescription, featureBullets, details } = product;
+  const { data: settings } = useStoreSettings();
 
   return (
     <Card fullWidth size="large">
@@ -56,27 +22,45 @@ export const ProductInfoTabs = ({ productId }: { productId?: string }) => {
       >
         <TabBarItem value="description">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {descriptionLoading ? 'Loading description...' : description}
+            {/* Short description */}
+            {shortDescription && <p className="bts-marginBxl">{shortDescription}</p>}
+
+            {/* Feature bullets */}
+            {featureBullets?.length ? (
+              <ul className={styles.productOverviewFeatureBullets}>
+                {featureBullets.map((b, i) => (
+                  <li key={`${b}-${i}`}>{b}</li>
+                ))}
+              </ul>
+            ) : null}
+
+            {/* Details key/value */}
+            {details?.length ? (
+              <div className={styles.productOverviewDetails}>
+                {details.map(({ label, value }, index) => (
+                  <React.Fragment key={`${label}-${index}`}>
+                    <label>{label}</label>
+                    <span>{value}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+            ) : null}
           </ExpandableContent>
         </TabBarItem>
 
         <TabBarItem value="reviews">
-          <ProductReviews productId={productId} />
+          <ProductReviews productId={String(id)} />
         </TabBarItem>
 
         <TabBarItem value="order-cancellation">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {policiesLoading
-              ? 'Loading cancellation policy...'
-              : policies?.cancel?.content || 'No cancellation policy available.'}
+            {settings?.policies?.cancelPolicy || 'No cancellation policy available.'}
           </ExpandableContent>
         </TabBarItem>
 
         <TabBarItem value="return-policy">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {policiesLoading
-              ? 'Loading return policy...'
-              : policies?.return?.content || 'No return policy available.'}
+            {settings?.policies?.returnPolicy || 'No return policy available.'}
           </ExpandableContent>
         </TabBarItem>
       </TabBar>

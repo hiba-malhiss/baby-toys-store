@@ -1,5 +1,7 @@
 .breadcrumbItem {
   cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
 
   &-content {
     color: $color-text-primary;

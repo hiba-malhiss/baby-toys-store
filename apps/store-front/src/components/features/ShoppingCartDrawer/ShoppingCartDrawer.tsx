@@ -13,10 +13,10 @@ import {
 import styles from './shopping-cart-drawer.module.scss';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
 import { useCartStore } from '../../../store/useCartStore.ts';
-import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import { calculateOrderSummary } from '../../../utils/order.utils.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
 import { useCartStockSync } from '../../../hooks/useCartStockSync.ts';
+import { useStoreSettings } from '../../../api/settingsApi';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -27,8 +27,10 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
   const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer, isSyncing } =
     useCartStore();
-  const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
-  const formatCurrency = useCurrencyFormatter(currency?.symbol);
+  const { data: settings } = useStoreSettings();
+  const symbol = settings?.general?.currencySymbol;
+  const formatCurrency = useCurrencyFormatter(symbol);
+  const shipping = { cost: 0, freeThreshold: 0 };
   const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
   useCartStockSync();
 
@@ -51,7 +53,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     handleClose();
   };
 
-  if (isLoadingConfigs || !currency || !shipping || isSyncing) {
+  if (isSyncing) {
     return (
       <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
         <BouncingDotsLoader />

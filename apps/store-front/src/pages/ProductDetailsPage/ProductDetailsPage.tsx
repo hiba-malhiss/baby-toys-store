@@ -16,7 +16,9 @@ const ProductDetailsPage: React.FC = () => {
 
   useEffect(() => {
     if (!product) return;
-    setExtraCrumbs([{ label: product?.name ?? '', path: `/product-details/${product?.id}` }]);
+    let name = product?.name || '';
+    name = name?.length > 100 ? product?.name?.slice(0, 100) + '...' : name;
+    setExtraCrumbs([{ label: name, path: `/product-details/${product?.id}` }]);
 
     return () => setExtraCrumbs(null);
   }, [product, setExtraCrumbs]);
@@ -32,7 +34,7 @@ const ProductDetailsPage: React.FC = () => {
   return (
     <PageContainer>
       <ProductOverview product={product} />
-      <ProductInfoTabs productId={id} />
+      <ProductInfoTabs product={product} />
       <RelatedProducts productId={id} />
     </PageContainer>
   );

@@ -1,6 +1,6 @@
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
-import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import { useBrands, useCategories, useColors, useMaterials } from '../../api/catalogApi.ts';
+import { useStoreSettings } from '../../api/settingsApi';
 
 const isEqual = (value1: any, value2: any): boolean => {
   if (Array.isArray(value1) && Array.isArray(value2)) {
@@ -14,13 +14,13 @@ export const useFilterChips = (
   filters: ShopFilters,
   defaultFilters: Record<string, any>
 ): { key: keyof ShopFilters; label: string }[] => {
-  const { currency } = useStoreConfiguration();
+  const { data: settings } = useStoreSettings();
   const { data: categories = [] } = useCategories();
   const { data: brands = [] } = useBrands();
   const { data: colors = [] } = useColors();
   const { data: materials = [] } = useMaterials();
 
-  const currencySymbol = currency?.symbol || '';
+  const currencySymbol = settings?.general?.currencySymbol || '';
 
   const chips: { key: keyof ShopFilters; label: string }[] = [];
 

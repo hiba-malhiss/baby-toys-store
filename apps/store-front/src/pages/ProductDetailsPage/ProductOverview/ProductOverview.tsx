@@ -9,7 +9,7 @@ import {
   Card,
   useToast,
 } from '@baby-toys/ui-kit';
-import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
+import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
@@ -22,7 +22,8 @@ import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
 
 export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
-  const { currency } = useStoreConfiguration();
+  const { data: settings } = useStoreSettings();
+  const symbol = settings?.general?.currencySymbol;
   const { addToCart } = useCartStore();
   const toast = useToast();
 
@@ -59,11 +60,11 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           className={clsx('bts-marginBl', product.oldPrice && styles.productOverviewWithDiscount)}
         >
           <span className={styles.productOverviewPriceNew}>
-            {product.price} {currency?.symbol}
+            {symbol ? `${symbol}${product.price}` : product.price}
           </span>
           {product.oldPrice && (
             <span className={styles.productOverviewPriceOld}>
-              {product.oldPrice} {currency?.symbol}
+              {symbol ? `${symbol}${product.oldPrice}` : product.oldPrice}
             </span>
           )}
         </Heading>

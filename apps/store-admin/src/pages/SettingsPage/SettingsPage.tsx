@@ -25,6 +25,16 @@ const generalSchema = z.object({
   currency: z.string().min(1, 'Currency is required').max(10),
   currencySymbol: z.string().min(1, 'Currency symbol is required').max(5),
   timezone: z.string().min(1, 'Timezone is required').max(100),
+  priceRangeMin: z
+    .string()
+    .regex(/^\d+(?:\.\d+)?$/, 'Min price must be a number')
+    .optional()
+    .default(''),
+  priceRangeMax: z
+    .string()
+    .regex(/^\d+(?:\.\d+)?$/, 'Max price must be a number')
+    .optional()
+    .default(''),
 });
 
 const contactSchema = z.object({
@@ -73,6 +83,8 @@ const SettingsPage: React.FC = () => {
         currency: data.general?.currency ?? '',
         currencySymbol: data.general?.currencySymbol ?? '',
         timezone: data.general?.timezone ?? '',
+        priceRangeMin: (data.general?.priceRangeMin as string) ?? '',
+        priceRangeMax: (data.general?.priceRangeMax as string) ?? '',
       },
       contact: {
         workDays: data.contact?.workDays ?? '',
@@ -95,6 +107,8 @@ const SettingsPage: React.FC = () => {
       { section: 'GENERAL', key: 'currency', value: values.general.currency },
       { section: 'GENERAL', key: 'currencySymbol', value: values.general.currencySymbol },
       { section: 'GENERAL', key: 'timezone', value: values.general.timezone },
+      { section: 'GENERAL', key: 'priceRangeMin', value: values.general.priceRangeMin || '' },
+      { section: 'GENERAL', key: 'priceRangeMax', value: values.general.priceRangeMax || '' },
       // Contact
       { section: 'CONTACT', key: 'workDays', value: values.contact.workDays },
       { section: 'CONTACT', key: 'workTimes', value: values.contact.workTimes },
@@ -151,6 +165,22 @@ const SettingsPage: React.FC = () => {
                   required
                 >
                   <StringInput placeholder="Asia/Gaza" />
+                </FormFieldWrapper>
+                <FormFieldWrapper
+                  control={control}
+                  name="general.priceRangeMin"
+                  label="Price Range Min"
+                  fullWidth
+                >
+                  <StringInput placeholder="0" />
+                </FormFieldWrapper>
+                <FormFieldWrapper
+                  control={control}
+                  name="general.priceRangeMax"
+                  label="Price Range Max"
+                  fullWidth
+                >
+                  <StringInput placeholder="300" />
                 </FormFieldWrapper>
               </Flex>
             </Accordion>

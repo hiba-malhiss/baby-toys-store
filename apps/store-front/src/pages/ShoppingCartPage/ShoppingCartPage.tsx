@@ -1,4 +1,3 @@
-import { useStoreConfiguration } from '../../context/StoreConfigurationContext.tsx';
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useCartStore } from '../../store/useCartStore.ts';
@@ -13,20 +12,22 @@ import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import { ProductQuantityInput } from '@baby-toys/ui-kit';
 import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
+import { useStoreSettings } from '../../api/settingsApi';
 
 const ShoppingCartPage = () => {
   useCartStockSync();
   const { cartItems, updateQuantity, removeFromCart } = useCartStore();
   const navigate = useNavigate();
-  const { currency, shipping, isLoadingConfigs } = useStoreConfiguration();
-
-  const formatCurrency = useCurrencyFormatter(currency?.symbol);
+  const { data: settings } = useStoreSettings();
+  const symbol = settings?.general?.currencySymbol;
+  const formatCurrency = useCurrencyFormatter(symbol);
+  const neutralShipping = { cost: 0, freeThreshold: 0 };
 
   if (cartItems.length === 0) {
     return (
       <PageContainer
         isBreadcrumbHidden
-        isLoading={isLoadingConfigs || !currency || !shipping}
+        isLoading={false}
         className={clsx(
           styles.shoppingCartPage,
           cartItems.length === 0 && styles.shoppingCartPageIsEmpty
@@ -45,11 +46,7 @@ const ShoppingCartPage = () => {
   }
 
   return (
-    <PageContainer
-      header="Your Shopping Cart"
-      className={styles.shoppingCartPage}
-      isBreadcrumbHidden
-    >
+    <PageContainer header="Your Shopping Cart" className={styles.shoppingCartPage} isBreadcrumbHidden>
       <div className={styles.shoppingCartPageTable}>
         <div className={styles.shoppingCartPageTableHeader}>
           <div>Product</div>
@@ -96,12 +93,7 @@ const ShoppingCartPage = () => {
         </div>
       </div>
       <Card header="Cart Total" className={styles.shoppingCartPageSummary}>
-        <TotalAmountSection
-          items={cartItems}
-          shipping={shipping}
-          currency={currency?.symbol}
-          className="bts-marginTxxl"
-        />
+        <TotalAmountSection items={cartItems} shipping={neutralShipping} currency={symbol || ''} className="bts-marginTxxl" />
         <Button
           color="accent"
           fullWidth
