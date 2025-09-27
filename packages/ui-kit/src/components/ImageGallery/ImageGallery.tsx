@@ -4,15 +4,28 @@ import ImageMagnifierPopover from '../ImageMagnifierPopover/ImageMagnifierPopove
 import styles from './image-gallery.module.scss';
 import clsx from 'clsx';
 import { BREAKPOINTS } from '../../constants/breakpoints';
+import { Image } from '../Image';
 
 type ImageGalleryProps = {
-  images: string[];
+  images?: string[];
   productName?: string;
 };
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images, productName }) => {
-  const [selectedImage, setSelectedImage] = useState(images[0]);
+const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], productName }) => {
+  const safeImages = Array.isArray(images) ? images.filter(Boolean) : [];
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(safeImages[0]);
 
+  if (!selectedImage) {
+    return (
+      <div className={styles.imageGallery}>
+        <div className={styles.imageGalleryMainImage}>
+          <div className={styles.imageGalleryThumbnailWrapper}>
+            <div className={styles.imageGalleryThumbnail} />
+          </div>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className={styles.imageGallery}>
       <div className={styles.imageGalleryMainImage}>
@@ -20,7 +33,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, productName }) => {
       </div>
       <Carousel
         navigationStyle="side"
-        items={images}
+        items={safeImages}
         numVisible={3}
         orientation="horizontal"
         responsiveOptions={[
@@ -34,7 +47,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images, productName }) => {
             className={styles.imageGalleryThumbnailWrapper}
             onClick={() => setSelectedImage(img)}
           >
-            <img
+            <Image
               src={img}
               alt={productName || ''}
               className={clsx(styles.imageGalleryThumbnail, {

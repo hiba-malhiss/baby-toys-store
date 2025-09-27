@@ -9,9 +9,22 @@ export type UiProduct = {
   oldPrice?: number | undefined;
   rating: number;
   isFavorite?: boolean | null;
+  images?: string[];
+  numberOfRatings?: number | null;
+  featureBullets?: string[];
+  details?: { label: string; value: string }[];
+  availableInStock?: number;
 };
 
 export function normalizeProduct(dto: Product): UiProduct {
+  // Merge main image first, then the rest, remove falsy and duplicates
+  const mergedImages = [dto.mainImage, ...(dto.images || [])].filter(Boolean);
+
+  // Convert details record to array if present
+  const detailsArray = dto.details
+    ? Object.entries(dto.details).map(([label, value]) => ({ label, value }))
+    : undefined;
+
   return {
     id: dto.id,
     name: dto.name,
@@ -21,5 +34,10 @@ export function normalizeProduct(dto: Product): UiProduct {
     oldPrice: dto.oldPrice != null ? Number(dto.oldPrice) : undefined,
     rating: Number(dto.averageRating ?? 0),
     isFavorite: dto.inWishlist ?? null,
+    images: mergedImages,
+    numberOfRatings: dto.numberOfRatings ?? 0,
+    featureBullets: dto.featureBullets || [],
+    details: detailsArray,
+    availableInStock: dto.stockQuantity ?? 0,
   };
 }

@@ -9,7 +9,6 @@ import {
   Card,
   useToast,
 } from '@baby-toys/ui-kit';
-import type { Product } from '../../../types/product.types.ts';
 import { useStoreConfiguration } from '../../../context/StoreConfigurationContext.tsx';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
@@ -19,8 +18,9 @@ import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { ProductQuantityInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
 import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
+import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
 
-export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
+export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const { currency } = useStoreConfiguration();
   const { addToCart } = useCartStore();
@@ -117,18 +117,20 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
 
           <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
         </Flex>
-        <Card fullWidth size="small" header="Item details">
-          <ExpandableContent>
-            <div className={styles.productOverviewDetails}>
-              {product.details?.map(({ label, value }, index) => (
-                <React.Fragment key={`${label}-${index}`}>
-                  <label>{label}</label>
-                  <span>{value}</span>
-                </React.Fragment>
-              ))}
-            </div>
-          </ExpandableContent>
-        </Card>
+        {product.details?.length && (
+          <Card fullWidth size="small" header="Item details">
+            <ExpandableContent>
+              <div className={styles.productOverviewDetails}>
+                {product.details?.map(({ label, value }, index) => (
+                  <React.Fragment key={`${label}-${index}`}>
+                    <label>{label}</label>
+                    <span>{value}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+            </ExpandableContent>
+          </Card>
+        )}
       </Flex>
     </div>
   );

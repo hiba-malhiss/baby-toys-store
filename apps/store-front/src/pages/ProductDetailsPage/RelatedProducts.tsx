@@ -1,24 +1,26 @@
-import React, { useCallback } from 'react';
-import { getRelatedProducts } from '@mock-data/useMockApi';
+import React from 'react';
 import Section from '../../components/features/Section/Section.tsx';
 import { ViewSwitcher } from '@baby-toys/ui-kit';
 import styles from './product-details-page.module.scss';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
+import { useRelatedProductsInfinite } from '../../api/productApi';
 
-const PAGE_NUMBER = 6;
+const PAGE_SIZE = 6;
 const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId }) => {
-  const fetchRelatedProducts = useCallback(
-    (page) => getRelatedProducts(productId, page, PAGE_NUMBER),
-    [productId]
-  );
+  const numericId = productId ? Number(productId) : undefined;
+  const infiniteQuery = useRelatedProductsInfinite(numericId, PAGE_SIZE);
 
-  const { items, totalSize, page, loading, handlePaginationChange, hasMore } = useHandlePagination(
-    fetchRelatedProducts,
-    PAGE_NUMBER,
-    false,
-    'infinite-scroll'
-  );
+  const items = infiniteQuery.data?.pages.flatMap((p) => p.items) ?? [];
+  const totalSize = infiniteQuery.data?.pages?.[0]?.totalItems ?? 0;
+  const page = infiniteQuery.data?.pages.length ?? 1;
+  const loading = infiniteQuery.isFetchingNextPage || infiniteQuery.isLoading;
+  const hasMore = Boolean(infiniteQuery.hasNextPage);
+
+  const handlePaginationChange = (newPage: number) => {
+    if (newPage > page && infiniteQuery.hasNextPage) {
+      infiniteQuery.fetchNextPage();
+    }
+  };
 
   return (
     <Section title="Related products">
@@ -28,7 +30,7 @@ const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId
           <SmartProductCard key={product.id} product={product} direction="vertical" />
         ))}
         page={page}
-        pageSize={PAGE_NUMBER}
+        pageSize={PAGE_SIZE}
         totalSize={totalSize}
         onPaginationChange={handlePaginationChange}
         staticView="flex"

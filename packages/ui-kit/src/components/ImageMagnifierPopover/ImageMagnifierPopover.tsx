@@ -1,6 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styles from './image-magnifier-popover.module.scss';
 import Popover from '../Popover/Popover';
+import { Image } from '../Image';
 
 type Props = {
   src: string;
@@ -70,7 +71,7 @@ const ImageMagnifierPopover: React.FC<Props> = ({
         onMouseLeave={() => setIsHovering(false)}
         onMouseMove={handleMouseMove}
       >
-        <img src={src} alt={alt} className={styles.imageMagnifierImage} />
+        <Image src={src} alt={alt} className={styles.imageMagnifierImage} />
         {isHovering && <div className={styles.imageMagnifierLens} style={lensStyle} />}
       </div>
 
@@ -80,7 +81,7 @@ const ImageMagnifierPopover: React.FC<Props> = ({
             className={styles.imageMagnifierPopover}
             style={{ width: popoverSize, height: popoverSize, overflow: 'hidden' }}
           >
-            <img src={src} alt={alt} style={imageStyle} />
+            <Image src={src} alt={alt} style={imageStyle} />
           </div>
         </Popover>
       )}

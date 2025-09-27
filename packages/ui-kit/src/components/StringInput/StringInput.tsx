@@ -34,6 +34,8 @@ export interface StringInputProps {
   hasError?: boolean;
   withControls?: boolean;
   readOnly?: boolean;
+  showCounter?: boolean;
+  maxLength?: number;
 }
 
 const StringInput: React.FC<StringInputProps> = ({
@@ -59,6 +61,8 @@ const StringInput: React.FC<StringInputProps> = ({
   maxTooltip,
   onBlur,
   readOnly = false,
+  showCounter = false,
+  maxLength,
 }) => {
   // Detect if controlled
   const isControlled = value !== undefined && onChange !== undefined;
@@ -160,6 +164,10 @@ const StringInput: React.FC<StringInputProps> = ({
     }
   );
 
+  // Derive string representation and length for counter
+  const currentStr = isControlled ? String(value ?? '') : internalValue;
+  const currentLen = currentStr?.length ?? 0;
+
   return (
     <div className={clsx(className, fullWidth && styles.fullWidth)}>
       <div className={containerClass}>
@@ -183,11 +191,12 @@ const StringInput: React.FC<StringInputProps> = ({
           type={type}
           min={min}
           max={max}
+          maxLength={typeof maxLength === 'number' ? maxLength : undefined}
           step="any"
           disabled={isDisabled}
           readOnly={readOnly}
           placeholder={placeholder}
-          value={isControlled ? String(value ?? '') : internalValue}
+          value={currentStr}
           onChange={(e) => handleChange(e.target.value)}
           onBlur={onBlur}
           className={clsx(inputClass)}
@@ -233,6 +242,12 @@ const StringInput: React.FC<StringInputProps> = ({
           </div>
         )}
       </div>
+      {showCounter && (
+        <div className={styles.stringInputCounter}>
+          {currentLen}
+          {typeof maxLength === 'number' ? ` / ${maxLength}` : ''}
+        </div>
+      )}
     </div>
   );
 };

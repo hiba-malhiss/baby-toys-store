@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import styles from './image.module.scss';
 import clsx from 'clsx';
 
@@ -18,7 +18,7 @@ export const Image: React.FC<ImageProps> = ({
   alt,
   fallbackSrc,
   showLoading = true,
-  objectFit = 'cover',
+  objectFit = 'contain',
   disableBaseUrl = false,
   onError,
   ...rest
@@ -26,6 +26,13 @@ export const Image: React.FC<ImageProps> = ({
   const [isLoading, setIsLoading] = useState(!!src);
   const [hasError, setHasError] = useState(false);
   const [imageSrc, setImageSrc] = useState<string | undefined>(src);
+
+  // Sync internal src state when prop changes
+  useEffect(() => {
+    setImageSrc(src);
+    setIsLoading(!!src);
+    setHasError(false);
+  }, [src]);
 
   // Process the image source URL
   const processedSrc = useMemo(() => {

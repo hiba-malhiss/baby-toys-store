@@ -9,6 +9,7 @@ interface StringArrayInputProps {
   addButtonText?: string;
   min?: number;
   fullwidth?: boolean;
+  max?: number;
 }
 
 const StringArrayInput: React.FC<StringArrayInputProps> = ({
@@ -18,8 +19,10 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
   min = 0,
   addButtonText = 0,
   fullwidth,
+  max,
 }) => {
   const handleAdd = () => {
+    if (typeof max === 'number' && value.length >= max) return;
     onChange([...value, '']);
   };
 
@@ -64,6 +67,7 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
         withoutPadding
         color="underline"
         leftIcon={faPlus}
+        isDisabled={typeof max === 'number' && value.length >= max}
       >
         {addButtonText || 'Add item'}
       </Button>
