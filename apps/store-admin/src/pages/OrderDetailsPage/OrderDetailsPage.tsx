@@ -1,14 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import {
-  Chip,
-  Select,
-  Option,
-  Button,
-  Flex,
-  Heading,
-  ConfirmDialog,
-} from '@baby-toys/ui-kit';
+import { Chip, Select, Option, Button, Flex, Heading, ConfirmDialog } from '@baby-toys/ui-kit';
 import styles from './order-details-page.module.scss';
 import { statusColorMap, orderStatusOptions } from '../OrdersPage/orders-page.utils';
 import { formatDate } from '@baby-toys/ui-kit/utils';
@@ -16,7 +8,7 @@ import { OrderStatus } from '../../api/types/order';
 import { useOrderDetails } from './useOrderDetails';
 import { OrderItems } from './OrderItems';
 import { CouponAndSummary } from './CouponAndSummary.tsx';
-import currency from '../../config/currency';
+import { useStoreSettings } from '../../api/settingsApi';
 
 interface OrderDetailsPageProps {
   isEdit?: boolean;
@@ -48,6 +40,8 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
     cancelStatusChange,
   } = useOrderDetails();
 
+  const { data: settings } = useStoreSettings();
+  const currency = { symbol: settings?.general?.currencySymbol } as const;
 
   return (
     <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMutating}>

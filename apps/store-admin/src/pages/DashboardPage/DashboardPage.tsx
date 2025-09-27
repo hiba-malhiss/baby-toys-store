@@ -15,6 +15,7 @@ import {
   Tooltip,
   Legend,
 } from 'chart.js';
+import { useStoreSettings } from '../../api/settingsApi.ts';
 
 ChartJS.register(
   CategoryScale,
@@ -26,7 +27,6 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-import currency from '../../config/currency';
 
 const ChartCard: React.FC<{ title: string; children: React.ReactNode }> = ({ title, children }) => (
   <Card className={styles.chartCard}>
@@ -37,6 +37,8 @@ const ChartCard: React.FC<{ title: string; children: React.ReactNode }> = ({ tit
 
 const DashboardPage: React.FC = () => {
   const { data, isLoading } = useAdminDashboard();
+  const { data: settings } = useStoreSettings();
+  const currency = { symbol: settings?.general?.currencySymbol } as const;
 
   // Using your theme colors
   const palette = {
