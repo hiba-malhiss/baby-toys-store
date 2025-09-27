@@ -73,7 +73,7 @@ export const Image: React.FC<ImageProps> = ({
   }
 
   return (
-    <div className={clsx(styles.imageContainer)}>
+    <div className={clsx(styles.imageContainer, rest.className)}>
       {isLoading && showLoading && <div className={styles.loadingSkeleton} />}
       <img
         {...rest}

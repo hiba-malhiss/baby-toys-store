@@ -70,7 +70,13 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
             />
           )}
           <Flex direction="vertical">
-            <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
+            <Button
+              withoutPadding
+              appearance="link"
+              onClick={() => navigate('/edit-product/' + item.productId)}
+            >
+              <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
+            </Button>
             <span className={styles.orderDetailsUnitPrice}>
               Unit: {item?.pricePerUnit} {currency?.symbol}
             </span>

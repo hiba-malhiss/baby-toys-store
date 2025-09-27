@@ -1,17 +1,16 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit';
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore } from '../../store/useCartStore';
-import { useHandlePagination } from '../../hooks/useHandlePagination';
-import { mockFetchOrdersHistory } from '@mock-data/useMockApi';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import type { CartItem } from '../../types/product.types.ts';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import AddReviewDialog from './AddReviewDialog.tsx';
 import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
+import { useMyOrdersNormalized, useCancelMyOrder } from '../../api/ordersApi';
 
-const PAGE_SIZE = 2;
+const PAGE_SIZE = 5;
 const OrderHistoryPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
@@ -30,19 +29,17 @@ const OrderHistoryPage: React.FC = () => {
     }
   }, [isAuthenticated, user, navigate]);
 
-  const fetchOrderProducts = useCallback(
-    async (page: number) => {
-      return await mockFetchOrdersHistory(user.email, page, PAGE_SIZE);
-    },
-    [isAuthenticated, user]
-  );
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useMyOrdersNormalized({
+    page,
+    size: PAGE_SIZE,
+    sortBy: 'createdAt',
+    sortDirection: 'DESC',
+  });
+  const cancelMutation = useCancelMyOrder();
 
-  const { items, page, totalSize, loading, handlePaginationChange } = useHandlePagination(
-    fetchOrderProducts,
-    PAGE_SIZE,
-    false,
-    'default'
-  );
+  const items = useMemo(() => data?.content ?? [], [data]);
+  const totalSize = data?.totalElements ?? 0;
 
   const handleBuyAgain = async (product: any) => {
     addToCart(product);
@@ -51,7 +48,7 @@ const OrderHistoryPage: React.FC = () => {
 
   return (
     <PageContainer header="Order History">
-      {!loading && items.length === 0 ? (
+      {!isLoading && items.length === 0 ? (
         <NoDataFound
           icon={faBoxOpen}
           message="No orders found."
@@ -65,15 +62,22 @@ const OrderHistoryPage: React.FC = () => {
               key={`order-${order.id}-${idx}`}
               order={order}
               onBuyAgain={handleBuyAgain}
-              onAddReview={(p) => setReviewDialog({ open: true, cartItem: p, orderId: order.id })}
+              onAddReview={(p) =>
+                setReviewDialog({ open: true, cartItem: p, orderId: String(order.id) })
+              }
+              onCancel={
+                order.status === 'pending'
+                  ? () => cancelMutation.mutate(Number(order.id))
+                  : undefined
+              }
             />
           ))}
           page={page}
           pageSize={PAGE_SIZE}
           totalSize={totalSize}
-          onPaginationChange={handlePaginationChange}
+          onPaginationChange={(newPage) => setPage(newPage)}
           staticView="flex"
-          isLoading={loading}
+          isLoading={isLoading}
         />
       )}
 

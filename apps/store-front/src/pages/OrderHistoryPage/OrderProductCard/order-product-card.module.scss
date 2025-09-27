@@ -28,7 +28,6 @@
     object-fit: cover;
     border-radius: $radius-lg;
     margin-right: 16px;
-    background-color: $color-bg-photo;
   }
 
   &-cartItemInfo {
@@ -39,7 +38,9 @@
 
   &-cartItemName {
     font-weight: 600;
-    color: $color-text-primary;
+    margin-right: 20px;
+    max-width: 600px;
+    @include line-clamp(2)
   }
 
   &-cartItemQuantity {

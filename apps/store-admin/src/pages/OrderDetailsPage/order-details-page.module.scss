@@ -46,7 +46,9 @@
   &-cartItemCardName {
     font-weight: 600;
     font-size: 15px;
-    color: $color-text-primary;
+    max-width: 500px;
+    margin-right: 20px;
+    @include line-clamp(2);
   }
 
   &-unitPrice {

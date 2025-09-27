@@ -3,7 +3,7 @@ import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { Card, Button, Chip } from '@baby-toys/ui-kit';
+import { Card, Button, Chip, Image } from '@baby-toys/ui-kit';
 
 export const statusColorMap: Record<string, string> = {
   pending: 'warning',
@@ -15,10 +15,11 @@ export const statusColorMap: Record<string, string> = {
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
   onAddReview: (cartItem: CartItem) => void;
+  onCancel?: () => void;
   order: OrderItem;
 }
 
-const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardProps) => {
+const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderProductCardProps) => {
   const formatCurrency = useCurrencyFormatter();
   const navigate = useNavigate();
 
@@ -32,12 +33,17 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
           severity={statusColorMap[order.status]}
           className={styles.orderCardStatus}
         />
+        {order.status === 'pending' && onCancel && (
+          <Button appearance="outline" size="small" onClick={onCancel} className="bts-marginLauto">
+            Cancel
+          </Button>
+        )}
       </header>
 
       <div>
         {order.cartItems.map((item) => (
           <div key={item.productId} className={styles.orderCardCartItem}>
-            <img
+            <Image
               src={item.product.mainImage}
               alt={item.product.name}
               className={styles.orderCardCartItemImage}
@@ -46,10 +52,9 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview }: OrderProductCardPr
               <Button
                 withoutPadding
                 appearance="link"
-                className={styles.orderCardCartItemName}
                 onClick={() => navigate('/product-details/' + item.productId)}
               >
-                {item.product.name}
+                <span className={styles.orderCardCartItemName}>{item.product.name}</span>
               </Button>
               <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
             </div>
