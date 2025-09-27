@@ -51,7 +51,7 @@ const Icon = ({
     return () => {
       cancelled = true;
     };
-  }, [iconName]);
+  }, [iconName, icon]);
 
   const iconClass = useMemo(
     () =>

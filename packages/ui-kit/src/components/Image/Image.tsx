@@ -64,19 +64,38 @@ export const Image: React.FC<ImageProps> = ({
     setIsLoading(false);
   };
 
+  const {
+    width,
+    height,
+    style: imgStyle,
+    className,
+    ...imgRest
+  } = rest as {
+    width?: number | string;
+    height?: number | string;
+    style?: React.CSSProperties;
+    className?: string;
+  } & React.ImgHTMLAttributes<HTMLImageElement>;
+
+  const containerStyle: React.CSSProperties | undefined =
+    width || height ? { width, height } : undefined;
+
   if (!processedSrc) {
     return (
-      <div className={clsx(styles.imageContainer, styles.placeholder)}>
+      <div
+        className={clsx(styles.imageContainer, styles.placeholder, className)}
+        style={containerStyle}
+      >
         <div className={styles.placeholderIcon} />
       </div>
     );
   }
 
   return (
-    <div className={clsx(styles.imageContainer, rest.className)}>
+    <div className={clsx(styles.imageContainer, className)} style={containerStyle}>
       {isLoading && showLoading && <div className={styles.loadingSkeleton} />}
       <img
-        {...rest}
+        {...imgRest}
         src={processedSrc}
         alt={alt}
         className={clsx(styles.image, {
@@ -86,8 +105,10 @@ export const Image: React.FC<ImageProps> = ({
         onError={handleError}
         onLoad={handleLoad}
         style={{
-          ...rest.style,
+          ...imgStyle,
           objectFit,
+          width: width ? '100%' : imgStyle?.width,
+          height: height ? '100%' : imgStyle?.height,
         }}
       />
       {hasError && !isLoading && (

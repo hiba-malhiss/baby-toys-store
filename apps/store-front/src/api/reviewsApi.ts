@@ -1,7 +1,8 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { ReviewDto } from './types/reviews.ts';
+import { useToast } from '@baby-toys/ui-kit';
 
 // Fallback mock reviews
 const MOCK_REVIEW_DTOS: ReviewDto[] = [
@@ -116,5 +117,78 @@ export function useProductReviews(productId: string | number, page: number, size
     keepPreviousData: true,
     staleTime: 60_000,
     enabled: Boolean(productId),
+  });
+}
+
+export function useGetMyReview(reviewId?: number | null, enabled: boolean = true) {
+  return useQuery<{ id: number; rating: number; comment: string | null }>({
+    queryKey: ['myReview', reviewId],
+    enabled: Boolean(reviewId) && enabled,
+    queryFn: async () => {
+      const res = await api.get<ApiEnvelope<ReviewDto>>(`/api/customer/reviews/${reviewId}`);
+      const dto = res.data.data as ReviewDto;
+      return {
+        id: Number(dto.id),
+        rating: Number(dto.rating || 1),
+        comment: dto.comment ?? '',
+      };
+    },
+    staleTime: 30_000,
+  });
+}
+
+export interface CreateReviewRequest {
+  orderItemId: number;
+  productId: number;
+  rating: number;
+  comment?: string;
+}
+
+export interface UpdateReviewRequest {
+  id: number;
+  rating?: number;
+  comment?: string;
+}
+
+export function useCreateReview() {
+  const qc = useQueryClient();
+  const toast = useToast();
+  return useMutation({
+    mutationFn: async (payload: CreateReviewRequest) => {
+      const res = await api.post<ApiEnvelope<{ id: number }>>('/api/customer/reviews', payload);
+      return res.data.data?.id;
+    },
+    onSuccess: () => {
+      // Invalidate generic review-related queries (optional)
+      qc.invalidateQueries({ queryKey: ['highlightedReviews'] });
+      // Refresh order history so buttons/state update (hasReview/canReview)
+      qc.invalidateQueries({ queryKey: ['customer-orders-normalized'] });
+      qc.invalidateQueries({ queryKey: ['customer-orders'] });
+      toast.success('Review created');
+    },
+    onError: (e: any) => {
+      toast.error(e?.response?.data?.message || 'Failed to create review');
+    },
+  });
+}
+
+export function useUpdateMyReview() {
+  const qc = useQueryClient();
+  const toast = useToast();
+  return useMutation({
+    mutationFn: async (payload: UpdateReviewRequest) => {
+      const { id, ...body } = payload;
+      const res = await api.put<ApiEnvelope<{ id: number }>>(`/api/customer/reviews/${id}`, body);
+      return res.data.data?.id;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['highlightedReviews'] });
+      qc.invalidateQueries({ queryKey: ['customer-orders-normalized'] });
+      qc.invalidateQueries({ queryKey: ['customer-orders'] });
+      toast.success('Review updated');
+    },
+    onError: (e: any) => {
+      toast.error(e?.response?.data?.message || 'Failed to update review');
+    },
   });
 }

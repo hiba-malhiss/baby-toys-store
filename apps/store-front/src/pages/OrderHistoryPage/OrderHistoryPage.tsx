@@ -4,11 +4,10 @@ import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit';
 import { useAuth } from '../../context/AuthContext';
 import { useCartStore } from '../../store/useCartStore';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-import type { CartItem } from '../../types/product.types.ts';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import AddReviewDialog from './AddReviewDialog.tsx';
 import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
-import { useMyOrdersNormalized, useCancelMyOrder } from '../../api/ordersApi';
+import { useMyOrdersNormalized, useCancelMyOrder, type OrderItem } from '../../api/ordersApi';
 
 const PAGE_SIZE = 5;
 const OrderHistoryPage: React.FC = () => {
@@ -17,11 +16,7 @@ const OrderHistoryPage: React.FC = () => {
   const toast = useToast();
   const { addToCart } = useCartStore();
 
-  const [reviewDialog, setReviewDialog] = useState<{
-    open: boolean;
-    cartItem: CartItem;
-    orderId: string;
-  } | null>(null);
+  const [reviewDialog, setReviewDialog] = useState<{ open: boolean; item: OrderItem } | null>(null);
 
   useEffect(() => {
     if (!isAuthenticated || !user) {
@@ -62,9 +57,7 @@ const OrderHistoryPage: React.FC = () => {
               key={`order-${order.id}-${idx}`}
               order={order}
               onBuyAgain={handleBuyAgain}
-              onAddReview={(p) =>
-                setReviewDialog({ open: true, cartItem: p, orderId: String(order.id) })
-              }
+              onAddReview={(item) => setReviewDialog({ open: true, item })}
               onCancel={
                 order.status === 'pending'
                   ? () => cancelMutation.mutate(Number(order.id))
@@ -84,8 +77,7 @@ const OrderHistoryPage: React.FC = () => {
       <AddReviewDialog
         open={!!reviewDialog}
         onClose={() => setReviewDialog(null)}
-        cartItem={reviewDialog?.cartItem}
-        orderId={reviewDialog?.orderId}
+        item={reviewDialog?.item}
       />
     </PageContainer>
   );

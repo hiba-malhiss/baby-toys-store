@@ -68,7 +68,8 @@ export function useCancelMyOrder() {
 }
 
 // ===== Normalization for UI consumers =====
-export type NormalizedOrderItem = {
+export type OrderItem = {
+  orderItemId: string;
   productId: string;
   quantity: number;
   product: {
@@ -78,14 +79,18 @@ export type NormalizedOrderItem = {
     mainImage: string;
   };
   isReviewed: boolean;
+  hasReview?: boolean;
+  canReview?: boolean;
+  canEditReview?: boolean;
+  reviewId?: number;
 };
 
-export type NormalizedOrder = {
+export type Order = {
   id: string;
   date: string;
   status: string; // lowercase for UI color maps
   statusEnum: OrderStatus;
-  cartItems: NormalizedOrderItem[];
+  cartItems: OrderItem[];
   subtotal: number;
   shippingCost: number;
   total: number;
@@ -98,13 +103,14 @@ function parseOrderStatus(s?: string): OrderStatus {
   return OrderStatus[key] ?? OrderStatus.PENDING;
 }
 
-export function normalizeOrder(dto: OrderDTO): NormalizedOrder {
+export function normalizeOrder(dto: OrderDTO): Order {
   return {
     id: String(dto.id),
     date: dto.createdAt,
     status: dto.status?.toLowerCase?.() || dto.status,
     statusEnum: parseOrderStatus(dto.status),
     cartItems: (dto.items || []).map((it) => ({
+      orderItemId: String(it.id),
       productId: String(it.productId),
       quantity: it.quantity,
       product: {
@@ -114,6 +120,10 @@ export function normalizeOrder(dto: OrderDTO): NormalizedOrder {
         mainImage: it.mainImage,
       },
       isReviewed: !!it.hasReview,
+      hasReview: it.hasReview,
+      canReview: (it as any).canReview,
+      canEditReview: (it as any).canReview || (it as any).canEditReview,
+      reviewId: (it as any).reviewId,
     })),
     subtotal: Number(dto.subtotal || 0),
     shippingCost: SHIPPING_COST_CONST,
@@ -128,7 +138,7 @@ export function useMyOrdersNormalized(params: {
   sortDirection?: 'ASC' | 'DESC';
 }) {
   const { page, size, sortBy = 'createdAt', sortDirection = 'DESC' } = params;
-  return useQuery<Page<NormalizedOrder>>({
+  return useQuery<Page<Order>>({
     queryKey: ['customer-orders-normalized', page, size, sortBy, sortDirection],
     placeholderData: keepPreviousData,
     queryFn: async () => {

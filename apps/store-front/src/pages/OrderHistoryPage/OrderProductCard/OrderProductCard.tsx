@@ -1,9 +1,10 @@
 import styles from './order-product-card.module.scss';
-import type { CartItem, OrderItem } from '../../../types/product.types.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { Card, Button, Chip, Image } from '@baby-toys/ui-kit';
+import type { CartItem } from '@baby-toys/types';
+import type { Order } from '../../../api/ordersApi.ts';
 
 export const statusColorMap: Record<string, string> = {
   pending: 'warning',
@@ -14,9 +15,9 @@ export const statusColorMap: Record<string, string> = {
 
 interface OrderProductCardProps {
   onBuyAgain: (cartItem: CartItem) => void;
-  onAddReview: (cartItem: CartItem) => void;
+  onAddReview: (item: any) => void;
   onCancel?: () => void;
-  order: OrderItem;
+  order: Order;
 }
 
 const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderProductCardProps) => {
@@ -69,12 +70,12 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
               >
                 Buy Again
               </Button>
-              {!item.isReviewed && order.status === 'delivered' && (
+              {(item.canReview || item.canEditReview) && (
                 <Button
                   onClick={() => onAddReview(item)}
-                  aria-label={`Add review for ${item.product.name}`}
+                  aria-label={`${item.canEditReview ? 'Edit' : 'Add'} review for ${item.product.name}`}
                 >
-                  Add Review
+                  {item.hasReview ? 'Edit Review' : 'Add Review'}
                 </Button>
               )}
             </div>
