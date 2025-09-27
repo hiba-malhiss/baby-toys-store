@@ -21,6 +21,7 @@ const menuItems = [
   { label: 'Customers', route: '/customers' },
   { label: 'Reviews', route: '/reviews' },
   { label: 'Home page content', route: '/homepage' },
+  { label: 'Store settings', route: '/settings' },
 ];
 
 const AdminLayout: React.FC<{

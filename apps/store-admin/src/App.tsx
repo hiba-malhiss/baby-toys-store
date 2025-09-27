@@ -15,6 +15,7 @@ import CustomersPage from './pages/CustomersPage/CustomersPage';
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import SettingsPage from './pages/SettingsPage/SettingsPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { ToastProvider, Toast } from '@baby-toys/ui-kit';
 import CouponsPage from './pages/CouponsPage/CouponsPage.tsx';
@@ -155,6 +156,14 @@ const App: React.FC = () => {
                   element={
                     <PrivateRoute>
                       <HomePageContent />
+                    </PrivateRoute>
+                  }
+                />
+                <Route
+                  path="/settings"
+                  element={
+                    <PrivateRoute>
+                      <SettingsPage />
                     </PrivateRoute>
                   }
                 />
