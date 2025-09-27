@@ -69,6 +69,7 @@ export const useRemoveOrderItem = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Item removed');
       qc.setQueryData(['admin-order', orderId], updated);
+      qc.invalidateQueries({ queryKey: ['admin-order', orderId] });
       qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to remove item'),
@@ -89,6 +90,7 @@ export const useUpdateOrderItemQuantity = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Quantity updated');
       qc.setQueryData(['admin-order', orderId], updated);
+      qc.invalidateQueries({ queryKey: ['admin-order', orderId] });
       qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to update quantity'),
@@ -110,6 +112,7 @@ export const useApplyOrderCoupon = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Coupon applied');
       qc.setQueryData(['admin-order', orderId], updated);
+      qc.invalidateQueries({ queryKey: ['admin-order', orderId] });
       qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to apply coupon'),
@@ -146,6 +149,7 @@ export const useUpdateOrderStatus = (orderId: number) => {
     onSuccess: (updated) => {
       toast.success('Status updated');
       qc.setQueryData(['admin-order', orderId], updated);
+      qc.invalidateQueries({ queryKey: ['admin-order', orderId] });
       qc.invalidateQueries({ queryKey: ['admin-orders'] });
     },
     onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to update status'),
