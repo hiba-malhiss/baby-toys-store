@@ -24,13 +24,18 @@ export const footerInfoConfig: Record<
   phone: {
     label: 'Call us: ',
     isLink: true,
-    link: 'tel:1234567868',
+    link: '',
     appearance: 'highlighted',
   },
   email: {
     label: 'Email us: ',
     isLink: true,
-    link: 'mailto:info@example.com',
+    link: '',
     appearance: 'highlighted',
   },
+};
+
+export const linkPrefixes: Record<string, string> = {
+  phone: 'tel:',
+  email: 'mailto:',
 };

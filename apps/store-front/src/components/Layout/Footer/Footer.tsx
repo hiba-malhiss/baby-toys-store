@@ -1,19 +1,22 @@
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
 import { Button, Flex, Heading } from '@baby-toys/ui-kit';
-import { footerInfoConfig, exploreLinks, socialMediaLinks } from './footer.constants.ts';
-import { mockFetchContactInfo } from '@mock-data/useMockApi';
+import {
+  footerInfoConfig,
+  exploreLinks,
+  socialMediaLinks,
+  linkPrefixes,
+} from './footer.constants.ts';
+import { useStoreSettings } from '../../../api/settingsApi';
 
 const Footer = () => {
   const navigate = useNavigate();
-  const [footerInfo, setFooterInfo] = useState<any[]>([]);
-
-  useEffect(() => {
-    mockFetchContactInfo().then((data) => {
-      setFooterInfo(data);
-    });
-  }, []);
+  const { data: settings } = useStoreSettings();
+  const footerInfo = useMemo(
+    () => Object.entries(settings?.contact || {}).map(([id, content]) => ({ id, content })),
+    [settings?.contact]
+  );
 
   return (
     <footer className={styles.footer}>
@@ -63,6 +66,9 @@ const Footer = () => {
           {footerInfo.map((item) => {
             const config = footerInfoConfig[item.id] || {};
             if (config.isLink && config.label) {
+              const dynamicLink = linkPrefixes[item.id]
+                ? `${linkPrefixes[item.id]}${item.content}`
+                : config.link;
               return (
                 <div key={item.id} className={styles.footerInfoItem}>
                   {config.label}{' '}
@@ -71,7 +77,7 @@ const Footer = () => {
                     size="small"
                     appearance="link"
                     color={config.appearance || 'highlighted'}
-                    onClick={() => window.open(config.link, '_blank')}
+                    onClick={() => window.open(dynamicLink || '', '_blank')}
                   >
                     {item.content}
                   </Button>
