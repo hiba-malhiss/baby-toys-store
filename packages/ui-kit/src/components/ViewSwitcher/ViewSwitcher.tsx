@@ -35,6 +35,10 @@ type ViewSwitcherProps = {
   header?: ReactNode;
   topBar?: ReactNode;
   gap?: 'small' | 'none';
+  emptyIcon?: any;
+  emptyMessage?: string;
+  emptySubtext?: string;
+  emptyAlign?: 'start' | 'center';
 };
 
 function ViewSwitcher({
@@ -55,6 +59,10 @@ function ViewSwitcher({
   gap,
   className,
   isLoading = false,
+  emptyIcon,
+  emptyMessage,
+  emptySubtext,
+  emptyAlign,
 }: ViewSwitcherProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState<ViewMode>(staticView ?? initialView);
@@ -224,10 +232,10 @@ function ViewSwitcher({
           ))
         ) : items.length === 0 ? (
           <NoDataFound
-            icon={faBoxOpen}
-            message="No toys found"
-            subtext="Try changing your search or filters."
-            align="center"
+            icon={emptyIcon ?? faBoxOpen}
+            message={emptyMessage ?? 'No toys found'}
+            subtext={emptySubtext ?? 'Try changing your search or filters.'}
+            align={emptyAlign ?? 'center'}
           />
         ) : (
           items.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>)

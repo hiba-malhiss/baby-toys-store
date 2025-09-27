@@ -89,3 +89,32 @@ export const useHighlightedReviews = (minRating = 4, size = 10, minDisplay = 6) 
     staleTime: 60_000,
   });
 };
+
+export function useProductReviews(productId: string | number, page: number, size: number) {
+  return useQuery({
+    queryKey: ['productReviews', productId, page, size],
+    queryFn: async () => {
+      if (!productId) return { items: [], page, totalPages: 0, totalElements: 0 };
+
+      const res = await api.get<ApiEnvelope<Page<ReviewDto>>>(
+        `/api/products/${productId}/reviews`,
+        {
+          params: { page: Math.max(0, page - 1), size, sortBy: 'createdAt', sortDirection: 'DESC' },
+        }
+      );
+
+      const pg = res.data.data;
+      const items = (pg?.content || []).map(adaptDtoToReview);
+
+      return {
+        items,
+        page,
+        totalPages: pg?.totalPages ?? 0,
+        totalElements: pg?.totalElements ?? 0,
+      };
+    },
+    keepPreviousData: true,
+    staleTime: 60_000,
+    enabled: Boolean(productId),
+  });
+}

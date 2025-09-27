@@ -19,10 +19,15 @@
     height: 100%;
   }
 
+  &--fullWidth {
+    width: 100%;
+  }
+
   &--detailed {
     gap: 8px;
     background-image: unset;
-    border: 1px solid $color-border;
+    border-bottom: 1px solid $color-border;
+    border-radius: 0;
 
     padding: 16px;
     grid-template-areas:

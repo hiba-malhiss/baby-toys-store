@@ -12,6 +12,7 @@ type ReviewCardProps = {
   fullHeight?: boolean;
   appearance?: 'main' | 'detailed';
   withoutPadding?: boolean;
+  fullWidth?: boolean;
 };
 
 const ReviewCard: React.FC<ReviewCardProps> = ({
@@ -19,6 +20,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
   appearance,
   fullHeight,
   withoutPadding,
+  fullWidth,
 }) => {
   const { rating, name, avatarUrl, comment, date } = review;
 
@@ -28,6 +30,7 @@ const ReviewCard: React.FC<ReviewCardProps> = ({
       className={clsx(
         styles.reviewCard,
         fullHeight && styles.reviewCardFullHeight,
+        fullWidth && styles.reviewCardFullWidth,
         withoutPadding && styles.withoutPadding,
         appearance === 'detailed' && styles.reviewCardDetailed
       )}
