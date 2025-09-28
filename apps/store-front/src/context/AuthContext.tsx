@@ -1,6 +1,8 @@
-import React, { createContext, useContext, useCallback } from 'react';
+import React, { createContext, useContext, useCallback, useEffect, useMemo } from 'react';
 import { useFetchProfile, type User, USER_ROLE } from '../api/authApi';
 import { getAccessToken } from '../api/axiosConfig';
+import { useQueryClient } from '@tanstack/react-query';
+import { invalidateAfterAuthenticated, refetchAfterAuthenticated } from '../api/queryInvalidation';
 
 interface AuthContextType {
   user: User | null;
@@ -14,6 +16,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { data: user, isLoading } = useFetchProfile();
+  const qc = useQueryClient();
 
   const hasPermission = useCallback(
     (role?: USER_ROLE | USER_ROLE[]): boolean => {
@@ -26,13 +29,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   const token = getAccessToken();
+  const isAuthenticated = useMemo(() => !!token && !!user, [token, user]);
+
+  // When auth flips to true (e.g., after login or refresh completes),
+  // invalidate and refetch product-related queries to refresh any pre-auth responses.
+  useEffect(() => {
+    if (isAuthenticated) {
+      invalidateAfterAuthenticated(qc);
+      // slight defer to allow providers to mount
+      setTimeout(() => refetchAfterAuthenticated(qc), 0);
+    }
+  }, [isAuthenticated, qc]);
 
   return (
     <AuthContext.Provider
       value={{
         user: user ?? null,
         hasPermission,
-        isAuthenticated: !!token && !!user,
+        isAuthenticated,
         isLoading,
       }}
     >

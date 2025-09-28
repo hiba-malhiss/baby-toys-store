@@ -4,6 +4,7 @@ import type { ApiEnvelope, Page } from './types/common';
 import type { Product } from './types/product';
 import { normalizeProduct, type UiProduct } from './normalizers/productNormalizer';
 import { useAuth } from '../context/AuthContext';
+import { invalidateAfterWishlistToggle } from './queryInvalidation';
 
 export function useMyWishlist(
   page: number,
@@ -56,13 +57,7 @@ export function useAddToWishlist() {
       return res.data.data;
     },
     onSuccess: (_data, variables) => {
-      // Invalidate products so inWishlist flags refresh
-      qc.invalidateQueries({ queryKey: ['products'] });
-      qc.invalidateQueries({ queryKey: ['productById', variables.productId] });
-      qc.invalidateQueries({ queryKey: ['relatedProducts'] });
-      qc.invalidateQueries({ queryKey: ['myWishlist'] });
-      qc.invalidateQueries({ queryKey: ['highlights'] });
-      qc.invalidateQueries({ queryKey: ['wishlistCount'] });
+      invalidateAfterWishlistToggle(qc, variables.productId);
     },
   });
 }
@@ -78,12 +73,7 @@ export function useRemoveFromWishlist() {
       return res.data.data;
     },
     onSuccess: (_data, variables) => {
-      qc.invalidateQueries({ queryKey: ['products'] });
-      qc.invalidateQueries({ queryKey: ['productById', variables.productId] });
-      qc.invalidateQueries({ queryKey: ['relatedProducts'] });
-      qc.invalidateQueries({ queryKey: ['myWishlist'] });
-      qc.invalidateQueries({ queryKey: ['highlights'] });
-      qc.invalidateQueries({ queryKey: ['wishlistCount'] });
+      invalidateAfterWishlistToggle(qc, variables.productId);
     },
   });
 }

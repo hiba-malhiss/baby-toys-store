@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 import api, { clearAccessToken, setAccessToken } from './axiosConfig';
 import type { ApiEnvelope } from '../../store-admin/src/api/types/common';
 import { queryClient } from '../App.tsx';
+import { ROOT_KEYS } from './queryKeys.ts';
 
 export enum USER_ROLE {
   CUSTOMER = 'ROLE_CUSTOMER',
@@ -27,11 +28,6 @@ export interface LoginResponse {
   accessToken: string;
   message: string;
   role: string;
-}
-
-export interface RefreshResponse {
-  accessToken: string;
-  tokenType: string;
 }
 
 export interface RegisterRequest {
@@ -60,31 +56,10 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess: (data) => {
+      qc.invalidateQueries({ queryKey: [ROOT_KEYS.profile] });
+      setTimeout(() => qc.refetchQueries({ queryKey: [ROOT_KEYS.profile] }), [100]);
       // Save access token for subsequent authenticated requests
       if (data?.accessToken) setAccessToken(data.accessToken);
-      // Invalidate queries that depend on auth (use predicate to catch param variants)
-      qc.invalidateQueries({ queryKey: ['profile'] });
-      qc.invalidateQueries({
-        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'myWishlist',
-      });
-      qc.invalidateQueries({ queryKey: ['wishlistCount'] });
-      qc.invalidateQueries({
-        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'products',
-      });
-      qc.invalidateQueries({
-        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'relatedProducts',
-      });
-      qc.invalidateQueries({
-        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'highlights',
-      });
-      // Proactively refetch critical ones if already mounted
-      setTimeout(() => {
-        qc.refetchQueries({ queryKey: ['profile'] });
-        qc.refetchQueries({
-          predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'myWishlist',
-        });
-        qc.refetchQueries({ queryKey: ['wishlistCount'] });
-      }, 100);
     },
   });
 };
