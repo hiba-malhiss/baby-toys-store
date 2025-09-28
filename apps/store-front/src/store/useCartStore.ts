@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 interface CartState {
   isShippingCartDrawerOpen: boolean;
@@ -7,16 +6,8 @@ interface CartState {
   closeShippingCartDrawer: () => void;
 }
 
-export const useCartStore = create<CartState>()(
-  persist(
-    (set) => ({
-      isShippingCartDrawerOpen: false,
-      openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
-      closeShippingCartDrawer: () => set({ isShippingCartDrawerOpen: false }),
-    }),
-    {
-      name: 'cart-ui-store',
-      partialize: (state) => ({ isShippingCartDrawerOpen: state.isShippingCartDrawerOpen }),
-    }
-  )
-);
+export const useCartStore = create<CartState>()((set) => ({
+  isShippingCartDrawerOpen: false,
+  openShippingCartDrawer: () => set({ isShippingCartDrawerOpen: true }),
+  closeShippingCartDrawer: () => set({ isShippingCartDrawerOpen: false }),
+}));

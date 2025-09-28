@@ -12,6 +12,8 @@ export type OrderItemDTO = {
   totalPrice: number;
   hasReview?: boolean;
   canReview?: boolean;
+  canEditReview?: boolean;
+  reviewId?: number;
 };
 
 export type OrderDTO = {
@@ -122,9 +124,9 @@ export function normalizeOrder(dto: OrderDTO): Order {
       },
       isReviewed: !!it.hasReview,
       hasReview: it.hasReview,
-      canReview: (it as any).canReview,
-      canEditReview: (it as any).canReview || (it as any).canEditReview,
-      reviewId: (it as any).reviewId,
+      canReview: it.canReview,
+      canEditReview: it.canEditReview ?? it.canReview,
+      reviewId: it.reviewId,
     })),
     subtotal: Number(dto.subtotal || 0),
     shippingCost: SHIPPING_COST_CONST,

@@ -3,8 +3,7 @@ import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { Card, Button, Chip, Image } from '@baby-toys/ui-kit';
-import type { CartItem } from '@baby-toys/types';
-import type { Order } from '../../../api/ordersApi.ts';
+import type { Order, OrderItem } from '../../../api/ordersApi.ts';
 
 export const statusColorMap: Record<string, string> = {
   pending: 'warning',
@@ -13,9 +12,11 @@ export const statusColorMap: Record<string, string> = {
   delivered: 'primary',
 };
 
+type ProductLite = { id: string; name: string; price: number; mainImage: string };
+
 interface OrderProductCardProps {
-  onBuyAgain: (cartItem: CartItem) => void;
-  onAddReview: (item: any) => void;
+  onBuyAgain: (product: ProductLite) => void;
+  onAddReview: (item: OrderItem) => void;
   onCancel?: () => void;
   order: Order;
 }

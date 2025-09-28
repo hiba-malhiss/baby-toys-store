@@ -13,7 +13,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@baby-toys/types": "workspace:*",
     "@hookform/resolvers": "^5.2.2",
     "@tanstack/react-query": "^5.87.4",
     "axios": "^1.12.2",

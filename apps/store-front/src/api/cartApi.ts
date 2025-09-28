@@ -44,7 +44,7 @@ export function useCartQuery() {
     },
     staleTime: 10_000,
     onError: (err: any) => {
-      const msg = err?.message || 'Failed to load cart';
+      const msg = err?.message ?? 'Failed to load cart';
       toast.error(msg);
     },
   });
@@ -62,7 +62,7 @@ export function useCartCount() {
     },
     staleTime: 10_000,
     onError: (err: any) => {
-      const msg = err?.message || 'Failed to load cart count';
+      const msg = err?.message ?? 'Failed to load cart count';
       toast.error(msg);
     },
   });
@@ -88,7 +88,7 @@ export function useAddToCart() {
       toast.success('Added to cart');
     },
     onError: (err: any) => {
-      const msg = err?.message || 'Failed to add to cart';
+      const msg = err?.message ?? 'Failed to add to cart';
       toast.error(msg);
     },
   });
@@ -111,7 +111,7 @@ export function useUpdateCartItem() {
       toast.success('Quantity updated');
     },
     onError: (err: any) => {
-      const msg = err?.message || 'Failed to update quantity';
+      const msg = err?.message ?? 'Failed to update quantity';
       toast.error(msg);
     },
   });
@@ -132,7 +132,7 @@ export function useRemoveFromCart() {
       toast.success('Removed from cart');
     },
     onError: (err: any) => {
-      const msg = err?.message || 'Failed to remove from cart';
+      const msg = err?.message ?? 'Failed to remove from cart';
       toast.error(msg);
     },
   });
