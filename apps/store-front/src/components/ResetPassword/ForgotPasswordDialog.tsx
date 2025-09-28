@@ -74,7 +74,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
               type="submit"
               fullWidth
               style={{ marginTop: '0.5rem' }}
-              isDisabled={!isValid || isSubmitting || forgotMutation.isPending}
+              isDisabled={isSubmitting || forgotMutation.isPending}
               isLoading={isSubmitting || forgotMutation.isPending}
             >
               Send Reset Link

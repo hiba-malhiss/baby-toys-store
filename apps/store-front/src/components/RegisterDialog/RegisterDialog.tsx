@@ -113,7 +113,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
             <Button
               type="submit"
               fullWidth
-              isDisabled={!isValid || isSubmitting || registerMutation.isPending}
+              isDisabled={isSubmitting || registerMutation.isPending}
               aria-label="Register account"
               isLoading={isSubmitting || registerMutation.isPending}
             >

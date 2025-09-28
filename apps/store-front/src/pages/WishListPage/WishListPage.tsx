@@ -1,43 +1,26 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit';
-import { mockFetchWishlist } from '@mock-data/useMockApi';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
-import { useWishlistStore } from '../../store/useWishlistStore';
-import { useHandlePagination } from '../../hooks/useHandlePagination.ts';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { useMyWishlist } from '../../api/wishlistApi';
 
-const LIST_PAGE_SIZE = 3;
+const LIST_PAGE_SIZE = 10;
 
 const WishListPage = () => {
   const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
-  const { items, page, totalSize, loading, handlePaginationChange } = useHandlePagination(
-    (page) => mockFetchWishlist(page, LIST_PAGE_SIZE),
-    LIST_PAGE_SIZE
-  );
-  const { wishlist } = useWishlistStore();
-  const [localItems, setLocalItems] = useState(items);
-
-  // Sync with pagination (initial load)
-  useEffect(() => {
-    setLocalItems(items);
-  }, [items]);
-
-  // Sync with wishlist store-front live updates
-  useEffect(() => {
-    setLocalItems((prev) => {
-      const filtered = prev.filter((item) => wishlist.some((p) => p.id === item.id));
-      const missing = wishlist.filter((p) => !filtered.some((i) => i.id === p.id));
-      return [...filtered, ...missing];
-    });
-  }, [wishlist]);
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useMyWishlist(page, LIST_PAGE_SIZE, 'id', 'DESC', isAuthenticated);
+  const localItems = data?.items ?? [];
+  const totalSize = data?.totalItems ?? 0;
+  const handlePaginationChange = (newPage: number) => setPage(newPage);
 
   const renderContent = () => {
-    if (!isAuthenticated && !loading) {
+    if (!isAuthenticated && !isLoading) {
       return (
         <NoDataFound
           icon={faInbox}
@@ -50,7 +33,7 @@ const WishListPage = () => {
       );
     }
 
-    if (localItems.length === 0 && !loading) {
+    if (localItems.length === 0 && !isLoading) {
       return (
         <NoDataFound
           icon={faHeart}
@@ -75,7 +58,7 @@ const WishListPage = () => {
         totalSize={totalSize}
         onPaginationChange={handlePaginationChange}
         staticView="flex"
-        isLoading={loading}
+        isLoading={isLoading}
       />
     );
   };

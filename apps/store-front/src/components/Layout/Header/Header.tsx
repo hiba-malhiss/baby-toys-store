@@ -9,6 +9,7 @@ import { useAuth } from '../../../context/AuthContext.tsx';
 import { useCategories } from '../../../api/catalogApi.ts';
 import clsx from 'clsx';
 import BurgerMenu from './BurgerMenu.tsx';
+import { useWishlistCount } from '../../../api/wishlistApi';
 
 const Header = () => {
   const { getTotalItemsInCart } = useCartStore();
@@ -32,6 +33,7 @@ const Header = () => {
   };
 
   const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
+  const { data: wishlistCount } = useWishlistCount();
 
   const authButtons = (isDarkMode = true, onAfterClick?: () => void) => (
     <>
@@ -109,6 +111,7 @@ const Header = () => {
             withoutPadding
             color="secondary"
             leftIcon={faHeart}
+            iconBadge={wishlistCount ?? 0}
             onClick={() => navigate('/wish-list')}
           />
         </Flex>

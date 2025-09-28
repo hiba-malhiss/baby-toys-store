@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import api, { clearAccessToken } from './axiosConfig';
+import api, { clearAccessToken, setAccessToken } from './axiosConfig';
 import type { ApiEnvelope } from '../../store-admin/src/api/types/common';
 import { queryClient } from '../App.tsx';
 
@@ -51,14 +51,43 @@ export const useRegister = () =>
     },
   });
 
-export const useLogin = () =>
-  useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
+export const useLogin = () => {
+  const qc = useQueryClient();
+  return useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
     mutationKey: ['login'],
     mutationFn: async (credentials) => {
       const response = await api.post<LoginResponse>('/api/auth/login', credentials);
       return response.data;
     },
+    onSuccess: (data) => {
+      // Save access token for subsequent authenticated requests
+      if (data?.accessToken) setAccessToken(data.accessToken);
+      // Invalidate queries that depend on auth (use predicate to catch param variants)
+      qc.invalidateQueries({ queryKey: ['profile'] });
+      qc.invalidateQueries({
+        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'myWishlist',
+      });
+      qc.invalidateQueries({ queryKey: ['wishlistCount'] });
+      qc.invalidateQueries({
+        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'products',
+      });
+      qc.invalidateQueries({
+        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'relatedProducts',
+      });
+      qc.invalidateQueries({
+        predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'highlights',
+      });
+      // Proactively refetch critical ones if already mounted
+      setTimeout(() => {
+        qc.refetchQueries({ queryKey: ['profile'] });
+        qc.refetchQueries({
+          predicate: (q) => Array.isArray(q.queryKey) && q.queryKey[0] === 'myWishlist',
+        });
+        qc.refetchQueries({ queryKey: ['wishlistCount'] });
+      }, 100);
+    },
   });
+};
 
 export const useLogout = () =>
   useMutation<void, AxiosError>({

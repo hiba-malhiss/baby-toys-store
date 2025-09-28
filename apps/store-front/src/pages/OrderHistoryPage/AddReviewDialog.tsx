@@ -121,7 +121,7 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
           isLoading={createMutation.isPending || updateMutation.isPending}
           color="primary"
           fullWidth
-          isDisabled={!isValid || createMutation.isPending || updateMutation.isPending}
+          isDisabled={createMutation.isPending || updateMutation.isPending}
         >
           {isEdit ? 'Update Review' : 'Submit Review'}
         </Button>

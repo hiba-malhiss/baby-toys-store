@@ -1,64 +1,31 @@
-import { useEffect, useCallback } from 'react';
-import { useWishlistStore } from '../store/useWishlistStore';
 import { useAuth } from '../context/AuthContext';
 import { useLoginDialogStore } from '../store/useLoginDialogStore';
-import {
-  mockAddToWishlist,
-  mockRemoveFromWishlist,
-  mockLoadFavoritesFromCloud,
-} from '@mock-data/useMockApi';
-import type { Product } from '../types/product.types.ts';
+import { useAddToWishlist, useRemoveFromWishlist } from '../api/wishlistApi';
+import type { UiProduct } from '../api/normalizers/productNormalizer';
+import { useToast } from '@baby-toys/ui-kit';
 
-export function useWishlist(product: Product) {
+export function useWishlist(product: Pick<UiProduct, 'id' | 'isFavorite'>) {
   const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
-  const {
-    wishlist,
-    isLoading,
-    isLoaded,
-    setWishlist,
-    addProductToWishlist,
-    removeProductFromWishlist,
-    setLoading,
-  } = useWishlistStore();
 
-  const fetchWishlist = useCallback(async () => {
-    if (!isAuthenticated || isLoaded) return;
-    setLoading(true);
-    try {
-      const cloudWishlist = await mockLoadFavoritesFromCloud();
-      setWishlist(cloudWishlist);
-    } catch (error) {
-      console.error('Failed to fetch wishlist', error);
-      setLoading(false);
-    }
-  }, [isAuthenticated, isLoaded, setLoading, setWishlist]);
+  const addMutation = useAddToWishlist();
+  const removeMutation = useRemoveFromWishlist();
+  const toast = useToast();
 
-  useEffect(() => {
-    fetchWishlist();
-  }, [fetchWishlist]);
-
-  const isFavorite = wishlist.some((p) => p.id === product.id); // ✅ fix
+  const isFavorite = Boolean(product.isFavorite);
+  const isLoading = addMutation.isPending || removeMutation.isPending;
 
   const toggleFavorite = async () => {
     if (!isAuthenticated) {
+      toast.info('Please log in to use your Wishlist.');
       openLoginDialog();
       return;
     }
 
-    setLoading(true);
-    try {
-      if (isFavorite) {
-        await mockRemoveFromWishlist(product.id);
-        removeProductFromWishlist(product);
-      } else {
-        await mockAddToWishlist(product.id);
-        addProductToWishlist(product);
-      }
-    } catch (error) {
-      console.error('Failed to update wishlist', error);
-    } finally {
-      setLoading(false);
+    if (isFavorite) {
+      await removeMutation.mutateAsync({ productId: product.id });
+    } else {
+      await addMutation.mutateAsync({ productId: product.id });
     }
   };
 

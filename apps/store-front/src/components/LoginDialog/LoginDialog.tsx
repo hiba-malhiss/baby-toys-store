@@ -21,7 +21,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
   const {
     control,
     handleSubmit,
-    formState: { isValid, isSubmitting },
+    formState: { isSubmitting },
     reset,
   } = useForm<LoginRequest>({
     mode: 'onBlur',
@@ -100,7 +100,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
               <Button
                 type="submit"
                 fullWidth
-                isDisabled={!isValid || isSubmitting || loginMutation.isPending}
+                isDisabled={isSubmitting || loginMutation.isPending}
                 aria-label="Login to account"
                 isLoading={isSubmitting || loginMutation.isPending}
               >
