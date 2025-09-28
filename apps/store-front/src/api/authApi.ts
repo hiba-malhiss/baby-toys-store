@@ -56,10 +56,11 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      qc.invalidateQueries({ queryKey: [ROOT_KEYS.profile] });
-      setTimeout(() => qc.refetchQueries({ queryKey: [ROOT_KEYS.profile] }), [100]);
-      // Save access token for subsequent authenticated requests
+      // Save access token first so UI becomes authenticated immediately
       if (data?.accessToken) setAccessToken(data.accessToken);
+      // Then refresh profile
+      qc.invalidateQueries({ queryKey: [ROOT_KEYS.profile] });
+      setTimeout(() => qc.refetchQueries({ queryKey: [ROOT_KEYS.profile] }), 100);
     },
   });
 };

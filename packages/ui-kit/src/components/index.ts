@@ -28,7 +28,6 @@ export { default as NoDataFound } from './NoDataFound';
 export { default as Paginator } from './Paginator/Paginator';
 export { default as Popover } from './Popover/Popover';
 export { default as ProductCard } from './ProductCard/ProductCard';
-export { default as ProductQuantityInput } from './ProductQuantityInput/ProductQuantityInput';
 export { default as RadioButtonGroup } from './RadioButtonGroup/RadioButtonGroup';
 export { default as Rating } from './Rating/Rating';
 export { default as ReviewCard } from './ReviewCard/ReviewCard';

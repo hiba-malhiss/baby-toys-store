@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   );
 
   const token = getAccessToken();
-  const isAuthenticated = useMemo(() => !!token && !!user, [token, user]);
+  const isAuthenticated = useMemo(() => !!token, [token]);
 
   // When auth flips to true (e.g., after login or refresh completes),
   // invalidate and refetch product-related queries to refresh any pre-auth responses.

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Flex, BouncingDotsLoader, Heading } from '@baby-toys/ui-kit';
+import { Flex, BouncingDotsLoader, Heading, Mask } from '@baby-toys/ui-kit';
 import styles from './page-container.module.scss';
 import LayoutBreadcrumb from './LayoutBreadcrumb/LayoutBreadcrumb.tsx';
 
@@ -10,6 +10,7 @@ type PageContainerProps = {
   header?: string;
   isBreadcrumbHidden?: boolean;
   isLoading?: boolean;
+  isMaskLoading?: boolean;
 };
 
 export const PageContainer = ({
@@ -18,6 +19,7 @@ export const PageContainer = ({
   isBreadcrumbHidden,
   className = '',
   isLoading,
+  isMaskLoading,
   header,
 }: PageContainerProps) => {
   return (
@@ -36,6 +38,7 @@ export const PageContainer = ({
         )}
         {isLoading && <BouncingDotsLoader className="bts-paddingVxxl" />}
         {!isLoading && children}
+        <Mask visible={!!isMaskLoading} />
       </Flex>
     </>
   );

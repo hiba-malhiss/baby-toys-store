@@ -2,21 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import {
-  Drawer,
-  Divider,
-  Flex,
-  Button,
-  NoDataFound,
-  BouncingDotsLoader,
-} from '@baby-toys/ui-kit';
+import { Drawer, Divider, Flex, Button, NoDataFound, BouncingDotsLoader } from '@baby-toys/ui-kit';
 import styles from './shopping-cart-drawer.module.scss';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
-import { useCartStore } from '../../../store/useCartStore.ts';
-import { calculateOrderSummary } from '../../../utils/order.utils.ts';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
-import { useCartStockSync } from '../../../hooks/useCartStockSync.ts';
+import { useCartQuery, CART_KEYS } from '../../../api/cartApi';
 import { useStoreSettings } from '../../../api/settingsApi';
+import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -25,21 +17,17 @@ interface ShoppingCartDrawerProps {
 
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
-  const { cartItems, updateQuantity, removeFromCart, closeShippingCartDrawer, isSyncing } =
-    useCartStore();
+  const { data: cart, isPending } = useCartQuery();
+  const isCartSyncing = useIsFetching({ queryKey: [CART_KEYS.cart] }) > 0;
+  const isAddCartSyncing =
+    useIsMutating({ mutationKey: [CART_KEYS.addToCart, CART_KEYS.updateCartItem] }) > 0;
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
-  const shipping = { cost: 0, freeThreshold: 0 };
-  const { subtotal, isFreeShipping } = calculateOrderSummary(cartItems, shipping);
-  useCartStockSync();
-
-  const handleAmountChange = (productId: string, newQuantity: number) => {
-    updateQuantity(productId, newQuantity);
-  };
+  const subtotal = cart?.subtotal ?? 0;
+  const isFreeShipping = (cart?.shipping ?? 0) === 0;
 
   const handleClose = () => {
-    closeShippingCartDrawer();
     setIsOpen(false);
   };
 
@@ -48,12 +36,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     handleClose();
   };
 
-  const handleContinueShopping = () => {
-    navigate('/shop');
-    handleClose();
-  };
-
-  if (isSyncing) {
+  if (isPending) {
     return (
       <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
         <BouncingDotsLoader />
@@ -68,7 +51,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       position="right"
       onClose={handleClose}
       footer={
-        cartItems.length > 0 && (
+        (cart?.items?.length || 0) > 0 && (
           <>
             <Flex fullWidth justify="between" className={clsx('bts-marginBxl', styles.subtotalRow)}>
               <span>Subtotal</span>
@@ -98,29 +81,27 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       }
     >
       <Flex direction="vertical" spacing="l" fullWidth className={styles.drawerContent}>
-        {cartItems.map((item, index) => (
+        {(cart?.items || []).map((item, index) => (
           <React.Fragment key={item.productId}>
             <CartItemCard
               fullWidth
-              id={item.productId}
-              image={item.product?.mainImage || ''}
-              name={item.product?.name}
-              price={formatCurrency(item.product?.price)}
-              quantityInStock={item.product?.availableInStock}
+              id={item.id as any}
+              image={item.productImage || ''}
+              name={item.productName}
+              totalPrice={formatCurrency(item.totalPrice)}
+              quantityInStock={item.availableStock}
               quantity={item.quantity}
-              onAmountChange={(val) => handleAmountChange(item.productId, val)}
-              onRemove={() => removeFromCart(item.productId)}
             />
-            {index < cartItems.length - 1 && <Divider />}
+            {index < (cart?.items?.length || 0) - 1 && <Divider />}
           </React.Fragment>
         ))}
-        {cartItems.length === 0 && (
-          <NoDataFound
-            icon={faShoppingCart}
-            message="Your cart is feeling empty!"
-            buttonText="Browse Toys"
-            onButtonClick={handleContinueShopping}
-          />
+        {(cart?.items?.length || 0) === 0 && (
+          <NoDataFound withoutPadding icon={faShoppingCart} message="Oops! No toys here..." />
+        )}
+        {(isCartSyncing || isAddCartSyncing) && (
+          <div className={styles.drawerOverlay}>
+            <BouncingDotsLoader />
+          </div>
         )}
       </Flex>
     </Drawer>

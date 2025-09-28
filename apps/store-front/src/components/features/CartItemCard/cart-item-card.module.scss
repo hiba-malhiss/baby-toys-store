@@ -5,7 +5,7 @@
   grid-template-columns: max-content 1fr max-content;
   grid-template-areas:
     'image name price'
-    'image amount -';
+    'image amount amount';
 
   &.fullWidth {
     width: 100%;
@@ -13,6 +13,7 @@
 
   &-image {
     min-height: 90px;
+    max-height: 120px;
     width: 90px;
     object-fit: contain;
     border-radius: 20px;

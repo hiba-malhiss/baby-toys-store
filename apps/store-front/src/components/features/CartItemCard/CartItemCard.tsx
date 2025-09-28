@@ -2,50 +2,51 @@ import React from 'react';
 import styles from './cart-item-card.module.scss';
 import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { ProductQuantityInput } from '@baby-toys/ui-kit';
 import { Button, Flex } from '@baby-toys/ui-kit';
+import CartQuantityInput from '../../shared/CartQuantityInput';
+import { useRemoveFromCart } from '../../../api/cartApi.ts';
 
 interface CartItemCardProps {
   image: string;
   name: string;
   id: string;
-  price: number;
+  totalPrice: number;
   quantityInStock: number;
   quantity: number;
   fullWidth?: boolean;
-  onAmountChange: (val: number) => void;
-  onRemove: (id: string) => void;
 }
 
 const CartItemCard: React.FC<CartItemCardProps> = ({
   image,
   name,
-  price,
+  totalPrice,
   quantity,
   fullWidth,
-  onRemove,
   quantityInStock,
   id,
-  onAmountChange,
 }) => {
+  const removeMutation = useRemoveFromCart();
+
   return (
     <div className={clsx(fullWidth && styles.fullWidth, styles.cartItemCard)}>
       <img src={image} alt={name} className={styles.cartItemCardImage} />
       <span className={styles.cartItemCardName}>{name}</span>
       <Flex spacing="xs" align="center" className={styles.cartItemCardAmount}>
-        <ProductQuantityInput
+        <CartQuantityInput
+          itemId={Number(id)}
           availableInStock={quantityInStock}
           quantity={quantity}
-          onChange={onAmountChange}
-        ></ProductQuantityInput>
+          fullWidth
+        />
         <Button
           leftIcon={faTrashAlt}
           appearance="link"
           color="secondary"
-          onClick={() => onRemove(id)}
+          onClick={() => removeMutation.mutate({ itemId: Number(id) })}
+          isLoading={removeMutation.isPending}
         ></Button>
       </Flex>
-      <span className={styles.cartItemCardPrice}>${(price * quantity).toFixed(2)}</span>
+      <span className={styles.cartItemCardPrice}>{totalPrice}</span>
     </div>
   );
 };

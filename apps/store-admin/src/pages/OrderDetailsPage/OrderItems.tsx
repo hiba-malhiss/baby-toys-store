@@ -1,12 +1,5 @@
 import React from 'react';
-import {
-  Card,
-  Flex,
-  Heading,
-  Button,
-  ProductQuantityInput,
-  ConfirmDialog,
-} from '@baby-toys/ui-kit';
+import { Card, Flex, Heading, Button, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './order-details-page.module.scss';
 import { NavigateFunction } from 'react-router-dom';
@@ -85,12 +78,15 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
 
         <Flex align="center" spacing="s">
           {isEdit ? (
-            <ProductQuantityInput
-              quantity={localQuantities[item.id] ?? item.quantity}
+            <StringInput
+              type="number"
+              withControls
+              value={localQuantities[item.id] ?? item.quantity}
               onChange={(value, byControls) =>
-                handleLocalQuantityChange(item.id, parseInt(value, 10), byControls)
+                handleLocalQuantityChange(item.id, parseInt(value as any, 10), byControls)
               }
               onBlur={() => handleQuantityUpdate(item.id)}
+              size="medium"
             />
           ) : (
             <div className={styles.orderDetailsQuantityLabel}>Qty {item.quantity}</div>

@@ -7,6 +7,7 @@ import clsx from 'clsx';
 import Card from '../Card/Card.tsx';
 import Button from '../Button/Button.tsx';
 import Flex from '../Flex/Flex.tsx';
+import Image from '../Image/Image.tsx';
 import { copyTextToClipboard } from '../../utils';
 import { useToast } from '../Toast/ToastContext.tsx';
 
@@ -27,6 +28,7 @@ export type ProductCardProps = {
   product: Product;
   fullWidth?: boolean;
   isLoadingFavorite?: boolean;
+  isLoadingAddToCart?: boolean;
   onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
   onAddToCart?: (product: Product) => void;
@@ -42,6 +44,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   onClick,
   fullWidth,
   isLoadingFavorite,
+  isLoadingAddToCart,
   formatCurrency,
 }) => {
   const isHorizontal = direction === 'horizontal';
@@ -79,6 +82,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           size="xlarge"
           onClick={(e) => handleButtonClick(e, onAddToCart)}
           aria-label="Add to cart"
+          isLoading={isLoadingAddToCart}
         />
       )}
       {direction === 'horizontal' && (
@@ -86,6 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           leftIcon={faCartShopping}
           size="large"
           onClick={(e) => handleButtonClick(e, onAddToCart)}
+          isLoading={isLoadingAddToCart}
         >
           Add to cart
         </Button>
@@ -134,7 +139,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
-          <img src={product.mainImage} alt={product.name} />
+          <Image src={product.mainImage} alt={product.name} />
         </div>
       </Card>
       <div className={styles.productCardInfo}>

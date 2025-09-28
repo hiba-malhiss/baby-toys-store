@@ -9,6 +9,19 @@ const authSensitiveRoots = [
   ROOT_KEYS.relatedProducts,
   ROOT_KEYS.highlights,
   ROOT_KEYS.topPicks,
+  ROOT_KEYS.cart,
+  ROOT_KEYS.cartCount,
+] as const;
+
+// Narrower scope: what should update when wishlist changes
+const wishlistSensitiveRoots = [
+  ROOT_KEYS.myWishlist,
+  ROOT_KEYS.wishlistCount,
+  ROOT_KEYS.products,
+  ROOT_KEYS.productById,
+  ROOT_KEYS.relatedProducts,
+  ROOT_KEYS.highlights,
+  ROOT_KEYS.topPicks,
 ] as const;
 
 function invalidateRoots(qc: QueryClient, roots = authSensitiveRoots) {
@@ -47,5 +60,5 @@ export function invalidateAfterWishlistToggle(qc: QueryClient, productId?: numbe
   if (productId != null) {
     qc.invalidateQueries({ queryKey: [ROOT_KEYS.productById, productId] });
   }
-  invalidateRoots(qc);
+  invalidateRoots(qc, wishlistSensitiveRoots);
 }

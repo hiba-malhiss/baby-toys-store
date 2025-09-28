@@ -10,6 +10,8 @@ export const ROOT_KEYS = {
   myWishlist: 'myWishlist',
   wishlistCount: 'wishlistCount',
   topPicks: 'topPicks',
+  cart: 'cart',
+  cartCount: 'cartCount',
 } as const;
 
 export type RootKey = (typeof ROOT_KEYS)[keyof typeof ROOT_KEYS];

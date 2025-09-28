@@ -1,7 +1,7 @@
 import { useStoreSettings } from '../../api/settingsApi';
 import React, { useState, useEffect } from 'react';
 import styles from './checkout-page.module.scss';
-import { useCartStore } from '../../store/useCartStore';
+// Removed local cart store; use server cart API
 import {
   Button,
   Card,
@@ -10,7 +10,6 @@ import {
   Select,
   useToast,
 } from '@baby-toys/ui-kit';
-import { calculateOrderSummary } from '../../utils/order.utils';
 import { mockPlaceOrder, mockFetchShippingInfo } from '@mock-data/useMockApi';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '@baby-toys/ui-kit';
@@ -20,14 +19,14 @@ import { useAuth } from '../../context/AuthContext.tsx';
 import { Alert } from '@baby-toys/ui-kit';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import type { OrderPayload } from '../../types/product.types.ts';
-import { useCartStockSync } from '../../hooks/useCartStockSync.ts';
+import { useCartQuery, useClearCart } from '../../api/cartApi';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
 const CheckoutPage: React.FC = () => {
-  useCartStockSync();
-  const { cartItems, clearCart } = useCartStore();
+  const { data: cart, isPending } = useCartQuery();
+  const clearCartMutation = useClearCart();
   const { user, isAuthenticated } = useAuth();
   const [form, setForm] = useState({
     country: '',
@@ -68,12 +67,11 @@ const CheckoutPage: React.FC = () => {
     }
   }, []);
 
-  // Calculate order summary (returns numbers)
-  const neutralShipping = { cost: 0, freeThreshold: 0 };
-  const { subtotal, total, shipping: shippingCost, isFreeShipping } = calculateOrderSummary(
-    cartItems,
-    neutralShipping
-  );
+  // Totals from server
+  const subtotal = cart?.subtotal || 0;
+  const total = cart?.totalAmount || 0;
+  const shippingCost = cart?.shipping || 0;
+  const isFreeShipping = shippingCost === 0;
 
   const handleInput = (name: string, value: string | number) => {
     setForm((prev) => ({ ...prev, [name]: String(value) }));
@@ -100,12 +98,12 @@ const CheckoutPage: React.FC = () => {
     try {
       const orderData: OrderPayload = {
         shippingInfo: form,
-        cartItems: cartItems,
+        cartItems: (cart?.items || []) as any,
         total,
         shippingCost,
       };
       await mockPlaceOrder(orderData);
-      clearCart();
+      await clearCartMutation.mutateAsync();
       toast.success('Order placed successfully!');
       navigate(`/home`);
     } catch (error) {
@@ -116,7 +114,7 @@ const CheckoutPage: React.FC = () => {
   };
 
   return (
-    <PageContainer isLoading={loadingShippingInfo}>
+    <PageContainer isLoading={loadingShippingInfo || isPending}>
       <div className={styles.checkoutPage}>
         <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
           {isAuthenticated && isLoadedFromCloud && (
@@ -216,14 +214,14 @@ const CheckoutPage: React.FC = () => {
 
         <Card className={styles.checkoutPageSummary} fullWidth header="Your Shopping Cart">
           <div className={styles.checkoutPageSummaryList}>
-            {cartItems.map((item) => (
-              <div className={styles.checkoutPageSummaryItem} key={item.productId}>
-                <img src={item.product.mainImage} alt={item.product.name} />
+            {(cart?.items || []).map((item) => (
+              <div className={styles.checkoutPageSummaryItem} key={item.id}>
+                <img src={item.productImage || ''} alt={item.productName} />
                 <div>
-                  <div className={styles.checkoutPageSummaryItemName}>{item.product.name}</div>
+                  <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
-                <div>{formatCurrency(item.product.price)}</div>
+                <div>{formatCurrency(item.unitPrice)}</div>
                 <Divider fullWidth />
               </div>
             ))}

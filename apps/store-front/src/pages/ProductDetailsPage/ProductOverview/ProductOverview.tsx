@@ -13,18 +13,24 @@ import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { useCartStore } from '../../../store/useCartStore';
+import { useAddToCart } from '../../../api/cartApi';
+import { useAuth } from '../../../context/AuthContext';
+import { useLoginDialogStore } from '../../../store/useLoginDialogStore';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
-import { ProductQuantityInput } from '@baby-toys/ui-kit';
+import { StringInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
 import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
 import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
+import { useCartStore } from '../../../store/useCartStore';
 
 export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol;
-  const { addToCart } = useCartStore();
+  const addToCartMutation = useAddToCart();
+  const { isAuthenticated } = useAuth();
+  const { open: openLoginDialog } = useLoginDialogStore();
+  const { openShippingCartDrawer } = useCartStore();
   const toast = useToast();
 
   // Use favorite hook here for this product
@@ -92,16 +98,28 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           ))}
         </Flex>
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
-          <ProductQuantityInput
-            availableInStock={product.availableInStock}
-            quantity={quantity}
+          <StringInput
+            type="number"
+            min={1}
+            max={product.availableInStock}
+            withControls
+            value={quantity}
             onChange={(val) => setQuantity(Number(val))}
-          ></ProductQuantityInput>
+            isDisabled={addToCartMutation.isPending}
+            maxTooltip={`Only ${product.availableInStock} left in stock`}
+          />
           <Button
             leftIcon={faShoppingCart}
-            onClick={() => {
-              addToCart(product, quantity);
-              toast.success('Added to cart!');
+            isDisabled={!isAuthenticated || addToCartMutation.isPending}
+            isLoading={addToCartMutation.isPending}
+            onClick={async () => {
+              if (!isAuthenticated) {
+                toast.info('Please log in to add items to your cart.');
+                openLoginDialog();
+                return;
+              }
+              await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity });
+              openShippingCartDrawer();
             }}
           >
             Add to cart

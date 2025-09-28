@@ -4,7 +4,7 @@ import { Icon, IconColor, Flex, Button } from '@baby-toys/ui-kit';
 import styles from './header.module.scss';
 import SearchInputWithUrl from './SearchInputWithUrl.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
-import { useCartStore } from '../../../store/useCartStore.ts';
+import { useCartCount } from '../../../api/cartApi';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useCategories } from '../../../api/catalogApi.ts';
 import clsx from 'clsx';
@@ -12,7 +12,7 @@ import BurgerMenu from './BurgerMenu.tsx';
 import { useWishlistCount } from '../../../api/wishlistApi';
 
 const Header = () => {
-  const { getTotalItemsInCart } = useCartStore();
+  const { data: cartCount } = useCartCount();
   const { data: categories = [] } = useCategories();
   const navigate = useNavigate();
   const location = useLocation();
@@ -100,8 +100,7 @@ const Header = () => {
             appearance="link"
             size="xlarge"
             withoutPadding
-            iconColor={IconColor.grayDark}
-            iconBadge={getTotalItemsInCart()}
+            iconBadge={cartCount ?? 0}
             leftIcon={faShoppingCart}
             onClick={() => navigate('/shopping-cart')}
           />
