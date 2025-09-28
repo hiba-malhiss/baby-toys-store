@@ -5,7 +5,7 @@ import type { GalleryImageDto } from '../../../api/types/homepage';
 import styles from './recent-photo-shoots-section.module.scss';
 
 const RecentPhotoShoots = () => {
-  const { data, isLoading } = useHomePageContent();
+  const { data, isPending } = useHomePageContent();
   const gallery = (data?.galleryImages || []) as GalleryImageDto[];
 
   return (
@@ -13,7 +13,7 @@ const RecentPhotoShoots = () => {
       title="Recent photo Shoots"
       subTitle="Check gallery"
       compactPadding
-      isLoading={isLoading}
+      isLoading={isPending}
     >
       <Flex wrap justify="center">
         {gallery.map((img, index) => (

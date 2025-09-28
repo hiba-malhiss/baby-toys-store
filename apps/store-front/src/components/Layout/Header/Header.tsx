@@ -115,7 +115,7 @@ const Header = () => {
       </Flex>
 
       {!isShopPage && (
-        <div className={clsx('bts-paddingLs bts-paddingRs')}>
+        <div className={clsx('bts-paddingLxl bts-paddingRxl', styles.headerCategoriesContainer)}>
           <Flex
             fullWidth
             spacing="xxxl"

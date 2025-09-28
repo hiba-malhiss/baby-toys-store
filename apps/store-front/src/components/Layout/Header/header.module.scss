@@ -11,9 +11,70 @@
     overflow-x: auto;
     white-space: nowrap;
     background: $color-white;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+
+    &-container {
+      position: relative;
+
+      &:after {
+        content: ">";
+        position: absolute;
+        right: 3px;
+        top: 17px;
+        color: $color-secondary;
+      }
+
+      &:before {
+        content: "<";
+        position: absolute;
+        left: 3px;
+        top: 17px;
+        color: $color-secondary;
+      }
+    }
+
+    /* Edge fade hint */
+    mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            black 24px,
+            black calc(100% - 24px),
+            transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+            to right,
+            transparent 0,
+            black 24px,
+            black calc(100% - 24px),
+            transparent 100%
+    );
+
+    /* Hide scrollbar by default, show thin on hover */
+    scrollbar-width: none; /* Firefox */
+    &::-webkit-scrollbar {
+      height: 0;
+    }
+
+    &:hover::-webkit-scrollbar {
+      height: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 4px;
+    }
 
     button {
       min-width: max-content;
+    }
+
+    /* Optional: scroll snap for nicer stops */
+    scroll-snap-type: x proximity;
+    padding: 0 24px;
+
+    > * {
+      scroll-snap-align: start;
     }
   }
 
