@@ -137,24 +137,3 @@ export function useRemoveFromCart() {
     },
   });
 }
-
-export function useClearCart() {
-  const qc = useQueryClient();
-  const toast = useToast();
-  return useMutation<{ id: number }, any, void>({
-    mutationKey: ['clearCart'],
-    mutationFn: async () => {
-      const res = await api.delete<{ data: { id: number } }>('/api/customer/cart');
-      return res.data.data;
-    },
-    onSuccess: () => {
-      qc.invalidateQueries({ queryKey: [CART_KEYS.cart] });
-      qc.invalidateQueries({ queryKey: [CART_KEYS.cartCount] });
-      toast.success('Cart cleared');
-    },
-    onError: (err: any) => {
-      const msg = err?.message || 'Failed to clear cart';
-      toast.error(msg);
-    },
-  });
-}

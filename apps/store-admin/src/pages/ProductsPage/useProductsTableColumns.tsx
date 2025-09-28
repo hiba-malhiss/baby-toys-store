@@ -131,7 +131,6 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
             size="small"
             appearance="outline"
             leftIcon={faTrashAlt}
-            variant="danger"
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(row);

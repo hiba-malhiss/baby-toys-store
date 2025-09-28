@@ -94,6 +94,7 @@ export type Order = {
   subtotal: number;
   shippingCost: number;
   total: number;
+  couponCode?: string | null;
 };
 
 const SHIPPING_COST_CONST = 15; // temporary until backend provides shipping
@@ -128,6 +129,7 @@ export function normalizeOrder(dto: OrderDTO): Order {
     subtotal: Number(dto.subtotal || 0),
     shippingCost: SHIPPING_COST_CONST,
     total: Number(dto.total || 0),
+    couponCode: dto.couponCode ?? null,
   };
 }
 

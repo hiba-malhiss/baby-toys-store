@@ -85,6 +85,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
 
       <footer className={styles.orderCardFooter}>
         <div>Subtotal: {formatCurrency(order.subtotal)}</div>
+        {order.couponCode ? <div>Coupon: {order.couponCode}</div> : null}
         <div>Shipping: {formatCurrency(order.shippingCost)}</div>
         <div>Total: {formatCurrency(order.total)}</div>
       </footer>

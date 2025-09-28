@@ -1,215 +1,79 @@
 import { useStoreSettings } from '../../api/settingsApi';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './checkout-page.module.scss';
-// Removed local cart store; use server cart API
-import {
-  Button,
-  Card,
-  StringInput,
-  FieldWrapper,
-  Select,
-  useToast,
-} from '@baby-toys/ui-kit';
-import { mockPlaceOrder, mockFetchShippingInfo } from '@mock-data/useMockApi';
+import { Card, useToast } from '@baby-toys/ui-kit';
+import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
 import { useNavigate } from 'react-router-dom';
 import { Divider } from '@baby-toys/ui-kit';
-import clsx from 'clsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import { useAuth } from '../../context/AuthContext.tsx';
-import { Alert } from '@baby-toys/ui-kit';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import type { OrderPayload } from '../../types/product.types.ts';
-import { useCartQuery, useClearCart } from '../../api/cartApi';
+import { useCartQuery } from '../../api/cartApi';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-
-const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
+import ShippingForm, { type ShippingFormValues } from './ShippingForm';
+import clsx from 'clsx';
 
 const CheckoutPage: React.FC = () => {
   const { data: cart, isPending } = useCartQuery();
-  const clearCartMutation = useClearCart();
-  const { user, isAuthenticated } = useAuth();
-  const [form, setForm] = useState({
-    country: '',
-    firstName: '',
-    lastName: '',
-    region: '',
-    address: '',
-    town: '',
-    phone: '',
-  });
-  const [errors, setErrors] = useState<Record<string, string>>({});
-  const [placingOrder, setPlacingOrder] = useState(false);
-  const [loadingShippingInfo, setLoadingShippingInfo] = useState(false);
-  const [isLoadedFromCloud, setIsLoadedFromCloud] = useState(false);
+  const { data: addresses, isPending: isAddressesPending } = useMyAddresses();
+  const placeOrderMutation = usePlaceOrder();
+  const { isAuthenticated } = useAuth();
+  const [previewDiscount, setPreviewDiscount] = useState<number>(0);
+  const [previewTotal, setPreviewTotal] = useState<number | null>(null);
   const toast = useToast();
   const { data: settings } = useStoreSettings();
   const navigate = useNavigate();
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
 
-  // Load saved shipping information when user is logged in
-  useEffect(() => {
-    if (isAuthenticated && user?.email) {
-      setLoadingShippingInfo(true);
-      mockFetchShippingInfo(user.email)
-        .then((shippingInfo) => {
-          if (shippingInfo) {
-            setForm(shippingInfo);
-            setIsLoadedFromCloud(true);
-          }
-        })
-        .catch((error) => {
-          console.error('Error loading shipping info:', error);
-        })
-        .finally(() => {
-          setLoadingShippingInfo(false);
-        });
-    }
-  }, []);
-
   // Totals from server
   const subtotal = cart?.subtotal || 0;
   const total = cart?.totalAmount || 0;
   const shippingCost = cart?.shipping || 0;
   const isFreeShipping = shippingCost === 0;
+  const effectiveTotal = previewTotal != null ? Number(previewTotal) + Number(shippingCost) : total;
+  const hasCartItems = (cart?.items?.length || 0) > 0;
+  const couponApplied = previewDiscount > 0;
 
-  const handleInput = (name: string, value: string | number) => {
-    setForm((prev) => ({ ...prev, [name]: String(value) }));
-    setErrors((prev) => ({ ...prev, [name]: '' }));
+  const handleCouponPreview = (info: { code: string; applied: boolean; discount: number; previewTotal: number | null; message: string; }) => {
+    setPreviewDiscount(info.discount || 0);
+    setPreviewTotal(info.previewTotal ?? null);
   };
 
-  const validate = () => {
-    const newErrors: Record<string, string> = {};
-    if (!form.country) newErrors.country = 'Country is required';
-    if (!form.firstName) newErrors.firstName = 'First name is required';
-    if (!form.lastName) newErrors.lastName = 'Last name is required';
-    if (!form.region) newErrors.region = 'Village/Region is required';
-    if (!form.address) newErrors.address = 'Detailed address is required';
-    if (!form.town) newErrors.town = 'Town is required';
-    if (!form.phone) newErrors.phone = 'Phone number is required';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleOrder = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!validate()) return;
-    setPlacingOrder(true);
+  const onSubmit = async (values: ShippingFormValues) => {
     try {
-      const orderData: OrderPayload = {
-        shippingInfo: form,
-        cartItems: (cart?.items || []) as any,
-        total,
-        shippingCost,
-      };
-      await mockPlaceOrder(orderData);
-      await clearCartMutation.mutateAsync();
-      toast.success('Order placed successfully!');
+      await placeOrderMutation.mutateAsync({
+        shippingAddress: {
+          firstName: values.firstName,
+          lastName: values.lastName,
+          town: values.town,
+          region: values.region,
+          detailedAddress: values.address,
+          phoneNumber: values.phone,
+        },
+        saveAddress: values.saveAddress,
+        couponCode: values.couponCode?.trim() || undefined,
+      });
       navigate(`/home`);
     } catch (error) {
       toast.error('Failed to place order. Please try again.');
-    } finally {
-      setPlacingOrder(false);
     }
   };
 
   return (
-    <PageContainer isLoading={loadingShippingInfo || isPending}>
+    <PageContainer
+      isLoading={isPending || isAddressesPending}
+      isMaskLoading={placeOrderMutation.isPending}
+    >
       <div className={styles.checkoutPage}>
-        <Card className={styles.checkoutPageForm} fullWidth header="Shipping Information">
-          {isAuthenticated && isLoadedFromCloud && (
-            <Alert icon={faCheck} title="Using your saved shipping information">
-              <Button
-                appearance="link"
-                color="primary"
-                withoutPadding
-                size="small"
-                onClick={() => {
-                  setForm({
-                    country: '',
-                    firstName: '',
-                    lastName: '',
-                    region: '',
-                    address: '',
-                    town: '',
-                    phone: '',
-                  });
-                }}
-              >
-                Use different shipping address
-              </Button>
-            </Alert>
-          )}
-
-          <FieldWrapper label="Country" error={errors.country}>
-            <Select
-              options={COUNTRIES}
-              hasError={!!errors.country}
-              value={form.country}
-              onChange={(val) => handleInput('country', val)}
-              placeholder="Select country"
-            />
-          </FieldWrapper>
-
-          <div className={styles.checkoutPageFormRow}>
-            <FieldWrapper label="First Name" error={errors.firstName}>
-              <StringInput
-                hasError={!!errors.firstName}
-                value={form.firstName}
-                fullWidth
-                onChange={(val) => handleInput('firstName', val)}
-              />
-            </FieldWrapper>
-            <FieldWrapper label="Last Name" error={errors.lastName}>
-              <StringInput
-                hasError={!!errors.lastName}
-                value={form.lastName}
-                fullWidth
-                onChange={(val) => handleInput('lastName', val)}
-              />
-            </FieldWrapper>
-          </div>
-
-          <div className={styles.checkoutPageFormRow}>
-            <FieldWrapper label="Town" error={errors.town}>
-              <StringInput
-                hasError={!!errors.town}
-                value={form.town}
-                fullWidth
-                onChange={(val) => handleInput('town', val)}
-              />
-            </FieldWrapper>
-            <FieldWrapper label="Village or Region" error={errors.region}>
-              <StringInput
-                hasError={!!errors.region}
-                value={form.region}
-                fullWidth
-                onChange={(val) => handleInput('region', val)}
-              />
-            </FieldWrapper>
-          </div>
-
-          <FieldWrapper label="Detailed Address" error={errors.address}>
-            <StringInput
-              fullWidth
-              hasError={!!errors.address}
-              value={form.address}
-              onChange={(val) => handleInput('address', val)}
-            />
-          </FieldWrapper>
-
-          <FieldWrapper label="Phone Number" error={errors.phone}>
-            <StringInput
-              fullWidth
-              hasError={!!errors.phone}
-              value={form.phone}
-              onChange={(val) => handleInput('phone', val)}
-            />
-          </FieldWrapper>
-
-          <Button onClick={handleOrder} fullWidth isLoading={placingOrder}>
-            Place Order
-          </Button>
+        <Card fullWidth header="Shipping Information">
+          <ShippingForm
+            isAuthenticated={isAuthenticated}
+            addresses={addresses}
+            onSubmit={onSubmit}
+            placing={placeOrderMutation.isPending}
+            disableSubmit={!hasCartItems || isPending || isAddressesPending}
+            onCouponPreview={handleCouponPreview}
+          />
         </Card>
 
         <Card className={styles.checkoutPageSummary} fullWidth header="Your Shopping Cart">
@@ -221,7 +85,7 @@ const CheckoutPage: React.FC = () => {
                   <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
-                <div>{formatCurrency(item.unitPrice)}</div>
+                <div>{formatCurrency(item.totalPrice)}</div>
                 <Divider fullWidth />
               </div>
             ))}
@@ -231,6 +95,12 @@ const CheckoutPage: React.FC = () => {
             <span>Subtotal</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
+          {couponApplied && previewDiscount > 0 && (
+            <div className={styles.checkoutPageSummaryRow}>
+              <span>Discount</span>
+              <span>-{formatCurrency(previewDiscount)}</span>
+            </div>
+          )}
           <div className={styles.checkoutPageSummaryRow}>
             <span>Shipping</span>
             <span>{isFreeShipping ? 'Free' : formatCurrency(shippingCost)}</span>
@@ -238,7 +108,7 @@ const CheckoutPage: React.FC = () => {
           <Divider className="bts-marginBl" />
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>Total</span>
-            <span>{formatCurrency(total)}</span>
+            <span>{formatCurrency(effectiveTotal)}</span>
           </div>
         </Card>
       </div>
