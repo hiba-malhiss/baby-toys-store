@@ -1,6 +1,7 @@
 import { useQuery, keepPreviousData, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
+import type { Page } from './types/common.ts';
 
 export type OrderItemDTO = {
   id: number;
@@ -16,19 +17,6 @@ export type OrderItemDTO = {
   reviewId?: number;
 };
 
-export type OrderDTO = {
-  id: number;
-  orderNumber: string;
-  createdAt: string;
-  deliveredAt?: string | null;
-  status: string; // e.g., PENDING, DELIVERED, ...
-  subtotal: number;
-  discountAmount?: number | null;
-  total: number;
-  couponCode?: string | null;
-  items: OrderItemDTO[];
-};
-
 export enum OrderStatus {
   PENDING = 'PENDING',
   PROCESSING = 'PROCESSING',
@@ -38,12 +26,17 @@ export enum OrderStatus {
   RETURNED = 'RETURNED',
 }
 
-export type Page<T> = {
-  content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number; // zero-based page index
-  size: number;
+export type OrderDTO = {
+  id: number;
+  orderNumber: string;
+  createdAt: string;
+  deliveredAt?: string | null;
+  status: OrderStatus;
+  subtotal: number;
+  discountAmount?: number | null;
+  total: number;
+  couponCode?: string | null;
+  items: OrderItemDTO[];
 };
 
 export function useCancelMyOrder() {
@@ -73,6 +66,7 @@ export function useCancelMyOrder() {
 export type OrderItem = {
   orderItemId: string;
   productId: string;
+  totalPrice: number;
   quantity: number;
   product: {
     id: string;
@@ -95,11 +89,10 @@ export type Order = {
   cartItems: OrderItem[];
   subtotal: number;
   shippingCost: number;
+  discountAmount: number;
   total: number;
   couponCode?: string | null;
 };
-
-const SHIPPING_COST_CONST = 15; // temporary until backend provides shipping
 
 function parseOrderStatus(s?: string): OrderStatus {
   const key = (s || '').toUpperCase() as keyof typeof OrderStatus;
@@ -129,7 +122,7 @@ export function normalizeOrder(dto: OrderDTO): Order {
       reviewId: it.reviewId,
     })),
     subtotal: Number(dto.subtotal || 0),
-    shippingCost: SHIPPING_COST_CONST,
+    shippingCost: Number((dto as any).shippingCost ?? 0),
     total: Number(dto.total || 0),
     couponCode: dto.couponCode ?? null,
   };

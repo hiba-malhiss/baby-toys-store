@@ -25,7 +25,6 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
   const subtotal = cart?.subtotal ?? 0;
-  const isFreeShipping = (cart?.shipping ?? 0) === 0;
 
   const handleClose = () => {
     setIsOpen(false);
@@ -57,11 +56,6 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               <span>Subtotal</span>
               <span>{formatCurrency(subtotal)}</span>
             </Flex>
-            {isFreeShipping && (
-              <Flex fullWidth justify="center" className="bts-marginBs">
-                <span className={styles.freeShippingIndicator}>Free shipping applied!</span>
-              </Flex>
-            )}
             <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
               Place order
             </Button>

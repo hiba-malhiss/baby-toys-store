@@ -31,21 +31,7 @@ export type CreateOrderRequest = {
   };
   saveAddress?: boolean;
   couponCode?: string | null;
-};
-
-export type CouponDto = {
-  id: number;
-  code: string;
-  description?: string;
-};
-
-export type CouponValidationResponse = {
-  valid: boolean;
-  message: string;
-  coupon?: CouponDto | null;
-  discountAmount: string | number; // backend returns BigDecimal serialized
-  subtotal: string | number;
-  total: string | number;
+  shippingOptionId?: number | null;
 };
 
 export function useMyAddresses() {
@@ -61,24 +47,6 @@ export function useMyAddresses() {
       toast.error(msg);
     },
     staleTime: 60_000,
-  });
-}
-
-export function useValidateCoupon() {
-  const toast = useToast();
-  return useMutation<CouponValidationResponse, any, { code: string}>({
-    mutationKey: [ORDER_KEYS.validateCoupon],
-    mutationFn: async ({ code }) => {
-      const res = await api.get<ApiEnvelope<CouponValidationResponse>>(
-        '/api/customer/coupons/validate',
-        { params: { code } }
-      );
-      return res.data.data;
-    },
-    onError: (err: any) => {
-      const msg = err?.message || 'Failed to validate coupon';
-      toast.error(msg);
-    },
   });
 }
 

@@ -59,6 +59,18 @@ export const useOrdersPage = () => {
         body: (row: Order) => new Date(row.createdAt).toLocaleString(),
       },
       {
+        field: 'couponCode',
+        header: 'Coupon',
+        sortable: false,
+        body: (row: Order) => row.couponCode || '-',
+      },
+      {
+        field: 'discountAmount',
+        header: 'Discount',
+        sortable: true,
+        body: (row: Order) => (row.discountAmount ? `-${formatNumber(row.discountAmount)}` : '-'),
+      },
+      {
         field: 'total',
         header: 'Total',
         sortable: true,

@@ -1,6 +1,6 @@
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
-import { Button, Card, NoDataFound } from '@baby-toys/ui-kit';
+import { Button, Card, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
@@ -18,6 +18,7 @@ const ShoppingCartPage = () => {
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
   const items = cart?.items || [];
+  const subtotal = cart?.subtotal || 0;
 
   if (!isPending && items.length === 0) {
     return (
@@ -94,19 +95,11 @@ const ShoppingCartPage = () => {
           ))}
         </div>
       </div>
-      <Card header="Cart Total" className={styles.shoppingCartPageSummary}>
-        <div className={styles.checkoutPageSummaryRow}>
-          <span>Subtotal</span>
-          <span>{formatCurrency(cart?.subtotal || 0)}</span>
-        </div>
-        <div className={styles.checkoutPageSummaryRow}>
-          <span>Shipping</span>
-          <span>{(cart?.shipping || 0) === 0 ? 'Free' : formatCurrency(cart?.shipping || 0)}</span>
-        </div>
-        <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
-          <span>Total</span>
-          <span>{formatCurrency(cart?.totalAmount || 0)}</span>
-        </div>
+      <Card header="Cart Sub Total" className={styles.shoppingCartPageSummary}>
+        <Flex justify="between">
+          <Text weight="bold" size="lg">Subtotal</Text>
+          <Text weight="bold" size="lg">{formatCurrency(subtotal)}</Text>
+        </Flex>
         <Button
           color="accent"
           fullWidth

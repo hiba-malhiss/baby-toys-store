@@ -1,47 +1,89 @@
-import { useStoreSettings } from '../../api/settingsApi';
-import React, { useState } from 'react';
-import styles from './checkout-page.module.scss';
-import { Card, useToast } from '@baby-toys/ui-kit';
-import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Divider } from '@baby-toys/ui-kit';
-import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
-import { useAuth } from '../../context/AuthContext.tsx';
-import { useCartQuery } from '../../api/cartApi';
+import styles from './checkout-page.module.scss';
+
+import { Card, Divider, useToast } from '@baby-toys/ui-kit';
+
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import ShippingForm, { type ShippingFormValues } from './ShippingForm';
-import clsx from 'clsx';
+
+import { useAuth } from '../../context/AuthContext.tsx';
+import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
+
+import { useStoreSettings } from '../../api/settingsApi';
+import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
+import { useCheckoutQuote, type QuoteResponse } from '../../api/checkoutApi';
+import { useCartQuery } from '../../api/cartApi';
 
 const CheckoutPage: React.FC = () => {
-  const { data: cart, isPending } = useCartQuery();
-  const { data: addresses, isPending: isAddressesPending } = useMyAddresses();
-  const placeOrderMutation = usePlaceOrder();
-  const { isAuthenticated } = useAuth();
-  const [previewDiscount, setPreviewDiscount] = useState<number>(0);
-  const [previewTotal, setPreviewTotal] = useState<number | null>(null);
-  const toast = useToast();
+  const { data: cart, isPending: cartLoading } = useCartQuery();
+  const { data: addresses, isPending: addressesLoading } = useMyAddresses();
   const { data: settings } = useStoreSettings();
+
+  const placeOrder = usePlaceOrder();
+  const quoteMutation = useCheckoutQuote();
+
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const toast = useToast();
+
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
 
-  // Totals from server
-  const subtotal = cart?.subtotal || 0;
-  const total = cart?.totalAmount || 0;
-  const shippingCost = cart?.shipping || 0;
-  const isFreeShipping = shippingCost === 0;
-  const effectiveTotal = previewTotal != null ? Number(previewTotal) + Number(shippingCost) : total;
-  const hasCartItems = (cart?.items?.length || 0) > 0;
-  const couponApplied = previewDiscount > 0;
+  // Local state
+  const [couponCode, setCouponCode] = useState('');
+  const [selectedShipping, setSelectedShipping] = useState<{ id: number; cost: number } | null>(
+    null
+  );
+  const [quote, setQuote] = useState<QuoteResponse | null>(null);
 
-  const handleCouponPreview = (info: { code: string; applied: boolean; discount: number; previewTotal: number | null; message: string; }) => {
-    setPreviewDiscount(info.discount || 0);
-    setPreviewTotal(info.previewTotal ?? null);
+  // Derived values
+  const hasCartItems = (cart?.items?.length || 0) > 0;
+  const subtotal = quote?.subtotal ?? cart?.subtotal ?? 0;
+  const shippingCost = quote?.shippingCost ?? null;
+  const discountAmount = quote?.discountAmount ?? 0;
+  const total = quote?.total ?? null;
+  const couponApplied = !!(quote?.coupon?.valid && quote?.coupon?.code);
+
+  // Handlers
+  const refreshQuote = (shippingId?: number, code?: string) => {
+    if (!shippingId) return setQuote(null);
+    quoteMutation.mutate(
+      { shippingOptionId: shippingId, couponCode: code || undefined },
+      {
+        onSuccess: (resp) => {
+          setQuote(resp);
+          // If user provided a code and backend says invalid, inform via toast
+          if (code && (!resp.coupon || resp.coupon.valid === false)) {
+            toast.error(resp.coupon?.message || 'Invalid coupon');
+          }
+        },
+        onError: () => {
+          setQuote(null);
+          if (code) toast.error('Failed to validate coupon');
+        },
+      }
+    );
   };
+
+  const handleCouponPreview = (info: { code: string }) => {
+    const code = info.code.trim();
+    setCouponCode(code);
+    refreshQuote(selectedShipping?.id, code);
+  };
+
+  const handleShippingChange = useCallback(
+    (opt: { id: number; cost: number } | null) => {
+      const sel = opt ? { id: opt.id, cost: Number(opt.cost) } : null;
+      setSelectedShipping(sel);
+      refreshQuote(sel?.id, couponCode);
+    },
+    [couponCode]
+  );
 
   const onSubmit = async (values: ShippingFormValues) => {
     try {
-      await placeOrderMutation.mutateAsync({
+      await placeOrder.mutateAsync({
         shippingAddress: {
           firstName: values.firstName,
           lastName: values.lastName,
@@ -52,33 +94,35 @@ const CheckoutPage: React.FC = () => {
         },
         saveAddress: values.saveAddress,
         couponCode: values.couponCode?.trim() || undefined,
+        shippingOptionId: values.shippingOptionId ?? selectedShipping?.id,
       });
-      navigate(`/home`);
-    } catch (error) {
+      navigate('/home');
+    } catch {
       toast.error('Failed to place order. Please try again.');
     }
   };
 
   return (
-    <PageContainer
-      isLoading={isPending || isAddressesPending}
-      isMaskLoading={placeOrderMutation.isPending}
-    >
+    <PageContainer isLoading={cartLoading || addressesLoading} isMaskLoading={placeOrder.isPending}>
       <div className={styles.checkoutPage}>
+        {/* Shipping Info */}
         <Card fullWidth header="Shipping Information">
           <ShippingForm
             isAuthenticated={isAuthenticated}
             addresses={addresses}
             onSubmit={onSubmit}
-            placing={placeOrderMutation.isPending}
-            disableSubmit={!hasCartItems || isPending || isAddressesPending}
+            placing={placeOrder.isPending}
+            disableSubmit={!hasCartItems || cartLoading || addressesLoading}
             onCouponPreview={handleCouponPreview}
+            couponValid={quote?.coupon?.valid ?? null}
+            onShippingOptionChange={handleShippingChange}
           />
         </Card>
 
+        {/* Cart Summary */}
         <Card className={styles.checkoutPageSummary} fullWidth header="Your Shopping Cart">
           <div className={styles.checkoutPageSummaryList}>
-            {(cart?.items || []).map((item) => (
+            {cart?.items?.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
                 <img src={item.productImage || ''} alt={item.productName} />
                 <div>
@@ -91,24 +135,24 @@ const CheckoutPage: React.FC = () => {
             ))}
           </div>
 
-          <div className={clsx(styles.checkoutPageSummaryRow, 'bts-marginTl')}>
+          <div className={styles.checkoutPageSummaryRow}>
             <span>Subtotal</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
-          {couponApplied && previewDiscount > 0 && (
+          {couponApplied && discountAmount > 0 && (
             <div className={styles.checkoutPageSummaryRow}>
               <span>Discount</span>
-              <span>-{formatCurrency(previewDiscount)}</span>
+              <span>-{formatCurrency(discountAmount)}</span>
             </div>
           )}
           <div className={styles.checkoutPageSummaryRow}>
             <span>Shipping</span>
-            <span>{isFreeShipping ? 'Free' : formatCurrency(shippingCost)}</span>
+            <span>{shippingCost == null ? '-' : formatCurrency(shippingCost)}</span>
           </div>
           <Divider className="bts-marginBl" />
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>Total</span>
-            <span>{formatCurrency(effectiveTotal)}</span>
+            <span>{total == null ? '-' : formatCurrency(total)}</span>
           </div>
         </Card>
       </div>

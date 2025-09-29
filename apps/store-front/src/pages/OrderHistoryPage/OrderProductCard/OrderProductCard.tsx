@@ -60,9 +60,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
               </Button>
               <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
             </div>
-            <div className={styles.orderCardCartItemPrice}>
-              {formatCurrency(item.product.price * item.quantity)}
-            </div>
+            <div className={styles.orderCardCartItemPrice}>{formatCurrency(item.totalPrice)}</div>
             <div className={styles.orderCardCartItemActions}>
               <Button
                 color="secondary-light"
@@ -87,6 +85,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
       <footer className={styles.orderCardFooter}>
         <div>Subtotal: {formatCurrency(order.subtotal)}</div>
         {order.couponCode ? <div>Coupon: {order.couponCode}</div> : null}
+        {order.discountAmount ? <div>Discount: {order.discountAmount}</div> : null}
         <div>Shipping: {formatCurrency(order.shippingCost)}</div>
         <div>Total: {formatCurrency(order.total)}</div>
       </footer>

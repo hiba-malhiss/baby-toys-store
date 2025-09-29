@@ -1,10 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
-import { Button, FieldWrapper, Select, StringInput, Alert } from '@baby-toys/ui-kit';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { useValidateCoupon } from '../../api/orderApi';
+import { Alert, Button, IconColor, Select, StringInput } from '@baby-toys/ui-kit';
+import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
+import {
+  faCheck,
+  faTrashAlt,
+  faTriangleExclamation,
+  faCheckCircle,
+} from '@fortawesome/free-solid-svg-icons';
+import { type ShippingOption, useActiveShippingOptions } from '../../api/shippingOptionsApi';
+import { useStoreSettings } from '../../api/settingsApi';
 import styles from './checkout-page.module.scss';
 
 export type ShippingFormValues = {
@@ -17,6 +24,7 @@ export type ShippingFormValues = {
   phone: string;
   saveAddress: boolean;
   couponCode?: string;
+  shippingOptionId?: number | null;
 };
 
 type Address = {
@@ -28,8 +36,21 @@ type Address = {
   phoneNumber?: string;
 };
 
+type ShippingFormProps = {
+  isAuthenticated: boolean;
+  addresses?: Address[];
+  onSubmit: (values: ShippingFormValues) => void | Promise<void>;
+  placing?: boolean;
+  disableSubmit?: boolean;
+  onCouponPreview?: (info: { code: string }) => void;
+  onShippingOptionChange?: (opt: ShippingOption | null) => void;
+  couponValid?: boolean | null;
+};
+
+// Allowed countries
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
+// Validation schema
 const shippingSchema = z.object({
   country: z.string().min(1, 'Country is required'),
   firstName: z.string().min(1, 'First name is required'),
@@ -40,30 +61,18 @@ const shippingSchema = z.object({
   phone: z.string().min(1, 'Phone number is required'),
   saveAddress: z.boolean().default(true),
   couponCode: z.string().optional(),
+  shippingOptionId: z.string().optional(),
 });
 
-type ShippingFormProps = {
-  isAuthenticated: boolean;
-  addresses?: Address[];
-  onSubmit: (values: ShippingFormValues) => void | Promise<void>;
-  placing?: boolean;
-  disableSubmit?: boolean;
-  onCouponPreview?: (info: {
-    code: string;
-    applied: boolean;
-    discount: number;
-    previewTotal: number | null;
-    message: string;
-  }) => void;
-};
-
-export const ShippingForm: React.FC<ShippingFormProps> = ({
+const ShippingForm: React.FC<ShippingFormProps> = ({
   isAuthenticated,
   addresses,
   onSubmit,
   placing,
   disableSubmit,
   onCouponPreview,
+  onShippingOptionChange,
+  couponValid,
 }) => {
   const formMethods = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema),
@@ -78,75 +87,83 @@ export const ShippingForm: React.FC<ShippingFormProps> = ({
       phone: '',
       saveAddress: true,
       couponCode: '',
+      shippingOptionId: null,
     },
   });
 
   const { control, formState, handleSubmit, reset, getValues, setValue, watch } = formMethods;
-  const errors = formState.errors as any;
-  const [isLoadedFromCloud, setIsLoadedFromCloud] = useState(false);
-  const validateCoupon = useValidateCoupon();
-  const [couponApplied, setCouponApplied] = useState(false);
-  const [couponMessage, setCouponMessage] = useState<string>('');
+
+  const [usingSavedAddress, setUsingSavedAddress] = useState(false);
+  const initializedRef = useRef(false);
+
+  // Shipping options
+  const { data: shippingOptions = [], isPending: loadingShipping } = useActiveShippingOptions();
+  const { data: settings } = useStoreSettings();
+  const symbol = settings?.general?.currencySymbol || '';
+
+  const shippingSelectOptions = useMemo(
+    () =>
+      (shippingOptions || []).map((o) => ({
+        label: `${o.name} (${symbol}${Number(o.cost).toFixed(2)})`,
+        value: String(o.id),
+      })),
+    [shippingOptions, symbol]
+  );
 
   useEffect(() => {
-    if (!isAuthenticated) return;
-    if (addresses && addresses.length > 0) {
-      const a = addresses[0];
-      reset({
-        country: 'palestine',
-        firstName: a.firstName || '',
-        lastName: a.lastName || '',
-        region: a.region || '',
-        address: a.detailedAddress || '',
-        town: a.town || '',
-        phone: a.phoneNumber || '',
-        saveAddress: true,
-        couponCode: '',
-      });
-      setIsLoadedFromCloud(true);
-    }
-  }, [isAuthenticated, addresses, reset]);
+    if (!isAuthenticated || !addresses?.length) return;
+    if (initializedRef.current) return;
+    const a = addresses[0];
+    const firstOpt = shippingOptions[0] ?? null;
+    reset({
+      country: 'palestine',
+      firstName: a.firstName || '',
+      lastName: a.lastName || '',
+      region: a.region || '',
+      address: a.detailedAddress || '',
+      town: a.town || '',
+      phone: a.phoneNumber || '',
+      saveAddress: true,
+      couponCode: '',
+      shippingOptionId: firstOpt ? String(firstOpt.id) : null,
+    });
+    setUsingSavedAddress(true);
+    initializedRef.current = true;
+  }, [isAuthenticated, addresses, shippingOptions, reset]);
 
-  const validateAndPreview = async () => {
+  // Ensure default shipping option
+  useEffect(() => {
+    // After options load, ensure a default is set once.
+    const current = getValues('shippingOptionId');
+    const first = shippingOptions[0];
+    if (!first || current) return;
+    setValue('shippingOptionId', String(first.id), { shouldDirty: false, shouldTouch: false });
+  }, [shippingOptions, getValues, setValue]);
+
+  // Notify parent when shipping option changes
+  const lastNotifiedShipId = useRef<number | null>(null);
+  const selectedShipId = watch('shippingOptionId');
+  useEffect(() => {
+    const idNum = selectedShipId != null ? Number(selectedShipId) : null;
+    if (!idNum) return;
+    if (lastNotifiedShipId.current === idNum) return;
+    const found = shippingOptions?.find((o) => o.id === idNum) || null;
+    if (!found) return;
+    onShippingOptionChange?.(found);
+    lastNotifiedShipId.current = idNum;
+  }, [selectedShipId, shippingOptions, onShippingOptionChange]);
+
+  // Coupon preview
+  const handleCouponPreview = () => {
     const code = (getValues('couponCode') || '').trim();
-    if (!code) {
-      setCouponApplied(false);
-      setCouponMessage('');
-      onCouponPreview?.({ code: '', applied: false, discount: 0, previewTotal: null, message: '' });
-      return;
-    }
-    try {
-      const res = await validateCoupon.mutateAsync({ code });
-      if (res?.valid) {
-        const discount = Number(res.discountAmount) || 0;
-        const respSubtotal = Number(res.subtotal) || 0;
-        setCouponApplied(true);
-        const message = res.message || 'Coupon applied';
-        setCouponMessage(message);
-        onCouponPreview?.({
-          code,
-          applied: true,
-          discount,
-          previewTotal: respSubtotal - discount,
-          message,
-        });
-      } else {
-        setCouponApplied(false);
-        const message = res?.message || 'Coupon invalid';
-        setCouponMessage(message);
-        onCouponPreview?.({ code, applied: false, discount: 0, previewTotal: null, message });
-      }
-    } catch (e) {
-      setCouponApplied(false);
-      setCouponMessage('');
-      onCouponPreview?.({ code, applied: false, discount: 0, previewTotal: null, message: '' });
-    }
+    if (code) onCouponPreview?.({ code });
   };
 
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.checkoutPageForm}>
-        {isAuthenticated && isLoadedFromCloud && (
+        {/* Alert for saved address */}
+        {isAuthenticated && usingSavedAddress && (
           <Alert icon={faCheck} title="Using your saved shipping information">
             <Button
               appearance="link"
@@ -164,201 +181,103 @@ export const ShippingForm: React.FC<ShippingFormProps> = ({
                   phone: '',
                   saveAddress: true,
                   couponCode: '',
+                  shippingOptionId: null,
                 });
-                setIsLoadedFromCloud(false);
+                setUsingSavedAddress(false);
               }}
             >
               Use different shipping address
             </Button>
           </Alert>
         )}
-        <FieldWrapper label="Country" error={errors?.country?.message as string}>
-          <Controller
-            control={control}
-            name="country"
-            render={({ field }) => (
-              <Select
-                options={COUNTRIES}
-                hasError={!!errors?.country}
-                value={field.value}
-                onChange={field.onChange}
-                placeholder="Select country"
-              />
-            )}
-          />
-        </FieldWrapper>
 
+        {/* Country */}
+        <FormFieldWrapper name="country" control={control} label="Country">
+          <Select options={COUNTRIES} placeholder="Select country" />
+        </FormFieldWrapper>
+
+        {/* First + Last name */}
         <div className={styles.checkoutPageFormRow}>
-          <FieldWrapper label="First Name" error={errors?.firstName?.message as string}>
-            <Controller
-              control={control}
-              name="firstName"
-              render={({ field }) => (
-                <StringInput
-                  fullWidth
-                  hasError={!!errors?.firstName}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FieldWrapper>
-          <FieldWrapper label="Last Name" error={errors?.lastName?.message as string}>
-            <Controller
-              control={control}
-              name="lastName"
-              render={({ field }) => (
-                <StringInput
-                  fullWidth
-                  hasError={!!errors?.lastName}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FieldWrapper>
+          <FormFieldWrapper name="firstName" control={control} label="First Name">
+            <StringInput fullWidth />
+          </FormFieldWrapper>
+          <FormFieldWrapper name="lastName" control={control} label="Last Name">
+            <StringInput fullWidth />
+          </FormFieldWrapper>
         </div>
 
+        {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
-          <FieldWrapper label="Town" error={errors?.town?.message as string}>
-            <Controller
-              control={control}
-              name="town"
-              render={({ field }) => (
-                <StringInput
-                  fullWidth
-                  hasError={!!errors?.town}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FieldWrapper>
-          <FieldWrapper label="Village or Region" error={errors?.region?.message as string}>
-            <Controller
-              control={control}
-              name="region"
-              render={({ field }) => (
-                <StringInput
-                  fullWidth
-                  hasError={!!errors?.region}
-                  value={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
-          </FieldWrapper>
+          <FormFieldWrapper name="town" control={control} label="Town">
+            <StringInput fullWidth />
+          </FormFieldWrapper>
+          <FormFieldWrapper name="region" control={control} label="Village or Region">
+            <StringInput fullWidth />
+          </FormFieldWrapper>
         </div>
 
-        <FieldWrapper label="Detailed Address" error={errors?.address?.message as string}>
-          <Controller
-            control={control}
-            name="address"
-            render={({ field }) => (
-              <StringInput
-                fullWidth
-                hasError={!!errors?.address}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </FieldWrapper>
+        {/* Address */}
+        <FormFieldWrapper name="address" control={control} label="Detailed Address">
+          <StringInput fullWidth />
+        </FormFieldWrapper>
 
-        <FieldWrapper label="Phone Number" error={errors?.phone?.message as string}>
-          <Controller
-            control={control}
-            name="phone"
-            render={({ field }) => (
-              <StringInput
-                fullWidth
-                hasError={!!errors?.phone}
-                value={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
-        </FieldWrapper>
+        {/* Phone */}
+        <FormFieldWrapper name="phone" control={control} label="Phone Number">
+          <StringInput fullWidth />
+        </FormFieldWrapper>
 
-        <div className={styles.checkoutPageFormRow}>
-          <FieldWrapper label="Save this address?">
-            <Controller
-              control={control}
-              name="saveAddress"
-              render={({ field }) => (
-                <Select
-                  options={[
-                    { label: 'Yes', value: 'yes' },
-                    { label: 'No', value: 'no' },
-                  ]}
-                  value={field.value ? 'yes' : 'no'}
-                  onChange={(val) => field.onChange(val === 'yes')}
-                />
-              )}
+        {/* Shipping option */}
+        <FormFieldWrapper name="shippingOptionId" control={control} label="Shipping Method">
+          <Select
+            options={shippingSelectOptions}
+            isLoading={loadingShipping}
+            placeholder="Select shipping option"
+          />
+        </FormFieldWrapper>
+
+        {/* Coupon */}
+        <FormFieldWrapper name="couponCode" control={control} label="Coupon Code (optional)">
+          <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+            <StringInput
+              fullWidth
+              iconRight={
+                !watch('couponCode') ? null : couponValid ? faCheckCircle : faTriangleExclamation
+              }
+              iconColor={couponValid ? IconColor.success : IconColor.warning}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleCouponPreview();
+                }
+              }}
             />
-          </FieldWrapper>
-          <FieldWrapper label="Coupon Code (optional)">
-            <div style={{ display: 'flex', gap: 8 }}>
-              <Controller
-                control={control}
-                name="couponCode"
-                render={({ field }) => (
-                  <StringInput
-                    value={field.value || ''}
-                    onChange={(v) => field.onChange(String(v))}
-                    onKeyDown={(e) => {
-                      if ((e as any).key === 'Enter') {
-                        e.preventDefault();
-                        validateAndPreview();
-                      }
-                    }}
-                    fullWidth
-                  />
-                )}
-              />
-              <Button
-                appearance="outline"
-                onClick={async () => {
-                  await validateAndPreview();
-                }}
-                isLoading={validateCoupon.isPending}
-                isDisabled={validateCoupon.isPending || !String(watch('couponCode') || '').trim()}
-              >
-                Apply
-              </Button>
-              <Button
-                size="medium"
-                appearance="outline"
-                leftIcon={faTrashAlt}
-                onClick={() => {
-                  setValue('couponCode', '');
-                  setCouponApplied(false);
-                  setCouponMessage('');
-                  onCouponPreview?.({
-                    code: '',
-                    applied: false,
-                    discount: 0,
-                    previewTotal: null,
-                    message: '',
-                  });
-                }}
-                aria-label="Delete"
-                isDisabled={validateCoupon.isPending || !String(watch('couponCode') || '').trim()}
-              />
-            </div>
-            {couponMessage && (
-              <div className={couponApplied ? 'bts-textSuccess' : 'bts-textDanger'}>
-                {couponMessage}
-              </div>
-            )}
-          </FieldWrapper>
-        </div>
+            <Button
+              appearance="outline"
+              onClick={handleCouponPreview}
+              isDisabled={!String(watch('couponCode') || '').trim()}
+            >
+              Apply
+            </Button>
+            <Button
+              size="medium"
+              appearance="outline"
+              leftIcon={faTrashAlt}
+              onClick={() => {
+                setValue('couponCode', '');
+                onCouponPreview?.({ code: '' });
+              }}
+              aria-label="Delete"
+              isDisabled={!String(watch('couponCode') || '').trim()}
+            />
+          </div>
+        </FormFieldWrapper>
 
+        {/* Submit */}
         <Button
           type="submit"
           fullWidth
-          isLoading={!!placing}
-          isDisabled={!!placing || !!disableSubmit || !formState.isValid}
+          isLoading={placing}
+          isDisabled={placing || disableSubmit || !formState.isValid}
         >
           Place Order
         </Button>

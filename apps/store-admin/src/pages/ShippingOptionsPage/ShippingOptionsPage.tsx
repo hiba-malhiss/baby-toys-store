@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, ConfirmDialog, Flex, Heading, Table } from '@baby-toys/ui-kit';
-import { faPen, faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import {
   useShippingOptions,
   useDeleteShippingOption,
@@ -20,7 +20,12 @@ const ShippingOptionsPage: React.FC = () => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [toDelete, setToDelete] = useState<ShippingOption | null>(null);
 
-  const { data, isLoading } = useShippingOptions({ page, size: ROWS_PER_PAGE, sortBy, sortDirection });
+  const { data, isLoading } = useShippingOptions({
+    page,
+    size: ROWS_PER_PAGE,
+    sortBy,
+    sortDirection,
+  });
   const deleteMutation = useDeleteShippingOption();
 
   const rows = data?.content || [];

@@ -8,7 +8,8 @@ export const useCurrencyFormatter = (symbolOverride?: string) => {
   return useCallback(
     (amount: number): string => {
       const val = typeof amount === 'number' && !isNaN(amount) ? amount : 0;
-      return symbol ? `${symbol}${val}` : String(val);
+      const fixed = Number(val).toFixed(2);
+      return symbol ? `${symbol}${fixed}` : fixed;
     },
     [symbol]
   );
