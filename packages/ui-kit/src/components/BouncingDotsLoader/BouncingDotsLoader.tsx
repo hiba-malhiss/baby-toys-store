@@ -3,15 +3,15 @@ import styles from './bouncing-dots-loader.module.scss';
 
 type BouncingDotsLoaderProps = {
   className?: string;
-  size?: 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large';
 };
 
 const BouncingDotsLoader = forwardRef<HTMLDivElement, BouncingDotsLoaderProps>(
   ({ className, size = 'large' }, ref) => {
-    const radius = size === 'large' ? 12 : 8;
+    const radius = size === 'large' ? 12 : size === 'medium' ? 8 : 5;
     const dotsCount = 4;
-    const width = 180;
-    const height = 60;
+    const width = size === 'large' ? 180 : size === 'medium' ? 150 : 120;
+    const height = size === 'large' ? 60 : size === 'medium' ? 50 : 40;
     const cy = height / 2;
 
     const gap = radius / 2 + 4;

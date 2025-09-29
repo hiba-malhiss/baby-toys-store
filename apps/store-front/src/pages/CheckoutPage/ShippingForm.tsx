@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, IconColor, Select, StringInput } from '@baby-toys/ui-kit';
+import { Alert, Button, Divider, IconColor, Select, StringInput } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import {
   faCheck,
@@ -271,7 +271,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             />
           </div>
         </FormFieldWrapper>
-
+        <Divider className="bts-marginVl" />
         {/* Submit */}
         <Button
           type="submit"

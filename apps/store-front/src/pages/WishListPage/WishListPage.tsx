@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit';
+import React, { useState } from 'react';
+import { ViewSwitcher, NoDataFound, Divider } from '@baby-toys/ui-kit';
 import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
@@ -66,6 +66,7 @@ const WishListPage = () => {
   return (
     <PageContainer header="My Wish List">
       {renderContent()}
+      <Divider />
       <YouMayAlsoLikeSection mode="flex" />
     </PageContainer>
   );

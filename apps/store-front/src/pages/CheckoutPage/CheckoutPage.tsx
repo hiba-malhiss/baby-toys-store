@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './checkout-page.module.scss';
 
-import { Card, Divider, useToast } from '@baby-toys/ui-kit';
+import { Card, Divider, useToast, BouncingDotsLoader } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import ShippingForm, { type ShippingFormValues } from './ShippingForm';
@@ -44,6 +44,7 @@ const CheckoutPage: React.FC = () => {
   const discountAmount = quote?.discountAmount ?? 0;
   const total = quote?.total ?? null;
   const couponApplied = !!(quote?.coupon?.valid && quote?.coupon?.code);
+  const isQuoting = quoteMutation.isPending;
 
   // Handlers
   const refreshQuote = (shippingId?: number, code?: string) => {
@@ -152,7 +153,7 @@ const CheckoutPage: React.FC = () => {
           <Divider className="bts-marginBl" />
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>Total</span>
-            <span>{total == null ? '-' : formatCurrency(total)}</span>
+            <span>{isQuoting ? <BouncingDotsLoader size="small" /> : formatCurrency(total)}</span>
           </div>
         </Card>
       </div>
