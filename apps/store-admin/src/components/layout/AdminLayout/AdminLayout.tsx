@@ -23,6 +23,7 @@ const menuItems = [
   { label: 'Reviews', route: '/reviews' },
   { label: 'Home page content', route: '/homepage' },
   { label: 'Store settings', route: '/settings' },
+  { label: 'Shipping options', route: '/shipping-options' },
 ];
 
 const AdminLayout: React.FC<{
