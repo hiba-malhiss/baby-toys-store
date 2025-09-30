@@ -119,35 +119,11 @@
       color: $color-text-grey;
       flex: 1;
     }
-
-    &-price {
-      display: flex;
-      align-items: end;
-      gap: 8px;
-      margin-top: 6px;
-      margin-bottom: 12px;
-      color: $color-text-primary;
-    }
-
-    &-priceNew {
-      font-weight: bold;
-      font-size: 18px;
-    }
-
-    &-priceOld {
-      text-decoration: line-through;
-      font-size: 14px;
-      color: $color-text-muted;
-      padding-left: 4px;
-    }
   }
 
   &--price {
     margin-top: 6px;
-  }
-
-  &--withDiscount .productCard-infoPriceNew {
-    color: $color-success-dark;
+    margin-bottom: 12px;
   }
 
   // Remove hover effect from the whole card

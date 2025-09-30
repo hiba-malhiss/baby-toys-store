@@ -12,6 +12,7 @@ export type QuoteResponse = {
   discountAmount: number;
   shippingCost: number;
   total: number;
+  freeShipping: boolean;
   coupon?: {
     code: string;
     valid: boolean;
@@ -27,7 +28,10 @@ export function useCheckoutQuote() {
   return useMutation<QuoteResponse, any, QuoteRequest>({
     mutationKey: ['checkout-quote'],
     mutationFn: async (payload) => {
-      const { data } = await api.post<ApiEnvelope<QuoteResponse>>('/api/customer/checkout/quote', payload);
+      const { data } = await api.post<ApiEnvelope<QuoteResponse>>(
+        '/api/customer/checkout/quote',
+        payload
+      );
       return data.data as any;
     },
   });

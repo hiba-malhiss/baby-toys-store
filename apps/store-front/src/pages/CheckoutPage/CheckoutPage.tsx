@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './checkout-page.module.scss';
 
-import { Card, Divider, useToast, BouncingDotsLoader } from '@baby-toys/ui-kit';
+import { Card, Divider, useToast, BouncingDotsLoader, Chip } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import ShippingForm, { type ShippingFormValues } from './ShippingForm';
@@ -147,7 +147,12 @@ const CheckoutPage: React.FC = () => {
             </div>
           )}
           <div className={styles.checkoutPageSummaryRow}>
-            <span>Shipping</span>
+            <span>
+              Shipping{' '}
+              {quote?.freeShipping && (
+                <Chip label="Free Shipping Applied" appearance="success" size="small" />
+              )}
+            </span>
             <span>{shippingCost == null ? '-' : formatCurrency(shippingCost)}</span>
           </div>
           <Divider className="bts-marginBl" />

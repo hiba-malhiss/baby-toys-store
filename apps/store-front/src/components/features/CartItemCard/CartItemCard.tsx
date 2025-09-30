@@ -10,7 +10,7 @@ interface CartItemCardProps {
   image: string;
   name: string;
   id: string;
-  totalPrice: number;
+  totalPrice: string | number;
   quantityInStock: number;
   quantity: number;
   fullWidth?: boolean;

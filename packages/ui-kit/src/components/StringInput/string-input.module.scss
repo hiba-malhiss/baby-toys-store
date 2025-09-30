@@ -109,6 +109,12 @@
     width: 100%;
     @include form-input-base();
 
+    &.inputTruncate {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
     &--largeSize {
       @include form-input-large();
     }

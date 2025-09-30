@@ -9,6 +9,7 @@ export type OrderItemDTO = {
   productName: string;
   mainImage: string;
   quantity: number;
+  originalPrice: number;
   pricePerUnit: number;
   totalPrice: number;
   hasReview?: boolean;
@@ -66,12 +67,15 @@ export function useCancelMyOrder() {
 export type OrderItem = {
   orderItemId: string;
   productId: string;
+  originalPrice?: number | null;
+  pricePerUnit?: number | null;
   totalPrice: number;
   quantity: number;
   product: {
     id: string;
     name: string;
     price: number;
+    originalPrice: number;
     mainImage: string;
   };
   isReviewed: boolean;
@@ -113,6 +117,7 @@ export function normalizeOrder(dto: OrderDTO): Order {
         id: String(it.productId),
         name: it.productName,
         price: Number(it.pricePerUnit),
+        originalPrice: it.originalPrice,
         mainImage: it.mainImage,
       },
       isReviewed: !!it.hasReview,
@@ -120,9 +125,11 @@ export function normalizeOrder(dto: OrderDTO): Order {
       canReview: it.canReview,
       canEditReview: it.canEditReview ?? it.canReview,
       reviewId: it.reviewId,
+      totalPrice: Number(it.totalPrice || 0),
     })),
     subtotal: Number(dto.subtotal || 0),
     shippingCost: Number((dto as any).shippingCost ?? 0),
+    discountAmount: Number(dto.discountAmount || 0),
     total: Number(dto.total || 0),
     couponCode: dto.couponCode ?? null,
   };

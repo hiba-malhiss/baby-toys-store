@@ -1,6 +1,7 @@
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { Button, Card, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
+import { PriceDisplay } from '@baby-toys/ui-kit';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
@@ -73,7 +74,11 @@ const ShoppingCartPage = () => {
               >
                 <span className={styles.shoppingCartPageName}>{item.productName}</span>
               </Button>
-              <div>{formatCurrency(item.unitPrice)}</div>
+              <PriceDisplay
+                price={item.unitPrice}
+                oldPrice={item.originalPrice}
+                formatCurrency={formatCurrency}
+              />
               <div className={styles.shoppingCartPageQuantityInput}>
                 <CartQuantityInput
                   fullWidth
@@ -97,8 +102,12 @@ const ShoppingCartPage = () => {
       </div>
       <Card header="Cart Sub Total" className={styles.shoppingCartPageSummary}>
         <Flex justify="between">
-          <Text weight="bold" size="lg">Subtotal</Text>
-          <Text weight="bold" size="lg">{formatCurrency(subtotal)}</Text>
+          <Text weight="bold" size="lg">
+            Subtotal
+          </Text>
+          <Text weight="bold" size="lg">
+            {formatCurrency(subtotal)}
+          </Text>
         </Flex>
         <Button
           color="accent"

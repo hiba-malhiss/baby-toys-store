@@ -2,7 +2,7 @@ import styles from './order-product-card.module.scss';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
-import { Card, Button, Chip, Image } from '@baby-toys/ui-kit';
+import { Button, Card, Chip, Image } from '@baby-toys/ui-kit';
 import type { Order, OrderItem } from '../../../api/ordersApi.ts';
 
 export const statusColorMap: Record<string, string> = {

@@ -26,6 +26,7 @@ const SmartProductCard: React.FC<SmartProductCardProps> = ({ ...props }) => {
   return (
     <ProductCard
       {...props}
+      label={props.product.oldPrice > props.product.price ? 'SALE' : ''}
       formatCurrency={formatCurrency}
       isFavorite={isFavorite}
       onToggleFavorite={handleToggleFavorite}

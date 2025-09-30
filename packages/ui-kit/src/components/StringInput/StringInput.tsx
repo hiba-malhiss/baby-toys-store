@@ -21,6 +21,7 @@ export interface StringInputProps {
   icon?: any;
   iconRight?: any;
   onIconClick?: (e: React.MouseEvent) => void;
+  onClick?: (e: React.MouseEvent) => void;
   iconColor?: IconColor;
   className?: string;
   iconPosition?: IconPosition;
@@ -36,6 +37,7 @@ export interface StringInputProps {
   readOnly?: boolean;
   showCounter?: boolean;
   maxLength?: number;
+  truncateOverflow?: boolean;
 }
 
 const StringInput: React.FC<StringInputProps> = ({
@@ -63,6 +65,8 @@ const StringInput: React.FC<StringInputProps> = ({
   readOnly = false,
   showCounter = false,
   maxLength,
+  truncateOverflow = false,
+  onClick,
 }) => {
   // Detect if controlled
   const isControlled = value !== undefined && onChange !== undefined;
@@ -169,7 +173,7 @@ const StringInput: React.FC<StringInputProps> = ({
   const currentLen = currentStr?.length ?? 0;
 
   return (
-    <div className={clsx(className, fullWidth && styles.fullWidth)}>
+    <div className={clsx(className, fullWidth && styles.fullWidth)} onClick={onClick}>
       <div className={containerClass}>
         {type === 'number' && withControls && (
           <Button
@@ -198,8 +202,8 @@ const StringInput: React.FC<StringInputProps> = ({
           placeholder={placeholder}
           value={currentStr}
           onChange={(e) => handleChange(e.target.value)}
-          onBlur={onBlur}
-          className={clsx(inputClass)}
+          className={clsx(inputClass, truncateOverflow && styles.inputTruncate)}
+          title={typeof currentStr === 'string' ? currentStr : undefined}
         />
 
         {type === 'number' && withControls && (

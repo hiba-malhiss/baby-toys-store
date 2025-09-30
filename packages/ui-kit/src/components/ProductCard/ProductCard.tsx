@@ -2,6 +2,7 @@ import React, { useCallback } from 'react';
 import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
+import PriceDisplay from '../PriceDisplay/PriceDisplay';
 import { faHeart, faCartShopping, faRightLeft } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Card from '../Card/Card.tsx';
@@ -27,6 +28,7 @@ export type ProductCardProps = {
   size?: 'small';
   product: Product;
   fullWidth?: boolean;
+  label?: string;
   isLoadingFavorite?: boolean;
   isLoadingAddToCart?: boolean;
   onToggleFavorite?: (product: Product) => void;
@@ -38,6 +40,7 @@ export type ProductCardProps = {
 const ProductCard: React.FC<ProductCardProps> = ({
   size,
   product,
+  label,
   onToggleFavorite,
   onAddToCart,
   direction = 'vertical',
@@ -134,9 +137,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       }}
     >
       <Card size="small" className={styles.productCardBox}>
-        {product.label && !isSmallSize && (
-          <Chip label={product.label} className={styles.productCardChip} />
-        )}
+        {label && !isSmallSize && <Chip label={label} className={styles.productCardChip} />}
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
           <Image src={product.mainImage} alt={product.name} />
@@ -147,21 +148,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
         {isHorizontal && product.shortDescription && !isSmallSize && (
           <div className={styles.productCardInfoDescription}>{product.shortDescription}</div>
         )}
-        <div
-          className={clsx(
-            product.oldPrice && styles.productCardWithDiscount,
-            styles.productCardPrice
-          )}
-        >
-          <span className={styles.productCardInfoPriceNew}>
-            {formatCurrency ? formatCurrency(product.price) : product.price}
-          </span>
-          {product.oldPrice && (
-            <span className={styles.productCardInfoPriceOld}>
-              {formatCurrency ? formatCurrency(product.oldPrice) : product.oldPrice}
-            </span>
-          )}
-        </div>
+        <PriceDisplay
+          className={clsx(styles.productCardPrice)}
+          price={product.price}
+          oldPrice={product.oldPrice}
+          formatCurrency={formatCurrency}
+        />
         <Rating value={product.rating} className={styles.productCardRating} />
         {isHorizontal && !isSmallSize && renderButtons()}
       </div>
