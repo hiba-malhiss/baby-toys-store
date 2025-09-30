@@ -9,6 +9,7 @@ export interface ReviewDto {
   userId: number | null;
   rating: number;
   comment?: string | null;
+  productImage?: string;
   verifiedPurchase?: boolean;
   createdAt: string;
   isEditable?: boolean;

@@ -76,6 +76,11 @@ export default function ReviewsPage() {
         ),
       },
       {
+        field: 'productImage',
+        header: 'Image',
+        type: 'image',
+      },
+      {
         field: 'userId',
         header: 'User',
         body: (row: ReviewDto) => (

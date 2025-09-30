@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -55,6 +55,12 @@ const LoginPage: React.FC = () => {
 
   const isSubmitting = formState.isSubmitting || loginMutation.isPending || userQuery.isLoading;
 
+  useEffect(() => {
+    if (userQuery?.data?.role === USER_ROLE.ADMIN) {
+      navigate('/dashboard', { replace: true });
+    }
+  }, [userQuery?.data?.role, navigate]);
+
   return (
     <div className={styles.loginPage}>
       <Card className={styles.loginPageCard}>
@@ -89,7 +95,7 @@ const LoginPage: React.FC = () => {
               <Button
                 type="submit"
                 fullWidth
-                isDisabled={!formState.isValid || isSubmitting}
+                isDisabled={isSubmitting}
                 isLoading={isSubmitting}
                 aria-label="Login to admin panel"
               >
