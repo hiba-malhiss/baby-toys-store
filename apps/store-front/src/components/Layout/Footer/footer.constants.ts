@@ -1,4 +1,4 @@
-import { faFacebookF, faInstagram, faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faFacebookF, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
 
 export const exploreLinks = [
   { label: 'Shop', path: '/shop' },
@@ -9,9 +9,8 @@ export const exploreLinks = [
 ];
 
 export const socialMediaLinks = [
-  { icon: faFacebookF, url: '' },
-  { icon: faTwitter, url: '' },
-  { icon: faInstagram, url: '' },
+  { icon: faFacebookF },
+  { icon: faWhatsapp },
 ];
 
 // UI config for each ID

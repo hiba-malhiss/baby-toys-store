@@ -19,9 +19,10 @@ import { useLoginDialogStore } from '../../../store/useLoginDialogStore';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { StringInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
-import { socialMediaLinks } from '../../../components/layout/Footer/footer.constants.ts';
+import { socialMediaLinks } from '../../../components/Layout/Footer/footer.constants.ts';
 import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
 import { useCartStore } from '../../../store/useCartStore';
+import { shareProduct } from '../../../utils/share.ts';
 
 export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -52,6 +53,20 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
         });
     },
     [product.id, toast]
+  );
+
+  const handleSocialShare = useCallback(
+    (iconName: string) => {
+      if (iconName === 'whatsapp') {
+        shareProduct('whatsapp', product.id);
+        return;
+      }
+      if (iconName === 'facebook-f') {
+        shareProduct('facebook', product.id);
+        return;
+      }
+    },
+    [product.id]
   );
 
   return (
@@ -86,14 +101,14 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
         </ExpandableContent>
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
           <span className="bts-marginRs">Share this:</span>
-          {socialMediaLinks.map(({ icon, url }) => (
+          {socialMediaLinks.map(({ icon }) => (
             <Button
               size="small"
               color="secondary"
               key={icon.iconName}
               leftIcon={icon}
               isRounded
-              onClick={() => console.log(url)}
+              onClick={() => handleSocialShare(icon.iconName)}
             />
           ))}
         </Flex>

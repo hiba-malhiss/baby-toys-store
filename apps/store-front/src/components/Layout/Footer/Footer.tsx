@@ -9,6 +9,7 @@ import {
   linkPrefixes,
 } from './footer.constants.ts';
 import { useStoreSettings } from '../../../api/settingsApi';
+import { handleFooterSocialClick } from '../../../utils/share.ts';
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -26,13 +27,13 @@ const Footer = () => {
           Bringing you quality products at affordable prices.
         </p>
         <Flex spacing="xl">
-          {socialMediaLinks.map(({ icon, url }) => (
+          {socialMediaLinks.map(({ icon }) => (
             <Button
               key={icon.iconName}
               appearance="filled"
               color="accent"
               leftIcon={icon}
-              onClick={() => window.open(url, '_blank')}
+              onClick={() => handleFooterSocialClick(icon.iconName)}
             />
           ))}
         </Flex>
