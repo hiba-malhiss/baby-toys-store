@@ -192,42 +192,47 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         )}
 
         {/* Country */}
-        <FormFieldWrapper name="country" control={control} label="Country">
+        <FormFieldWrapper required name="country" control={control} label="Country">
           <Select options={COUNTRIES} placeholder="Select country" />
         </FormFieldWrapper>
 
         {/* First + Last name */}
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper name="firstName" control={control} label="First Name">
+          <FormFieldWrapper required name="firstName" control={control} label="First Name">
             <StringInput fullWidth />
           </FormFieldWrapper>
-          <FormFieldWrapper name="lastName" control={control} label="Last Name">
+          <FormFieldWrapper required name="lastName" control={control} label="Last Name">
             <StringInput fullWidth />
           </FormFieldWrapper>
         </div>
 
         {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper name="town" control={control} label="Town">
+          <FormFieldWrapper required name="town" control={control} label="Town">
             <StringInput fullWidth />
           </FormFieldWrapper>
-          <FormFieldWrapper name="region" control={control} label="Village or Region">
+          <FormFieldWrapper required name="region" control={control} label="Village or Region">
             <StringInput fullWidth />
           </FormFieldWrapper>
         </div>
 
         {/* Address */}
-        <FormFieldWrapper name="address" control={control} label="Detailed Address">
+        <FormFieldWrapper required name="address" control={control} label="Detailed Address">
           <StringInput fullWidth />
         </FormFieldWrapper>
 
         {/* Phone */}
-        <FormFieldWrapper name="phone" control={control} label="Phone Number">
+        <FormFieldWrapper required name="phone" control={control} label="Phone Number">
           <StringInput fullWidth />
         </FormFieldWrapper>
 
         {/* Shipping option */}
-        <FormFieldWrapper name="shippingOptionId" control={control} label="Shipping Method">
+        <FormFieldWrapper
+          required
+          name="shippingOptionId"
+          control={control}
+          label="Shipping Method"
+        >
           <Select
             options={shippingSelectOptions}
             isLoading={loadingShipping}

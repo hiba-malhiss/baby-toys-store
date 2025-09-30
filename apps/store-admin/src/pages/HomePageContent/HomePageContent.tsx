@@ -39,6 +39,7 @@ const HomePageContent: React.FC = () => {
               <Card key={card.id || i} fullWidth variant="outlined" className="bts-marginTm">
                 <Flex direction="column" spacing="m" fullWidth>
                   <FormFieldWrapper
+                    required
                     name={`infoCards.${i}.icon`}
                     control={control}
                     label="Icon"
@@ -47,6 +48,7 @@ const HomePageContent: React.FC = () => {
                     <StringInput />
                   </FormFieldWrapper>
                   <FormFieldWrapper
+                    required
                     name={`infoCards.${i}.title`}
                     control={control}
                     label="Title"
@@ -55,6 +57,7 @@ const HomePageContent: React.FC = () => {
                     <StringInput />
                   </FormFieldWrapper>
                   <FormFieldWrapper
+                    required
                     name={`infoCards.${i}.appearance`}
                     control={control}
                     label="Appearance"
@@ -68,6 +71,7 @@ const HomePageContent: React.FC = () => {
                     </Select>
                   </FormFieldWrapper>
                   <FormFieldWrapper
+                    required
                     fullWidth
                     name={`infoCards.${i}.subtitle`}
                     control={control}
@@ -88,6 +92,7 @@ const HomePageContent: React.FC = () => {
             <Flex direction="column" spacing="m" fullWidth>
               {heroBanners.map((banner, i) => (
                 <FormFieldWrapper
+                  required
                   fullWidth
                   key={banner.id || i}
                   name={`heroBanners.${i}.text`}

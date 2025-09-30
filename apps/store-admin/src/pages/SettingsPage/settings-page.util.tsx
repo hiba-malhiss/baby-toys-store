@@ -26,9 +26,9 @@ export const contactSchema = z.object({
 
 export const policiesSchema = z
   .object({
-    cancelPolicy: z.string().max(4000).optional().default(''),
-    returnPolicy: z.string().max(8000).optional().default(''),
-    shippingPolicy: z.string().max(8000).optional().default(''),
+    cancelPolicy: z.string().min(1, 'Cancel policy is required').max(4000).default(''),
+    returnPolicy: z.string().min(1, 'Return policy is required').max(8000).default(''),
+    shippingPolicy: z.string().min(1, 'Shipping policy is required').max(8000).default(''),
     freeShippingMinSubtotal: z.number().nullable().optional(),
     freeShippingStartAt: z.date().nullable().optional(),
     freeShippingEndAt: z.date().nullable().optional(),

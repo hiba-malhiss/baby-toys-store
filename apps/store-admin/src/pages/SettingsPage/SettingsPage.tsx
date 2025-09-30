@@ -217,6 +217,7 @@ const SettingsPage: React.FC = () => {
                   <StringInput placeholder="Asia/Gaza" />
                 </FormFieldWrapper>
                 <FormFieldWrapper
+                  required
                   control={control}
                   name="general.priceRangeMin"
                   label="Price Range Min"
@@ -225,6 +226,7 @@ const SettingsPage: React.FC = () => {
                   <StringInput placeholder="0" />
                 </FormFieldWrapper>
                 <FormFieldWrapper
+                  required
                   control={control}
                   name="general.priceRangeMax"
                   label="Price Range Max"
@@ -290,6 +292,7 @@ const SettingsPage: React.FC = () => {
             <Accordion header="Policies" buttonAppearance="outline">
               <Flex direction="vertical" spacing="m" fullWidth>
                 <FormFieldWrapper
+                  required
                   control={control}
                   name="policies.cancelPolicy"
                   label="Cancel Policy"
@@ -298,6 +301,7 @@ const SettingsPage: React.FC = () => {
                   <TextArea rows={4} placeholder="Describe cancellation policy" />
                 </FormFieldWrapper>
                 <FormFieldWrapper
+                  required
                   control={control}
                   name="policies.returnPolicy"
                   label="Return Policy"
@@ -306,6 +310,7 @@ const SettingsPage: React.FC = () => {
                   <TextArea rows={4} placeholder="Describe return policy" />
                 </FormFieldWrapper>
                 <FormFieldWrapper
+                  required
                   control={control}
                   name="policies.shippingPolicy"
                   label="Shipping Policy"
