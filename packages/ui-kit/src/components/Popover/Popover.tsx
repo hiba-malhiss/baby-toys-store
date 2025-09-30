@@ -48,7 +48,7 @@ function Popover({
 
       // Force popover width for stable measurement
       const targetWidth = targetRect.width;
-      popoverRef.current.style.width = width || `${targetWidth}px`;
+      popoverRef.current.style.minWidth = width || `${targetWidth}px`;
 
       const popoverRect = popoverRef.current.getBoundingClientRect();
 
@@ -91,7 +91,7 @@ function Popover({
         transform: 'scale(1)',
         transition: 'opacity 150ms ease, transform 150ms ease',
         zIndex: 9999,
-        width: width || `${targetWidth}px`,
+        minWidth: width || `${targetWidth}px`,
       });
     };
 

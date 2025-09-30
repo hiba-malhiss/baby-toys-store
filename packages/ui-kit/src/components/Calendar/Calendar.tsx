@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Moment } from 'moment';
 
-import AnchoredFloatingContainer from '../AnchoredFloatingContainer/AnchoredFloatingContainer';
+import Popover from '../Popover/Popover';
 import CalendarButton from './CalendarButton/CalendarButton';
 
 import { DEFAULT_DATE_FORMAT } from './utils/calendarUtils';
@@ -50,6 +50,7 @@ const Calendar = ({
   getLabel,
   fullWidth,
 }: CalendarProps) => {
+  const anchorRef = useRef<HTMLDivElement | null>(null);
   const {
     month,
     weekDays,
@@ -94,20 +95,26 @@ const Calendar = ({
         [styles.fullWidth]: fullWidth,
       })}
     >
-      <StringInput
-        value={getCalendarLabel()}
-        onIconClick={onInputClick}
-        fullWidth
-        onClick={onInputClick}
-        placeholder="Select Date"
-        iconRight={faCalendar}
-        readOnly
-        isDisabled={isDisabled}
-        isCalculated={isCalculated}
-      />
-      <AnchoredFloatingContainer
-        isVisible={isOverlayVisible}
-        onVisibilityChange={setOverlayVisible}
+      <div ref={anchorRef}>
+        <StringInput
+          value={getCalendarLabel()}
+          onIconClick={onInputClick}
+          fullWidth
+          onClick={onInputClick}
+          placeholder="Select Date"
+          iconRight={faCalendar}
+          readOnly
+          isDisabled={isDisabled}
+          isCalculated={isCalculated}
+        />
+      </div>
+      <Popover
+        targetRef={anchorRef as any}
+        open={isOverlayVisible}
+        onClose={() => setOverlayVisible(false)}
+        position="bottom"
+        withArrow={false}
+        size="medium"
       >
         <div className={styles.calendarHeader}>
           <Button
@@ -224,7 +231,7 @@ const Calendar = ({
             </Button>
           </div>
         )}
-      </AnchoredFloatingContainer>
+      </Popover>
     </div>
   );
 };
