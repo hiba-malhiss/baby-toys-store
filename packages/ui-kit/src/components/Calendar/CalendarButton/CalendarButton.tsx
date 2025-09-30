@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './CalendarButton.module.scss';
 import clsx from 'clsx';
-import { SelectionStatus } from "../utils/getSelectionStatus";
+import { SelectionStatus } from '../utils/getSelectionStatus';
 
 type CalendarButtonProps = {
   isDisabled?: boolean;
@@ -20,21 +20,21 @@ const CalendarButton = ({
   isLastColumn = false,
   selectionStatus,
   onClick,
-  children
+  children,
 }: CalendarButtonProps) => {
   const [className, setClassName] = useState('');
 
   useEffect(() => {
-    const classes = clsx(styles.CalendarButton, {
-      [styles['is-disabled']]: isDisabled,
+    const classes = clsx(styles.calendarButton, {
+      [styles.isDisabled]: isDisabled,
       [styles[`${appearance}-appearance`]]: appearance,
-      [styles['is-selected']]: selectionStatus.isSelected,
-      [styles['is-highlighted']]: selectionStatus.isSelectedSecondary,
-      [styles['is-highlightedMiddle']]: selectionStatus.isMiddleInterval,
-      [styles['is-highlightedRangeStart']]: selectionStatus.isStartInterval,
-      [styles['is-highlightedRangeEnd']]: selectionStatus.isEndInterval,
-      [styles['is-firstColumn']]: isFirstColumn,
-      [styles['is-lastColumn']]: isLastColumn,
+      [styles.isSelected]: selectionStatus.isSelected,
+      [styles.isHighlighted]: selectionStatus.isSelectedSecondary,
+      [styles.isHighlightedMiddle]: selectionStatus.isMiddleInterval,
+      [styles.isHighlightedRangeStart]: selectionStatus.isStartInterval,
+      [styles.isHighlightedRangeEnd]: selectionStatus.isEndInterval,
+      [styles.isFirstColumn]: isFirstColumn,
+      [styles.isLastColumn]: isLastColumn,
     });
 
     setClassName(classes);

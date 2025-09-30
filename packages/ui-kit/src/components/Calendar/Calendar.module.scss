@@ -1,4 +1,6 @@
-.Calendar {
+@use '../../styles/constants.scss' as *;
+
+.calendar {
   display: inline-block;
   position: relative;
 
@@ -7,26 +9,26 @@
   }
 
   &-withFooter {
-    .Calendar-menu {
-      padding-bottom: 8px;
+    .calendar-menu {
+      padding-bottom: $spacing-sm;
     }
   }
 
   &-footer {
-    border-top: 1px solid var(--disabled-01);
+    border-top: 1px solid $color-border-disabled;
     display: flex;
     align-items: center;
     justify-content: end;
-    padding: 4px 0;
+    padding: $spacing-xs 0;
   }
 
   &-header {
     display: flex;
     align-items: center;
-    color: var(--text-secondary);
+    color: $color-text-secondary;
     min-width: 160px;
-    margin: 8px 16px;
-    border-bottom: 1px solid var(--disabled-01);
+    margin: $spacing-sm $spacing-md;
+    border-bottom: 1px solid $color-border-disabled;
 
     .decade-range {
       font-size: 16px !important;
@@ -48,26 +50,26 @@
     align-items: center;
     justify-content: center;
     text-align: center;
-    padding: 8px 16px 16px;
+    padding: $spacing-sm $spacing-md $spacing-md;
     min-width: 280px;
     grid-template-columns: repeat(2, 1fr);
     row-gap: 2px;
 
-    &.Calendar-yearsMenu {
+    &.calendar-yearsMenu {
       min-height: 204px;
     }
 
-    &.Calendar-monthsMenu {
+    &.calendar-monthsMenu {
       grid-template-columns: repeat(3, 1fr);
     }
 
-    &.Calendar-datesMenu {
+    &.calendar-datesMenu {
       grid-template-columns: repeat(7, 1fr);
 
       .days {
-        color: var(--text-secondary);
+        color: $color-text-secondary;
         font-weight: 600;
-        margin-bottom: 8px;
+        margin-bottom: $spacing-sm;
       }
     }
   }

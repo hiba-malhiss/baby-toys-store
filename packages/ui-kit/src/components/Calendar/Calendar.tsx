@@ -89,8 +89,8 @@ const Calendar = ({
 
   return (
     <div
-      className={clsx(styles.Calendar, {
-        [styles['Calendar-withFooter']]: withClearFooter,
+      className={clsx(styles.calendar, {
+        [styles.calendarWithFooter]: withClearFooter,
         [styles.fullWidth]: fullWidth,
       })}
     >
@@ -109,16 +109,16 @@ const Calendar = ({
         isVisible={isOverlayVisible}
         onVisibilityChange={setOverlayVisible}
       >
-        <div className={styles['Calendar-header']}>
+        <div className={styles.calendarHeader}>
           <Button
             iconLeft={faChevronLeft}
             appearance="plainDefault"
             isDisabled={isPrevDisabled()}
             onClick={goToPrevious}
-            className={styles['left-chevron']}
+            className={styles.leftChevron}
           />
           {currentView === 'year' && (
-            <div className={styles['decade-range']}>
+            <div className={styles.decadeRange}>
               {yearsList[0]} – {yearsList[yearsList.length - 1]}
             </div>
           )}
@@ -152,12 +152,12 @@ const Calendar = ({
             appearance="plainDefault"
             onClick={goToNext}
             isDisabled={isNextDisabled()}
-            className={styles['right-chevron']}
+            className={styles.rightChevron}
           />
         </div>
 
         {currentView === 'year' && (
-          <div className={`${styles['Calendar-menu']} ${styles['Calendar-yearsMenu']}`}>
+          <div className={`${styles.calendarMenu} ${styles.calendarYearsMenu}`}>
             {yearsList.map((year, i) => (
               <CalendarButton
                 key={year}
@@ -174,7 +174,7 @@ const Calendar = ({
         )}
 
         {currentView === 'month' && (
-          <div className={`${styles['Calendar-menu']} ${styles['Calendar-monthsMenu']}`}>
+          <div className={`${styles.calendarMenu} ${styles.calendarMonthsMenu}`}>
             {shortMonthNames.map((monthName, i) => (
               <CalendarButton
                 key={monthName}
@@ -191,9 +191,9 @@ const Calendar = ({
         )}
 
         {currentView === 'date' && (
-          <div className={`${styles['Calendar-menu']} ${styles['Calendar-datesMenu']}`}>
+          <div className={`${styles.calendarMenu} ${styles.calendarDatesMenu}`}>
             {weekDays.map((day) => (
-              <span key={day} className={styles['days']}>
+              <span key={day} className={styles.days}>
                 {day}
               </span>
             ))}
@@ -218,7 +218,7 @@ const Calendar = ({
         )}
 
         {withClearFooter && (
-          <div className={styles['Calendar-footer']}>
+          <div className={styles.calendarFooter}>
             <Button appearance="plainDefault" onClick={reset}>
               Clear
             </Button>
