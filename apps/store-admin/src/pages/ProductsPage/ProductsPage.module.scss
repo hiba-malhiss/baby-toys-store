@@ -1,4 +1,13 @@
 .productsPage {
+  &-truncate {
+    display: -webkit-box;
+    max-width: 320px;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    white-space: normal;
+    vertical-align: bottom;
+  }
   &-colorIndecator {
     width: 20px;
     height: 20px;

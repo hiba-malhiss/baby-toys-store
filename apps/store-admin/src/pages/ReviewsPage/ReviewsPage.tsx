@@ -7,6 +7,7 @@ import { useAdminReviews, useHideReview, useUnhideReview } from '../../api/revie
 import { ReviewDto, ReviewStatus } from '../../api/types/review';
 import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
+import styles from './reviews-page.module.scss';
 
 export default function ReviewsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -62,7 +63,13 @@ export default function ReviewsPage() {
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
             <Link to={`/edit-product/${row.productId}`}>
-              {row.productName ?? `#${row.productId}`}
+              {row.productName ? (
+                <span className={styles.reviewsPageTruncate} title={row.productName}>
+                  {row.productName}
+                </span>
+              ) : (
+                `#${row.productId}`
+              )}
             </Link>
             <CopyToClipboardButton value={row.productId} successMessage="Product ID copied" />
           </Flex>
@@ -88,7 +95,15 @@ export default function ReviewsPage() {
           </Flex>
         ),
       },
-      { field: 'comment', header: 'Comment' },
+      {
+        field: 'comment',
+        header: 'Comment',
+        body: (row: ReviewDto) => (
+          <span className={styles.reviewsPageTruncate} title={row.comment || ''}>
+            {row.comment || '-'}
+          </span>
+        ),
+      },
       {
         field: 'status',
         header: 'Status',

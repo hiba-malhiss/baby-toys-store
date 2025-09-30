@@ -36,7 +36,11 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
       field: 'name',
       header: 'Name',
       sortable: true,
-      body: (row: Product) => row.name?.slice(0, 50) + '...',
+      body: (row: Product) => (
+        <span className={styles.productsPageTruncate} title={row.name || ''}>
+          {row.name || '-'}
+        </span>
+      ),
     },
     {
       field: 'brandName',

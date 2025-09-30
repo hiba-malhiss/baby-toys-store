@@ -1,3 +1,12 @@
 .reviewPage-select {
   width: 180px;
 }
+
+.reviewsPageTruncate {
+  display: -webkit-box;
+  max-width: 360px;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  white-space: normal;
+}
