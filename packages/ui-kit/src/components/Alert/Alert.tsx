@@ -20,6 +20,7 @@ interface AlertProps {
   className?: string;
   children?: React.ReactNode;
   countdown?: string;
+  justify?: string;
   isAnimated?: boolean;
 }
 
@@ -35,6 +36,7 @@ const Alert: React.FC<AlertProps> = ({
   children,
   countdown,
   isAnimated = false,
+  justify,
 }) => {
   const alertClass = clsx(
     styles.alert,
@@ -46,14 +48,20 @@ const Alert: React.FC<AlertProps> = ({
 
   return (
     <div className={alertClass} role="alert">
-      <Flex spacing="s" fullWidth align="start" className={styles.alertContent}>
+      <Flex
+        spacing="s"
+        fullWidth
+        justify={justify || 'start'}
+        align={'center'}
+        className={styles.alertContent}
+      >
         {icon && (
           <div className={styles.alertIcon}>
             <Icon icon={icon} size={size} />
           </div>
         )}
 
-        <div className={styles.alertText}>
+        <Flex align="center" className={styles.alertText} justify={justify || 'start'}>
           {title && <div className={styles.alertTitle}>{title}</div>}
           <div className={styles.alertMessage}>{message}</div>
           {countdown && (
@@ -62,12 +70,12 @@ const Alert: React.FC<AlertProps> = ({
             </div>
           )}
           {children}
-        </div>
+        </Flex>
 
         {closable && onClose && (
           <Button
             appearance="link"
-            size="small"
+            size="medium"
             onClick={onClose}
             leftIcon={faTimes}
             className={styles.alertCloseButton}

@@ -11,8 +11,10 @@
   box-sizing: border-box;
 
   &--small {
-    padding: $spacing-sm;
-    font-size: 14px;
+    padding: $spacing-sm $spacing-md;
+    font-weight: 700;
+    font-size: 16px;
+    border-radius: 2px;
   }
 
   &--medium {
@@ -63,9 +65,6 @@
 }
 
 .alertContent {
-  display: flex;
-  align-items: flex-start;
-  gap: $spacing-sm;
   flex: 1;
   min-width: 0;
   overflow: hidden;

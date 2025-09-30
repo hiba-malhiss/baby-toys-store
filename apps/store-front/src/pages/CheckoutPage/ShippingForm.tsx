@@ -273,12 +273,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         </FormFieldWrapper>
         <Divider className="bts-marginVl" />
         {/* Submit */}
-        <Button
-          type="submit"
-          fullWidth
-          isLoading={placing}
-          isDisabled={placing || disableSubmit || !formState.isValid}
-        >
+        <Button type="submit" fullWidth isLoading={placing} isDisabled={placing || disableSubmit}>
           Place Order
         </Button>
       </form>
