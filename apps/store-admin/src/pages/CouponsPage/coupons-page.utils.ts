@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const ADMIN_LOCAL_DATETIME_FORMAT = 'YYYY-MM-DD[T]HH:mm:ss';
+
 export const couponSchema = z
   .object({
     code: z.string().min(5, 'Code must be at least 5 characters'),

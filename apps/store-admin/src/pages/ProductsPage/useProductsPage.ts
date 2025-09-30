@@ -11,6 +11,7 @@ export const useProductsPage = () => {
   const [sortField, setSortField] = useState('name');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('asc');
   const [searchQuery, setSearchQuery] = useState('');
+  const [onSaleOnly, setOnSaleOnly] = useState<boolean>(false);
 
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
   const [productToDelete, setProductToDelete] = useState<Product | null>(null);
@@ -23,6 +24,7 @@ export const useProductsPage = () => {
     sortBy: sortField,
     sortDirection: sortOrder.toUpperCase() as 'ASC' | 'DESC',
     query: searchQuery || undefined,
+    onSale: onSaleOnly || undefined,
   });
 
   const products = data?.content ?? [];
@@ -80,6 +82,8 @@ export const useProductsPage = () => {
     handleSort,
     searchQuery,
     handleSearch,
+    onSaleOnly,
+    setOnSaleOnly,
     selectedProducts,
     setSelectedProducts,
     productToDelete,

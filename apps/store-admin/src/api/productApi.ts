@@ -15,6 +15,7 @@ export interface UseProductsParams {
   minPrice?: number;
   maxPrice?: number;
   query?: string;
+  onSale?: boolean;
 }
 
 /** ---- Queries ---- */
@@ -31,6 +32,7 @@ export const useProducts = (params?: UseProductsParams) =>
       params?.minPrice ?? '',
       params?.maxPrice ?? '',
       params?.query ?? '',
+      params?.onSale ? 'onSale' : '',
     ],
     queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {

@@ -1,5 +1,13 @@
 import React from 'react';
-import { Card, Flex, Heading, Button, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
+import {
+  Card,
+  Flex,
+  Heading,
+  Button,
+  ConfirmDialog,
+  StringInput,
+  PriceDisplay,
+} from '@baby-toys/ui-kit';
 import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import styles from './order-details-page.module.scss';
 import { NavigateFunction } from 'react-router-dom';
@@ -71,7 +79,11 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
               <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
             </Button>
             <span className={styles.orderDetailsUnitPrice}>
-              Unit: {item?.pricePerUnit} {currency?.symbol}
+              Unit:{' '}
+              <PriceDisplay
+                price={item?.pricePerUnit}
+                oldPrice={item?.originalPrice}
+              ></PriceDisplay>
             </span>
           </Flex>
         </Flex>

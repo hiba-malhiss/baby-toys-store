@@ -1,5 +1,14 @@
 import React from 'react';
-import { Button, Flex, Table, Heading, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Table,
+  Heading,
+  ConfirmDialog,
+  StringInput,
+  Select,
+  Option,
+} from '@baby-toys/ui-kit';
 import { faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useProductsTableColumns } from './useProductsTableColumns';
@@ -13,6 +22,8 @@ const ProductsPage: React.FC = () => {
     sortField,
     products,
     sortOrder,
+    onSaleOnly,
+    setOnSaleOnly,
     selectedProducts,
     productToDelete,
     confirmDialogVisible,
@@ -42,6 +53,17 @@ const ProductsPage: React.FC = () => {
         <Flex justify="between" align="center" fullWidth>
           <Heading level="h1">Products</Heading>
           <Flex align="center" spacing="xl">
+            <Select
+              value={onSaleOnly ? 'on' : 'all'}
+              onChange={(v) => {
+                const val = String(v);
+                setOnSaleOnly(val === 'on');
+                setPage(1);
+              }}
+            >
+              <Option value="all">All</Option>
+              <Option value="on">On sale</Option>
+            </Select>
             <StringInput
               placeholder="Search products by name or id"
               value={searchValue}

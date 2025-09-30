@@ -1,6 +1,6 @@
-import { Button, Flex, Chip, Rating } from '@baby-toys/ui-kit';
+import { Button, Flex, Chip, Rating, Icon } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { faPen, faTrashAlt, faStar } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt, faStar, faCross, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Product } from '../../api/types/product.ts';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
@@ -32,7 +32,12 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
       header: 'Image',
       type: 'image',
     },
-    { field: 'name', header: 'Name', sortable: true },
+    {
+      field: 'name',
+      header: 'Name',
+      sortable: true,
+      body: (row: Product) => row.name?.slice(0, 50) + '...',
+    },
     {
       field: 'brandName',
       header: 'Brand',
@@ -78,13 +83,20 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
       body: (row: Product) => (symbol ? `${symbol}${row.price}` : String(row.price ?? '')),
     },
     {
+      field: 'oldPrice',
+      header: 'Old Price',
+      sortable: true,
+      body: (row: Product) =>
+        !row.oldPrice ? '-' : <Chip label={row.oldPrice} appearance="secondary-outline" />,
+    },
+    {
       field: 'stockQuantity',
       header: 'Stock',
       sortable: true,
       body: (row: Product) => (
-        <Chip
-          label={row.stockQuantity > 0 ? 'In Stock' : 'Out of Stock'}
-          variant={row.stockQuantity > 0 ? 'success' : 'danger'}
+        <Icon
+          icon={row.stockQuantity > 0 ? faCheck : faCross}
+          color={row.stockQuantity > 0 ? 'success' : 'error'}
         />
       ),
     },

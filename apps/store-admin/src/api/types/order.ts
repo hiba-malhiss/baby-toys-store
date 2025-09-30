@@ -13,6 +13,7 @@ export interface OrderItem {
   productName: string;
   quantity: number;
   pricePerUnit: string;
+  originalPrice: string;
   totalPrice: string;
   mainImage?: string;
 }

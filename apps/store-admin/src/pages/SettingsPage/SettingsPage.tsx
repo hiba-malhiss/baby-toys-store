@@ -9,7 +9,8 @@ import {
   StringInput,
   TextArea,
   Accordion,
-  AccordionGroup,
+  Calendar,
+  Text,
 } from '@baby-toys/ui-kit';
 import {
   useStoreSettings,
@@ -17,47 +18,31 @@ import {
   type StoreSettingUpdateItem,
 } from '../../api/settingsApi';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
+import moment from 'moment/moment';
+import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
+import { SettingsFormValues, settingsSchema } from './settings-page.util.tsx';
 
-const generalSchema = z.object({
-  currency: z.string().min(1, 'Currency is required').max(10),
-  currencySymbol: z.string().min(1, 'Currency symbol is required').max(5),
-  timezone: z.string().min(1, 'Timezone is required').max(100),
-  priceRangeMin: z
-    .string()
-    .regex(/^\d+(?:\.\d+)?$/, 'Min price must be a number')
-    .optional()
-    .default(''),
-  priceRangeMax: z
-    .string()
-    .regex(/^\d+(?:\.\d+)?$/, 'Max price must be a number')
-    .optional()
-    .default(''),
-});
-
-const contactSchema = z.object({
-  workDays: z.string().min(1, 'Working days are required').max(100),
-  workTimes: z.string().min(1, 'Working times are required').max(100),
-  phone: z.string().min(1, 'Phone is required').max(50),
-  email: z.string().email('Invalid email').max(100),
-  address: z.string().min(1, 'Address is required').max(500),
-});
-
-const policiesSchema = z.object({
-  cancelPolicy: z.string().max(4000).optional().default(''),
-  returnPolicy: z.string().max(8000).optional().default(''),
-  shippingPolicy: z.string().max(8000).optional().default(''),
-});
-
-const settingsSchema = z.object({
-  general: generalSchema,
-  contact: contactSchema,
-  policies: policiesSchema,
-});
-
-type SettingsFormValues = z.infer<typeof settingsSchema>;
+const CalendarFieldAdapter: React.FC<{
+  value?: Date | null;
+  onChange?: (d: Date | null) => void;
+  isDisabled?: boolean;
+}> = ({ value, onChange, isDisabled }) => (
+  <Calendar
+    value={value ? moment(value) : undefined}
+    onChange={(m) => {
+      const next = Array.isArray(m) ? (m[0]?.toDate?.() ?? null) : ((m as any)?.toDate?.() ?? null);
+      onChange?.(next);
+    }}
+    isDisabled={isDisabled}
+    disableFutureDates={false}
+    selectionMode="single"
+    typeView="date"
+    appendToBody
+    fullWidth
+  />
+);
 
 const SettingsPage: React.FC = () => {
   const toast = useToast();
@@ -67,14 +52,53 @@ const SettingsPage: React.FC = () => {
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema),
     defaultValues: {
-      general: { currency: '', currencySymbol: '', timezone: '' },
-      contact: { workDays: '', workTimes: '', phone: '', email: '', address: '' },
-      policies: { cancelPolicy: '', returnPolicy: '', shippingPolicy: '' },
+      general: {
+        currency: '',
+        currencySymbol: '',
+        timezone: '',
+        priceRangeMin: '',
+        priceRangeMax: '',
+      },
+      contact: {
+        workDays: '',
+        workTimes: '',
+        phone: '',
+        email: '',
+        address: '',
+      },
+      policies: {
+        cancelPolicy: '',
+        returnPolicy: '',
+        shippingPolicy: '',
+        freeShippingMinSubtotal: undefined,
+        freeShippingStartAt: undefined,
+        freeShippingEndAt: undefined,
+      },
     },
     mode: 'onBlur',
   });
 
-  const { control, handleSubmit, reset, formState } = form;
+  const { control, handleSubmit, reset, formState, setValue, clearErrors, trigger } = form;
+
+  const handleResetFreeShipping = () => {
+    setValue('policies.freeShippingMinSubtotal', null, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+    setValue('policies.freeShippingStartAt', null, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+    setValue('policies.freeShippingEndAt', null, {
+      shouldDirty: true,
+      shouldValidate: false,
+    });
+    clearErrors([
+      'policies.freeShippingMinSubtotal',
+      'policies.freeShippingStartAt',
+      'policies.freeShippingEndAt',
+    ]);
+  };
 
   useEffect(() => {
     if (!data) return;
@@ -83,8 +107,8 @@ const SettingsPage: React.FC = () => {
         currency: data.general?.currency ?? '',
         currencySymbol: data.general?.currencySymbol ?? '',
         timezone: data.general?.timezone ?? '',
-        priceRangeMin: (data.general?.priceRangeMin as string) ?? '',
-        priceRangeMax: (data.general?.priceRangeMax as string) ?? '',
+        priceRangeMin: data.general?.priceRangeMin ?? '',
+        priceRangeMax: data.general?.priceRangeMax ?? '',
       },
       contact: {
         workDays: data.contact?.workDays ?? '',
@@ -97,6 +121,13 @@ const SettingsPage: React.FC = () => {
         cancelPolicy: data.policies?.cancelPolicy ?? '',
         returnPolicy: data.policies?.returnPolicy ?? '',
         shippingPolicy: data.policies?.shippingPolicy ?? '',
+        freeShippingMinSubtotal: data.policies?.freeShippingMinSubtotal ?? undefined,
+        freeShippingStartAt: data.policies?.freeShippingStartAt
+          ? new Date(data.policies.freeShippingStartAt)
+          : undefined,
+        freeShippingEndAt: data.policies?.freeShippingEndAt
+          ? new Date(data.policies.freeShippingEndAt)
+          : undefined,
       },
     });
   }, [data, reset]);
@@ -116,9 +147,28 @@ const SettingsPage: React.FC = () => {
       { section: 'CONTACT', key: 'email', value: values.contact.email },
       { section: 'CONTACT', key: 'address', value: values.contact.address },
       // Policies
-      { section: 'POLICIES', key: 'cancelPolicy', value: values.policies.cancelPolicy || '' },
-      { section: 'POLICIES', key: 'returnPolicy', value: values.policies.returnPolicy || '' },
-      { section: 'POLICIES', key: 'shippingPolicy', value: values.policies.shippingPolicy || '' },
+      { section: 'POLICIES', key: 'cancelPolicy', value: values.policies.cancelPolicy },
+      { section: 'POLICIES', key: 'returnPolicy', value: values.policies.returnPolicy },
+      { section: 'POLICIES', key: 'shippingPolicy', value: values.policies.shippingPolicy },
+      {
+        section: 'POLICIES',
+        key: 'freeShippingMinSubtotal',
+        value: values.policies.freeShippingMinSubtotal ?? null,
+      },
+      {
+        section: 'POLICIES',
+        key: 'freeShippingStartAt',
+        value: values.policies.freeShippingStartAt
+          ? moment(values.policies.freeShippingStartAt).format(ADMIN_LOCAL_DATETIME_FORMAT)
+          : null,
+      },
+      {
+        section: 'POLICIES',
+        key: 'freeShippingEndAt',
+        value: values.policies.freeShippingEndAt
+          ? moment(values.policies.freeShippingEndAt).format(ADMIN_LOCAL_DATETIME_FORMAT)
+          : null,
+      },
     ];
 
     try {
@@ -263,6 +313,47 @@ const SettingsPage: React.FC = () => {
                 >
                   <TextArea rows={4} placeholder="Describe shipping policy" />
                 </FormFieldWrapper>
+              </Flex>
+            </Accordion>
+
+            {/* Free Shipping Section */}
+            <Accordion header="Free Shipping" buttonAppearance="outline">
+              <Flex spacing="m" fullWidth direction="vertical">
+                <Text color="muted" size="sm">
+                  Note: Free shipping applies when order subtotal ≥ threshold and now is within the
+                  configured period and threshold is greater than 0.
+                </Text>
+                <Flex align="end" spacing="m" fullWidth>
+                  <FormFieldWrapper
+                    control={control}
+                    name="policies.freeShippingMinSubtotal"
+                    label="Minimum Subtotal"
+                    fullWidth
+                  >
+                    <StringInput placeholder="50.00" type="number" />
+                  </FormFieldWrapper>
+                  <Button type="button" appearance="outline" onClick={handleResetFreeShipping}>
+                    Clear
+                  </Button>
+                </Flex>
+                <Flex fullWidth spacing="m">
+                  <FormFieldWrapper
+                    control={control}
+                    name="policies.freeShippingStartAt"
+                    label="Starts At"
+                    fullWidth
+                  >
+                    <CalendarFieldAdapter />
+                  </FormFieldWrapper>
+                  <FormFieldWrapper
+                    control={control}
+                    name="policies.freeShippingEndAt"
+                    label="Ends At"
+                    fullWidth
+                  >
+                    <CalendarFieldAdapter />
+                  </FormFieldWrapper>
+                </Flex>
               </Flex>
             </Accordion>
 

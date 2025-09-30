@@ -52,10 +52,11 @@
   }
 
   &-unitPrice {
-    font-size: 13px;
-    color: $color-text-grey-light;
     padding-top: 4px;
-    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
   }
 
   &-quantityLabel {

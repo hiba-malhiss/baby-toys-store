@@ -89,9 +89,19 @@ const ProductFormPage: React.FC = () => {
                 />
               </FormFieldWrapper>
 
-              <FormFieldWrapper name="price" control={control} label="Price" fullWidth required>
-                <StringInput type="number" disabled={isDeletingImage} />
-              </FormFieldWrapper>
+              <Flex spacing="l" fullWidth>
+                <FormFieldWrapper name="price" control={control} label="Price" fullWidth required>
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
+                </FormFieldWrapper>
+                <FormFieldWrapper
+                  name="oldPrice"
+                  control={control}
+                  label="Old Price (optional)"
+                  fullWidth
+                >
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
+                </FormFieldWrapper>
+              </Flex>
 
               <FormFieldWrapper
                 name="stockQuantity"
