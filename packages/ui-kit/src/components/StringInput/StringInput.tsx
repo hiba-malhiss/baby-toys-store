@@ -16,7 +16,7 @@ export interface StringInputProps {
   max?: string | number;
   value?: string | number;
   onChange?: (val: string | number, byControls: boolean) => void;
-  onBlur?: () => void;
+  onFocus?: () => void;
   placeholder?: string;
   icon?: any;
   iconRight?: any;
@@ -47,6 +47,7 @@ const StringInput: React.FC<StringInputProps> = ({
   max,
   value,
   onChange,
+  onFocus,
   placeholder = '',
   icon,
   iconRight,
@@ -61,7 +62,6 @@ const StringInput: React.FC<StringInputProps> = ({
   withControls = false,
   hasError,
   maxTooltip,
-  onBlur,
   readOnly = false,
   showCounter = false,
   maxLength,
@@ -111,6 +111,10 @@ const StringInput: React.FC<StringInputProps> = ({
       const parsed = parseFloat(trimmed);
       if (!isNaN(parsed)) {
         onChange?.(parsed as any, byControls);
+        if (parsed && max && parsed >= max && maxTooltip) {
+          setShowMaxTooltip(true);
+          setTimeout(() => setShowMaxTooltip(false), 1500);
+        }
       } else {
         // Keep previous behavior for other non-numeric cases
         onChange?.(NaN as any, byControls);
@@ -130,14 +134,6 @@ const StringInput: React.FC<StringInputProps> = ({
 
     const minVal = min !== undefined ? parseFloat(String(min)) : undefined;
     const maxVal = max !== undefined ? parseFloat(String(max)) : undefined;
-
-    const isMax = maxVal !== undefined && current === maxVal;
-
-    if (step > 0 && isMax && maxTooltip) {
-      setShowMaxTooltip(true);
-      setTimeout(() => setShowMaxTooltip(false), 1500);
-      return;
-    }
 
     if (minVal !== undefined && next < minVal) return;
     if (maxVal !== undefined && next > maxVal) return;
@@ -201,6 +197,7 @@ const StringInput: React.FC<StringInputProps> = ({
           readOnly={readOnly}
           placeholder={placeholder}
           value={currentStr}
+          onFocus={() => onFocus?.()}
           onChange={(e) => handleChange(e.target.value)}
           className={clsx(inputClass, truncateOverflow && styles.inputTruncate)}
           title={typeof currentStr === 'string' ? currentStr : undefined}
