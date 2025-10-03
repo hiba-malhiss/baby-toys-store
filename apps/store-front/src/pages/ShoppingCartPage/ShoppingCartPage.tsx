@@ -12,7 +12,7 @@ import { useStoreSettings } from '../../api/settingsApi';
 import { useCartQuery, useRemoveFromCart } from '../../api/cartApi';
 
 const ShoppingCartPage = () => {
-  const { data: cart, isPending } = useCartQuery();
+  const { data: cart, isLoading } = useCartQuery();
   const removeMutation = useRemoveFromCart();
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
@@ -21,11 +21,10 @@ const ShoppingCartPage = () => {
   const items = cart?.items || [];
   const subtotal = cart?.subtotal || 0;
 
-  if (!isPending && items.length === 0) {
+  if (!isLoading && items.length === 0) {
     return (
       <PageContainer
         isBreadcrumbHidden
-        isLoading={false}
         className={clsx(
           styles.shoppingCartPage,
           items.length === 0 && styles.shoppingCartPageIsEmpty
@@ -48,7 +47,7 @@ const ShoppingCartPage = () => {
       header="Your Shopping Cart"
       className={styles.shoppingCartPage}
       isBreadcrumbHidden
-      isLoading={isPending}
+      isLoading={isLoading}
       isMaskLoading={removeMutation.isPending}
     >
       <div className={styles.shoppingCartPageTable}>
