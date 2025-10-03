@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ViewSwitcher, useToast, NoDataFound } from '@baby-toys/ui-kit';
+import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit';
 import { useAuth } from '../../context/AuthContext';
 import { useAddToCart } from '../../api/cartApi';
-import { useLoginDialogStore } from '../../store/useLoginDialogStore';
 import { useCartStore } from '../../store/useCartStore';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
@@ -15,9 +14,7 @@ const PAGE_SIZE = 5;
 const OrderHistoryPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const toast = useToast();
   const addToCartMutation = useAddToCart();
-  const { open: openLoginDialog } = useLoginDialogStore();
   const { openShippingCartDrawer } = useCartStore();
 
   const [reviewDialog, setReviewDialog] = useState<{ open: boolean; item: OrderItem } | null>(null);
@@ -41,11 +38,6 @@ const OrderHistoryPage: React.FC = () => {
   const totalSize = data?.totalElements ?? 0;
 
   const handleBuyAgain = async (product: any) => {
-    if (!isAuthenticated) {
-      toast.info('Please log in to add items to your cart.');
-      openLoginDialog();
-      return;
-    }
     await addToCartMutation.mutateAsync({
       productId: Number(product?.id || product?.productId || 0),
       quantity: 1,

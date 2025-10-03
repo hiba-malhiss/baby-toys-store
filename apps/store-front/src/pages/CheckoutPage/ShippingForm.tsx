@@ -58,7 +58,10 @@ const shippingSchema = z.object({
   region: z.string().min(1, 'Village/Region is required'),
   address: z.string().min(1, 'Detailed address is required'),
   town: z.string().min(1, 'Town is required'),
-  phone: z.string().min(1, 'Phone number is required'),
+  phone: z
+    .string()
+    .regex(/^[0-9+\-\s()]{7,20}$/, 'Invalid phone number')
+    .min(1, 'Phone number is required'),
   saveAddress: z.boolean().default(true),
   couponCode: z.string().optional(),
   shippingOptionId: z.string().optional(),

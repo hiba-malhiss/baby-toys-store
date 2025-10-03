@@ -15,7 +15,6 @@ import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-sv
 import clsx from 'clsx';
 import { useAddToCart } from '../../../api/cartApi';
 import { useAuth } from '../../../context/AuthContext';
-import { useLoginDialogStore } from '../../../store/useLoginDialogStore';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { StringInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
@@ -30,7 +29,6 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   const symbol = settings?.general?.currencySymbol;
   const addToCartMutation = useAddToCart();
   const { isAuthenticated } = useAuth();
-  const { open: openLoginDialog } = useLoginDialogStore();
   const { openShippingCartDrawer } = useCartStore();
   const toast = useToast();
 
@@ -128,11 +126,6 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
             isDisabled={!isAuthenticated || addToCartMutation.isPending}
             isLoading={addToCartMutation.isPending}
             onClick={async () => {
-              if (!isAuthenticated) {
-                toast.info('Please log in to add items to your cart.');
-                openLoginDialog();
-                return;
-              }
               await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity });
               openShippingCartDrawer();
             }}

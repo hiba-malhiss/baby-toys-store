@@ -17,7 +17,7 @@ import { useCartQuery } from '../../api/cartApi';
 
 const CheckoutPage: React.FC = () => {
   const { data: cart, isPending: cartLoading } = useCartQuery();
-  const { data: addresses, isPending: addressesLoading } = useMyAddresses();
+  const { data: addresses, isLoading: addressesLoading } = useMyAddresses();
   const { data: settings } = useStoreSettings();
 
   const placeOrder = usePlaceOrder();
@@ -95,7 +95,9 @@ const CheckoutPage: React.FC = () => {
         },
         saveAddress: values.saveAddress,
         couponCode: values.couponCode?.trim() || undefined,
-        shippingOptionId: values.shippingOptionId ?? selectedShipping?.id,
+        shippingOptionId: values.shippingOptionId
+          ? Number(values.shippingOptionId)
+          : (selectedShipping?.id ?? null),
       });
       navigate('/home');
     } catch {

@@ -20,7 +20,7 @@ export function useActiveShippingOptions() {
   return useQuery<ShippingOption[]>({
     queryKey: [SHIPPING_OPTIONS_KEYS.active],
     queryFn: async () => {
-      const res = await api.get<ApiEnvelope<ShippingOption[]>>('/api/customer/shipping-options');
+      const res = await api.get<ApiEnvelope<ShippingOption[]>>('/api/shipping-options');
       return res.data.data || [];
     },
     staleTime: 60_000,

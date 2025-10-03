@@ -75,9 +75,10 @@ export const useLogout = () =>
     },
   });
 
-export const useFetchProfile = () =>
+export const useFetchProfile = (enabled: boolean = true) =>
   useQuery<User, AxiosError>({
     queryKey: ['profile'],
+    enabled,
     queryFn: async () => {
       const response = await api.get<ApiEnvelope<User>>('/users/profile');
       return response.data.data;
