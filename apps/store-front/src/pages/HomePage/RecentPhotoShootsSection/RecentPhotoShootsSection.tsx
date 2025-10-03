@@ -8,6 +8,8 @@ const RecentPhotoShoots = () => {
   const { data, isLoading } = useHomePageContent();
   const gallery = (data?.galleryImages || []) as GalleryImageDto[];
 
+  if (!gallery?.length) return null;
+
   return (
     <Section
       title="Recent photo Shoots"

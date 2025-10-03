@@ -82,7 +82,7 @@ const Drawer: React.FC<DrawerProps> = ({
         onClick={(e) => e.stopPropagation()}
       >
         <div className={styles.drawerHeader}>
-          {header && <div className={styles.drawerTitle}>{header}</div>}
+          {header && <div>{header}</div>}
           {closable && (
             <Button
               appearance="link"

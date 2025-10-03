@@ -14,7 +14,6 @@ import styles from './product-overview.module.scss';
 import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useAddToCart } from '../../../api/cartApi';
-import { useAuth } from '../../../context/AuthContext';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { StringInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
@@ -22,15 +21,16 @@ import { socialMediaLinks } from '../../../components/Layout/Footer/footer.const
 import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
 import { useCartStore } from '../../../store/useCartStore';
 import { shareProduct } from '../../../utils/share.ts';
+import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
 
 export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol;
   const addToCartMutation = useAddToCart();
-  const { isAuthenticated } = useAuth();
   const { openShippingCartDrawer } = useCartStore();
   const toast = useToast();
+  const formatCurrency = useCurrencyFormatter(symbol);
 
   // Use favorite hook here for this product
   const { isFavorite, isLoading, toggleFavorite } = useWishlist(product);
@@ -71,19 +71,17 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
     <div className={styles.productOverview}>
       <ImageGallery images={product.images} productName={product.name} />
       <Flex direction="vertical">
-        <Heading level="h2" className="bts-marginBxxl">
+        <Heading level="h3" className="bts-marginBxxl">
           {product.name}
         </Heading>
         <Heading
           level="h2"
           className={clsx('bts-marginBl', product.oldPrice && styles.productOverviewWithDiscount)}
         >
-          <span className={styles.productOverviewPriceNew}>
-            {symbol ? `${symbol}${product.price}` : product.price}
-          </span>
+          <span className={styles.productOverviewPriceNew}>{formatCurrency(product.price)}</span>
           {product.oldPrice && (
             <span className={styles.productOverviewPriceOld}>
-              {symbol ? `${symbol}${product.oldPrice}` : product.oldPrice}
+              {formatCurrency(product.oldPrice)}
             </span>
           )}
         </Heading>
@@ -123,7 +121,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           />
           <Button
             leftIcon={faShoppingCart}
-            isDisabled={!isAuthenticated || addToCartMutation.isPending}
+            isDisabled={addToCartMutation.isPending}
             isLoading={addToCartMutation.isPending}
             onClick={async () => {
               await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity });
@@ -144,7 +142,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
 
           <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
         </Flex>
-        {product.details?.length && (
+        {!!product.details?.length && (
           <Card fullWidth size="small" header="Item details">
             <ExpandableContent>
               <div className={styles.productOverviewDetails}>

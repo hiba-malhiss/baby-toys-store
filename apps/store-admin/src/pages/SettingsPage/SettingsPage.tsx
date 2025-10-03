@@ -223,7 +223,7 @@ const SettingsPage: React.FC = () => {
                   label="Price Range Min"
                   fullWidth
                 >
-                  <StringInput placeholder="0" />
+                  <StringInput placeholder="0" type="number" />
                 </FormFieldWrapper>
                 <FormFieldWrapper
                   required
@@ -232,7 +232,7 @@ const SettingsPage: React.FC = () => {
                   label="Price Range Max"
                   fullWidth
                 >
-                  <StringInput placeholder="300" />
+                  <StringInput placeholder="300" type="number" />
                 </FormFieldWrapper>
               </Flex>
             </Accordion>

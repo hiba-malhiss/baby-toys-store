@@ -1,12 +1,3 @@
-.freeShippingIndicator {
-  @include free-shipping-indicator();
-
-  &::before {
-    content: '🎉';
-    margin-right: $spacing-xs;
-  }
-}
-
 .subtotalRow {
   display: flex;
   justify-content: space-between;

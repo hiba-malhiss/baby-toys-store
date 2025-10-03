@@ -6,7 +6,7 @@ const PolicyCardsSection = () => {
   const { data, isLoading } = useHomePageContent();
   const infoCards = (data?.infoCards ?? []) as InfoCardDto[];
 
-  if (isLoading) {
+  if (isLoading || !infoCards?.length) {
     return null;
   }
 

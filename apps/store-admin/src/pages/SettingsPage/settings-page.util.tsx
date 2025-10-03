@@ -4,16 +4,8 @@ export const generalSchema = z.object({
   currency: z.string().min(1, 'Currency is required').max(10),
   currencySymbol: z.string().min(1, 'Currency symbol is required').max(5),
   timezone: z.string().min(1, 'Timezone is required').max(100),
-  priceRangeMin: z
-    .string()
-    .regex(/^\d+(\.\d+)?$/, 'Min price must be a number')
-    .optional()
-    .default(''),
-  priceRangeMax: z
-    .string()
-    .regex(/^\d+(\.\d+)?$/, 'Max price must be a number')
-    .optional()
-    .default(''),
+  priceRangeMin: z.number().optional(),
+  priceRangeMax: z.number().optional(),
 });
 
 export const contactSchema = z.object({

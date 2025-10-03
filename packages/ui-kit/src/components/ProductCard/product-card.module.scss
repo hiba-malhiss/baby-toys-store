@@ -110,10 +110,11 @@
       @include line-clamp(2);
       width: 100%;
       line-height: 20px;
+      font-size: 18px;
     }
 
     &-description {
-      @include line-clamp(5);
+      @include line-clamp(4);
       width: 100%;
       margin: 16px 0 10px 0;
       color: $color-text-grey;
@@ -142,6 +143,10 @@
   }
 
   // Show buttons on hover for vertical cards
+  &--vertical .productCard-info-name {
+    @include line-clamp(1);
+  }
+
   &--vertical .productCard-buttons {
     opacity: 0;
     transform: translateY(-10px);
