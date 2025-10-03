@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "home": "Home",
+    "welcome": "Welcome to Baby Toy Store",
+    "shop": "Shop",
+    "cart": "Shopping Cart",
+    "wishlist": "Wishlist",
+    "checkoutLabel": "Checkout",
+    "orders": "Orders",
+    "contact": "Contact Us",
+    "policies": "Policies",
+    "admin": "Admin"
+  },
+  "admin": {
+    "redirecting": "Redirecting to admin panel..."
+  },
+  "cart": {
+    "header": "Your Shopping Cart",
+    "empty": "Oops! No toys here...",
+    "browse": "Browse Toys",
+    "subtotal": "Subtotal",
+    "proceed": "Proceed to checkout",
+    "placeOrder": "Place order",
+    "goToCart": "Go To Shopping Cart",
+    "orderSummary": "Order Summary",
+    "headers": {
+      "product": "Product",
+      "name": "Name",
+      "price": "Price",
+      "quantity": "Quantity",
+      "subtotal": "Subtotal",
+      "action": "Action"
+    }
+  },
+  "product": {
+    "addToCart": "Add to cart",
+    "details": "Item details",
+    "recentShoots": "Recent photo Shoots",
+    "checkGallery": "Check gallery",
+    "tabs": {
+      "description": "Description",
+      "reviews": "Reviews",
+      "cancelPolicy": "Cancellation Policy",
+      "returnPolicy": "Return Policy"
+    },
+    "policies": {
+      "noCancel": "No cancellation policy available.",
+      "noReturn": "No return policy available."
+    }
+  },
+  "common": {
+    "subtotal": "Subtotal",
+    "freeShipping": "Free shipping",
+    "onlyLeft": "Only {{count}} left in stock",
+    "largeQuantity": "Large quantity selected (max 100)"
+  },
+  "shop": {
+    "all": "All",
+    "allCategories": "All Categories",
+    "sortBy": "Sort by",
+    "resultsSummary": "Showing {{from}}–{{to}} of {{total}} results",
+    "sort": {
+      "rating": "Featured",
+      "sales": "Best Seller",
+      "createdAt": "New Arrivals",
+      "price_asc": "Price: Low to High",
+      "price_desc": "Price: High to Low"
+    }
+  },
+  "filters": {
+    "header": "Filters",
+    "none": "No filters applied",
+    "headerWithCount": "Filters ({{count}})",
+    "clear": "Clear Filters",
+    "category": "Category",
+    "color": "Color",
+    "brand": "Brand",
+    "material": "Material",
+    "price": "Price"
+  },
+  "policies": {
+    "header": "Policies",
+    "returnPolicy": "Return Policy",
+    "shippingPolicy": "Shipping Policy",
+    "cancelPolicy": "Cancellation Policy"
+  },
+  "checkout": {
+    "shippingInfo": "Shipping Information",
+    "cartSummary": "Your Shopping Cart",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "freeShippingApplied": "Free Shipping Applied",
+    "total": "Total",
+    "invalidCoupon": "Invalid coupon",
+    "validateCouponFailed": "Failed to validate coupon",
+    "placeOrderFailed": "Failed to place order. Please try again.",
+    "form": {
+      "alertUsingSaved": "Using your saved shipping information",
+      "useDifferentAddress": "Use different shipping address",
+      "country": "Country",
+      "selectCountry": "Select country",
+      "countryOptions": {
+        "palestine": "Palestine"
+      },
+      "firstName": "First Name",
+      "lastName": "Last Name",
+      "town": "Town",
+      "region": "Village or Region",
+      "address": "Detailed Address",
+      "phone": "Phone Number",
+      "shippingMethod": "Shipping Method",
+      "selectShipping": "Select shipping option",
+      "coupon": "Coupon Code (optional)"
+    }
+  },
+  "orders": {
+    "header": "Order History",
+    "emptyTitle": "No orders found.",
+    "emptySubtitle": "You haven't placed any orders yet."
+  },
+  "wishlist": {
+    "header": "My Wish List",
+    "loginPromptTitle": "It is empty here.",
+    "loginPromptSubtitle": "Personalize your shopping experience with your Wishlist.",
+    "login": "Login",
+    "emptyTitle": "Your wish list is empty",
+    "emptySubtitle": "Store everything you love on one page."
+  },
+  "contact": {
+    "header": "Contact",
+    "title": "Contact us",
+    "name": "Name",
+    "subject": "Subject",
+    "email": "Email",
+    "phoneNumber": "Phone Number",
+    "message": "Message",
+    "placeholder": {
+      "name": "Enter your name",
+      "subject": "Enter subject",
+      "email": "Enter your email",
+      "phone": "Enter your phone number",
+      "message": "Enter your message"
+    },
+    "send": "Send Message",
+    "thankYou": "Thank you for reaching out!",
+    "sendFailed": "Failed to send message. Please try again later.",
+    "phone": "Phone",
+    "address": "Address"
+  },
+  "footer": {
+    "description": "Bringing you quality products at affordable prices.",
+    "explore": "Explore",
+    "customerService": "Customer Service",
+    "links": {
+      "Shop": "Shop",
+      "Wish List": "Wish List",
+      "Contact Us": "Contact Us",
+      "Return Policy": "Return Policy",
+      "Shipping Policy": "Shipping Policy"
+    },
+    "info": {
+      "phone": "Call us:",
+      "email": "Email us:"
+    }
+  },
+  "home": {
+    "topPicks": {
+      "title": "Top picks for your little ones",
+      "viewAll": "View all {{label}}"
+    },
+    "shopNow": {
+      "title": "Play, learn, & grow!",
+      "subtitle": "Crafting smiles with every toy, made for learning, fun, and growth",
+      "cta": "Shop now"
+    },
+    "collection": {
+      "title": "Find The Perfect Toy",
+      "subtitle": "Our Collections"
+    },
+    "reviews": {
+      "title": "Hear from Other Happy Parents",
+      "subtitle": "Customer testimonials"
+    }
+  },
+  "related": {
+    "title": "Related products"
+  },
+  "highlights": {
+    "youMayAlsoLike": "You May Also Like"
+  },
+  "auth": {
+    "verifyEmail": {
+      "success": "Email verified successfully! You can now log in.",
+      "invalidLink": "Invalid or expired verification link",
+      "verifying": "Verifying your email...",
+      "failed": "Verification Failed",
+      "failedDetail": "Failed to verify email. The link may have expired or is invalid.",
+      "goHome": "Go to Home"
+    },
+    "reset": {
+      "invalidLink": "Invalid or expired reset link",
+      "success": "Password has been reset successfully",
+      "failed": "Failed to reset password",
+      "header": "Reset Your Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "placeholder": {
+        "newPassword": "Enter new password",
+        "confirmNewPassword": "Confirm new password"
+      },
+      "submit": "Reset Password"
+    },
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "freeShipping": {
+    "unlocked": "🎉 You’ve unlocked free shipping!",
+    "addMore": "Add {{amount}} more to unlock free shipping 🚚",
+    "overThreshold": "Free shipping on orders over {{amount}} 🚚"
+  }
+}

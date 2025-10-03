@@ -3,31 +3,33 @@ import { useSearchParams } from 'react-router-dom';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { AccordionGroup, Accordion } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../api/settingsApi';
+import { useTranslation } from 'react-i18next';
 
 const PoliciesPage: React.FC = () => {
   const { data: settings, isLoading } = useStoreSettings();
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedPolicy = searchParams.get('section') || '';
+  const { t } = useTranslation('common');
 
   const policies = useMemo(
     () => [
       {
         key: 'returnPolicy',
-        title: 'Return Policy',
+        title: t('policies.returnPolicy'),
         content: settings?.policies?.returnPolicy || '',
       },
       {
         key: 'shippingPolicy',
-        title: 'Shipping Policy',
+        title: t('policies.shippingPolicy'),
         content: settings?.policies?.shippingPolicy || '',
       },
       {
         key: 'cancelPolicy',
-        title: 'Cancel Policy',
+        title: t('policies.cancelPolicy'),
         content: settings?.policies?.cancelPolicy || '',
       },
     ],
-    [settings?.policies]
+    [settings?.policies, t]
   );
 
   const handleAccordionToggle = (key: string) => {
@@ -36,7 +38,7 @@ const PoliciesPage: React.FC = () => {
   };
 
   return (
-    <PageContainer header="Policies" isLoading={isLoading} className="bts-marginBxxl">
+    <PageContainer header={t('policies.header')} isLoading={isLoading} className="bts-marginBxxl">
       <AccordionGroup activeKey={selectedPolicy} onChange={(key) => handleAccordionToggle(key)}>
         {policies.map(({ key, title, content }) => (
           <Accordion

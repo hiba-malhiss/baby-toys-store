@@ -3,17 +3,19 @@ import Section from '../../../components/features/Section/Section.tsx';
 import { useHomePageContent } from '../../../api/homepageApi';
 import type { GalleryImageDto } from '../../../api/types/homepage';
 import styles from './recent-photo-shoots-section.module.scss';
+import { useTranslation } from 'react-i18next';
 
 const RecentPhotoShoots = () => {
   const { data, isLoading } = useHomePageContent();
+  const { t } = useTranslation('common');
   const gallery = (data?.galleryImages || []) as GalleryImageDto[];
 
   if (!gallery?.length) return null;
 
   return (
     <Section
-      title="Recent photo Shoots"
-      subTitle="Check gallery"
+      title={t('product.recentShoots')}
+      subTitle={t('product.checkGallery', { defaultValue: 'Check gallery' })}
       compactPadding
       isLoading={isLoading}
     >

@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { StringInput } from '@baby-toys/ui-kit';
+import { useTranslation } from 'react-i18next';
 import Icon from '@baby-toys/ui-kit/components/Icon/Icon';
 import { useUpdateCartItem } from '../../api/cartApi';
 
@@ -22,6 +23,7 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
 }) => {
   const updateMutation = useUpdateCartItem();
   const isLoading = updateMutation.isPending;
+  const { t } = useTranslation('common');
 
   const [localQty, setLocalQty] = useState<number>(quantity);
   const prevQtyRef = useRef<number>(quantity);
@@ -81,8 +83,8 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
   }, []);
 
   const maxTooltip = useMemo(
-    () => (availableInStock ? `Only ${availableInStock} left in stock` : undefined),
-    [availableInStock]
+    () => (availableInStock ? t('onlyLeft', { count: availableInStock }) : undefined),
+    [availableInStock, t]
   );
 
   return (

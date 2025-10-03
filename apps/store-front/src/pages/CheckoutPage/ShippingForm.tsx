@@ -13,6 +13,7 @@ import {
 import { type ShippingOption, useActiveShippingOptions } from '../../api/shippingOptionsApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './checkout-page.module.scss';
+import { useTranslation } from 'react-i18next';
 
 export type ShippingFormValues = {
   country: string;
@@ -103,6 +104,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   const { data: shippingOptions = [], isPending: loadingShipping } = useActiveShippingOptions();
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol || '';
+  const { t } = useTranslation('common');
 
   const shippingSelectOptions = useMemo(
     () =>
@@ -167,7 +169,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
       <form onSubmit={handleSubmit(onSubmit)} className={styles.checkoutPageForm}>
         {/* Alert for saved address */}
         {isAuthenticated && usingSavedAddress && (
-          <Alert icon={faCheck} title="Using your saved shipping information">
+          <Alert icon={faCheck} title={t('checkout.form.alertUsingSaved')}>
             <Button
               appearance="link"
               color="primary"
@@ -189,43 +191,46 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
                 setUsingSavedAddress(false);
               }}
             >
-              Use different shipping address
+              {t('checkout.form.useDifferentAddress')}
             </Button>
           </Alert>
         )}
 
         {/* Country */}
-        <FormFieldWrapper required name="country" control={control} label="Country">
-          <Select options={COUNTRIES} placeholder="Select country" />
+        <FormFieldWrapper required name="country" control={control} label={t('checkout.form.country')}>
+          <Select
+            options={COUNTRIES.map((c) => ({ ...c, label: t(`checkout.form.countryOptions.${c.value}`, { defaultValue: c.label }) }))}
+            placeholder={t('checkout.form.selectCountry')}
+          />
         </FormFieldWrapper>
 
         {/* First + Last name */}
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper required name="firstName" control={control} label="First Name">
+          <FormFieldWrapper required name="firstName" control={control} label={t('checkout.form.firstName')}>
             <StringInput fullWidth />
           </FormFieldWrapper>
-          <FormFieldWrapper required name="lastName" control={control} label="Last Name">
+          <FormFieldWrapper required name="lastName" control={control} label={t('checkout.form.lastName')}>
             <StringInput fullWidth />
           </FormFieldWrapper>
         </div>
 
         {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper required name="town" control={control} label="Town">
+          <FormFieldWrapper required name="town" control={control} label={t('checkout.form.town')}>
             <StringInput fullWidth />
           </FormFieldWrapper>
-          <FormFieldWrapper required name="region" control={control} label="Village or Region">
+          <FormFieldWrapper required name="region" control={control} label={t('checkout.form.region')}>
             <StringInput fullWidth />
           </FormFieldWrapper>
         </div>
 
         {/* Address */}
-        <FormFieldWrapper required name="address" control={control} label="Detailed Address">
+        <FormFieldWrapper required name="address" control={control} label={t('checkout.form.address')}>
           <StringInput fullWidth />
         </FormFieldWrapper>
 
         {/* Phone */}
-        <FormFieldWrapper required name="phone" control={control} label="Phone Number">
+        <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
           <StringInput fullWidth />
         </FormFieldWrapper>
 
@@ -234,17 +239,17 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           required
           name="shippingOptionId"
           control={control}
-          label="Shipping Method"
+          label={t('checkout.form.shippingMethod')}
         >
           <Select
             options={shippingSelectOptions}
             isLoading={loadingShipping}
-            placeholder="Select shipping option"
+            placeholder={t('checkout.form.selectShipping')}
           />
         </FormFieldWrapper>
 
         {/* Coupon */}
-        <FormFieldWrapper name="couponCode" control={control} label="Coupon Code (optional)">
+        <FormFieldWrapper name="couponCode" control={control} label={t('checkout.form.coupon')}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <StringInput
               fullWidth

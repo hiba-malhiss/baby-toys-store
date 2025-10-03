@@ -199,6 +199,7 @@ function ViewSwitcher({
 
           <span className={styles.containerResultsInfo}>
             Showing {totalSize === 0 ? 0 : startIdx}–{endIdx} of {totalSize} results
+            {/*{t('shop.resultsSummary', { from, to, total: totalSize })}*/}
           </span>
         </Flex>
       )}

@@ -14,6 +14,7 @@ import { useStoreSettings } from '../../api/settingsApi';
 import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
 import { useCheckoutQuote, type QuoteResponse } from '../../api/checkoutApi';
 import { useCartQuery } from '../../api/cartApi';
+import { useTranslation } from 'react-i18next';
 
 const CheckoutPage: React.FC = () => {
   const { data: cart, isPending: cartLoading } = useCartQuery();
@@ -26,6 +27,7 @@ const CheckoutPage: React.FC = () => {
   const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const toast = useToast();
+  const { t } = useTranslation('common');
 
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
@@ -56,12 +58,12 @@ const CheckoutPage: React.FC = () => {
           setQuote(resp);
           // If user provided a code and backend says invalid, inform via toast
           if (code && (!resp.coupon || resp.coupon.valid === false)) {
-            toast.error(resp.coupon?.message || 'Invalid coupon');
+            toast.error(resp.coupon?.message || t('checkout.invalidCoupon'));
           }
         },
         onError: () => {
           setQuote(null);
-          if (code) toast.error('Failed to validate coupon');
+          if (code) toast.error(t('checkout.validateCouponFailed'));
         },
       }
     );
@@ -101,7 +103,7 @@ const CheckoutPage: React.FC = () => {
       });
       navigate('/home');
     } catch {
-      toast.error('Failed to place order. Please try again.');
+      toast.error(t('checkout.placeOrderFailed'));
     }
   };
 
@@ -109,7 +111,7 @@ const CheckoutPage: React.FC = () => {
     <PageContainer isLoading={cartLoading || addressesLoading} isMaskLoading={placeOrder.isPending}>
       <div className={styles.checkoutPage}>
         {/* Shipping Info */}
-        <Card fullWidth header="Shipping Information">
+        <Card fullWidth header={t('checkout.shippingInfo')}>
           <ShippingForm
             isAuthenticated={isAuthenticated}
             addresses={addresses}
@@ -123,7 +125,7 @@ const CheckoutPage: React.FC = () => {
         </Card>
 
         {/* Cart Summary */}
-        <Card className={styles.checkoutPageSummary} fullWidth header="Your Shopping Cart">
+        <Card className={styles.checkoutPageSummary} fullWidth header={t('checkout.cartSummary')}>
           <div className={styles.checkoutPageSummaryList}>
             {cart?.items?.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
@@ -139,27 +141,27 @@ const CheckoutPage: React.FC = () => {
           </div>
 
           <div className={styles.checkoutPageSummaryRow}>
-            <span>Subtotal</span>
+            <span>{t('common.subtotal')}</span>
             <span>{formatCurrency(subtotal)}</span>
           </div>
           {couponApplied && discountAmount > 0 && (
             <div className={styles.checkoutPageSummaryRow}>
-              <span>Discount</span>
+              <span>{t('checkout.discount')}</span>
               <span>-{formatCurrency(discountAmount)}</span>
             </div>
           )}
           <div className={styles.checkoutPageSummaryRow}>
             <span>
-              Shipping{' '}
+              {t('checkout.shipping')}{' '}
               {quote?.freeShipping && (
-                <Chip label="Free Shipping Applied" appearance="success" size="small" />
+                <Chip label={t('checkout.freeShippingApplied')} appearance="success" size="small" />
               )}
             </span>
             <span>{shippingCost == null ? '-' : formatCurrency(shippingCost)}</span>
           </div>
           <Divider className="bts-marginBl" />
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
-            <span>Total</span>
+            <span>{t('checkout.total')}</span>
             <span>{isQuoting ? <BouncingDotsLoader size="small" /> : formatCurrency(total)}</span>
           </div>
         </Card>

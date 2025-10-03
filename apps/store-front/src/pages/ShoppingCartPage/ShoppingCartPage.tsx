@@ -1,6 +1,7 @@
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { Button, Card, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
+import { useTranslation } from 'react-i18next';
 import { PriceDisplay } from '@baby-toys/ui-kit';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import { useStoreSettings } from '../../api/settingsApi';
 import { useCartQuery, useRemoveFromCart } from '../../api/cartApi';
 
 const ShoppingCartPage = () => {
+  const { t } = useTranslation('common');
   const { data: cart, isLoading } = useCartQuery();
   const removeMutation = useRemoveFromCart();
   const navigate = useNavigate();
@@ -32,8 +34,8 @@ const ShoppingCartPage = () => {
       >
         <NoDataFound
           icon={faBoxOpen}
-          message="Oops! No toys here..."
-          buttonText="Browse Toys"
+          message={t('cart.empty')}
+          buttonText={t('cart.browse')}
           onButtonClick={() => {
             navigate('/shop');
           }}
@@ -44,7 +46,7 @@ const ShoppingCartPage = () => {
 
   return (
     <PageContainer
-      header="Your Shopping Cart"
+      header={t('cart.header')}
       className={styles.shoppingCartPage}
       isBreadcrumbHidden
       isLoading={isLoading}
@@ -52,12 +54,12 @@ const ShoppingCartPage = () => {
     >
       <div className={styles.shoppingCartPageTable}>
         <div className={styles.shoppingCartPageTableHeader}>
-          <div>Product</div>
-          <div>Name</div>
-          <div>Price</div>
-          <div>Quantity</div>
-          <div>Subtotal</div>
-          <div>Action</div>
+          <div>{t('cart.headers.product')}</div>
+          <div>{t('cart.headers.name')}</div>
+          <div>{t('cart.headers.price')}</div>
+          <div>{t('cart.headers.quantity')}</div>
+          <div>{t('cart.headers.subtotal')}</div>
+          <div>{t('cart.headers.action')}</div>
         </div>
 
         <div className={styles.shoppingCartPageTableBody}>
@@ -99,11 +101,9 @@ const ShoppingCartPage = () => {
           ))}
         </div>
       </div>
-      <Card header="Cart Sub Total" className={styles.shoppingCartPageSummary}>
+      <Card header={t('cart.subtotal')} className={styles.shoppingCartPageSummary}>
         <Flex justify="between">
-          <Text weight="bold" size="lg">
-            Subtotal
-          </Text>
+          <Text weight="bold" size="lg">{t('cart.subtotal')}</Text>
           <Text weight="bold" size="lg">
             {formatCurrency(subtotal)}
           </Text>
@@ -115,7 +115,7 @@ const ShoppingCartPage = () => {
           className="bts-marginTxl"
           onClick={() => navigate('/checkout')}
         >
-          Proceed to checkout
+          {t('cart.proceed')}
         </Button>
       </Card>
       <YouMayAlsoLikeSection mode="flex" />

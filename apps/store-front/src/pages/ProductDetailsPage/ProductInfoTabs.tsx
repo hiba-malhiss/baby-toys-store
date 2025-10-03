@@ -4,19 +4,21 @@ import styles from './product-details-page.module.scss';
 import { ProductReviews } from './ProductReviews.tsx';
 import type { UiProduct } from '../../api/normalizers/productNormalizer';
 import { useStoreSettings } from '../../api/settingsApi';
+import { useTranslation } from 'react-i18next';
 
 export const ProductInfoTabs: React.FC<{ product: UiProduct }> = ({ product }) => {
   const { id, shortDescription, featureBullets, details } = product;
   const { data: settings } = useStoreSettings();
+  const { t } = useTranslation('common');
 
   return (
     <Card fullWidth size="large">
       <TabBar
         tabs={[
-          { header: 'Description', value: 'description' },
-          { header: 'Reviews', value: 'reviews' },
-          { header: 'Cancellation Policy', value: 'order-cancellation' },
-          { header: 'Return Policy', value: 'return-policy' },
+          { header: t('product.tabs.description'), value: 'description' },
+          { header: t('product.tabs.reviews'), value: 'reviews' },
+          { header: t('product.tabs.cancelPolicy'), value: 'order-cancellation' },
+          { header: t('product.tabs.returnPolicy'), value: 'return-policy' },
         ]}
         defaultSelected="description"
       >
@@ -54,13 +56,13 @@ export const ProductInfoTabs: React.FC<{ product: UiProduct }> = ({ product }) =
 
         <TabBarItem value="order-cancellation">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {settings?.policies?.cancelPolicy || 'No cancellation policy available.'}
+            {settings?.policies?.cancelPolicy || t('product.policies.noCancel')}
           </ExpandableContent>
         </TabBarItem>
 
         <TabBarItem value="return-policy">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {settings?.policies?.returnPolicy || 'No return policy available.'}
+            {settings?.policies?.returnPolicy || t('product.policies.noReturn')}
           </ExpandableContent>
         </TabBarItem>
       </TabBar>

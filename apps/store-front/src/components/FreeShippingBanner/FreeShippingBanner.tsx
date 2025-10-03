@@ -2,11 +2,13 @@ import { Alert } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../api/settingsApi.ts';
 import { useCartQuery } from '../../api/cartApi.ts';
 import { useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const FreeShippingBanner = () => {
   const { data: settings } = useStoreSettings();
   const { data: cart } = useCartQuery();
   const { pathname } = useLocation();
+  const { t } = useTranslation('common');
 
   if (!settings || !cart) return null;
 
@@ -23,7 +25,7 @@ const FreeShippingBanner = () => {
     if (cart?.freeShippingApplied) {
       return (
         <Alert key={pathname} appearance="success" size="small" justify="center">
-          🎉 You’ve unlocked free shipping!
+          {t('freeShipping.unlocked')}
         </Alert>
       );
     }
@@ -31,7 +33,7 @@ const FreeShippingBanner = () => {
     if (cart.freeShippingRemaining > 0) {
       return (
         <Alert key={pathname} appearance="flash-sale" size="small" justify="center">
-          Add {fmt.format(cart.freeShippingRemaining)} more to unlock free shipping 🚚
+          {t('freeShipping.addMore', { amount: fmt.format(cart.freeShippingRemaining) })}
         </Alert>
       );
     }
@@ -39,7 +41,7 @@ const FreeShippingBanner = () => {
 
   return (
     <Alert key={pathname} size="small" appearance="flash-sale" justify="center">
-      Free shipping on orders over {fmt.format(minSubtotal)} 🚚
+      {t('freeShipping.overThreshold', { amount: fmt.format(minSubtotal) })}
     </Alert>
   );
 };

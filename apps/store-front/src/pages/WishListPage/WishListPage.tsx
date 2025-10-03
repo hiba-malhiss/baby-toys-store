@@ -7,12 +7,14 @@ import SmartProductCard from '../../components/features/SmartProductCard/SmartPr
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useMyWishlist } from '../../api/wishlistApi';
+import { useTranslation } from 'react-i18next';
 
 const LIST_PAGE_SIZE = 10;
 
 const WishListPage = () => {
   const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
+  const { t } = useTranslation('common');
   const [page, setPage] = useState(1);
   const { data, isLoading } = useMyWishlist(page, LIST_PAGE_SIZE, 'id', 'DESC', isAuthenticated);
   const localItems = data?.items ?? [];
@@ -24,10 +26,10 @@ const WishListPage = () => {
       return (
         <NoDataFound
           icon={faInbox}
-          message="It is empty here."
-          subtext="Personalize your shopping experience with your Wishlist."
+          message={t('wishlist.loginPromptTitle')}
+          subtext={t('wishlist.loginPromptSubtitle')}
           align="center"
-          buttonText="Login"
+          buttonText={t('wishlist.login')}
           onButtonClick={openLoginDialog}
         />
       );
@@ -37,8 +39,8 @@ const WishListPage = () => {
       return (
         <NoDataFound
           icon={faHeart}
-          message="Your wish list is empty"
-          subtext="Store everything you love on one page."
+          message={t('wishlist.emptyTitle')}
+          subtext={t('wishlist.emptySubtitle')}
           align="center"
           iconSize="xxxlarge"
         />
@@ -64,7 +66,7 @@ const WishListPage = () => {
   };
 
   return (
-    <PageContainer header="My Wish List">
+    <PageContainer header={t('wishlist.header')}>
       {renderContent()}
       <Divider />
       <YouMayAlsoLikeSection mode="flex" />

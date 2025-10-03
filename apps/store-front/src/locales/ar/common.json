@@ -1,0 +1,222 @@
+{
+  "nav": {
+    "home": "الرئيسية",
+    "welcome": "مرحبًا بكم في متجر ألعاب الأطفال",
+    "shop": "المتجر",
+    "cart": "سلة التسوق",
+    "wishlist": "المفضلة",
+    "checkoutLabel": "الدفع",
+    "orders": "الطلبات",
+    "contact": "اتصل بنا",
+    "policies": "السياسات",
+    "admin": "المدير"
+  },
+  "admin": {
+    "redirecting": "جاري التحويل إلى لوحة التحكم..."
+  },
+  "cart": {
+    "header": "سلة التسوق",
+    "empty": "عذراً! لا توجد ألعاب هنا...",
+    "browse": "استعرض الألعاب",
+    "subtotal": "الإجمالي الفرعي",
+    "proceed": "المتابعة للدفع",
+    "placeOrder": "إتمام الطلب",
+    "goToCart": "الانتقال إلى السلة",
+    "orderSummary": "ملخص الطلب",
+    "headers": {
+      "product": "المنتج",
+      "name": "الاسم",
+      "price": "السعر",
+      "quantity": "الكمية",
+      "subtotal": "الإجمالي الفرعي",
+      "action": "الإجراء"
+    }
+  },
+  "product": {
+    "addToCart": "أضف إلى السلة",
+    "details": "تفاصيل المنتج",
+    "recentShoots": "أحدث جلسات التصوير",
+    "checkGallery": "عرض المعرض",
+    "tabs": {
+      "description": "الوصف",
+      "reviews": "المراجعات",
+      "cancelPolicy": "سياسة الإلغاء",
+      "returnPolicy": "سياسة الإرجاع"
+    },
+    "policies": {
+      "noCancel": "لا توجد سياسة إلغاء متاحة.",
+      "noReturn": "لا توجد سياسة إرجاع متاحة."
+    }
+  },
+  "common": {
+    "subtotal": "الإجمالي الفرعي",
+    "freeShipping": "شحن مجاني",
+    "onlyLeft": "متبقي {{count}} فقط في المخزون",
+    "largeQuantity": "تم اختيار كمية كبيرة (الحد الأقصى 100)"
+  },
+  "shop": {
+    "all": "الكل",
+    "allCategories": "جميع الفئات",
+    "sortBy": "ترتيب حسب",
+    "resultsSummary": "يتم عرض {{from}}–{{to}} من {{total}} نتائج",
+    "sort": {
+      "rating": "مميّز",
+      "sales": "الأكثر مبيعًا",
+      "createdAt": "الأحدث",
+      "price_asc": "السعر: من الأقل إلى الأعلى",
+      "price_desc": "السعر: من الأعلى إلى الأقل"
+    }
+  },
+  "filters": {
+    "header": "مرشحات",
+    "none": "لا توجد مرشحات مفعّلة",
+    "headerWithCount": "المرشحات ({{count}})",
+    "clear": "مسح المرشحات",
+    "category": "الفئة",
+    "color": "اللون",
+    "brand": "العلامة التجارية",
+    "material": "المادة",
+    "price": "السعر"
+  },
+  "policies": {
+    "header": "السياسات",
+    "returnPolicy": "سياسة الإرجاع",
+    "shippingPolicy": "سياسة الشحن",
+    "cancelPolicy": "سياسة الإلغاء"
+  },
+  "footer": {
+    "description": "نقدّم لكم منتجات ذات جودة بأسعار مناسبة.",
+    "explore": "استكشف",
+    "customerService": "خدمة العملاء",
+    "links": {
+      "Shop": "المتجر",
+      "Wish List": "قائمة الأمنيات",
+      "Contact Us": "اتصل بنا",
+      "Return Policy": "سياسة الإرجاع",
+      "Shipping Policy": "سياسة الشحن"
+    },
+    "info": {
+      "phone": "اتصل بنا:",
+      "email": "راسلنا:"
+    }
+  },
+  "contact": {
+    "header": "اتصال",
+    "title": "اتصل بنا",
+    "name": "الاسم",
+    "subject": "الموضوع",
+    "email": "البريد الإلكتروني",
+    "phoneNumber": "رقم الهاتف",
+    "message": "الرسالة",
+    "placeholder": {
+      "name": "أدخل اسمك",
+      "subject": "أدخل الموضوع",
+      "email": "أدخل بريدك الإلكتروني",
+      "phone": "أدخل رقم هاتفك",
+      "message": "أدخل رسالتك"
+    },
+    "send": "إرسال الرسالة",
+    "thankYou": "شكراً لتواصلك معنا!",
+    "sendFailed": "فشل إرسال الرسالة. يرجى المحاولة لاحقاً.",
+    "phone": "الهاتف",
+    "address": "العنوان"
+  },
+  "home": {
+    "topPicks": {
+      "title": "اختيارات مميزة لصغاركم",
+      "viewAll": "عرض الكل {{label}}"
+    },
+    "shopNow": {
+      "title": "العب، تعلم، وانمُ!",
+      "subtitle": "نصنع الابتسامات مع كل لعبة، للتعلم والمرح والنمو",
+      "cta": "تسوّق الآن"
+    },
+    "collection": {
+      "title": "اعثر على اللعبة المثالية",
+      "subtitle": "مجموعاتنا"
+    },
+    "reviews": {
+      "title": "آراء من آباء سعداء",
+      "subtitle": "شهادات العملاء"
+    }
+  },
+  "related": {
+    "title": "منتجات ذات صلة"
+  },
+  "highlights": {
+    "youMayAlsoLike": "قد يعجبك أيضًا"
+  },
+  "auth": {
+    "verifyEmail": {
+      "success": "تم تفعيل البريد الإلكتروني بنجاح! يمكنك الآن تسجيل الدخول.",
+      "invalidLink": "رابط التحقق غير صالح أو منتهي الصلاحية",
+      "verifying": "جاري التحقق من بريدك الإلكتروني...",
+      "failed": "فشل التحقق",
+      "failedDetail": "فشل التحقق من البريد الإلكتروني. قد يكون الرابط منتهي الصلاحية أو غير صالح.",
+      "goHome": "الذهاب إلى الرئيسية"
+    },
+    "reset": {
+      "invalidLink": "رابط إعادة التعيين غير صالح أو منتهي الصلاحية",
+      "success": "تمت إعادة تعيين كلمة المرور بنجاح",
+      "failed": "فشل في إعادة تعيين كلمة المرور",
+      "header": "إعادة تعيين كلمة المرور",
+      "newPassword": "كلمة المرور الجديدة",
+      "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+      "placeholder": {
+        "newPassword": "أدخل كلمة مرور جديدة",
+        "confirmNewPassword": "أكد كلمة المرور الجديدة"
+      },
+      "submit": "إعادة تعيين كلمة المرور"
+    },
+    "login": "تسجيل الدخول",
+    "register": "إنشاء حساب",
+    "logout": "تسجيل الخروج"
+  },
+  "freeShipping": {
+    "unlocked": "🎉 لقد حصلت على شحن مجاني!",
+    "addMore": "أضف {{amount}} للحصول على الشحن المجاني 🚚",
+    "overThreshold": "شحن مجاني للطلبات فوق {{amount}} 🚚"
+  },
+  "orders": {
+    "header": "سجل الطلبات",
+    "emptyTitle": "لا توجد طلبات.",
+    "emptySubtitle": "لم تقم بإجراء أي طلبات بعد."
+  },
+  "checkout": {
+    "shippingInfo": "معلومات الشحن",
+    "cartSummary": "سلة التسوق",
+    "discount": "الخصم",
+    "shipping": "الشحن",
+    "freeShippingApplied": "تم تطبيق الشحن المجاني",
+    "total": "الإجمالي",
+    "invalidCoupon": "رمز القسيمة غير صالح",
+    "validateCouponFailed": "فشل التحقق من القسيمة",
+    "placeOrderFailed": "فشل في إتمام الطلب. يرجى المحاولة مرة أخرى.",
+    "form": {
+      "alertUsingSaved": "يتم استخدام معلومات الشحن المحفوظة",
+      "useDifferentAddress": "استخدم عنوان شحن مختلف",
+      "country": "الدولة",
+      "selectCountry": "اختر الدولة",
+      "countryOptions": {
+        "palestine": "فلسطين"
+      },
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "town": "المدينة",
+      "region": "القرية/المنطقة",
+      "address": "العنوان التفصيلي",
+      "phone": "رقم الهاتف",
+      "shippingMethod": "طريقة الشحن",
+      "selectShipping": "اختر خيار الشحن",
+      "coupon": "رمز القسيمة (اختياري)"
+    }
+  },
+  "wishlist": {
+    "header": "قائمة الأمنيات",
+    "loginPromptTitle": "لا يوجد شيء هنا.",
+    "loginPromptSubtitle": "خصّص تجربة التسوق لديك باستخدام قائمة الأمنيات.",
+    "login": "تسجيل الدخول",
+    "emptyTitle": "قائمة الأمنيات فارغة",
+    "emptySubtitle": "احفظ كل ما تحبه في صفحة واحدة."
+  }
+}

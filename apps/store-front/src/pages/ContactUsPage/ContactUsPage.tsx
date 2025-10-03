@@ -10,6 +10,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { contactSchema, type ContactFormValues } from './contact-us.helper';
+import { useTranslation } from 'react-i18next';
 
 const ContactUsPage: React.FC = () => {
   const { control, handleSubmit, reset } = useForm<ContactFormValues>({
@@ -21,33 +22,34 @@ const ContactUsPage: React.FC = () => {
 
   const toast = useToast();
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const contactInfo = useMemo(() => {
     const contact = settings?.contact || {};
     const raw = [
       {
         id: 'phone',
-        title: 'Phone',
+        title: t('contact.phone'),
         content: contact.phone,
         icon: faPhone,
         appearance: 'primary',
       },
       {
         id: 'email',
-        title: 'Email',
+        title: t('contact.email'),
         content: contact.email,
         icon: faEnvelope,
         appearance: 'primary',
       },
       {
         id: 'address',
-        title: 'Address',
+        title: t('contact.address'),
         content: contact.address,
         icon: faMapMarkerAlt,
         appearance: 'primary',
       },
     ];
     return raw.filter((i) => i.content);
-  }, [settings?.contact]);
+  }, [settings?.contact, t]);
 
   const onSubmit = handleSubmit(async (values) => {
     sendMutation.mutate(
@@ -60,13 +62,13 @@ const ContactUsPage: React.FC = () => {
       },
       {
         onSuccess: () => {
-          toast.success('Thank you for reaching out!');
+          toast.success(t('contact.thankYou'));
           reset();
           navigate('/home');
         },
         onError: (error: any) => {
           toast.error(
-            error?.response?.data?.message || 'Failed to send message. Please try again later.'
+            error?.response?.data?.message || t('contact.sendFailed')
           );
         },
       }
@@ -74,31 +76,31 @@ const ContactUsPage: React.FC = () => {
   });
 
   return (
-    <PageContainer header="Contact">
+    <PageContainer header={t('contact.header')}>
       <div className={styles.contactUsPageCards}>
         {contactInfo.map((item) => (
           <InfoCard key={item.id} card={item} size="medium" fullWidth />
         ))}
       </div>
       <form className={styles.contactUsPage} onSubmit={onSubmit}>
-        <Heading level="h2">Contact us</Heading>
-        <FormFieldWrapper control={control} name="name" label="Name" required fullWidth>
-          <StringInput fullWidth placeholder="Enter your name" />
+        <Heading level="h2">{t('contact.title')}</Heading>
+        <FormFieldWrapper control={control} name="name" label={t('contact.name')} required fullWidth>
+          <StringInput fullWidth placeholder={t('contact.placeholder.name')} />
         </FormFieldWrapper>
-        <FormFieldWrapper control={control} name="subject" label="Subject" required fullWidth>
-          <StringInput fullWidth placeholder="Enter subject" />
+        <FormFieldWrapper control={control} name="subject" label={t('contact.subject')} required fullWidth>
+          <StringInput fullWidth placeholder={t('contact.placeholder.subject')} />
         </FormFieldWrapper>
-        <FormFieldWrapper control={control} name="email" label="Email" fullWidth>
-          <StringInput fullWidth placeholder="Enter your email" />
+        <FormFieldWrapper control={control} name="email" label={t('contact.email')} fullWidth>
+          <StringInput fullWidth placeholder={t('contact.placeholder.email')} />
         </FormFieldWrapper>
-        <FormFieldWrapper control={control} name="phone" label="Phone Number" fullWidth>
-          <StringInput fullWidth placeholder="Enter your phone number" />
+        <FormFieldWrapper control={control} name="phone" label={t('contact.phoneNumber')} fullWidth>
+          <StringInput fullWidth placeholder={t('contact.placeholder.phone')} />
         </FormFieldWrapper>
-        <FormFieldWrapper control={control} name="message" label="Message" required fullWidth>
-          <TextArea fullWidth placeholder="Enter your message" />
+        <FormFieldWrapper control={control} name="message" label={t('contact.message')} required fullWidth>
+          <TextArea fullWidth placeholder={t('contact.placeholder.message')} />
         </FormFieldWrapper>
-        <Button type="submit" isLoading={sendMutation.isPending} aria-label="Send Message">
-          Send Message
+        <Button type="submit" isLoading={sendMutation.isPending} aria-label={t('contact.send')}>
+          {t('contact.send')}
         </Button>
       </form>
     </PageContainer>

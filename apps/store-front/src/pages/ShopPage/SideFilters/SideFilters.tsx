@@ -21,12 +21,14 @@ import { useDebounce } from '@baby-toys/ui-kit/hooks';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useBrands, useCategories, useColors, useMaterials } from '../../../api/catalogApi.ts';
 import { useStoreSettings } from '../../../api/settingsApi';
+import { useTranslation } from 'react-i18next';
 
 export const SideFilters: React.FC<{
   className?: string;
   onFiltersChange: (filters: ShopFilters) => void;
   isDrawer?: boolean;
 }> = ({ className, onFiltersChange, isDrawer = false }) => {
+  const { t } = useTranslation('common');
   const { data: categories = [], isLoading: loadingCategories } = useCategories();
   const { data: brands = [], isLoading: loadingBrands } = useBrands();
   const { data: colors = [], isLoading: loadingColors } = useColors();
@@ -99,7 +101,7 @@ export const SideFilters: React.FC<{
         ))}
         {filtersCount < 1 && (
           <NoDataFound
-            subtext="No filters applied"
+            subtext={t('filters.none')}
             align="start"
             withoutPadding
             withoutHeaderPadding
@@ -109,7 +111,7 @@ export const SideFilters: React.FC<{
 
       <Divider className="bts-marginTxl" />
 
-      <Accordion header="Category" withoutPadding withoutHeaderPadding>
+      <Accordion header={t('filters.category')} withoutPadding withoutHeaderPadding>
         <RadioButtonGroup
           name="category"
           selectedValue={urlFilters.categoryId}
@@ -127,7 +129,7 @@ export const SideFilters: React.FC<{
         </RadioButtonGroup>
       </Accordion>
 
-      <Accordion header="Color" withoutPadding withoutHeaderPadding>
+      <Accordion header={t('filters.color')} withoutPadding withoutHeaderPadding>
         <RadioButtonGroup
           name="color"
           selectedValue={urlFilters.colorId}
@@ -144,7 +146,7 @@ export const SideFilters: React.FC<{
         </RadioButtonGroup>
       </Accordion>
 
-      <Accordion header="Brand" withoutPadding withoutHeaderPadding>
+      <Accordion header={t('filters.brand')} withoutPadding withoutHeaderPadding>
         <RadioButtonGroup
           name="brand"
           selectedValue={urlFilters.brandId}
@@ -162,7 +164,7 @@ export const SideFilters: React.FC<{
         </RadioButtonGroup>
       </Accordion>
 
-      <Accordion header="Material" withoutPadding withoutHeaderPadding>
+      <Accordion header={t('filters.material')} withoutPadding withoutHeaderPadding>
         <RadioButtonGroup
           name="material"
           selectedValue={urlFilters.materialId}
@@ -180,7 +182,7 @@ export const SideFilters: React.FC<{
         </RadioButtonGroup>
       </Accordion>
 
-      <Accordion header="Price" withoutPadding withoutHeaderPadding>
+      <Accordion header={t('filters.price')} withoutPadding withoutHeaderPadding>
         <Slider
           min={priceRange?.[0]}
           max={priceRange?.[1]}
@@ -197,8 +199,8 @@ export const SideFilters: React.FC<{
   const isLoadingFilters = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
   if (isLoadingFilters) {
     return (
-      <Card className={className} header="Filters">
-        <BouncingDotsLoader size="medium" />
+      <Card className={className} header={t('filters.header')}>
+        <BouncingDotsLoader />
       </Card>
     );
   }
@@ -223,7 +225,7 @@ export const SideFilters: React.FC<{
           onClose={() => setIsDrawerOpen(false)}
           position="right"
           appendTo={document.body}
-          header={<span>Filters ({filtersCount})</span>}
+          header={<span>{t('filters.headerWithCount', { count: filtersCount })}</span>}
         >
           {content}
         </Drawer>
@@ -235,7 +237,11 @@ export const SideFilters: React.FC<{
     <Card
       header={
         <Flex justify="between" align="center" fullWidth spacing="l">
-          <span>Filters {filtersCount > 0 && `(${filtersCount})`}</span>
+          <span>
+            {filtersCount > 0
+              ? t('filters.headerWithCount', { count: filtersCount })
+              : t('filters.header')}
+          </span>
           {filtersCount > 0 && (
             <Button
               appearance="link"
@@ -244,7 +250,7 @@ export const SideFilters: React.FC<{
               onClick={clearFilters}
               withoutPadding
             >
-              Clear Filters
+              {t('filters.clear')}
             </Button>
           )}
         </Flex>

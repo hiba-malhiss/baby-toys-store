@@ -4,6 +4,7 @@ import { Carousel, SkeletonProductCard } from '@baby-toys/ui-kit';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
 import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints';
 import { useHighlightsQuery } from '../../../api/highlightsApi';
+import { useTranslation } from 'react-i18next';
 
 interface YouMayAlsoLikeCarouselProps {
   className?: string;
@@ -16,13 +17,14 @@ const DEFAULT_PAGE_SIZE = 12;
 const YouMayAlsoLikeCarousel: React.FC<YouMayAlsoLikeCarouselProps> = ({
   className,
   pageSize = DEFAULT_PAGE_SIZE,
-  title = 'You May Also Like',
+  title = undefined,
 }) => {
   const { data, isLoading } = useHighlightsQuery(1, pageSize);
   const items = data?.items ?? [];
+  const { t } = useTranslation('common');
 
   return (
-    <Section title={title} className={className} isLoading={isLoading}>
+    <Section title={title || t('highlights.youMayAlsoLike')} className={className} isLoading={isLoading}>
       <Carousel
         className="bts-marginTxxxxl"
         items={isLoading ? Array.from({ length: Math.min(8, pageSize) }) : items}

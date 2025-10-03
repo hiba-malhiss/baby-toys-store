@@ -5,6 +5,7 @@ import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 import RegisterDialog from '../../RegisterDialog/RegisterDialog.tsx';
 import LoginDialog from '../../LoginDialog/LoginDialog.tsx';
 import { useLogout } from '../../../api/authApi.ts';
+import { useTranslation } from 'react-i18next';
 
 const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: () => void }> = ({
   isDarkMode,
@@ -14,6 +15,7 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
   const [isRegisterOpen, setRegisterOpen] = React.useState(false);
   const { isAuthenticated } = useAuth();
   const { mutateAsync: logoutApi } = useLogout();
+  const { t } = useTranslation('common');
 
   const logout = useCallback(async () => {
     try {
@@ -38,7 +40,7 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
               onAfterClick?.();
             }}
           >
-            Login
+            {t('auth.login')}
           </Button>
           <Button
             withoutPadding
@@ -49,7 +51,7 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
               onAfterClick?.();
             }}
           >
-            Register
+            {t('auth.register')}
           </Button>
         </>
       ) : (
@@ -62,7 +64,7 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
             onAfterClick?.();
           }}
         >
-          Logout
+          {t('auth.logout')}
         </Button>
       )}
       <LoginDialog open={isOpen} onClose={close} />

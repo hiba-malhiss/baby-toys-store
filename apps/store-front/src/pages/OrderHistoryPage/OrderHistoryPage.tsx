@@ -9,6 +9,7 @@ import { PageContainer } from '../../components/layout/PageContainer/PageContain
 import AddReviewDialog from './AddReviewDialog.tsx';
 import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
 import { useMyOrdersNormalized, useCancelMyOrder, type OrderItem } from '../../api/ordersApi';
+import { useTranslation } from 'react-i18next';
 
 const PAGE_SIZE = 5;
 const OrderHistoryPage: React.FC = () => {
@@ -16,6 +17,7 @@ const OrderHistoryPage: React.FC = () => {
   const navigate = useNavigate();
   const addToCartMutation = useAddToCart();
   const { openShippingCartDrawer } = useCartStore();
+  const { t } = useTranslation('common');
 
   const [reviewDialog, setReviewDialog] = useState<{ open: boolean; item: OrderItem } | null>(null);
 
@@ -46,12 +48,12 @@ const OrderHistoryPage: React.FC = () => {
   };
 
   return (
-    <PageContainer header="Order History">
+    <PageContainer header={t('orders.header')}>
       {!isLoading && items.length === 0 ? (
         <NoDataFound
           icon={faBoxOpen}
-          message="No orders found."
-          subtext="You haven't placed any orders yet."
+          message={t('orders.emptyTitle')}
+          subtext={t('orders.emptySubtitle')}
           withoutPadding
         />
       ) : (

@@ -4,11 +4,13 @@ import { Button } from '@baby-toys/ui-kit';
 import { useVerifyEmail } from '../../api/authApi';
 import styles from './VerifyEmailPage.module.scss';
 import { BouncingDotsLoader } from '@baby-toys/ui-kit';
+import { useTranslation } from 'react-i18next';
 
 export const VerifyEmailPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const token = searchParams.get('token');
+  const { t } = useTranslation('common');
 
   const {
     isPending,
@@ -24,7 +26,7 @@ export const VerifyEmailPage: React.FC = () => {
       navigate('/', {
         state: {
           showToast: true,
-          toastMessage: data.message || 'Email verified successfully! You can now log in.',
+          toastMessage: data.message || t('auth.verifyEmail.success'),
           toastType: 'success',
         },
       });
@@ -34,8 +36,8 @@ export const VerifyEmailPage: React.FC = () => {
   if(!token) {
     return (
       <div className={styles.verifyEmailPage}>
-        <div className={styles.verifyEmailPageError}>Invalid or expired verification link</div>
-        <Button onClick={() => navigate('/')}>Go to Home</Button>
+        <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.invalidLink')}</div>
+        <Button onClick={() => navigate('/')}>{t('auth.verifyEmail.goHome')}</Button>
       </div>
     );
   }
@@ -45,17 +47,17 @@ export const VerifyEmailPage: React.FC = () => {
       {isPending && (
         <>
           <BouncingDotsLoader/>
-          <div className={styles.verifyEmailPageLoading}>Verifying your email...</div>
+          <div className={styles.verifyEmailPageLoading}>{t('auth.verifyEmail.verifying')}</div>
         </>
       )}
 
       {(isError) && (
         <>
-          <div className={styles.verifyEmailPageError}>Verification Failed</div>
+          <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.failed')}</div>
           <div className={styles.verifyEmailPageErrorMessage}>
-            {(error as any)?.response?.message || 'Failed to verify email. The link may have expired or is invalid.'}
+            {(error as any)?.response?.message || t('auth.verifyEmail.failedDetail')}
           </div>
-          <Button onClick={() => navigate('/')}>Go to Home</Button>
+          <Button onClick={() => navigate('/')}>{t('auth.verifyEmail.goHome')}</Button>
         </>
       )}
     </div>

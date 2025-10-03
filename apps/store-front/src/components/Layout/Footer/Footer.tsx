@@ -10,10 +10,12 @@ import {
 } from './footer.constants.ts';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { handleFooterSocialClick } from '../../../utils/share.ts';
+import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
+  const { t } = useTranslation('common');
   const footerInfo = useMemo(
     () => Object.entries(settings?.contact || {}).map(([id, content]) => ({ id, content })),
     [settings?.contact]
@@ -23,9 +25,7 @@ const Footer = () => {
     <footer className={styles.footer}>
       <Flex direction="vertical" className={styles.footerLogo}>
         <img src="/assets/kit-images/logo.png" alt="logo" />
-        <p className={styles.footerDescription}>
-          Bringing you quality products at affordable prices.
-        </p>
+        <p className={styles.footerDescription}>{t('footer.description')}</p>
         <Flex spacing="xl">
           {socialMediaLinks.map(({ icon }) => (
             <Button
@@ -41,7 +41,7 @@ const Footer = () => {
 
       <Flex direction="vertical">
         <Heading level="h3" className={styles.footerSectionHeader}>
-          Explore
+          {t('footer.explore')}
         </Heading>
         <Flex direction="vertical" spacing="s">
           {exploreLinks.map(({ label, path }) => (
@@ -53,7 +53,7 @@ const Footer = () => {
               color="primary"
               onClick={() => navigate(path)}
             >
-              {label}
+              {t(`footer.links.${label}`, { defaultValue: label })}
             </Button>
           ))}
         </Flex>
@@ -61,7 +61,7 @@ const Footer = () => {
 
       <Flex direction="vertical" className={styles.footerCustomerService}>
         <Heading level="h3" className={styles.footerSectionHeader}>
-          Customer Service
+          {t('footer.customerService')}
         </Heading>
         <Flex direction="vertical" spacing="s" justify="center">
           {footerInfo.map((item) => {
@@ -72,7 +72,7 @@ const Footer = () => {
                 : config.link;
               return (
                 <div key={item.id} className={styles.footerInfoItem}>
-                  {config.label}{' '}
+                  {t(`footer.info.${item.id}`, { defaultValue: config.label })}{' '}
                   <Button
                     withoutPadding
                     size="small"

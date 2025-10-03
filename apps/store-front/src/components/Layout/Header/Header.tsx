@@ -10,6 +10,8 @@ import { useCategories } from '../../../api/catalogApi.ts';
 import clsx from 'clsx';
 import BurgerMenu from './BurgerMenu.tsx';
 import { useWishlistCount } from '../../../api/wishlistApi';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from '../../i18n/LanguageSwitcher';
 
 const Header = () => {
   const { data: cartCount } = useCartCount();
@@ -34,6 +36,7 @@ const Header = () => {
 
   const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
   const { data: wishlistCount } = useWishlistCount();
+  const { t } = useTranslation('common');
 
   const authButtons = (isDarkMode = true, onAfterClick?: () => void) => (
     <>
@@ -47,7 +50,7 @@ const Header = () => {
             onAfterClick?.();
           }}
         >
-          My Orders
+          {t('nav.orders')}
         </Button>
       )}
       {isAuthenticated && (
@@ -60,7 +63,7 @@ const Header = () => {
             onAfterClick?.();
           }}
         >
-          Admin
+          {t('nav.admin')}
         </Button>
       )}
       <AuthButtonsWithDialogs isDarkMode={isDarkMode} onAfterClick={onAfterClick} />
@@ -72,11 +75,12 @@ const Header = () => {
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
         <Flex spacing="m">
           <Icon icon={faTruckFast} color={IconColor.light} />
-          <span>Welcome to Baby Toy Store</span>
+          <span>{t('nav.welcome')}</span>
         </Flex>
-        <div className="bts-hideOnMobile">
-          <Flex spacing="xxl">{authButtons(true)}</Flex>
-        </div>
+        <Flex align="center" spacing="s" className="bts-hideOnMobile">
+          <LanguageSwitcher />
+          {authButtons(true)}
+        </Flex>
         <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>
 
@@ -131,7 +135,7 @@ const Header = () => {
               appearance="link"
               onClick={() => handleCategoryClick()}
             >
-              All Toys
+              {t('shop.all', { defaultValue: 'All' })}
             </Button>
             {categories.map(({ name, id }) => (
               <Button

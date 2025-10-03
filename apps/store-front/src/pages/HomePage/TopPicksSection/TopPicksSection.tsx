@@ -5,6 +5,7 @@ import { Flex, Button, RadioButtonGroup } from '@baby-toys/ui-kit';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/features/SmartProductCard/SmartProductCard.tsx';
 import { useTopPicks } from '../../../api/productApi';
+import { useTranslation } from 'react-i18next';
 
 import { HOMEPAGE_TOP_PICKS_LIMIT } from '../../../constants/display.constants.ts';
 import {
@@ -16,6 +17,7 @@ const TopPicksSection = () => {
   const [selected, setSelected] = useState(DEFAULT_SORT_OPTION);
   const navigate = useNavigate();
   const { data: items = [], isLoading } = useTopPicks(selected as any, HOMEPAGE_TOP_PICKS_LIMIT);
+  const { t } = useTranslation('common');
 
   const handleSortChange = useCallback((val: string) => {
     setSelected(val);
@@ -26,10 +28,13 @@ const TopPicksSection = () => {
   }, [navigate, selected]);
 
   return (
-    <Section title="Top picks for your little ones" isLoading={isLoading}>
+    <Section title={t('home.topPicks.title')} isLoading={isLoading}>
       <RadioButtonGroup
         className={styles.topPicks}
-        options={TOP_PICS_SORT_OPTIONS}
+        options={TOP_PICS_SORT_OPTIONS.map((opt) => ({
+          ...opt,
+          label: t(`shop.sort.${opt.value}`, { defaultValue: opt.label }),
+        }))}
         selectedValue={selected}
         name="topPicks"
         onChange={handleSortChange}
@@ -42,7 +47,11 @@ const TopPicksSection = () => {
       </div>
       <Flex justify="center" className="bts-marginTxxxl">
         <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>
-          View All {TOP_PICS_SORT_OPTIONS.find((opt) => opt.value === selected)?.label}
+          {t('home.topPicks.viewAll', {
+            label: t(`shop.sort.${selected}`, {
+              defaultValue: TOP_PICS_SORT_OPTIONS.find((opt) => opt.value === selected)?.label,
+            }),
+          })}
         </Button>
       </Flex>
     </Section>

@@ -3,6 +3,7 @@ import { Select, Option } from '@baby-toys/ui-kit';
 import styles from './shop-page.module.scss';
 import { DEFAULT_SORT_OPTION, SORT_OPTIONS } from '../../constants/filters.constants.ts';
 import { useUrlFilters } from '../../hooks/useUrlFilters'; // adjust path as needed
+import { useTranslation } from 'react-i18next';
 
 interface SortProductsProps {
   onSort?: (value: string) => void;
@@ -21,6 +22,7 @@ export const SortProductsWithUrl: React.FC<SortProductsProps> = ({ onSort }) => 
   );
 
   const { sortBy } = urlFilters;
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     if (sortBy) {
@@ -40,12 +42,12 @@ export const SortProductsWithUrl: React.FC<SortProductsProps> = ({ onSort }) => 
     <Select
       value={sortBy}
       onChange={(val) => handleSortChange(val as string)}
-      placeholder="Sort by"
+      placeholder={t('shop.sortBy')}
       className={styles.shopPageSelect}
     >
       {SORT_OPTIONS.map((opt) => (
         <Option key={opt.value} value={opt.value}>
-          {opt.label}
+          {t(`shop.sort.${opt.value}`, { defaultValue: opt.label })}
         </Option>
       ))}
     </Select>

@@ -3,10 +3,12 @@ import styles from './our-collection-section.module.scss';
 import { Flex, Button } from '@baby-toys/ui-kit';
 import Section from '../../../components/features/Section/Section.tsx';
 import { useCategories } from '../../../api/catalogApi.ts';
+import { useTranslation } from 'react-i18next';
 
 const OurCollectionSection = () => {
   const { data: categories = [], isLoading } = useCategories();
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
 
   const handleCategoryClick = (category: string) => {
     // Navigate to shop page with category filter
@@ -15,8 +17,8 @@ const OurCollectionSection = () => {
 
   return (
     <Section
-      title="Find The Perfect Toy"
-      subTitle="Our Collections"
+      title={t('home.collection.title')}
+      subTitle={t('home.collection.subtitle')}
       className={styles.ourCollection}
       isLoading={isLoading}
     >

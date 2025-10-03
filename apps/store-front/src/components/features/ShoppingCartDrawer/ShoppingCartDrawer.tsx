@@ -9,6 +9,7 @@ import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
 import { useCartQuery, CART_KEYS } from '../../../api/cartApi';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 interface ShoppingCartDrawerProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface ShoppingCartDrawerProps {
 
 const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
   const { data: cart, isPending } = useCartQuery();
   const isCartSyncing = useIsFetching({ queryKey: [CART_KEYS.cart] }) > 0;
   const isAddCartSyncing =
@@ -37,7 +39,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
 
   if (isPending) {
     return (
-      <Drawer visible={isOpen} header="Order Summary" position="right" onClose={handleClose}>
+      <Drawer visible={isOpen} header={t('cart.orderSummary', { defaultValue: 'Order Summary' })} position="right" onClose={handleClose}>
         <BouncingDotsLoader />
       </Drawer>
     );
@@ -46,18 +48,18 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   return (
     <Drawer
       visible={isOpen}
-      header="Order Summary"
+      header={t('cart.orderSummary', { defaultValue: 'Order Summary' })}
       position="right"
       onClose={handleClose}
       footer={
         (cart?.items?.length || 0) > 0 && (
           <>
             <Flex fullWidth justify="between" className={clsx('bts-marginBxl', styles.subtotalRow)}>
-              <span>Subtotal</span>
+              <span>{t('cart.subtotal')}</span>
               <span>{formatCurrency(subtotal)}</span>
             </Flex>
             <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
-              Place order
+              {t('cart.placeOrder')}
             </Button>
             <Button
               onClick={() => {
@@ -68,7 +70,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               color="secondary-light"
               className="bts-marginTl"
             >
-              Go To Shopping Cart
+              {t('cart.goToCart')}
             </Button>
           </>
         )
@@ -90,7 +92,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           </React.Fragment>
         ))}
         {(cart?.items?.length || 0) === 0 && (
-          <NoDataFound withoutPadding icon={faShoppingCart} message="Oops! No toys here..." />
+          <NoDataFound withoutPadding icon={faShoppingCart} message={t('cart.empty')} />
         )}
         {(isCartSyncing || isAddCartSyncing) && (
           <div className={styles.drawerOverlay}>

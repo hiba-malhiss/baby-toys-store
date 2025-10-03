@@ -3,6 +3,7 @@ import Section from '../Section/Section.tsx';
 import { ViewSwitcher } from '@baby-toys/ui-kit';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
 import { useHighlightsInfiniteQuery } from '../../../api/highlightsApi';
+import { useTranslation } from 'react-i18next';
 
 interface YouMayAlsoLikeListProps {
   className?: string;
@@ -15,9 +16,10 @@ const DEFAULT_PAGE_SIZE = 24;
 const YouMayAlsoLikeList: React.FC<YouMayAlsoLikeListProps> = ({
   className,
   pageSize = DEFAULT_PAGE_SIZE,
-  title = 'You May Also Like',
+  title = undefined,
 }) => {
   const infiniteQuery = useHighlightsInfiniteQuery(pageSize);
+  const { t } = useTranslation('common');
 
   const items = infiniteQuery.data?.pages.flatMap((p) => p.items) ?? [];
   const totalSize = infiniteQuery.data?.pages?.[0]?.totalItems ?? 0;
@@ -32,7 +34,7 @@ const YouMayAlsoLikeList: React.FC<YouMayAlsoLikeListProps> = ({
   };
 
   return (
-    <Section title={title} className={className} isLoading={loading && page === 1}>
+    <Section title={title || t('highlights.youMayAlsoLike')} className={className} isLoading={loading && page === 1}>
       <ViewSwitcher
         items={items.map((product) => (
           <SmartProductCard key={product.id} product={product} direction="vertical" />

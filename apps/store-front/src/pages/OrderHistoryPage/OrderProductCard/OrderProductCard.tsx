@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { Button, Card, Chip, Image } from '@baby-toys/ui-kit';
 import type { Order, OrderItem } from '../../../api/ordersApi.ts';
+import { useTranslation } from 'react-i18next';
 
 export const statusColorMap: Record<string, string> = {
   pending: 'warning',
@@ -24,11 +25,12 @@ interface OrderProductCardProps {
 const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderProductCardProps) => {
   const formatCurrency = useCurrencyFormatter();
   const navigate = useNavigate();
+  const { t } = useTranslation('common');
 
   return (
     <Card fullWidth size="small" className={styles.orderCard}>
       <header className={styles.orderCardHeader}>
-        <div>Order #{order.id}</div>
+        <div>{t('orders.orderNumber', { number: order.id })}</div>
         <div>{formatDate(order.date)}</div>
         <Chip
           label={order.status}
@@ -37,7 +39,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
         />
         {order.status === 'pending' && onCancel && (
           <Button appearance="outline" size="small" onClick={onCancel} className="bts-marginLauto">
-            Cancel
+            {t('orders.cancel')}
           </Button>
         )}
       </header>
@@ -65,16 +67,20 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
               <Button
                 color="secondary-light"
                 onClick={() => onBuyAgain(item.product)}
-                aria-label={`Buy again ${item.product.name}`}
+                aria-label={t('orders.aria.buyAgain', { name: item.product.name })}
               >
-                Buy Again
+                {t('orders.buyAgain')}
               </Button>
               {(item.canReview || item.canEditReview) && (
                 <Button
                   onClick={() => onAddReview(item)}
-                  aria-label={`${item.canEditReview ? 'Edit' : 'Add'} review for ${item.product.name}`}
+                  aria-label={
+                    item.canEditReview
+                      ? t('orders.aria.editReview', { name: item.product.name })
+                      : t('orders.aria.addReview', { name: item.product.name })
+                  }
                 >
-                  {item.hasReview ? 'Edit Review' : 'Add Review'}
+                  {item.hasReview ? t('orders.editReview') : t('orders.addReview')}
                 </Button>
               )}
             </div>
@@ -83,11 +89,11 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
       </div>
 
       <footer className={styles.orderCardFooter}>
-        <div>Subtotal: {formatCurrency(order.subtotal)}</div>
-        {order.couponCode ? <div>Coupon: {order.couponCode}</div> : null}
-        {order.discountAmount ? <div>Discount: {order.discountAmount}</div> : null}
-        <div>Shipping: {formatCurrency(order.shippingCost)}</div>
-        <div>Total: {formatCurrency(order.total)}</div>
+        <div>{t('orders.subtotal')}: {formatCurrency(order.subtotal)}</div>
+        {order.couponCode ? <div>{t('orders.coupon')}: {order.couponCode}</div> : null}
+        {order.discountAmount ? <div>{t('orders.discount')}: {order.discountAmount}</div> : null}
+        <div>{t('orders.shipping')}: {formatCurrency(order.shippingCost)}</div>
+        <div>{t('orders.total')}: {formatCurrency(order.total)}</div>
       </footer>
     </Card>
   );

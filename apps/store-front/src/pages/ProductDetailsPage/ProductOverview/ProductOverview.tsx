@@ -17,6 +17,7 @@ import { useAddToCart } from '../../../api/cartApi';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { StringInput } from '@baby-toys/ui-kit';
 import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
+import { useTranslation } from 'react-i18next';
 import { socialMediaLinks } from '../../../components/Layout/Footer/footer.constants.ts';
 import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
 import { useCartStore } from '../../../store/useCartStore';
@@ -31,6 +32,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   const { openShippingCartDrawer } = useCartStore();
   const toast = useToast();
   const formatCurrency = useCurrencyFormatter(symbol);
+  const { t } = useTranslation('common');
 
   // Use favorite hook here for this product
   const { isFavorite, isLoading, toggleFavorite } = useWishlist(product);
@@ -128,7 +130,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
               openShippingCartDrawer();
             }}
           >
-            Add to cart
+            {t('product.addToCart')}
           </Button>
           <Button
             leftIcon={faHeart}
@@ -143,7 +145,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
         </Flex>
         {!!product.details?.length && (
-          <Card fullWidth size="small" header="Item details">
+          <Card fullWidth size="small" header={t('product.details')}>
             <ExpandableContent>
               <div className={styles.productOverviewDetails}>
                 {product.details?.map(({ label, value }, index) => (

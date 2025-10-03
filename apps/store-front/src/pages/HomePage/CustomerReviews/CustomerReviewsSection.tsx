@@ -2,14 +2,16 @@ import Section from '../../../components/features/Section/Section.tsx';
 import { ReviewCard, Carousel } from '@baby-toys/ui-kit';
 import { useHighlightedReviews } from '../../../api/reviewsApi';
 import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints';
+import { useTranslation } from 'react-i18next';
 
 const CustomerReviewsSection = () => {
   const { data: featuredReviews = [], isLoading } = useHighlightedReviews();
+  const { t } = useTranslation('common');
 
   return (
     <Section
-      title="Hear from Other Happy Parents"
-      subTitle="Customer testimonials"
+      title={t('home.reviews.title')}
+      subTitle={t('home.reviews.subtitle')}
       compactPadding
       isLoading={isLoading}
     >
