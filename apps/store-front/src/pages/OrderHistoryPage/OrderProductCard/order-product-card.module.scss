@@ -4,6 +4,7 @@
   &-header {
     display: flex;
     gap: 16px;
+    align-items: center;
     margin-bottom: 16px;
     font-size: 14px;
     color: $color-text-grey-light;
@@ -15,6 +16,7 @@
 
   &-cartItem {
     display: flex;
+    gap: 12px;
     align-items: center;
     padding-bottom: 12px;
     border-bottom: 1px solid $color-border-light;
@@ -27,7 +29,6 @@
     height: 120px;
     object-fit: cover;
     border-radius: $radius-lg;
-    margin-right: 16px;
   }
 
   &-cartItemInfo {
@@ -38,7 +39,6 @@
 
   &-cartItemName {
     font-weight: 600;
-    margin-right: 20px;
     max-width: 600px;
     @include line-clamp(2)
   }
@@ -55,7 +55,6 @@
   }
 
   &-cartItemActions {
-    margin-left: 16px;
     display: flex;
     gap: 8px;
   }

@@ -5,12 +5,17 @@ export const clamp = (num: number, min: number, max: number) => Math.min(Math.ma
 export const roundToStep = (val: number, step: number, min: number) =>
   Math.round((val - min) / step) * step + min;
 
-export const isRTL = (): boolean => {
+// Determine direction from the slider element itself (preferred),
+// falling back to document direction if element is unavailable.
+export const isElementRTL = (trackRef?: RefObject<HTMLElement | null>): boolean => {
   if (typeof window === 'undefined') return false;
+  const el = trackRef?.current as HTMLElement | null;
+  if (el) {
+    return getComputedStyle(el).direction === 'rtl' || el.dir === 'rtl';
+  }
   return (
     document.documentElement.dir === 'rtl' ||
-    document.body.dir === 'rtl' ||
-    getComputedStyle(document.body).direction === 'rtl'
+    (document.body && getComputedStyle(document.body).direction === 'rtl')
   );
 };
 
@@ -29,7 +34,7 @@ export const getPercentFromEvent = (
   if (orientation === 'horizontal') {
     const x = clientX - rect.left;
     percent = (x / rect.width) * 100;
-    if (isRTL()) percent = 100 - percent;
+    if (isElementRTL(trackRef)) percent = 100 - percent;
   } else {
     const y = clientY - rect.top;
     percent = ((rect.height - y) / rect.height) * 100;

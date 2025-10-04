@@ -6,6 +6,7 @@ import { type LoginRequest, useLogin } from '../../api/authApi';
 import { loginFields, loginSchema } from './loginDialog.helpers';
 import ForgotPasswordDialog from '../ResetPassword/ForgotPasswordDialog.tsx';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
+import { useTranslation } from 'react-i18next';
 
 interface LoginDialogProps {
   open: boolean;
@@ -17,6 +18,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
   const toast = useToast();
   const loginMutation = useLogin();
   const [forgotOpen, setForgotOpen] = useState(false);
+  const { t } = useTranslation('common');
 
   const {
     control,
@@ -40,13 +42,13 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
   const onSubmit = async (data: LoginRequest) => {
     try {
       const response = await loginMutation.mutateAsync(data);
-      toast.success(response.message || 'Login successful!');
+      toast.success(response.message || t('auth.dialogs.login.success'));
       handleClose();
       onSuccess?.();
     } catch (error: any) {
       toast.error(
         error.response?.data?.message ||
-          'Login failed. Please check your credentials and try again.'
+          t('auth.dialogs.login.failure')
       );
     }
   };
@@ -56,12 +58,12 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
       <Dialog
         visible={open}
         onHide={handleClose}
-        header="Login to Your Account"
+        header={t('auth.dialogs.login.header')}
         closable={!isSubmitting && !loginMutation.isPending}
         modal
         focusOnShow
         dismissableMask={!isSubmitting && !loginMutation.isPending}
-        aria-label="Login form"
+        aria-label={t('auth.dialogs.login.formAria')}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
@@ -70,13 +72,13 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
                 key={field.name}
                 name={field.name}
                 control={control}
-                label={field.label}
+                label={t(field.labelKey)}
                 required
                 fullWidth
               >
                 <StringInput
                   type={field.type || 'text'}
-                  placeholder={field.label}
+                  placeholder={t(field.placeholderKey)}
                   autoComplete={field.autoComplete}
                   fullWidth
                   isDisabled={isSubmitting || loginMutation.isPending}
@@ -94,17 +96,17 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
                   setForgotOpen(true);
                 }}
               >
-                Forgot Password?
+                {t('auth.dialogs.login.forgotLink')}
               </Button>
 
               <Button
                 type="submit"
                 fullWidth
                 isDisabled={isSubmitting || loginMutation.isPending}
-                aria-label="Login to account"
+                aria-label={t('auth.dialogs.login.submitAria')}
                 isLoading={isSubmitting || loginMutation.isPending}
               >
-                Login
+                {t('auth.dialogs.login.submitLabel')}
               </Button>
             </Flex>
           </Flex>

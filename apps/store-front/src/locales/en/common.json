@@ -52,7 +52,9 @@
     "subtotal": "Subtotal",
     "freeShipping": "Free shipping",
     "onlyLeft": "Only {{count}} left in stock",
-    "largeQuantity": "Large quantity selected (max 100)"
+    "largeQuantity": "Large quantity selected (max 100)",
+    "searchPlaceholder": "Search products...",
+    "share": "Share this"
   },
   "shop": {
     "all": "All",
@@ -110,13 +112,37 @@
       "phone": "Phone Number",
       "shippingMethod": "Shipping Method",
       "selectShipping": "Select shipping option",
-      "coupon": "Coupon Code (optional)"
+      "coupon": "Coupon Code (optional)",
+      "placeholder": {
+        "firstName": "Enter first name",
+        "lastName": "Enter last name",
+        "town": "Enter town",
+        "region": "Enter village or region",
+        "address": "Enter detailed address",
+        "phone": "Enter phone number",
+        "coupon": "Enter coupon code"
+      }
     }
   },
   "orders": {
     "header": "Order History",
     "emptyTitle": "No orders found.",
-    "emptySubtitle": "You haven't placed any orders yet."
+    "emptySubtitle": "You haven't placed any orders yet.",
+    "orderNumber": "Order #{{number}}",
+    "cancel": "Cancel",
+    "buyAgain": "Buy Again",
+    "addReview": "Add Review",
+    "editReview": "Edit Review",
+    "aria": {
+      "buyAgain": "Buy {{name}} again",
+      "addReview": "Add review for {{name}}",
+      "editReview": "Edit review for {{name}}"
+    },
+    "subtotal": "Subtotal",
+    "coupon": "Coupon",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "total": "Total"
   },
   "wishlist": {
     "header": "My Wish List",
@@ -188,6 +214,19 @@
   "highlights": {
     "youMayAlsoLike": "You May Also Like"
   },
+  "reviews": {
+    "dialog": {
+      "addHeader": "Add Review",
+      "editHeader": "Edit Review",
+      "product": "Product",
+      "rating": "Rating",
+      "comment": "Comment",
+      "commentPlaceholder": "Add a comment (optional)",
+      "submit": "Submit Review",
+      "update": "Update Review",
+      "error": "Failed to submit review. Please try again."
+    }
+  },
   "auth": {
     "verifyEmail": {
       "success": "Email verified successfully! You can now log in.",
@@ -196,6 +235,62 @@
       "failed": "Verification Failed",
       "failedDetail": "Failed to verify email. The link may have expired or is invalid.",
       "goHome": "Go to Home"
+    },
+    "dialogs": {
+      "login": {
+        "header": "Login to Your Account",
+        "success": "Login successful!",
+        "failure": "Login failed. Please check your credentials and try again.",
+        "formAria": "Login form",
+        "submitAria": "Login to account",
+        "submitLabel": "Login",
+        "forgotLink": "Forgot Password?",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Enter your email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Enter your password"
+      },
+      "register": {
+        "header": "Create an Account",
+        "failure": "Registration failed. Please check your details and try again.",
+        "formAria": "Registration form",
+        "submitAria": "Register account",
+        "submitLabel": "Register",
+        "firstNameLabel": "First Name",
+        "firstNamePlaceholder": "Enter first name",
+        "lastNameLabel": "Last Name",
+        "lastNamePlaceholder": "Enter last name",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Enter your email",
+        "passwordLabel": "Password",
+        "passwordPlaceholder": "Create a password",
+        "phoneLabel": "Phone Number",
+        "phonePlaceholder": "Enter phone number (optional)"
+      },
+      "forgot": {
+        "header": "Forgot Password",
+        "description": "Enter your email address and we'll send you a link to reset your password.",
+        "emailLabel": "Email",
+        "emailPlaceholder": "Enter your email",
+        "submitLabel": "Send Reset Link",
+        "failure": "Failed to send reset link. Please try again."
+      },
+      "verification": {
+        "close": "Close",
+        "inboxPrompt": "Please check your inbox and click the link to continue.",
+        "register": {
+          "title": "Verify Your Email",
+          "heading": "Registration Successful!",
+          "messagePrefix": "We've sent a verification link to ",
+          "hint": "Didn't receive the email? Check your spam folder."
+        },
+        "password": {
+          "title": "Check Your Email",
+          "heading": "Reset Link Sent!",
+          "messagePrefix": "We’ve emailed a password-reset link to ",
+          "hint": "Didn’t get the email? Check your spam or try again."
+        }
+      }
     },
     "reset": {
       "invalidLink": "Invalid or expired reset link",

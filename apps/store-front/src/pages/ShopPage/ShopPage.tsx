@@ -43,9 +43,6 @@ const ShopPage = () => {
     categories.find((option) => String(option.id) === String(sideFilters?.categoryId))?.name ||
     t('shop.allCategories', { defaultValue: 'All Categories' });
 
-  const from = totalSize > 0 ? (page - 1) * SHOP_PAGE_SIZE + 1 : 0;
-  const to = Math.min(page * SHOP_PAGE_SIZE, totalSize);
-
   // Reset to page 1 on filter/sort change
   useEffect(() => {
     setPage(1);

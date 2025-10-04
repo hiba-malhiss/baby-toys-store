@@ -5,16 +5,26 @@ export const loginSchema = z.object({
   password: z.string().min(6, 'Password must be at least 6 characters'),
 });
 
-export const loginFields = [
+export type LoginField = {
+  name: 'email' | 'password';
+  labelKey: string;
+  placeholderKey: string;
+  type: 'email' | 'password';
+  autoComplete: string;
+};
+
+export const loginFields: readonly LoginField[] = [
   {
     name: 'email',
-    label: 'Email',
+    labelKey: 'auth.dialogs.login.emailLabel',
+    placeholderKey: 'auth.dialogs.login.emailPlaceholder',
     type: 'email',
     autoComplete: 'email',
   },
   {
     name: 'password',
-    label: 'Password',
+    labelKey: 'auth.dialogs.login.passwordLabel',
+    placeholderKey: 'auth.dialogs.login.passwordPlaceholder',
     type: 'password',
     autoComplete: 'current-password',
   },

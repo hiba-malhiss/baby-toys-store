@@ -16,6 +16,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import type { AxiosError } from 'axios';
+import { useTranslation } from 'react-i18next';
 
 interface AddReviewDialogProps {
   open: boolean;
@@ -26,10 +27,11 @@ interface AddReviewDialogProps {
 
 const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDialogProps) => {
   const toast = useToast();
+  const { t } = useTranslation('common');
   const isEdit = !!item?.canEditReview && !!item?.reviewId;
 
   const schema = z.object({
-    rating: z.number({ message: 'Rating is required' }).min(1).max(5),
+    rating: z.number({ message: t('reviews.dialog.rating') as string }).min(1).max(5),
     comment: z.string().trim().min(1, 'Comment too short').max(500),
   });
   type FormValues = z.infer<typeof schema>;
@@ -80,7 +82,7 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
       onClose();
     } catch (e) {
       const err = e as AxiosError<{ message?: string }>;
-      toast.error(err.response?.data?.message ?? 'Failed to submit review. Please try again.');
+      toast.error(err.response?.data?.message ?? t('reviews.dialog.error'));
     }
   });
 
@@ -94,7 +96,7 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
 
   return (
     <Dialog
-      header={isEdit ? 'Edit Review' : 'Add Review'}
+      header={isEdit ? t('reviews.dialog.editHeader') : t('reviews.dialog.addHeader')}
       visible={open}
       onVisibleChange={onCloseDialog}
       modal
@@ -108,12 +110,12 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
           </Heading>
         </Flex>
 
-        <FormFieldWrapper control={control} name="rating" label="Rating" required fullWidth>
+        <FormFieldWrapper control={control} name="rating" label={t('reviews.dialog.rating')} required fullWidth>
           <Rating size="xlarge" />
         </FormFieldWrapper>
 
-        <FormFieldWrapper control={control} name="comment" label="Comment" fullWidth>
-          <TextArea fullWidth placeholder="Add a comment (optional)" />
+        <FormFieldWrapper control={control} name="comment" label={t('reviews.dialog.comment')} fullWidth>
+          <TextArea fullWidth placeholder={t('reviews.dialog.commentPlaceholder')} />
         </FormFieldWrapper>
 
         <Button
@@ -123,7 +125,7 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
           fullWidth
           isDisabled={createMutation.isPending || updateMutation.isPending}
         >
-          {isEdit ? 'Update Review' : 'Submit Review'}
+          {isEdit ? t('reviews.dialog.update') : t('reviews.dialog.submit')}
         </Button>
       </Flex>
     </Dialog>

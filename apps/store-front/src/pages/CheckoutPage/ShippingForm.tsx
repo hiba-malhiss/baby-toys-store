@@ -207,31 +207,31 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         {/* First + Last name */}
         <div className={styles.checkoutPageFormRow}>
           <FormFieldWrapper required name="firstName" control={control} label={t('checkout.form.firstName')}>
-            <StringInput fullWidth />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')} />
           </FormFieldWrapper>
           <FormFieldWrapper required name="lastName" control={control} label={t('checkout.form.lastName')}>
-            <StringInput fullWidth />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')} />
           </FormFieldWrapper>
         </div>
 
         {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
           <FormFieldWrapper required name="town" control={control} label={t('checkout.form.town')}>
-            <StringInput fullWidth />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.town')} />
           </FormFieldWrapper>
           <FormFieldWrapper required name="region" control={control} label={t('checkout.form.region')}>
-            <StringInput fullWidth />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')} />
           </FormFieldWrapper>
         </div>
 
         {/* Address */}
         <FormFieldWrapper required name="address" control={control} label={t('checkout.form.address')}>
-          <StringInput fullWidth />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')} />
         </FormFieldWrapper>
 
         {/* Phone */}
         <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
-          <StringInput fullWidth />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')} />
         </FormFieldWrapper>
 
         {/* Shipping option */}
@@ -253,6 +253,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <StringInput
               fullWidth
+              placeholder={t('checkout.form.placeholder.coupon')}
               iconRight={
                 !watch('couponCode') ? null : couponValid ? faCheckCircle : faTriangleExclamation
               }

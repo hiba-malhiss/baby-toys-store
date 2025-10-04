@@ -6,6 +6,7 @@ import { type RegisterRequest, useRegister } from '../../api/authApi.ts';
 import VerificationDialog from './VerificationDialog';
 import { registerFields, registerSchema } from './registerDialog.helpers.ts';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
+import { useTranslation } from 'react-i18next';
 
 interface RegisterDialogProps {
   open: boolean;
@@ -17,11 +18,12 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
   const [registeredEmail, setRegisteredEmail] = useState('');
   const [verifyDialogVisible, setVerifyDialogVisible] = useState(false);
   const registerMutation = useRegister();
+  const { t } = useTranslation('common');
 
   const {
     control,
     handleSubmit,
-    formState: { isValid, isSubmitting },
+    formState: { isSubmitting },
     reset,
   } = useForm<RegisterRequest>({
     mode: 'onBlur',
@@ -47,7 +49,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       setVerifyDialogVisible(true);
       handleClose();
     } catch (error: any) {
-      toast.error(error.message || 'Registration failed. Please check your details and try again.');
+      toast.error(error.message || t('auth.dialogs.register.failure'));
     }
   };
 
@@ -56,12 +58,12 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       <Dialog
         visible={open}
         onHide={handleClose}
-        header="Create an Account"
+        header={t('auth.dialogs.register.header')}
         closable={!isSubmitting && !registerMutation.isPending}
         modal
         focusOnShow
         dismissableMask={!isSubmitting && !registerMutation.isPending}
-        aria-label="Registration form"
+        aria-label={t('auth.dialogs.register.formAria')}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
@@ -73,12 +75,12 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                     key={name}
                     name={name}
                     control={control}
-                    label={fieldConfig.label}
+                    label={t(fieldConfig.labelKey)}
                     required
                     fullWidth
                   >
                     <StringInput
-                      placeholder={fieldConfig.label}
+                      placeholder={t(fieldConfig.placeholderKey)}
                       autoComplete={fieldConfig.autoComplete}
                       fullWidth
                       isDisabled={isSubmitting || registerMutation.isPending}
@@ -95,13 +97,13 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                   key={name}
                   name={name}
                   control={control}
-                  label={fieldConfig.label}
+                  label={t(fieldConfig.labelKey)}
                   required={name !== 'phoneNumber'} // optional field
                   fullWidth
                 >
                   <StringInput
                     type={fieldConfig.type || 'text'}
-                    placeholder={fieldConfig.label}
+                    placeholder={t(fieldConfig.placeholderKey)}
                     autoComplete={fieldConfig.autoComplete}
                     fullWidth
                     isDisabled={isSubmitting || registerMutation.isPending}
@@ -114,10 +116,10 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
               type="submit"
               fullWidth
               isDisabled={isSubmitting || registerMutation.isPending}
-              aria-label="Register account"
+              aria-label={t('auth.dialogs.register.submitAria')}
               isLoading={isSubmitting || registerMutation.isPending}
             >
-              Register
+              {t('auth.dialogs.register.submitLabel')}
             </Button>
           </Flex>
         </form>

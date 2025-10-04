@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, type CSSProperties } from 'react';
-import { clamp, roundToStep, getPercentFromEvent } from './slider.utils.ts';
+import { clamp, roundToStep, getPercentFromEvent, isElementRTL } from './slider.utils.ts';
 import styles from './slider.module.scss';
 import clsx from 'clsx';
 
@@ -162,14 +162,23 @@ const Slider: React.FC<SliderProps> = ({
     let newVal: number;
 
     const currentVal = range ? (value as [number, number])[index] : (value as number);
+    const horizontalRtl =
+      orientation === 'horizontal' &&
+      isElementRTL(trackRef as unknown as React.RefObject<HTMLElement | null>);
 
     switch (e.key) {
       case 'ArrowLeft':
+        newVal = clamp(currentVal + (horizontalRtl ? stepSize : -stepSize), min, max);
+        updateValue(newVal, index);
+        break;
       case 'ArrowDown':
         newVal = clamp(currentVal - stepSize, min, max);
         updateValue(newVal, index);
         break;
       case 'ArrowRight':
+        newVal = clamp(currentVal + (horizontalRtl ? -stepSize : stepSize), min, max);
+        updateValue(newVal, index);
+        break;
       case 'ArrowUp':
         newVal = clamp(currentVal + stepSize, min, max);
         updateValue(newVal, index);
@@ -225,42 +234,47 @@ const Slider: React.FC<SliderProps> = ({
   const filledSize = endPercent - startPercent;
 
   return (
-    <div
-      className={clsx(
-        styles.slider,
-        range && styles.sliderRange,
-        orientation === 'vertical' && styles.sliderVertical,
-        orientation === 'horizontal' && styles.sliderHorizontal,
-        disabled && styles.sliderIsDisabled,
-        className
-      )}
-      onClick={handleTrackClick}
-      ref={trackRef}
-      aria-disabled={disabled}
-    >
-      <div className={clsx(styles.sliderTrack, disabled && styles.sliderTrackIsDisabled)}>
-        <div
-          className={clsx(styles.sliderFilledTrack, disabled && styles.sliderFilledTrackIsDisabled)}
-          style={
-            orientation === 'horizontal'
-              ? { left: `${startPercent}%`, width: `${filledSize}%` }
-              : { bottom: `${startPercent}%`, height: `${filledSize}%` }
-          }
-        />
-      </div>
+    <div className={styles.sliderContainer}>
+      <div
+        className={clsx(
+          styles.slider,
+          range && styles.sliderRange,
+          orientation === 'vertical' && styles.sliderVertical,
+          orientation === 'horizontal' && styles.sliderHorizontal,
+          disabled && styles.sliderIsDisabled,
+          className
+        )}
+        onClick={handleTrackClick}
+        ref={trackRef}
+        aria-disabled={disabled}
+      >
+        <div className={clsx(styles.sliderTrack, disabled && styles.sliderTrackIsDisabled)}>
+          <div
+            className={clsx(
+              styles.sliderFilledTrack,
+              disabled && styles.sliderFilledTrackIsDisabled
+            )}
+            style={
+              orientation === 'horizontal'
+                ? { left: `${startPercent}%`, width: `${filledSize}%` }
+                : { bottom: `${startPercent}%`, height: `${filledSize}%` }
+            }
+          />
+        </div>
 
-      <div className={styles.sliderMinMaxLabel}>
-        <span>{min}</span>
-        <span>{max}</span>
-      </div>
+        <div className={styles.sliderMinMaxLabel}>
+          <span>{min}</span>
+          <span>{max}</span>
+        </div>
 
-      {!range && renderHandle(0)}
-      {range && (
-        <>
-          {renderHandle(0)}
-          {renderHandle(1)}
-        </>
-      )}
+        {!range && renderHandle(0)}
+        {range && (
+          <>
+            {renderHandle(0)}
+            {renderHandle(1)}
+          </>
+        )}
+      </div>
     </div>
   );
 };

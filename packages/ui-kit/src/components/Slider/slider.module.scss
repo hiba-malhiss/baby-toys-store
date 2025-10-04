@@ -12,7 +12,7 @@ $v-min-max-gap: 0px;
 // Reduce width by handler size
 $width-shrink: $handle-width;
 $horizontal-slider-width-calc: calc(100% - #{$width-shrink});
-$horizontal-slider-left-offset: calc($width-shrink/2);
+$horizontal-slider-left-offset: calc($width-shrink / 2);
 
 // Reduce height by handler size and label size
 $min-max-font-size: 12px;
@@ -25,6 +25,11 @@ $center-handler-position: calc(($track-thickness - $handle-width) / 2);
   position: relative;
   width: 100%;
   touch-action: none;
+
+
+  &-container {
+    direction: ltr;
+  }
 
   &--horizontal {
     width: $horizontal-slider-width-calc;

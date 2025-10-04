@@ -44,8 +44,14 @@
 
 @media (max-width: $breakpoint-medium) {
   .productOverview {
-    grid-template-columns: 1fr;
+    grid-template-columns: 100%;
     margin-bottom: 12px;
     gap: 32px;
+  }
+
+  .productOverview-actions {
+    flex-wrap: wrap;
+    row-gap: 8px;
+    column-gap: 8px;
   }
 }

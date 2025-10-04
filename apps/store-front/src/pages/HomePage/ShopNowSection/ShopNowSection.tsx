@@ -2,10 +2,12 @@ import { useNavigate } from 'react-router-dom';
 import styles from './shop-now-section.module.scss';
 import { Flex, Button } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
+import { useIsRtl } from '../../../utils/i18n';
 
 const ShopNowSection = () => {
   const navigate = useNavigate();
-  const { t, i18n } = useTranslation('common');
+  const { t } = useTranslation('common');
+  const isRtl = useIsRtl();
 
   const handleShopNow = () => {
     navigate('/shop');
@@ -16,7 +18,7 @@ const ShopNowSection = () => {
       className={styles.shopNowSectionImageContainer}
       direction="vertical"
       justify="center"
-      align="end"
+      align={isRtl ? 'center' : 'end'}
     >
       <Flex direction="vertical" className={styles.shopNowSectionContent}>
         <span className={styles.shopNowSectionTitle}>{t('home.shopNow.title')}</span>

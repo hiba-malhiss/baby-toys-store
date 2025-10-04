@@ -98,7 +98,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           </ul>
         </ExpandableContent>
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
-          <span className="bts-marginRs">Share this:</span>
+          <span className="bts-marginRs"> {t('common.share')}</span>
           {socialMediaLinks.map(({ icon }) => (
             <Button
               size="small"
@@ -110,7 +110,12 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
             />
           ))}
         </Flex>
-        <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
+        <Flex
+          direction="horizontal"
+          className={clsx('bts-marginBxxxl', styles.productOverviewActions)}
+          spacing="s"
+          align="center"
+        >
           <StringInput
             type="number"
             min={1}

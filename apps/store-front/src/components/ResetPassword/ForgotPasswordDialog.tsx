@@ -6,6 +6,7 @@ import { useForgotPassword } from '../../api/authApi';
 import VerificationDialog from '../RegisterDialog/VerificationDialog';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
 import { schema, type FormData } from './forget-password-dialog.utils.ts';
+import { useTranslation } from 'react-i18next';
 
 interface ForgotPasswordDialogProps {
   open: boolean;
@@ -17,11 +18,12 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
   const forgotMutation = useForgotPassword();
   const [verifyVisible, setVerifyVisible] = useState(false);
   const [sentEmail, setSentEmail] = useState('');
+  const { t } = useTranslation('common');
 
   const {
     control,
     handleSubmit,
-    formState: { errors, isValid, isSubmitting },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<FormData>({
     mode: 'onBlur',
@@ -40,7 +42,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
       setSentEmail(data.email);
       setVerifyVisible(true);
     } catch (e: any) {
-      toast.error(e?.response?.data?.message || 'Failed to send reset link. Please try again.');
+      toast.error(e?.response?.data?.message || t('auth.dialogs.forgot.failure'));
     }
   };
 
@@ -49,20 +51,20 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
       <Dialog
         visible={open}
         onHide={handleClose}
-        header="Forgot Password"
+        header={t('auth.dialogs.forgot.header')}
         modal
         closable={!isSubmitting && !forgotMutation.isPending}
       >
         <Text size="sm" color="muted" className="bts-marginBs">
-          Enter your email address and we'll send you a link to reset your password.
+          {t('auth.dialogs.forgot.description')}
         </Text>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
-            <FormFieldWrapper name="email" control={control} label="Email" required fullWidth>
+            <FormFieldWrapper name="email" control={control} label={t('auth.dialogs.forgot.emailLabel')} required fullWidth>
               <StringInput
                 type="email"
-                placeholder="Enter your email"
+                placeholder={t('auth.dialogs.forgot.emailPlaceholder')}
                 autoComplete="email"
                 fullWidth
                 hasError={errors.email?.message}
@@ -77,7 +79,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
               isDisabled={isSubmitting || forgotMutation.isPending}
               isLoading={isSubmitting || forgotMutation.isPending}
             >
-              Send Reset Link
+              {t('auth.dialogs.forgot.submitLabel')}
             </Button>
           </Flex>
         </form>

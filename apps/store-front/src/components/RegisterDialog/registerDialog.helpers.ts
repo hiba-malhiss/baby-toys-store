@@ -23,15 +23,46 @@ export const registerSchema = z.object({
     .refine((val) => !val || /^[0-9\-+()\s]+$/.test(val), { message: 'Please enter a valid phone number' }),
 });
 
-export const registerFields: Array<{
+export type RegisterField = {
   name: keyof RegisterRequest;
-  label: string;
+  labelKey: string;
+  placeholderKey: string;
   type?: string;
   autoComplete?: string;
-}> = [
-  { name: 'firstName', label: 'First Name', autoComplete: 'given-name' },
-  { name: 'lastName', label: 'Last Name', autoComplete: 'family-name' },
-  { name: 'email', label: 'Email', type: 'email', autoComplete: 'email' },
-  { name: 'password', label: 'Password', type: 'password', autoComplete: 'new-password' },
-  { name: 'phoneNumber', label: 'Phone Number', type: 'tel', autoComplete: 'tel' },
+};
+
+export const registerFields: Array<RegisterField> = [
+  {
+    name: 'firstName',
+    labelKey: 'auth.dialogs.register.firstNameLabel',
+    placeholderKey: 'auth.dialogs.register.firstNamePlaceholder',
+    autoComplete: 'given-name',
+  },
+  {
+    name: 'lastName',
+    labelKey: 'auth.dialogs.register.lastNameLabel',
+    placeholderKey: 'auth.dialogs.register.lastNamePlaceholder',
+    autoComplete: 'family-name',
+  },
+  {
+    name: 'email',
+    labelKey: 'auth.dialogs.register.emailLabel',
+    placeholderKey: 'auth.dialogs.register.emailPlaceholder',
+    type: 'email',
+    autoComplete: 'email',
+  },
+  {
+    name: 'password',
+    labelKey: 'auth.dialogs.register.passwordLabel',
+    placeholderKey: 'auth.dialogs.register.passwordPlaceholder',
+    type: 'password',
+    autoComplete: 'new-password',
+  },
+  {
+    name: 'phoneNumber',
+    labelKey: 'auth.dialogs.register.phoneLabel',
+    placeholderKey: 'auth.dialogs.register.phonePlaceholder',
+    type: 'tel',
+    autoComplete: 'tel',
+  },
 ];

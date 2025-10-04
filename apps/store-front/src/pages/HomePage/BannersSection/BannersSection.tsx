@@ -3,10 +3,12 @@ import styles from './banners-section.module.scss';
 import clsx from 'clsx';
 import { useHomePageContent } from '../../../api/homepageApi';
 import type { HeroBannerDto } from '../../../api/types/homepage';
+import { useIsRtl } from '../../../utils/i18n.ts';
 
 const BannersSection = () => {
   const { data, isLoading } = useHomePageContent();
   const heroBanners = (data?.heroBanners || []) as HeroBannerDto[];
+  const isRtl = useIsRtl();
 
   if (isLoading || heroBanners.length === 0) return null;
 
@@ -21,7 +23,7 @@ const BannersSection = () => {
       </Flex>
       <Flex
         align="center"
-        justify="end"
+        justify={isRtl ? 'start' : 'end'}
         className={clsx(styles.bannerWrapper, styles.bannerWrapperTopRight)}
       >
         <p>{heroBanners[1]?.text || ''}</p>

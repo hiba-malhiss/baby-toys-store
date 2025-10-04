@@ -71,7 +71,7 @@ const Footer = () => {
                 ? `${linkPrefixes[item.id]}${item.content}`
                 : config.link;
               return (
-                <div key={item.id} className={styles.footerInfoItem}>
+                <Flex direction="vertical" key={item.id} className={styles.footerInfoItem}>
                   {t(`footer.info.${item.id}`, { defaultValue: config.label })}{' '}
                   <Button
                     withoutPadding
@@ -82,7 +82,7 @@ const Footer = () => {
                   >
                     {item.content}
                   </Button>
-                </div>
+                </Flex>
               );
             }
 

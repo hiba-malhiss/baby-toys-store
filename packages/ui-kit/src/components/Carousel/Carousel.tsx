@@ -39,6 +39,16 @@ const Carousel: React.FC<CarouselProps> = ({
   const totalItems = items.length;
   const totalPages = Math.ceil(totalItems / visible);
 
+  // Determine if this carousel element is rendered in RTL context
+  const isRtl = (() => {
+    if (!carouselRef.current) return false;
+    try {
+      return getComputedStyle(carouselRef.current).direction === 'rtl';
+    } catch {
+      return false;
+    }
+  })();
+
   useEffect(() => {
     if (!responsiveOptions?.length) return;
     const handleResize = () => {
@@ -66,15 +76,20 @@ const Carousel: React.FC<CarouselProps> = ({
   const nextSlide = () => goToIndex(currentPage + 1);
   const prevSlide = () => goToIndex(currentPage - 1);
 
+  // In horizontal RTL, the visual next/prev are flipped
+  const isHorizontal = orientation === 'horizontal';
+  const directionalNext = isHorizontal && isRtl ? prevSlide : nextSlide;
+  const directionalPrev = isHorizontal && isRtl ? nextSlide : prevSlide;
+
   // Autoplay functionality
   useEffect(() => {
     if (autoplayInterval > 0) {
-      intervalRef.current = setInterval(nextSlide, autoplayInterval);
+      intervalRef.current = setInterval(directionalNext, autoplayInterval);
       return () => {
         if (intervalRef.current) clearInterval(intervalRef.current);
       };
     }
-  }, [autoplayInterval, currentPage]);
+  }, [autoplayInterval, currentPage, directionalNext]);
 
   // Pause autoplay on hover
   const handleMouseEnter = () => {
@@ -84,7 +99,7 @@ const Carousel: React.FC<CarouselProps> = ({
   // Proceed autoplay
   const handleMouseLeave = () => {
     if (autoplayInterval > 0) {
-      intervalRef.current = setInterval(nextSlide, autoplayInterval);
+      intervalRef.current = setInterval(directionalNext, autoplayInterval);
     }
   };
 
@@ -107,17 +122,26 @@ const Carousel: React.FC<CarouselProps> = ({
     const threshold = 50;
     const difference = touchStart - touchEnd;
 
-    if (difference > threshold) {
-      nextSlide();
-    } else if (difference < -threshold) {
-      prevSlide();
+    if (isHorizontal && isRtl) {
+      // In RTL, swipe left should go to previous visually
+      if (difference > threshold) {
+        directionalPrev();
+      } else if (difference < -threshold) {
+        directionalNext();
+      }
+    } else {
+      if (difference > threshold) {
+        directionalNext();
+      } else if (difference < -threshold) {
+        directionalPrev();
+      }
     }
   };
 
   const getTransform = () => {
     const percentage = (currentPage * 100) / visible;
     return orientation === 'horizontal'
-      ? `translateX(-${percentage}%)`
+      ? `translateX(${isRtl ? '' : '-'}${percentage}%)`
       : `translateY(-${percentage}%)`;
   };
 
@@ -144,12 +168,14 @@ const Carousel: React.FC<CarouselProps> = ({
       {showNavigation && (
         <Button
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonPrev)}
-          onClick={prevSlide}
+          onClick={directionalPrev}
           appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
           size="large"
           isRounded
           leftIcon={ChevronIcons[orientation].prev}
-          isDisabled={!circular && currentPage === 0}
+          isDisabled={
+            !circular && (isHorizontal && isRtl ? currentPage === totalPages - 1 : currentPage === 0)
+          }
         />
       )}
 
@@ -179,12 +205,14 @@ const Carousel: React.FC<CarouselProps> = ({
       {showNavigation && (
         <Button
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
-          onClick={nextSlide}
+          onClick={directionalNext}
           appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
           isRounded
           size="large"
           leftIcon={ChevronIcons[orientation].next}
-          isDisabled={!circular && currentPage === totalPages - 1}
+          isDisabled={
+            !circular && (isHorizontal && isRtl ? currentPage === 0 : currentPage === totalPages - 1)
+          }
         />
       )}
     </div>

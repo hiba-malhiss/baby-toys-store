@@ -16,7 +16,7 @@ interface HeadingProps {
 }
 
 const Heading: React.FC<HeadingProps> = ({
-  align = 'left',
+  align,
   appearance,
   level = 'h1',
   tag,

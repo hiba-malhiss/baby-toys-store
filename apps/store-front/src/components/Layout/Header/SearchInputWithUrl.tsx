@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { StringInput } from '@baby-toys/ui-kit';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
+import { useTranslation } from 'react-i18next';
 
 const parsers = {
   query: (val: string) => val,
@@ -11,6 +12,7 @@ const SearchInputWithUrl = () => {
   const navigate = useNavigate();
   const { urlFilters, updateUrlFilters } = useUrlFilters(parsers, {}, ['query']);
   const [value, setValue] = useState<string>(urlFilters?.query ?? '');
+  const { t } = useTranslation('common');
 
   useEffect(() => {
     setValue(urlFilters?.query ?? '');
@@ -29,7 +31,7 @@ const SearchInputWithUrl = () => {
   return (
     <form onSubmit={handleSearch} aria-label="Product Search Form">
       <StringInput
-        placeholder="Search products..."
+        placeholder={t('common.searchPlaceholder')}
         fullWidth
         value={value}
         onChange={(val) => {
