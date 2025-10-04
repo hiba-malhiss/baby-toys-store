@@ -22,6 +22,7 @@ export type Product = {
   label?: string;
   mainImage: string;
   isFavorite?: boolean;
+  availableInStock?: number;
 };
 export type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
@@ -29,6 +30,7 @@ export type ProductCardProps = {
   product: Product;
   fullWidth?: boolean;
   label?: string;
+  labelAppearance?: string;
   isLoadingFavorite?: boolean;
   isLoadingAddToCart?: boolean;
   onToggleFavorite?: (product: Product) => void;
@@ -41,6 +43,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   size,
   product,
   label,
+  labelAppearance,
   onToggleFavorite,
   onAddToCart,
   direction = 'vertical',
@@ -53,6 +56,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
   const toast = useToast();
+  const isOutOfStock = (product?.availableInStock ?? 0) === 0;
 
   const handleButtonClick = useCallback((e: MouseEvent, handler?: (product: Product) => void) => {
     e.preventDefault();
@@ -86,6 +90,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           onClick={(e) => handleButtonClick(e, onAddToCart)}
           aria-label="Add to cart"
           isLoading={isLoadingAddToCart}
+          isDisabled={isOutOfStock}
         />
       )}
       {direction === 'horizontal' && (
@@ -94,6 +99,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
           size="large"
           onClick={(e) => handleButtonClick(e, onAddToCart)}
           isLoading={isLoadingAddToCart}
+          isDisabled={isOutOfStock}
         >
           Add to cart
         </Button>
@@ -137,7 +143,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
       }}
     >
       <Card size="small" className={styles.productCardBox}>
-        {label && !isSmallSize && <Chip label={label} className={styles.productCardChip} />}
+        {label && !isSmallSize && (
+          <Chip label={label} appearance={labelAppearance} className={styles.productCardChip} />
+        )}
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
           <Image src={product.mainImage} alt={product.name} />

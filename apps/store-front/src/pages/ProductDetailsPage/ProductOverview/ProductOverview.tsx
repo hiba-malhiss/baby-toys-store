@@ -123,19 +123,22 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
             withControls
             value={quantity}
             onChange={(val) => setQuantity(Number(val))}
-            isDisabled={addToCartMutation.isPending}
+            isDisabled={addToCartMutation.isPending || product.outOfStock}
             maxTooltip={`Only ${product.availableInStock} left in stock`}
           />
           <Button
             leftIcon={faShoppingCart}
-            isDisabled={addToCartMutation.isPending}
+            isDisabled={addToCartMutation.isPending || product.outOfStock}
             isLoading={addToCartMutation.isPending}
             onClick={async () => {
               await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity });
               openShippingCartDrawer();
             }}
+            aria-label={product.outOfStock ? 'Out of stock' : t('product.addToCart')}
           >
-            {t('product.addToCart')}
+            {product.outOfStock
+              ? t('common.outOfStock', { defaultValue: 'Out of stock' })
+              : t('product.addToCart')}
           </Button>
           <Button
             leftIcon={faHeart}

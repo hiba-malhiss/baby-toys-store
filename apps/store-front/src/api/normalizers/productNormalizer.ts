@@ -14,6 +14,7 @@ export type UiProduct = {
   featureBullets?: string[];
   details?: { label: string; value: string }[];
   availableInStock?: number;
+  outOfStock?: boolean;
 };
 
 export function normalizeProduct(dto: Product): UiProduct {
@@ -39,5 +40,6 @@ export function normalizeProduct(dto: Product): UiProduct {
     featureBullets: dto.featureBullets || [],
     details: detailsArray,
     availableInStock: dto.stockQuantity ?? 0,
+    outOfStock: dto.outOfStock,
   };
 }

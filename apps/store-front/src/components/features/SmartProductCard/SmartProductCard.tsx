@@ -1,32 +1,44 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ProductCard, type ProductCardProps } from '@baby-toys/ui-kit';
+import { ProductCard } from '@baby-toys/ui-kit';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
 import { useAddToCart } from '../../../api/cartApi';
 import { useCartStore } from '../../../store/useCartStore';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
+import { useToast } from '@baby-toys/ui-kit';
+import type { Product } from '../../../api/types/product.ts';
 
-type SmartProductCardProps = ProductCardProps;
-
-const SmartProductCard: React.FC<SmartProductCardProps> = ({ ...props }) => {
+const SmartProductCard: React.FC<{ product: Product }> = ({ ...props }) => {
   const navigate = useNavigate();
   const { isFavorite, isLoading, toggleFavorite } = useWishlist(props.product);
   const addToCartMutation = useAddToCart();
   const { openShippingCartDrawer } = useCartStore();
   const formatCurrency = useCurrencyFormatter();
+  const toast = useToast();
   const handleToggleFavorite = async () => {
     await toggleFavorite();
+  };
+
+  const getProductLabel = (p: any): string => {
+    if (p?.outOfStock) return 'Out of stock';
+    if (p?.oldPrice > p?.price) return 'SALE';
+    return '';
   };
 
   return (
     <ProductCard
       {...props}
-      label={props.product.oldPrice > props.product.price ? 'SALE' : ''}
+      labelAppearance={props.product?.outOfStock ? 'secondary' : 'primary'}
+      label={getProductLabel(props.product)}
       formatCurrency={formatCurrency}
       isFavorite={isFavorite}
       onToggleFavorite={handleToggleFavorite}
       isLoadingAddToCart={addToCartMutation.isPending}
       onAddToCart={async (product) => {
+        if ((product as any)?.outOfStock) {
+          toast.error('Out of stock');
+          return;
+        }
         await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity: 1 });
         openShippingCartDrawer();
       }}
