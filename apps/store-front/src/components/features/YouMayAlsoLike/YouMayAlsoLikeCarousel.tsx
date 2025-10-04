@@ -24,7 +24,11 @@ const YouMayAlsoLikeCarousel: React.FC<YouMayAlsoLikeCarouselProps> = ({
   const { t } = useTranslation('common');
 
   return (
-    <Section title={title || t('highlights.youMayAlsoLike')} className={className} isLoading={isLoading}>
+    <Section
+      title={title || t('highlights.youMayAlsoLike')}
+      className={className}
+      isLoading={isLoading}
+    >
       <Carousel
         className="bts-marginTxxxxl"
         items={isLoading ? Array.from({ length: Math.min(8, pageSize) }) : items}
@@ -33,9 +37,9 @@ const YouMayAlsoLikeCarousel: React.FC<YouMayAlsoLikeCarouselProps> = ({
         orientation="horizontal"
         showNavigation
         responsiveOptions={[
-          { breakpoint: BREAKPOINTS.large, numVisible: 3 },
-          { breakpoint: BREAKPOINTS.medium, numVisible: 2 },
-          { breakpoint: BREAKPOINTS.small, numVisible: 1 },
+          { breakpoint: BREAKPOINTS.large, numVisible: 4 },
+          { breakpoint: BREAKPOINTS.medium, numVisible: 3 },
+          { breakpoint: BREAKPOINTS.small, numVisible: 2 },
         ]}
         itemTemplate={(item) =>
           isLoading ? (

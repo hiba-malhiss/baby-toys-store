@@ -37,9 +37,9 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], productName })
         numVisible={3}
         orientation="horizontal"
         responsiveOptions={[
-          { breakpoint: BREAKPOINTS.large, numVisible: 3 },
-          { breakpoint: BREAKPOINTS.medium, numVisible: 2 },
-          { breakpoint: BREAKPOINTS.small, numVisible: 1 },
+          { breakpoint: BREAKPOINTS.large, numVisible: 4 },
+          { breakpoint: BREAKPOINTS.medium, numVisible: 3 },
+          { breakpoint: BREAKPOINTS.small, numVisible: 2 },
         ]}
         itemTemplate={(img) => (
           <div

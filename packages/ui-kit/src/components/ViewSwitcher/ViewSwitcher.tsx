@@ -11,8 +11,13 @@ import NoDataFound from '../NoDataFound';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 
 type ResponsiveOption = {
-  breakpoint: number;
+  breakpoint: number | string;
   gridColumns: number;
+};
+
+type ResponsiveMinWidth = {
+  breakpoint: number | string;
+  minWidth: number; // px
 };
 
 export type ViewMode = 'grid' | 'list' | 'flex';
@@ -27,6 +32,7 @@ type ViewSwitcherProps = {
   className?: string;
   onPaginationChange: (page: number, pageSize: number) => void;
   responsiveOptions?: ResponsiveOption[];
+  responsiveMinWidth?: ResponsiveMinWidth[];
   onViewChange?: (view: ViewMode) => void;
   initialView?: ViewMode;
   staticView?: ViewMode;
@@ -48,6 +54,7 @@ function ViewSwitcher({
   totalSize,
   onPaginationChange,
   responsiveOptions = [],
+  responsiveMinWidth = [],
   onViewChange,
   minColWidth,
   initialView = 'grid',
@@ -67,6 +74,7 @@ function ViewSwitcher({
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState<ViewMode>(staticView ?? initialView);
   const [columns, setColumns] = useState<number | undefined>(undefined);
+  const [effectiveMinWidth, setEffectiveMinWidth] = useState<number | undefined>(undefined);
 
   // Track if this is the initial render
   const isInitialMount = useRef(true);
@@ -79,55 +87,76 @@ function ViewSwitcher({
     }
   }, [initialView, staticView, onViewChange]);
 
+  // Normalize breakpoint to numeric value (supports '768px' and numbers)
+  const toBpNumber = (bp: number | string): number =>
+    typeof bp === 'number' ? bp : parseInt(String(bp), 10);
+
   // Memoize sorted options to prevent unnecessary resorting
   const sortedOptions = React.useMemo(() => {
-    return [...(responsiveOptions || [])].sort((a, b) => a.breakpoint - b.breakpoint);
+    return [...(responsiveOptions || [])].sort(
+      (a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint)
+    );
   }, [responsiveOptions]);
 
-  // Handle responsive columns for grid view
+  const sortedMinWidth = React.useMemo(() => {
+    return [...(responsiveMinWidth || [])].sort(
+      (a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint)
+    );
+  }, [responsiveMinWidth]);
+
+  // Handle responsive columns for grid view and/or responsive minWidth
   useEffect(() => {
-    if (responsiveOptions.length === 0) {
+    if (responsiveOptions.length === 0 && responsiveMinWidth.length === 0) {
       setColumns(undefined);
+      setEffectiveMinWidth(undefined);
       return;
     }
 
     let timeoutId: NodeJS.Timeout;
 
-    const updateColumns = () => {
+    const updateResponsive = () => {
       const width = window.innerWidth;
-      let matched = pageSize;
 
-      // Find the best matching breakpoint
-      for (const opt of sortedOptions) {
-        if (width >= opt.breakpoint) {
-          matched = opt.gridColumns;
-        } else {
-          break;
-        }
+      if (sortedOptions.length > 0) {
+        // Carousel behavior: pick the first rule where width <= breakpoint;
+        // if none (width > largest), fallback to the largest rule
+        const match = sortedOptions.find((opt) => width <= toBpNumber(opt.breakpoint));
+        const matchedCols = match
+          ? match.gridColumns
+          : sortedOptions[sortedOptions.length - 1].gridColumns;
+        setColumns((prev) => (prev !== matchedCols ? matchedCols : prev));
       }
 
-      // Only update state if columns changed
-      setColumns((prev) => (prev !== matched ? matched : prev));
+      if (sortedMinWidth.length > 0) {
+        // Same behavior for minWidth: first rule where width <= breakpoint;
+        // if none (width > largest), fallback to largest rule's minWidth
+        const matchMin = sortedMinWidth.find((opt) => width <= toBpNumber(opt.breakpoint));
+        const matchedMin = matchMin
+          ? matchMin.minWidth
+          : sortedMinWidth[sortedMinWidth.length - 1].minWidth;
+        setEffectiveMinWidth((prev) => (prev !== matchedMin ? matchedMin : prev));
+      }
     };
 
-    // Debounce the resize handler
     const handleResize = () => {
       clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateColumns, 100);
+      timeoutId = setTimeout(updateResponsive, 100);
     };
 
-    // Initial update
-    updateColumns();
-
-    // Add event listener with passive: true for better performance
+    updateResponsive();
     window.addEventListener('resize', handleResize, { passive: true });
-
-    // Cleanup
     return () => {
       clearTimeout(timeoutId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [sortedOptions, pageSize, responsiveOptions.length]);
+  }, [
+    sortedOptions,
+    sortedMinWidth,
+    pageSize,
+    minColWidth,
+    responsiveOptions.length,
+    responsiveMinWidth.length,
+  ]);
 
   const changeView = React.useCallback(
     (view: ViewMode) => {
@@ -214,9 +243,7 @@ function ViewSwitcher({
         style={
           viewMode === 'grid'
             ? {
-                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(${
-                  minColWidth || 200
-                }px, 1fr))`,
+                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(${effectiveMinWidth ?? minColWidth ?? 200}px, 1fr))`,
               }
             : undefined
         }

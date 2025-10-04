@@ -4,6 +4,7 @@ import { ViewSwitcher } from '@baby-toys/ui-kit';
 import SmartProductCard from '../SmartProductCard/SmartProductCard.tsx';
 import { useHighlightsInfiniteQuery } from '../../../api/highlightsApi';
 import { useTranslation } from 'react-i18next';
+import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints.ts';
 
 interface YouMayAlsoLikeListProps {
   className?: string;
@@ -34,7 +35,11 @@ const YouMayAlsoLikeList: React.FC<YouMayAlsoLikeListProps> = ({
   };
 
   return (
-    <Section title={title || t('highlights.youMayAlsoLike')} className={className} isLoading={loading && page === 1}>
+    <Section
+      title={title || t('highlights.youMayAlsoLike')}
+      className={className}
+      isLoading={loading && page === 1}
+    >
       <ViewSwitcher
         items={items.map((product) => (
           <SmartProductCard key={product.id} product={product} direction="vertical" />
@@ -44,7 +49,12 @@ const YouMayAlsoLikeList: React.FC<YouMayAlsoLikeListProps> = ({
         pageSize={pageSize}
         totalSize={totalSize}
         onPaginationChange={handlePaginationChange}
-        staticView="flex"
+        staticView="grid"
+        responsiveMinWidth={[
+          { breakpoint: BREAKPOINTS.large, minWidth: 250 },
+          { breakpoint: BREAKPOINTS.medium, minWidth: 180 },
+          { breakpoint: BREAKPOINTS.small, minWidth: 150 },
+        ]}
         paginationMode="infinite-scroll"
         isLoading={loading}
         hasMore={hasMore}

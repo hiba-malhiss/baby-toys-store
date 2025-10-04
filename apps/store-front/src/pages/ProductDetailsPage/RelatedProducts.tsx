@@ -5,6 +5,7 @@ import styles from './product-details-page.module.scss';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
 import { useRelatedProductsInfinite } from '../../api/productApi';
 import { useTranslation } from 'react-i18next';
+import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints.ts';
 
 const PAGE_SIZE = 6;
 const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId }) => {
@@ -35,7 +36,12 @@ const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId
         pageSize={PAGE_SIZE}
         totalSize={totalSize}
         onPaginationChange={handlePaginationChange}
-        staticView="flex"
+        staticView="grid"
+        responsiveMinWidth={[
+          { breakpoint: BREAKPOINTS.large, minWidth: 250 },
+          { breakpoint: BREAKPOINTS.medium, minWidth: 180 },
+          { breakpoint: BREAKPOINTS.small, minWidth: 150 },
+        ]}
         paginationMode="infinite-scroll"
         isLoading={loading}
         hasMore={hasMore}

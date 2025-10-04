@@ -8,6 +8,7 @@ import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouM
 import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
 import { useMyWishlist } from '../../api/wishlistApi';
 import { useTranslation } from 'react-i18next';
+import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints.ts';
 
 const LIST_PAGE_SIZE = 10;
 
@@ -59,7 +60,12 @@ const WishListPage = () => {
         pageSize={LIST_PAGE_SIZE}
         totalSize={totalSize}
         onPaginationChange={handlePaginationChange}
-        staticView="flex"
+        staticView="grid"
+        responsiveMinWidth={[
+          { breakpoint: BREAKPOINTS.large, minWidth: 250 },
+          { breakpoint: BREAKPOINTS.medium, minWidth: 180 },
+          { breakpoint: BREAKPOINTS.small, minWidth: 150 },
+        ]}
         isLoading={isLoading}
       />
     );
