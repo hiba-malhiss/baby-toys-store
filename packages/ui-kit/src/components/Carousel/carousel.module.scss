@@ -35,6 +35,13 @@
     padding: 0 10px;
   }
 
+  // Small size variant: tighter spacing between items
+  &--small {
+    .carousel-item {
+      padding: 0 2px;
+    }
+  }
+
   &-navButton {
     &-prev {
       order: -1;
@@ -67,6 +74,13 @@
 
     .carousel-item {
       padding: 10px 0;
+    }
+
+    // Small size for vertical orientation
+    &.carousel--small {
+      .carousel-item {
+        padding: 2px 0;
+      }
     }
 
     .carousel-navButton {

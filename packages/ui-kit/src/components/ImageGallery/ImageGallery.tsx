@@ -36,11 +36,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], productName })
         items={safeImages}
         numVisible={3}
         orientation="horizontal"
-        responsiveOptions={[
-          { breakpoint: BREAKPOINTS.large, numVisible: 4 },
-          { breakpoint: BREAKPOINTS.medium, numVisible: 3 },
-          { breakpoint: BREAKPOINTS.small, numVisible: 2 },
-        ]}
+        size="small"
         itemTemplate={(img) => (
           <div
             key={img}

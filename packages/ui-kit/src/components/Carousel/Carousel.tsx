@@ -16,6 +16,7 @@ interface CarouselProps {
   showNavigation?: boolean;
   responsiveOptions?: { breakpoint: string; numVisible: number }[];
   navigationStyle?: 'overlay' | 'side';
+  size?: 'small' | 'medium' | 'large';
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -30,6 +31,7 @@ const Carousel: React.FC<CarouselProps> = ({
   showNavigation = true,
   navigationStyle = 'overlay',
   responsiveOptions = [],
+  size = 'medium',
 }) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [visible, setVisible] = useState(numVisible);
@@ -156,6 +158,7 @@ const Carousel: React.FC<CarouselProps> = ({
         styles.carousel,
         orientation === 'vertical' && styles.carouselVertical,
         navigationStyle === 'side' && styles.carouselSideNav,
+        size === 'small' && styles.carouselSmall,
         className
       )}
       style={{ height: orientation === 'vertical' ? verticalViewPortHeight : 'auto' }}
