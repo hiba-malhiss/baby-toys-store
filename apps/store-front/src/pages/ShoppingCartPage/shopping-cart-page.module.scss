@@ -30,6 +30,10 @@
     font-weight: 600;
     padding: 12px;
     border-bottom: 1px solid $color-border;
+
+    > div {
+      padding-inline-start: 6px;
+    }
   }
 
   &-productName {

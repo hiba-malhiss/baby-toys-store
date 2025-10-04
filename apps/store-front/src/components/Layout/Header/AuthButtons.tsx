@@ -42,6 +42,7 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
           >
             {t('auth.login')}
           </Button>
+          <div>|</div>
           <Button
             withoutPadding
             appearance="link"

@@ -78,8 +78,8 @@ const Header = () => {
           <span>{t('nav.welcome')}</span>
         </Flex>
         <Flex align="center" spacing="s" className="bts-hideOnMobile">
-          <LanguageSwitcher />
           {authButtons(true)}
+          <LanguageSwitcher />
         </Flex>
         <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>
