@@ -1,20 +1,26 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import styles from './language-switcher.module.scss';
 import clsx from 'clsx';
+import styles from './language-switcher.module.scss';
+import { queryClient } from '../../App';
+import { setAppLocale } from './locale.ts';
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
   const current = (i18n.language || 'en').toLowerCase();
-  const isAr = useMemo(() => current.startsWith('ar'), [current]);
+  const isAr = current.startsWith('ar');
 
   const handleToggle = () => {
     const next = isAr ? 'en' : 'ar';
+
     i18n.changeLanguage(next);
-    if (typeof document !== 'undefined') {
-      document.documentElement.setAttribute('dir', next === 'ar' ? 'rtl' : 'ltr');
-      document.documentElement.setAttribute('lang', next);
-    }
+    setAppLocale(next);
+
+    document.documentElement.setAttribute('dir', next === 'ar' ? 'rtl' : 'ltr');
+    document.documentElement.setAttribute('lang', next);
+
+    // Invalidate cached data to reload translated content
+    queryClient.invalidateQueries();
   };
 
   return (

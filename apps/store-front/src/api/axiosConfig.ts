@@ -6,6 +6,7 @@ import axios, {
 } from 'axios';
 import { queryClient } from '../App';
 import { getGuestCartToken } from '../utils/guestCart';
+import { getAppLocale } from '../components/i18n/locale.ts';
 
 type RequestQueueItem = {
   resolve: (value: any) => void;
@@ -19,6 +20,7 @@ let isRefreshing = false;
 
 let inMemoryAccessToken: string | null = null;
 
+// Access token helpers
 export function setAccessToken(token: string) {
   inMemoryAccessToken = token;
 }
@@ -59,7 +61,7 @@ function processQueue(error: any, token: string | null = null) {
   requestQueue.length = 0;
 }
 
-// Attach Authorization header
+// Attach Authorization + Locale headers
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {};
@@ -79,12 +81,15 @@ api.interceptors.request.use(
       }
     }
 
+    // Attach preferred locale
+    (config.headers as any)['Accept-Language'] = getAppLocale() || 'ar';
+
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Handle response errors and token refresh
+// Handle token refresh and errors
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
