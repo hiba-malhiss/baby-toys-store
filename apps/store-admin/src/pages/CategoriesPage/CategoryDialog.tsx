@@ -14,9 +14,18 @@ import {
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Category } from '../../api/types/category';
-import { categorySchema, defaultCategoryValues, type CategoryFormValues } from './categories.helper.ts';
+import {
+  categorySchema,
+  defaultCategoryValues,
+  type CategoryFormValues,
+} from './categories.helper.ts';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
-import { useCreateCategory, useUpdateCategory, useUploadCategoryImage, useCategoryAdmin } from '../../api/categoryApi';
+import {
+  useCreateCategory,
+  useUpdateCategory,
+  useUploadCategoryImage,
+  useCategoryAdmin,
+} from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit';
 
 interface CategoryDialogProps {
@@ -59,7 +68,9 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   React.useEffect(() => {
     if (category?.id && adminCategory) {
       const trMap = new Map<string, any>();
-      adminCategory.translations?.forEach((t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t));
+      adminCategory.translations?.forEach(
+        (t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t)
+      );
       const en = trMap.get('en') || {};
       const ar = trMap.get('ar') || {};
       reset({
@@ -84,8 +95,16 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         imageUrl: data.imageUrl || undefined,
         isMain: data.isMain ?? false,
         translations: [
-          { locale: 'en', name: data.translations.en.name, description: data.translations.en.description || '' },
-          { locale: 'ar', name: data.translations.ar.name, description: data.translations.ar.description || '' },
+          {
+            locale: 'en',
+            name: data.translations.en.name,
+            description: data.translations.en.description || '',
+          },
+          {
+            locale: 'ar',
+            name: data.translations.ar.name,
+            description: data.translations.ar.description || '',
+          },
         ],
       };
 
@@ -151,18 +170,40 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
           defaultSelected="en"
         >
           <TabBarItem value="en">
-            <FormFieldWrapper name={`translations.en.name`} control={control} label="Name (en)" required fullWidth>
+            <FormFieldWrapper
+              name={`translations.en.name`}
+              control={control}
+              label="Name (en)"
+              required
+              fullWidth
+            >
               <StringInput disabled={isSubmitting} />
             </FormFieldWrapper>
-            <FormFieldWrapper name={`translations.en.description`} control={control} label="Description (en)" fullWidth>
+            <FormFieldWrapper
+              name={`translations.en.description`}
+              control={control}
+              label="Description (en)"
+              fullWidth
+            >
               <TextArea rows={4} disabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>
           <TabBarItem value="ar">
-            <FormFieldWrapper name={`translations.ar.name`} control={control} label="Name (ar)" required fullWidth>
+            <FormFieldWrapper
+              name={`translations.ar.name`}
+              control={control}
+              label="Name (ar)"
+              required
+              fullWidth
+            >
               <StringInput disabled={isSubmitting} />
             </FormFieldWrapper>
-            <FormFieldWrapper name={`translations.ar.description`} control={control} label="Description (ar)" fullWidth>
+            <FormFieldWrapper
+              name={`translations.ar.description`}
+              control={control}
+              label="Description (ar)"
+              fullWidth
+            >
               <TextArea rows={4} disabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>
