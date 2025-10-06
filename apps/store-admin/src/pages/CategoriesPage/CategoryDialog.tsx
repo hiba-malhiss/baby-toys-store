@@ -8,21 +8,16 @@ import {
   useToast,
   Select,
   Option,
+  TabBar,
+  TabBarItem,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
-import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Category } from '../../api/types/category';
-import { categorySchema } from './categories.helper.ts';
+import { categorySchema, defaultCategoryValues, type CategoryFormValues } from './categories.helper.ts';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
-import {
-  useCreateCategory,
-  useUpdateCategory,
-  useUploadCategoryImage,
-} from '../../api/categoryApi';
+import { useCreateCategory, useUpdateCategory, useUploadCategoryImage, useCategoryAdmin } from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit';
-
-type CategoryFormValues = z.infer<typeof categorySchema>;
 
 interface CategoryDialogProps {
   visible: boolean;
@@ -43,6 +38,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   const uploadCategoryImage = useUploadCategoryImage();
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(category?.imageUrl || null);
+  const { data: adminCategory } = useCategoryAdmin(category?.id);
 
   const {
     control,
@@ -52,51 +48,63 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     getValues,
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
-    defaultValues: {
-      name: category?.name || '',
-      description: category?.description || '',
-      imageUrl: category?.imageUrl || '',
-      isMain: category?.isMain ?? false,
-    },
+    defaultValues: defaultCategoryValues,
   });
 
   useEffect(() => {
     return () => imagePreview && URL.revokeObjectURL(imagePreview);
   }, [imagePreview]);
 
-  // Reset form whenever dialog closes or category changes
+  // Reset form whenever dialog opens or category/admin data changes
   React.useEffect(() => {
-    reset({
-      name: category?.name || '',
-      description: category?.description || '',
-      imageUrl: category?.imageUrl || '',
-      isMain: category?.isMain ?? false,
-    });
-    setImagePreview(category?.imageUrl || null);
+    if (category?.id && adminCategory) {
+      const trMap = new Map<string, any>();
+      adminCategory.translations?.forEach((t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t));
+      const en = trMap.get('en') || {};
+      const ar = trMap.get('ar') || {};
+      reset({
+        imageUrl: adminCategory.imageUrl || '',
+        isMain: adminCategory.isMain ?? false,
+        translations: {
+          en: { name: en.name || '', description: en.description || '' },
+          ar: { name: ar.name || '', description: ar.description || '' },
+        },
+      });
+      setImagePreview(adminCategory.imageUrl || null);
+    } else if (!category?.id) {
+      reset(defaultCategoryValues);
+      setImagePreview(null);
+    }
     setImageFile(null);
-  }, [category, reset, visible]);
+  }, [category?.id, adminCategory, reset, visible]);
 
   const submitForm = async (data: CategoryFormValues) => {
     try {
-      const categoryData = {
-        ...data,
-        imageUrl: category?.imageUrl,
+      const payload = {
+        imageUrl: data.imageUrl || undefined,
+        isMain: data.isMain ?? false,
+        translations: [
+          { locale: 'en', name: data.translations.en.name, description: data.translations.en.description || '' },
+          { locale: 'ar', name: data.translations.ar.name, description: data.translations.ar.description || '' },
+        ],
       };
 
-      let result;
-      if (category?.id) {
-        result = await updateCategory.mutateAsync({ ...categoryData, id: category.id });
-      } else {
-        result = await createCategory.mutateAsync(categoryData);
-      }
+      const returnedId = category?.id
+        ? await updateCategory.mutateAsync({ id: category.id, ...payload })
+        : await createCategory.mutateAsync(payload);
 
       // Upload image if a new file was selected
       if (imageFile) {
         try {
-          await uploadCategoryImage.mutateAsync({
-            id: result.id,
+          const res = await uploadCategoryImage.mutateAsync({
+            id: returnedId,
             file: imageFile,
           });
+          // Update preview and form with server URL so user sees the uploaded image if dialog stays open
+          if (res?.imageUrl) {
+            setImagePreview(res.imageUrl);
+            reset({ ...getValues(), imageUrl: res.imageUrl });
+          }
         } catch (error) {
           console.error('Error uploading image:', error);
           toast.error('Category saved, but there was an error uploading the image');
@@ -110,21 +118,6 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       setImagePreview(null);
     } catch (err: any) {
       toast.error(err?.message || 'Failed to save category');
-    }
-  };
-
-  const handleImageChange = (files) => {
-    const f = files[0] || null;
-
-    if (f instanceof File) {
-      setImageFile(f);
-      const preview = URL.createObjectURL(f);
-      setImagePreview(preview);
-      reset({ ...getValues(), imageUrl: '' });
-    } else {
-      setImageFile(null);
-      setImagePreview(null);
-      reset({ ...getValues(), imageUrl: '' });
     }
   };
 
@@ -150,9 +143,30 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       footer={footer}
     >
       <Flex direction="vertical" spacing="m" fullwidth>
-        <FormFieldWrapper name="name" control={control} label="Name" required fullWidth>
-          <StringInput disabled={isSubmitting} />
-        </FormFieldWrapper>
+        <TabBar
+          tabs={[
+            { header: 'English (en)', value: 'en' },
+            { header: 'Arabic (ar)', value: 'ar' },
+          ]}
+          defaultSelected="en"
+        >
+          <TabBarItem value="en">
+            <FormFieldWrapper name={`translations.en.name`} control={control} label="Name (en)" required fullWidth>
+              <StringInput disabled={isSubmitting} />
+            </FormFieldWrapper>
+            <FormFieldWrapper name={`translations.en.description`} control={control} label="Description (en)" fullWidth>
+              <TextArea rows={4} disabled={isSubmitting} />
+            </FormFieldWrapper>
+          </TabBarItem>
+          <TabBarItem value="ar">
+            <FormFieldWrapper name={`translations.ar.name`} control={control} label="Name (ar)" required fullWidth>
+              <StringInput disabled={isSubmitting} />
+            </FormFieldWrapper>
+            <FormFieldWrapper name={`translations.ar.description`} control={control} label="Description (ar)" fullWidth>
+              <TextArea rows={4} disabled={isSubmitting} />
+            </FormFieldWrapper>
+          </TabBarItem>
+        </TabBar>
 
         <FormFieldWrapper name="isMain" control={control} label="Is Main" fullWidth>
           <Select>
@@ -161,14 +175,26 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
           </Select>
         </FormFieldWrapper>
 
-        <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-          <TextArea rows={4} disabled={isSubmitting} />
-        </FormFieldWrapper>
-
         <FormFieldWrapper name="imageUrl" label="Image" fullWidth>
           <ImageUploader
-            value={imagePreview ? [imagePreview] : []}
-            onChange={handleImageChange}
+            images={imageFile ? [imageFile] : imagePreview ? [imagePreview] : []}
+            multiple={false}
+            onImagesChange={(files: (File | string)[]) => {
+              const file = files?.[0];
+              if (file instanceof File) {
+                setImageFile(file);
+                // Show local blob preview immediately
+                const preview = URL.createObjectURL(file);
+                setImagePreview(preview);
+              } else if (typeof file === 'string') {
+                // If component returns a string URL (e.g., previously uploaded), use it as preview
+                setImagePreview(file);
+                setImageFile(null);
+              } else {
+                setImageFile(null);
+                setImagePreview(null);
+              }
+            }}
             isDisabled={isSubmitting}
           />
         </FormFieldWrapper>

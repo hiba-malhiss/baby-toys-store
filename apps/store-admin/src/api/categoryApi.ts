@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import api from './axiosConfig';
-import { Category } from './types/category';
+import { Category, CategoryDetailsAdminDto, CategoryUpsertRequest } from './types/category';
 import { ApiEnvelope } from './types/common';
 
 export const useCategories = () => {
@@ -17,12 +17,9 @@ export const useCategories = () => {
 export const useCreateCategory = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<number, AxiosError, Omit<Category, 'id'>>({
-    mutationFn: async (category) => {
-      const response = await api.post<ApiEnvelope<{ id: number }>>(
-        '/api/admin/categories',
-        category
-      );
+  return useMutation<number, AxiosError, CategoryUpsertRequest>({
+    mutationFn: async (payload) => {
+      const response = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/categories', payload);
       return response.data.data.id;
     },
     onSuccess: () => {
@@ -34,18 +31,16 @@ export const useCreateCategory = () => {
 export const useUpdateCategory = () => {
   const queryClient = useQueryClient();
 
-  return useMutation<number, AxiosError, Category>({
-    mutationFn: async (category) => {
-      const { id, ...updateData } = category;
-      const response = await api.put<ApiEnvelope<{ id: number }>>(
-        `/api/admin/categories/${id}`,
-        updateData
-      );
+  return useMutation<number, AxiosError, CategoryUpsertRequest & { id: number }>({
+    mutationFn: async ({ id, ...payload }) => {
+      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/categories/${id}`, payload);
       return response.data.data.id;
     },
-    onSuccess: (_, id) => {
+    onSuccess: (_res, variables) => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      queryClient.invalidateQueries({ queryKey: ['categories', id] });
+      if (variables?.id) {
+        queryClient.invalidateQueries({ queryKey: ['category-admin', variables.id] });
+      }
     },
   });
 };
@@ -85,7 +80,18 @@ export const useUploadCategoryImage = () => {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['categories'] });
-      queryClient.invalidateQueries({ queryKey: ['categories', data.id] });
+      queryClient.invalidateQueries({ queryKey: ['category-admin', data.id] });
+    },
+  });
+};
+
+export const useCategoryAdmin = (id?: number) => {
+  return useQuery<CategoryDetailsAdminDto, AxiosError>({
+    queryKey: ['category-admin', id],
+    enabled: !!id,
+    queryFn: async () => {
+      const response = await api.get<ApiEnvelope<CategoryDetailsAdminDto>>(`/api/admin/categories/${id}`);
+      return response.data.data;
     },
   });
 };
