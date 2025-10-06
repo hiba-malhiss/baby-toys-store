@@ -34,24 +34,44 @@ export interface Product {
   updatedAt?: string;
 }
 
-export interface CreateProductRequest {
+// Admin: translation DTO
+export interface ProductTranslationDto {
+  locale: string;
   name: string;
+  shortDescription: string;
   description?: string;
-  shortDescription?: string;
-  price: number;
-  stockQuantity: number;
-  releaseDate?: string;
-  mainImage?: string;
-  images?: string[];
   featureBullets?: string[];
   details?: Record<string, string>;
+}
+
+// Admin: product details with all translations
+export interface ProductDetailsAdminDto extends Product {
+  translations: ProductTranslationDto[];
+}
+
+// Backend upsert payload with translations
+export interface ProductUpsertRequest {
+  // Non-localized fields
+  price: number;
+  oldPrice?: number | null;
+  stockQuantity: number;
+  releaseDate?: string;
+  mainImage: string;
+  images?: string[];
   isActive?: boolean;
+
   categoryId?: number;
   brandId?: number;
   materialIds?: number[];
   colorIds?: number[];
-}
 
-export interface UpdateProductRequest extends CreateProductRequest {
-  id: number;
+  // Localized content per locale (e.g., en, ar)
+  translations: Array<{
+    locale: 'en' | 'ar' | string;
+    name: string;
+    shortDescription: string;
+    description?: string;
+    featureBullets?: string[];
+    details?: Record<string, string>;
+  }>;
 }

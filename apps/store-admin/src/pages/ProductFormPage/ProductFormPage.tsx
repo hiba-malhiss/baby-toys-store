@@ -1,17 +1,10 @@
 import React from 'react';
-import { Flex, Heading, Button, Card } from '@baby-toys/ui-kit';
-import {
-  StringInput,
-  TextArea,
-  StringArrayInput,
-  KeyValueArrayInput,
-  Select,
-  Option,
-  ImageUploader,
-} from '@baby-toys/ui-kit';
+import { Flex, Heading, Button, Card, TabBar, TabBarItem } from '@baby-toys/ui-kit';
+import { StringInput, Select, Option, ImageUploader } from '@baby-toys/ui-kit';
 import { useProductForm } from './useProductForm';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
+import LocalizedFields from './LocalizedFields';
 
 const ProductFormPage: React.FC = () => {
   const {
@@ -36,57 +29,36 @@ const ProductFormPage: React.FC = () => {
       <Flex direction="vertical" spacing="m">
         <Heading>{isEditMode ? `Edit Product` : 'Add Product'}</Heading>
         <Flex spacing="xl" fullWidth align="stretch">
-          {/* Left Card - Product Details */}
+          {/* Left Card - Product Details (Localized with TabBar) */}
+          <Card fullWidth>
+            <TabBar
+              tabs={[
+                { header: 'English (en)', value: 'en' },
+                { header: 'Arabic (ar)', value: 'ar' },
+              ]}
+              defaultSelected="en"
+            >
+              <TabBarItem value="en">
+                <LocalizedFields control={control} locale="en" isDisabled={isDeletingImage} />
+              </TabBarItem>
+
+              <TabBarItem value="ar">
+                <LocalizedFields control={control} locale="ar" isDisabled={isDeletingImage} />
+              </TabBarItem>
+            </TabBar>
+          </Card>
+
+          {/* Right Card - Images & Meta */}
           <Card fullWidth>
             <Flex direction="vertical" spacing="xxl" fullWidth>
-              <FormFieldWrapper
-                name="name"
-                control={control}
-                label="Product name"
-                fullWidth
-                required
-              >
-                <StringInput placeholder="Enter product name" disabled={isDeletingImage} />
+              {/* Main Image */}
+              <FormFieldWrapper label="Main Image" fullWidth isDisabled={isDeletingImage} required>
+                <ImageUploader {...mainImageUploaderProps} />
               </FormFieldWrapper>
 
-              <FormFieldWrapper
-                name="shortDescription"
-                control={control}
-                label="Short Description"
-                fullWidth
-                required
-              >
-                <TextArea placeholder="Enter a short description" disabled={isDeletingImage} />
-              </FormFieldWrapper>
-
-              <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-                <TextArea placeholder="Enter a full description" disabled={isDeletingImage} />
-              </FormFieldWrapper>
-
-              <FormFieldWrapper name="details" control={control} label="Product Details" fullWidth>
-                <KeyValueArrayInput
-                  keyPlaceholder="Label"
-                  valuePlaceholder="Value"
-                  addButtonText="Add detail"
-                  fullWidth
-                  disabled={isDeletingImage}
-                />
-              </FormFieldWrapper>
-
-              <FormFieldWrapper
-                name="featureBullets"
-                control={control}
-                label="Feature Bullets"
-                fullWidth
-              >
-                <StringArrayInput
-                  placeholder="Add bullet"
-                  addButtonText="Add bullet"
-                  min={1}
-                  max={10}
-                  fullWidth
-                  disabled={isDeletingImage}
-                />
+              {/* Gallery Images */}
+              <FormFieldWrapper label="Gallery Images" fullWidth isDisabled={isDeletingImage}>
+                <ImageUploader {...imageUploaderProps} />
               </FormFieldWrapper>
 
               <Flex spacing="l" fullWidth>
@@ -112,23 +84,8 @@ const ProductFormPage: React.FC = () => {
               >
                 <StringInput type="number" disabled={isDeletingImage} />
               </FormFieldWrapper>
-            </Flex>
-          </Card>
 
-          {/* Right Card - Images & Meta */}
-          <Card fullWidth>
-            <Flex direction="vertical" spacing="xxl" fullWidth>
-              {/* Main Image */}
-              <FormFieldWrapper label="Main Image" fullWidth isDisabled={isDeletingImage} required>
-                <ImageUploader {...mainImageUploaderProps} />
-              </FormFieldWrapper>
-
-              {/* Gallery Images */}
-              <FormFieldWrapper label="Gallery Images" fullWidth isDisabled={isDeletingImage}>
-                <ImageUploader {...imageUploaderProps} />
-              </FormFieldWrapper>
-
-              {/* Category */}
+              {/* Category (non-localized) */}
               <FormFieldWrapper name="categoryId" control={control} label="Category" fullWidth>
                 <Select fullWidth disabled={isDeletingImage}>
                   {categories.map((cat) => (
@@ -139,7 +96,7 @@ const ProductFormPage: React.FC = () => {
                 </Select>
               </FormFieldWrapper>
 
-              {/* Brand */}
+              {/* Brand (non-localized) */}
               <FormFieldWrapper name="brandId" control={control} label="Brand" fullWidth>
                 <Select fullWidth disabled={isDeletingImage}>
                   {brands.map((b) => (
@@ -150,7 +107,7 @@ const ProductFormPage: React.FC = () => {
                 </Select>
               </FormFieldWrapper>
 
-              {/* Colors */}
+              {/* Colors (non-localized) */}
               <FormFieldWrapper name="colorIds" control={control} label="Colors" fullWidth>
                 <Select multiple fullWidth disabled={isDeletingImage}>
                   {colors.map((c) => (
@@ -161,7 +118,7 @@ const ProductFormPage: React.FC = () => {
                 </Select>
               </FormFieldWrapper>
 
-              {/* Materials */}
+              {/* Materials (non-localized) */}
               <FormFieldWrapper name="materialIds" control={control} label="Materials" fullWidth>
                 <Select multiple fullWidth disabled={isDeletingImage}>
                   {materials.map((m) => (

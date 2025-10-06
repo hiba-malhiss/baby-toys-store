@@ -1,8 +1,9 @@
 import React, { useCallback } from 'react';
-import { Menu, Button, Toast, BouncingDotsLoader, Mask } from '@baby-toys/ui-kit';
+import { Menu, Button, Toast, BouncingDotsLoader, Mask, Flex } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';
+import LanguageSwitcher from '../../i18n/LanguageSwitcher.tsx';
 
 const menuItems = [
   { label: 'Dashboard', route: '/dashboard' },
@@ -49,7 +50,10 @@ const AdminLayout: React.FC<{
       <Toast />
       <div className={styles.adminLayout}>
         <aside className={styles.adminLayoutSidebar}>
-          <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
+          <Flex justify="between" align="center">
+            <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
+            <LanguageSwitcher />
+          </Flex>
           <Menu model={menuItems} spacing="s" className={styles.adminLayoutNav} />
           <Button
             fullWidth

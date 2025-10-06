@@ -1,5 +1,6 @@
 import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig, type AxiosRequestConfig } from 'axios';
 import { queryClient } from '../App';
+import { getAppLocale } from '../components/i18n/locale';
 
 type RequestQueueItem = {
   resolve: (value: any) => void;
@@ -53,12 +54,14 @@ function processQueue(error: any, token: string | null = null){
   requestQueue.length = 0;
 }
 
-// Attach Authorization header
+// Attach Authorization and language headers
 api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   config.headers = config.headers ?? {};
   if(inMemoryAccessToken) {
     config.headers.Authorization = `Bearer ${inMemoryAccessToken}`;
   }
+  // Always attach preferred locale
+  (config.headers as any)['Accept-Language'] = getAppLocale() || 'en';
   return config;
 });
 

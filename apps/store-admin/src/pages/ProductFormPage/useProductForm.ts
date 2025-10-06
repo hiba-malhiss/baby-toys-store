@@ -64,36 +64,74 @@ export const useProductForm = () => {
   } as const;
 
   // Live watchers for counters
-  const watchName = useWatch({ control, name: 'name' });
-  const watchShortDescription = useWatch({ control, name: 'shortDescription' });
-  const watchDescription = useWatch({ control, name: 'description' });
-  const watchFeatureBullets = useWatch({ control, name: 'featureBullets' });
+  const watchNameEn = useWatch({ control, name: 'translations.en.name' });
+  const watchShortDescriptionEn = useWatch({ control, name: 'translations.en.shortDescription' });
+  const watchDescriptionEn = useWatch({ control, name: 'translations.en.description' });
+  const watchFeatureBulletsEn = useWatch({ control, name: 'translations.en.featureBullets' });
+  const watchNameAr = useWatch({ control, name: 'translations.ar.name' });
+  const watchShortDescriptionAr = useWatch({ control, name: 'translations.ar.shortDescription' });
+  const watchDescriptionAr = useWatch({ control, name: 'translations.ar.description' });
+  const watchFeatureBulletsAr = useWatch({ control, name: 'translations.ar.featureBullets' });
 
   // Pre-fill form when editing
   useEffect(() => {
     if (product) {
       setExistingImages(product.images || []);
       setMainImageUrl(product.mainImage || null);
+      
+      // Build locale maps from admin translations
+      const trMap = new Map<string, any>();
+      (product as any).translations?.forEach((t: any) => {
+        if (t?.locale) trMap.set(String(t.locale).toLowerCase(), t);
+      });
+      const enTr = trMap.get('en') || {};
+      const arTr = trMap.get('ar') || {};
 
-      const detailsArray = product.details
-        ? Object.entries(product.details).map(([label, value]) => ({
+      const detailsArrayEn = enTr.details
+        ? Object.entries(enTr.details as Record<string, string>).map(([label, value]) => ({
+            label,
+            value: String(value),
+          }))
+        : [];
+      const detailsArrayAr = arTr.details
+        ? Object.entries(arTr.details as Record<string, string>).map(([label, value]) => ({
             label,
             value: String(value),
           }))
         : [];
 
-      const defaultValues = {
+      const defaultValues: ProductFormValues = {
         ...defaultProductValues,
-        ...product,
-        details: detailsArray,
-        featureBullets: product.featureBullets?.length ? product.featureBullets : [''],
+        // non-localized
+        price: product.price as unknown as number,
+        oldPrice: (product.oldPrice as number | null) ?? undefined,
+        stockQuantity: product.stockQuantity as unknown as number,
+        releaseDate: product.releaseDate || '',
         images: product.images || [],
         mainImage: product.mainImage || '',
+        isActive: product.isActive ?? true,
         colorIds: product.colorIds || [],
         materialIds: product.materialIds || [],
         categoryId: product.categoryId ?? undefined,
         brandId: product.brandId ?? undefined,
-      };
+        // localized (prefill from admin translations)
+        translations: {
+          en: {
+            name: enTr.name || '',
+            shortDescription: enTr.shortDescription || '',
+            description: enTr.description || '',
+            featureBullets: Array.isArray(enTr.featureBullets) && enTr.featureBullets.length ? enTr.featureBullets : [''],
+            details: detailsArrayEn,
+          },
+          ar: {
+            name: arTr.name || '',
+            shortDescription: arTr.shortDescription || '',
+            description: arTr.description || '',
+            featureBullets: Array.isArray(arTr.featureBullets) && arTr.featureBullets.length ? arTr.featureBullets : [''],
+            details: detailsArrayAr,
+          },
+        },
+      } as unknown as ProductFormValues;
 
       reset(defaultValues);
       setNewImages([]);
@@ -114,32 +152,46 @@ export const useProductForm = () => {
         return;
       }
 
-      // Sanitize and trim to backend limits
-      const name = (data.name || '').trim().slice(0, MAX.name);
-      const shortDescription = (data.shortDescription || '').trim().slice(0, MAX.shortDescription);
-      const description = (data.description || '').trim().slice(0, MAX.description);
+      // Helper to sanitize a locale block
+      const sanitizeLocale = (locale: 'en' | 'ar') => {
+        const t = (data.translations as any)[locale] || {};
+        const name = (t.name || '').trim().slice(0, MAX.name);
+        const shortDescription = (t.shortDescription || '').trim().slice(0, MAX.shortDescription);
+        const description = (t.description || '').trim().slice(0, MAX.description);
+        const featureBullets = (t.featureBullets || [])
+          .map((f: string) => (f || '').trim().slice(0, MAX.featureBullet))
+          .filter(Boolean)
+          .slice(0, MAX.featureBulletsCount);
+        const detailsObj = (t.details || []).reduce<Record<string, string>>((acc: any, item: any) => {
+          const key = (item?.label || '').trim().slice(0, MAX.detailsLabel);
+          const val = (String(item?.value || '')).trim().slice(0, MAX.detailsValue);
+          if (key) acc[key] = val;
+          return acc;
+        }, {});
+        return { name, shortDescription, description, featureBullets, details: detailsObj };
+      };
 
-      const featureBullets = (data.featureBullets || [])
-        .map((f) => (f || '').trim().slice(0, MAX.featureBullet))
-        .filter(Boolean)
-        .slice(0, MAX.featureBulletsCount);
-
-      const detailsObject = (data.details || []).reduce<Record<string, string>>((acc, item) => {
-        const key = (item?.label || '').trim().slice(0, MAX.detailsLabel);
-        const val = (String(item?.value || '')).trim().slice(0, MAX.detailsValue);
-        if (key) acc[key] = val;
-        return acc;
-      }, {});
+      const en = sanitizeLocale('en');
+      const ar = sanitizeLocale('ar');
 
       const payload = {
-        ...data,
-        name,
-        shortDescription,
-        description,
-        featureBullets,
+        // non-localized
+        price: data.price,
+        oldPrice: data.oldPrice ?? null,
+        stockQuantity: data.stockQuantity,
+        releaseDate: data.releaseDate || undefined,
         images: existingImages.slice(0, MAX.images),
-        details: detailsObject,
         mainImage: mainImageUrl || '',
+        isActive: data.isActive,
+        categoryId: data.categoryId,
+        brandId: data.brandId,
+        materialIds: data.materialIds,
+        colorIds: data.colorIds,
+        // localized
+        translations: [
+          { locale: 'en', ...en },
+          { locale: 'ar', ...ar },
+        ],
       };
 
       const returnedId = productId
@@ -242,10 +294,18 @@ export const useProductForm = () => {
     mainImageUploaderProps,
     // counters data
     counters: {
-      watchName,
-      watchShortDescription,
-      watchDescription,
-      watchFeatureBullets,
+      en: {
+        watchName: watchNameEn,
+        watchShortDescription: watchShortDescriptionEn,
+        watchDescription: watchDescriptionEn,
+        watchFeatureBullets: watchFeatureBulletsEn,
+      },
+      ar: {
+        watchName: watchNameAr,
+        watchShortDescription: watchShortDescriptionAr,
+        watchDescription: watchDescriptionAr,
+        watchFeatureBullets: watchFeatureBulletsAr,
+      },
       MAX,
     },
   };

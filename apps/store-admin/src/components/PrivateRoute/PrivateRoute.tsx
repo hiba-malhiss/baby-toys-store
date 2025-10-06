@@ -5,9 +5,9 @@ import { BouncingDotsLoader } from '@baby-toys/ui-kit';
 import { USER_ROLE } from '../../api/authApi.ts';
 
 const PrivateRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { isAuthenticated, user, hasPermission, isLoading } = useAuth();
+  const { isAuthenticated, user, hasPermission, isLoading, isInitializing } = useAuth();
 
-  if (isLoading) {
+  if (isInitializing || isLoading) {
     return <BouncingDotsLoader />;
   }
 

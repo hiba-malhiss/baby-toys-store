@@ -1,0 +1,67 @@
+.langToggle {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  font-family: 'Comfortaa', sans-serif;
+  font-weight: bold;
+  text-transform: uppercase;
+  outline: none;
+}
+
+.langLabel {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  justify-items: center;
+  height: 24px;
+  width: 70px;
+  border-radius: 999px;
+  background: $color-bg-secondary;
+  border: 1px solid $color-border-dark;
+  font-size: 11px;
+  overflow: hidden;
+
+  &:focus-within,
+  :global(button:focus) & {
+    box-shadow: 0 0 0 2px rgba($color-primary, 0.15);
+    border-color: $color-accent-light;
+  }
+
+  .langText {
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    color: $color-text-muted;
+    transition: color 0.25s;
+
+    // Selected state (scoped to CSS module)
+    &.selected {
+      color: $color-white;
+    }
+  }
+
+  .knob {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: calc(50% - 4px);
+    height: calc(100% - 4px);
+    border-radius: 999px;
+    background: $color-primary;
+    box-shadow: $shadow-xs;
+    z-index: 1;
+    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  // Move knob when English is selected (data-locale set by component)
+  &[data-locale='en'] {
+    .knob {
+      transform: translateX(calc(100% + 4px));
+    }
+  }
+}

@@ -1,18 +1,23 @@
-import React, { createContext, useContext, useCallback } from 'react';
+import React, { createContext, useContext, useCallback, useMemo } from 'react';
 import { useFetchProfile, type User, USER_ROLE } from '../api/authApi';
 import { getAccessToken } from '../api/axiosConfig';
+import { useAuthInit } from '../hooks/useAuthInit';
 
 interface AuthContextType {
   user: User | null;
   hasPermission: (role?: USER_ROLE | USER_ROLE[]) => boolean;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isInitializing: boolean;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const { data: user, isLoading } = useFetchProfile();
+  const token = getAccessToken();
+  const isAuthenticated = useMemo(() => !!token, [token]);
+  const { isLoading: isAuthInitLoading } = useAuthInit();
+  const { data: user, isLoading: isProfileLoading } = useFetchProfile(isAuthenticated);
 
   const hasPermission = useCallback(
     (role?: USER_ROLE | USER_ROLE[]): boolean => {
@@ -24,15 +29,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [user]
   );
 
-  const token = getAccessToken();
-
   return (
     <AuthContext.Provider
       value={{
         user: user ?? null,
         hasPermission,
-        isAuthenticated: !!token && !!user,
-        isLoading,
+        isAuthenticated,
+        isLoading: isProfileLoading,
+        isInitializing: isAuthInitLoading || (isAuthenticated && isProfileLoading),
       }}
     >
       {children}

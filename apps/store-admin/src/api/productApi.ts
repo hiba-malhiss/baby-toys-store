@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
-import { Product, CreateProductRequest, UpdateProductRequest } from './types/product';
+import { Product, ProductUpsertRequest, ProductDetailsAdminDto } from './types/product';
 import { ApiEnvelope, Page } from './types/common';
 
 export interface UseProductsParams {
@@ -51,13 +51,15 @@ export const useProduct = (id?: number) => {
   const navigate = useNavigate();
   const toast = useToast();
 
-  return useQuery<Product>({
+  return useQuery<ProductDetailsAdminDto>({
     queryKey: ['product', id],
     enabled: !!id,
     retry: false,
     queryFn: async () => {
       try {
-        const { data } = await api.get<ApiEnvelope<Product>>(`/api/products/${id}`);
+        const { data } = await api.get<ApiEnvelope<ProductDetailsAdminDto>>(
+          `/api/admin/products/${id}`
+        );
         return data.data;
       } catch (err) {
         toast.error('Product not found');
@@ -72,7 +74,7 @@ export const useProduct = (id?: number) => {
 export const useCreateProduct = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async (payload: CreateProductRequest) => {
+    mutationFn: async (payload: ProductUpsertRequest) => {
       const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/products', payload);
       return data.data.id;
     },
@@ -90,7 +92,7 @@ export const useUpdateProduct = () => {
   const toast = useToast();
 
   return useMutation({
-    mutationFn: async ({ id, ...payload }: UpdateProductRequest & { id: number }) => {
+    mutationFn: async ({ id, ...payload }: ProductUpsertRequest & { id: number }) => {
       const { data } = await api.put<ApiEnvelope<{ id: number }>>(
         `/api/admin/products/${id}`,
         payload
