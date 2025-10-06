@@ -30,7 +30,7 @@ export const Image: React.FC<ImageProps> = ({
   // Sync internal src state when prop changes
   useEffect(() => {
     setImageSrc(src);
-    setIsLoading(!!src);
+    setIsLoading(!src);
     setHasError(false);
   }, [src]);
 

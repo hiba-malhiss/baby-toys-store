@@ -99,13 +99,17 @@ export const useUpdateProduct = () => {
       );
       return data.data.id;
     },
-    onSuccess: () => {
+    onSuccess: (_returnedId, variables) => {
+      // Invalidate product list and the specific product cache
       qc.invalidateQueries({ queryKey: ['products'] });
+      if (variables?.id) {
+        qc.invalidateQueries({ queryKey: ['product', variables.id] });
+      }
       toast.success('Product updated successfully');
       navigate('/products');
     },
     onError: (e: any) => {
-      toast.error(e?.response?.data?.message || 'Failed to update product');
+      throw new Error(e?.response?.data?.message || 'Failed to update product');
     },
   });
 };
