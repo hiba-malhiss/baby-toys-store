@@ -15,6 +15,7 @@ type TabBarProps = {
   defaultSelected?: string;
   children: React.ReactNode;
   size?: 'medium' | 'small';
+  fullWidth?: boolean;
   responsive?: boolean;
 };
 
@@ -25,6 +26,7 @@ const TabBar = ({
   children,
   size = 'medium',
   responsive = true,
+  fullWidth,
 }: TabBarProps) => {
   const [selectedValue, setSelectedValue] = useState(defaultSelected ?? tabs[0]?.value);
   const [isCompact, setIsCompact] = useState(false);
@@ -57,7 +59,11 @@ const TabBar = ({
   });
 
   return (
-    <Flex direction="vertical" spacing={effectiveSize === 'small' ? 'l' : 'xxxxl'}>
+    <Flex
+      direction="vertical"
+      spacing={effectiveSize === 'small' ? 'l' : 'xxxxl'}
+      fullWidth={fullWidth}
+    >
       <RadioButtonGroup
         fullWidth
         spacing={effectiveSize === 'small' ? 'l' : 'xxxxl'}

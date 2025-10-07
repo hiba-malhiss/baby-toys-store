@@ -10,6 +10,7 @@ import {
   Option,
   TabBar,
   TabBarItem,
+  Divider,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -163,11 +164,13 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     >
       <Flex direction="vertical" spacing="m" fullwidth>
         <TabBar
+          size="small"
           tabs={[
             { header: 'English (en)', value: 'en' },
             { header: 'Arabic (ar)', value: 'ar' },
           ]}
           defaultSelected="en"
+          fullWidth
         >
           <TabBarItem value="en">
             <FormFieldWrapper
@@ -184,6 +187,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
               control={control}
               label="Description (en)"
               fullWidth
+              className="bts-marginTm"
             >
               <TextArea rows={4} disabled={isSubmitting} />
             </FormFieldWrapper>
@@ -203,12 +207,14 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
               control={control}
               label="Description (ar)"
               fullWidth
+              className="bts-marginTm"
             >
               <TextArea rows={4} disabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>
         </TabBar>
 
+        <Divider thickness="2px" />
         <FormFieldWrapper name="isMain" control={control} label="Is Main" fullWidth>
           <Select>
             <Option value={true as any}>Yes</Option>

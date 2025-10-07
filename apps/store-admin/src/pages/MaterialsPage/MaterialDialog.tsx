@@ -1,5 +1,14 @@
 import React, { useEffect } from 'react';
-import { Dialog, StringInput, TextArea, Button, useToast, TabBar, TabBarItem } from '@baby-toys/ui-kit';
+import {
+  Dialog,
+  StringInput,
+  TextArea,
+  Button,
+  useToast,
+  TabBar,
+  TabBarItem,
+  Divider,
+} from '@baby-toys/ui-kit';
 import type { Material } from '../../api/types/material';
 import { Flex } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
@@ -35,7 +44,9 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
   useEffect(() => {
     if (material?.id && adminMaterial) {
       const trMap = new Map<string, any>();
-      adminMaterial.translations?.forEach((t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t));
+      adminMaterial.translations?.forEach(
+        (t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t)
+      );
       const en = trMap.get('en') || {};
       const ar = trMap.get('ar') || {};
       reset({
@@ -53,8 +64,16 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
     try {
       const payload = {
         translations: [
-          { locale: 'en', name: data.translations.en.name, description: data.translations.en.description || '' },
-          { locale: 'ar', name: data.translations.ar.name, description: data.translations.ar.description || '' },
+          {
+            locale: 'en',
+            name: data.translations.en.name,
+            description: data.translations.en.description || '',
+          },
+          {
+            locale: 'ar',
+            name: data.translations.ar.name,
+            description: data.translations.ar.description || '',
+          },
         ],
         isActive: true,
       };
@@ -93,6 +112,8 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
     >
       <Flex direction="vertical" spacing="m" fullwidth>
         <TabBar
+          size="small"
+          fullWidth
           tabs={[
             { header: 'English (en)', value: 'en' },
             { header: 'Arabic (ar)', value: 'ar' },
@@ -100,18 +121,43 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
           defaultSelected="en"
         >
           <TabBarItem value="en">
-            <FormFieldWrapper name={`translations.en.name`} control={control} label="Name (en)" required fullWidth>
+            <FormFieldWrapper
+              name={`translations.en.name`}
+              control={control}
+              label="Name (en)"
+              required
+              fullWidth
+            >
               <StringInput isDisabled={isSubmitting} />
             </FormFieldWrapper>
-            <FormFieldWrapper name={`translations.en.description`} control={control} label="Description (en)" fullWidth>
+            <FormFieldWrapper
+              name={`translations.en.description`}
+              control={control}
+              label="Description (en)"
+              fullWidth
+              className="bts-marginTm"
+            >
               <TextArea rows={4} isDisabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>
+          <Divider thickness="2px" />
           <TabBarItem value="ar">
-            <FormFieldWrapper name={`translations.ar.name`} control={control} label="Name (ar)" required fullWidth>
+            <FormFieldWrapper
+              name={`translations.ar.name`}
+              control={control}
+              label="Name (ar)"
+              required
+              fullWidth
+            >
               <StringInput isDisabled={isSubmitting} />
             </FormFieldWrapper>
-            <FormFieldWrapper name={`translations.ar.description`} control={control} label="Description (ar)" fullWidth>
+            <FormFieldWrapper
+              name={`translations.ar.description`}
+              control={control}
+              label="Description (ar)"
+              fullWidth
+              className="bts-marginTm"
+            >
               <TextArea rows={4} isDisabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>

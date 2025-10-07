@@ -6,9 +6,22 @@ export interface Color {
   updatedAt?: string;
 }
 
-export interface CreateColorRequest {
+// Admin translations
+export interface ColorTranslationDto {
+  locale: 'en' | 'ar' | string;
   name: string;
-  code: string;
 }
 
-export interface UpdateColorRequest extends Partial<CreateColorRequest> {}
+export interface ColorDetailsAdminDto {
+  id: string | number;
+  code: string;
+  translations: ColorTranslationDto[];
+}
+
+export interface ColorUpsertRequest {
+  code: string;
+  translations: Array<{
+    locale: 'en' | 'ar' | string;
+    name: string;
+  }>;
+}

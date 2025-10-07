@@ -7,13 +7,21 @@ import {
   Button,
   useToast,
   Flex,
+  TabBar,
+  TabBarItem,
+  Divider,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Brand } from '../../api/types/brand';
-import { brandSchema, type BrandFormValues } from './brands.helper';
+import { brandSchema, type BrandFormValues, defaultBrandValues } from './brands.helper';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
-import { useCreateBrand, useUpdateBrand, useUploadBrandImage } from '../../api/brandApi';
+import {
+  useCreateBrand,
+  useUpdateBrand,
+  useUploadBrandImage,
+  useBrandAdmin,
+} from '../../api/brandApi';
 
 interface BrandDialogProps {
   visible: boolean;
@@ -27,6 +35,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
   const createBrand = useCreateBrand();
   const updateBrand = useUpdateBrand();
   const uploadImageMutation = useUploadBrandImage();
+  const { data: adminBrand } = useBrandAdmin(brand?.id);
 
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string | null>(brand?.logoUrl || null);
@@ -36,14 +45,9 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     handleSubmit,
     formState: { isSubmitting, isValid },
     reset,
-    getValues,
   } = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
-    defaultValues: {
-      name: brand?.name || '',
-      description: brand?.description || '',
-      logoUrl: brand?.logoUrl || '',
-    },
+    defaultValues: defaultBrandValues,
   });
 
   useEffect(() => {
@@ -51,32 +55,57 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
   }, [imagePreview]);
 
   useEffect(() => {
-    reset({
-      name: brand?.name || '',
-      description: brand?.description || '',
-      logoUrl: brand?.logoUrl || '',
-    });
-    setImagePreview(brand?.logoUrl || null);
+    if (brand?.id && adminBrand) {
+      const trMap = new Map<string, any>();
+      adminBrand.translations?.forEach(
+        (t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t)
+      );
+      const en = trMap.get('en') || {};
+      const ar = trMap.get('ar') || {};
+      reset({
+        logoUrl: adminBrand.logoUrl || '',
+        translations: {
+          en: { name: en.name || '', description: en.description || '' },
+          ar: { name: ar.name || '', description: ar.description || '' },
+        },
+      });
+      setImagePreview(adminBrand.logoUrl || null);
+    } else if (!brand?.id) {
+      reset(defaultBrandValues);
+      setImagePreview(null);
+    }
     setImageFile(null);
-  }, [brand, reset]);
+  }, [brand?.id, adminBrand, reset]);
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
-      const brandData = { ...data, logoUrl: data.logoUrl };
-      let result: Brand;
+      const payload = {
+        logoUrl: data.logoUrl || undefined,
+        translations: [
+          {
+            locale: 'en',
+            name: data.translations.en.name,
+            description: data.translations.en.description || '',
+          },
+          {
+            locale: 'ar',
+            name: data.translations.ar.name,
+            description: data.translations.ar.description || '',
+          },
+        ],
+      };
 
-      if (brand) {
-        result = await updateBrand.mutateAsync({ ...brandData, id: brand.id });
-      } else {
-        result = await createBrand.mutateAsync(brandData);
-      }
+      const id = brand?.id
+        ? await updateBrand.mutateAsync({ id: brand.id, ...payload })
+        : await createBrand.mutateAsync(payload);
 
       if (imageFile) {
         try {
-          await uploadImageMutation.mutateAsync({ id: result.id, file: imageFile });
+          const targetId = brand?.id ?? id;
+          await uploadImageMutation.mutateAsync({ id: targetId, file: imageFile });
         } catch (err) {
           console.error('Image upload failed:', err);
-          toast.warning('Brand saved, but image upload failed');
+          toast.error('Brand saved, but image upload failed');
         }
       }
 
@@ -88,21 +117,6 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
       setImagePreview(null);
     } catch (err) {
       toast.error(`Failed to ${brand ? 'update' : 'create'} brand`);
-    }
-  };
-
-  const handleImageChange = (files) => {
-    const f = files[0] || null;
-
-    if (f instanceof File) {
-      setImageFile(f);
-      const preview = URL.createObjectURL(f);
-      setImagePreview(preview);
-      reset({ ...getValues(), logoUrl: '' }); // clear previous URL
-    } else {
-      setImageFile(null);
-      setImagePreview(null);
-      reset({ ...getValues(), logoUrl: '' }); // clear previous URL
     }
   };
 
@@ -125,25 +139,89 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
       footer={footer}
     >
       <Flex direction="vertical" spacing="m" fullwidth>
-        <FormFieldWrapper name="name" control={control} label="Brand Name" required fullWidth>
-          <StringInput
-            placeholder="Enter brand name"
-            isDisabled={isSubmitting || uploadImageMutation.isPending}
-          />
-        </FormFieldWrapper>
-
-        <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-          <TextArea
-            placeholder="Enter brand description"
-            rows={3}
-            isDisabled={isSubmitting || uploadImageMutation.isPending}
-          />
-        </FormFieldWrapper>
-
+        <TabBar
+          fullWidth
+          size="small"
+          tabs={[
+            { header: 'English (en)', value: 'en' },
+            { header: 'Arabic (ar)', value: 'ar' },
+          ]}
+          defaultSelected="en"
+        >
+          <TabBarItem value="en">
+            <FormFieldWrapper
+              name={`translations.en.name`}
+              control={control}
+              label="Brand Name (en)"
+              required
+              fullWidth
+            >
+              <StringInput
+                placeholder="Enter brand name"
+                isDisabled={isSubmitting || uploadImageMutation.isPending}
+              />
+            </FormFieldWrapper>
+            <FormFieldWrapper
+              name={`translations.en.description`}
+              control={control}
+              label="Description (en)"
+              fullWidth
+              className="bts-marginTm"
+            >
+              <TextArea
+                placeholder="Enter brand description"
+                rows={3}
+                isDisabled={isSubmitting || uploadImageMutation.isPending}
+              />
+            </FormFieldWrapper>
+          </TabBarItem>
+          <TabBarItem value="ar">
+            <FormFieldWrapper
+              name={`translations.ar.name`}
+              control={control}
+              label="Brand Name (ar)"
+              required
+              fullWidth
+            >
+              <StringInput
+                placeholder="Enter brand name"
+                isDisabled={isSubmitting || uploadImageMutation.isPending}
+              />
+            </FormFieldWrapper>
+            <FormFieldWrapper
+              name={`translations.ar.description`}
+              control={control}
+              label="Description (ar)"
+              fullWidth
+              className="bts-marginTm"
+            >
+              <TextArea
+                placeholder="Enter brand description"
+                rows={3}
+                isDisabled={isSubmitting || uploadImageMutation.isPending}
+              />
+            </FormFieldWrapper>
+          </TabBarItem>
+        </TabBar>
+        <Divider thickness="2px" />
         <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>
           <ImageUploader
-            value={imagePreview ? [imagePreview] : []}
-            onChange={handleImageChange}
+            images={imageFile ? [imageFile] : imagePreview ? [imagePreview] : []}
+            multiple={false}
+            onImagesChange={(files: (File | string)[]) => {
+              const file = files?.[0];
+              if (file instanceof File) {
+                setImageFile(file);
+                const preview = URL.createObjectURL(file);
+                setImagePreview(preview);
+              } else if (typeof file === 'string') {
+                setImagePreview(file);
+                setImageFile(null);
+              } else {
+                setImageFile(null);
+                setImagePreview(null);
+              }
+            }}
             isDisabled={isSubmitting || uploadImageMutation.isPending}
           />
         </FormFieldWrapper>

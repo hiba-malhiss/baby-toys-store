@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { Color, CreateColorRequest, UpdateColorRequest } from './types/color';
+import { Color, ColorUpsertRequest, ColorDetailsAdminDto } from './types/color';
 import api from './axiosConfig';
 import { ApiEnvelope } from './types/common';
 
@@ -19,9 +19,9 @@ export const useColors = () =>
 // ---------- Mutations ----------
 export const useCreateColor = () => {
   const queryClient = useQueryClient();
-  return useMutation<number, Error, CreateColorRequest>({
-    mutationFn: async (data) => {
-      const res = await api.post<ApiEnvelope<{ id: number }>>(ADMIN_BASE_URL, data);
+  return useMutation<number, Error, ColorUpsertRequest>({
+    mutationFn: async (payload) => {
+      const res = await api.post<ApiEnvelope<{ id: number }>>(ADMIN_BASE_URL, payload);
       return res.data.data.id;
     },
     onSuccess: () => {
@@ -32,14 +32,14 @@ export const useCreateColor = () => {
 
 export const useUpdateColor = () => {
   const queryClient = useQueryClient();
-  return useMutation<number, Error, { id: string | number; data: UpdateColorRequest }>({
-    mutationFn: async ({ id, data }) => {
-      const res = await api.put<ApiEnvelope<{ id: number }>>(`${ADMIN_BASE_URL}/${id}`, data);
+  return useMutation<number, Error, { id: string | number; payload: ColorUpsertRequest }>({
+    mutationFn: async ({ id, payload }) => {
+      const res = await api.put<ApiEnvelope<{ id: number }>>(`${ADMIN_BASE_URL}/${id}`, payload);
       return res.data.data.id;
     },
     onSuccess: (_, { id }) => {
       queryClient.invalidateQueries({ queryKey: ['colors'] });
-      queryClient.invalidateQueries({ queryKey: ['colors', id] });
+      queryClient.invalidateQueries({ queryKey: ['color-admin', id] });
     },
   });
 };
@@ -56,3 +56,13 @@ export const useDeleteColor = () => {
     },
   });
 };
+
+export const useColorAdmin = (id?: string | number) =>
+  useQuery<ColorDetailsAdminDto>({
+    queryKey: ['color-admin', id],
+    enabled: !!id,
+    queryFn: async () => {
+      const res = await api.get<ApiEnvelope<ColorDetailsAdminDto>>(`${ADMIN_BASE_URL}/${id}`);
+      return res.data.data;
+    },
+  });
