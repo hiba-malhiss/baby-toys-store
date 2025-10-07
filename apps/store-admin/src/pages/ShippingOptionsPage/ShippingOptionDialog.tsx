@@ -1,9 +1,14 @@
 import React, { useEffect } from 'react';
 import { Button, Dialog, Flex, StringInput, Select, useToast } from '@baby-toys/ui-kit';
+import { LocaleSelect } from '../../components/LocaleSelect';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useCreateShippingOption, useUpdateShippingOption, type ShippingOption } from '../../api/shippingOptionApi';
+import {
+  useCreateShippingOption,
+  useUpdateShippingOption,
+  type ShippingOption,
+} from '../../api/shippingOptionApi';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 
 const schema = z.object({
@@ -14,6 +19,7 @@ const schema = z.object({
     .regex(/^(?:\d+)(?:\.\d+)?$/, 'Enter a valid number')
     .default('0'),
   active: z.enum(['yes', 'no']).default('yes'),
+  locale: z.enum(['en', 'ar']).default('en'),
 });
 
 export type ShippingOptionForm = z.infer<typeof schema>;
@@ -30,7 +36,13 @@ const ShippingOptionDialog: React.FC<{
 
   const { control, handleSubmit, reset, formState } = useForm<ShippingOptionForm>({
     resolver: zodResolver(schema),
-    defaultValues: { name: '', description: '', cost: '0', active: 'yes' },
+    defaultValues: {
+      name: '',
+      description: '',
+      cost: '0',
+      active: 'yes',
+      locale: 'en',
+    },
     mode: 'onChange',
   });
 
@@ -42,9 +54,16 @@ const ShippingOptionDialog: React.FC<{
         description: option.description ?? '',
         cost: String(option.cost ?? 0),
         active: option.active ? 'yes' : 'no',
+        locale: option.locale || 'en',
       });
     } else {
-      reset({ name: '', description: '', cost: '0', active: 'yes' });
+      reset({
+        name: '',
+        description: '',
+        cost: '0',
+        active: 'yes',
+        locale: 'en',
+      });
     }
   }, [option, reset, visible]);
 
@@ -58,6 +77,7 @@ const ShippingOptionDialog: React.FC<{
             description: values.description || '',
             cost: Number(values.cost || 0),
             active: values.active === 'yes',
+            locale: values.locale,
           },
         });
         toast.success('Shipping option updated');
@@ -67,6 +87,7 @@ const ShippingOptionDialog: React.FC<{
           description: values.description || '',
           cost: Number(values.cost || 0),
           active: values.active === 'yes',
+          locale: values.locale,
         });
         toast.success('Shipping option created');
       }
@@ -78,7 +99,11 @@ const ShippingOptionDialog: React.FC<{
   };
 
   return (
-    <Dialog visible={visible} onHide={onHide} header={option ? 'Edit Shipping Option' : 'Add Shipping Option'}>
+    <Dialog
+      visible={visible}
+      onHide={onHide}
+      header={option ? 'Edit Shipping Option' : 'Add Shipping Option'}
+    >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m" fullWidth>
           <FormFieldWrapper control={control} name="name" label="Name" fullWidth required>
@@ -99,11 +124,16 @@ const ShippingOptionDialog: React.FC<{
               placeholder="Select status"
             />
           </FormFieldWrapper>
+          <LocaleSelect control={control} name="locale" label="Language" />
           <Flex justify="end" spacing="m">
             <Button appearance="outline" type="button" onClick={onHide}>
               Cancel
             </Button>
-            <Button type="submit" isLoading={createMutation.isPending || updateMutation.isPending} isDisabled={!formState.isValid}>
+            <Button
+              type="submit"
+              isLoading={createMutation.isPending || updateMutation.isPending}
+              isDisabled={!formState.isValid}
+            >
               Save
             </Button>
           </Flex>

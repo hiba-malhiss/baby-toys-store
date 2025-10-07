@@ -34,6 +34,7 @@ const ShippingOptionsPage: React.FC = () => {
     { header: 'Name', field: 'name', sortable: true },
     { header: 'Description', field: 'description' },
     { header: 'Cost', field: 'cost', sortable: true },
+    { header: 'Language', field: 'locale', sortable: true },
     {
       header: 'Active',
       field: 'active',
