@@ -200,7 +200,7 @@ export const SideFilters: React.FC<{
   if (isLoadingFilters) {
     return (
       <Card className={className} header={t('filters.header')}>
-        <BouncingDotsLoader />
+        <BouncingDotsLoader size="medium" className="bts-marginTl" />
       </Card>
     );
   }
