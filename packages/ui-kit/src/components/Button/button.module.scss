@@ -37,7 +37,7 @@
   $icon-color: $color,
   $text-underline-decoration: transparent
 ) {
-  &:hover:not(.is-disabled):not(.has-error) {
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
     background-color: $background;
     color: $color;
     border-color: $border;

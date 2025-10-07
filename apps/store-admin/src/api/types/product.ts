@@ -26,7 +26,7 @@ export interface Product {
 
   // Optional extra data
   oldPrice?: number | null;
-  rating?: number | null;
+  averageRating?: number | null;
   numberOfRatings?: number | null;
   sales?: number | null;
 

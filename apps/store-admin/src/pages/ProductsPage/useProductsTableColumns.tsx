@@ -105,12 +105,12 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
       ),
     },
     {
-      field: 'rating',
+      field: 'averageRating',
       header: 'Rating',
       body: (row: Product) =>
-        row.rating ? (
+        row.averageRating ? (
           <Flex spacing="xs">
-            <Rating value={row.rating} />
+            <Rating value={row.averageRating} />
             <span>({row.numberOfRatings || 0})</span>
           </Flex>
         ) : (
