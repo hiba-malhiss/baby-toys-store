@@ -17,10 +17,17 @@ const WishListPage = () => {
   const { open: openLoginDialog } = useLoginDialogStore();
   const { t } = useTranslation('common');
   const [page, setPage] = useState(1);
-  const { data, isLoading } = useMyWishlist(page, LIST_PAGE_SIZE, 'id', 'DESC', isAuthenticated);
+  const { data, isLoading: loading } = useMyWishlist(
+    page,
+    LIST_PAGE_SIZE,
+    'id',
+    'DESC',
+    isAuthenticated
+  );
   const localItems = data?.items ?? [];
   const totalSize = data?.totalItems ?? 0;
   const handlePaginationChange = (newPage: number) => setPage(newPage);
+  const isLoading = loading && !data?.items?.length;
 
   const renderContent = () => {
     if (!isAuthenticated && !isLoading) {

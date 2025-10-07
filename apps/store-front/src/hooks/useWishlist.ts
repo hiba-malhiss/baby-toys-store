@@ -3,8 +3,9 @@ import { useLoginDialogStore } from '../store/useLoginDialogStore';
 import { useAddToWishlist, useRemoveFromWishlist } from '../api/wishlistApi';
 import type { UiProduct } from '../api/normalizers/productNormalizer';
 import { useToast } from '@baby-toys/ui-kit';
+import { useWishlistIdsStore } from '../store/useWishlistIdsStore';
 
-export function useWishlist(product: Pick<UiProduct, 'id' | 'isFavorite'>) {
+export function useWishlist(product: Pick<UiProduct, 'id'>) {
   const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
 
@@ -12,7 +13,8 @@ export function useWishlist(product: Pick<UiProduct, 'id' | 'isFavorite'>) {
   const removeMutation = useRemoveFromWishlist();
   const toast = useToast();
 
-  const isFavorite = Boolean(product.isFavorite);
+  const has = useWishlistIdsStore((s) => s.has);
+  const isFavorite = has(product.id as number);
   const isLoading = addMutation.isPending || removeMutation.isPending;
 
   const toggleFavorite = async () => {

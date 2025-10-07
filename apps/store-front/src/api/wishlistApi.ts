@@ -4,7 +4,7 @@ import type { ApiEnvelope, Page } from './types/common';
 import type { Product } from './types/product';
 import { normalizeProduct, type UiProduct } from './normalizers/productNormalizer';
 import { useAuth } from '../context/AuthContext';
-import { invalidateAfterWishlistToggle } from './queryInvalidation';
+import { useWishlistIdsStore } from '../store/useWishlistIdsStore';
 
 export function useMyWishlist(
   page: number,
@@ -46,8 +46,25 @@ export function useWishlistCount() {
   });
 }
 
+export function useWishlistIds() {
+  const { isAuthenticated } = useAuth();
+  const setAll = useWishlistIdsStore((s) => s.setAll);
+  return useQuery<number[]>({
+    queryKey: ['wishlistIds'],
+    queryFn: async () => {
+      const res = await api.get<{ data: number[] }>('/api/customer/wishlist/ids');
+      const ids = res.data.data || [];
+      setAll(ids);
+      return ids;
+    },
+    enabled: isAuthenticated,
+    staleTime: 60_000,
+  });
+}
+
 export function useAddToWishlist() {
   const qc = useQueryClient();
+  const add = useWishlistIdsStore((s) => s.add);
   return useMutation<{ count?: number }, any, { productId: number }>({
     mutationKey: ['addToWishlist'],
     mutationFn: async ({ productId }) => {
@@ -57,13 +74,16 @@ export function useAddToWishlist() {
       return res.data.data;
     },
     onSuccess: (_data, variables) => {
-      invalidateAfterWishlistToggle(qc, variables.productId);
+      add(variables.productId);
+      qc.invalidateQueries({ queryKey: ['wishlistCount'] });
+      qc.invalidateQueries({ queryKey: ['myWishlist'] });
     },
   });
 }
 
 export function useRemoveFromWishlist() {
   const qc = useQueryClient();
+  const remove = useWishlistIdsStore((s) => s.remove);
   return useMutation<{ id?: number }, any, { productId: number }>({
     mutationKey: ['removeFromWishlist'],
     mutationFn: async ({ productId }) => {
@@ -73,7 +93,9 @@ export function useRemoveFromWishlist() {
       return res.data.data;
     },
     onSuccess: (_data, variables) => {
-      invalidateAfterWishlistToggle(qc, variables.productId);
+      remove(variables.productId);
+      qc.invalidateQueries({ queryKey: ['wishlistCount'] });
+      qc.invalidateQueries({ queryKey: ['myWishlist'] });
     },
   });
 }

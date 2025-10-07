@@ -32,6 +32,7 @@ export type ProductCardProps = {
   label?: string;
   labelAppearance?: string;
   isLoadingFavorite?: boolean;
+  isFavorite?: boolean;
   isLoadingAddToCart?: boolean;
   onToggleFavorite?: (product: Product) => void;
   onClick?: (product: Product) => void;
@@ -52,6 +53,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   isLoadingFavorite,
   isLoadingAddToCart,
   formatCurrency,
+  isFavorite,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
@@ -109,10 +111,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
         appearance={isHorizontal ? 'outline' : 'link'}
         color="icon"
         size={isHorizontal ? 'large' : 'xlarge'}
-        isSelected={product.isFavorite}
+        isSelected={isFavorite}
         isLoading={isLoadingFavorite}
         onClick={(e) => handleButtonClick(e, onToggleFavorite)}
-        aria-label={product.isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
       />
       {direction === 'horizontal' && (
         <Button

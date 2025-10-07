@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ProductCard } from '@baby-toys/ui-kit';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
+import { useWishlistIds } from '../../../api/wishlistApi';
 import { useAddToCart } from '../../../api/cartApi';
 import { useCartStore } from '../../../store/useCartStore';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
@@ -15,6 +16,7 @@ const SmartProductCard: React.FC<{ product: Product }> = ({ ...props }) => {
   const { openShippingCartDrawer } = useCartStore();
   const formatCurrency = useCurrencyFormatter();
   const toast = useToast();
+  useWishlistIds();
   const handleToggleFavorite = async () => {
     await toggleFavorite();
   };

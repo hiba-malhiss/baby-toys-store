@@ -21,7 +21,6 @@ export interface Product {
   colorCodes?: string[];
   materialIds?: number[];
   materialNames?: string[];
-  inWishlist?: boolean | null;
   averageRating?: number | null;
   numberOfRatings?: number | null;
 

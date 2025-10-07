@@ -34,7 +34,6 @@ export function normalizeProduct(dto: Product): UiProduct {
     price: Number(dto.price ?? 0),
     oldPrice: dto.oldPrice != null ? Number(dto.oldPrice) : undefined,
     rating: Number(dto.averageRating ?? 0),
-    isFavorite: dto.inWishlist ?? null,
     images: mergedImages,
     numberOfRatings: dto.numberOfRatings ?? 0,
     featureBullets: dto.featureBullets || [],
