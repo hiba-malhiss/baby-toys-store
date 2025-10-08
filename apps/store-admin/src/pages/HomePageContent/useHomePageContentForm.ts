@@ -11,13 +11,22 @@ import {
 import type { UpdateHomePageContentRequest } from '../../api/types/homePage';
 import { HomePageFormValues, homePageSchema } from './homePage.helper';
 
-const DEFAULT_HERO_BANNERS = [{ text: '' }, { text: '' }];
-const DEFAULT_INFO_CARDS = Array(3).fill({
-  title: '',
-  subtitle: '',
-  icon: '',
-  appearance: 'primary',
-});
+const locales = ['en', 'ar'];
+
+const DEFAULT_HERO_BANNERS = locales.flatMap((locale) => [
+  { text: '', imageUrl: '', locale },
+  { text: '', imageUrl: '', locale },
+]);
+
+const DEFAULT_INFO_CARDS = locales.flatMap((locale) =>
+  Array(3).fill({
+    title: '',
+    subtitle: '',
+    icon: '',
+    appearance: 'primary',
+    locale,
+  })
+);
 
 export const useHomePageContentForm = () => {
   const toast = useToast();
@@ -48,20 +57,43 @@ export const useHomePageContentForm = () => {
   const infoCards = useFieldArray({ control, name: 'infoCards' }).fields;
   const galleryImageFields = useFieldArray({ control, name: 'galleryImages' }).fields;
 
-  /** Initialize form when API data is fetched */
   useEffect(() => {
     if (!data) return;
 
+    const ensurePerLocale = <T extends { locale: string }>(items: T[], defaults: T[]): T[] => {
+      const byLocale: Record<string, T[]> = { en: [], ar: [] };
+      (items || []).forEach((i) => {
+        if (!i || !i.locale) return;
+        const code = i.locale.toLowerCase() as 'en' | 'ar';
+        byLocale[code].push(i);
+      });
+
+      const enCountDefault = defaults.filter((d) => d.locale === 'en').length;
+      const arCountDefault = defaults.filter((d) => d.locale === 'ar').length;
+
+      const fillFor = (code: 'en' | 'ar', count: number) => {
+        const current = byLocale[code];
+        if (current.length >= count) return;
+        const needed = count - current.length;
+        const templates = defaults.filter((d) => d.locale === code).slice(0, needed);
+        byLocale[code].push(...templates);
+      };
+
+      fillFor('en', enCountDefault);
+      fillFor('ar', arCountDefault);
+
+      return [...byLocale.en, ...byLocale.ar];
+    };
+
+    const hero = ensurePerLocale(
+      (data.heroBanners || []) as any,
+      DEFAULT_HERO_BANNERS as any
+    ) as any;
+    const cards = ensurePerLocale((data.infoCards || []) as any, DEFAULT_INFO_CARDS as any) as any;
+
     reset({
-      heroBanners: data.heroBanners?.length ? data.heroBanners : DEFAULT_HERO_BANNERS,
-      infoCards: data.infoCards?.length
-        ? data.infoCards.map((c) => ({
-            title: c.title ?? '',
-            subtitle: c.subtitle ?? '',
-            icon: c.icon ?? '',
-            appearance: (c as any).appearance ?? 'primary',
-          }))
-        : DEFAULT_INFO_CARDS,
+      heroBanners: hero,
+      infoCards: cards,
       galleryImages: data.galleryImages || [],
     });
 
@@ -69,13 +101,11 @@ export const useHomePageContentForm = () => {
     setNewImages([]);
   }, [data, reset]);
 
-  /** Handle form submission */
   const onSubmit = async (values: HomePageFormValues) => {
     if (isProcessing) return;
     setIsProcessing(true);
 
     try {
-      // Upload new files in sequence
       const uploadedUrls: string[] = [];
       for (const file of newImages) {
         const uploadedUrl = await uploadImage.mutateAsync(file);
@@ -83,6 +113,7 @@ export const useHomePageContentForm = () => {
       }
 
       const finalGallery = [...existingImages, ...uploadedUrls].map((url) => ({ imageUrl: url }));
+
       const payload: UpdateHomePageContentRequest = {
         heroBanners: values.heroBanners,
         infoCards: values.infoCards,
@@ -90,33 +121,26 @@ export const useHomePageContentForm = () => {
       };
 
       await updateContent.mutateAsync(payload);
-
       toast.success('Homepage content updated successfully');
-      setNewImages([]);
-      setExistingImages(finalGallery.map((img) => img.imageUrl));
     } catch (error) {
-      console.error(error);
       toast.error('Failed to update homepage content');
     } finally {
       setIsProcessing(false);
     }
   };
 
-  /** Delete image from backend */
   const handleBackendDelete = async (url: string) => {
     setIsDeletingImage(true);
     try {
       await deleteImageMutation.mutateAsync(url);
       setExistingImages((imgs) => imgs.filter((img) => img !== url));
     } catch (error) {
-      console.error('Error deleting image:', error);
       toast.error('Failed to delete image');
     } finally {
       setIsDeletingImage(false);
     }
   };
 
-  /** Update local state when gallery images change */
   const handleImagesChange = (files: (File | string)[]) => {
     const newFiles: File[] = [];
     const urls: string[] = [];

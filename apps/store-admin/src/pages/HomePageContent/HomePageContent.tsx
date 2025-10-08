@@ -1,18 +1,9 @@
-import React from 'react';
-import {
-  Card,
-  Flex,
-  Accordion,
-  StringInput,
-  TextArea,
-  Button,
-  ImageUploader,
-  Select,
-  Option,
-} from '@baby-toys/ui-kit';
+import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem } from '@baby-toys/ui-kit';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
+import HeroBannersSection from './HeroBannersSection';
+import InfoCardsSection from './InfoCardsSection';
+import GallerySection from './GallerySection';
 
 const HomePageContent: React.FC = () => {
   const {
@@ -29,92 +20,61 @@ const HomePageContent: React.FC = () => {
   return (
     <AdminLayout isLoading={isLoading}>
       <Card header="Homepage Content" fullWidth>
-        <Flex direction="column" spacing="xxl" fullWidth>
-          <Accordion
-            header="Info Cards"
-            buttonAppearance="outline"
-            buttonColor={errors?.infoCards && 'error'}
-          >
-            {infoCards.map((card, i) => (
-              <Card key={card.id || i} fullWidth variant="outlined" className="bts-marginTm">
-                <Flex direction="column" spacing="m" fullWidth>
-                  <FormFieldWrapper
-                    required
-                    name={`infoCards.${i}.icon`}
-                    control={control}
-                    label="Icon"
-                    fullWidth
-                  >
-                    <StringInput />
-                  </FormFieldWrapper>
-                  <FormFieldWrapper
-                    required
-                    name={`infoCards.${i}.title`}
-                    control={control}
-                    label="Title"
-                    fullWidth
-                  >
-                    <StringInput />
-                  </FormFieldWrapper>
-                  <FormFieldWrapper
-                    required
-                    name={`infoCards.${i}.appearance`}
-                    control={control}
-                    label="Appearance"
-                    fullWidth
-                  >
-                    <Select>
-                      <Option value="info">info</Option>
-                      <Option value="warning">warning</Option>
-                      <Option value="success">success</Option>
-                      <Option value="primary">primary</Option>
-                    </Select>
-                  </FormFieldWrapper>
-                  <FormFieldWrapper
-                    required
-                    fullWidth
-                    name={`infoCards.${i}.subtitle`}
-                    control={control}
-                    label="Subtitle"
-                  >
-                    <TextArea />
-                  </FormFieldWrapper>
-                </Flex>
-              </Card>
-            ))}
-          </Accordion>
-
+        <Flex direction="vertical" spacing="xxl" fullWidth>
+          {/* === Hero Banners Section === */}
           <Accordion
             header="Hero Banners"
             buttonAppearance="outline"
             buttonColor={errors?.heroBanners && 'error'}
           >
-            <Flex direction="column" spacing="m" fullWidth>
-              {heroBanners.map((banner, i) => (
-                <FormFieldWrapper
-                  required
-                  fullWidth
-                  key={banner.id || i}
-                  name={`heroBanners.${i}.text`}
-                  control={control}
-                  label={`Banner ${i + 1}`}
-                >
-                  <TextArea />
-                </FormFieldWrapper>
-              ))}
-            </Flex>
+            <TabBar
+              fullWidth
+              size="small"
+              tabs={[
+                { header: 'English (en)', value: 'en' },
+                { header: 'Arabic (ar)', value: 'ar' },
+              ]}
+            >
+              <TabBarItem value="en">
+                <HeroBannersSection locale="en" control={control} heroBanners={heroBanners} />
+              </TabBarItem>
+              <TabBarItem value="ar">
+                <HeroBannersSection locale="ar" control={control} heroBanners={heroBanners} />
+              </TabBarItem>
+            </TabBar>
           </Accordion>
 
+          {/* === Info Cards Section === */}
+          <Accordion
+            header="Info Cards"
+            buttonAppearance="outline"
+            buttonColor={errors?.infoCards && 'error'}
+          >
+            <TabBar
+              fullWidth
+              size="small"
+              tabs={[
+                { header: 'English (en)', value: 'en' },
+                { header: 'Arabic (ar)', value: 'ar' },
+              ]}
+            >
+              <TabBarItem value="en">
+                <InfoCardsSection locale="en" control={control} infoCards={infoCards} />
+              </TabBarItem>
+              <TabBarItem value="ar">
+                <InfoCardsSection locale="ar" control={control} infoCards={infoCards} />
+              </TabBarItem>
+            </TabBar>
+          </Accordion>
+
+          {/* === Gallery Section === */}
           <Accordion header="Gallery Images" buttonAppearance="outline">
-            <ImageUploader
-              {...galleryUploaderProps}
-              maxFileSizeMB={10}
-              accept="image/jpeg,image/png,image/webp"
-              showPreview
-            />
+            <GallerySection galleryUploaderProps={galleryUploaderProps} />
           </Accordion>
 
-          <Flex justify="flex-end">
+          <Divider thickness="2px" />
+
+          <Flex justify="end">
             <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>
               Save All Changes
             </Button>

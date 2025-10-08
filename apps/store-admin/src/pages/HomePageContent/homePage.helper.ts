@@ -2,6 +2,8 @@ import { z } from 'zod';
 
 export const heroBannerSchema = z.object({
   text: z.string().min(1, 'Banner text is required'),
+  imageUrl: z.string().optional(),
+  locale: z.enum(['en', 'ar']),
 });
 
 export const infoCardSchema = z.object({
@@ -9,13 +11,16 @@ export const infoCardSchema = z.object({
   subtitle: z.string().min(1, 'Subtitle is required'),
   icon: z.string().min(1, 'Icon is required'),
   appearance: z.enum(['info', 'warning', 'success', 'primary']).optional(),
+  locale: z.enum(['en', 'ar']),
 });
 
-export const galleryImageSchema = z.object({});
+export const galleryImageSchema = z.object({
+  imageUrl: z.string(),
+});
 
 export const homePageSchema = z.object({
-  heroBanners: z.array(heroBannerSchema).length(2, 'Exactly 2 hero banners required'),
-  infoCards: z.array(infoCardSchema).length(3, 'Exactly 3 info cards required'),
+  heroBanners: z.array(heroBannerSchema),
+  infoCards: z.array(infoCardSchema),
   galleryImages: z.array(galleryImageSchema),
 });
 

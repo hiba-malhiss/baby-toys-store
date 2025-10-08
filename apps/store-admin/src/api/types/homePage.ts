@@ -1,6 +1,7 @@
 export interface HeroBannerDto {
   id?: number;
   text: string;
+  locale: string;
 }
 
 export interface InfoCardDto {
@@ -9,6 +10,7 @@ export interface InfoCardDto {
   subtitle: string;
   icon: string;
   appearance?: 'info' | 'warning' | 'success' | 'primary';
+  locale: string;
 }
 
 export interface GalleryImageDto {
