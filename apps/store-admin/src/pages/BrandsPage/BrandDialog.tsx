@@ -22,6 +22,7 @@ import {
   useUploadBrandImage,
   useBrandAdmin,
 } from '../../api/brandApi';
+import { getSupportedLocales } from '../../components/i18n/locale';
 
 interface BrandDialogProps {
   visible: boolean;
@@ -142,66 +143,38 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
         <TabBar
           fullWidth
           size="small"
-          tabs={[
-            { header: 'English (en)', value: 'en' },
-            { header: 'Arabic (ar)', value: 'ar' },
-          ]}
-          defaultSelected="en"
+          tabs={getSupportedLocales().map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: l }))}
+          defaultSelected={getSupportedLocales()[0]}
         >
-          <TabBarItem value="en">
-            <FormFieldWrapper
-              name={`translations.en.name`}
-              control={control}
-              label="Brand Name (en)"
-              required
-              fullWidth
-            >
-              <StringInput
-                placeholder="Enter brand name"
-                isDisabled={isSubmitting || uploadImageMutation.isPending}
-              />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name={`translations.en.description`}
-              control={control}
-              label="Description (en)"
-              fullWidth
-              className="bts-marginTm"
-            >
-              <TextArea
-                placeholder="Enter brand description"
-                rows={3}
-                isDisabled={isSubmitting || uploadImageMutation.isPending}
-              />
-            </FormFieldWrapper>
-          </TabBarItem>
-          <TabBarItem value="ar">
-            <FormFieldWrapper
-              name={`translations.ar.name`}
-              control={control}
-              label="Brand Name (ar)"
-              required
-              fullWidth
-            >
-              <StringInput
-                placeholder="Enter brand name"
-                isDisabled={isSubmitting || uploadImageMutation.isPending}
-              />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name={`translations.ar.description`}
-              control={control}
-              label="Description (ar)"
-              fullWidth
-              className="bts-marginTm"
-            >
-              <TextArea
-                placeholder="Enter brand description"
-                rows={3}
-                isDisabled={isSubmitting || uploadImageMutation.isPending}
-              />
-            </FormFieldWrapper>
-          </TabBarItem>
+          {getSupportedLocales().map((l) => (
+            <TabBarItem key={l} value={l}>
+              <FormFieldWrapper
+                name={`translations.${l}.name`}
+                control={control}
+                label={`Brand Name (${l})`}
+                required
+                fullWidth
+              >
+                <StringInput
+                  placeholder="Enter brand name"
+                  isDisabled={isSubmitting || uploadImageMutation.isPending}
+                />
+              </FormFieldWrapper>
+              <FormFieldWrapper
+                name={`translations.${l}.description`}
+                control={control}
+                label={`Description (${l})`}
+                fullWidth
+                className="bts-marginTm"
+              >
+                <TextArea
+                  placeholder="Enter brand description"
+                  rows={3}
+                  isDisabled={isSubmitting || uploadImageMutation.isPending}
+                />
+              </FormFieldWrapper>
+            </TabBarItem>
+          ))}
         </TabBar>
         <Divider thickness="2px" />
         <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>

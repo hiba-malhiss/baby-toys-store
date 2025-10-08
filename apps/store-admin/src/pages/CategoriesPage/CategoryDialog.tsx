@@ -28,6 +28,7 @@ import {
   useCategoryAdmin,
 } from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit';
+import { getSupportedLocales } from '../../components/i18n/locale';
 
 interface CategoryDialogProps {
   visible: boolean;
@@ -165,53 +166,32 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       <Flex direction="vertical" spacing="m" fullwidth>
         <TabBar
           size="small"
-          tabs={[
-            { header: 'English (en)', value: 'en' },
-            { header: 'Arabic (ar)', value: 'ar' },
-          ]}
-          defaultSelected="en"
+          tabs={getSupportedLocales().map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: l }))}
+          defaultSelected={getSupportedLocales()[0]}
           fullWidth
         >
-          <TabBarItem value="en">
-            <FormFieldWrapper
-              name={`translations.en.name`}
-              control={control}
-              label="Name (en)"
-              required
-              fullWidth
-            >
-              <StringInput disabled={isSubmitting} />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name={`translations.en.description`}
-              control={control}
-              label="Description (en)"
-              fullWidth
-              className="bts-marginTm"
-            >
-              <TextArea rows={4} disabled={isSubmitting} />
-            </FormFieldWrapper>
-          </TabBarItem>
-          <TabBarItem value="ar">
-            <FormFieldWrapper
-              name={`translations.ar.name`}
-              control={control}
-              label="Name (ar)"
-              required
-              fullWidth
-            >
-              <StringInput disabled={isSubmitting} />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name={`translations.ar.description`}
-              control={control}
-              label="Description (ar)"
-              fullWidth
-              className="bts-marginTm"
-            >
-              <TextArea rows={4} disabled={isSubmitting} />
-            </FormFieldWrapper>
-          </TabBarItem>
+          {getSupportedLocales().map((l) => (
+            <TabBarItem key={l} value={l}>
+              <FormFieldWrapper
+                name={`translations.${l}.name`}
+                control={control}
+                label={`Name (${l})`}
+                required
+                fullWidth
+              >
+                <StringInput disabled={isSubmitting} />
+              </FormFieldWrapper>
+              <FormFieldWrapper
+                name={`translations.${l}.description`}
+                control={control}
+                label={`Description (${l})`}
+                fullWidth
+                className="bts-marginTm"
+              >
+                <TextArea rows={4} disabled={isSubmitting} />
+              </FormFieldWrapper>
+            </TabBarItem>
+          ))}
         </TabBar>
 
         <Divider thickness="2px" />

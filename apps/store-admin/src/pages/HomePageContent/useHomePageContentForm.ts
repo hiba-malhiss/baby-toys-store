@@ -10,8 +10,9 @@ import {
 } from '../../api/homePageApi';
 import type { UpdateHomePageContentRequest } from '../../api/types/homePage';
 import { HomePageFormValues, homePageSchema } from './homePage.helper';
+import { getSupportedLocales } from '../../components/i18n/locale.ts';
 
-const locales = ['en', 'ar'];
+const locales = getSupportedLocales();
 
 const DEFAULT_HERO_BANNERS = locales.flatMap((locale) => [
   { text: '', imageUrl: '', locale },

@@ -23,6 +23,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { settingsSchema, SettingsFormValues } from './settings-page.util';
+import { getSupportedLocales } from '../../components/i18n/locale';
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
 
@@ -49,7 +50,7 @@ const SettingsPage: React.FC = () => {
   const { data } = useStoreSettings();
   const upsertMutation = useUpsertStoreSettings();
 
-  const locales = useMemo(() => ['en', 'ar'], []);
+  const locales = useMemo(() => getSupportedLocales(), []);
 
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema(locales)),

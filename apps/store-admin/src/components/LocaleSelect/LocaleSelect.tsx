@@ -1,6 +1,7 @@
 import React from 'react';
 import { Select } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
+import { getSupportedLocales } from '../i18n/locale';
 import type { Control } from 'react-hook-form';
 
 type LocaleSelectProps = {
@@ -11,10 +12,10 @@ type LocaleSelectProps = {
   control?: Control<T>;
 };
 
-const LOCALE_OPTIONS = [
-  { label: 'English', value: 'en' },
-  { label: 'العربية', value: 'ar' },
-] as const;
+const LOCALE_OPTIONS = getSupportedLocales().map((code) => ({
+  label: code.toUpperCase(),
+  value: code,
+})) as any;
 
 export const LocaleSelect: React.FC<LocaleSelectProps> = ({
   name = 'locale',

@@ -1,4 +1,5 @@
 import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem } from '@baby-toys/ui-kit';
+import { getSupportedLocales } from '../../components/i18n/locale';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import HeroBannersSection from './HeroBannersSection';
@@ -17,6 +18,8 @@ const HomePageContent: React.FC = () => {
     errors,
   } = useHomePageContentForm();
 
+  const locales = getSupportedLocales();
+
   return (
     <AdminLayout isLoading={isLoading}>
       <Card header="Homepage Content" fullWidth>
@@ -30,17 +33,13 @@ const HomePageContent: React.FC = () => {
             <TabBar
               fullWidth
               size="small"
-              tabs={[
-                { header: 'English (en)', value: 'en-banner' },
-                { header: 'Arabic (ar)', value: 'ar-banner' },
-              ]}
+              tabs={locales.map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: `${l}-banner` }))}
             >
-              <TabBarItem value="en-banner">
-                <HeroBannersSection locale="en" control={control} heroBanners={heroBanners} />
-              </TabBarItem>
-              <TabBarItem value="ar-banner">
-                <HeroBannersSection locale="ar" control={control} heroBanners={heroBanners} />
-              </TabBarItem>
+              {locales.map((l) => (
+                <TabBarItem key={l} value={`${l}-banner`}>
+                  <HeroBannersSection locale={l} control={control} heroBanners={heroBanners} />
+                </TabBarItem>
+              ))}
             </TabBar>
           </Accordion>
 
@@ -53,17 +52,13 @@ const HomePageContent: React.FC = () => {
             <TabBar
               fullWidth
               size="small"
-              tabs={[
-                { header: 'English (en)', value: 'en-info' },
-                { header: 'Arabic (ar)', value: 'ar-info' },
-              ]}
+              tabs={locales.map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: `${l}-info` }))}
             >
-              <TabBarItem value="en-info">
-                <InfoCardsSection locale="en" control={control} infoCards={infoCards} />
-              </TabBarItem>
-              <TabBarItem value="ar-info">
-                <InfoCardsSection locale="ar" control={control} infoCards={infoCards} />
-              </TabBarItem>
+              {locales.map((l) => (
+                <TabBarItem key={l} value={`${l}-info`}>
+                  <InfoCardsSection locale={l} control={control} infoCards={infoCards} />
+                </TabBarItem>
+              ))}
             </TabBar>
           </Accordion>
 

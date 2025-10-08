@@ -5,7 +5,7 @@ import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper
 
 export type LocalizedFieldsProps = {
   control: Control<any>;
-  locale: 'en' | 'ar';
+  locale: string;
   isDisabled?: boolean;
 };
 

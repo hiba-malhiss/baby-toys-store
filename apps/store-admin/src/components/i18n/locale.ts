@@ -20,3 +20,7 @@ export function setAppLocale(locale: string): void {
     // ignore storage errors
   }
 }
+
+export function getSupportedLocales(): string[] {
+  return ['ar', 'en'];
+}

@@ -5,6 +5,7 @@ import { useProductForm } from './useProductForm';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import LocalizedFields from './LocalizedFields';
+import { getSupportedLocales } from '../../components/i18n/locale';
 
 const ProductFormPage: React.FC = () => {
   const {
@@ -32,19 +33,14 @@ const ProductFormPage: React.FC = () => {
           {/* Left Card - Product Details (Localized with TabBar) */}
           <Card fullWidth>
             <TabBar
-              tabs={[
-                { header: 'English (en)', value: 'en' },
-                { header: 'Arabic (ar)', value: 'ar' },
-              ]}
-              defaultSelected="en"
+              tabs={getSupportedLocales().map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: l }))}
+              defaultSelected={getSupportedLocales()[0]}
             >
-              <TabBarItem value="en">
-                <LocalizedFields control={control} locale="en" isDisabled={isDeletingImage} />
-              </TabBarItem>
-
-              <TabBarItem value="ar">
-                <LocalizedFields control={control} locale="ar" isDisabled={isDeletingImage} />
-              </TabBarItem>
+              {getSupportedLocales().map((l) => (
+                <TabBarItem key={l} value={l}>
+                  <LocalizedFields control={control} locale={l as any} isDisabled={isDeletingImage} />
+                </TabBarItem>
+              ))}
             </TabBar>
           </Card>
 
