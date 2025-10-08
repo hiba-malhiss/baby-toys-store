@@ -30,7 +30,7 @@ export const useStoreSettings = () =>
   useQuery<StoreSettings>({
     queryKey: ['storeFront', 'storeSettings'],
     queryFn: async () => {
-      const { data } = await api.get<{ data: StoreSettings }>('/api/store-settings');
+      const { data } = await api.get<{ data: StoreSettings }>(`/api/store-settings`);
       return data.data as StoreSettings;
     },
     staleTime: 60_000,

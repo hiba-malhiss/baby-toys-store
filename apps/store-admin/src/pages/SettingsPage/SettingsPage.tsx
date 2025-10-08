@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Card,
@@ -11,30 +11,27 @@ import {
   Accordion,
   Calendar,
   Text,
+  TabBar,
+  TabBarItem,
 } from '@baby-toys/ui-kit';
+import { useForm } from 'react-hook-form';
 import {
   useStoreSettings,
   useUpsertStoreSettings,
   type StoreSettingUpdateItem,
 } from '../../api/settingsApi';
-import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
-import moment from 'moment/moment';
+import { settingsSchema, SettingsFormValues } from './settings-page.util';
+import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
-import { SettingsFormValues, settingsSchema } from './settings-page.util.tsx';
 
-const CalendarFieldAdapter: React.FC<{
-  value?: Date | null;
-  onChange?: (d: Date | null) => void;
-  isDisabled?: boolean;
-}> = ({ value, onChange, isDisabled }) => (
+const CalendarFieldAdapter = ({ value, onChange, isDisabled }: any) => (
   <Calendar
     value={value ? moment(value) : undefined}
-    onChange={(m) => {
-      const next = Array.isArray(m) ? (m[0]?.toDate?.() ?? null) : ((m as any)?.toDate?.() ?? null);
-      onChange?.(next);
-    }}
+    onChange={(m) =>
+      onChange?.(Array.isArray(m) ? (m[0]?.toDate?.() ?? null) : (m?.toDate?.() ?? null))
+    }
     isDisabled={isDisabled}
     disableFutureDates={false}
     selectionMode="single"
@@ -44,13 +41,18 @@ const CalendarFieldAdapter: React.FC<{
   />
 );
 
+const contactFields = ['workDays', 'workTimes', 'phone', 'email', 'address'] as const;
+const policyFields = ['cancelPolicy', 'returnPolicy', 'shippingPolicy'] as const;
+
 const SettingsPage: React.FC = () => {
   const toast = useToast();
   const { data } = useStoreSettings();
   const upsertMutation = useUpsertStoreSettings();
 
+  const locales = useMemo(() => ['en', 'ar'], []);
+
   const form = useForm<SettingsFormValues>({
-    resolver: zodResolver(settingsSchema),
+    resolver: zodResolver(settingsSchema(locales)),
     defaultValues: {
       general: {
         currency: '',
@@ -59,116 +61,74 @@ const SettingsPage: React.FC = () => {
         priceRangeMin: '',
         priceRangeMax: '',
       },
-      contact: {
-        workDays: '',
-        workTimes: '',
-        phone: '',
-        email: '',
-        address: '',
-      },
-      policies: {
-        cancelPolicy: '',
-        returnPolicy: '',
-        shippingPolicy: '',
-        freeShippingMinSubtotal: undefined,
-        freeShippingStartAt: undefined,
-        freeShippingEndAt: undefined,
+      contact: Object.fromEntries(
+        locales.map((l) => [l, { workDays: '', workTimes: '', phone: '', email: '', address: '' }])
+      ) as any,
+      policies: Object.fromEntries(
+        locales.map((l) => [l, { cancelPolicy: '', returnPolicy: '', shippingPolicy: '' }])
+      ) as any,
+      policiesGlobal: {
+        freeShippingMinSubtotal: null,
+        freeShippingStartAt: null,
+        freeShippingEndAt: null,
       },
     },
-    mode: 'onBlur',
   });
 
-  const { control, handleSubmit, reset, formState, setValue, clearErrors, trigger } = form;
-
-  const handleResetFreeShipping = () => {
-    setValue('policies.freeShippingMinSubtotal', null, {
-      shouldDirty: true,
-      shouldValidate: false,
-    });
-    setValue('policies.freeShippingStartAt', null, {
-      shouldDirty: true,
-      shouldValidate: false,
-    });
-    setValue('policies.freeShippingEndAt', null, {
-      shouldDirty: true,
-      shouldValidate: false,
-    });
-    clearErrors([
-      'policies.freeShippingMinSubtotal',
-      'policies.freeShippingStartAt',
-      'policies.freeShippingEndAt',
-    ]);
-  };
+  const { control, handleSubmit, reset, setValue, clearErrors } = form;
+  const [activeContactTab, setActiveContactTab] = useState(locales[0]);
+  const [activePoliciesTab, setActivePoliciesTab] = useState(locales[0]);
 
   useEffect(() => {
     if (!data) return;
+    const global = (data as any).global || {};
+
     reset({
-      general: {
-        currency: data.general?.currency ?? '',
-        currencySymbol: data.general?.currencySymbol ?? '',
-        timezone: data.general?.timezone ?? '',
-        priceRangeMin: data.general?.priceRangeMin ?? '',
-        priceRangeMax: data.general?.priceRangeMax ?? '',
-      },
-      contact: {
-        workDays: data.contact?.workDays ?? '',
-        workTimes: data.contact?.workTimes ?? '',
-        phone: data.contact?.phone ?? '',
-        email: data.contact?.email ?? '',
-        address: data.contact?.address ?? '',
-      },
-      policies: {
-        cancelPolicy: data.policies?.cancelPolicy ?? '',
-        returnPolicy: data.policies?.returnPolicy ?? '',
-        shippingPolicy: data.policies?.shippingPolicy ?? '',
-        freeShippingMinSubtotal: data.policies?.freeShippingMinSubtotal ?? undefined,
-        freeShippingStartAt: data.policies?.freeShippingStartAt
-          ? new Date(data.policies.freeShippingStartAt)
-          : undefined,
-        freeShippingEndAt: data.policies?.freeShippingEndAt
-          ? new Date(data.policies.freeShippingEndAt)
-          : undefined,
-      },
+      general: global.general || {},
+      contact: Object.fromEntries(locales.map((l) => [l, (data as any)[l]?.contact || {}])),
+      policies: Object.fromEntries(locales.map((l) => [l, (data as any)[l]?.policies || {}])),
+      policiesGlobal: global.policies || {},
     });
   }, [data, reset]);
 
+  const handleResetFreeShipping = () => {
+    setValue('policiesGlobal.freeShippingMinSubtotal', null, { shouldDirty: true });
+    setValue('policiesGlobal.freeShippingStartAt', null, { shouldDirty: true });
+    setValue('policiesGlobal.freeShippingEndAt', null, { shouldDirty: true });
+    clearErrors('policiesGlobal');
+  };
+
   const onSubmit = async (values: SettingsFormValues) => {
     const payload: StoreSettingUpdateItem[] = [
-      // General
-      { section: 'GENERAL', key: 'currency', value: values.general.currency },
-      { section: 'GENERAL', key: 'currencySymbol', value: values.general.currencySymbol },
-      { section: 'GENERAL', key: 'timezone', value: values.general.timezone },
-      { section: 'GENERAL', key: 'priceRangeMin', value: values.general.priceRangeMin || '' },
-      { section: 'GENERAL', key: 'priceRangeMax', value: values.general.priceRangeMax || '' },
-      // Contact
-      { section: 'CONTACT', key: 'workDays', value: values.contact.workDays },
-      { section: 'CONTACT', key: 'workTimes', value: values.contact.workTimes },
-      { section: 'CONTACT', key: 'phone', value: values.contact.phone },
-      { section: 'CONTACT', key: 'email', value: values.contact.email },
-      { section: 'CONTACT', key: 'address', value: values.contact.address },
-      // Policies
-      { section: 'POLICIES', key: 'cancelPolicy', value: values.policies.cancelPolicy },
-      { section: 'POLICIES', key: 'returnPolicy', value: values.policies.returnPolicy },
-      { section: 'POLICIES', key: 'shippingPolicy', value: values.policies.shippingPolicy },
-      {
+      ...Object.entries(values.general).map(([key, value]) => ({
+        section: 'GENERAL',
+        key,
+        value,
+      })),
+      ...locales.flatMap((locale) =>
+        Object.entries(values.contact[locale]).map(([key, value]) => ({
+          section: 'CONTACT',
+          key,
+          value,
+          locale,
+        }))
+      ),
+      ...locales.flatMap((locale) =>
+        Object.entries(values.policies[locale]).map(([key, value]) => ({
+          section: 'POLICIES',
+          key,
+          value,
+          locale,
+        }))
+      ),
+      ...Object.entries(values.policiesGlobal).map(([key, value]) => ({
         section: 'POLICIES',
-        key: 'freeShippingMinSubtotal',
-        value: values.policies.freeShippingMinSubtotal ?? null,
-      },
-      {
-        section: 'POLICIES',
-        key: 'freeShippingStartAt',
-        value: values.policies.freeShippingStartAt
-          ? moment(values.policies.freeShippingStartAt).format(ADMIN_LOCAL_DATETIME_FORMAT)
-          : null,
-      },
-      {
-        section: 'POLICIES',
-        key: 'freeShippingEndAt',
-        value: values.policies.freeShippingEndAt
-          ? moment(values.policies.freeShippingEndAt).format(ADMIN_LOCAL_DATETIME_FORMAT)
-          : null,
-      },
+        key,
+        value:
+          value instanceof Date
+            ? moment(value).format(ADMIN_LOCAL_DATETIME_FORMAT)
+            : (value ?? null),
+      })),
     ];
 
     try {
@@ -186,152 +146,98 @@ const SettingsPage: React.FC = () => {
           <Flex direction="column" spacing="xxl" fullWidth>
             <Heading>Store Settings</Heading>
 
-            {/* General Section */}
+            {/* General */}
             <Accordion header="General" buttonAppearance="outline">
-              <Flex direction="vertical" spacing="m" fullWidth>
-                <FormFieldWrapper
-                  control={control}
-                  name="general.currency"
-                  label="Currency"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="USD" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  control={control}
-                  name="general.currencySymbol"
-                  label="Currency Symbol"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="$" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  control={control}
-                  name="general.timezone"
-                  label="Timezone"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="Asia/Gaza" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  required
-                  control={control}
-                  name="general.priceRangeMin"
-                  label="Price Range Min"
-                  fullWidth
-                >
-                  <StringInput placeholder="0" type="number" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  required
-                  control={control}
-                  name="general.priceRangeMax"
-                  label="Price Range Max"
-                  fullWidth
-                >
-                  <StringInput placeholder="300" type="number" />
-                </FormFieldWrapper>
-              </Flex>
+              {['currency', 'currencySymbol', 'timezone', 'priceRangeMin', 'priceRangeMax'].map(
+                (field) => (
+                  <FormFieldWrapper
+                    key={field}
+                    control={control}
+                    name={`general.${field}`}
+                    label={field.replace(/([A-Z])/g, ' $1')}
+                    required
+                    fullWidth
+                  >
+                    <StringInput
+                      placeholder={field}
+                      type={field.includes('price') ? 'number' : 'text'}
+                    />
+                  </FormFieldWrapper>
+                )
+              )}
             </Accordion>
 
-            {/* Contact Section */}
+            {/* Contact */}
             <Accordion header="Contact" buttonAppearance="outline">
-              <Flex direction="vertical" spacing="m" fullWidth>
-                <FormFieldWrapper
-                  control={control}
-                  name="contact.workDays"
-                  label="Working Days"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="Monday to Friday" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  control={control}
-                  name="contact.workTimes"
-                  label="Working Times"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="10am - 6pm (Palestine time)" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  control={control}
-                  name="contact.phone"
-                  label="Phone"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="+1 234 567 8900" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  control={control}
-                  name="contact.email"
-                  label="Email"
-                  fullWidth
-                  required
-                >
-                  <StringInput placeholder="support@toystore.com" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  control={control}
-                  name="contact.address"
-                  label="Address"
-                  fullWidth
-                  required
-                >
-                  <TextArea rows={3} placeholder="123 Toy Lane, Playtown, USA" />
-                </FormFieldWrapper>
-              </Flex>
+              <TabBar
+                fullWidth
+                size="small"
+                value={activeContactTab}
+                onChange={setActiveContactTab}
+                tabs={locales.map((l) => ({ header: l.toUpperCase(), value: l }))}
+              >
+                {locales.map((l) => (
+                  <TabBarItem key={l} value={l}>
+                    <Flex direction="vertical" spacing="m" fullWidth>
+                      {contactFields.map((key) => (
+                        <FormFieldWrapper
+                          key={key}
+                          control={control}
+                          name={`contact.${l}.${key}`}
+                          label={`${key} (${l})`}
+                          required
+                          fullWidth
+                        >
+                          {key === 'address' ? <TextArea rows={3} /> : <StringInput />}
+                        </FormFieldWrapper>
+                      ))}
+                    </Flex>
+                  </TabBarItem>
+                ))}
+              </TabBar>
             </Accordion>
 
-            {/* Policies Section */}
+            {/* Policies */}
             <Accordion header="Policies" buttonAppearance="outline">
-              <Flex direction="vertical" spacing="m" fullWidth>
-                <FormFieldWrapper
-                  required
-                  control={control}
-                  name="policies.cancelPolicy"
-                  label="Cancel Policy"
-                  fullWidth
-                >
-                  <TextArea rows={4} placeholder="Describe cancellation policy" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  required
-                  control={control}
-                  name="policies.returnPolicy"
-                  label="Return Policy"
-                  fullWidth
-                >
-                  <TextArea rows={4} placeholder="Describe return policy" />
-                </FormFieldWrapper>
-                <FormFieldWrapper
-                  required
-                  control={control}
-                  name="policies.shippingPolicy"
-                  label="Shipping Policy"
-                  fullWidth
-                >
-                  <TextArea rows={4} placeholder="Describe shipping policy" />
-                </FormFieldWrapper>
-              </Flex>
+              <TabBar
+                fullWidth
+                size="small"
+                value={activePoliciesTab}
+                onChange={setActivePoliciesTab}
+                tabs={locales.map((l) => ({ header: l.toUpperCase(), value: l }))}
+              >
+                {locales.map((l) => (
+                  <TabBarItem key={l} value={l}>
+                    <Flex direction="vertical" spacing="m" fullWidth>
+                      {policyFields.map((key) => (
+                        <FormFieldWrapper
+                          key={key}
+                          control={control}
+                          name={`policies.${l}.${key}`}
+                          label={`${key} (${l})`}
+                          required
+                          fullWidth
+                        >
+                          <TextArea rows={4} />
+                        </FormFieldWrapper>
+                      ))}
+                    </Flex>
+                  </TabBarItem>
+                ))}
+              </TabBar>
             </Accordion>
 
-            {/* Free Shipping Section */}
+            {/* Free Shipping */}
             <Accordion header="Free Shipping" buttonAppearance="outline">
               <Flex spacing="m" fullWidth direction="vertical">
                 <Text color="muted" size="sm">
-                  Note: Free shipping applies when order subtotal ≥ threshold and now is within the
-                  configured period and threshold is greater than 0.
+                  Free shipping applies when subtotal ≥ threshold and within the configured dates.
                 </Text>
+
                 <Flex align="end" spacing="m" fullWidth>
                   <FormFieldWrapper
                     control={control}
-                    name="policies.freeShippingMinSubtotal"
+                    name="policiesGlobal.freeShippingMinSubtotal"
                     label="Minimum Subtotal"
                     fullWidth
                   >
@@ -341,18 +247,20 @@ const SettingsPage: React.FC = () => {
                     Clear
                   </Button>
                 </Flex>
+
                 <Flex fullWidth spacing="m">
                   <FormFieldWrapper
                     control={control}
-                    name="policies.freeShippingStartAt"
+                    name="policiesGlobal.freeShippingStartAt"
                     label="Starts At"
                     fullWidth
                   >
                     <CalendarFieldAdapter />
                   </FormFieldWrapper>
+
                   <FormFieldWrapper
                     control={control}
-                    name="policies.freeShippingEndAt"
+                    name="policiesGlobal.freeShippingEndAt"
                     label="Ends At"
                     fullWidth
                   >
@@ -363,11 +271,7 @@ const SettingsPage: React.FC = () => {
             </Accordion>
 
             <Flex justify="end">
-              <Button
-                type="submit"
-                isLoading={upsertMutation.isPending}
-                isDisabled={formState.isSubmitting}
-              >
+              <Button type="submit" isLoading={upsertMutation.isPending}>
                 Save Settings
               </Button>
             </Flex>

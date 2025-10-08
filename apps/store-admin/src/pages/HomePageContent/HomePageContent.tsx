@@ -31,14 +31,14 @@ const HomePageContent: React.FC = () => {
               fullWidth
               size="small"
               tabs={[
-                { header: 'English (en)', value: 'en' },
-                { header: 'Arabic (ar)', value: 'ar' },
+                { header: 'English (en)', value: 'en-banner' },
+                { header: 'Arabic (ar)', value: 'ar-banner' },
               ]}
             >
-              <TabBarItem value="en">
+              <TabBarItem value="en-banner">
                 <HeroBannersSection locale="en" control={control} heroBanners={heroBanners} />
               </TabBarItem>
-              <TabBarItem value="ar">
+              <TabBarItem value="ar-banner">
                 <HeroBannersSection locale="ar" control={control} heroBanners={heroBanners} />
               </TabBarItem>
             </TabBar>
@@ -54,14 +54,14 @@ const HomePageContent: React.FC = () => {
               fullWidth
               size="small"
               tabs={[
-                { header: 'English (en)', value: 'en' },
-                { header: 'Arabic (ar)', value: 'ar' },
+                { header: 'English (en)', value: 'en-info' },
+                { header: 'Arabic (ar)', value: 'ar-info' },
               ]}
             >
-              <TabBarItem value="en">
+              <TabBarItem value="en-info">
                 <InfoCardsSection locale="en" control={control} infoCards={infoCards} />
               </TabBarItem>
-              <TabBarItem value="ar">
+              <TabBarItem value="ar-info">
                 <InfoCardsSection locale="ar" control={control} infoCards={infoCards} />
               </TabBarItem>
             </TabBar>

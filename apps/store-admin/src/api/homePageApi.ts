@@ -8,7 +8,7 @@ export const useHomePageContent = () => {
   return useQuery<HomePageContentDto>({
     queryKey: [HOME_PAGE_QUERY_KEY],
     queryFn: async () => {
-      const { data } = await api.get('/api/homepage');
+      const { data } = await api.get('/api/admin/homepage');
       return data?.data;
     },
   });

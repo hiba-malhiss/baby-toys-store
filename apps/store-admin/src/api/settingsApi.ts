@@ -3,22 +3,44 @@ import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
 
 export type StoreSettingsGrouped = {
-  general?: Record<string, string>;
-  contact?: Record<string, string>;
-  policies?: Record<string, string>;
+  general: {
+    currency: string;
+    currencySymbol: string;
+    timezone: string;
+    priceRangeMin?: string | number | null;
+    priceRangeMax?: string | number | null;
+  };
+  contact: {
+    workDays: string;
+    workTimes: string;
+    phone: string;
+    email: string;
+    address: string;
+  };
+  policies: {
+    cancelPolicy?: string | null;
+    returnPolicy?: string | null;
+    shippingPolicy?: string | null;
+    freeShippingMinSubtotal?: number | null;
+    freeShippingStartAt?: string | null;
+    freeShippingEndAt?: string | null;
+  };
 };
 
 export type StoreSettingUpdateItem = {
   section: 'GENERAL' | 'CONTACT' | 'POLICIES';
   key: string;
   value: string;
+  locale?: string;
 };
 
 export const useStoreSettings = () =>
   useQuery<StoreSettingsGrouped>({
     queryKey: ['storeSettings'],
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<StoreSettingsGrouped>>('/api/store-settings');
+      const { data } = await api.get<ApiEnvelope<StoreSettingsGrouped>>(
+        '/api/admin/store-settings'
+      );
       return data.data || {};
     },
     staleTime: 60_000,
