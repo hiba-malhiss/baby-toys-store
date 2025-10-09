@@ -14,9 +14,10 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = getAccessToken();
-  const isAuthenticated = useMemo(() => !!token, [token]);
-  const { isLoading: isAuthInitLoading } = useAuthInit();
+  const { data: initData, isLoading: isAuthInitLoading } = useAuthInit();
+  const isAuthenticated = useMemo(() => {
+    return Boolean(initData?.isAuthenticated || getAccessToken());
+  }, [initData]);
   const { data: user, isLoading: isProfileLoading } = useFetchProfile(isAuthenticated);
 
   const hasPermission = useCallback(

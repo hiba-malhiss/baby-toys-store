@@ -4,7 +4,8 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { StringInput, Button, Flex, Heading, Card, useToast } from '@baby-toys/ui-kit';
-import { useFetchProfile, useLogin, useLogout, USER_ROLE } from '../../api/authApi';
+import { useLogin, useLogout, USER_ROLE } from '../../api/authApi';
+import { useAuth } from '../../context/AuthContext';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import styles from './login-page.module.scss';
 import { setAccessToken } from '../../api/axiosConfig.ts';
@@ -22,7 +23,7 @@ const LoginPage: React.FC = () => {
   const toast = useToast();
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
-  const userQuery = useFetchProfile();
+  const { user, isInitializing } = useAuth();
 
   const { control, handleSubmit, formState } = useForm<LoginFormData>({
     mode: 'onBlur',
@@ -40,7 +41,6 @@ const LoginPage: React.FC = () => {
         return;
       }
       setAccessToken(response.accessToken);
-      await userQuery.refetch();
       toast.success(response.message || 'Login successful!');
       navigate('/dashboard');
     } catch (error: any) {
@@ -53,13 +53,13 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const isSubmitting = formState.isSubmitting || loginMutation.isPending || userQuery.isLoading;
+  const isSubmitting = formState.isSubmitting || loginMutation.isPending || isInitializing;
 
   useEffect(() => {
-    if (userQuery?.data?.role === USER_ROLE.ADMIN) {
+    if (user?.role === USER_ROLE.ADMIN) {
       navigate('/dashboard', { replace: true });
     }
-  }, [userQuery?.data?.role, navigate]);
+  }, [user?.role, navigate]);
 
   return (
     <div className={styles.loginPage}>

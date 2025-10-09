@@ -60,8 +60,8 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   if(inMemoryAccessToken) {
     config.headers.Authorization = `Bearer ${inMemoryAccessToken}`;
   }
-  // Always attach preferred locale
-  (config.headers as any)['Accept-Language'] = getAppLocale() || 'en';
+  // Always attach preferred locale (align default with store-front)
+  (config.headers as any)['Accept-Language'] = getAppLocale() || 'ar';
   return config;
 });
 
@@ -77,8 +77,31 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // 401 Unauthorized
-    if(error.response.status === 401 && originalRequest && !originalRequest._retry) {
+    // 403/419: forbidden or csrf/expired — clear token and do not attempt refresh
+    if ((error.response.status === 403 || error.response.status === 419) && originalRequest) {
+      clearAccessToken();
+      failedQueries.forEach(key => queryClient.invalidateQueries(key));
+      failedQueries.clear();
+      return Promise.reject(error);
+    }
+
+    // 401 Unauthorized handling with refresh
+    if (error.response.status === 401 && originalRequest) {
+      // Never try to refresh when the refresh endpoint itself fails
+      const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
+      if (isRefreshCall) {
+        clearAccessToken();
+        processQueue(error);
+        failedQueries.forEach(key => queryClient.invalidateQueries(key));
+        failedQueries.clear();
+        return Promise.reject(error);
+      }
+
+      if (originalRequest._retry) {
+        // Already retried this request once; avoid loops
+        return Promise.reject(error);
+      }
+
       if(isRefreshing) {
         // Queue request if token is being refreshed
         return new Promise((resolve, reject) => {
@@ -103,7 +126,7 @@ api.interceptors.response.use(
           originalRequest.headers.Authorization = `Bearer ${accessToken}`;
         }
         return api(originalRequest);
-      } catch(refreshError) {
+      } catch(refreshError: any) {
         clearAccessToken();
         processQueue(refreshError);
 

@@ -56,5 +56,13 @@ export const useFetchProfile = (enabled: boolean = true) =>
       const response = await api.get<ApiEnvelope<User>>('/users/profile');
       return response.data.data;
     },
-    retry: 1,
+    // Avoid noisy retries that trigger UI flicker during login/init
+    retry: (failureCount, error) => {
+      const status = error?.response?.status;
+      if (status === 401 || status === 403) return false; // not authorized => don't retry
+      if (!error.response) return failureCount < 2; // network error: allow 2 quick retries
+      return failureCount < 1; // other errors: single retry at most
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 60_000,
   });

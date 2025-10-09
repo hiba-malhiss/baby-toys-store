@@ -7,7 +7,7 @@ import { Control } from 'react-hook-form';
 interface Props {
   locale: string;
   control: Control<HomePageFormValues>;
-  infoCards: any[];
+  infoCards: HomePageFormValues['infoCards'];
 }
 
 const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {

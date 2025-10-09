@@ -20,13 +20,13 @@ const DEFAULT_HERO_BANNERS = locales.flatMap((locale) => [
 ]);
 
 const DEFAULT_INFO_CARDS = locales.flatMap((locale) =>
-  Array(3).fill({
+  Array.from({ length: 3 }, () => ({
     title: '',
     subtitle: '',
     icon: '',
     appearance: 'primary',
     locale,
-  })
+  }))
 );
 
 export const useHomePageContentForm = () => {
@@ -62,28 +62,32 @@ export const useHomePageContentForm = () => {
     if (!data) return;
 
     const ensurePerLocale = <T extends { locale: string }>(items: T[], defaults: T[]): T[] => {
-      const byLocale: Record<string, T[]> = { en: [], ar: [] };
+      const supported = locales.map((l) => l.toLowerCase());
+      const byLocale: Record<string, T[]> = Object.fromEntries(
+        supported.map((l) => [l, [] as T[]])
+      ) as Record<string, T[]>;
+
       (items || []).forEach((i) => {
         if (!i || !i.locale) return;
-        const code = i.locale.toLowerCase() as 'en' | 'ar';
+        const code = String(i.locale).toLowerCase();
+        if (!byLocale[code]) byLocale[code] = [] as T[];
         byLocale[code].push(i);
       });
 
-      const enCountDefault = defaults.filter((d) => d.locale === 'en').length;
-      const arCountDefault = defaults.filter((d) => d.locale === 'ar').length;
-
-      const fillFor = (code: 'en' | 'ar', count: number) => {
-        const current = byLocale[code];
+      const fillFor = (code: string, count: number) => {
+        const current = byLocale[code] || (byLocale[code] = [] as T[]);
         if (current.length >= count) return;
         const needed = count - current.length;
-        const templates = defaults.filter((d) => d.locale === code).slice(0, needed);
+        const templates = defaults.filter((d) => String(d.locale).toLowerCase() === code).slice(0, needed);
         byLocale[code].push(...templates);
       };
 
-      fillFor('en', enCountDefault);
-      fillFor('ar', arCountDefault);
+      supported.forEach((code) => {
+        const countDefault = defaults.filter((d) => String(d.locale).toLowerCase() === code).length;
+        fillFor(code, countDefault);
+      });
 
-      return [...byLocale.en, ...byLocale.ar];
+      return supported.flatMap((code) => byLocale[code] || []);
     };
 
     const hero = ensurePerLocale(
@@ -107,10 +111,15 @@ export const useHomePageContentForm = () => {
     setIsProcessing(true);
 
     try {
-      const uploadedUrls: string[] = [];
-      for (const file of newImages) {
-        const uploadedUrl = await uploadImage.mutateAsync(file);
-        uploadedUrls.push(uploadedUrl);
+      const uploadResults = await Promise.allSettled(
+        newImages.map((file) => uploadImage.mutateAsync(file))
+      );
+      const uploadedUrls: string[] = uploadResults
+        .filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled')
+        .map((r) => r.value);
+      const failedCount = uploadResults.filter((r) => r.status === 'rejected').length;
+      if (failedCount > 0) {
+        toast.error(`${failedCount} image${failedCount > 1 ? 's' : ''} failed to upload`);
       }
 
       const finalGallery = [...existingImages, ...uploadedUrls].map((url) => ({ imageUrl: url }));

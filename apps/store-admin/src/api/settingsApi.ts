@@ -41,7 +41,31 @@ export const useStoreSettings = () =>
       const { data } = await api.get<ApiEnvelope<StoreSettingsGrouped>>(
         '/api/admin/store-settings'
       );
-      return data.data || {};
+      const DEFAULT_SETTINGS: StoreSettingsGrouped = {
+        general: {
+          currency: '',
+          currencySymbol: '',
+          timezone: '',
+          priceRangeMin: null,
+          priceRangeMax: null,
+        },
+        contact: {
+          workDays: '',
+          workTimes: '',
+          phone: '',
+          email: '',
+          address: '',
+        },
+        policies: {
+          cancelPolicy: null,
+          returnPolicy: null,
+          shippingPolicy: null,
+          freeShippingMinSubtotal: null,
+          freeShippingStartAt: null,
+          freeShippingEndAt: null,
+        },
+      };
+      return data.data ?? DEFAULT_SETTINGS;
     },
     staleTime: 60_000,
   });

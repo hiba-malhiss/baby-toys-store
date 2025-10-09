@@ -7,7 +7,7 @@ import { HomePageFormValues } from './homePage.helper';
 interface Props {
   locale: string;
   control: Control<HomePageFormValues>;
-  heroBanners: any[];
+  heroBanners: HomePageFormValues['heroBanners'];
 }
 
 const HeroBannersSection: React.FC<Props> = ({ locale, control, heroBanners }) => {
