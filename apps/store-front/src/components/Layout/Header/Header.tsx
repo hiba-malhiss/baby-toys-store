@@ -84,7 +84,7 @@ const Header = () => {
         <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>
 
-      <Flex className={styles.headerMain} justify="stretch" align="center" wrap fullWidth>
+      <Flex className={styles.headerMain} justify="stretch" align="center" fullWidth>
         <div className="bts-hideOnMobile">
           <img
             src="/assets/kit-images/logo.png"

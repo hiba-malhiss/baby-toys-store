@@ -23,7 +23,7 @@ const CustomerReviewsSection = () => {
         responsiveOptions={[
           { breakpoint: BREAKPOINTS.large, numVisible: 4 },
           { breakpoint: BREAKPOINTS.medium, numVisible: 3 },
-          { breakpoint: BREAKPOINTS.small, numVisible: 2 },
+          { breakpoint: BREAKPOINTS.small, numVisible: 1 },
         ]}
         itemTemplate={(review) => <ReviewCard review={review} fullHeight />}
       />

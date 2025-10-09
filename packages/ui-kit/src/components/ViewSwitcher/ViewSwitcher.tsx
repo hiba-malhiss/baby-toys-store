@@ -174,7 +174,7 @@ function ViewSwitcher({
   const handlePageChange = React.useCallback(
     (newPage: number) => {
       if (newPage !== page) {
-        onPaginationChange(newPage, pageSize);
+        onPaginationChange?.(newPage, pageSize);
 
         // Scroll to top of container on page change (only for 'default' mode)
         if (paginationMode === 'default' && containerRef.current) {

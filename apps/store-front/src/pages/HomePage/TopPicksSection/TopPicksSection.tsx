@@ -1,7 +1,7 @@
-import { useState, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Section from '../../../components/features/Section/Section.tsx';
-import { Flex, Button, RadioButtonGroup } from '@baby-toys/ui-kit';
+import { Flex, Button, RadioButtonGroup, SkeletonProductCard } from '@baby-toys/ui-kit';
 import styles from './top-picks-section.module.scss';
 import SmartProductCard from '../../../components/features/SmartProductCard/SmartProductCard.tsx';
 import { useTopPicks } from '../../../api/productApi';
@@ -28,7 +28,7 @@ const TopPicksSection = () => {
   }, [navigate, selected]);
 
   return (
-    <Section title={t('home.topPicks.title')} isLoading={isLoading}>
+    <Section title={t('home.topPicks.title')}>
       <RadioButtonGroup
         className={styles.topPicks}
         options={TOP_PICS_SORT_OPTIONS.map((opt) => ({
@@ -44,6 +44,12 @@ const TopPicksSection = () => {
         {items.map((toy, index) => (
           <SmartProductCard key={toy.id || `product-${index}`} product={toy} />
         ))}
+        {!items.length &&
+          Array.from({ length: 9 }).map((_, i) => (
+            <React.Fragment key={`skeleton-${i}`}>
+              <SkeletonProductCard fullWidth />
+            </React.Fragment>
+          ))}
       </div>
       <Flex justify="center" className="bts-marginTxxxl">
         <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>

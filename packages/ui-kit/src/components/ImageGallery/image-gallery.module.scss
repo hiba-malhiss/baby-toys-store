@@ -7,7 +7,7 @@
 
   &-mainImage {
     width: 100%;
-    max-height: 600px;
+    max-height: 495px;
     aspect-ratio: 3 / 4;
     display: flex;
     justify-content: center;
@@ -27,6 +27,7 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    max-height: 140px;
   }
 
   &-thumbnail {

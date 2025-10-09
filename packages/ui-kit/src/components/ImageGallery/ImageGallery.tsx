@@ -3,7 +3,6 @@ import Carousel from '../Carousel/Carousel';
 import ImageMagnifierPopover from '../ImageMagnifierPopover/ImageMagnifierPopover';
 import styles from './image-gallery.module.scss';
 import clsx from 'clsx';
-import { BREAKPOINTS } from '../../constants/breakpoints';
 import { Image } from '../Image';
 
 type ImageGalleryProps = {
