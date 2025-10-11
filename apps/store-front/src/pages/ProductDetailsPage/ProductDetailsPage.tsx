@@ -1,7 +1,7 @@
 import { useParams } from 'react-router-dom';
 import { useBreadcrumb } from '@baby-toys/ui-kit/hooks';
 import React, { useEffect } from 'react';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import { BouncingDotsLoader } from '@baby-toys/ui-kit';
 import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';

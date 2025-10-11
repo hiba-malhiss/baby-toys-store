@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './order-details-page.module.scss';
 import { faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button, Card, Flex, Heading, StringInput } from '@baby-toys/ui-kit';
+import { Button, Card, Divider, Flex, Heading, StringInput } from '@baby-toys/ui-kit';
 
 export const CouponAndSummary: React.FC<{
   isEdit: boolean;
@@ -13,15 +13,15 @@ export const CouponAndSummary: React.FC<{
   handleRemoveCoupon: () => void;
   canEditOrder: boolean;
 }> = ({
-  isEdit,
-  couponInput,
-  setCouponInput,
-  order,
-  currency,
-  handleApplyCoupon,
-  handleRemoveCoupon,
-  canEditOrder,
-}) => (
+        isEdit,
+        couponInput,
+        setCouponInput,
+        order,
+        currency,
+        handleApplyCoupon,
+        handleRemoveCoupon,
+        canEditOrder,
+      }) => (
   <Card header={<Heading level="h3">Coupon & Summary</Heading>}>
     <Flex spacing="xl" direction="vertical">
       {isEdit && (
@@ -74,6 +74,25 @@ export const CouponAndSummary: React.FC<{
         <span>
           {order?.total} {currency?.symbol}
         </span>
+      </Flex>
+      <Divider/>
+      <Flex spacing="s" justify="between">
+        <strong>Total Cost:</strong>
+        <span>
+            {order?.totalCost} {currency?.symbol}
+          </span>
+      </Flex>
+      <Flex spacing="s" justify="between">
+        <strong>Total Profit:</strong>
+        <span className={styles.orderDetailsProfit}>
+            {order?.totalProfit} {currency?.symbol}
+          </span>
+      </Flex>
+      <Flex spacing="s" justify="between">
+        <strong>Profit Margin:</strong>
+        <span>
+            {Number(order?.profitMargin) * 100}%
+          </span>
       </Flex>
     </Flex>
   </Card>

@@ -115,7 +115,7 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
       header={color ? 'Edit Color' : 'Add New Color'}
       footer={footer}
     >
-      <Flex direction="vertical" spacing="m" fullwidth>
+      <Flex direction="vertical" spacing="m" fullWidth>
         <TabBar
           fullWidth
           size="small"

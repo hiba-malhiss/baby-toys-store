@@ -4,7 +4,7 @@ import styles from './checkout-page.module.scss';
 
 import { Card, Divider, useToast, BouncingDotsLoader, Chip } from '@baby-toys/ui-kit';
 
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import ShippingForm, { type ShippingFormValues } from './ShippingForm';
 
 import { useAuth } from '../../context/AuthContext.tsx';

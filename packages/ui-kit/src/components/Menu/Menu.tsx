@@ -29,7 +29,7 @@ const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false }) =>
   const navigate = useNavigate();
 
   // Check recursively if current route is in the subtree
-  const isRouteInSubtree = (items: MenuItem[]): boolean => {
+  const isRouteInSubtree = (items: MenuItem[] = []): boolean => {
     return items.some((item) => {
       if (item.route === location.pathname) return true;
       if (item.items) return isRouteInSubtree(item.items);
@@ -37,51 +37,50 @@ const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false }) =>
     });
   };
 
-  const renderSubMenu = (items: MenuItem[]) => {
-    return items.map((item, idx) => {
-      const hasSubmenu = item.items && item.items.length > 0;
+  const renderSubMenu = (items: MenuItem[] = []) => {
+    return (items ?? []).map((item, idx) => {
+      const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;
 
       if (hasSubmenu) {
-        const isOpen = isRouteInSubtree(item.items);
+        const isOpen = isRouteInSubtree(item.items ?? []);
 
         return (
           <Accordion
             key={idx}
             header={item.label}
             disabled={item.disabled}
-            withoutPadding
             withoutHeaderPadding
             buttonAppearance="link"
             unstyled
             defaultOpen={isOpen}
           >
-            <div>{renderSubMenu(item.items!)}</div>
+            <div>{renderSubMenu(item.items ? item.items : [])}</div>
           </Accordion>
         );
-      } else {
-        return (
-          <Button
-            key={idx}
-            appearance="link"
-            onClick={() => {
-              if (item.route) {
-                navigate(item.route);
-              } else {
-                item.command?.();
-              }
-            }}
-            isDisabled={item.disabled}
-            leftIcon={item.icon}
-            fullWidth
-            align="start"
-            withoutPadding
-            className="bts-marginLxl"
-            isSelected={item.route === location.pathname}
-          >
-            {item.label}
-          </Button>
-        );
       }
+
+      return (
+        <Button
+          key={idx}
+          appearance="link"
+          onClick={() => {
+            if (item.route) {
+              navigate(item.route);
+            } else {
+              item.command?.();
+            }
+          }}
+          isDisabled={item.disabled}
+          leftIcon={item.icon}
+          fullWidth
+          align="start"
+          withoutPadding
+          className="bts-marginLxl"
+          isSelected={item.route === location.pathname}
+        >
+          {item.label}
+        </Button>
+      );
     });
   };
 
@@ -89,8 +88,8 @@ const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false }) =>
     <AccordionGroup allowMultipleOpen={multiple} fullWidth unstyled>
       <Flex direction="vertical" spacing={spacing}>
         {model.map((item, index) => {
-          const hasSubmenu = item.items && item.items.length > 0;
-          const isOpen = hasSubmenu ? isRouteInSubtree(item.items) : false;
+          const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;
+          const isOpen = hasSubmenu ? isRouteInSubtree(item.items ?? []) : false;
 
           if (hasSubmenu) {
             return (
@@ -104,7 +103,7 @@ const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false }) =>
                 unstyled
                 defaultOpen={isOpen}
               >
-                <div>{renderSubMenu(item.items!)}</div>
+                <div>{renderSubMenu(item.items ?? [])}</div>
               </Accordion>
             );
           } else {

@@ -12,7 +12,7 @@ import Image from '../Image/Image.tsx';
 import { copyTextToClipboard } from '../../utils';
 import { useToast } from '../Toast/ToastContext.tsx';
 
-export type Product = {
+export type ProductCard = {
   id: string | number;
   name: string;
   shortDescription?: string;
@@ -27,16 +27,16 @@ export type Product = {
 export type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
   size?: 'small';
-  product: Product;
+  product: ProductCard;
   fullWidth?: boolean;
   label?: string;
   labelAppearance?: string;
   isLoadingFavorite?: boolean;
   isFavorite?: boolean;
   isLoadingAddToCart?: boolean;
-  onToggleFavorite?: (product: Product) => void;
-  onClick?: (product: Product) => void;
-  onAddToCart?: (product: Product) => void;
+  onToggleFavorite?: (product: ProductCard) => void;
+  onClick?: (product: ProductCard) => void;
+  onAddToCart?: (product: ProductCard) => void;
   formatCurrency?: (amount: number) => string;
 };
 
@@ -60,7 +60,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const toast = useToast();
   const isOutOfStock = (product?.availableInStock ?? 0) === 0;
 
-  const handleButtonClick = useCallback((e: MouseEvent, handler?: (product: Product) => void) => {
+  const handleButtonClick = useCallback((e: React.MouseEvent, handler?: (product: ProductCard) => void) => {
     e.preventDefault();
     e.stopPropagation();
     handler?.(product);

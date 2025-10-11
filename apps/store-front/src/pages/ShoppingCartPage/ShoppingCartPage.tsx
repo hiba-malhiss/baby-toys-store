@@ -1,5 +1,5 @@
 import styles from './shopping-cart-page.module.scss';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import { Button, Card, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 import { PriceDisplay } from '@baby-toys/ui-kit';

@@ -8,7 +8,7 @@ import React, {
   cloneElement,
   isValidElement,
 } from 'react';
-import styles from './Select.module.scss';
+import styles from './select.module.scss';
 import Popover from '../Popover/Popover.tsx';
 import clsx from 'clsx';
 import { faChevronDown, faChevronUp, faTimes } from '@fortawesome/free-solid-svg-icons';
@@ -76,14 +76,14 @@ export const Select: React.FC<SelectProps> = ({
         return placeholder;
       }
       const selectedLabels = options
-        ? internalValue.map((v) => options.find((o) => o.value === v)?.label)
-        : Children.map(children, (child) => {
-            if (isValidElement(child) && internalValue.includes(child.props.value)) {
-              return child.props.children;
+        ? (internalValue as string[]).map((v) => options.find((o) => o.value === v)?.label || '')
+        : (Children.map(children, (child) => {
+            if (isValidElement(child) && (internalValue as string[]).includes(child.props.value)) {
+              return child.props.children as string;
             }
             return null;
-          });
-      return selectedLabels.join(', ');
+          }) || []);
+      return (selectedLabels as (string | null)[]).filter(Boolean).join(', ');
     }
 
     const selectedChild = Children.toArray(children).find(
@@ -125,10 +125,8 @@ export const Select: React.FC<SelectProps> = ({
         {renderSelected()}
         <Flex>
           {clearable &&
-            (internalValue.length > 0 ||
-              (Array.isArray(internalValue) && internalValue.length > 0)) && (
-              <Icon
-                icon={faTimes}
+            ((Array.isArray(internalValue) && internalValue.length > 0) || (!Array.isArray(internalValue) && !!internalValue)) && (
+              <span
                 onClick={(e) => {
                   e.stopPropagation();
                   if (multiple) {
@@ -139,7 +137,11 @@ export const Select: React.FC<SelectProps> = ({
                     onChange?.('');
                   }
                 }}
-              />
+                role="button"
+                aria-label="clear selection"
+              >
+                <Icon icon={faTimes} />
+              </span>
             )}
           <Icon icon={isOpen ? faChevronUp : faChevronDown} />
         </Flex>
@@ -150,6 +152,9 @@ export const Select: React.FC<SelectProps> = ({
         targetRef={selectRef}
         position="bottom"
         gap={8}
+        withArrow={false}
+        size="medium"
+        appearance="dark"
       >
         <div className={styles.selectOptions}>
           {options

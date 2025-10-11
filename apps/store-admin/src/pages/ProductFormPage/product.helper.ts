@@ -30,6 +30,7 @@ const localizedFieldsSchema = z.object({
 export const productSchema = z
   .object({
     price: z.number().min(1, 'Price must be positive'),
+    costPrice: z.number().min(0, 'Cost price must be >= 0').optional().or(z.literal(NaN)).transform((v) => (Number.isNaN(v) ? undefined : v)),
     oldPrice: z.number().nullable(),
     stockQuantity: z.number().min(0, 'Stock quantity must be non-negative'),
     releaseDate: z.string().optional(),
@@ -62,11 +63,20 @@ export const productSchema = z
         });
       }
     }
+
+    if (typeof val.costPrice === 'number' && typeof val.price === 'number' && val.costPrice > val.price) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Cost price cannot exceed price',
+        path: ['costPrice'],
+      });
+    }
   });
 
 export const defaultProductValues = {
   // non-localized
   price: undefined as unknown as number,
+  costPrice: undefined as unknown as number | undefined,
   oldPrice: undefined as unknown as number | undefined,
   stockQuantity: undefined as unknown as number,
   releaseDate: '',

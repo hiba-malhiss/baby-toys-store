@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
 import api, { clearAccessToken, setAccessToken } from './axiosConfig';
-import type { ApiEnvelope } from '../../store-admin/src/api/types/common';
+import type { ApiEnvelope } from './types/common';
 import { queryClient } from '../App.tsx';
 import { ROOT_KEYS } from './queryKeys.ts';
 

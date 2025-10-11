@@ -16,6 +16,9 @@ export interface OrderItem {
   originalPrice: string;
   totalPrice: string;
   mainImage?: string;
+  costPrice?: string;
+  itemCostTotal?: string;
+  itemProfit?: string;
 }
 
 export interface Order {
@@ -28,4 +31,7 @@ export interface Order {
   total: string;
   couponCode?: string | null;
   items: OrderItem[];
+  totalCost?: string;
+  totalProfit?: string;
+  profitMargin?: string;
 }

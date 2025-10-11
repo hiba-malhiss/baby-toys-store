@@ -1,27 +1,27 @@
-.select {
-  &-label {
-    @include form-input-base();
-    @include form-input-medium();
-    justify-content: space-between;
-    align-items: center;
-    gap: 8px;
-    min-width: 80px;
-    display: flex;
-    cursor: pointer;
-    padding: 9px 12px;
-    position: relative;
-    text-align: left;
-    height: 40px;
-  }
+.selectLabel {
+  @include form-input-base();
+  @include form-input-medium();
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-width: 80px;
+  cursor: pointer;
+  padding: 9px 12px;
+  position: relative;
+  text-align: left;
+  height: 40px;
+}
 
-  &--hasError .select-label {
+.selectHasError {
+  .selectLabel {
     border: 1.5px solid $color-error !important;
   }
+}
 
-  &.isDisabled {
-    .select-label {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+.isDisabled {
+  .selectLabel {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 }

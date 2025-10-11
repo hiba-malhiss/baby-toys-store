@@ -38,6 +38,8 @@ type ButtonProps = {
   className?: string;
   iconBadge?: string;
   align?: string;
+  type?: 'button' | 'submit' | 'reset';
+  form?: string;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -61,10 +63,16 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       align,
       iconColor,
       iconBadge,
+      type,
+      form,
       ...rest
     },
     ref
   ) => {
+    const resolvedDisabled = !!isDisabled;
+    const resolvedLoading = !!isLoading;
+    const resolvedFullWidth = !!fullWidth;
+    const resolvedType = type ?? 'button';
     const calculatedClassName = clsx(
       styles.button,
       isRounded && styles.isRounded,
@@ -72,8 +80,8 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       styles['button--' + color + 'Color'],
       styles['button--' + appearance + 'Appearance'],
       styles['button--' + align + 'Align'],
-      isDisabled && styles.isDisabled,
-      fullWidth && styles.fullWidth,
+      resolvedDisabled && styles.isDisabled,
+      resolvedFullWidth && styles.fullWidth,
       withoutPadding && styles.buttonNoPadding,
       withAutoHeight && styles.buttonAutoHeight,
       isSelected && styles.isSelected,
@@ -91,11 +99,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           }}
           className={calculatedClassName}
           onClick={onClick}
-          disabled={isDisabled}
-          type="button"
+          disabled={resolvedDisabled}
+          type={resolvedType}
+          form={form}
           {...rest}
         >
-          {isLoading ? (
+          {resolvedLoading ? (
             <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
           ) : (
             <>

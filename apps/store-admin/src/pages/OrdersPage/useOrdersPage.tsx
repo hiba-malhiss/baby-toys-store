@@ -77,6 +77,25 @@ export const useOrdersPage = () => {
         body: (row: Order) => formatNumber(row.total),
       },
       {
+        field: 'totalCost',
+        header: 'Total Cost',
+        sortable: false,
+        body: (row: Order) => (row.totalCost != null ? formatNumber(row.totalCost) : '-'),
+      },
+      {
+        field: 'totalProfit',
+        header: 'Profit',
+        sortable: false,
+        body: (row: Order) => (row.totalProfit ? formatNumber(row.totalProfit) : '-'),
+      },
+      {
+        field: 'profitMargin',
+        header: 'Margin',
+        sortable: false,
+        body: (row: Order) =>
+          row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',
+      },
+      {
         field: 'status',
         header: 'Status',
         body: (row: Order) => <Chip label={row.status} appearance={statusColorMap[row.status]} />,

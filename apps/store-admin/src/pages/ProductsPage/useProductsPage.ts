@@ -18,7 +18,7 @@ export const useProductsPage = () => {
   const [confirmDialogVisible, setConfirmDialogVisible] = useState(false);
   const [showBulkDeleteConfirm, setShowBulkDeleteConfirm] = useState(false);
 
-  const { data, isLoading } = useProducts({
+  const { data, isLoading, isFetching } = useProducts({
     page: page - 1,
     size: rowsPerPage,
     sortBy: sortField,
@@ -49,8 +49,8 @@ export const useProductsPage = () => {
     setConfirmDialogVisible(true);
   };
 
-  const handleConfirmDelete = async () => {
-    if (!productToDelete) return;
+  const handleConfirmDelete = async() => {
+    if(!productToDelete) return;
     await deleteMutation.mutateAsync(productToDelete.id);
     setConfirmDialogVisible(false);
     setProductToDelete(null);
@@ -62,7 +62,7 @@ export const useProductsPage = () => {
   };
 
   const confirmBulkDelete = () => {
-    if (selectedProducts.length > 0) {
+    if(selectedProducts.length > 0) {
       deleteProducts.mutate(selectedProducts.map((p) => p.id));
       setSelectedProducts([]);
     }
@@ -96,7 +96,7 @@ export const useProductsPage = () => {
     confirmBulkDelete,
     setShowBulkDeleteConfirm,
     navigateToCreate: () => navigate('/add-product'),
-    isLoading,
+    isLoading: isLoading || isFetching,
     setSearchQuery,
   };
 };

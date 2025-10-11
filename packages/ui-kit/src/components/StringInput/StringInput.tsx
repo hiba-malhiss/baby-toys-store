@@ -6,6 +6,7 @@ import Button from '../Button/Button.tsx';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import Tooltip from '../Tooltip/Tooltip.tsx';
 import type { IconColor } from '../Icon/icon.constant.ts';
+import { IconSize } from '../Icon/icon.constant.ts';
 
 export type IconPosition = 'left' | 'right';
 export type StringInputSize = 'small' | 'medium' | 'large';
@@ -17,6 +18,7 @@ export interface StringInputProps {
   value?: string | number;
   onChange?: (val: string | number, byControls: boolean) => void;
   onFocus?: () => void;
+  onBlur?: () => void;
   placeholder?: string;
   icon?: any;
   iconRight?: any;
@@ -38,6 +40,7 @@ export interface StringInputProps {
   showCounter?: boolean;
   maxLength?: number;
   truncateOverflow?: boolean;
+  autoComplete?: string;
 }
 
 const StringInput: React.FC<StringInputProps> = ({
@@ -48,6 +51,7 @@ const StringInput: React.FC<StringInputProps> = ({
   value,
   onChange,
   onFocus,
+  onBlur,
   placeholder = '',
   icon,
   iconRight,
@@ -67,6 +71,7 @@ const StringInput: React.FC<StringInputProps> = ({
   maxLength,
   truncateOverflow = false,
   onClick,
+  autoComplete,
 }) => {
   // Detect if controlled
   const isControlled = value !== undefined && onChange !== undefined;
@@ -111,7 +116,8 @@ const StringInput: React.FC<StringInputProps> = ({
       const parsed = parseFloat(trimmed);
       if (!isNaN(parsed)) {
         onChange?.(parsed as any, byControls);
-        if (parsed && max && parsed >= max && maxTooltip) {
+        const maxVal = max !== undefined ? parseFloat(String(max)) : undefined;
+        if (parsed && maxVal !== undefined && parsed >= maxVal && maxTooltip) {
           setShowMaxTooltip(true);
           setTimeout(() => setShowMaxTooltip(false), 1500);
         }
@@ -152,19 +158,17 @@ const StringInput: React.FC<StringInputProps> = ({
       [styles.stringInputWithControls]: type === 'number' && withControls,
     }
   );
-
+  const resolvedDisabled = !!isDisabled;
   const inputClass = clsx(
     styles.input,
     styles[`input--${size}Size`],
     styles[`${size}Size-${resolvedIconPosition}Icon`],
     {
-      [styles.isDisabled]: isDisabled,
+      [styles.isDisabled]: resolvedDisabled,
       [styles.hasIcon]: resolvedIcon,
       [styles.hasError]: !!hasError,
     }
   );
-
-  // Derive string representation and length for counter
   const currentStr = isControlled ? String(value ?? '') : internalValue;
   const currentLen = currentStr?.length ?? 0;
 
@@ -182,7 +186,7 @@ const StringInput: React.FC<StringInputProps> = ({
               handleStep(-1);
             }}
             leftIcon={faMinus}
-            isDisabled={isDisabled}
+            isDisabled={resolvedDisabled}
             className={styles.stringInputDecreaseControl}
           />
         )}
@@ -193,14 +197,16 @@ const StringInput: React.FC<StringInputProps> = ({
           max={max}
           maxLength={typeof maxLength === 'number' ? maxLength : undefined}
           step="any"
-          disabled={isDisabled}
+          disabled={resolvedDisabled}
           readOnly={readOnly}
           placeholder={placeholder}
           value={currentStr}
           onFocus={() => onFocus?.()}
+          onBlur={() => onBlur?.()}
           onChange={(e) => handleChange(e.target.value)}
           className={clsx(inputClass, truncateOverflow && styles.inputTruncate)}
           title={typeof currentStr === 'string' ? currentStr : undefined}
+          autoComplete={autoComplete}
         />
 
         {type === 'number' && withControls && (
@@ -215,7 +221,7 @@ const StringInput: React.FC<StringInputProps> = ({
                 handleStep(1);
               }}
               leftIcon={faPlus}
-              isDisabled={isDisabled}
+              isDisabled={resolvedDisabled}
               className={styles.stringInputIncreaseControl}
             />
           </Tooltip>
@@ -239,7 +245,18 @@ const StringInput: React.FC<StringInputProps> = ({
             role={onIconClick ? 'button' : undefined}
             aria-disabled={isDisabled}
           >
-            <Icon icon={resolvedIcon} className={clsx(styles.icon)} color={iconColor} size={size} />
+            <Icon
+              icon={resolvedIcon}
+              className={clsx(styles.icon)}
+              color={iconColor}
+              size={
+                size === 'small'
+                  ? IconSize.small
+                  : size === 'large'
+                  ? IconSize.large
+                  : IconSize.medium
+              }
+            />
           </div>
         )}
       </div>

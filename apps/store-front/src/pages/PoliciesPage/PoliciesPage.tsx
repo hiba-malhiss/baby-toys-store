@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import { AccordionGroup, Accordion } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';

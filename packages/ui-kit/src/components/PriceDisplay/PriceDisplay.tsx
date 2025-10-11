@@ -26,13 +26,13 @@ const PriceDisplay: React.FC<PriceDisplayProps> = ({
   const oldNum = toNumber(oldPrice);
 
   return (
-    <div className={clsx(className, oldNum && styles.priceDisplayHasOld, styles.priceDisplayPrice)}>
+    <div className={clsx(className, !!oldNum && styles.priceDisplayHasOld, styles.priceDisplayPrice)}>
       <span className={styles.priceDisplayPriceNew}>
-        {formatCurrency ? formatCurrency(priceNum) : priceNum}
+        {formatCurrency ? formatCurrency(priceNum ?? 0) : (priceNum ?? 0)}
       </span>
-      {oldNum && (
+      {oldNum !== null && oldNum !== undefined && (
         <span className={styles.priceDisplayPriceOld}>
-          {formatCurrency ? formatCurrency(oldNum) : oldNum}
+          {formatCurrency ? formatCurrency(oldNum ?? 0) : (oldNum ?? 0)}
         </span>
       )}
     </div>

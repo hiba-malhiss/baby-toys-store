@@ -16,7 +16,7 @@ import {
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import {
-  useStoreSettings,
+  useAdminStoreSettingsMap,
   useUpsertStoreSettings,
   type StoreSettingUpdateItem,
 } from '../../api/settingsApi';
@@ -26,6 +26,34 @@ import { settingsSchema, SettingsFormValues } from './settings-page.util';
 import { getSupportedLocales } from '../../components/i18n/locale';
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
+
+const emptyGeneral = {
+  currency: '',
+  currencySymbol: '',
+  timezone: '',
+  priceRangeMin: '',
+  priceRangeMax: '',
+};
+
+const emptyContact = {
+  workDays: '',
+  workTimes: '',
+  phone: '',
+  email: '',
+  address: '',
+};
+
+const emptyPolicies = {
+  cancelPolicy: '',
+  returnPolicy: '',
+  shippingPolicy: '',
+};
+
+const emptyPoliciesGlobal = {
+  freeShippingMinSubtotal: null,
+  freeShippingStartAt: null,
+  freeShippingEndAt: null,
+};
 
 const CalendarFieldAdapter = ({ value, onChange, isDisabled }: any) => (
   <Calendar
@@ -47,7 +75,7 @@ const policyFields = ['cancelPolicy', 'returnPolicy', 'shippingPolicy'] as const
 
 const SettingsPage: React.FC = () => {
   const toast = useToast();
-  const { data } = useStoreSettings();
+  const { data: settingsMap } = useAdminStoreSettingsMap();
   const upsertMutation = useUpsertStoreSettings();
 
   const locales = useMemo(() => getSupportedLocales(), []);
@@ -55,24 +83,14 @@ const SettingsPage: React.FC = () => {
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema(locales)),
     defaultValues: {
-      general: {
-        currency: '',
-        currencySymbol: '',
-        timezone: '',
-        priceRangeMin: '',
-        priceRangeMax: '',
-      },
+      general: emptyGeneral,
       contact: Object.fromEntries(
-        locales.map((l) => [l, { workDays: '', workTimes: '', phone: '', email: '', address: '' }])
+        locales.map((l) => [l, emptyContact])
       ) as any,
       policies: Object.fromEntries(
-        locales.map((l) => [l, { cancelPolicy: '', returnPolicy: '', shippingPolicy: '' }])
+        locales.map((l) => [l, emptyPolicies])
       ) as any,
-      policiesGlobal: {
-        freeShippingMinSubtotal: null,
-        freeShippingStartAt: null,
-        freeShippingEndAt: null,
-      },
+      policiesGlobal: emptyPoliciesGlobal,
     },
   });
 
@@ -81,16 +99,17 @@ const SettingsPage: React.FC = () => {
   const [activePoliciesTab, setActivePoliciesTab] = useState(locales[0]);
 
   useEffect(() => {
-    if (!data) return;
-    const global = (data as any).global || {};
+    if (!settingsMap) return;
+    const localeKeys = Object.keys(settingsMap);
+    const base = localeKeys.length > 0 ? settingsMap[localeKeys[0]] : undefined;
 
     reset({
-      general: global.general || {},
-      contact: Object.fromEntries(locales.map((l) => [l, (data as any)[l]?.contact || {}])),
-      policies: Object.fromEntries(locales.map((l) => [l, (data as any)[l]?.policies || {}])),
-      policiesGlobal: global.policies || {},
+      general: base?.general ?? emptyGeneral,
+      contact: Object.fromEntries(locales.map((l) => [l, settingsMap[l]?.contact ?? emptyContact])),
+      policies: Object.fromEntries(locales.map((l) => [l, settingsMap[l]?.policies ?? emptyPolicies])),
+      policiesGlobal: base?.policies ?? emptyPoliciesGlobal,
     });
-  }, [data, reset]);
+  }, [settingsMap, reset, locales]);
 
   const handleResetFreeShipping = () => {
     setValue('policiesGlobal.freeShippingMinSubtotal', null, { shouldDirty: true });

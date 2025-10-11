@@ -163,7 +163,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       header={category ? 'Edit Category' : 'Add New Category'}
       footer={footer}
     >
-      <Flex direction="vertical" spacing="m" fullwidth>
+      <Flex direction="vertical" spacing="m" fullWidth>
         <TabBar
           size="small"
           tabs={getSupportedLocales().map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: l }))}
@@ -179,7 +179,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
                 required
                 fullWidth
               >
-                <StringInput disabled={isSubmitting} />
+                <StringInput isDisabled={isSubmitting} />
               </FormFieldWrapper>
               <FormFieldWrapper
                 name={`translations.${l}.description`}
@@ -188,7 +188,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
                 fullWidth
                 className="bts-marginTm"
               >
-                <TextArea rows={4} disabled={isSubmitting} />
+                <TextArea rows={4} isDisabled={isSubmitting} />
               </FormFieldWrapper>
             </TabBarItem>
           ))}

@@ -3,7 +3,7 @@ import Flex, { type Align } from './Flex/Flex.tsx';
 import Button from './Button/Button.tsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './no-data-found.module.scss';
-import { IconColor } from './Icon/icon.constant.ts';
+import { IconColor, IconSize } from './Icon/icon.constant.ts';
 import clsx from 'clsx';
 
 type NoDataFoundProps = {
@@ -39,7 +39,19 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
       {icon && (
         <Icon
           icon={icon}
-          size={iconSize}
+          size={
+            iconSize === 'xxxlarge'
+              ? IconSize.xxxlarge
+              : iconSize === 'xxlarge'
+              ? IconSize.xxlarge
+              : iconSize === 'xlarge'
+              ? IconSize.xlarge
+              : iconSize === 'large'
+              ? IconSize.large
+              : iconSize === 'small'
+              ? IconSize.small
+              : IconSize.medium
+          }
           color={IconColor.gray}
           className={styles.noDataFoundIcon}
         />

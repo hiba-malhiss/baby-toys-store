@@ -1,4 +1,4 @@
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import ShopNowSection from './ShopNowSection/ShopNowSection.tsx';
 import OurCollectionSection from './OurCollectionSection/OurCollectionSection.tsx';
 import TopPicksSection from './TopPicksSection/TopPicksSection.tsx';

@@ -110,7 +110,7 @@ const MaterialDialog: React.FC<MaterialDialogProps> = ({ visible, onClose, mater
       header={material ? 'Edit Material' : 'Add New Material'}
       footer={footer}
     >
-      <Flex direction="vertical" spacing="m" fullwidth>
+      <Flex direction="vertical" spacing="m" fullWidth>
         <TabBar
           size="small"
           fullWidth

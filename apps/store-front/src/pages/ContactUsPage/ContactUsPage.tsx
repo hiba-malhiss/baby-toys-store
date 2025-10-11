@@ -3,7 +3,7 @@ import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg
 import styles from './contact-us-page.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { TextArea, InfoCard, Heading, Button, StringInput, useToast } from '@baby-toys/ui-kit';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useSendContactMessage } from '../../api/contactApi';
 import { useForm } from 'react-hook-form';

@@ -1,4 +1,4 @@
-export interface Product {
+export interface AdminProductBase {
   id?: number;
   name: string;
   description?: string;
@@ -11,8 +11,8 @@ export interface Product {
   featureBullets?: string[];
   details?: Record<string, string>;
   isActive?: boolean;
-
-  // Relations (IDs)
+  createdAt?: string;
+  updatedAt?: string;
   categoryId?: number | null;
   brandId?: number | null;
   materialIds?: number[];
@@ -30,8 +30,11 @@ export interface Product {
   numberOfRatings?: number | null;
   sales?: number | null;
 
-  createdAt?: string;
-  updatedAt?: string;
+  costPrice?: number | null;
+  totalRevenue?: number | null;
+  totalCost?: number | null;
+  totalProfit?: number | null;
+  profitMargin?: number | null;
 }
 
 // Admin: translation DTO
@@ -45,7 +48,7 @@ export interface ProductTranslationDto {
 }
 
 // Admin: product details with all translations
-export interface ProductDetailsAdminDto extends Product {
+export interface ProductDetailsAdminDto extends AdminProductBase {
   translations: ProductTranslationDto[];
 }
 
@@ -53,6 +56,7 @@ export interface ProductDetailsAdminDto extends Product {
 export interface ProductUpsertRequest {
   // Non-localized fields
   price: number;
+  costPrice?: number | null;
   oldPrice?: number | null;
   stockQuantity: number;
   releaseDate?: string;

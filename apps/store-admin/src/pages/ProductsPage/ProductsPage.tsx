@@ -1,4 +1,5 @@
 import React from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
   Flex,
@@ -16,6 +17,7 @@ import { useProductsPage } from './useProductsPage';
 import styles from './ProductsPage.module.scss';
 
 const ProductsPage: React.FC = () => {
+  const qc = useQueryClient();
   const [searchValue, setSearchValue] = React.useState('');
   const {
     rowsPerPage,
@@ -53,6 +55,12 @@ const ProductsPage: React.FC = () => {
         <Flex justify="between" align="center" fullWidth>
           <Heading level="h1">Products</Heading>
           <Flex align="center" spacing="xl">
+            <Button
+              onClick={() => qc.invalidateQueries({ queryKey: ['products'] })}
+              color="secondary"
+            >
+              Refresh
+            </Button>
             <Select
               value={onSaleOnly ? 'on' : 'all'}
               onChange={(v) => {

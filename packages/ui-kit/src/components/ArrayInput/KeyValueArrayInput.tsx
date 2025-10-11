@@ -15,6 +15,7 @@ interface KeyValueArrayInputProps {
   addButtonText?: string;
   minItems?: number;
   fullWidth?: boolean;
+  isDisabled?: boolean;
 }
 
 const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
@@ -25,6 +26,7 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
   addButtonText = 'Add item',
   minItems = 0,
   fullWidth = true,
+  isDisabled = false,
 }) => {
   // Ensure value is always an array
   const items = Array.isArray(value) ? value : [];
@@ -48,13 +50,14 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
   return (
     <Flex spacing="m" direction="vertical">
       {items.map((item, index) => (
-        <Flex key={index} spacing="s" align="center" fullwidth={fullWidth}>
+        <Flex key={index} spacing="s" align="center" fullWidth={fullWidth}>
           <Flex spacing="s">
             <StringInput
               value={item.label}
               onChange={(v) => handleChange(index, 'label', v)}
               placeholder={keyPlaceholder}
-              fullwidth={fullWidth}
+              fullWidth={fullWidth}
+              isDisabled={isDisabled}
             />
           </Flex>
           <div style={{ flex: 1 }}>
@@ -62,7 +65,8 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
               value={item.value}
               onChange={(v) => handleChange(index, 'value', v)}
               placeholder={valuePlaceholder}
-              fullwidth={fullWidth}
+              fullWidth={fullWidth}
+              isDisabled={isDisabled}
             />
           </div>
           {index >= minItems && (
@@ -71,6 +75,7 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
               appearance="outline"
               color="secondary"
               leftIcon={faTrashAlt}
+              isDisabled={isDisabled}
             />
           )}
         </Flex>
@@ -82,11 +87,13 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
         withoutPadding
         color="underline"
         leftIcon={faPlus}
+        isDisabled={isDisabled}
       >
         {addButtonText}
       </Button>
     </Flex>
   );
-};
+}
+;
 
 export default KeyValueArrayInput;

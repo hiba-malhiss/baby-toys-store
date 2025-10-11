@@ -2,7 +2,7 @@ import { useQuery, useMutation, useQueryClient, keepPreviousData } from '@tansta
 import { useNavigate } from 'react-router-dom';
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
-import { Product, ProductUpsertRequest, ProductDetailsAdminDto } from './types/product';
+import { AdminProductBase, ProductUpsertRequest, ProductDetailsAdminDto } from './types/product';
 import { ApiEnvelope, Page } from './types/common';
 
 export interface UseProductsParams {
@@ -20,7 +20,7 @@ export interface UseProductsParams {
 
 /** ---- Queries ---- */
 export const useProducts = (params?: UseProductsParams) =>
-  useQuery<Page<Product>>({
+  useQuery<Page<AdminProductBase>>({
     queryKey: [
       'products',
       params?.page ?? 0,
@@ -35,7 +35,7 @@ export const useProducts = (params?: UseProductsParams) =>
       params?.onSale ? 'onSale' : '',
     ],
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
+      const { data } = await api.get<ApiEnvelope<Page<AdminProductBase>>>('/api/admin/products', {
         params: {
           ...params,
           // Spring expects 0-based page and upper-case sort direction

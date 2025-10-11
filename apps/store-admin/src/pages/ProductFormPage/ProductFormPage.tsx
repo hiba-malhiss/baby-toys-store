@@ -23,7 +23,7 @@ const ProductFormPage: React.FC = () => {
     isDeletingImage,
   } = useProductForm();
 
-  if (isLoadingProduct) return <AdminLayout>Loading...</AdminLayout>;
+  if(isLoadingProduct) return <AdminLayout>Loading...</AdminLayout>;
 
   return (
     <AdminLayout>
@@ -38,7 +38,7 @@ const ProductFormPage: React.FC = () => {
             >
               {getSupportedLocales().map((l) => (
                 <TabBarItem key={l} value={l}>
-                  <LocalizedFields control={control} locale={l as any} isDisabled={isDeletingImage} />
+                  <LocalizedFields control={control} locale={l as any} isDisabled={isDeletingImage}/>
                 </TabBarItem>
               ))}
             </TabBar>
@@ -57,9 +57,17 @@ const ProductFormPage: React.FC = () => {
                 <ImageUploader {...imageUploaderProps} />
               </FormFieldWrapper>
 
-              <Flex spacing="l" fullWidth>
+              <Flex spacing="l" fullWidth align="center">
                 <FormFieldWrapper name="price" control={control} label="Price" fullWidth required>
-                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage}/>
+                </FormFieldWrapper>
+                <FormFieldWrapper
+                  name="costPrice"
+                  control={control}
+                  label="Cost Price"
+                  fullWidth
+                >
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage}/>
                 </FormFieldWrapper>
                 <FormFieldWrapper
                   name="oldPrice"
@@ -67,7 +75,7 @@ const ProductFormPage: React.FC = () => {
                   label="Old Price (optional)"
                   fullWidth
                 >
-                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage}/>
                 </FormFieldWrapper>
               </Flex>
 
@@ -78,12 +86,12 @@ const ProductFormPage: React.FC = () => {
                 fullWidth
                 required
               >
-                <StringInput type="number" disabled={isDeletingImage} />
+                <StringInput type="number" isDisabled={isDeletingImage}/>
               </FormFieldWrapper>
 
               {/* Category (non-localized) */}
               <FormFieldWrapper name="categoryId" control={control} label="Category" fullWidth>
-                <Select fullWidth disabled={isDeletingImage}>
+                <Select fullWidth isDisabled={isDeletingImage}>
                   {categories.map((cat) => (
                     <Option key={cat.id} value={cat.id}>
                       {cat.name}
@@ -94,7 +102,7 @@ const ProductFormPage: React.FC = () => {
 
               {/* Brand (non-localized) */}
               <FormFieldWrapper name="brandId" control={control} label="Brand" fullWidth>
-                <Select fullWidth disabled={isDeletingImage}>
+                <Select fullWidth isDisabled={isDeletingImage}>
                   {brands.map((b) => (
                     <Option key={b.id} value={b.id}>
                       {b.name}
@@ -105,7 +113,7 @@ const ProductFormPage: React.FC = () => {
 
               {/* Colors (non-localized) */}
               <FormFieldWrapper name="colorIds" control={control} label="Colors" fullWidth>
-                <Select multiple fullWidth disabled={isDeletingImage}>
+                <Select multiple fullWidth isDisabled={isDeletingImage}>
                   {colors.map((c) => (
                     <Option key={c.id} value={c.id}>
                       {c.name} - {c.code}
@@ -116,7 +124,7 @@ const ProductFormPage: React.FC = () => {
 
               {/* Materials (non-localized) */}
               <FormFieldWrapper name="materialIds" control={control} label="Materials" fullWidth>
-                <Select multiple fullWidth disabled={isDeletingImage}>
+                <Select multiple fullWidth isDisabled={isDeletingImage}>
                   {materials.map((m) => (
                     <Option key={m.id} value={m.id}>
                       {m.name}

@@ -4,6 +4,7 @@ import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import Flex from '../Flex/Flex.tsx';
 import Icon from '../Icon/Icon.tsx';
 import type { IconSize } from '../Icon/icon.constant.ts';
+import { IconColor } from '../Icon/icon.constant.ts';
 
 type RatingProps = {
   value: number;
@@ -47,7 +48,7 @@ const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChan
               }
             }}
           >
-            <Icon key={i} icon={icon} color="warning" size={size} />
+            <Icon key={i} icon={icon} color={IconColor.warning} size={size} />
           </span>
         );
       })}

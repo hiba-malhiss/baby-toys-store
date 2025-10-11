@@ -1,12 +1,12 @@
-import { Button, Flex, Chip, Rating, Icon } from '@baby-toys/ui-kit';
+import { Button, Flex, Rating, Icon } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { faPen, faTrashAlt, faStar, faCross, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { Product } from '../../api/types/product.ts';
+import { faPen, faTrashAlt, faStar, faCross, faCheck, faEye } from '@fortawesome/free-solid-svg-icons';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
 import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
+import { AdminProductBase } from "../../api/types/product.ts";
 
-export const useProductsTableColumns = (handleDelete: (product: Product) => void) => {
+export const useProductsTableColumns = (handleDelete: (product: AdminProductBase) => void) => {
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol;
@@ -15,7 +15,7 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
     {
       field: 'id',
       header: 'ID',
-      body: (row: Product) => (
+      body: (row: AdminProductBase) => (
         <Flex spacing="s" align="center">
           <span>#{row.id}</span>
           <CopyToClipboardButton
@@ -35,8 +35,8 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
     {
       field: 'name',
       header: 'Name',
-      sortable: true,
-      body: (row: Product) => (
+      sortable: false,
+      body: (row: AdminProductBase) => (
         <span className={styles.productsPageTruncate} title={row.name || ''}>
           {row.name || '-'}
         </span>
@@ -45,59 +45,46 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
     {
       field: 'brandName',
       header: 'Brand',
-      sortable: true,
-      body: (row: Product) => row.brandName || '-',
+      sortable: false,
+      body: (row: AdminProductBase) => row.brandName || '-',
     },
     {
       field: 'categoryName',
       header: 'Category',
-      sortable: true,
-      body: (row: Product) => row.categoryName || '-',
-    },
-    {
-      field: 'colorCodes',
-      header: 'Colors',
-      body: (row: Product) =>
-        row.colorCodes && row.colorCodes.length > 0 ? (
-          <div style={{ display: 'flex', gap: 4 }}>
-            {row.colorCodes.map((code) => (
-              <div
-                key={code}
-                className={styles.productsPageColorIndecator}
-                style={{
-                  backgroundColor: code,
-                }}
-                title={code}
-              />
-            ))}
-          </div>
-        ) : (
-          '-'
-        ),
-    },
-    {
-      field: 'materialNames',
-      header: 'Materials',
-      body: (row: Product) => (row.materialNames?.length ? row.materialNames.join(', ') : '-'),
+      sortable: false,
+      body: (row: AdminProductBase) => row.categoryName || '-',
     },
     {
       field: 'price',
       header: 'Price',
       sortable: true,
-      body: (row: Product) => (symbol ? `${symbol}${row.price}` : String(row.price ?? '')),
+      body: (row: AdminProductBase) => (symbol ? `${symbol}${row.price}` : String(row.price ?? '')),
     },
     {
-      field: 'oldPrice',
-      header: 'Old Price',
+      field: 'sales',
+      header: 'Units',
       sortable: true,
-      body: (row: Product) =>
-        !row.oldPrice ? '-' : <Chip label={row.oldPrice} appearance="secondary-outline" />,
+      body: (row: AdminProductBase) => (row.sales != null ? String(row.sales) : '-'),
+    },
+    {
+      field: 'totalRevenue',
+      header: 'Revenue',
+      sortable: true,
+      body: (row: AdminProductBase) =>
+        row.totalRevenue != null ? (symbol ? `${symbol}${row.totalRevenue}` : String(row.totalRevenue)) : '-',
+    },
+    {
+      field: 'profitMargin',
+      header: 'Margin',
+      sortable: true,
+      body: (row: AdminProductBase) =>
+        row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',
     },
     {
       field: 'stockQuantity',
       header: 'Stock',
       sortable: true,
-      body: (row: Product) => (
+      body: (row: AdminProductBase) => (
         <Icon
           icon={row.stockQuantity > 0 ? faCheck : faCross}
           color={row.stockQuantity > 0 ? 'success' : 'error'}
@@ -107,7 +94,7 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
     {
       field: 'averageRating',
       header: 'Rating',
-      body: (row: Product) =>
+      body: (row: AdminProductBase) =>
         row.averageRating ? (
           <Flex spacing="xs">
             <Rating value={row.averageRating} />
@@ -120,14 +107,21 @@ export const useProductsTableColumns = (handleDelete: (product: Product) => void
     {
       field: 'releaseDate',
       header: 'Release Date',
-      sortable: true,
-      body: (row: Product) => row.releaseDate || '-',
+      sortable: false,
+      body: (row: AdminProductBase) => row.releaseDate || '-',
     },
     {
       field: 'actions',
       header: 'Actions',
-      body: (row: Product) => (
+      body: (row: AdminProductBase) => (
         <Flex spacing="m">
+          <Button
+            size="small"
+            appearance="outline"
+            leftIcon={faEye}
+            onClick={() => navigate(`/product/${row.id}`)}
+            aria-label="View product"
+          />
           <Button
             size="small"
             appearance="outline"

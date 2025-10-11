@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import classNames from 'clsx';
+import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Button, Image, useToast } from '@baby-toys/ui-kit';
 import styles from './image-uploader.module.scss';
@@ -9,6 +9,8 @@ interface ImageUploaderProps {
   onImagesChange?: (files: (File | string)[]) => void;
   multiple?: boolean;
   onBackendDelete?: (imageUrl: string) => Promise<void>;
+  isDisabled?: boolean;
+  isLoading?: boolean;
 }
 
 export interface PreviewImage {
@@ -28,6 +30,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onImagesChange,
   multiple = true,
   onBackendDelete,
+  isDisabled = false,
+  isLoading = false,
 }) => {
   const toast = useToast();
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
@@ -65,6 +69,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   }, [previewImages]);
 
   const addFiles = (files: File[]) => {
+    if (isDisabled) return;
     const validFiles = files.filter((f) => f.type.startsWith('image/'));
     validFiles.forEach((f) => {
       if (f.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
@@ -97,6 +102,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const handleRemove = async (index: number) => {
     const target = previewImages[index];
     if (!target) return;
+    if (isDisabled) return;
     setIsDeleting(true);
 
     try {
@@ -117,6 +123,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (isDisabled) return;
     const files = e.target.files ? Array.from(e.target.files) : [];
     addFiles(files);
     e.target.value = '';
@@ -130,16 +137,16 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     addFiles(files);
   };
 
+  const containerClass = clsx(styles.imageUploaderContent, isDragging && styles.isDragover);
+
   return (
     <div className={styles.imageUploaderContainer}>
       <div
-        className={classNames(styles.imageUploaderContent, {
-          [styles.isDragover]: isDragging,
-        })}
+        className={containerClass}
         onDragEnter={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          setIsDragging(true);
+          if (!isDisabled) setIsDragging(true);
         }}
         onDragOver={(e) => {
           e.preventDefault();
@@ -150,12 +157,12 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           e.stopPropagation();
           // only reset if actually left the container
           if (e.currentTarget.contains(e.relatedTarget as Node)) return;
-          setIsDragging(false);
+          if (!isDisabled) setIsDragging(false);
         }}
         onDrop={handleDrop}
-        onClick={() => fileInputRef.current?.click()}
+        onClick={() => !isDisabled && fileInputRef.current?.click()}
       >
-        <Button type="button" color="secondary-light" className={styles.uploadButton}>
+        <Button type="button" color="secondary-light" className={styles.uploadButton} isDisabled={isDisabled} isLoading={isLoading}>
           Upload {multiple ? 'Images' : 'Image'}
         </Button>
 
@@ -166,6 +173,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
           ref={fileInputRef}
           onChange={handleFileChange}
           hidden
+          disabled={isDisabled}
         />
 
         {previewImages.length === 0 ? (
@@ -191,8 +199,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                   leftIcon={faTrashAlt}
                   className={styles.imageUploaderRemove}
                   withoutPadding
-                  loading={isDeleting}
-                  disabled={isDeleting}
+                  isLoading={isDeleting || isLoading}
+                  isDisabled={isDeleting || isDisabled}
                 />
               </div>
             ))}

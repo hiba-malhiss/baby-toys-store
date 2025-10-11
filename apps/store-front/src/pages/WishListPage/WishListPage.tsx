@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import { useMyWishlist } from '../../api/wishlistApi';
 import { useTranslation } from 'react-i18next';
 import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints.ts';

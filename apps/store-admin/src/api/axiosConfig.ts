@@ -1,4 +1,5 @@
 import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig, type AxiosRequestConfig } from 'axios';
+import type { QueryKey } from '@tanstack/react-query';
 import { queryClient } from '../App';
 import { getAppLocale } from '../components/i18n/locale';
 
@@ -8,7 +9,7 @@ type RequestQueueItem = {
   config: AxiosRequestConfig;
 };
 
-const failedQueries = new Set<string | string[]>();
+const failedQueries = new Set<QueryKey>();
 const requestQueue: RequestQueueItem[] = [];
 let isRefreshing = false;
 
@@ -141,8 +142,9 @@ api.interceptors.response.use(
     }
 
     // For other errors, attach message if available
-    if(error.response?.data?.message) {
-      error.message = error.response.data.message;
+    const data: any = error.response?.data as any;
+    if(data?.message) {
+      error.message = data.message as string;
     }
 
     return Promise.reject(error);

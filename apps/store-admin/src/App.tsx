@@ -6,6 +6,7 @@ import OrderDetailsPage from './pages/OrderDetailsPage/OrderDetailsPage';
 import { AuthProvider, useAuth } from './context/AuthContext.tsx';
 import DashboardPage from './pages/DashboardPage/DashboardPage.tsx';
 import ProductsPage from './pages/ProductsPage/ProductsPage.tsx';
+import ProductViewPage from './pages/ProductViewPage/ProductViewPage';
 import OrdersPage from './pages/OrdersPage/OrdersPage.tsx';
 import CategoriesPage from './pages/CategoriesPage/CategoriesPage.tsx';
 import BrandsPage from './pages/BrandsPage/BrandsPage.tsx';
@@ -88,6 +89,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <OrderDetailsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/product/:id"
+          element={
+            <PrivateRoute>
+              <ProductViewPage />
             </PrivateRoute>
           }
         />

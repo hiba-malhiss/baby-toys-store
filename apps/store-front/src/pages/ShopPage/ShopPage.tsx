@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import styles from './shop-page.module.scss';
 import { ViewSwitcher, Flex } from '@baby-toys/ui-kit';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
 import { SHOP_PAGE_SIZE } from '../../constants/display.constants.ts';
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';

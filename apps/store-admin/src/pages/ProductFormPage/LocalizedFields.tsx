@@ -22,7 +22,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
         fullWidth
         required
       >
-        <StringInput placeholder="Enter product name" disabled={!!isDisabled} />
+        <StringInput placeholder="Enter product name" isDisabled={!!isDisabled} />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -32,7 +32,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
         fullWidth
         required
       >
-        <TextArea placeholder="Enter a short description" disabled={!!isDisabled} />
+        <TextArea placeholder="Enter a short description" isDisabled={!!isDisabled} />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -41,7 +41,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
         label={`Description ${labelSuffix}`}
         fullWidth
       >
-        <TextArea placeholder="Enter a full description" disabled={!!isDisabled} />
+        <TextArea placeholder="Enter a full description" isDisabled={!!isDisabled} />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -55,7 +55,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
           valuePlaceholder="Value"
           addButtonText="Add detail"
           fullWidth
-          disabled={!!isDisabled}
+          isDisabled={!!isDisabled}
         />
       </FormFieldWrapper>
 
@@ -71,7 +71,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
           min={1}
           max={10}
           fullWidth
-          disabled={!!isDisabled}
+          isDisabled={!!isDisabled}
         />
       </FormFieldWrapper>
     </Flex>

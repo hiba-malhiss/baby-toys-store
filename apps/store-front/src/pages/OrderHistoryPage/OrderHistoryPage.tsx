@@ -5,7 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useAddToCart } from '../../api/cartApi';
 import { useCartStore } from '../../store/useCartStore';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-import { PageContainer } from '../../components/layout/PageContainer/PageContainer.tsx';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import AddReviewDialog from './AddReviewDialog.tsx';
 import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
 import { useMyOrdersNormalized, useCancelMyOrder, type OrderItem } from '../../api/ordersApi';
