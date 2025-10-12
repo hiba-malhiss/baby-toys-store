@@ -22,6 +22,9 @@ import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { BouncingDotsLoader, Toast, ToastProvider } from '@baby-toys/ui-kit';
 import CouponsPage from './pages/CouponsPage/CouponsPage.tsx';
 import ContactMessagesPage from './pages/ContactMessagesPage/ContactMessagesPage';
+import FinancePage from './pages/FinancePage/FinancePage';
+import MonthDetailPage from './pages/MonthDetailPage/MonthDetailPage';
+import ExpensesPage from './pages/ExpensesPage/ExpensesPage';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,6 +47,30 @@ const AppContent: React.FC = () => {
     <BrowserRouter>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
+        <Route
+          path="/finance"
+          element={
+            <PrivateRoute>
+              <FinancePage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/finance/:yearMonth"
+          element={
+            <PrivateRoute>
+              <MonthDetailPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/expenses"
+          element={
+            <PrivateRoute>
+              <ExpensesPage />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={

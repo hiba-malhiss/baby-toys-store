@@ -17,6 +17,13 @@ const menuItems = [
       { label: 'Materials', route: '/materials' },
     ],
   },
+  {
+    label: 'Finance',
+    items: [
+      { label: 'Finance', route: '/finance' },
+      { label: 'Expenses', route: '/expenses' },
+    ],
+  },
   { label: 'Orders', route: '/orders' },
   { label: 'Coupons', route: '/coupons' },
   { label: 'Customers', route: '/customers' },
@@ -35,26 +42,26 @@ const AdminLayout: React.FC<{
   const navigate = useNavigate();
   const { mutateAsync: logoutApi } = useLogout();
 
-  const logout = useCallback(async () => {
+  const logout = useCallback(async() => {
     try {
       await logoutApi();
       navigate('/login');
-    } catch (error) {
+    } catch(error) {
       console.error('Logout failed:', error);
     }
   }, [logoutApi]);
 
   return (
     <>
-      <Mask visible={isMaskLoading} />
-      <Toast />
+      <Mask visible={isMaskLoading}/>
+      <Toast/>
       <div className={styles.adminLayout}>
         <aside className={styles.adminLayoutSidebar}>
           <Flex justify="between" align="center">
-            <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo} />
-            <LanguageSwitcher />
+            <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo}/>
+            <LanguageSwitcher/>
           </Flex>
-          <Menu model={menuItems} spacing="s" className={styles.adminLayoutNav} />
+          <Menu model={menuItems} spacing="s" className={styles.adminLayoutNav}/>
           <Button
             fullWidth
             onClick={logout}
@@ -65,7 +72,7 @@ const AdminLayout: React.FC<{
           </Button>
         </aside>
         <main className={styles.adminLayoutContent}>
-          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl" /> : children}
+          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl"/> : children}
         </main>
       </div>
     </>
