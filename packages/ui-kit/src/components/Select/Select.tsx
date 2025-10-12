@@ -154,7 +154,6 @@ export const Select: React.FC<SelectProps> = ({
         gap={8}
         withArrow={false}
         size="medium"
-        appearance="dark"
       >
         <div className={styles.selectOptions}>
           {options
