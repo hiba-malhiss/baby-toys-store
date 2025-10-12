@@ -118,8 +118,8 @@ const Calendar = ({
       >
         <div className={styles.calendarHeader}>
           <Button
-            iconLeft={faChevronLeft}
-            appearance="plainDefault"
+            leftIcon={faChevronLeft}
+            appearance="link"
             isDisabled={isPrevDisabled()}
             onClick={goToPrevious}
             className={styles.leftChevron}
@@ -131,9 +131,8 @@ const Calendar = ({
           )}
           {currentView === 'date' && (
             <Button
-              appearance="plainDefault"
+              appearance="link"
               size="large"
-              display="inline"
               onClick={(e) => {
                 setCurrentView('month');
                 e.stopPropagation();
@@ -144,7 +143,7 @@ const Calendar = ({
           )}
           {(currentView === 'month' || currentView === 'date') && (
             <Button
-              appearance="plainDefault"
+              appearance="link"
               size="large"
               onClick={(e) => {
                 setCurrentView('year');
@@ -155,8 +154,8 @@ const Calendar = ({
             </Button>
           )}
           <Button
-            iconLeft={faChevronRight}
-            appearance="plainDefault"
+            leftIcon={faChevronRight}
+            appearance="link"
             onClick={goToNext}
             isDisabled={isNextDisabled()}
             className={styles.rightChevron}
@@ -226,7 +225,7 @@ const Calendar = ({
 
         {withClearFooter && (
           <div className={styles.calendarFooter}>
-            <Button appearance="plainDefault" onClick={reset}>
+            <Button appearance="link" onClick={reset}>
               Clear
             </Button>
           </div>
