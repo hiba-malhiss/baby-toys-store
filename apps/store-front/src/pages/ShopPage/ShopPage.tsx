@@ -68,9 +68,8 @@ const ShopPage = () => {
         ))}
         onViewChange={setView}
         onPaginationChange={(newPage) => setPage(newPage)}
-        minColWidth={250}
         topBar={
-          <Flex className={styles.topBar}>
+          <Flex className={styles.topBar} align="center">
             <SideFilters
               isDrawer
               className={styles.shopPageFilterIcon}

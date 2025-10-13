@@ -93,8 +93,6 @@
 
   &-search {
     flex-grow: 1;
-    padding-right: 24px;
-    padding-left: 24px;
   }
 
   &-logo {
@@ -136,6 +134,9 @@
 }
 
 @media (max-width: $breakpoint-medium) {
+  .header-search {
+    margin-inline-start: 16px;
+  }
   .burgerMenu {
     display: block;
   }

@@ -72,6 +72,21 @@
   }
 }
 
+@media (max-width: $breakpoint-sm) {
+  .infoCard {
+    padding: 16px;
+    min-height: auto;
+
+    svg {
+      font-size: 48px;
+    }
+  }
+
+  .infoCard-title {
+    padding-top: 8px !important;
+  }
+}
+
 @media (max-width: $breakpoint-xs) {
   .infoCard {
     min-width: 100%;

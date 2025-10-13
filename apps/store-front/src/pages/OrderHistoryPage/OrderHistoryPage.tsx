@@ -75,7 +75,8 @@ const OrderHistoryPage: React.FC = () => {
           pageSize={PAGE_SIZE}
           totalSize={totalSize}
           onPaginationChange={(newPage) => setPage(newPage)}
-          staticView="flex"
+          isStaticView
+          initialView="list"
           isLoading={isLoading}
         />
       )}

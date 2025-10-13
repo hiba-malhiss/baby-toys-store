@@ -2,12 +2,10 @@
   cursor: pointer;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 24px;
+  gap: 18px;
   width: 100%;
-  max-width: 280px;
-  transition:
-    $transition-transform,
-    box-shadow $transition-normal;
+  transition: $transition-transform,
+  box-shadow $transition-normal;
 
   @include animate-fade-in-up();
 
@@ -29,18 +27,32 @@
     }
   }
 
+  .productCard-mobileCart {
+    display: none;
+  }
+
   .productCard-rating {
     padding-top: 6px;
+
+    button {
+      height: 24px;
+      width: 40px;
+      padding-top: 2px;
+    }
   }
 
   &--vertical {
+    .productCard-box {
+      max-height: 360px;
+    }
+
     .productCard-info {
       gap: 6px;
     }
   }
 
   &--horizontal {
-    grid-template-columns: 280px 1fr;
+    grid-template-columns: minmax(180px, 30%) minmax(auto, 1fr);
     gap: 36px;
     align-items: flex-start;
     max-width: 100%;
@@ -65,8 +77,6 @@
     position: relative;
     height: 280px;
     width: 100%;
-    max-width: 280px;
-    max-height: 360px;
     display: flex;
     align-items: center;
     flex-direction: column;
@@ -105,7 +115,7 @@
     width: 100%;
     display: flex;
     flex-direction: column;
-    max-width: 500px;
+    max-width: 600px;
 
     &-name {
       @include line-clamp(2);
@@ -115,7 +125,7 @@
     }
 
     &-description {
-      @include line-clamp(4);
+      @include line-clamp(5);
       width: 100%;
       margin: 16px 0 10px 0;
       color: $color-text-grey;
@@ -131,11 +141,7 @@
   // Remove hover effect from the whole card
 
   &-box:hover {
-    transform: translateY(-4px);
     box-shadow: $shadow-hover;
-    transition:
-      $transition-transform,
-      box-shadow $transition-normal;
 
     img {
       transform: scale(1.05);
@@ -153,6 +159,7 @@
     transform: translateY(-10px);
     transition: $transition-all;
   }
+
   &--vertical:hover .productCard-buttons {
     opacity: 1;
     transform: translateY(0);
@@ -174,12 +181,9 @@
   @media (max-width: $breakpoint-medium) {
     gap: 16px;
 
-    &--horizontal {
-      grid-template-columns: 1fr;
-    }
-
     &-box {
       height: auto;
+      max-height: 280px;
       aspect-ratio: 1 / 1;
     }
 
@@ -196,9 +200,18 @@
       margin: 12px 0;
     }
 
-    .productCard-buttons {
-      opacity: 1;
-      transform: translateY(0);
+    &--vertical:hover .productCard-buttons {
+      display: none;
+    }
+
+    .productCard-mobileCart {
+      display: block;
+    }
+  }
+
+  @media (max-width: $breakpoint-small) {
+    &--horizontal {
+      grid-template-columns: 1fr;
     }
   }
 }

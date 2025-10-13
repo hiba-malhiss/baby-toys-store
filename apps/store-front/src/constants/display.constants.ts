@@ -1,3 +1,2 @@
 export const HOMEPAGE_TOP_PICKS_LIMIT = 6;
-export const SHOP_PAGE_SIZE = 8;
-export const PRODUCT_RELATED_PRODUCTS_LIMIT = 4;
+export const SHOP_PAGE_SIZE = 12;

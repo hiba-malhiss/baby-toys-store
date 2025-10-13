@@ -3,7 +3,7 @@ import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
 import PriceDisplay from '../PriceDisplay/PriceDisplay';
-import { faHeart, faCartShopping, faRightLeft } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faCartShopping, faRightLeft, faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Card from '../Card/Card.tsx';
 import Button from '../Button/Button.tsx';
@@ -34,6 +34,7 @@ export type ProductCardProps = {
   isLoadingFavorite?: boolean;
   isFavorite?: boolean;
   isLoadingAddToCart?: boolean;
+  hideMobileCart?: boolean;
   onToggleFavorite?: (product: ProductCard) => void;
   onClick?: (product: ProductCard) => void;
   onAddToCart?: (product: ProductCard) => void;
@@ -41,19 +42,20 @@ export type ProductCardProps = {
 };
 
 const ProductCard: React.FC<ProductCardProps> = ({
-  size,
-  product,
-  label,
-  labelAppearance,
-  onToggleFavorite,
-  onAddToCart,
-  direction = 'vertical',
-  onClick,
-  fullWidth,
-  isLoadingFavorite,
-  isLoadingAddToCart,
-  formatCurrency,
-  isFavorite,
+ size,
+ product,
+ label,
+ labelAppearance,
+ onToggleFavorite,
+ onAddToCart,
+ direction = 'vertical',
+ onClick,
+ fullWidth,
+ isLoadingFavorite,
+ isLoadingAddToCart,
+ formatCurrency,
+ isFavorite,
+ hideMobileCart,
 }) => {
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
@@ -138,7 +140,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       onClick={() => onClick?.(product)}
       tabIndex={onClick ? 0 : undefined}
       onKeyDown={(e) => {
-        if (onClick && (e.key === 'Enter' || e.key === ' ')) {
+        if(onClick && (e.key === 'Enter' || e.key === ' ')) {
           e.preventDefault();
           onClick(product);
         }
@@ -146,11 +148,11 @@ const ProductCard: React.FC<ProductCardProps> = ({
     >
       <Card size="small" className={styles.productCardBox}>
         {label && !isSmallSize && (
-          <Chip label={label} appearance={labelAppearance} className={styles.productCardChip} />
+          <Chip label={label} appearance={labelAppearance} className={styles.productCardChip}/>
         )}
         {!isHorizontal && !isSmallSize && renderButtons()}
         <div className={styles.productCardImageWrapper}>
-          <Image src={product.mainImage} alt={product.name} />
+          <Image src={product.mainImage} alt={product.name}/>
         </div>
       </Card>
       <div className={styles.productCardInfo}>
@@ -164,7 +166,17 @@ const ProductCard: React.FC<ProductCardProps> = ({
           oldPrice={product.oldPrice}
           formatCurrency={formatCurrency}
         />
-        <Rating value={product.rating} className={styles.productCardRating} />
+        <Flex justify="between" align="center" className={styles.productCardRating}>
+          <Rating value={product.rating}/>
+          {!hideMobileCart && <Button
+            leftIcon={faCartPlus}
+            onClick={(e) => handleButtonClick(e, onAddToCart)}
+            appearance="outline"
+            size="small"
+            className={styles.productCardMobileCart}
+          />}
+        </Flex>
+
         {isHorizontal && !isSmallSize && renderButtons()}
       </div>
     </div>

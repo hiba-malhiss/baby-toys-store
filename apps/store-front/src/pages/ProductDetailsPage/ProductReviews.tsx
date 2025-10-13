@@ -29,7 +29,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId }) => 
       emptyMessage="No reviews yet"
       emptySubtext="Be the first to review this product."
       emptyAlign="center"
-      staticView="list"
+      isStaticView
       onPaginationChange={handlePaginationChange}
       items={reviews.map((review, index) => (
         <ReviewCard key={`review-${index}`} review={review} appearance="detailed" fullWidth />

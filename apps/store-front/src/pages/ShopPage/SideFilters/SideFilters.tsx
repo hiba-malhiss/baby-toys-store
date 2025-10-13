@@ -60,7 +60,7 @@ export const SideFilters: React.FC<{
 
   useEffect(() => {
     const filterLoading = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
-    if (!filterLoading) {
+    if(!filterLoading) {
       onFiltersChange(debouncedFilters);
     }
   }, [
@@ -81,7 +81,7 @@ export const SideFilters: React.FC<{
   };
 
   const removeFilter = (key: keyof ShopFilters) => {
-    if (key === 'priceRange') {
+    if(key === 'priceRange') {
       handleFilterChange(key, priceRange);
     } else {
       handleFilterChange(key, undefined);
@@ -109,7 +109,7 @@ export const SideFilters: React.FC<{
         )}
       </Flex>
 
-      <Divider className="bts-marginTxl" />
+      <Divider className="bts-marginTxl"/>
 
       <Accordion header={t('filters.category')} withoutPadding withoutHeaderPadding>
         <RadioButtonGroup
@@ -141,7 +141,7 @@ export const SideFilters: React.FC<{
           className="bts-marginTm"
         >
           {colors.map(({ id, code }) => (
-            <RadioButton key={id} value={String(id)} name="color" swatchColor={code} />
+            <RadioButton key={id} value={String(id)} name="color" swatchColor={code}/>
           ))}
         </RadioButtonGroup>
       </Accordion>
@@ -197,15 +197,15 @@ export const SideFilters: React.FC<{
   );
 
   const isLoadingFilters = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
-  if (isLoadingFilters) {
+  if(isLoadingFilters) {
     return (
-      <Card className={className} header={t('filters.header')}>
-        <BouncingDotsLoader size="medium" className="bts-marginTl" />
+      <Card className={className} header={t('filters.header')} withoutBorder size="xsmall">
+        <BouncingDotsLoader size="medium" className="bts-marginTl"/>
       </Card>
     );
   }
 
-  if (isDrawer) {
+  if(isDrawer) {
     return (
       <>
         <div className={className}>
@@ -235,6 +235,8 @@ export const SideFilters: React.FC<{
 
   return (
     <Card
+      withoutBorder
+      size="xsmall"
       header={
         <Flex justify="between" align="center" fullWidth spacing="l">
           <span>

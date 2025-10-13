@@ -89,7 +89,7 @@
 }
 
 .isResponsive {
-  @media (max-width: $breakpoint-medium) {
+  @media (max-width: $breakpoint-xs) {
     &.flex--horizontal {
       flex-direction: column;
     }

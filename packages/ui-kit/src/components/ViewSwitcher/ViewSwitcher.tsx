@@ -1,26 +1,21 @@
-import React, { useEffect, useState, type ReactNode, useRef } from 'react';
+import React, { useEffect, useState, type ReactNode, useRef, useMemo, useCallback } from 'react';
 import clsx from 'clsx';
 import Flex from '../Flex/Flex.tsx';
 import Button from '../Button/Button.tsx';
-import { faTh, faBars } from '@fortawesome/free-solid-svg-icons';
+import { faTh, faBars, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import Heading from '../Heading/Heading.tsx';
 import styles from './view-switcher.module.scss';
 import Paginator, { type PaginationMode } from '../Paginator/Paginator.tsx';
 import SkeletonProductCard from '../Skeleton/SkeletonProductCard.tsx';
 import NoDataFound from '../NoDataFound';
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { BREAKPOINTS } from "../../constants/breakpoints.ts";
 
 type ResponsiveOption = {
   breakpoint: number | string;
   gridColumns: number;
 };
 
-type ResponsiveMinWidth = {
-  breakpoint: number | string;
-  minWidth: number; // px
-};
-
-export type ViewMode = 'grid' | 'list' | 'flex';
+export type ViewMode = 'grid' | 'list';
 
 type ViewSwitcherProps = {
   items: ReactNode[];
@@ -28,14 +23,12 @@ type ViewSwitcherProps = {
   pageSize: number;
   totalSize: number;
   isLoading?: boolean;
-  minColWidth?: number;
   className?: string;
   onPaginationChange: (page: number, pageSize: number) => void;
   responsiveOptions?: ResponsiveOption[];
-  responsiveMinWidth?: ResponsiveMinWidth[];
   onViewChange?: (view: ViewMode) => void;
   initialView?: ViewMode;
-  staticView?: ViewMode;
+  isStaticView?: boolean;
   paginationMode?: PaginationMode;
   hasMore?: boolean;
   header?: ReactNode;
@@ -47,18 +40,23 @@ type ViewSwitcherProps = {
   emptyAlign?: 'start' | 'center';
 };
 
+const defaultResponsiveOptions: ResponsiveOption[] = [
+  { breakpoint: BREAKPOINTS.xlarge, gridColumns: 5 },
+  { breakpoint: BREAKPOINTS.large, gridColumns: 4 },
+  { breakpoint: BREAKPOINTS.medium, gridColumns: 3 },
+  { breakpoint: BREAKPOINTS.small, gridColumns: 2 },
+];
+
 function ViewSwitcher({
   items,
   page,
   pageSize,
   totalSize,
   onPaginationChange,
-  responsiveOptions = [],
-  responsiveMinWidth = [],
+  responsiveOptions = defaultResponsiveOptions,
   onViewChange,
-  minColWidth,
   initialView = 'grid',
-  staticView,
+  isStaticView,
   paginationMode = 'default',
   hasMore,
   header,
@@ -70,114 +68,80 @@ function ViewSwitcher({
   emptyMessage,
   emptySubtext,
   emptyAlign,
-}: ViewSwitcherProps) {
+}: ViewSwitcherProps){
   const containerRef = useRef<HTMLDivElement>(null);
-  const [viewMode, setViewMode] = useState<ViewMode>(staticView ?? initialView);
+  const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [columns, setColumns] = useState<number | undefined>(undefined);
-  const [effectiveMinWidth, setEffectiveMinWidth] = useState<number | undefined>(undefined);
-
-  // Track if this is the initial render
   const isInitialMount = useRef(true);
 
-  // Notify initial view on mount if not static
+  // Inform parent about initial view
   useEffect(() => {
-    if (!staticView && isInitialMount.current) {
+    if(!isStaticView && isInitialMount.current) {
       isInitialMount.current = false;
       onViewChange?.(initialView);
     }
-  }, [initialView, staticView, onViewChange]);
+  }, [initialView, isStaticView, onViewChange]);
 
-  // Normalize breakpoint to numeric value (supports '768px' and numbers)
   const toBpNumber = (bp: number | string): number =>
     typeof bp === 'number' ? bp : parseInt(String(bp), 10);
 
-  // Memoize sorted options to prevent unnecessary resorting
-  const sortedOptions = React.useMemo(() => {
-    return [...(responsiveOptions || [])].sort(
-      (a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint)
-    );
+  const sortedOptions = useMemo(() => {
+    return [...responsiveOptions].sort((a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint));
   }, [responsiveOptions]);
 
-  const sortedMinWidth = React.useMemo(() => {
-    return [...(responsiveMinWidth || [])].sort(
-      (a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint)
-    );
-  }, [responsiveMinWidth]);
-
-  // Handle responsive columns for grid view and/or responsive minWidth
   useEffect(() => {
-    if (responsiveOptions.length === 0 && responsiveMinWidth.length === 0) {
+    const element = containerRef.current;
+    if(!element || responsiveOptions.length === 0) {
       setColumns(undefined);
-      setEffectiveMinWidth(undefined);
       return;
     }
 
-    let timeoutId: NodeJS.Timeout;
+    let resizeTimeout: NodeJS.Timeout;
 
-    const updateResponsive = () => {
-      const width = window.innerWidth;
-
-      if (sortedOptions.length > 0) {
-        // Carousel behavior: pick the first rule where width <= breakpoint;
-        // if none (width > largest), fallback to the largest rule
+    const updateResponsive = (width: number) => {
+      if(sortedOptions.length > 0) {
         const match = sortedOptions.find((opt) => width <= toBpNumber(opt.breakpoint));
         const matchedCols = match
           ? match.gridColumns
           : sortedOptions[sortedOptions.length - 1].gridColumns;
         setColumns((prev) => (prev !== matchedCols ? matchedCols : prev));
       }
+    };
 
-      if (sortedMinWidth.length > 0) {
-        // Same behavior for minWidth: first rule where width <= breakpoint;
-        // if none (width > largest), fallback to largest rule's minWidth
-        const matchMin = sortedMinWidth.find((opt) => width <= toBpNumber(opt.breakpoint));
-        const matchedMin = matchMin
-          ? matchMin.minWidth
-          : sortedMinWidth[sortedMinWidth.length - 1].minWidth;
-        setEffectiveMinWidth((prev) => (prev !== matchedMin ? matchedMin : prev));
+    const observer = new ResizeObserver((entries) => {
+      for(const entry of entries) {
+        const newWidth = entry.contentRect.width;
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(() => updateResponsive(newWidth), 100);
       }
-    };
+    });
 
-    const handleResize = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(updateResponsive, 100);
-    };
+    observer.observe(element);
+    updateResponsive(element.clientWidth);
 
-    updateResponsive();
-    window.addEventListener('resize', handleResize, { passive: true });
     return () => {
-      clearTimeout(timeoutId);
-      window.removeEventListener('resize', handleResize);
+      clearTimeout(resizeTimeout);
+      observer.disconnect();
     };
-  }, [
-    sortedOptions,
-    sortedMinWidth,
-    pageSize,
-    minColWidth,
-    responsiveOptions.length,
-    responsiveMinWidth.length,
-  ]);
+  }, [sortedOptions, responsiveOptions.length]);
 
-  const changeView = React.useCallback(
+  const changeView = useCallback(
     (view: ViewMode) => {
-      if (staticView || view === viewMode) return;
+      if(isStaticView || view === viewMode) return;
       setViewMode(view);
       onViewChange?.(view);
     },
-    [staticView, viewMode, onViewChange]
+    [isStaticView, viewMode, onViewChange]
   );
 
   const startIdx = (page - 1) * pageSize + 1;
   const endIdx = Math.min(page * pageSize, totalSize);
 
-  // Memoize the page change handler
-  const handlePageChange = React.useCallback(
+  const handlePageChange = useCallback(
     (newPage: number) => {
-      if (newPage !== page) {
+      if(newPage !== page) {
         onPaginationChange?.(newPage, pageSize);
-
-        // Scroll to top of container on page change (only for 'default' mode)
-        if (paginationMode === 'default' && containerRef.current) {
+        if(paginationMode === 'default' && containerRef.current) {
           const top = containerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
           window.scrollTo({ top, behavior: 'smooth' });
         }
@@ -192,20 +156,14 @@ function ViewSwitcher({
       ref={containerRef}
     >
       {header && (
-        <Heading level="h1" className={clsx('bts-marginBxxxl')}>
+        <Heading level="h1" className="bts-marginBxxxl">
           {header}
         </Heading>
       )}
 
-      {!staticView && (
-        <Flex
-          key="header-buttons"
-          justify="between"
-          align="center"
-          wrap
-          className={clsx('bts-marginBxxxl')}
-        >
-          <Flex>
+      {!isStaticView && (
+        <Flex justify="between" align="center" wrap className="bts-marginBxxxl">
+          <Flex align="center">
             <Button
               onClick={() => changeView('grid')}
               isSelected={viewMode === 'grid'}
@@ -228,7 +186,6 @@ function ViewSwitcher({
 
           <span className={styles.containerResultsInfo}>
             Showing {totalSize === 0 ? 0 : startIdx}–{endIdx} of {totalSize} results
-            {/*{t('shop.resultsSummary', { from, to, total: totalSize })}*/}
           </span>
         </Flex>
       )}
@@ -237,26 +194,23 @@ function ViewSwitcher({
         className={clsx(styles.containerContent, {
           [styles.containerGrid]: viewMode === 'grid',
           [styles.containerList]: viewMode === 'list',
-          [styles.containerFlex]: viewMode === 'flex',
           [styles.hasNoData]: items.length === 0 && !isLoading,
         })}
         style={
           viewMode === 'grid'
             ? {
-                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, minmax(${effectiveMinWidth ?? minColWidth ?? 200}px, 1fr))`,
-              }
+              gridTemplateColumns: `repeat(${columns || 'auto-fill'}, 1fr)`,
+            }
             : undefined
         }
       >
         {isLoading && paginationMode === 'default' ? (
-          // Show a page of skeleton cards for a better loading experience
           Array.from({ length: pageSize }).map((_, i) => (
-            <React.Fragment key={`skeleton-${i}`}>
-              <SkeletonProductCard
-                direction={viewMode === 'list' ? 'horizontal' : 'vertical'}
-                fullWidth={viewMode !== 'flex'}
-              />
-            </React.Fragment>
+            <SkeletonProductCard
+              key={`skeleton-${i}`}
+              direction={viewMode === 'list' ? 'horizontal' : 'vertical'}
+              fullWidth
+            />
           ))
         ) : items.length === 0 ? (
           <NoDataFound
@@ -268,10 +222,13 @@ function ViewSwitcher({
         ) : (
           items.map((item, index) => <React.Fragment key={index}>{item}</React.Fragment>)
         )}
+
         {isLoading &&
           (paginationMode === 'show-more' || paginationMode === 'infinite-scroll') &&
           items.length > 0 && (
-            <SkeletonProductCard direction={viewMode === 'list' ? 'horizontal' : 'vertical'} />
+            <SkeletonProductCard
+              direction={viewMode === 'list' ? 'horizontal' : 'vertical'}
+            />
           )}
       </div>
 

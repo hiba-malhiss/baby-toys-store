@@ -1,7 +1,9 @@
+$gap: 30px;
+
 .shopPage {
-  column-gap: 60px !important;
+  column-gap: $gap !important;
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 300px calc(100% - 300px - $gap);
   width: 100%;
 
   &-rightSide {

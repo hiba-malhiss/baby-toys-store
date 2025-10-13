@@ -49,12 +49,7 @@ const YouMayAlsoLikeList: React.FC<YouMayAlsoLikeListProps> = ({
         pageSize={pageSize}
         totalSize={totalSize}
         onPaginationChange={handlePaginationChange}
-        staticView="grid"
-        responsiveMinWidth={[
-          { breakpoint: BREAKPOINTS.large, minWidth: 250 },
-          { breakpoint: BREAKPOINTS.medium, minWidth: 180 },
-          { breakpoint: BREAKPOINTS.small, minWidth: 150 },
-        ]}
+        isStaticView
         paginationMode="infinite-scroll"
         isLoading={loading}
         hasMore={hasMore}

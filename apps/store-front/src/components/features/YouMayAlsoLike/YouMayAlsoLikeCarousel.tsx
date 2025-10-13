@@ -45,7 +45,7 @@ const YouMayAlsoLikeCarousel: React.FC<YouMayAlsoLikeCarouselProps> = ({
           isLoading ? (
             <SkeletonProductCard />
           ) : (
-            <SmartProductCard fullWidth product={item} direction="vertical" />
+            <SmartProductCard hideMobileCart fullWidth product={item} direction="vertical" />
           )
         }
       />
