@@ -7,7 +7,7 @@ type Position = 'top' | 'bottom' | 'left' | 'right';
 
 type PopoverProps = {
   targetRef: React.RefObject<HTMLElement>;
-  withArrow: boolean;
+  withArrow?: boolean;
   open: boolean;
   onClose?: () => void;
   position?: Position;
@@ -15,9 +15,9 @@ type PopoverProps = {
   appendTo?: HTMLElement | null;
   width?: string;
   children: React.ReactNode;
-  gap: number;
+  gap?: number;
   size: 'small' | 'medium';
-  appearance: 'dark';
+  appearance?: 'dark';
 };
 
 function Popover({
