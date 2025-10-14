@@ -39,6 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [user]
   );
 
+  console.log(isAuthInitLoading,(isAuthenticated && isProfileLoading) )
   // App is initializing if auth init is loading, or if authenticated but profile is loading
   const isInitializing = isAuthInitLoading || (isAuthenticated && isProfileLoading);
 

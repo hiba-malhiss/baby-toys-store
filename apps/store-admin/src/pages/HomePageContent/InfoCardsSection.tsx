@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Flex, Select, StringInput, TextArea } from '@baby-toys/ui-kit';
+import { Card, Flex, Select, StringInput, TextArea, Option } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { HomePageFormValues } from './homePage.helper';
 import { Control } from 'react-hook-form';
@@ -56,10 +56,10 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
                 required
               >
                 <Select>
-                  <option value="primary">Primary</option>
-                  <option value="info">Info</option>
-                  <option value="success">Success</option>
-                  <option value="warning">Warning</option>
+                  <Option value="primary" key="primary">Primary</Option>
+                  <Option value="info" key="info">Info</Option>
+                  <Option value="success" key="success">Success</Option>
+                  <Option value="warning" key="warning">Warning</Option>
                 </Select>
               </FormFieldWrapper>
             </Flex>

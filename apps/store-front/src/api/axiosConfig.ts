@@ -102,8 +102,20 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // 403/419: forbidden or csrf/expired — clear token, don't attempt refresh
+    if ((error.response.status === 403 || error.response.status === 419) && originalRequest) {
+      clearAccessToken();
+      return Promise.reject(error);
+    }
+
     // 401 Unauthorized
     if (error.response.status === 401 && originalRequest && !originalRequest._retry) {
+      // If the failing request is the refresh call itself, do NOT try to refresh again (avoids deadlock)
+      const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
+      if (isRefreshCall) {
+        clearAccessToken();
+        return Promise.reject(error);
+      }
       if (isRefreshing) {
         // Queue request if token is being refreshed
         return new Promise((resolve, reject) => {

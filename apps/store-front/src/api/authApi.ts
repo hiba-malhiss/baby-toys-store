@@ -72,6 +72,7 @@ export const useLogout = () =>
       await api.post('/api/auth/logout');
       clearAccessToken();
       queryClient.clear();
+      window.location.href = '/login';
     },
   });
 

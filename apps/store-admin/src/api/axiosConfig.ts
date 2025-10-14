@@ -27,6 +27,13 @@ export function getAccessToken(){
   return inMemoryAccessToken;
 }
 
+// Simple redirect helper
+function redirectToLogin(){
+  if (typeof window !== 'undefined') {
+    window.location.href = '/login';
+  }
+}
+
 // Axios instance
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
@@ -78,11 +85,12 @@ api.interceptors.response.use(
       return Promise.reject(error);
     }
 
-    // 403/419: forbidden or csrf/expired — clear token and do not attempt refresh
+    // 403/419: forbidden or csrf/expired — clear token and redirect
     if ((error.response.status === 403 || error.response.status === 419) && originalRequest) {
       clearAccessToken();
       failedQueries.forEach(key => queryClient.invalidateQueries(key));
       failedQueries.clear();
+      redirectToLogin();
       return Promise.reject(error);
     }
 
@@ -134,7 +142,7 @@ api.interceptors.response.use(
         // Invalidate failed queries
         failedQueries.forEach(key => queryClient.invalidateQueries(key));
         failedQueries.clear();
-
+        redirectToLogin();
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
