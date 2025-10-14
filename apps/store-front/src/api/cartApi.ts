@@ -167,7 +167,6 @@ export function useRemoveFromCart() {
  */
 export function useMergeCart() {
   const qc = useQueryClient();
-  const toast = useToast();
   return useMutation<CartDTO, any, void>({
     mutationKey: ['mergeCart'],
     enabled: hasGuestCartToken(),
@@ -180,11 +179,6 @@ export function useMergeCart() {
       qc.invalidateQueries({ queryKey: [CART_KEYS.cartCount] });
       qc.refetchQueries({ queryKey: [CART_KEYS.cart] });
       qc.refetchQueries({ queryKey: [CART_KEYS.cartCount] });
-      toast.success('Cart merged successfully');
-    },
-    onError: (err: any) => {
-      const msg = err?.message ?? 'Failed to merge cart';
-      toast.error(msg);
     },
   });
 }
