@@ -19,6 +19,7 @@ import ShopScreen from './src/screens/ShopScreen';
 import CartScreen from './src/screens/CartScreen';
 import MeScreen from './src/screens/MeScreen';
 import HeaderActions from './src/components/HeaderActions';
+import BottomTabBar from './src/components/BottomTabBar';
 
 // Map tab names to icons
 const ICONS: Record<string, any> = {
@@ -52,12 +53,12 @@ export default function App() {
     <GluestackUIProvider config={uiConfig}>
       <NavigationContainer theme={navTheme}>
         <Tab.Navigator
+          tabBar={(props) => <BottomTabBar {...props} />}
           screenOptions={({ route }) => ({
             tabBarIcon: ({ color, size }) => {
               const icon = ICONS[route.name] ?? faHouse;
               return <FontAwesomeIcon icon={icon} size={size} color={color as string} />;
             },
-            tabBarLabelStyle: { fontSize: 12 },
             tabBarActiveTintColor: tokens.colors.primary,
             tabBarInactiveTintColor: tokens.colors.iconMuted,
             headerTitleAlign: 'center',
