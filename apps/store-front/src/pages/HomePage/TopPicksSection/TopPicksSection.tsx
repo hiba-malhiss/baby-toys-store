@@ -51,7 +51,7 @@ const TopPicksSection = () => {
             </React.Fragment>
           ))}
       </div>
-      <Flex justify="center" className="bts-marginTxxxl">
+      <Flex justify="center">
         <Button appearance="outline" color="primary" size="large" onClick={handleViewAll}>
           {t('home.topPicks.viewAll', {
             label: t(`shop.sort.${selected}`, {

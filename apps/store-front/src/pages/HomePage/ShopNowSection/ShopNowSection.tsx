@@ -18,7 +18,7 @@ const ShopNowSection = () => {
       className={styles.shopNowSectionImageContainer}
       direction="vertical"
       justify="center"
-      align={isRtl ? 'center' : 'end'}
+      align={isRtl ? 'start' : 'end'}
     >
       <Flex direction="vertical" className={styles.shopNowSectionContent}>
         <span className={styles.shopNowSectionTitle}>{t('home.shopNow.title')}</span>

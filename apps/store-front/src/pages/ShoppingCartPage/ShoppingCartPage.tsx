@@ -1,6 +1,6 @@
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
-import { Button, Card, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
+import { Button, Card, Divider, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 import { PriceDisplay } from '@baby-toys/ui-kit';
 import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
@@ -118,6 +118,7 @@ const ShoppingCartPage = () => {
           {t('cart.proceed')}
         </Button>
       </Card>
+      <Divider className="bts-marginTxxxxl" />
       <YouMayAlsoLikeSection mode="flex" />
     </PageContainer>
   );

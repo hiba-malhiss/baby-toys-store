@@ -153,7 +153,7 @@ function Paginator({
         leftIcon={faChevronLeft}
         appearance="outline"
         isRounded
-        className={styles.paginationButton}
+        className={clsx(styles.paginationButton, styles.paginationPrev)}
       />
       {Array.from({ length: totalPages }, (_, i) => {
         const pageNum = i + 1;
@@ -177,7 +177,7 @@ function Paginator({
         leftIcon={faChevronRight}
         appearance="outline"
         isRounded
-        className={styles.paginationButton}
+        className={clsx(styles.paginationButton, styles.paginationNext)}
       />
     </div>
   );

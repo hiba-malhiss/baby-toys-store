@@ -2,5 +2,15 @@
   display: flex;
   justify-content: center;
   gap: 12px;
-  direction: ltr;
+}
+
+/* Flip chevron icons visually in RTL without changing behavior */
+[dir='rtl'] .paginationButton svg {
+  transform: scaleX(-1);
+}
+
+/* If your Button renders the icon within a specific wrapper, use more specific selectors as needed */
+[dir='rtl'] .paginationPrev svg,
+[dir='rtl'] .paginationNext svg {
+  transform-origin: center;
 }

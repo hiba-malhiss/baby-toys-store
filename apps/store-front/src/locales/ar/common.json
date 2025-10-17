@@ -53,7 +53,7 @@
     "freeShipping": "شحن مجاني",
     "onlyLeft": "متبقي {{count}} فقط في المخزون",
     "largeQuantity": "تم اختيار كمية كبيرة (الحد الأقصى 100)",
-    "searchPlaceholder": "ابحث عن المنتجات...",
+    "searchPlaceholder": "...ابحث عن المنتجات",
     "share": "شارك"
   },
   "shop": {

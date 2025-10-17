@@ -43,7 +43,7 @@ const PoliciesPage: React.FC = () => {
         {policies.map(({ key, title, content }) => (
           <Accordion
             key={key}
-            header={title}
+            header={<span className="bts-bold">{title}</span>}
             isOpen={selectedPolicy === key}
             defaultOpen={selectedPolicy === key}
             iconPosition="left"
