@@ -1,4 +1,5 @@
 import React from 'react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { NavigationContainer, DefaultTheme } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
@@ -14,10 +15,10 @@ import {
 import { GluestackUIProvider } from '@gluestack-ui/themed';
 import { uiConfig, navThemeFromTokens, tokens } from '@pwn/theme';
 
-import HomeScreen from './src/screens/HomeScreen';
-import ShopScreen from './src/screens/ShopScreen';
-import CartScreen from './src/screens/CartScreen';
-import MeScreen from './src/screens/MeScreen';
+import HomeScreen from './src/screens/Home/HomeScreen';
+import ShopScreen from './src/screens/Shop/ShopScreen';
+import CartScreen from './src/screens/Cart/CartScreen';
+import MeScreen from './src/screens/Me/MeScreen';
 import HeaderActions from './src/components/HeaderActions';
 import BottomTabBar from './src/components/BottomTabBar';
 
@@ -37,6 +38,9 @@ const navTheme = navThemeFromTokens(DefaultTheme);
 
 const Tab = createBottomTabNavigator();
 
+// Export a shared QueryClient for hooks and axios interceptors
+export const queryClient = new QueryClient();
+
 // Default header actions (to avoid repeating)
 const defaultHeaderOptions = {
   headerRight: () => (
@@ -50,34 +54,36 @@ const defaultHeaderOptions = {
 
 export default function App() {
   return (
-    <GluestackUIProvider config={uiConfig}>
-      <NavigationContainer theme={navTheme}>
-        <Tab.Navigator
-          tabBar={(props) => <BottomTabBar {...props} />}
-          screenOptions={({ route }) => ({
-            tabBarIcon: ({ color, size }) => {
-              const icon = ICONS[route.name] ?? faHouse;
-              return <FontAwesomeIcon icon={icon} size={size} color={color as string} />;
-            },
-            tabBarActiveTintColor: tokens.colors.primary,
-            tabBarInactiveTintColor: tokens.colors.iconMuted,
-            headerTitleAlign: 'center',
-          })}
-        >
-          <Tab.Screen
-            name="Home"
-            component={HomeScreen}
-            options={{ ...defaultHeaderOptions, title: 'Home' }}
-          />
-          <Tab.Screen
-            name="Shop"
-            component={ShopScreen}
-            options={{ ...defaultHeaderOptions, title: 'Shop' }}
-          />
-          <Tab.Screen name="Cart" component={CartScreen} options={{ title: 'Cart' }} />
-          <Tab.Screen name="Me" component={MeScreen} options={{ title: 'Me' }} />
-        </Tab.Navigator>
-      </NavigationContainer>
-    </GluestackUIProvider>
+    <QueryClientProvider client={queryClient}>
+      <GluestackUIProvider config={uiConfig}>
+        <NavigationContainer theme={navTheme}>
+          <Tab.Navigator
+            tabBar={(props) => <BottomTabBar {...props} />}
+            screenOptions={({ route }) => ({
+              tabBarIcon: ({ color, size }) => {
+                const icon = ICONS[route.name] ?? faHouse;
+                return <FontAwesomeIcon icon={icon} size={size} color={color as string} />;
+              },
+              tabBarActiveTintColor: tokens.colors.primary,
+              tabBarInactiveTintColor: tokens.colors.iconMuted,
+              headerTitleAlign: 'center',
+            })}
+          >
+            <Tab.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{ ...defaultHeaderOptions, title: 'Home' }}
+            />
+            <Tab.Screen
+              name="Shop"
+              component={ShopScreen}
+              options={{ ...defaultHeaderOptions, title: 'Shop' }}
+            />
+            <Tab.Screen name="Cart" component={CartScreen} options={{ title: 'Cart' }} />
+            <Tab.Screen name="Me" component={MeScreen} options={{ title: 'Me' }} />
+          </Tab.Navigator>
+        </NavigationContainer>
+      </GluestackUIProvider>
+    </QueryClientProvider>
   );
 }
