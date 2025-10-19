@@ -7,21 +7,19 @@ import {
   faHouse,
   faTags,
   faCartShopping,
-  faUser,
   faEnvelope,
   faMagnifyingGlass,
-  faHeart,
+  faHeart, faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import { GluestackUIProvider } from '@gluestack-ui/themed';
-import { uiConfig, navThemeFromTokens, tokens } from '@pwn/theme';
-
+import { uiConfig } from '@pwn/theme';
+// import "./global.css"
 import HomeScreen from './src/screens/Home/HomeScreen';
 import ShopScreen from './src/screens/Shop/ShopScreen';
 import CartScreen from './src/screens/Cart/CartScreen';
 import MeScreen from './src/screens/Me/MeScreen';
 import HeaderActions from './src/components/HeaderActions';
 import BottomTabBar from './src/components/BottomTabBar';
-
 // Map tab names to icons
 const ICONS: Record<string, any> = {
   Home: faHouse,
@@ -33,8 +31,8 @@ const ICONS: Record<string, any> = {
   Favorites: faHeart,
 };
 
-// Build navigation theme from shared tokens
-const navTheme = navThemeFromTokens(DefaultTheme);
+// Use React Navigation default theme; Gluestack handles UI theming via colorMode
+const navTheme = DefaultTheme;
 
 const Tab = createBottomTabNavigator();
 
@@ -55,7 +53,7 @@ const defaultHeaderOptions = {
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <GluestackUIProvider config={uiConfig}>
+      <GluestackUIProvider config={uiConfig} colorMode="light">
         <NavigationContainer theme={navTheme}>
           <Tab.Navigator
             tabBar={(props) => <BottomTabBar {...props} />}
@@ -64,8 +62,6 @@ export default function App() {
                 const icon = ICONS[route.name] ?? faHouse;
                 return <FontAwesomeIcon icon={icon} size={size} color={color as string} />;
               },
-              tabBarActiveTintColor: tokens.colors.primary,
-              tabBarInactiveTintColor: tokens.colors.iconMuted,
               headerTitleAlign: 'center',
             })}
           >
