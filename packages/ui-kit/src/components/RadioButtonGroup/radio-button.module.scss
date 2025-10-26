@@ -48,6 +48,7 @@
   &--chip {
     background-color: transparent;
     color: $color-black;
+    border: 1px solid $color-accent-light;
 
     &.is-selected {
       background-color: $color-accent-light;

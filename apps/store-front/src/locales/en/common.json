@@ -60,7 +60,7 @@
     "all": "All",
     "allCategories": "All Categories",
     "sortBy": "Sort by",
-    "resultsSummary": "Showing {{from}}–{{to}} of {{total}} results",
+    "resultsSummary": "{{from}}–{{to}} of {{total}}",
     "sort": {
       "rating": "Featured",
       "sales": "Best Seller",

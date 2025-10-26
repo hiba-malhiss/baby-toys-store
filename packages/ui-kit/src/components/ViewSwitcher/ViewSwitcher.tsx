@@ -185,7 +185,7 @@ function ViewSwitcher({
           <div className={styles.containerTopBar}>{topBar}</div>
 
           <span className={styles.containerResultsInfo}>
-            Showing {totalSize === 0 ? 0 : startIdx}–{endIdx} of {totalSize} results
+            {totalSize === 0 ? 0 : startIdx} – {endIdx} of {totalSize}
           </span>
         </Flex>
       )}

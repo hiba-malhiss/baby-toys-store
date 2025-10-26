@@ -39,6 +39,7 @@ const TopPicksSection = () => {
         name="topPicks"
         onChange={handleSortChange}
         appearance="chip"
+        justify="center"
       />
       <div className={styles.topPicksGrid}>
         {items.map((toy, index) => (
