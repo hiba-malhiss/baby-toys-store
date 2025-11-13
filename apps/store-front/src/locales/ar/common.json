@@ -23,6 +23,8 @@
     "placeOrder": "إتمام الطلب",
     "goToCart": "الانتقال إلى السلة",
     "orderSummary": "ملخص الطلب",
+    "deleteItemTitle": "إزالة المنتج",
+    "deleteItemMessage": "هل أنت متأكد أنك تريد إزالة <strong>{{itemName}}</strong> من سلة التسوق؟",
     "headers": {
       "product": "المنتج",
       "name": "الاسم",
@@ -54,7 +56,9 @@
     "onlyLeft": "متبقي {{count}} فقط في المخزون",
     "largeQuantity": "تم اختيار كمية كبيرة (الحد الأقصى 100)",
     "searchPlaceholder": "...ابحث عن المنتجات",
-    "share": "شارك"
+    "share": "شارك",
+    "delete": "حذف",
+    "cancel": "إلغاء"
   },
   "shop": {
     "all": "الكل",

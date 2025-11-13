@@ -1,11 +1,12 @@
-import styles from './shopping-cart-page.module.scss';
-import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
-import { Button, Card, Divider, Flex, NoDataFound, Text } from '@baby-toys/ui-kit';
-import { useTranslation } from 'react-i18next';
-import { PriceDisplay } from '@baby-toys/ui-kit';
-import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { useState } from 'react';
+import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
+import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Button, Card, Divider, Flex, NoDataFound, Text, PriceDisplay, ConfirmDialog } from '@baby-toys/ui-kit';
+
+import styles from './shopping-cart-page.module.scss';
+import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouMayAlsoLikeSection.tsx';
 import CartQuantityInput from '../../components/shared/CartQuantityInput';
@@ -17,11 +18,19 @@ const ShoppingCartPage = () => {
   const { data: cart, isLoading } = useCartQuery();
   const removeMutation = useRemoveFromCart();
   const navigate = useNavigate();
+  const [itemToDelete, setItemToDelete] = useState<{ id: number; name: string } | null>(null);
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
   const items = cart?.items || [];
   const subtotal = cart?.subtotal || 0;
+
+  const handleConfirmDelete = () => {
+    if (itemToDelete) {
+      removeMutation.mutate({ itemId: itemToDelete.id });
+      setItemToDelete(null);
+    }
+  };
 
   if (!isLoading && items.length === 0) {
     return (
@@ -29,16 +38,14 @@ const ShoppingCartPage = () => {
         isBreadcrumbHidden
         className={clsx(
           styles.shoppingCartPage,
-          items.length === 0 && styles.shoppingCartPageIsEmpty
+          styles.shoppingCartPageIsEmpty
         )}
       >
         <NoDataFound
           icon={faBoxOpen}
           message={t('cart.empty')}
           buttonText={t('cart.browse')}
-          onButtonClick={() => {
-            navigate('/shop');
-          }}
+          onButtonClick={() => navigate('/shop')}
         />
       </PageContainer>
     );
@@ -94,7 +101,7 @@ const ShoppingCartPage = () => {
                   leftIcon={faTrashAlt}
                   appearance="link"
                   color="secondary"
-                  onClick={() => removeMutation.mutate({ itemId: Number(item.id) })}
+                  onClick={() => setItemToDelete({ id: Number(item.id), name: item.productName })}
                 />
               </div>
             </div>
@@ -120,6 +127,23 @@ const ShoppingCartPage = () => {
       </Card>
       <Divider className="bts-marginTxxxxl" />
       <YouMayAlsoLikeSection mode="flex" />
+      
+      <ConfirmDialog
+        visible={!!itemToDelete}
+        header={t('cart.deleteItemTitle')}
+        message={
+          <Trans
+            ns="common"
+            i18nKey="cart.deleteItemMessage"
+            values={{ itemName: itemToDelete?.name }}
+            components={{ strong: <strong className={styles['shoppingCartPage-dialogStrong']} /> }}
+          />
+        }
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setItemToDelete(null)}
+      />
     </PageContainer>
   );
 };

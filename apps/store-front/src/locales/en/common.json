@@ -23,6 +23,8 @@
     "placeOrder": "Place order",
     "goToCart": "Go To Shopping Cart",
     "orderSummary": "Order Summary",
+    "deleteItemTitle": "Remove item",
+    "deleteItemMessage": "Are you sure you want to remove <strong>{{itemName}}</strong> from your cart?",
     "headers": {
       "product": "Product",
       "name": "Name",
@@ -54,7 +56,9 @@
     "onlyLeft": "Only {{count}} left in stock",
     "largeQuantity": "Large quantity selected (max 100)",
     "searchPlaceholder": "Search products...",
-    "share": "Share this"
+    "share": "Share this",
+    "delete": "Delete",
+    "cancel": "Cancel"
   },
   "shop": {
     "all": "All",
