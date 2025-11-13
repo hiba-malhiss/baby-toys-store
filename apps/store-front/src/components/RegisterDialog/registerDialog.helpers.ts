@@ -21,6 +21,11 @@ export const registerSchema = z.object({
   phoneNumber: z.string()
     .optional()
     .refine((val) => !val || /^[0-9\-+()\s]+$/.test(val), { message: 'Please enter a valid phone number' }),
+  age: z.coerce.number()
+    .optional()
+    .refine((val) => val === undefined || (Number.isFinite(val) && val >= 5 && val <= 120), {
+      message: 'Please enter a valid age (5-120)'
+    }),
 });
 
 export type RegisterField = {
@@ -64,5 +69,12 @@ export const registerFields: Array<RegisterField> = [
     placeholderKey: 'auth.dialogs.register.phonePlaceholder',
     type: 'tel',
     autoComplete: 'tel',
+  },
+  {
+    name: 'age',
+    labelKey: 'auth.dialogs.register.ageLabel',
+    placeholderKey: 'auth.dialogs.register.agePlaceholder',
+    type: 'number',
+    autoComplete: 'off',
   },
 ];

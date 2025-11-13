@@ -36,6 +36,7 @@ export interface RegisterRequest {
   firstName?: string;
   lastName?: string;
   phoneNumber?: string;
+  age?: number;
 }
 
 export const useRegister = () =>

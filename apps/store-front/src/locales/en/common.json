@@ -265,7 +265,9 @@
         "passwordLabel": "Password",
         "passwordPlaceholder": "Create a password",
         "phoneLabel": "Phone Number",
-        "phonePlaceholder": "Enter phone number (optional)"
+        "phonePlaceholder": "Enter phone number (optional)",
+        "ageLabel": "Age",
+        "agePlaceholder": "Enter age (optional)"
       },
       "forgot": {
         "header": "Forgot Password",

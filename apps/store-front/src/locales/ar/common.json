@@ -199,7 +199,9 @@
         "passwordLabel": "كلمة المرور",
         "passwordPlaceholder": "أنشئ كلمة مرور",
         "phoneLabel": "رقم الهاتف",
-        "phonePlaceholder": "أدخل رقم الهاتف (اختياري)"
+        "phonePlaceholder": "أدخل رقم الهاتف (اختياري)",
+        "ageLabel": "العمر",
+        "agePlaceholder": "أدخل العمر (اختياري)"
       },
       "forgot": {
         "header": "نسيت كلمة المرور",

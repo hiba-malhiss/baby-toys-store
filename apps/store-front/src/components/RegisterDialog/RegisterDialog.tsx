@@ -33,6 +33,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       firstName: '',
       lastName: '',
       phoneNumber: '',
+      age: undefined,
     },
     resolver: zodResolver(registerSchema),
   });
@@ -90,7 +91,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
               })}
             </Flex>
 
-            {['email', 'password', 'phoneNumber'].map((name) => {
+            {['email', 'password', 'phoneNumber', 'age'].map((name) => {
               const fieldConfig = registerFields.find((f) => f.name === name)!;
               return (
                 <FormFieldWrapper
@@ -98,7 +99,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                   name={name}
                   control={control}
                   label={t(fieldConfig.labelKey)}
-                  required={name !== 'phoneNumber'} // optional field
+                  required={name !== 'phoneNumber' && name !== 'age'} // optional fields
                   fullWidth
                 >
                   <StringInput
