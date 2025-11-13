@@ -102,6 +102,11 @@ const CustomersPage: React.FC = () => {
         body: (row: AdminUser) => (row.age ?? '-') as any,
       },
       {
+        field: 'country',
+        header: 'Country',
+        body: (row: AdminUser) => row.country ?? '-',
+      },
+      {
         field: 'actions',
         header: 'Actions',
         body: (row: AdminUser) => (

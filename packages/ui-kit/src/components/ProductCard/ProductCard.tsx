@@ -18,9 +18,10 @@ export type ProductCard = {
   shortDescription?: string;
   price: number;
   oldPrice?: number;
-  rating: number;
+  rating?: number;
+  reviewsCount?: number;
   label?: string;
-  mainImage: string;
+  mainImage?: string;
   isFavorite?: boolean;
   availableInStock?: number;
 };
@@ -60,7 +61,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isHorizontal = direction === 'horizontal';
   const isSmallSize = size === 'small';
   const toast = useToast();
-  const isOutOfStock = (product?.availableInStock ?? 0) === 0;
+  const isOutOfStock = (product?.availableInStock ?? 0) === 0 || (product as any)?.outOfStock === true;
 
   const handleButtonClick = useCallback((e: React.MouseEvent, handler?: (product: ProductCard) => void) => {
     e.preventDefault();
@@ -167,7 +168,12 @@ const ProductCard: React.FC<ProductCardProps> = ({
           formatCurrency={formatCurrency}
         />
         <Flex justify="between" align="center" className={styles.productCardRating}>
-          <Rating value={product.rating}/>
+          <Flex align="center" spacing="xs">
+            <Rating
+              value={(product as any)?.rating ?? (product as any)?.averageRating ?? 0}
+              reviewsCount={((product as any)?.reviewsCount ?? (product as any)?.numberOfRatings ?? 0) as number}
+            />
+          </Flex>
           {!hideMobileCart && <Button
             leftIcon={faCartPlus}
             onClick={(e) => handleButtonClick(e, onAddToCart)}

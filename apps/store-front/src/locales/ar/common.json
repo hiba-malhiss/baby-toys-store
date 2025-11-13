@@ -207,7 +207,9 @@
         "phoneLabel": "رقم الهاتف",
         "phonePlaceholder": "أدخل رقم الهاتف (اختياري)",
         "ageLabel": "العمر",
-        "agePlaceholder": "أدخل العمر (اختياري)"
+        "agePlaceholder": "أدخل العمر (اختياري)",
+        "countryLabel": "الدولة",
+        "countryPlaceholder": "أدخل الدولة (اختياري)"
       },
       "forgot": {
         "header": "نسيت كلمة المرور",

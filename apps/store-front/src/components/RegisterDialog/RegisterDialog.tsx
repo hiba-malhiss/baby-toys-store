@@ -34,6 +34,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       lastName: '',
       phoneNumber: '',
       age: undefined,
+      country: '',
     },
     resolver: zodResolver(registerSchema),
   });
@@ -91,7 +92,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
               })}
             </Flex>
 
-            {['email', 'password', 'phoneNumber', 'age'].map((name) => {
+            {['email', 'password', 'phoneNumber'].map((name) => {
               const fieldConfig = registerFields.find((f) => f.name === name)!;
               return (
                 <FormFieldWrapper
@@ -99,7 +100,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                   name={name}
                   control={control}
                   label={t(fieldConfig.labelKey)}
-                  required={name !== 'phoneNumber' && name !== 'age'} // optional fields
+                  required={name !== 'phoneNumber'} // optional fields
                   fullWidth
                 >
                   <StringInput
@@ -112,6 +113,30 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                 </FormFieldWrapper>
               );
             })}
+
+            <Flex direction="horizontal" spacing="m" fullWidth>
+              {(['age', 'country'] as const).map((name) => {
+                const fieldConfig = registerFields.find((f) => f.name === name)!;
+                return (
+                  <FormFieldWrapper
+                    key={name}
+                    name={name}
+                    control={control}
+                    label={t(fieldConfig.labelKey)}
+                    required={false}
+                    fullWidth
+                  >
+                    <StringInput
+                      type={fieldConfig.type || 'text'}
+                      placeholder={t(fieldConfig.placeholderKey)}
+                      autoComplete={fieldConfig.autoComplete}
+                      fullWidth
+                      isDisabled={isSubmitting || registerMutation.isPending}
+                    />
+                  </FormFieldWrapper>
+                );
+              })}
+            </Flex>
 
             <Button
               type="submit"

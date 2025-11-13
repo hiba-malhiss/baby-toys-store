@@ -41,6 +41,12 @@
     }
   }
 
+  &-reviewCount {
+    font-size: 12px;
+    line-height: 16px !important;
+    color: $color-text-grey;
+  }
+
   &--vertical {
     .productCard-box {
       max-height: 360px;

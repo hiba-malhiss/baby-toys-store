@@ -273,7 +273,9 @@
         "phoneLabel": "Phone Number",
         "phonePlaceholder": "Enter phone number (optional)",
         "ageLabel": "Age",
-        "agePlaceholder": "Enter age (optional)"
+        "agePlaceholder": "Enter age (optional)",
+        "countryLabel": "Country",
+        "countryPlaceholder": "Enter country (optional)"
       },
       "forgot": {
         "header": "Forgot Password",

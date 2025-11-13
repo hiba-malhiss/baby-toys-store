@@ -5,6 +5,7 @@ export interface AdminUser {
   lastName?: string | null;
   phoneNumber?: string | null;
   age?: number | null;
+  country?: string | null;
   role?: string;
 }
 

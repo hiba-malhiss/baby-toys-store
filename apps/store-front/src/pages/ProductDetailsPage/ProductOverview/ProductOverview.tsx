@@ -88,7 +88,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           )}
         </Heading>
         <Flex spacing="s" className="bts-marginBxxl">
-          <Rating value={product.rating} /> ({product.numberOfRatings || 0})
+          <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} />
         </Flex>
         <ExpandableContent className="bts-marginBxxl bts-marginTs" maxHeight="200px">
           <ul className={styles.productOverviewFeatureBullets}>

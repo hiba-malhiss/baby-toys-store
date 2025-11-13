@@ -1,4 +1,5 @@
 import React from 'react';
+import styles from './rating.module.scss';
 import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
 import Flex from '../Flex/Flex.tsx';
@@ -12,9 +13,10 @@ type RatingProps = {
   max?: number;
   className?: string;
   onChange?: (value: number) => void;
+  reviewsCount?: number;
 };
 
-const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChange }) => {
+const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChange, reviewsCount }) => {
   const handleStarClick = (starIndex: number) => {
     if (onChange) {
       onChange(starIndex + 1);
@@ -22,7 +24,7 @@ const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChan
   };
 
   return (
-    <Flex direction="horizontal" spacing="xs" className={className}>
+    <Flex direction="horizontal" spacing="xs" className={className} align="center">
       {Array.from({ length: max }).map((_, i) => {
         const diff = value - i;
 
@@ -52,6 +54,11 @@ const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChan
           </span>
         );
       })}
+      {typeof reviewsCount === 'number' && (
+        <span aria-label={`Reviews count: ${reviewsCount}`} className={styles.ratingCount}>
+          ({reviewsCount})
+        </span>
+      )}
     </Flex>
   );
 };

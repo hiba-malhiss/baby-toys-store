@@ -26,6 +26,9 @@ export const registerSchema = z.object({
     .refine((val) => val === undefined || (Number.isFinite(val) && val >= 5 && val <= 120), {
       message: 'Please enter a valid age (5-120)'
     }),
+  country: z.string()
+    .optional()
+    .refine((val) => !val || val.trim().length > 0, { message: 'Please enter a valid country' }),
 });
 
 export type RegisterField = {
@@ -76,5 +79,12 @@ export const registerFields: Array<RegisterField> = [
     placeholderKey: 'auth.dialogs.register.agePlaceholder',
     type: 'number',
     autoComplete: 'off',
+  },
+  {
+    name: 'country',
+    labelKey: 'auth.dialogs.register.countryLabel',
+    placeholderKey: 'auth.dialogs.register.countryPlaceholder',
+    type: 'text',
+    autoComplete: 'country-name',
   },
 ];
