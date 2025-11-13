@@ -82,7 +82,9 @@
     "color": "اللون",
     "brand": "العلامة التجارية",
     "material": "المادة",
-    "price": "السعر"
+    "price": "السعر",
+    "dealsAndDiscounts": "العروض والخصومات",
+    "discounts": "خصومات"
   },
   "policies": {
     "header": "السياسات",

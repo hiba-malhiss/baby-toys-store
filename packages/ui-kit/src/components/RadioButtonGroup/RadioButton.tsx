@@ -36,6 +36,14 @@ const RadioButton: React.FC<RadioButtonProps> = ({
       className={clsx(className, styles.radioButton, styles[`radioButton--${appearance}`], {
         [styles.isSelected]: isSelected,
       })}
+      onMouseDown={(e) => {
+        // Native radios do not fire onChange when clicking the already-selected option.
+        // We manually trigger onChange so outer logic can toggle it off.
+        if (isSelected) {
+          e.preventDefault();
+          onChange?.(value);
+        }
+      }}
     >
       <input
         type="radio"

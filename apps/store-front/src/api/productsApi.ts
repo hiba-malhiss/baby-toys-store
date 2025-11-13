@@ -45,6 +45,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
   const minPrice = filters?.priceRange?.[0];
   const maxPrice = filters?.priceRange?.[1];
   const query = (filters as any)?.query;
+  const onSale = (filters as any)?.discounts === 'discounts' ? true : undefined;
 
   const zeroBasedPage = Math.max(0, (page || 1) - 1);
 
@@ -62,6 +63,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
       minPrice,
       maxPrice,
       query || '',
+      onSale ? 'onSale' : '',
     ],
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
@@ -77,6 +79,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
           colorIds,
           materialIds,
           query,
+          onSale,
         },
       });
       const data = res.data.data;

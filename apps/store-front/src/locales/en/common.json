@@ -82,7 +82,9 @@
     "color": "Color",
     "brand": "Brand",
     "material": "Material",
-    "price": "Price"
+    "price": "Price",
+    "dealsAndDiscounts": "Deals & Discounts",
+    "discounts": "Discounts"
   },
   "policies": {
     "header": "Policies",

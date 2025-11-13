@@ -45,6 +45,7 @@ export const SideFilters: React.FC<{
     colorId: undefined,
     materialId: undefined,
     priceRange: priceRange,
+    discounts: undefined,
   };
 
   const { urlFilters, updateUrlFilters } = useUrlFilters<ShopFilters>(
@@ -73,7 +74,9 @@ export const SideFilters: React.FC<{
   ]);
 
   const handleFilterChange = (key: keyof ShopFilters, value: any) => {
-    updateUrlFilters({ [key]: value });
+    const current = (urlFilters as any)[key];
+    const nextValue = current === value ? undefined : value;
+    updateUrlFilters({ [key]: nextValue });
   };
 
   const clearFilters = () => {
@@ -179,6 +182,22 @@ export const SideFilters: React.FC<{
               {name}
             </RadioButton>
           ))}
+        </RadioButtonGroup>
+      </Accordion>
+
+      <Accordion header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })} withoutPadding withoutHeaderPadding>
+        <RadioButtonGroup
+          name="deals-discounts"
+          selectedValue={urlFilters.discounts}
+          onChange={(val) => handleFilterChange('discounts', val)}
+          direction="vertical"
+          spacing="l"
+          align="start"
+          className="bts-marginTm"
+        >
+          <RadioButton value="discounts">
+            {t('filters.discounts', { defaultValue: 'Discounts' })}
+          </RadioButton>
         </RadioButtonGroup>
       </Accordion>
 

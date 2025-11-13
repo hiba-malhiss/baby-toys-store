@@ -3,6 +3,7 @@ export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> =
   brandId: (v) => v,
   colorId: (v) => v,
   materialId: (v) => v,
+  discounts: (v) => (v === 'discounts' ? 'discounts' : undefined),
   priceRange: (v) => {
     try {
       const parsed = JSON.parse(v);
@@ -25,4 +26,5 @@ export type ShopFilters = {
   brandId?: string;
   materialId?: string;
   priceRange?: [number, number];
+  discounts?: 'discounts';
 };

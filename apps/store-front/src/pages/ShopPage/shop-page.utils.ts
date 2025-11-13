@@ -1,6 +1,7 @@
 import type { ShopFilters } from './SideFilters/side-filters.utils.ts';
 import { useBrands, useCategories, useColors, useMaterials } from '../../api/catalogApi.ts';
 import { useStoreSettings } from '../../api/settingsApi';
+import { useTranslation } from 'react-i18next';
 
 const isEqual = (value1: any, value2: any): boolean => {
   if (Array.isArray(value1) && Array.isArray(value2)) {
@@ -14,6 +15,7 @@ export const useFilterChips = (
   filters: ShopFilters,
   defaultFilters: Record<string, any>
 ): { key: keyof ShopFilters; label: string }[] => {
+  const { t } = useTranslation('common');
   const { data: settings } = useStoreSettings();
   const { data: categories = [] } = useCategories();
   const { data: brands = [] } = useBrands();
@@ -69,6 +71,10 @@ export const useFilterChips = (
           const name = materials.find((m) => String(m.id) === String(value))?.name || String(value);
           chips.push({ key: 'materialId', label: name });
         }
+        break;
+
+      case 'discounts':
+        chips.push({ key: 'discounts', label: t('filters.discounts', { defaultValue: 'Discounts' }) });
         break;
 
       default:
