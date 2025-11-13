@@ -30,10 +30,12 @@ export type CreateOrderRequest = {
     region: string;
     detailedAddress: string;
     phoneNumber: string;
+    secondPhoneNumber?: string;
   };
   saveAddress?: boolean;
   couponCode?: string | null;
   shippingOptionId?: number | null;
+  note?: string | null;
 };
 
 export function useMyAddresses() {

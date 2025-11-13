@@ -116,6 +116,8 @@
       "region": "Village or Region",
       "address": "Detailed Address",
       "phone": "Phone Number",
+      "secondPhone": "Second Phone Number (optional)",
+      "note": "Note (optional)",
       "shippingMethod": "Shipping Method",
       "selectShipping": "Select shipping option",
       "coupon": "Coupon Code (optional)",
@@ -126,6 +128,8 @@
         "region": "Enter village or region",
         "address": "Enter detailed address",
         "phone": "Enter phone number",
+        "secondPhone": "Enter second phone number (optional)",
+        "note": "Add a note for your order (optional)",
         "coupon": "Enter coupon code"
       }
     }

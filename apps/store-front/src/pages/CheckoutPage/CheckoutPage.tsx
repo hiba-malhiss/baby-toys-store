@@ -94,12 +94,14 @@ const CheckoutPage: React.FC = () => {
           region: values.region,
           detailedAddress: values.address,
           phoneNumber: values.phone,
+          secondPhoneNumber: values.secondPhone?.trim() || undefined,
         },
         saveAddress: values.saveAddress,
         couponCode: values.couponCode?.trim() || undefined,
         shippingOptionId: values.shippingOptionId
           ? Number(values.shippingOptionId)
           : (selectedShipping?.id ?? null),
+        note: values.note?.trim() || null,
       });
       navigate('/home');
     } catch {

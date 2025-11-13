@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Alert, Button, Divider, IconColor, Select, StringInput } from '@baby-toys/ui-kit';
+import { Alert, Button, Divider, IconColor, Select, StringInput, TextArea } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import {
   faCheck,
@@ -23,6 +23,8 @@ export type ShippingFormValues = {
   address: string;
   town: string;
   phone: string;
+  secondPhone?: string;
+  note?: string;
   saveAddress: boolean;
   couponCode?: string;
   shippingOptionId?: number | null;
@@ -63,6 +65,12 @@ const shippingSchema = z.object({
     .string()
     .regex(/^[0-9+\-\s()]{7,20}$/, 'Invalid phone number')
     .min(1, 'Phone number is required'),
+  secondPhone: z
+    .string()
+    .regex(/^[0-9+\-\s()]{7,20}$/, 'Invalid phone number')
+    .optional()
+    .or(z.literal('').transform(() => undefined)),
+  note: z.string().max(1000).optional().or(z.literal('').transform(() => undefined)),
   saveAddress: z.boolean().default(true),
   couponCode: z.string().optional(),
   shippingOptionId: z.string().optional(),
@@ -89,6 +97,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
       address: '',
       town: '',
       phone: '',
+      secondPhone: '',
+      note: '',
       saveAddress: true,
       couponCode: '',
       shippingOptionId: null,
@@ -128,6 +138,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
       address: a.detailedAddress || '',
       town: a.town || '',
       phone: a.phoneNumber || '',
+      secondPhone: '',
+      note: '',
       saveAddress: true,
       couponCode: '',
       shippingOptionId: firstOpt ? String(firstOpt.id) : null,
@@ -184,6 +196,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
                   address: '',
                   town: '',
                   phone: '',
+                  secondPhone: '',
+                  note: '',
                   saveAddress: true,
                   couponCode: '',
                   shippingOptionId: null,
@@ -232,6 +246,16 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         {/* Phone */}
         <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
           <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')} />
+        </FormFieldWrapper>
+
+        {/* Second Phone (optional) */}
+        <FormFieldWrapper name="secondPhone" control={control} label={t('checkout.form.secondPhone')}>
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')} />
+        </FormFieldWrapper>
+
+        {/* Note (optional) */}
+        <FormFieldWrapper name="note" control={control} label={t('checkout.form.note')}>
+          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3} />
         </FormFieldWrapper>
 
         {/* Shipping option */}
