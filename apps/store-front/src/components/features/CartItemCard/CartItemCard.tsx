@@ -2,9 +2,10 @@ import React from 'react';
 import styles from './cart-item-card.module.scss';
 import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button, Flex } from '@baby-toys/ui-kit';
+import { Button, Flex, Text } from '@baby-toys/ui-kit';
 import CartQuantityInput from '../../shared/CartQuantityInput';
 import { useRemoveFromCart } from '../../../api/cartApi.ts';
+import { useTranslation } from 'react-i18next';
 
 interface CartItemCardProps {
   image: string;
@@ -26,17 +27,26 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   id,
 }) => {
   const removeMutation = useRemoveFromCart();
+  const { t } = useTranslation('common');
 
   return (
     <div className={clsx(fullWidth && styles.fullWidth, styles.cartItemCard)}>
-      <img src={image} alt={name} className={styles.cartItemCardImage} />
-      <span className={styles.cartItemCardName}>{name}</span>
+      <img src={image} alt={name} className={styles.cartItemCardImage}/>
+      <Flex   direction="vertical" spacing="s" className={styles.cartItemCardName}>
+        {name}
+        {(!quantityInStock || quantityInStock <= 0) && (
+          <Text size="sm" color="error" className="bts-marginTs">
+            {t('cart.outOfStock')}
+          </Text>
+        )}
+      </Flex>
       <Flex spacing="xs" align="center" className={styles.cartItemCardAmount}>
         <CartQuantityInput
           itemId={Number(id)}
           availableInStock={quantityInStock}
           quantity={quantity}
           fullWidth
+          isDisabled={!quantityInStock || quantityInStock <= 0}
         />
         <Button
           leftIcon={faTrashAlt}

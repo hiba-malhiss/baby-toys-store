@@ -2,7 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { Drawer, Divider, Flex, Button, NoDataFound, BouncingDotsLoader } from '@baby-toys/ui-kit';
+import { Drawer, Divider, Flex, Button, NoDataFound, BouncingDotsLoader, Alert } from '@baby-toys/ui-kit';
 import styles from './shopping-cart-drawer.module.scss';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
@@ -27,6 +27,8 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const symbol = settings?.general?.currencySymbol;
   const formatCurrency = useCurrencyFormatter(symbol);
   const subtotal = cart?.subtotal ?? 0;
+  const items = cart?.items || [];
+  const hasOOS = items.some((i) => (i.availableStock ?? 0) <= 0);
 
   const handleClose = () => {
     setIsOpen(false);
@@ -58,8 +60,14 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               <span>{t('cart.subtotal')}</span>
               <span>{formatCurrency(subtotal)}</span>
             </Flex>
-            <Button onClick={handlePlaceOrder} fullWidth className="bts-marginTl">
-              {t('cart.placeOrder')}
+            <Button
+              onClick={handlePlaceOrder}
+              fullWidth
+              className="bts-marginTl"
+              isDisabled={hasOOS}
+              title={hasOOS ? t('cart.removeToProceed', { defaultValue: 'Remove out-of-stock items to proceed' }) : undefined}
+            >
+              {hasOOS ? t('cart.removeToProceed', { defaultValue: 'Remove out-of-stock items to proceed' }) : t('cart.placeOrder')}
             </Button>
             <Button
               onClick={() => {
@@ -77,6 +85,11 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       }
     >
       <Flex direction="vertical" spacing="l" fullWidth className={styles.drawerContent}>
+        {hasOOS && (
+          <Alert appearance="warning">
+            {t('cart.removeOOSGlobal', { defaultValue: 'Some items are out of stock. Remove them to continue to checkout.' })}
+          </Alert>
+        )}
         {(cart?.items || []).map((item, index) => (
           <React.Fragment key={item.productId}>
             <CartItemCard
