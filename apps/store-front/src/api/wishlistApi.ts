@@ -10,15 +10,24 @@ export function useMyWishlist(
   page: number,
   size: number,
   sortBy = 'id',
-  sortDirection: 'ASC' | 'DESC' = 'DESC'
+  sortDirection: 'ASC' | 'DESC' = 'DESC',
+  categoryId?: number | null,
+  stock: 'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK' = 'ALL'
 ) {
   const { isAuthenticated } = useAuth();
   const zeroBased = Math.max(0, (page || 1) - 1);
   return useQuery<{ items: UiProduct[]; page: number; totalPages: number; totalItems: number }>({
-    queryKey: ['myWishlist', isAuthenticated, zeroBased, size, sortBy, sortDirection],
+    queryKey: ['myWishlist', isAuthenticated, zeroBased, size, sortBy, sortDirection, categoryId ?? null, stock],
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<Page<Product>>>('/api/customer/wishlist', {
-        params: { page: zeroBased, size, sortBy, sortDirection },
+        params: {
+          page: zeroBased,
+          size,
+          sortBy,
+          sortDirection,
+          categoryId: categoryId ?? undefined,
+          stock,
+        },
       });
       const data = res.data.data;
       return {

@@ -84,7 +84,12 @@
     "material": "المادة",
     "price": "السعر",
     "dealsAndDiscounts": "العروض والخصومات",
-    "discounts": "خصومات"
+    "discounts": "خصومات",
+    "status": "الحالة",
+    "reset": "إعادة تعيين",
+    "all": "الكل",
+    "inStock": "متوفر",
+    "outOfStock": "غير متوفر"
   },
   "policies": {
     "header": "السياسات",
@@ -326,6 +331,9 @@
     "loginPromptTitle": "لا يوجد شيء هنا.",
     "loginPromptSubtitle": "خصّص تجربة التسوق لديك باستخدام قائمة الأمنيات.",
     "login": "تسجيل الدخول",
-    "emptySubtitle": "احفظ كل ما تحبه في صفحة واحدة."
+    "emptySubtitle": "احفظ كل ما تحبه في صفحة واحدة.",
+    "sort": {
+      "recentlyAdded": "أضيفت مؤخرًا"
+    }
   }
 }
