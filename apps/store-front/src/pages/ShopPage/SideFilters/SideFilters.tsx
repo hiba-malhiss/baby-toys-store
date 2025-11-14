@@ -11,7 +11,8 @@ import {
   Accordion,
   BouncingDotsLoader,
   NoDataFound,
-  Drawer, Heading,
+  Drawer,
+  ExpandableContent,
 } from '@baby-toys/ui-kit';
 import { useFilterChips } from '../shop-page.utils.ts';
 import styles from './side-filters.module.scss';
@@ -92,7 +93,7 @@ export const SideFilters: React.FC<{
   };
 
   const content = (
-    <Flex direction="vertical" spacing="m" fullWidth>
+    <Flex direction="vertical" spacing="l" fullWidth>
       <Flex wrap spacing="m" fullWidth className={styles.sideFilterChipsContainer}>
         {filterChips.map(({ key, label }) => (
           <Chip
@@ -114,104 +115,116 @@ export const SideFilters: React.FC<{
 
       <Divider className="bts-marginTxl"/>
 
-      <Accordion header={t('filters.category')} withoutPadding withoutHeaderPadding>
-        <RadioButtonGroup
-          name="category"
-          selectedValue={urlFilters.categoryId}
-          onChange={(val) => handleFilterChange('categoryId', val)}
-          direction="vertical"
-          align="start"
-          spacing="s"
-          className="bts-marginTm"
-        >
-          {categories.map(({ name, id }) => (
-            <RadioButton key={id} value={String(id)}>
-              {name}
-            </RadioButton>
-          ))}
-        </RadioButtonGroup>
+      <Accordion header={t('filters.category')} withoutPadding withoutHeaderPadding isOpenByDefault>
+        <ExpandableContent maxHeight="210px" buttonColor="underline">
+          <RadioButtonGroup
+            name="category"
+            selectedValue={urlFilters.categoryId}
+            onChange={(val) => handleFilterChange('categoryId', val)}
+            direction="vertical"
+            align="start"
+            spacing="s"
+            className="bts-marginTm"
+          >
+            {categories.map(({ name, id }) => (
+              <RadioButton key={id} value={String(id)}>
+                {name}
+              </RadioButton>
+            ))}
+          </RadioButtonGroup>
+        </ExpandableContent>
       </Accordion>
 
       <Accordion header={t('filters.color')} withoutPadding withoutHeaderPadding>
-        <RadioButtonGroup
-          name="color"
-          selectedValue={urlFilters.colorId}
-          onChange={(val) => handleFilterChange('colorId', val)}
-          direction="horizontal"
-          align="start"
-          spacing="s"
-          appearance="color-swatch"
-          className="bts-marginTm"
-        >
-          {colors.map(({ id, code }) => (
-            <RadioButton key={id} value={String(id)} name="color" swatchColor={code}/>
-          ))}
-        </RadioButtonGroup>
+        <ExpandableContent maxHeight="210px" buttonColor="underline">
+          <RadioButtonGroup
+            name="color"
+            selectedValue={urlFilters.colorId}
+            onChange={(val) => handleFilterChange('colorId', val)}
+            direction="horizontal"
+            align="start"
+            spacing="s"
+            appearance="color-swatch"
+            className="bts-marginTm"
+          >
+            {colors.map(({ id, code }) => (
+              <RadioButton key={id} value={String(id)} name="color" swatchColor={code}/>
+            ))}
+          </RadioButtonGroup>
+        </ExpandableContent>
       </Accordion>
 
       <Accordion header={t('filters.brand')} withoutPadding withoutHeaderPadding>
-        <RadioButtonGroup
-          name="brand"
-          selectedValue={urlFilters.brandId}
-          onChange={(val) => handleFilterChange('brandId', val)}
-          direction="vertical"
-          spacing="s"
-          align="start"
-          className="bts-marginTm"
-        >
-          {brands.map(({ id, name }) => (
-            <RadioButton key={id} value={String(id)}>
-              {name}
-            </RadioButton>
-          ))}
-        </RadioButtonGroup>
+        <ExpandableContent maxHeight="210px">
+          <RadioButtonGroup
+            name="brand"
+            selectedValue={urlFilters.brandId}
+            onChange={(val) => handleFilterChange('brandId', val)}
+            direction="vertical"
+            spacing="s"
+            align="start"
+            className="bts-marginTm"
+          >
+            {brands.map(({ id, name }) => (
+              <RadioButton key={id} value={String(id)}>
+                {name}
+              </RadioButton>
+            ))}
+          </RadioButtonGroup>
+        </ExpandableContent>
       </Accordion>
 
       <Accordion header={t('filters.material')} withoutPadding withoutHeaderPadding>
-        <RadioButtonGroup
-          name="material"
-          selectedValue={urlFilters.materialId}
-          onChange={(val) => handleFilterChange('materialId', val)}
-          direction="vertical"
-          spacing="s"
-          align="start"
-          className="bts-marginTm"
-        >
-          {materials.map(({ id, name }) => (
-            <RadioButton key={id} value={String(id)}>
-              {name}
-            </RadioButton>
-          ))}
-        </RadioButtonGroup>
+        <ExpandableContent maxHeight="210px">
+          <RadioButtonGroup
+            name="material"
+            selectedValue={urlFilters.materialId}
+            onChange={(val) => handleFilterChange('materialId', val)}
+            direction="vertical"
+            spacing="s"
+            align="start"
+            className="bts-marginTm"
+          >
+            {materials.map(({ id, name }) => (
+              <RadioButton key={id} value={String(id)}>
+                {name}
+              </RadioButton>
+            ))}
+          </RadioButtonGroup>
+        </ExpandableContent>
       </Accordion>
 
       <Accordion header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })} withoutPadding
                  withoutHeaderPadding>
-        <RadioButtonGroup
-          name="deals-discounts"
-          selectedValue={urlFilters.discounts}
-          onChange={(val) => handleFilterChange('discounts', val)}
-          direction="vertical"
-          spacing="s"
-          align="start"
-          className="bts-marginTm"
-        >
-          <RadioButton value="discounts">
-            {t('filters.discounts', { defaultValue: 'Discounts' })}
-          </RadioButton>
-        </RadioButtonGroup>
+        <ExpandableContent maxHeight="210px" buttonColor="underline">
+          <RadioButtonGroup
+            name="deals-discounts"
+            selectedValue={urlFilters.discounts}
+            onChange={(val) => handleFilterChange('discounts', val)}
+            direction="vertical"
+            spacing="s"
+            align="start"
+            className="bts-marginTm"
+          >
+            <RadioButton value="discounts">
+              {t('filters.discounts', { defaultValue: 'Discounts' })}
+            </RadioButton>
+          </RadioButtonGroup>
+        </ExpandableContent>
       </Accordion>
 
       <Accordion header={t('filters.price')} withoutPadding withoutHeaderPadding>
-        <Slider
-          min={priceRange?.[0]}
-          max={priceRange?.[1]}
-          step={1}
-          range
-          value={urlFilters.priceRange || priceRange}
-          className="bts-marginTxxl"
-          onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
-        />
+        <ExpandableContent maxHeight="120px">
+          <Slider
+            min={priceRange?.[0]}
+            max={priceRange?.[1]}
+            step={1}
+            range
+            value={urlFilters.priceRange || priceRange}
+            className="bts-marginTxxl"
+            onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
+          />
+        </ExpandableContent>
       </Accordion>
     </Flex>
   );

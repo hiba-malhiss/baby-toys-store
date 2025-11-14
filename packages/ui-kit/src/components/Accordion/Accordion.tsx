@@ -15,6 +15,7 @@ interface AccordionProps {
   hasError?: boolean;
   onToggle?: () => void;
   defaultOpen?: boolean;
+  isOpenByDefault?: boolean;
   iconPosition?: 'left' | 'right';
   buttonAppearance?: ButtonAppearance;
   buttonColor?: ButtonColor;
@@ -29,6 +30,7 @@ const Accordion: React.FC<AccordionProps> = ({
   onToggle,
   defaultOpen = false,
   withoutPadding = false,
+  isOpenByDefault = false,
   withoutHeaderPadding = false,
   iconPosition = 'right',
   buttonAppearance = 'link',
@@ -36,13 +38,15 @@ const Accordion: React.FC<AccordionProps> = ({
   unstyled,
 }) => {
   // If controlled, use controlledIsOpen, else manage local open state
-  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(defaultOpen);
+  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(
+    defaultOpen || isOpenByDefault
+  );
   const isControlled = controlledIsOpen !== undefined;
   const isOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen;
 
   const handleToggle = () => {
-    if (disabled) return;
-    if (isControlled) {
+    if(disabled) return;
+    if(isControlled) {
       onToggle && onToggle();
     } else {
       setUncontrolledIsOpen((open) => !open);
