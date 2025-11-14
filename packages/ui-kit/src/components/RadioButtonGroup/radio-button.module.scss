@@ -4,7 +4,6 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-weight: 500;
   border: none;
   cursor: pointer;
   transition: background 0.3s ease;
@@ -12,6 +11,7 @@
   border-radius: 74px;
   padding: 12px 20px;
   user-select: none;
+  font-size: 14px;
 
   input {
     display: none;

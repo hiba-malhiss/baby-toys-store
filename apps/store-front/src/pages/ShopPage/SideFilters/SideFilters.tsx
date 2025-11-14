@@ -11,7 +11,7 @@ import {
   Accordion,
   BouncingDotsLoader,
   NoDataFound,
-  Drawer,
+  Drawer, Heading,
 } from '@baby-toys/ui-kit';
 import { useFilterChips } from '../shop-page.utils.ts';
 import styles from './side-filters.module.scss';
@@ -121,7 +121,7 @@ export const SideFilters: React.FC<{
           onChange={(val) => handleFilterChange('categoryId', val)}
           direction="vertical"
           align="start"
-          spacing="l"
+          spacing="s"
           className="bts-marginTm"
         >
           {categories.map(({ name, id }) => (
@@ -139,7 +139,7 @@ export const SideFilters: React.FC<{
           onChange={(val) => handleFilterChange('colorId', val)}
           direction="horizontal"
           align="start"
-          spacing="l"
+          spacing="s"
           appearance="color-swatch"
           className="bts-marginTm"
         >
@@ -155,7 +155,7 @@ export const SideFilters: React.FC<{
           selectedValue={urlFilters.brandId}
           onChange={(val) => handleFilterChange('brandId', val)}
           direction="vertical"
-          spacing="l"
+          spacing="s"
           align="start"
           className="bts-marginTm"
         >
@@ -173,7 +173,7 @@ export const SideFilters: React.FC<{
           selectedValue={urlFilters.materialId}
           onChange={(val) => handleFilterChange('materialId', val)}
           direction="vertical"
-          spacing="l"
+          spacing="s"
           align="start"
           className="bts-marginTm"
         >
@@ -185,13 +185,14 @@ export const SideFilters: React.FC<{
         </RadioButtonGroup>
       </Accordion>
 
-      <Accordion header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })} withoutPadding withoutHeaderPadding>
+      <Accordion header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })} withoutPadding
+                 withoutHeaderPadding>
         <RadioButtonGroup
           name="deals-discounts"
           selectedValue={urlFilters.discounts}
           onChange={(val) => handleFilterChange('discounts', val)}
           direction="vertical"
-          spacing="l"
+          spacing="s"
           align="start"
           className="bts-marginTm"
         >
@@ -257,7 +258,7 @@ export const SideFilters: React.FC<{
       withoutBorder
       size="xsmall"
       header={
-        <Flex justify="between" align="center" fullWidth spacing="l">
+        <Flex justify="between" align="center" fullWidth spacing="s">
           <span>
             {filtersCount > 0
               ? t('filters.headerWithCount', { count: filtersCount })

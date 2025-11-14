@@ -3,6 +3,7 @@ import styles from './accordion.module.scss';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Button, { type ButtonAppearance, type ButtonColor } from '../Button/Button.tsx';
+import { Heading } from "../index.ts";
 
 interface AccordionProps {
   header: ReactNode;
@@ -71,7 +72,7 @@ const Accordion: React.FC<AccordionProps> = ({
         color={buttonColor}
         withoutPadding={withoutHeaderPadding}
       >
-        {header}
+        <Heading level="h5">{header}</Heading>
       </Button>
       {isOpen && <div className={styles.accordionContent}>{children}</div>}
     </div>
