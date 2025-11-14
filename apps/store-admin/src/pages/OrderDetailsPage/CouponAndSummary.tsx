@@ -64,6 +64,12 @@ export const CouponAndSummary: React.FC<{
         </span>
       </Flex>
       <Flex spacing="s" justify="between">
+        <strong>Shipping:</strong>
+        <span>
+          {order?.shippingCost} {currency?.symbol}
+        </span>
+      </Flex>
+      <Flex spacing="s" justify="between">
         <strong>Discount:</strong>
         <span className={styles.orderDetailsDiscount}>
           - {order?.discountAmount} {currency?.symbol}

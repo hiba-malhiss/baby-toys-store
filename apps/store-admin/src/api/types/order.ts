@@ -21,12 +21,24 @@ export interface OrderItem {
   itemProfit?: string;
 }
 
+export interface ShippingAddress {
+  firstName: string;
+  lastName: string;
+  town: string;
+  region: string;
+  detailedAddress: string;
+  phoneNumber: string;
+  secondPhoneNumber?: string | null;
+  email?: string | null;
+}
+
 export interface Order {
   id: number;
   orderNumber: string;
   createdAt: string;
   status: OrderStatus | string;
   subtotal: string;
+  shippingCost?: string;
   discountAmount: string;
   total: string;
   couponCode?: string | null;
@@ -34,4 +46,6 @@ export interface Order {
   totalCost?: string;
   totalProfit?: string;
   profitMargin?: string;
+  shippingAddress?: ShippingAddress;
+  note?: string | null;
 }

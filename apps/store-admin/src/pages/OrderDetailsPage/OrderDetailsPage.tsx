@@ -8,6 +8,8 @@ import { OrderStatus } from '../../api/types/order';
 import { useOrderDetails } from './useOrderDetails';
 import { OrderItems } from './OrderItems';
 import { CouponAndSummary } from './CouponAndSummary.tsx';
+import { ShippingAddressCard } from './ShippingAddressCard.tsx';
+import { ShippingNoteCard } from './ShippingNoteCard.tsx';
 import { useStoreSettings } from '../../api/settingsApi';
 
 interface OrderDetailsPageProps {
@@ -82,7 +84,7 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
           </Flex>
         ) : (
           <Flex align="center" spacing="m">
-            <Chip label={order?.status} appearance={statusColorMap[order?.status]} />
+            <Chip label={order?.status} appearance={statusColorMap[order?.status]}/>
             <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
               Edit Order
             </Button>
@@ -105,16 +107,20 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
           handleDeleteItem={handleDeleteItem}
           setItemIdToDelete={setItemIdToDelete}
         />
-        <CouponAndSummary
-          isEdit={Boolean(isEdit && canEditOrder)}
-          couponInput={couponInput}
-          setCouponInput={setCouponInput}
-          order={order}
-          currency={currency}
-          handleApplyCoupon={handleApplyCoupon}
-          handleRemoveCoupon={handleRemoveCoupon}
-          canEditOrder={canEditOrder}
-        />
+        <Flex direction="vertical" spacing="xxl" align="start" className={styles.orderDetailsPageContent} fullHeight>
+          <CouponAndSummary
+            isEdit={Boolean(isEdit && canEditOrder)}
+            couponInput={couponInput}
+            setCouponInput={setCouponInput}
+            order={order}
+            currency={currency}
+            handleApplyCoupon={handleApplyCoupon}
+            handleRemoveCoupon={handleRemoveCoupon}
+            canEditOrder={canEditOrder}
+          />
+          <ShippingAddressCard order={order}/>
+          <ShippingNoteCard note={order?.note}/>
+        </Flex>
       </Flex>
 
       <ConfirmDialog
