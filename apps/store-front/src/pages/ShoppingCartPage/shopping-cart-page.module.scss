@@ -86,6 +86,11 @@
     gap: 8px;
   }
 
+  .oosPrice {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+
   &-dialogStrong {
     font-weight: 700;
     font-size: 13px;

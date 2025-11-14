@@ -40,6 +40,11 @@
     margin-top: 16px;
   }
 
+  .oosPrice {
+    opacity: 0.6;
+    text-decoration: line-through;
+  }
+
   &-amount {
     grid-area: amount;
     width: 165px !important;

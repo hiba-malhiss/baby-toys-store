@@ -56,7 +56,9 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           isLoading={removeMutation.isPending}
         ></Button>
       </Flex>
-      <span className={styles.cartItemCardPrice}>{totalPrice}</span>
+      <span className={clsx(styles.cartItemCardPrice, (!quantityInStock || quantityInStock <= 0) && styles.oosPrice)}>
+        {totalPrice}
+      </span>
     </div>
   );
 };

@@ -92,6 +92,7 @@ const ShoppingCartPage = () => {
                 price={item.unitPrice}
                 oldPrice={item.originalPrice}
                 formatCurrency={formatCurrency}
+                className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}
               />
               <div className={styles.shoppingCartPageQuantityInput}>
                 <CartQuantityInput
@@ -107,7 +108,8 @@ const ShoppingCartPage = () => {
                   </Text>
                 )}
               </div>
-              <div>{formatCurrency(item.totalPrice)}</div>
+              <div
+                className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}>{formatCurrency(item.totalPrice)}</div>
               <div>
                 <Button
                   leftIcon={faTrashAlt}
@@ -124,7 +126,7 @@ const ShoppingCartPage = () => {
         <Flex justify="between">
           <Text weight="bold" size="lg">{t('cart.subtotal')}</Text>
           <Text weight="bold" size="lg">
-            {formatCurrency(subtotal)}
+            {formatCurrency(subtotal || 0)}
           </Text>
         </Flex>
         <Button

@@ -58,7 +58,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           <>
             <Flex fullWidth justify="between" className={clsx('bts-marginBxl', styles.subtotalRow)}>
               <span>{t('cart.subtotal')}</span>
-              <span>{formatCurrency(subtotal)}</span>
+              <span>{formatCurrency(subtotal || 0)}</span>
             </Flex>
             <Button
               onClick={handlePlaceOrder}
