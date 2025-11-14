@@ -22,7 +22,7 @@ export const CouponAndSummary: React.FC<{
         handleRemoveCoupon,
         canEditOrder,
       }) => (
-  <Card header={<Heading level="h3">Coupon & Summary</Heading>}>
+  <Card header={<Heading level="h3">Coupon & Summary</Heading>} fullWidth>
     <Flex spacing="xl" direction="vertical">
       {isEdit && (
         <Flex spacing="s" align="center" className={styles.couponRow}>

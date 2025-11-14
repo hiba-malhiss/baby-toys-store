@@ -73,7 +73,7 @@ const WishListPage = () => {
   };
 
   return (
-    <PageContainer header={t('wishlist.header')}>
+    <PageContainer header={`${t('wishlist.header')} (${totalSize})`}>
       {renderContent()}
       <Divider className="bts-marginTxxxxl" />
       <YouMayAlsoLikeSection mode="flex" />

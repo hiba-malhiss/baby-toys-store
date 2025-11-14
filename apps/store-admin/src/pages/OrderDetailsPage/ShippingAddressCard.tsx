@@ -12,8 +12,8 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
       {!a ? (
         <span>No address</span>
       ) : (
-        <Flex direction="vertical" spacing="s">
-          <Flex justify="between" spacing="s">
+        <Flex direction="vertical" spacing="m">
+          <Flex justify="between" spacing="m">
             <strong>Name</strong>
             <span>
               {(a.firstName || '-') + ' ' + (a.lastName || '-')}
