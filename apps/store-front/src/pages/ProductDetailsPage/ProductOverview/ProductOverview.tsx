@@ -8,6 +8,7 @@ import {
   Button,
   Card,
   useToast,
+  CopyToClipboardButton,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
@@ -57,11 +58,11 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
 
   const handleSocialShare = useCallback(
     (iconName: string) => {
-      if (iconName === 'whatsapp') {
+      if(iconName === 'whatsapp') {
         shareProduct('whatsapp', product.id);
         return;
       }
-      if (iconName === 'facebook-f') {
+      if(iconName === 'facebook-f') {
         shareProduct('facebook', product.id);
         return;
       }
@@ -71,11 +72,24 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
 
   return (
     <div className={styles.productOverview}>
-      <ImageGallery images={product.images} productName={product.name} />
+      <ImageGallery images={product.images} productName={product.name}/>
       <Flex direction="vertical">
-        <Heading level="h3" className="bts-marginBxxl">
+        <Heading level="h3" className="bts-marginBxs">
           {product.name}
         </Heading>
+        {product.productSku && (
+          <Flex className={styles.productOverviewSkuLine}>
+            <span>SKU: {product.productSku}</span>
+            <CopyToClipboardButton
+              value={product.productSku}
+              successMessage="SKU copied"
+              ariaLabel="Copy SKU"
+              appearance="link"
+              withoutPadding
+            />
+            <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} className="bts-marginLm"/>
+          </Flex>
+        )}
         <Heading
           level="h2"
           className={clsx('bts-marginBl', product.oldPrice && styles.productOverviewWithDiscount)}
@@ -87,9 +101,6 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
             </span>
           )}
         </Heading>
-        <Flex spacing="s" className="bts-marginBxxl">
-          <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} />
-        </Flex>
         <ExpandableContent className="bts-marginBxxl bts-marginTs" maxHeight="200px">
           <ul className={styles.productOverviewFeatureBullets}>
             {product.featureBullets?.map((item: string, index: number) => (

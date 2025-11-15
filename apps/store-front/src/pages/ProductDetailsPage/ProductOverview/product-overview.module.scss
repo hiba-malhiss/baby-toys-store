@@ -16,6 +16,14 @@
     }
   }
 
+  &-skuLine {
+    color: $color-secondary;
+    font-size: 12px;
+    align-items: center;
+    margin-bottom: 12px;
+    font-weight: bold;
+  }
+
   &-details {
     display: grid;
     grid-template-columns: max-content 1fr;

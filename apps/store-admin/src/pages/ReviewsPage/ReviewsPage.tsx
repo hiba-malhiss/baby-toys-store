@@ -1,12 +1,11 @@
 import { useState, useMemo, useCallback } from 'react';
-import { Heading, Table, Flex, Chip, Button, Rating } from '@baby-toys/ui-kit';
+import { Heading, Table, Flex, Chip, Button, Rating, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useSearchParams, Link } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import ReviewsFilters from './ReviewsFilters.tsx';
 import { useAdminReviews, useHideReview, useUnhideReview } from '../../api/reviewsApi';
 import { ReviewDto, ReviewStatus } from '../../api/types/review';
 import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
-import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
 import styles from './reviews-page.module.scss';
 
 export default function ReviewsPage() {

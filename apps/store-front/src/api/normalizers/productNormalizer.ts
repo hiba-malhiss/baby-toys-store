@@ -2,6 +2,7 @@ import type { Product } from '../types/product';
 
 export type UiProduct = {
   id: number;
+  productSku?: string | null;
   name: string;
   shortDescription?: string | null;
   mainImage?: string | null;
@@ -28,6 +29,7 @@ export function normalizeProduct(dto: Product): UiProduct {
 
   return {
     id: dto.id,
+    productSku: dto.productSku ?? null,
     name: dto.name,
     shortDescription: dto.shortDescription,
     mainImage: dto.mainImage,

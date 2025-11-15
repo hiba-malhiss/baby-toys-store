@@ -1,8 +1,7 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Button, Card, Heading, KPI, Chip } from '@baby-toys/ui-kit';
-import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
+import { Button, Card, Heading, KPI, Chip, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useProduct } from '../../api/productApi';
 import { useStoreSettings } from '../../api/settingsApi';

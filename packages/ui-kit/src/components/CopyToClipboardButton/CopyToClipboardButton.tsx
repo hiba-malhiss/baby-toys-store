@@ -1,15 +1,17 @@
 import React from 'react';
-import { Button, useToast } from '@baby-toys/ui-kit';
+import Button from '../Button/Button';
+import { useToast } from '../Toast/ToastContext';
 import { faCopy } from '@fortawesome/free-solid-svg-icons';
-import { copyTextToClipboard } from '@baby-toys/ui-kit/utils';
+import { copyTextToClipboard } from '../../utils';
 
 export interface CopyToClipboardButtonProps {
   value: string | number | undefined | null;
   successMessage?: string;
   errorMessage?: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'xsmall' | 'small' | 'medium' | 'large';
   appearance?: 'ghost' | 'link' | 'outline' | 'primary' | 'secondary' | 'icon';
   stopPropagation?: boolean;
+  withoutPadding?: boolean;
   ariaLabel?: string;
 }
 
@@ -21,15 +23,18 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
   appearance = 'ghost',
   stopPropagation = true,
   ariaLabel = 'Copy to clipboard',
+  withoutPadding
 }) => {
   const toast = useToast();
 
   return (
     <Button
-      size={size}
+      size={size as any}
       appearance={appearance as any}
       leftIcon={faCopy}
       aria-label={ariaLabel}
+      withoutPadding={withoutPadding}
+      iconColor="gray-dark"
       onClick={async (e) => {
         if (stopPropagation) e.stopPropagation();
         if (value == null) return;

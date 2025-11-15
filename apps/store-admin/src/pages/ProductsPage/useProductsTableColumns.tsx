@@ -1,9 +1,8 @@
-import { Button, Flex, Rating, Icon } from '@baby-toys/ui-kit';
+import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { faPen, faTrashAlt, faStar, faCross, faCheck, faEye } from '@fortawesome/free-solid-svg-icons';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
-import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
 import { AdminProductBase } from "../../api/types/product.ts";
 
 export const useProductsTableColumns = (handleDelete: (product: AdminProductBase) => void) => {

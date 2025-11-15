@@ -1,10 +1,9 @@
 import React, { useMemo, useState, useCallback, useEffect } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Table, Button, StringInput, Flex } from '@baby-toys/ui-kit';
+import { Heading, Table, Button, StringInput, Flex, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAdminUsers } from '../../api/usersApi';
 import type { AdminUser } from '../../api/types/user';
-import { CopyToClipboardButton } from '../../components/CopyToClipboardButton/CopyToClipboardButton';
 import styles from './customer-page.module.scss';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
