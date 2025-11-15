@@ -50,7 +50,7 @@ const Footer = () => {
               withoutPadding
               size="small"
               appearance="link"
-              color="primary"
+              color="underline"
               onClick={() => navigate(path)}
             >
               {t(`footer.links.${label}`, { defaultValue: label })}

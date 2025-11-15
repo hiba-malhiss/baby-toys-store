@@ -39,6 +39,11 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
             {t('cart.outOfStock')}
           </Text>
         )}
+        {quantityInStock > 0 && (quantity ?? 0) > quantityInStock && (
+          <Text size="sm" color="warning" className="bts-marginTs">
+            {t('cart.reduceToStock', { count: quantityInStock })}
+          </Text>
+        )}
       </Flex>
       <Flex spacing="xs" align="center" className={styles.cartItemCardAmount}>
         <CartQuantityInput

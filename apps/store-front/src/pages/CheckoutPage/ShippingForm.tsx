@@ -48,6 +48,8 @@ type ShippingFormProps = {
   onCouponPreview?: (info: { code: string }) => void;
   onShippingOptionChange?: (opt: ShippingOption | null) => void;
   couponValid?: boolean | null;
+  stockBlocked?: boolean;
+  onAlterCart?: () => void;
 };
 
 // Allowed countries
@@ -77,14 +79,16 @@ const shippingSchema = z.object({
 });
 
 const ShippingForm: React.FC<ShippingFormProps> = ({
-  isAuthenticated,
-  addresses,
-  onSubmit,
-  placing,
-  disableSubmit,
-  onCouponPreview,
-  onShippingOptionChange,
-  couponValid,
+ isAuthenticated,
+ addresses,
+ onSubmit,
+ placing,
+ disableSubmit,
+ onCouponPreview,
+ onShippingOptionChange,
+ couponValid,
+ stockBlocked,
+ onAlterCart,
 }) => {
   const formMethods = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema),
@@ -105,7 +109,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
     },
   });
 
-  const { control, formState, handleSubmit, reset, getValues, setValue, watch } = formMethods;
+  const { control, handleSubmit, reset, getValues, setValue, watch } = formMethods;
 
   const [usingSavedAddress, setUsingSavedAddress] = useState(false);
   const initializedRef = useRef(false);
@@ -126,8 +130,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   );
 
   useEffect(() => {
-    if (!isAuthenticated || !addresses?.length) return;
-    if (initializedRef.current) return;
+    if(!isAuthenticated || !addresses?.length) return;
+    if(initializedRef.current) return;
     const a = addresses[0];
     const firstOpt = shippingOptions[0] ?? null;
     reset({
@@ -153,7 +157,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
     // After options load, ensure a default is set once.
     const current = getValues('shippingOptionId');
     const first = shippingOptions[0];
-    if (!first || current) return;
+    if(!first || current) return;
     setValue('shippingOptionId', String(first.id), { shouldDirty: false, shouldTouch: false });
   }, [shippingOptions, getValues, setValue]);
 
@@ -162,10 +166,10 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   const selectedShipId = watch('shippingOptionId');
   useEffect(() => {
     const idNum = selectedShipId != null ? Number(selectedShipId) : null;
-    if (!idNum) return;
-    if (lastNotifiedShipId.current === idNum) return;
+    if(!idNum) return;
+    if(lastNotifiedShipId.current === idNum) return;
     const found = shippingOptions?.find((o) => o.id === idNum) || null;
-    if (!found) return;
+    if(!found) return;
     onShippingOptionChange?.(found);
     lastNotifiedShipId.current = idNum;
   }, [selectedShipId, shippingOptions, onShippingOptionChange]);
@@ -173,7 +177,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   // Coupon preview
   const handleCouponPreview = () => {
     const code = (getValues('couponCode') || '').trim();
-    if (code) onCouponPreview?.({ code });
+    if(code) onCouponPreview?.({ code });
   };
 
   return (
@@ -184,8 +188,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           <Alert icon={faCheck} title={t('checkout.form.alertUsingSaved')}>
             <Button
               appearance="link"
-              color="primary"
-              withoutPadding
+              color="underline"
               size="small"
               onClick={() => {
                 reset({
@@ -213,7 +216,10 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         {/* Country */}
         <FormFieldWrapper required name="country" control={control} label={t('checkout.form.country')}>
           <Select
-            options={COUNTRIES.map((c) => ({ ...c, label: t(`checkout.form.countryOptions.${c.value}`, { defaultValue: c.label }) }))}
+            options={COUNTRIES.map((c) => ({
+              ...c,
+              label: t(`checkout.form.countryOptions.${c.value}`, { defaultValue: c.label })
+            }))}
             placeholder={t('checkout.form.selectCountry')}
           />
         </FormFieldWrapper>
@@ -221,41 +227,41 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         {/* First + Last name */}
         <div className={styles.checkoutPageFormRow}>
           <FormFieldWrapper required name="firstName" control={control} label={t('checkout.form.firstName')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')}/>
           </FormFieldWrapper>
           <FormFieldWrapper required name="lastName" control={control} label={t('checkout.form.lastName')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')}/>
           </FormFieldWrapper>
         </div>
 
         {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
           <FormFieldWrapper required name="town" control={control} label={t('checkout.form.town')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.town')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.town')}/>
           </FormFieldWrapper>
           <FormFieldWrapper required name="region" control={control} label={t('checkout.form.region')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')}/>
           </FormFieldWrapper>
         </div>
 
         {/* Address */}
         <FormFieldWrapper required name="address" control={control} label={t('checkout.form.address')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')} />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')}/>
         </FormFieldWrapper>
 
         {/* Phone */}
         <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')} />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')}/>
         </FormFieldWrapper>
 
         {/* Second Phone (optional) */}
         <FormFieldWrapper name="secondPhone" control={control} label={t('checkout.form.secondPhone')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')} />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')}/>
         </FormFieldWrapper>
 
         {/* Note (optional) */}
         <FormFieldWrapper name="note" control={control} label={t('checkout.form.note')}>
-          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3} />
+          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3}/>
         </FormFieldWrapper>
 
         {/* Shipping option */}
@@ -283,7 +289,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
               }
               iconColor={couponValid ? IconColor.success : IconColor.warning}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if(e.key === 'Enter') {
                   e.preventDefault();
                   handleCouponPreview();
                 }
@@ -309,11 +315,21 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             />
           </div>
         </FormFieldWrapper>
-        <Divider className="bts-marginVl" />
-        {/* Submit */}
-        <Button type="submit" fullWidth isLoading={placing} isDisabled={placing || disableSubmit}>
-          Place Order
-        </Button>
+        <Divider className="bts-marginVl"/>
+        {stockBlocked ? (
+          <Button
+            fullWidth
+            onClick={onAlterCart}
+            appearance="outline"
+            color="error"
+          >
+            {t('cart.goToCart')}
+          </Button>
+        ) : (
+          <Button type="submit" fullWidth isLoading={placing} isDisabled={placing || disableSubmit}>
+            {t('cart.placeOrder')}
+          </Button>
+        )}
       </form>
     </FormProvider>
   );

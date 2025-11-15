@@ -29,6 +29,9 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
   const subtotal = cart?.subtotal ?? 0;
   const items = cart?.items || [];
   const hasOOS = items.some((i) => (i.availableStock ?? 0) <= 0);
+  const hasOverAllocated = items.some(
+    (i) => (i.availableStock ?? 0) > 0 && i.quantity > (i.availableStock ?? 0)
+  );
 
   const handleClose = () => {
     setIsOpen(false);
@@ -39,10 +42,11 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     handleClose();
   };
 
-  if (isPending) {
+  if(isPending) {
     return (
-      <Drawer visible={isOpen} header={t('cart.orderSummary', { defaultValue: 'Order Summary' })} position="right" onClose={handleClose}>
-        <BouncingDotsLoader />
+      <Drawer visible={isOpen} header={t('cart.orderSummary', { defaultValue: 'Order Summary' })} position="right"
+              onClose={handleClose}>
+        <BouncingDotsLoader/>
       </Drawer>
     );
   }
@@ -64,10 +68,20 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               onClick={handlePlaceOrder}
               fullWidth
               className="bts-marginTl"
-              isDisabled={hasOOS}
-              title={hasOOS ? t('cart.removeToProceed', { defaultValue: 'Remove out-of-stock items to proceed' }) : undefined}
+              isDisabled={hasOOS || hasOverAllocated}
+              title={
+                hasOOS
+                  ? t('cart.removeToProceed')
+                  : hasOverAllocated
+                    ? t('cart.reduceToProceed')
+                    : undefined
+              }
             >
-              {hasOOS ? t('cart.removeToProceed', { defaultValue: 'Remove out-of-stock items to proceed' }) : t('cart.placeOrder')}
+              {hasOOS
+                ? t('cart.removeToProceed')
+                : hasOverAllocated
+                  ? t('cart.reduceToProceed')
+                  : t('cart.placeOrder')}
             </Button>
             <Button
               onClick={() => {
@@ -90,6 +104,11 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
             {t('cart.removeOOSGlobal', { defaultValue: 'Some items are out of stock. Remove them to continue to checkout.' })}
           </Alert>
         )}
+        {hasOverAllocated && (
+          <Alert appearance="warning">
+            {t('cart.reduceQtyGlobal', { defaultValue: 'Some items exceed available stock. Please reduce quantities to proceed.' })}
+          </Alert>
+        )}
         {(cart?.items || []).map((item, index) => (
           <React.Fragment key={item.productId}>
             <CartItemCard
@@ -101,15 +120,15 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               quantityInStock={item.availableStock}
               quantity={item.quantity}
             />
-            {index < (cart?.items?.length || 0) - 1 && <Divider />}
+            {index < (cart?.items?.length || 0) - 1 && <Divider/>}
           </React.Fragment>
         ))}
         {(cart?.items?.length || 0) === 0 && (
-          <NoDataFound withoutPadding icon={faShoppingCart} message={t('cart.empty')} />
+          <NoDataFound withoutPadding icon={faShoppingCart} message={t('cart.empty')}/>
         )}
         {(isCartSyncing || isAddCartSyncing) && (
           <div className={styles.drawerOverlay}>
-            <BouncingDotsLoader />
+            <BouncingDotsLoader/>
           </div>
         )}
       </Flex>

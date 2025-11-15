@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StringInput } from '@baby-toys/ui-kit';
+import { StringInput, Tooltip } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 import Icon from '@baby-toys/ui-kit/components/Icon/Icon';
 import { useUpdateCartItem } from '../../api/cartApi';
@@ -56,7 +56,19 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
 
   const handleChange = useCallback(
     (val: number) => {
-      const next = bounded(Number(val));
+      const numeric = Number(val);
+      // Prevent increasing above available stock while still allowing decreases/editing
+      if (
+        availableInStock &&
+        typeof numeric === 'number' &&
+        !Number.isNaN(numeric) &&
+        localQty >= availableInStock &&
+        numeric > localQty
+      ) {
+        return; // ignore increments beyond cap
+      }
+
+      const next = bounded(numeric);
       setLocalQty(next);
       // debounce API calls while typing
       if (debounceRef.current) {
@@ -64,7 +76,7 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
       }
       debounceRef.current = window.setTimeout(() => commit(next), 400);
     },
-    [bounded, commit]
+    [availableInStock, localQty, bounded, commit]
   );
 
   // Sync local quantity when server-provided quantity prop changes (e.g., after refetch)
@@ -87,19 +99,38 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
     [availableInStock, t]
   );
 
-  return (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }} className={className}>
+  const isAtOrOverMax = useMemo(
+    () => Boolean(availableInStock && localQty >= availableInStock),
+    [availableInStock, localQty]
+  );
+
+  const maxProp = useMemo<number | undefined>(
+    () => (isAtOrOverMax ? undefined : availableInStock),
+    [isAtOrOverMax, availableInStock]
+  );
+
+  const inputEl = useMemo(
+    () => (
       <StringInput
         fullWidth={fullWidth}
         type="number"
         min={1}
-        max={availableInStock}
+        max={maxProp}
         withControls
         value={localQty}
         onChange={(v) => handleChange(v as number)}
         isDisabled={isLoading || !!isDisabled}
         maxTooltip={maxTooltip}
       />
+    ),
+    [fullWidth, maxProp, localQty, handleChange, isLoading, isDisabled, maxTooltip]
+  );
+
+  return (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }} className={className}>
+      <Tooltip content={isAtOrOverMax ? maxTooltip : undefined} position="top">
+        <span>{inputEl}</span>
+      </Tooltip>
       {isLoading && <Icon iconName="faSpinner" isSpinning />}
     </span>
   );

@@ -1,9 +1,18 @@
 .checkoutPage {
   display: grid;
   grid-template-columns: max-content minmax(345px, 1fr);
-  gap: 48px;
+  column-gap: 48px;
+  row-gap: 24px;
   margin: 0 auto;
   padding: 48px 0;
+
+  &.stockBlocked {
+    grid-template-rows: max-content 1fr;
+  }
+
+  .alert {
+    grid-column: 1/-1;
+  }
 
   &-form {
     display: flex;

@@ -25,6 +25,9 @@ const ShoppingCartPage = () => {
   const items = cart?.items || [];
   const subtotal = cart?.subtotal || 0;
   const hasOOS = items.some((i) => (i.availableStock ?? 0) <= 0);
+  const hasOverAllocated = items.some(
+    (i) => (i.availableStock ?? 0) > 0 && i.quantity > (i.availableStock ?? 0)
+  );
 
   const handleConfirmDelete = () => {
     if(itemToDelete) {
@@ -64,6 +67,11 @@ const ShoppingCartPage = () => {
         {hasOOS && (
           <Alert appearance="warning" className="bts-marginBm">
             {t('cart.removeOOSGlobal')}
+          </Alert>
+        )}
+        {hasOverAllocated && (
+          <Alert appearance="warning" className="bts-marginBm">
+            {t('cart.reduceQtyGlobal')}
           </Alert>
         )}
         <div className={styles.shoppingCartPageTableHeader}>
@@ -107,6 +115,11 @@ const ShoppingCartPage = () => {
                     {t('cart.removeOOSNotice')}
                   </Text>
                 )}
+                {(item.availableStock ?? 0) > 0 && item.quantity > (item.availableStock ?? 0) && (
+                  <Text size="sm" color="warning" className="bts-marginTs">
+                    {t('cart.reduceToStock', { count: item.availableStock })}
+                  </Text>
+                )}
               </div>
               <div
                 className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}>{formatCurrency(item.totalPrice)}</div>
@@ -135,11 +148,19 @@ const ShoppingCartPage = () => {
           size="large"
           className="bts-marginTxl"
           onClick={() => navigate('/checkout')}
-          isDisabled={hasOOS}
-          title={hasOOS ? t('cart.removeToProceed', { defaultValue: 'Remove out-of-stock items to proceed' }) : undefined}
+          isDisabled={hasOOS || hasOverAllocated}
+          title={
+            hasOOS
+              ? t('cart.removeToProceed')
+              : hasOverAllocated
+              ? t('cart.reduceToProceed')
+              : undefined
+          }
         >
           {hasOOS
-            ? t('cart.removeToProceed', { defaultValue: 'Remove out-of-stock items to proceed' })
+            ? t('cart.removeToProceed')
+            : hasOverAllocated
+            ? t('cart.reduceToProceed')
             : t('cart.proceed')}
         </Button>
       </Card>

@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './checkout-page.module.scss';
 
-import { Card, Divider, useToast, BouncingDotsLoader, Chip } from '@baby-toys/ui-kit';
+import { Card, Divider, useToast, BouncingDotsLoader, Chip, Alert, Button } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import ShippingForm, { type ShippingFormValues } from './ShippingForm';
@@ -15,6 +15,7 @@ import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
 import { useCheckoutQuote, type QuoteResponse } from '../../api/checkoutApi';
 import { useCartQuery } from '../../api/cartApi';
 import { useTranslation } from 'react-i18next';
+import clsx from "clsx";
 
 const CheckoutPage: React.FC = () => {
   const { data: cart, isPending: cartLoading } = useCartQuery();
@@ -48,22 +49,30 @@ const CheckoutPage: React.FC = () => {
   const couponApplied = !!(quote?.coupon?.valid && quote?.coupon?.code);
   const isQuoting = quoteMutation.isPending;
 
+  // Stock validation
+  const items = cart?.items || [];
+  const hasOOS = items.some((i) => (i.availableStock ?? 0) <= 0);
+  const hasOverAllocated = items.some(
+    (i) => (i.availableStock ?? 0) > 0 && i.quantity > (i.availableStock ?? 0)
+  );
+  const stockBlocked = hasOOS || hasOverAllocated;
+
   // Handlers
   const refreshQuote = (shippingId?: number, code?: string) => {
-    if (!shippingId) return setQuote(null);
+    if(!shippingId) return setQuote(null);
     quoteMutation.mutate(
       { shippingOptionId: shippingId, couponCode: code || undefined },
       {
         onSuccess: (resp) => {
           setQuote(resp);
           // If user provided a code and backend says invalid, inform via toast
-          if (code && (!resp.coupon || resp.coupon.valid === false)) {
+          if(code && (!resp.coupon || resp.coupon.valid === false)) {
             toast.error(resp.coupon?.message || t('checkout.invalidCoupon'));
           }
         },
         onError: () => {
           setQuote(null);
-          if (code) toast.error(t('checkout.validateCouponFailed'));
+          if(code) toast.error(t('checkout.validateCouponFailed'));
         },
       }
     );
@@ -84,7 +93,7 @@ const CheckoutPage: React.FC = () => {
     [couponCode]
   );
 
-  const onSubmit = async (values: ShippingFormValues) => {
+  const onSubmit = async(values: ShippingFormValues) => {
     try {
       await placeOrder.mutateAsync({
         shippingAddress: {
@@ -111,7 +120,31 @@ const CheckoutPage: React.FC = () => {
 
   return (
     <PageContainer isLoading={cartLoading || addressesLoading} isMaskLoading={placeOrder.isPending}>
-      <div className={styles.checkoutPage}>
+      <div className={clsx(styles.checkoutPage, stockBlocked ? styles.stockBlocked : undefined)}>
+        {hasOOS && (
+          <Alert appearance="error" className={clsx(styles.alert)}>
+            {t('cart.removeOOSGlobal')}
+            <Button
+              appearance="link"
+              color="underline"
+              onClick={() => navigate('/shopping-cart')}
+            >
+              {t('cart.goToCart', { defaultValue: 'Go to cart' })}
+            </Button>
+          </Alert>
+        )}
+        {hasOverAllocated && (
+          <Alert appearance="error" className={clsx(styles.alert)}>
+            {t('cart.reduceQtyGlobal')}
+            <Button
+              appearance="link"
+              color="underline"
+              onClick={() => navigate('/shopping-cart')}
+            >
+              {t('cart.goToCart', { defaultValue: 'Go to cart' })}
+            </Button>
+          </Alert>
+        )}
         {/* Shipping Info */}
         <Card fullWidth header={t('checkout.shippingInfo')}>
           <ShippingForm
@@ -120,6 +153,8 @@ const CheckoutPage: React.FC = () => {
             onSubmit={onSubmit}
             placing={placeOrder.isPending}
             disableSubmit={!hasCartItems || cartLoading || addressesLoading}
+            stockBlocked={stockBlocked}
+            onAlterCart={() => navigate('/shopping-cart')}
             onCouponPreview={handleCouponPreview}
             couponValid={quote?.coupon?.valid ?? null}
             onShippingOptionChange={handleShippingChange}
@@ -131,13 +166,13 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryList}>
             {cart?.items?.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
-                <img src={item.productImage || ''} alt={item.productName} />
+                <img src={item.productImage || ''} alt={item.productName}/>
                 <div>
                   <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
                 <div>{formatCurrency(item.totalPrice)}</div>
-                <Divider fullWidth />
+                <Divider fullWidth/>
               </div>
             ))}
           </div>
@@ -156,15 +191,15 @@ const CheckoutPage: React.FC = () => {
             <span>
               {t('checkout.shipping')}{' '}
               {quote?.freeShipping && (
-                <Chip label={t('checkout.freeShippingApplied')} appearance="success" size="small" />
+                <Chip label={t('checkout.freeShippingApplied')} appearance="success" size="small"/>
               )}
             </span>
             <span>{shippingCost == null ? '-' : formatCurrency(shippingCost)}</span>
           </div>
-          <Divider className="bts-marginBl" />
+          <Divider className="bts-marginBl"/>
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>{t('checkout.total')}</span>
-            <span>{isQuoting ? <BouncingDotsLoader size="small" /> : formatCurrency(total)}</span>
+            <span>{isQuoting ? <BouncingDotsLoader size="small"/> : formatCurrency(total)}</span>
           </div>
         </Card>
       </div>
