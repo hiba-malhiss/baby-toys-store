@@ -288,7 +288,11 @@
     "coupon": "القسيمة",
     "discount": "الخصم",
     "shipping": "الشحن",
-    "total": "الإجمالي"
+    "total": "الإجمالي",
+    "confirmHeader": "تأكيد",
+    "confirmCancel": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
+    "confirmYes": "نعم",
+    "confirmNo": "لا"
   },
   "checkout": {
     "shippingInfo": "معلومات الشحن",

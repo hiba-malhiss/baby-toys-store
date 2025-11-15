@@ -19,10 +19,11 @@ interface OrderProductCardProps {
   onBuyAgain: (product: ProductLite) => void;
   onAddReview: (item: OrderItem) => void;
   onCancel?: () => void;
+  isCancelling?: boolean;
   order: Order;
 }
 
-const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderProductCardProps) => {
+const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel, isCancelling }: OrderProductCardProps) => {
   const formatCurrency = useCurrencyFormatter();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
@@ -38,7 +39,14 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel }: OrderPro
           className={styles.orderCardStatus}
         />
         {order.status === 'pending' && onCancel && (
-          <Button appearance="outline" size="small" onClick={onCancel} className="bts-marginLauto">
+          <Button
+            appearance="outline"
+            size="small"
+            onClick={onCancel}
+            className="bts-marginLauto"
+            isLoading={!!isCancelling}
+            isDisabled={!!isCancelling}
+          >
             {t('orders.cancel')}
           </Button>
         )}

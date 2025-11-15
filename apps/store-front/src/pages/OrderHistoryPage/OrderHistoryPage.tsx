@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { useIsFetching } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { ViewSwitcher, NoDataFound } from '@baby-toys/ui-kit';
+import { ViewSwitcher, NoDataFound, ConfirmDialog } from '@baby-toys/ui-kit';
 import { useAuth } from '../../context/AuthContext';
 import { useAddToCart } from '../../api/cartApi';
 import { useCartStore } from '../../store/useCartStore';
@@ -35,6 +36,18 @@ const OrderHistoryPage: React.FC = () => {
     sortDirection: 'DESC',
   });
   const cancelMutation = useCancelMyOrder();
+  const [cancelingId, setCancelingId] = useState<string | null>(null);
+  const [confirmOrderId, setConfirmOrderId] = useState<string | null>(null);
+  const [awaitingRefetchForId, setAwaitingRefetchForId] = useState<string | null>(null);
+  const isOrdersRefetching = useIsFetching({ queryKey: ['customer-orders-normalized'] }) > 0;
+
+  // When refetch completes after a cancel, clear loading state
+  useEffect(() => {
+    if (!isOrdersRefetching && awaitingRefetchForId && cancelingId === awaitingRefetchForId) {
+      setCancelingId(null);
+      setAwaitingRefetchForId(null);
+    }
+  }, [isOrdersRefetching, awaitingRefetchForId, cancelingId]);
 
   const items = useMemo(() => data?.content ?? [], [data]);
   const totalSize = data?.totalElements ?? 0;
@@ -66,9 +79,13 @@ const OrderHistoryPage: React.FC = () => {
               onAddReview={(item) => setReviewDialog({ open: true, item })}
               onCancel={
                 order.status === 'pending'
-                  ? () => cancelMutation.mutate(Number(order.id))
+                  ? () => {
+                      if (cancelingId) return; // prevent concurrent
+                      setConfirmOrderId(order.id);
+                    }
                   : undefined
               }
+              isCancelling={cancelingId === order.id}
             />
           ))}
           page={page}
@@ -85,6 +102,31 @@ const OrderHistoryPage: React.FC = () => {
         open={!!reviewDialog}
         onClose={() => setReviewDialog(null)}
         item={reviewDialog?.item}
+      />
+
+      {/* Confirmation modal for cancel */}
+      <ConfirmDialog
+        visible={!!confirmOrderId}
+        header={t('orders.confirmHeader', { defaultValue: 'Confirmation' })}
+        message={t('orders.confirmCancel', { defaultValue: 'Are you sure you want to cancel this order?' })}
+        confirmLabel={t('orders.confirmYes', { defaultValue: 'Yes' })}
+        cancelLabel={t('orders.confirmNo', { defaultValue: 'No' })}
+        onCancel={() => setConfirmOrderId(null)}
+        onConfirm={async () => {
+          const id = confirmOrderId;
+          if (!id) return;
+          setConfirmOrderId(null);
+          // Defensive: ensure we only cancel pending
+          const target = items.find((o) => o.id === id);
+          if (!target || target.status !== 'pending') return;
+          setCancelingId(id);
+          try {
+            await cancelMutation.mutateAsync(Number(id));
+          } finally {
+            // Keep button loading until the orders refetch completes
+            setAwaitingRefetchForId(id);
+          }
+        }}
       />
     </PageContainer>
   );

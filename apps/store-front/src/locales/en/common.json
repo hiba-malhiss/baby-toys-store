@@ -155,7 +155,11 @@
     "coupon": "Coupon",
     "discount": "Discount",
     "shipping": "Shipping",
-    "total": "Total"
+    "total": "Total",
+    "confirmHeader": "Confirmation",
+    "confirmCancel": "Are you sure you want to cancel this order?",
+    "confirmYes": "Yes",
+    "confirmNo": "No"
   },
   "wishlist": {
     "header": "My Wish List",
