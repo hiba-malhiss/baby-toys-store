@@ -186,6 +186,7 @@
   display: block;
   min-width: 200px;
   max-height: 280px;
+  max-width: 75vw;
   overflow-y: auto;
   padding: 4px 0;
   z-index: $z-popover;
