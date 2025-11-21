@@ -6,6 +6,8 @@ import { faPen } from '@fortawesome/free-solid-svg-icons';
 import { useProduct } from '../../api/productApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './product-view-page.module.scss';
+import KPIWithTooltip from '../../components/KPIWithTooltip/KPIWithTooltip';
+import { Tooltips } from '../../constants/tooltips';
 
 const StatRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, value }) => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8 }}>
@@ -83,9 +85,21 @@ const ProductViewPage: React.FC = () => {
         <div className={styles.kpiGrid}>
           <KPI label="Price" value={formatMoney(product?.price)} />
           <KPI label="Cost" value={formatMoney(product?.costPrice)} />
-          <KPI label="Revenue (lifetime)" value={formatMoney(product?.totalRevenue)} />
-          <KPI label="Profit (lifetime)" value={formatMoney(product?.totalProfit)} />
-          <KPI label="Margin" value={formatPercent(product?.profitMargin)} />
+          <KPIWithTooltip
+            label="Revenue (lifetime)"
+            tooltip={Tooltips.productKPIs.revenueLifetime}
+            value={formatMoney(product?.totalRevenue)}
+          />
+          <KPIWithTooltip
+            label="Profit (lifetime)"
+            tooltip={Tooltips.productKPIs.profitLifetime}
+            value={formatMoney(product?.totalProfit)}
+          />
+          <KPIWithTooltip
+            label="Margin"
+            tooltip={Tooltips.productKPIs.margin}
+            value={formatPercent(product?.profitMargin)}
+          />
         </div>
 
         {/* Content grid */}

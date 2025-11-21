@@ -106,7 +106,13 @@ const CouponsPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading level="h1">Coupons</Heading>
+          <Flex direction="vertical" spacing="s">
+            <Heading level="h1">Coupons</Heading>
+            <Heading level="h4" appearance="light">
+              Single coupon per order. Supports fixed amount or percentage (with optional max discount),
+              minimum order amount, validity dates, and usage limits per code.
+            </Heading>
+          </Flex>
           <Flex align="center" spacing="xl">
             <StringInput
               placeholder="Search by code..."

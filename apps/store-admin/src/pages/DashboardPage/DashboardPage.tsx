@@ -1,6 +1,8 @@
 import React, { useMemo } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Heading, Card, BouncingDotsLoader, KPI } from '@baby-toys/ui-kit';
+import KPIWithTooltip from '../../components/KPIWithTooltip/KPIWithTooltip';
+import { Tooltips } from '../../constants/tooltips';
 import { useAdminDashboard } from '../../api/dashboardApi';
 import styles from './dashboard-page.module.scss';
 import { Line, Bar, Doughnut } from 'react-chartjs-2';
@@ -138,8 +140,9 @@ const DashboardPage: React.FC = () => {
             <KPI label="Total Products" value={data.totalProducts} />
             <KPI label="Total Orders" value={data.totalOrders} />
             <KPI label="Pending Orders" value={data.pendingOrders} />
-            <KPI
+            <KPIWithTooltip
               label="Revenue (This Month)"
+              tooltip={Tooltips.dashboard.revenueThisMonth}
               value={`${currency.symbol}${data.revenueThisMonth}`}
             />
             <KPI label="Total Customers" value={data.totalCustomers} />

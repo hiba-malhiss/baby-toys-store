@@ -4,8 +4,11 @@ import { useAdminOrders } from '../../api/ordersApi';
 import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
-import { Chip, Flex, Button } from '@baby-toys/ui-kit';
+import { Chip, Flex, Button, Tooltip } from '@baby-toys/ui-kit';
 import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Tooltips } from '../../constants/tooltips';
 
 export const useOrdersPage = () => {
   const navigate = useNavigate();
@@ -49,6 +52,17 @@ export const useOrdersPage = () => {
     setPageSize(newPageSize);
   }, []);
 
+  const HeaderWithTooltip: React.FC<{ label: string; tip: string }> = ({ label, tip }) => (
+    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+      <span>{label}</span>
+      <Tooltip position="top" content={tip}>
+        <span>
+          <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }} />
+        </span>
+      </Tooltip>
+    </span>
+  );
+
   const columns = useMemo(
     () => [
       { field: 'orderNumber', header: 'Order #', sortable: true },
@@ -84,13 +98,13 @@ export const useOrdersPage = () => {
       },
       {
         field: 'totalProfit',
-        header: 'Profit',
+        header: <HeaderWithTooltip label="Profit" tip={Tooltips.orderHeaders.profit} />,
         sortable: false,
         body: (row: Order) => (row.totalProfit ? formatNumber(row.totalProfit) : '-'),
       },
       {
         field: 'profitMargin',
-        header: 'Margin',
+        header: <HeaderWithTooltip label="Margin" tip={Tooltips.orderHeaders.margin} />,
         sortable: false,
         body: (row: Order) =>
           row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',

@@ -74,9 +74,11 @@ const Tooltip = ({
         withArrow
         size="medium"
         appearance="dark"
-        width="max-content"
+        width="auto"
       >
-        {content}
+        <div style={{ maxWidth: 200, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+          {content}
+        </div>
       </Popover>
     </>
   );

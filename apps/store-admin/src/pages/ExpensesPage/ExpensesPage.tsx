@@ -44,7 +44,13 @@ const ExpensesPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>Expenses</Heading>
+          <Flex direction="vertical" spacing="s">
+            <Heading>Expenses</Heading>
+            <Heading level="h4" appearance="light">
+              Admin-recorded operating costs. Expenses are aggregated by month and deducted from
+              gross profit (Revenue − COGS) to compute net profit.
+            </Heading>
+          </Flex>
           <Flex spacing="s" align="center">
             <Calendar
               value={moment(yearMonth + '-01', 'YYYY-MM-DD') as any}
