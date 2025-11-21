@@ -9,14 +9,48 @@ A modern, modular, and fully customizable React + TypeScript template for a baby
 
 ## Features
 
-- ⚛️ **React 19** with TypeScript
-- ⚡ **Vite** for fast development and builds
-- 🎨 **SCSS Modules** with [SUIT CSS](https://suitcss.github.io/) naming convention
-- 🧩 **Component-based architecture** (atomic design)
-- 🗂️ **Centralized mock data** for easy prototyping
-- 🧹 **Consistent folder and file naming**
-- 🛠️ **ESLint & Prettier** for code quality
-- 🌍 **StoreConfigurationContext** for global currency and shipping settings
+### Product discovery
+- Browse products (grid/list, pagination)
+- Search products (keyword)
+- Filter products: category, brand, color, material, price range, discounts, on sale, in‑stock
+- Sort products: Featured, Best Seller, New Arrivals, Price (low→high), Price (high→low)
+- Product details: gallery, share (WhatsApp/Facebook), copy product number
+
+### Wishlist & Cart
+- Wishlist: add/remove items, view wishlist
+- Cart: add/remove/update quantity, move to wishlist
+- Shipping cart drawer: quick access after add-to-cart
+- Free shipping indicator: threshold prompt and unlocked banner
+
+### Checkout
+- Shipping information form
+- Select shipping option
+- Apply coupon
+- Order summary and totals
+- Place order as guest or authenticated user
+
+### Orders
+- Order history with pagination
+- Filter orders by month (YYYY‑MM)
+- Show 2 items per order with expand/collapse
+- Cancel order when status is Pending
+- Buy Again from previous orders
+
+### Reviews
+- Add/edit review per item only after status Delivered (within allowed window)
+
+### Authentication & Security
+- Register, login, logout (JWT access/refresh)
+- Email verification flow
+- Password reset flow
+
+### Communication & Content
+- Contact us form (send message)
+- Policies pages: Return, Shipping, Cancellation
+
+### Internationalization & UI
+- Localization: English and Arabic
+- Responsive UI: mobile and desktop
 
 ---
 
