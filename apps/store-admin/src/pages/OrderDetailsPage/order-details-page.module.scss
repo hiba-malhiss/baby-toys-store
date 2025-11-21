@@ -10,6 +10,10 @@
 
   &-pageContent {
     align-items: flex-start;
+
+    > * {
+      flex-shrink: 0;
+    }
   }
 
   &-status {

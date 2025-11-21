@@ -13,11 +13,13 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
         <span>No address</span>
       ) : (
         <Flex direction="vertical" spacing="m">
-          <Flex justify="between" spacing="m">
-            <strong>Name</strong>
-            <span>
-              {(a.firstName || '-') + ' ' + (a.lastName || '-')}
-            </span>
+          <Flex justify="between" spacing="s">
+            <strong>First Name</strong>
+            <span>{a.firstName || '-'}</span>
+          </Flex>
+          <Flex justify="between" spacing="s">
+            <strong>Last Name</strong>
+            <span>{a.lastName || '-'}</span>
           </Flex>
           <Flex justify="between" spacing="s">
             <strong>Town</strong>
@@ -35,18 +37,14 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
             <strong>Phone Number</strong>
             <span>{a.phoneNumber || '-'}</span>
           </Flex>
-          {a.secondPhoneNumber && (
-            <Flex justify="between" spacing="s">
-              <strong>Second Phone Number</strong>
-              <span>{a.secondPhoneNumber}</span>
-            </Flex>
-          )}
-          {a.email && (
-            <Flex justify="between" spacing="s">
-              <strong>Email</strong>
-              <span>{a.email}</span>
-            </Flex>
-          )}
+          <Flex justify="between" spacing="s">
+            <strong>Second Phone Number</strong>
+            <span>{a.secondPhoneNumber || '-'}</span>
+          </Flex>
+          <Flex justify="between" spacing="s">
+            <strong>Email</strong>
+            <span>{a.email || '-'}</span>
+          </Flex>
         </Flex>
       )}
     </Card>
