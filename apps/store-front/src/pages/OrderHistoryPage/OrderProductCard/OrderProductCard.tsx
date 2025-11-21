@@ -1,8 +1,10 @@
 import styles from './order-product-card.module.scss';
+import { useState } from 'react';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { Button, Card, Chip, Image } from '@baby-toys/ui-kit';
+import { faCircleArrowDown, faCircleArrowUp } from '@fortawesome/free-solid-svg-icons';
 import type { Order, OrderItem } from '../../../api/ordersApi.ts';
 import { useTranslation } from 'react-i18next';
 
@@ -27,6 +29,10 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel, isCancelli
   const formatCurrency = useCurrencyFormatter();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
+
+  const [expanded, setExpanded] = useState(false);
+  const items = order.cartItems || [];
+  const visibleItems = expanded ? items : items.slice(0, 2);
 
   return (
     <Card fullWidth size="small" className={styles.orderCard}>
@@ -53,7 +59,7 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel, isCancelli
       </header>
 
       <div>
-        {order.cartItems.map((item) => (
+        {visibleItems.map((item) => (
           <div key={item.productId} className={styles.orderCardCartItem}>
             <Image
               src={item.product.mainImage}
@@ -94,6 +100,20 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel, isCancelli
             </div>
           </div>
         ))}
+        {items.length > 2 && (
+          <div className="bts-marginTs">
+            <Button
+              appearance="link"
+              color="primary"
+              leftIcon={expanded ? faCircleArrowUp : faCircleArrowDown}
+              onClick={() => setExpanded((v) => !v)}
+            >
+              {expanded
+                ? t('orders.showLess', { defaultValue: 'Show less' })
+                : t('orders.showMore', { defaultValue: 'Show more ({{count}})', count: items.length - 2 })}
+            </Button>
+          </div>
+        )}
       </div>
 
       <footer className={styles.orderCardFooter}>

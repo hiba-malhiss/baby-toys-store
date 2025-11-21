@@ -308,7 +308,9 @@
     "confirmYes": "نعم",
     "confirmNo": "لا",
     "filterByMonth": "تصفية حسب الشهر",
-    "clearMonth": "مسح"
+    "clearMonth": "مسح",
+    "showMore": "عرض المزيد ({{count}})",
+    "showLess": "عرض أقل"
   },
   "checkout": {
     "shippingInfo": "معلومات الشحن",

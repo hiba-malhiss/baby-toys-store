@@ -175,7 +175,9 @@
     "confirmYes": "Yes",
     "confirmNo": "No",
     "filterByMonth": "Filter by month",
-    "clearMonth": "Clear"
+    "clearMonth": "Clear",
+    "showMore": "Show more ({{count}})",
+    "showLess": "Show less"
   },
   "wishlist": {
     "header": "My Wish List",
