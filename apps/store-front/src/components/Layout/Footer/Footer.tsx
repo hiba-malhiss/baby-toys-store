@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
-import { Button, Flex, Heading } from '@baby-toys/ui-kit';
+import { Button, Flex, Heading, Tooltip } from '@baby-toys/ui-kit';
 import {
   footerInfoConfig,
   exploreLinks,
@@ -16,6 +16,10 @@ const Footer = () => {
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
   const { t } = useTranslation('common');
+  const tooltipKeyByIcon: Record<string, string> = {
+    'whatsapp': 'product.tooltips.shareWhatsapp',
+    'facebook-f': 'product.tooltips.shareFacebook',
+  };
   const footerInfo = useMemo(
     () => Object.entries(settings?.contact || {}).map(([id, content]) => ({ id, content })),
     [settings?.contact]
@@ -24,17 +28,23 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <Flex direction="vertical" className={styles.footerLogo}>
-        <img src="/assets/kit-images/logo.png" alt="logo" />
+        <img src="/assets/kit-images/logo.png" alt="logo"/>
         <p className={styles.footerDescription}>{t('footer.description')}</p>
         <Flex spacing="xl">
           {socialMediaLinks.map(({ icon }) => (
-            <Button
+            <Tooltip
               key={icon.iconName}
-              appearance="filled"
-              color="accent"
-              leftIcon={icon}
-              onClick={() => handleFooterSocialClick(icon.iconName)}
-            />
+              content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', {
+                defaultValue: tooltipKeyByIcon[icon.iconName]
+              })}
+            >
+              <Button
+                appearance="filled"
+                color="accent"
+                leftIcon={icon}
+                onClick={() => handleFooterSocialClick(icon.iconName)}
+              />
+            </Tooltip>
           ))}
         </Flex>
       </Flex>
@@ -66,7 +76,7 @@ const Footer = () => {
         <Flex direction="vertical" spacing="s" justify="center">
           {footerInfo.map((item) => {
             const config = footerInfoConfig[item.id] || {};
-            if (config.isLink && config.label) {
+            if(config.isLink && config.label) {
               const dynamicLink = linkPrefixes[item.id]
                 ? `${linkPrefixes[item.id]}${item.content}`
                 : config.link;

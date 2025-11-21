@@ -49,6 +49,14 @@
     "productNumber": "رقم المنتج",
     "productNumberCopied": "تم نسخ رقم المنتج",
     "copyProductNumber": "نسخ رقم المنتج",
+    "tooltips": {
+      "share": "مشاركة",
+      "shareWhatsapp": "مشاركة عبر واتساب",
+      "shareFacebook": "مشاركة عبر فيسبوك",
+      "addToFavorites": "إضافة إلى المفضلة",
+      "removeFromFavorites": "إزالة من المفضلة",
+      "copyLink": "نسخ رابط المنتج"
+    },
     "tabs": {
       "description": "الوصف",
       "reviews": "المراجعات",

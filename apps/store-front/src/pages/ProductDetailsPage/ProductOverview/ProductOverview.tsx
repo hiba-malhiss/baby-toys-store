@@ -9,6 +9,7 @@ import {
   Card,
   useToast,
   CopyToClipboardButton,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
@@ -34,6 +35,11 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   const toast = useToast();
   const formatCurrency = useCurrencyFormatter(symbol);
   const { t } = useTranslation('common');
+
+  const tooltipKeyByIcon: Record<string, string> = {
+    'whatsapp': 'product.tooltips.shareWhatsapp',
+    'facebook-f': 'product.tooltips.shareFacebook',
+  };
 
   // Use favorite hook here for this product
   const { isFavorite, isLoading, toggleFavorite } = useWishlist(product);
@@ -80,13 +86,15 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
         {product.productSku && (
           <Flex className={styles.productOverviewSkuLine}>
             <span>{t('product.productNumber', { defaultValue: 'Product Number' })}: {product.productSku}</span>
-            <CopyToClipboardButton
-              value={product.productSku}
-              successMessage={t('product.productNumberCopied', { defaultValue: 'Product number copied' })}
-              ariaLabel={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
-              appearance="link"
-              withoutPadding
-            />
+            <Tooltip content={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}>
+              <CopyToClipboardButton
+                value={product.productSku}
+                successMessage={t('product.productNumberCopied', { defaultValue: 'Product number copied' })}
+                ariaLabel={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
+                appearance="link"
+                withoutPadding
+              />
+            </Tooltip>
             <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} className="bts-marginLm"/>
           </Flex>
         )}
@@ -111,14 +119,20 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
           <span className="bts-marginRs"> {t('common.share')}</span>
           {socialMediaLinks.map(({ icon }) => (
-            <Button
-              size="small"
-              color="secondary"
+            <Tooltip
               key={icon.iconName}
-              leftIcon={icon}
-              isRounded
-              onClick={() => handleSocialShare(icon.iconName)}
-            />
+              content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', {
+                defaultValue: 'Share',
+              })}
+            >
+              <Button
+                size="small"
+                color="secondary"
+                leftIcon={icon}
+                isRounded
+                onClick={() => handleSocialShare(icon.iconName)}
+              />
+            </Tooltip>
           ))}
         </Flex>
         <Flex
@@ -151,17 +165,31 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
               ? t('common.outOfStock', { defaultValue: 'Out of stock' })
               : t('product.addToCart')}
           </Button>
-          <Button
-            leftIcon={faHeart}
-            appearance="outline"
-            color="icon"
-            isSelected={isFavorite}
-            isLoading={isLoading}
-            onClick={() => toggleFavorite()}
-            aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-          />
+          <Tooltip
+            content={
+              isFavorite
+                ? t('product.tooltips.removeFromFavorites', { defaultValue: 'Remove from favorites' })
+                : t('product.tooltips.addToFavorites', { defaultValue: 'Add to favorites' })
+            }
+          >
+            <Button
+              leftIcon={faHeart}
+              appearance="outline"
+              color="icon"
+              isSelected={isFavorite}
+              isLoading={isLoading}
+              onClick={() => toggleFavorite()}
+              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+            />
+          </Tooltip>
 
-          <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
+          <Tooltip content={t('product.tooltips.copyLink', { defaultValue: 'Copy product link' })}>
+            <Button
+              leftIcon={faRightLeft}
+              appearance="outline"
+              onClick={handleCopyUrl}
+            />
+          </Tooltip>
         </Flex>
         {!!product.details?.length && (
           <Card fullWidth size="small" header={t('product.details')}>

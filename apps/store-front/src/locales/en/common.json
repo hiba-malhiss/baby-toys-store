@@ -45,6 +45,14 @@
     "productNumber": "Product Number",
     "productNumberCopied": "Product number copied",
     "copyProductNumber": "Copy product number",
+    "tooltips": {
+      "share": "Share",
+      "shareWhatsapp": "Share on WhatsApp",
+      "shareFacebook": "Share on Facebook",
+      "addToFavorites": "Add to favorites",
+      "removeFromFavorites": "Remove from favorites",
+      "copyLink": "Copy product link"
+    },
     "tabs": {
       "description": "Description",
       "reviews": "Reviews",
