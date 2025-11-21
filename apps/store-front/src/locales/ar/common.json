@@ -46,6 +46,9 @@
     "details": "تفاصيل المنتج",
     "recentShoots": "أحدث جلسات التصوير",
     "checkGallery": "عرض المعرض",
+    "productNumber": "رقم المنتج",
+    "productNumberCopied": "تم نسخ رقم المنتج",
+    "copyProductNumber": "نسخ رقم المنتج",
     "tabs": {
       "description": "الوصف",
       "reviews": "المراجعات",

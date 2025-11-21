@@ -79,11 +79,11 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
         </Heading>
         {product.productSku && (
           <Flex className={styles.productOverviewSkuLine}>
-            <span>SKU: {product.productSku}</span>
+            <span>{t('product.productNumber', { defaultValue: 'Product Number' })}: {product.productSku}</span>
             <CopyToClipboardButton
               value={product.productSku}
-              successMessage="SKU copied"
-              ariaLabel="Copy SKU"
+              successMessage={t('product.productNumberCopied', { defaultValue: 'Product number copied' })}
+              ariaLabel={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
               appearance="link"
               withoutPadding
             />

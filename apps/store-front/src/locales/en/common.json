@@ -42,6 +42,9 @@
     "details": "Item details",
     "recentShoots": "Recent photo Shoots",
     "checkGallery": "Check gallery",
+    "productNumber": "Product Number",
+    "productNumberCopied": "Product number copied",
+    "copyProductNumber": "Copy product number",
     "tabs": {
       "description": "Description",
       "reviews": "Reviews",
