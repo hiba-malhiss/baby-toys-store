@@ -15,6 +15,7 @@ import MaterialsPage from './pages/MaterialsPage/MaterialsPage';
 import CustomersPage from './pages/CustomersPage/CustomersPage';
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
+import ProductAnalyticsPage from './pages/ProductAnalyticsPage/ProductAnalyticsPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import ShippingOptionsPage from './pages/ShippingOptionsPage/ShippingOptionsPage';
@@ -212,6 +213,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <HomePageContent />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/analytics/products"
+          element={
+            <PrivateRoute>
+              <ProductAnalyticsPage />
             </PrivateRoute>
           }
         />

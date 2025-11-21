@@ -24,6 +24,12 @@ const menuItems = [
       { label: 'Expenses', route: '/expenses' },
     ],
   },
+  {
+    label: 'Analytics',
+    items: [
+      { label: 'Product Analytics', route: '/analytics/products' },
+    ],
+  },
   { label: 'Orders', route: '/orders' },
   { label: 'Coupons', route: '/coupons' },
   { label: 'Customers', route: '/customers' },
