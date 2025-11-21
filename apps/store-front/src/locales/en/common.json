@@ -173,7 +173,9 @@
     "confirmHeader": "Confirmation",
     "confirmCancel": "Are you sure you want to cancel this order?",
     "confirmYes": "Yes",
-    "confirmNo": "No"
+    "confirmNo": "No",
+    "filterByMonth": "Filter by month",
+    "clearMonth": "Clear"
   },
   "wishlist": {
     "header": "My Wish List",

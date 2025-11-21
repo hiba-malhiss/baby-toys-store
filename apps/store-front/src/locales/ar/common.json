@@ -306,7 +306,9 @@
     "confirmHeader": "تأكيد",
     "confirmCancel": "هل أنت متأكد أنك تريد إلغاء هذا الطلب؟",
     "confirmYes": "نعم",
-    "confirmNo": "لا"
+    "confirmNo": "لا",
+    "filterByMonth": "تصفية حسب الشهر",
+    "clearMonth": "مسح"
   },
   "checkout": {
     "shippingInfo": "معلومات الشحن",

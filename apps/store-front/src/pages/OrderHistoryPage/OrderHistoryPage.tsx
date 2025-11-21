@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import moment from 'moment';
 import { useIsFetching } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import { ViewSwitcher, NoDataFound, ConfirmDialog } from '@baby-toys/ui-kit';
+import { ViewSwitcher, NoDataFound, ConfirmDialog, Calendar, Flex, Button } from '@baby-toys/ui-kit';
 import { useAuth } from '../../context/AuthContext';
 import { useAddToCart } from '../../api/cartApi';
 import { useCartStore } from '../../store/useCartStore';
@@ -23,17 +24,19 @@ const OrderHistoryPage: React.FC = () => {
   const [reviewDialog, setReviewDialog] = useState<{ open: boolean; item: OrderItem } | null>(null);
 
   useEffect(() => {
-    if (!isAuthenticated || !user) {
+    if(!isAuthenticated || !user) {
       navigate('/');
     }
   }, [isAuthenticated, user, navigate]);
 
   const [page, setPage] = useState(1);
+  const [month, setMonth] = useState<string>(''); // format YYYY-MM
   const { data, isLoading } = useMyOrdersNormalized({
     page,
     size: PAGE_SIZE,
     sortBy: 'createdAt',
     sortDirection: 'DESC',
+    month: month || undefined,
   });
   const cancelMutation = useCancelMyOrder();
   const [cancelingId, setCancelingId] = useState<string | null>(null);
@@ -43,7 +46,7 @@ const OrderHistoryPage: React.FC = () => {
 
   // When refetch completes after a cancel, clear loading state
   useEffect(() => {
-    if (!isOrdersRefetching && awaitingRefetchForId && cancelingId === awaitingRefetchForId) {
+    if(!isOrdersRefetching && awaitingRefetchForId && cancelingId === awaitingRefetchForId) {
       setCancelingId(null);
       setAwaitingRefetchForId(null);
     }
@@ -52,7 +55,7 @@ const OrderHistoryPage: React.FC = () => {
   const items = useMemo(() => data?.content ?? [], [data]);
   const totalSize = data?.totalElements ?? 0;
 
-  const handleBuyAgain = async (product: any) => {
+  const handleBuyAgain = async(product: any) => {
     await addToCartMutation.mutateAsync({
       productId: Number(product?.id || product?.productId || 0),
       quantity: 1,
@@ -60,8 +63,35 @@ const OrderHistoryPage: React.FC = () => {
     openShippingCartDrawer();
   };
 
+  const selectedMoment = useMemo(() => (month ? moment(month, 'YYYY-MM') : moment()), [month]);
+
   return (
     <PageContainer header={t('orders.header')}>
+      <Flex className="bts-marginBxl" spacing="s" align="center">
+        <label className="bts-marginRe">{t('orders.filterByMonth', { defaultValue: 'Filter by month' })}</label>
+        <div style={{ maxWidth: 280, display: 'inline-block' }}>
+          <Calendar
+            typeView="month"
+            value={selectedMoment}
+            disableFutureDates
+            fullWidth
+            getLabel={() => (month ? selectedMoment.format('MMM YYYY') : '')}
+            onChange={(val) => {
+              const v = Array.isArray(val) ? val[0] : val;
+              if(v && v.isValid && v.isValid()) {
+                setMonth(v.format('YYYY-MM'));
+                setPage(1);
+              }
+            }}
+          />
+        </div>
+        {month && (
+          <Button color="secondary-light" onClick={() => {
+            setMonth('');
+            setPage(1);
+          }}>{t('filters.reset', { defaultValue: 'Reset' })}</Button>
+        )}
+      </Flex>
       {!isLoading && items.length === 0 ? (
         <NoDataFound
           icon={faBoxOpen}
@@ -80,9 +110,9 @@ const OrderHistoryPage: React.FC = () => {
               onCancel={
                 order.status === 'pending'
                   ? () => {
-                      if (cancelingId) return; // prevent concurrent
-                      setConfirmOrderId(order.id);
-                    }
+                    if(cancelingId) return; // prevent concurrent
+                    setConfirmOrderId(order.id);
+                  }
                   : undefined
               }
               isCancelling={cancelingId === order.id}
@@ -112,13 +142,13 @@ const OrderHistoryPage: React.FC = () => {
         confirmLabel={t('orders.confirmYes', { defaultValue: 'Yes' })}
         cancelLabel={t('orders.confirmNo', { defaultValue: 'No' })}
         onCancel={() => setConfirmOrderId(null)}
-        onConfirm={async () => {
+        onConfirm={async() => {
           const id = confirmOrderId;
-          if (!id) return;
+          if(!id) return;
           setConfirmOrderId(null);
           // Defensive: ensure we only cancel pending
           const target = items.find((o) => o.id === id);
-          if (!target || target.status !== 'pending') return;
+          if(!target || target.status !== 'pending') return;
           setCancelingId(id);
           try {
             await cancelMutation.mutateAsync(Number(id));

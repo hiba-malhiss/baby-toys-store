@@ -140,14 +140,15 @@ export function useMyOrdersNormalized(params: {
   size: number;
   sortBy?: string;
   sortDirection?: 'ASC' | 'DESC';
+  month?: string; // format: YYYY-MM
 }) {
-  const { page, size, sortBy = 'createdAt', sortDirection = 'DESC' } = params;
+  const { page, size, sortBy = 'createdAt', sortDirection = 'DESC', month } = params;
   return useQuery<Page<Order>>({
-    queryKey: ['customer-orders-normalized', page, size, sortBy, sortDirection],
+    queryKey: ['customer-orders-normalized', page, size, sortBy, sortDirection, month ?? null],
     placeholderData: keepPreviousData,
     queryFn: async () => {
       const { data } = await api.get<{ data: Page<OrderDTO> }>(`/api/customer/orders`, {
-        params: { page: Math.max(0, page - 1), size, sortBy, sortDirection },
+        params: { page: Math.max(0, page - 1), size, sortBy, sortDirection, month },
       });
       const raw = data.data;
       return {
