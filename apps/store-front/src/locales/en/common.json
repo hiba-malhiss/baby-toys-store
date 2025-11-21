@@ -26,6 +26,8 @@
     "reduceToStock": "Only {{count}} left. Please reduce quantity.",
     "reduceQtyGlobal": "Some items exceed available stock. Please reduce quantities to proceed.",
     "reduceToProceed": "Reduce quantities to proceed",
+    "moveToWishlist": "Move to wishlist",
+    "removeAndMoveToWishlist": "Remove and move to wishlist",
     "deleteItemTitle": "Remove item",
     "deleteItemMessage": "Are you sure you want to remove <strong>{{itemName}}</strong> from your cart?",
     "headers": {

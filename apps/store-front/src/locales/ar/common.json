@@ -26,6 +26,8 @@
     "reduceToStock": "المتوفر {{count}} فقط. يرجى تقليل الكمية.",
     "reduceQtyGlobal": "بعض المنتجات تتجاوز الكمية المتاحة. يرجى تقليل الكميات للمتابعة.",
     "reduceToProceed": "قلّل الكميات للمتابعة",
+    "moveToWishlist": "نقل إلى المفضلة",
+    "removeAndMoveToWishlist": "إزالة ونقل إلى المفضلة",
     "deleteItemTitle": "إزالة المنتج",
     "deleteItemMessage": "هل أنت متأكد أنك تريد إزالة <strong>{{itemName}}</strong> من سلة التسوق؟",
     "headers": {

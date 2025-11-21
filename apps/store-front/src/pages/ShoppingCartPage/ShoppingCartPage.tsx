@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import { faBoxOpen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
 import { Button, Card, Divider, Flex, NoDataFound, Text, PriceDisplay, ConfirmDialog, Alert } from '@baby-toys/ui-kit';
 
 import styles from './shopping-cart-page.module.scss';
@@ -12,11 +12,13 @@ import YouMayAlsoLikeSection from '../../components/features/YouMayAlsoLike/YouM
 import CartQuantityInput from '../../components/shared/CartQuantityInput';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useCartQuery, useRemoveFromCart } from '../../api/cartApi';
+import { useAddToWishlist } from '../../api/wishlistApi';
 
 const ShoppingCartPage = () => {
   const { t } = useTranslation('common');
   const { data: cart, isLoading } = useCartQuery();
   const removeMutation = useRemoveFromCart();
+  const addToWishlist = useAddToWishlist();
   const navigate = useNavigate();
   const [itemToDelete, setItemToDelete] = useState<{ id: number; name: string } | null>(null);
   const { data: settings } = useStoreSettings();
@@ -33,6 +35,15 @@ const ShoppingCartPage = () => {
     if(itemToDelete) {
       removeMutation.mutate({ itemId: itemToDelete.id });
       setItemToDelete(null);
+    }
+  };
+
+  const handleMoveToWishlist = async (item: { id: number; productId: number; productName: string }) => {
+    try {
+      await addToWishlist.mutateAsync({ productId: item.productId });
+      removeMutation.mutate({ itemId: item.id });
+    } catch (e) {
+      // noop; UI kit toasts handled inside hooks if any
     }
   };
 
@@ -124,12 +135,25 @@ const ShoppingCartPage = () => {
               <div
                 className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}>{formatCurrency(item.totalPrice)}</div>
               <div>
-                <Button
-                  leftIcon={faTrashAlt}
-                  appearance="link"
-                  color="secondary"
-                  onClick={() => setItemToDelete({ id: Number(item.id), name: item.productName })}
-                />
+                <Flex spacing="xs" align="center">
+                  <Button
+                    appearance="link"
+                    color="highlighted"
+                    withoutPadding
+                    onClick={() => setItemToDelete({ id: Number(item.id), name: item.productName })}
+                  >
+                    {t('common.delete', { defaultValue: 'Delete' })}
+                  </Button>
+                  <span>|</span>
+                  <Button
+                    appearance="link"
+                    color="highlighted"
+                    withoutPadding
+                    onClick={() => handleMoveToWishlist({ id: Number(item.id), productId: Number(item.productId), productName: item.productName })}
+                  >
+                    {t('cart.removeAndMoveToWishlist', { defaultValue: 'Remove and move to wishlist' })}
+                  </Button>
+                </Flex>
               </div>
             </div>
           ))}
