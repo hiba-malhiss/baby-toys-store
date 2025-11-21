@@ -20,7 +20,7 @@ const WishListPage = () => {
   const [page, setPage] = useState(1);
 
   const [categoryId, setCategoryId] = useState<number | null>(null);
-  const [stock, setStock] = useState<'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK'>('ALL');
+  const [stock, setStock] = useState<'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK' | 'ON_SALE'>('ALL');
   const [sortBy, setSortBy] = useState<string>('id');
   const [sortDirection, setSortDirection] = useState<'ASC' | 'DESC'>('DESC');
   const { data: categories = [] } = useCategories();

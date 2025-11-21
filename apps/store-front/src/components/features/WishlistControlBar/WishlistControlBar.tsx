@@ -6,7 +6,7 @@ export type WishlistControls = {
   sortBy: string;
   sortDirection: 'ASC' | 'DESC';
   categoryId: number | null;
-  stock: 'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK';
+  stock: '' | 'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK' | 'ON_SALE';
 };
 
 export type CategoryLite = { id: number; name: string };
@@ -58,13 +58,14 @@ const WishlistControlBar: React.FC<Props> = ({ value, onChange, onReset, categor
         )}
 
         <Select
-          value={value.stock}
+          value={value.stock ?? 'ALL'}
           onChange={(val) => onChange({ ...value, stock: val as WishlistControls['stock'] })}
           placeholder={t('filters.status', { defaultValue: 'Status' })}
         >
-          <Option value="ALL">{t('filters.all', { defaultValue: 'All' })}</Option>
+          <Option value="ALL">{t('filters.status', { defaultValue: 'Status' })}</Option>
           <Option value="IN_STOCK">{t('filters.inStock', { defaultValue: 'In stock' })}</Option>
           <Option value="OUT_OF_STOCK">{t('filters.outOfStock', { defaultValue: 'Out of stock' })}</Option>
+          <Option value="ON_SALE">{t('filters.onSale', { defaultValue: 'On sale' })}</Option>
         </Select>
 
         {onReset && (

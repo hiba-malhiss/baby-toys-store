@@ -12,7 +12,7 @@ export function useMyWishlist(
   sortBy = 'id',
   sortDirection: 'ASC' | 'DESC' = 'DESC',
   categoryId?: number | null,
-  stock: 'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK' = 'ALL'
+  stock: 'ALL' | 'IN_STOCK' | 'OUT_OF_STOCK' | 'ON_SALE' = 'ALL'
 ) {
   const { isAuthenticated } = useAuth();
   const zeroBased = Math.max(0, (page || 1) - 1);

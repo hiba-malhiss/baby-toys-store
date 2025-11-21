@@ -98,7 +98,8 @@
     "material": "Material",
     "price": "Price",
     "dealsAndDiscounts": "Deals & Discounts",
-    "discounts": "Discounts"
+    "discounts": "Discounts",
+    "onSale": "On sale"
   },
   "policies": {
     "header": "Policies",
