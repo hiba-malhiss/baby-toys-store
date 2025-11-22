@@ -16,6 +16,7 @@ export interface ReviewDto {
   status?: ReviewStatus | string;
   productName?: string | null;
   userEmail?: string | null;
+  userPhone?: string | null;
 }
 
 export interface UseAdminReviewsParams {

@@ -96,6 +96,11 @@ const CustomersPage: React.FC = () => {
         body: (row: AdminUser) => `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim() || '-',
       },
       {
+        field: 'phoneNumber',
+        header: 'Phone',
+        body: (row: AdminUser) => row.phoneNumber ?? '-',
+      },
+      {
         field: 'age',
         header: 'Age',
         body: (row: AdminUser) => (row.age ?? '-') as any,

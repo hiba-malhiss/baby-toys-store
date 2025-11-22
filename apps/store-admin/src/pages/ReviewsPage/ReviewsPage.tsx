@@ -90,6 +90,11 @@ export default function ReviewsPage() {
         ),
       },
       {
+        field: 'userPhone',
+        header: 'Phone',
+        body: (row: ReviewDto) => row.userPhone || '-',
+      },
+      {
         field: 'rating',
         header: 'Rating',
         body: (row: ReviewDto) => (
