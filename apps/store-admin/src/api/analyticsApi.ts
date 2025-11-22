@@ -9,6 +9,7 @@ export type ProductAnalyticsRow = {
   viewsCount: number;
   wishlistCount: number;
   addedToCartCount: number;
+  trendingScore: number;
 };
 
 export type PageResponse<T> = {

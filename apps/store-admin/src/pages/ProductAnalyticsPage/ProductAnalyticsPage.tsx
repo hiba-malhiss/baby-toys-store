@@ -1,5 +1,7 @@
 import React from 'react';
-import { Button, StringInput, Flex, Heading, Calendar, Table } from '@baby-toys/ui-kit';
+import { Button, StringInput, Flex, Heading, Calendar, Table, Tooltip } from '@baby-toys/ui-kit';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import moment from 'moment';
 import { type ProductAnalyticsRow } from '../../api/analyticsApi';
@@ -35,6 +37,23 @@ const ProductAnalyticsPage: React.FC = () => {
     { header: 'Views', field: 'viewsCount', sortable: true },
     { header: 'Wishlists', field: 'wishlistCount', sortable: true },
     { header: 'Added To Cart', field: 'addedToCartCount', sortable: true },
+    {
+      header: (
+        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+          <span>Trending Score</span>
+          <Tooltip
+            content="Calculated as: 0.3 × Views + 0.4 × Wishlists + 0.8 × Add to Cart."
+            position="top"
+          >
+            <span>
+              <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }}/>
+            </span>
+          </Tooltip>
+        </span>
+      ),
+      field: 'trendingScore',
+      body: (r: ProductAnalyticsRow) => r.trendingScore.toFixed(2),
+    },
   ];
 
   return (
@@ -55,7 +74,7 @@ const ProductAnalyticsPage: React.FC = () => {
               value={moment(from + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if (!d) return;
+                if(!d) return;
                 const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
                 setFrom(ym);
               }}
@@ -66,7 +85,7 @@ const ProductAnalyticsPage: React.FC = () => {
               value={moment(to + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if (!d) return;
+                if(!d) return;
                 const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
                 setTo(ym);
               }}
