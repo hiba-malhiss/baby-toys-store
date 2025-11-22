@@ -1,14 +1,11 @@
 export interface DashboardStatsResponse {
-  totalOrders: number;
   pendingOrders: number;
   revenueThisMonth: string | number;
-  revenuePrevMonth: string | number;
   revenueMoMPercent: number; // -1..+inf
   aovThisMonth: string | number;
   categoryDistribution: SimpleChart;
   topSellingProducts: SimpleChart;
   salesOverTimeComparison: ComparisonChart;
-  newVsReturningCustomers: NewReturningChart;
   productInterest: ProductInterest;
 }
 
@@ -17,11 +14,7 @@ export interface SimpleChart {
   data: number[];
 }
 
-export interface NewReturningChart {
-  labels: string[];
-  newData: number[];
-  returningData: number[];
-}
+// NewReturningChart removed (not used on admin dashboard)
 
 export interface ComparisonChart {
   labels: string[];
