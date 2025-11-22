@@ -1,7 +1,6 @@
 import api from './axiosConfig';
 import { type AxiosResponse } from 'axios';
-import { useQuery } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
+import { useMutation } from '@tanstack/react-query';
 
 export type ProductAnalyticsRow = {
   productId: number;
@@ -21,19 +20,19 @@ export type PageResponse<T> = {
 };
 
 export type ProductAnalyticsQuery = {
-  productId?: number;
+  query?: string; // product id or SKU as string
   from: string; // YYYY-MM
   to: string;   // YYYY-MM
   page?: number;
   size?: number;
-  sortBy?: 'year' | 'month' | 'productId' | 'viewsCount' | 'wishlistCount' | 'addedToCartCount';
+  sortBy?: 'year' | 'month' | 'viewsCount' | 'wishlistCount' | 'addedToCartCount' | 'productId';
   sortDirection?: 'ASC' | 'DESC';
 };
 
 export async function fetchProductAnalytics(params: ProductAnalyticsQuery): Promise<PageResponse<ProductAnalyticsRow>> {
   const res: AxiosResponse<{ data: PageResponse<ProductAnalyticsRow> }> = await api.get('/api/admin/analytics/products', {
     params: {
-      productId: params.productId,
+      query: params.query,
       from: params.from,
       to: params.to,
       page: params.page ?? 0,
@@ -45,23 +44,8 @@ export async function fetchProductAnalytics(params: ProductAnalyticsQuery): Prom
   return res.data.data;
 }
 
-export function useProductAnalytics() {
-  const [params, setParams] = useState<ProductAnalyticsQuery | null>(null);
-  const query = useQuery({
-    queryKey: ['product-analytics', params],
-    queryFn: async () => {
-      if (!params) throw new Error('Params not set');
-      return fetchProductAnalytics(params);
-    },
-    keepPreviousData: true,
-    enabled: false,
+export function useProductAnalyticsMutation() {
+  return useMutation({
+    mutationFn: (params: ProductAnalyticsQuery) => fetchProductAnalytics(params),
   });
-
-  const run = useCallback(async (next: ProductAnalyticsQuery) => {
-    setParams(next);
-    const res = await query.refetch();
-    return res;
-  }, [query]);
-
-  return { ...query, run };
 }

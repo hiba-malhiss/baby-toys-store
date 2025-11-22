@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { useProductAnalytics, type ProductAnalyticsRow } from '../../api/analyticsApi';
+import { useProductAnalyticsMutation, type ProductAnalyticsRow } from '../../api/analyticsApi';
 
 export type SortOrder = 'asc' | 'desc';
 const rowsPerPage = 50;
@@ -13,13 +13,13 @@ export const useProductAnalyticsPage = () => {
   }, [today]);
 
   // Draft input (used by the UI, does not trigger query until Apply)
-  const [productId, setProductId] = useState<string>('');
+  const [productQuery, setProductQuery] = useState<string>('');
   const [from, setFrom] = useState<string>(sixMonthsAgo);
   const [to, setTo] = useState<string>(thisMonth);
 
   // Snapshot of the last executed params (used by sort/paging)
   const [lastParams, setLastParams] = useState<{
-    productId?: number;
+    query?: string;
     from: string;
     to: string;
     page: number; // 0-based
@@ -32,7 +32,7 @@ export const useProductAnalyticsPage = () => {
   const [sortField, setSortField] = useState<string>('year');
   const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
 
-  const { data, isFetching, run } = useProductAnalytics();
+  const { data, isPending, mutateAsync } = useProductAnalyticsMutation();
 
   const rows: ProductAnalyticsRow[] = data?.content || [];
   const totalItems = data?.totalElements ?? 0;
@@ -43,7 +43,7 @@ export const useProductAnalyticsPage = () => {
     setSortField(nextSortField);
     setSortOrder(nextSortOrder);
     // If we already have a dataset, re-run with same filters
-    if (lastParams) {
+    if(lastParams) {
       const next = {
         ...lastParams,
         page: 0,
@@ -51,13 +51,14 @@ export const useProductAnalyticsPage = () => {
         sortDirection: nextSortOrder.toUpperCase() as 'ASC' | 'DESC',
       };
       setLastParams(next);
-      run(next);
+      mutateAsync(next);
     }
-  };
+  }
 
   const applyFilters = () => {
+    const trimmed = (productQuery || '').trim();
     const next = {
-      productId: productId ? Number(productId) : undefined,
+      query: trimmed || undefined,
       from,
       to,
       page: 0,
@@ -66,23 +67,23 @@ export const useProductAnalyticsPage = () => {
       sortDirection: (sortOrder || 'desc').toUpperCase() as 'ASC' | 'DESC',
     };
     setLastParams(next);
-    run(next);
+    mutateAsync(next);
   };
 
   const setPageWrapped = (newPage: number) => {
-    if (!lastParams) return; // no-op until first Apply
+    if(!lastParams) return; // no-op until first Apply
     const next = {
       ...lastParams,
       page: Math.max(0, newPage - 1),
     };
     setLastParams(next);
-    run(next);
+    mutateAsync(next);
   };
 
   return {
     // Draft input state (used in the UI controls)
-    productId,
-    setProductId,
+    productQuery,
+    setProductQuery,
     from,
     setFrom,
     to,
@@ -94,7 +95,7 @@ export const useProductAnalyticsPage = () => {
     setPage: setPageWrapped,
     rows,
     totalItems,
-    isFetching,
+    isFetching: !!isPending,
     applyFilters,
   };
 };

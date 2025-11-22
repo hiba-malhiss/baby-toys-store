@@ -7,8 +7,8 @@ import { useProductAnalyticsPage } from './useProductAnalyticsPage';
 
 const ProductAnalyticsPage: React.FC = () => {
   const {
-    productId,
-    setProductId,
+    productQuery,
+    setProductQuery,
     from,
     setFrom,
     to,
@@ -47,15 +47,15 @@ const ProductAnalyticsPage: React.FC = () => {
           </Flex>
           <Flex spacing="s" align="center">
             <StringInput
-              value={productId}
-              onChange={(e: any) => setProductId(e)}
-              placeholder="Product id"
+              value={productQuery}
+              onChange={(e: any) => setProductQuery(e)}
+              placeholder="Product ID or SKU"
             />
             <Calendar
               value={moment(from + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if(!d) return;
+                if (!d) return;
                 const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
                 setFrom(ym);
               }}
@@ -66,7 +66,7 @@ const ProductAnalyticsPage: React.FC = () => {
               value={moment(to + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if(!d) return;
+                if (!d) return;
                 const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
                 setTo(ym);
               }}
