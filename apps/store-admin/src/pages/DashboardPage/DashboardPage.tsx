@@ -8,6 +8,7 @@ import { Tooltips } from '../../constants/tooltips';
 import { useAdminDashboard } from '../../api/dashboardApi';
 import styles from './dashboard-page.module.scss';
 import { Line, Bar } from 'react-chartjs-2';
+import ChartDataLabels from 'chartjs-plugin-datalabels';
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -28,7 +29,8 @@ ChartJS.register(
   LineElement,
   BarElement,
   ArcElement,
-  Legend
+  Legend,
+  ChartDataLabels
 );
 
 const ChartCard: React.FC<{ title: React.ReactNode; children: React.ReactNode }> = ({ title, children }) => (
