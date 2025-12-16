@@ -12,7 +12,8 @@
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
     "type-check": "tsc --noEmit",
     "start": "pnpm --filter store-front dev",
-    "start:admin": "pnpm --filter store-admin dev"
+    "start:admin": "pnpm --filter store-admin dev",
+    "build": "pnpm exec vite build"
   },
   "dependencies": {
     "@baby-toys/ui-kit": "workspace:*",

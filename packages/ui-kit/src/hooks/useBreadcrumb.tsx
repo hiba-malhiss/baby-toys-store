@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
-import { BreadcrumbItemData } from '../components';
+import type { BreadcrumbItemData } from '../components';
 
 type BreadcrumbContextType = {
   extraCrumbs: BreadcrumbItemData[] | null;

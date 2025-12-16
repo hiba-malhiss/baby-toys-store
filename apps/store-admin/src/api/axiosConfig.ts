@@ -27,10 +27,12 @@ export function getAccessToken(){
   return inMemoryAccessToken;
 }
 
-// Simple redirect helper
+// Simple redirect helper that respects Vite base (e.g., /admin/)
 function redirectToLogin(){
   if (typeof window !== 'undefined') {
-    window.location.href = '/login';
+    const base = (import.meta as any).env?.BASE_URL || '/';
+    const target = (base.endsWith('/') ? base : base + '/') + 'login';
+    window.location.href = target;
   }
 }
 

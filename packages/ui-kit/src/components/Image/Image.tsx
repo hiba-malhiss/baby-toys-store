@@ -11,7 +11,9 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   disableBaseUrl?: boolean;
 }
 
-export const IMAGE_BASE_URL = 'http://localhost:8080';
+export const IMAGE_BASE_URL =
+  (import.meta as any)?.env?.VITE_API_BASE_URL ||
+  ((import.meta as any)?.env?.DEV ? 'http://localhost:8080' : '');
 
 export const Image: React.FC<ImageProps> = ({
   src,

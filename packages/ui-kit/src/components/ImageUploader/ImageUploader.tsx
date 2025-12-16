@@ -23,7 +23,9 @@ export interface PreviewImage {
 
 const MAX_IMAGES = 10;
 const MAX_FILE_SIZE_MB = 5;
-const BASE_URL = 'http://localhost:8080'; // adjust as needed
+const BASE_URL =
+  (import.meta as any)?.env?.VITE_API_BASE_URL ||
+  ((import.meta as any)?.env?.DEV ? 'http://localhost:8080' : '');
 
 const ImageUploader: React.FC<ImageUploaderProps> = ({
   images = [],

@@ -4,7 +4,9 @@ import { useTranslation } from 'react-i18next';
 const AdminRedirect: React.FC = () => {
   const { t } = useTranslation('common');
   useEffect(() => {
-    window.location.href = 'http://localhost:5173';
+    const configured = import.meta.env.VITE_ADMIN_URL;
+    const fallback = `${window.location.origin}/admin`;
+    window.location.href = configured || fallback;
   }, []);
 
   return <div>{t('admin.redirecting')}</div>;
