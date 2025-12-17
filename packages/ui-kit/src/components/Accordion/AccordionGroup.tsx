@@ -16,6 +16,7 @@ interface AccordionGroupProps {
   allowMultipleOpen?: boolean; // optional, default false
   fullWidth?: boolean;
   unstyled?: boolean;
+  autoOverflow?: boolean;
   onChange?: (key: string) => void;
   activeKey?: string;
 }
@@ -26,6 +27,7 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
   fullWidth = false,
   onChange,
   unstyled,
+  autoOverflow = false,
   activeKey,
 }) => {
   // Initialize open state for all accordions; defaultOpen respected if provided
@@ -67,7 +69,8 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
       className={clsx(
         styles.accordionGroup,
         fullWidth && styles.fullWidth,
-        unstyled && styles.unstyled
+        unstyled && styles.unstyled,
+        autoOverflow && styles.autoOverflow
       )}
     >
       {Children.map(children, (child, index) => {

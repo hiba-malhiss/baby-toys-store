@@ -22,9 +22,10 @@ interface PanelMenuProps {
   multiple?: boolean;
   className?: string;
   spacing?: Spacing;
+  autoOverflow?: boolean;
 }
 
-const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false }) => {
+const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false, autoOverflow = false }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -85,7 +86,7 @@ const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false }) =>
   };
 
   return (
-    <AccordionGroup allowMultipleOpen={multiple} fullWidth unstyled>
+    <AccordionGroup allowMultipleOpen={multiple} fullWidth unstyled autoOverflow={autoOverflow}>
       <Flex direction="vertical" spacing={spacing}>
         {model.map((item, index) => {
           const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;

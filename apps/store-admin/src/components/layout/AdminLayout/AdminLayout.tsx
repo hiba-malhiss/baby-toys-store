@@ -67,7 +67,7 @@ const AdminLayout: React.FC<{
             <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo}/>
             <LanguageSwitcher/>
           </Flex>
-          <Menu model={menuItems} spacing="s" className={styles.adminLayoutNav}/>
+          <Menu autoOverflow model={menuItems} spacing="s" className={styles.adminLayoutNav}/>
           <Button
             fullWidth
             onClick={logout}

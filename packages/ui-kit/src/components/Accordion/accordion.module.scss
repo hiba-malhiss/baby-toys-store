@@ -6,6 +6,10 @@
   width: 100%;
   padding: 18px 10px;
 
+  &.autoOverflow {
+    overflow: auto;
+  }
+
   &.unstyled {
     border: none;
     background-color: transparent;
