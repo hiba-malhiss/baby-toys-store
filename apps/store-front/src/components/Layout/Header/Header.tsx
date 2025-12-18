@@ -53,19 +53,6 @@ const Header = () => {
           {t('nav.orders')}
         </Button>
       )}
-      {isAuthenticated && (
-        <Button
-          fullWidth
-          appearance="link"
-          color={isDarkMode ? 'light' : 'primary'}
-          onClick={() => {
-            navigate('/admin');
-            onAfterClick?.();
-          }}
-        >
-          {t('nav.admin')}
-        </Button>
-      )}
       <AuthButtonsWithDialogs isDarkMode={isDarkMode} onAfterClick={onAfterClick}/>
     </>
   );
