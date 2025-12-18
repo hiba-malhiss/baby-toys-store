@@ -1,4 +1,4 @@
-import React, { type ReactNode } from 'react';
+import React, { type ReactNode, useCallback, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import Icon from '../Icon/Icon.tsx';
 import { IconSize } from '../Icon/icon.constant.ts';
@@ -29,6 +29,29 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   isRainbow,
 }) => {
   const inputId = `${name}-${value}`;
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
+
+  // Native radios do not fire onChange when clicking the already-selected option.
+  // We manually trigger onChange so outer logic can toggle it off.
+  const handleMouseDown = useCallback((e: React.MouseEvent) => {
+    if(timerRef.current) {
+      clearTimeout(timerRef.current);
+    }
+    if(isSelected) {
+      e.preventDefault();
+      timerRef.current = setTimeout(() => {
+        onChange?.(value);
+      }, 150); // 150ms debounce time
+    }
+  }, [isSelected, onChange, value]);
+
+  useEffect(() => {
+    return () => {
+      if(timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+    };
+  }, []);
 
   return (
     <label
@@ -36,14 +59,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
       className={clsx(className, styles.radioButton, styles[`radioButton--${appearance}`], {
         [styles.isSelected]: isSelected,
       })}
-      onMouseDown={(e) => {
-        // Native radios do not fire onChange when clicking the already-selected option.
-        // We manually trigger onChange so outer logic can toggle it off.
-        if (isSelected) {
-          e.preventDefault();
-          onChange?.(value);
-        }
-      }}
+      onMouseDown={handleMouseDown}
     >
       <input
         type="radio"
@@ -56,7 +72,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
 
       {appearance === 'field' && (
         <span className={styles.radioButtonBox}>
-          <Icon icon={faCheck} size={IconSize.xsmall} />
+          <Icon icon={faCheck} size={IconSize.xsmall}/>
         </span>
       )}
 
