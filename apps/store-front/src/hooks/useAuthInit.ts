@@ -1,6 +1,7 @@
-import { useQuery } from '@tanstack/react-query';
-import api, { setAccessToken } from '../api/axiosConfig';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import api from '../api/axiosConfig';
 import { getGuestCartToken, setGuestCartToken } from '../utils/guestCart';
+import { AUTH_TOKEN_KEY } from "../api/authApi.ts";
 
 interface AuthInitResult {
   isAuthenticated: boolean;
@@ -22,6 +23,8 @@ interface GuestTokenResponse {
  * 3. If fail → User is guest, fetch guest token from backend
  */
 export function useAuthInit() {
+  const qc = useQueryClient();
+
   return useQuery<AuthInitResult>({
     queryKey: ['auth-init'],
     queryFn: async (): Promise<AuthInitResult> => {
@@ -30,7 +33,7 @@ export function useAuthInit() {
         const response = await api.post<{ accessToken: string }>('/api/auth/refresh');
 
         if (response.data?.accessToken) {
-          setAccessToken(response.data.accessToken);
+          qc.setQueryData(AUTH_TOKEN_KEY, response.data.accessToken);
           return { isAuthenticated: true, isGuest: false };
         }
 

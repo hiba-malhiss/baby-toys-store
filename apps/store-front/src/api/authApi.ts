@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AxiosError } from 'axios';
-import api, { clearAccessToken, setAccessToken } from './axiosConfig';
+import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
 import { queryClient } from '../App.tsx';
 import { ROOT_KEYS } from './queryKeys.ts';
@@ -40,6 +40,16 @@ export interface RegisterRequest {
   country?: string;
 }
 
+export const AUTH_TOKEN_KEY = ['authToken'];
+
+export const useAuthToken = () =>
+  useQuery<string | null>({
+    queryKey: AUTH_TOKEN_KEY,
+    queryFn: () => null,
+    initialData: null,
+    enabled: false, // manual control only
+  });
+
 export const useRegister = () =>
   useMutation<{ accessToken: string }, AxiosError<{ message?: string }>, RegisterRequest>({
     mutationKey: ['register'],
@@ -58,11 +68,9 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      // Save access token first so UI becomes authenticated immediately
-      if (data?.accessToken) setAccessToken(data.accessToken);
-      // Then refresh profile
+      if(!data?.accessToken) return;
+      qc.setQueryData(AUTH_TOKEN_KEY, data.accessToken);
       qc.invalidateQueries({ queryKey: [ROOT_KEYS.profile] });
-      setTimeout(() => qc.refetchQueries({ queryKey: [ROOT_KEYS.profile] }), 100);
     },
   });
 };
@@ -72,22 +80,25 @@ export const useLogout = () =>
     mutationKey: ['logout'],
     mutationFn: async () => {
       await api.post('/api/auth/logout');
-      clearAccessToken();
+      queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
       queryClient.clear();
       window.location.href = '/login';
     },
   });
 
-export const useFetchProfile = (enabled: boolean = true) =>
-  useQuery<User, AxiosError>({
-    queryKey: ['profile'],
-    enabled,
-    queryFn: async () => {
-      const response = await api.get<ApiEnvelope<User>>('/users/profile');
-      return response.data.data;
+export const useFetchProfile = () => {
+  const { data: token } = useAuthToken();
+
+  return useQuery<User, AxiosError>({
+    queryKey: [ROOT_KEYS.profile],
+    enabled: !!token,
+    queryFn: async() => {
+      const res = await api.get<ApiEnvelope<User>>('/users/profile');
+      return res.data.data;
     },
     retry: 1,
   });
+}
 
 export interface VerifyEmailResponse {
   message: string;

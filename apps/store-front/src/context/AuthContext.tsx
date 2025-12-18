@@ -1,6 +1,5 @@
 import React, { createContext, useContext, useCallback, useEffect, useMemo, useRef } from 'react';
-import { useFetchProfile, useLogout, type User, USER_ROLE } from '../api/authApi';
-import { getAccessToken } from '../api/axiosConfig';
+import { useAuthToken, useFetchProfile, useLogout, type User, USER_ROLE } from '../api/authApi';
 import { useQueryClient } from '@tanstack/react-query';
 import { invalidateAfterAuthenticated, refetchAfterAuthenticated } from '../api/queryInvalidation';
 import { useMergeCart } from '../api/cartApi';
@@ -19,11 +18,11 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const token = getAccessToken();
-  const isAuthenticated = useMemo(() => !!token, [token]);
+  const { data: token } = useAuthToken();
   const { isLoading: isAuthInitLoading } = useAuthInit();
-  const { data: user, isLoading: isProfileLoading } = useFetchProfile(isAuthenticated);
+  const { data: user, isLoading: isProfileLoading } = useFetchProfile();
   const { mutate: logout } = useLogout();
+  const isAuthenticated = useMemo(() => !!token || !!user, [token, user]);
 
   const qc = useQueryClient();
   const { mutate: mergeCart } = useMergeCart();
@@ -39,7 +38,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     [user]
   );
 
-  console.log(isAuthInitLoading,(isAuthenticated && isProfileLoading) )
   // App is initializing if auth init is loading, or if authenticated but profile is loading
   const isInitializing = isAuthInitLoading || (isAuthenticated && isProfileLoading);
 

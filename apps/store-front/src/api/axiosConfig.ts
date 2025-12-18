@@ -8,6 +8,7 @@ import { queryClient } from '../App';
 import type { QueryKey } from '@tanstack/react-query';
 import { getGuestCartToken } from '../utils/guestCart';
 import { getAppLocale } from '../components/i18n/locale.ts';
+import { AUTH_TOKEN_KEY } from "./authApi.ts";
 
 type RequestQueueItem = {
   resolve: (value: any) => void;
@@ -18,21 +19,6 @@ type RequestQueueItem = {
 const failedQueries = new Set<QueryKey>();
 const requestQueue: RequestQueueItem[] = [];
 let isRefreshing = false;
-
-let inMemoryAccessToken: string | null = null;
-
-// Access token helpers
-export function setAccessToken(token: string) {
-  inMemoryAccessToken = token;
-}
-
-export function clearAccessToken() {
-  inMemoryAccessToken = null;
-}
-
-export function getAccessToken() {
-  return inMemoryAccessToken;
-}
 
 // Axios instance
 const api: AxiosInstance = axios.create({
@@ -66,7 +52,7 @@ function processQueue(error: any, token: string | null = null) {
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {};
-
+    const inMemoryAccessToken = queryClient.getQueryData(AUTH_TOKEN_KEY)
     // Add Authorization header for authenticated users
     if (inMemoryAccessToken) {
       config.headers.Authorization = `Bearer ${inMemoryAccessToken}`;
@@ -104,7 +90,7 @@ api.interceptors.response.use(
 
     // 403/419: forbidden or csrf/expired — clear token, don't attempt refresh
     if ((error.response.status === 403 || error.response.status === 419) && originalRequest) {
-      clearAccessToken();
+      queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
       return Promise.reject(error);
     }
 
@@ -113,7 +99,7 @@ api.interceptors.response.use(
       // If the failing request is the refresh call itself, do NOT try to refresh again (avoids deadlock)
       const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
       if (isRefreshCall) {
-        clearAccessToken();
+        queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
         return Promise.reject(error);
       }
       if (isRefreshing) {
@@ -130,7 +116,7 @@ api.interceptors.response.use(
         const response = await api.post<{ accessToken: string }>('/api/auth/refresh');
 
         const { accessToken } = response.data;
-        setAccessToken(accessToken);
+        queryClient.setQueryData(AUTH_TOKEN_KEY, accessToken);
 
         // Retry queued requests
         processQueue(null, accessToken);
@@ -141,7 +127,7 @@ api.interceptors.response.use(
         }
         return api(originalRequest);
       } catch (refreshError) {
-        clearAccessToken();
+        queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
         processQueue(refreshError);
 
         // Invalidate failed queries
