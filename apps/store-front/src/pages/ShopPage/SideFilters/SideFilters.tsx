@@ -75,6 +75,7 @@ export const SideFilters: React.FC<{
   ]);
 
   const handleFilterChange = (key: keyof ShopFilters, value: any) => {
+    console.log(key, value)
     const current = (urlFilters as any)[key];
     const nextValue = current === value ? undefined : value;
     updateUrlFilters({ [key]: nextValue });
