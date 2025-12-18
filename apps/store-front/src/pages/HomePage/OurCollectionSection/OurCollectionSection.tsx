@@ -42,7 +42,7 @@ const OurCollectionSection = () => {
             >
               <Flex fullHeight direction="vertical" align="center" justify="between" spacing="xl">
                 <img
-                  src={cat.image || '/assets/educational-toys.svg'}
+                  src={cat.imageUrl || '/assets/educational-toys.svg'}
                   alt={cat.name}
                   className={styles.ourCollectionImage}
                 />
