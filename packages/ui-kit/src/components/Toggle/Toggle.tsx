@@ -1,4 +1,4 @@
-import React, { useState, KeyboardEvent } from 'react';
+import React, { useState, KeyboardEvent, useEffect } from 'react';
 import styles from './toggle.module.scss';
 import clsx from 'clsx';
 
@@ -6,23 +6,33 @@ export type ToggleSize = 'medium' | 'small';
 
 interface ToggleProps {
   defaultValue?: boolean;
+  value?: boolean;
   size?: ToggleSize;
+  onChange?: (value: boolean) => void;
 }
 
 const KEY_ENTER = 13;
 const KEY_ESCAPE = 27;
 
-const Toggle: React.FC<ToggleProps> = ({ defaultValue = false, size = 'medium' }) => {
-  const [value, setValue] = useState(defaultValue);
+const Toggle: React.FC<ToggleProps> = ({ value, defaultValue = false, size = 'medium', onChange }) => {
+  const [internalValue, setInternalValue] = useState(value ?? defaultValue);
+
+  // Sync with controlled value
+  useEffect(() => {
+    if(value !== undefined) setInternalValue(value);
+  }, [value]);
 
   const handleToggle = () => {
-    setValue(!value);
+    const newValue = !internalValue;
+    setInternalValue(newValue);
+    if(onChange) onChange(newValue);
   };
 
   const handleKeyPress = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if (event.keyCode === KEY_ENTER) {
+    if(event.key === 'Enter') {
       event.preventDefault();
-    } else if (event.keyCode === KEY_ESCAPE) {
+      handleToggle();
+    } else if(event.key === 'Escape') {
       handleToggle();
     }
   };
@@ -30,7 +40,7 @@ const Toggle: React.FC<ToggleProps> = ({ defaultValue = false, size = 'medium' }
   const classNames = clsx(
     styles.toggle,
     styles[`toggle--${size}`],
-    value ? styles.isTrue : styles.isFalse
+    internalValue ? styles.isTrue : styles.isFalse
   );
 
   return (
@@ -40,9 +50,9 @@ const Toggle: React.FC<ToggleProps> = ({ defaultValue = false, size = 'medium' }
       onClick={handleToggle}
       onKeyDown={handleKeyPress}
       role="switch"
-      aria-checked={value}
+      aria-checked={internalValue}
     >
-      <span className={styles.toggleThumb} />
+      <span className={styles.toggleThumb}/>
     </button>
   );
 };

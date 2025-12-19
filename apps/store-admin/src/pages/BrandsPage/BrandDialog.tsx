@@ -82,6 +82,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     try {
       const payload = {
         logoUrl: data.logoUrl || undefined,
+        isActive: true,
         translations: [
           {
             locale: 'en',

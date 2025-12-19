@@ -1,4 +1,9 @@
-import axios, { AxiosError, type AxiosInstance, type InternalAxiosRequestConfig, type AxiosRequestConfig } from 'axios';
+import axios, {
+  AxiosError,
+  type AxiosInstance,
+  type AxiosRequestConfig,
+  type InternalAxiosRequestConfig,
+} from 'axios';
 import type { QueryKey } from '@tanstack/react-query';
 import { queryClient } from '../App';
 import { getAppLocale } from '../components/i18n/locale';
@@ -12,6 +17,7 @@ type RequestQueueItem = {
 const failedQueries = new Set<QueryKey>();
 const requestQueue: RequestQueueItem[] = [];
 let isRefreshing = false;
+let isRedirecting = false; // prevent multiple redirects
 
 let inMemoryAccessToken: string | null = null;
 
@@ -27,30 +33,36 @@ export function getAccessToken(){
   return inMemoryAccessToken;
 }
 
-// Simple redirect helper that respects Vite base (e.g., /admin/)
-function redirectToLogin(){
-  if (typeof window !== 'undefined') {
+function safeRedirectToLogin(){
+  if(isRedirecting) return;
+  isRedirecting = true;
+
+  if(typeof window !== 'undefined') {
     const base = (import.meta as any).env?.BASE_URL || '/';
-    const target = (base.endsWith('/') ? base : base + '/') + 'login';
+    const target = (base.endsWith('/') ? base : `${base}/`) + 'login';
     window.location.href = target;
   }
 }
 
-// Axios instance
+// Axios instances
 const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   },
   xsrfCookieName: 'XSRF-TOKEN',
   xsrfHeaderName: 'X-XSRF-TOKEN',
 });
 
-// Process queued requests after token refresh
+const refreshApi = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  withCredentials: true,
+});
+
 function processQueue(error: any, token: string | null = null){
-  requestQueue.forEach(promise => {
+  requestQueue.forEach((promise) => {
     if(error) {
       promise.reject(error);
     } else if(token) {
@@ -77,41 +89,40 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
 
 // Handle response errors and token refresh
 api.interceptors.response.use(
-  response => response,
+  (response) => response,
   async(error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+    };
 
-    // Network errors
-    if(!error.response) {
+    if(!error.response || !originalRequest) {
       error.message = 'Network error. Please check your connection.';
       return Promise.reject(error);
     }
 
-    // 403/419: forbidden or csrf/expired — clear token and redirect
-    if ((error.response.status === 403 || error.response.status === 419) && originalRequest) {
+    const status = error.response.status;
+
+    const isRefreshCall =
+      (originalRequest.url || '').includes('/api/auth/refresh');
+
+    // Handle refresh call failure separately (prevents infinite loop)
+    if(isRefreshCall && (status === 401 || status === 403)) {
       clearAccessToken();
-      failedQueries.forEach(key => queryClient.invalidateQueries(key));
-      failedQueries.clear();
-      redirectToLogin();
+      processQueue(error);
+      // Do NOT redirect immediately; let login page handle it
       return Promise.reject(error);
     }
 
-    // 401 Unauthorized handling with refresh
-    if (error.response.status === 401 && originalRequest) {
-      // Never try to refresh when the refresh endpoint itself fails
-      const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
-      if (isRefreshCall) {
+    // Only try refresh if user has a token and it's not the refresh call itself
+    if((status === 401 || status === 403) && !originalRequest._retry) {
+      if(!inMemoryAccessToken) {
         clearAccessToken();
         processQueue(error);
-        failedQueries.forEach(key => queryClient.invalidateQueries(key));
-        failedQueries.clear();
+        safeRedirectToLogin();
         return Promise.reject(error);
       }
 
-      if (originalRequest._retry) {
-        // Already retried this request once; avoid loops
-        return Promise.reject(error);
-      }
+      originalRequest._retry = true;
 
       if(isRefreshing) {
         // Queue request if token is being refreshed
@@ -121,11 +132,11 @@ api.interceptors.response.use(
       }
 
       isRefreshing = true;
-      originalRequest._retry = true;
 
       try {
-        const response = await api.post<{ accessToken: string }>('/api/auth/refresh');
-
+        const response = await refreshApi.post<{ accessToken: string }>(
+          '/api/auth/refresh'
+        );
         const { accessToken } = response.data;
         setAccessToken(accessToken);
 
@@ -133,32 +144,36 @@ api.interceptors.response.use(
         processQueue(null, accessToken);
 
         // Retry original request
-        if(originalRequest.headers) {
-          originalRequest.headers.Authorization = `Bearer ${accessToken}`;
-        }
+        originalRequest.headers = {
+          ...originalRequest.headers,
+          Authorization: `Bearer ${accessToken}`,
+        };
+
         return api(originalRequest);
-      } catch(refreshError: any) {
+      } catch(refreshError) {
         clearAccessToken();
         processQueue(refreshError);
 
         // Invalidate failed queries
         failedQueries.forEach(key => queryClient.invalidateQueries(key));
         failedQueries.clear();
-        redirectToLogin();
+
+        // Redirect safely
+        setTimeout(() => safeRedirectToLogin(), 0);
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;
       }
     }
 
-    // For other errors, attach message if available
-    const data: any = error.response?.data as any;
+    // Other errors: attach message if available
+    const data: any = error.response.data;
     if(data?.message) {
-      error.message = data.message as string;
+      error.message = data.message;
     }
 
     return Promise.reject(error);
-  },
+  }
 );
 
 export default api;

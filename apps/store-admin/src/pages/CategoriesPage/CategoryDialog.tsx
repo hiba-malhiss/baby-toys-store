@@ -11,6 +11,7 @@ import {
   TabBar,
   TabBarItem,
   Divider,
+  Toggle,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -38,11 +39,11 @@ interface CategoryDialogProps {
 }
 
 const CategoryDialog: React.FC<CategoryDialogProps> = ({
-  visible,
-  onHide,
-  onSuccess,
-  category,
-}) => {
+                                                         visible,
+                                                         onHide,
+                                                         onSuccess,
+                                                         category,
+                                                       }) => {
   const toast = useToast();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
@@ -57,6 +58,8 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     formState: { isSubmitting, isValid },
     reset,
     getValues,
+    setValue,
+    watch
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
     defaultValues: defaultCategoryValues,
@@ -66,9 +69,11 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     return () => imagePreview && URL.revokeObjectURL(imagePreview);
   }, [imagePreview]);
 
+  const isActiveValue = watch('isActive');
+
   // Reset form whenever dialog opens or category/admin data changes
   React.useEffect(() => {
-    if (category?.id && adminCategory) {
+    if(category?.id && adminCategory) {
       const trMap = new Map<string, any>();
       adminCategory.translations?.forEach(
         (t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t)
@@ -78,24 +83,26 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       reset({
         imageUrl: adminCategory.imageUrl || '',
         isMain: adminCategory.isMain ?? false,
+        isActive: adminCategory.isActive ?? true,
         translations: {
           en: { name: en.name || '', description: en.description || '' },
           ar: { name: ar.name || '', description: ar.description || '' },
         },
       });
       setImagePreview(adminCategory.imageUrl || null);
-    } else if (!category?.id) {
+    } else if(!category?.id) {
       reset(defaultCategoryValues);
       setImagePreview(null);
     }
     setImageFile(null);
   }, [category?.id, adminCategory, reset, visible]);
 
-  const submitForm = async (data: CategoryFormValues) => {
+  const submitForm = async(data: CategoryFormValues) => {
     try {
       const payload = {
         imageUrl: data.imageUrl || undefined,
         isMain: data.isMain ?? false,
+        isActive: data.isActive ?? true,
         translations: [
           {
             locale: 'en',
@@ -115,18 +122,18 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         : await createCategory.mutateAsync(payload);
 
       // Upload image if a new file was selected
-      if (imageFile) {
+      if(imageFile) {
         try {
           const res = await uploadCategoryImage.mutateAsync({
             id: returnedId,
             file: imageFile,
           });
           // Update preview and form with server URL so user sees the uploaded image if dialog stays open
-          if (res?.imageUrl) {
+          if(res?.imageUrl) {
             setImagePreview(res.imageUrl);
             reset({ ...getValues(), imageUrl: res.imageUrl });
           }
-        } catch (error) {
+        } catch(error) {
           console.error('Error uploading image:', error);
           toast.error('Category saved, but there was an error uploading the image');
         }
@@ -137,7 +144,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       onHide();
       setImageFile(null);
       setImagePreview(null);
-    } catch (err: any) {
+    } catch(err: any) {
       toast.error(err?.message || 'Failed to save category');
     }
   };
@@ -179,7 +186,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
                 required
                 fullWidth
               >
-                <StringInput isDisabled={isSubmitting} />
+                <StringInput isDisabled={isSubmitting}/>
               </FormFieldWrapper>
               <FormFieldWrapper
                 name={`translations.${l}.description`}
@@ -188,32 +195,37 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
                 fullWidth
                 className="bts-marginTm"
               >
-                <TextArea rows={4} isDisabled={isSubmitting} />
+                <TextArea rows={4} isDisabled={isSubmitting}/>
               </FormFieldWrapper>
             </TabBarItem>
           ))}
         </TabBar>
 
-        <Divider thickness="2px" />
+        <Divider thickness="2px"/>
+        <FormFieldWrapper name="isActive" control={control} label="Is Active" fullWidth>
+          <Select>
+            <Option value={true as any}>Yes</Option>
+            <Option value={false as any}>No</Option>
+          </Select>
+        </FormFieldWrapper>
         <FormFieldWrapper name="isMain" control={control} label="Is Main" fullWidth>
           <Select>
             <Option value={true as any}>Yes</Option>
             <Option value={false as any}>No</Option>
           </Select>
         </FormFieldWrapper>
-
         <FormFieldWrapper name="imageUrl" label="Image" fullWidth>
           <ImageUploader
             images={imageFile ? [imageFile] : imagePreview ? [imagePreview] : []}
             multiple={false}
             onImagesChange={(files: (File | string)[]) => {
               const file = files?.[0];
-              if (file instanceof File) {
+              if(file instanceof File) {
                 setImageFile(file);
                 // Show local blob preview immediately
                 const preview = URL.createObjectURL(file);
                 setImagePreview(preview);
-              } else if (typeof file === 'string') {
+              } else if(typeof file === 'string') {
                 // If component returns a string URL (e.g., previously uploaded), use it as preview
                 setImagePreview(file);
                 setImageFile(null);

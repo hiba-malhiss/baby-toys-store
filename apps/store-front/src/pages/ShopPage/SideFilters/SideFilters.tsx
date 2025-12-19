@@ -23,6 +23,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useBrands, useCategories, useColors, useMaterials } from '../../../api/catalogApi.ts';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
+import clsx from "clsx";
 
 export const SideFilters: React.FC<{
   className?: string;
@@ -222,7 +223,7 @@ export const SideFilters: React.FC<{
             step={1}
             range
             value={urlFilters.priceRange || priceRange}
-            className="bts-marginTxxl"
+            className={clsx(styles.sideFilterPriceSlider, "bts-marginTxxxl")}
             onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
           />
         </ExpandableContent>

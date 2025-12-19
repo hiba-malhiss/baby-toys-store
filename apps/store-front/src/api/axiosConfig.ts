@@ -7,8 +7,8 @@ import axios, {
 import { queryClient } from '../App';
 import type { QueryKey } from '@tanstack/react-query';
 import { getGuestCartToken } from '../utils/guestCart';
-import { getAppLocale } from '../components/i18n/locale.ts';
-import { AUTH_TOKEN_KEY } from "./authApi.ts";
+import { getAppLocale } from '../components/i18n/locale';
+import { AUTH_TOKEN_KEY } from './authApi';
 
 type RequestQueueItem = {
   resolve: (value: any) => void;
@@ -20,19 +20,7 @@ const failedQueries = new Set<QueryKey>();
 const requestQueue: RequestQueueItem[] = [];
 let isRefreshing = false;
 
-// Axios instance
-const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json',
-    Accept: 'application/json',
-  },
-  xsrfCookieName: 'XSRF-TOKEN',
-  xsrfHeaderName: 'X-XSRF-TOKEN',
-});
-
-// Process queued requests after token refresh
+// Process queued requests
 function processQueue(error: any, token: string | null = null) {
   requestQueue.forEach((promise) => {
     if (error) {
@@ -48,14 +36,33 @@ function processQueue(error: any, token: string | null = null) {
   requestQueue.length = 0;
 }
 
+// Axios instances
+const api: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  withCredentials: true,
+  headers: {
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  },
+  xsrfCookieName: 'XSRF-TOKEN',
+  xsrfHeaderName: 'X-XSRF-TOKEN',
+});
+
+// Clean instance for refresh only (no interceptors)
+const refreshApi: AxiosInstance = axios.create({
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  withCredentials: true,
+});
+
 // Attach Authorization + Locale headers
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     config.headers = config.headers ?? {};
-    const inMemoryAccessToken = queryClient.getQueryData(AUTH_TOKEN_KEY)
+    const token = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
     // Add Authorization header for authenticated users
-    if (inMemoryAccessToken) {
-      config.headers.Authorization = `Bearer ${inMemoryAccessToken}`;
+    if (token) {
+      // Authenticated user
+      config.headers.Authorization = `Bearer ${token}`;
     } else {
       // Add X-Cart-Token header for guest users
       // Token is already initialized by useAuthInit (React Query)
@@ -70,51 +77,55 @@ api.interceptors.request.use(
 
     // Attach preferred locale
     (config.headers as any)['Accept-Language'] = getAppLocale() || 'ar';
-
     return config;
   },
   (error) => Promise.reject(error)
 );
 
-// Handle token refresh and errors
+// Response interceptor
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
     const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
 
-    // Network errors
-    if (!error.response) {
+    if (!error.response || !originalRequest) {
       error.message = 'Network error. Please check your connection.';
       return Promise.reject(error);
     }
 
-    // 403/419: forbidden or csrf/expired — clear token, don't attempt refresh
-    if ((error.response.status === 403 || error.response.status === 419) && originalRequest) {
+    const status = error.response.status;
+    const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
+
+    // Only attempt refresh if user has a token and it's not the refresh call itself
+    const token = queryClient.getQueryData<string>(AUTH_TOKEN_KEY);
+
+    // Handle refresh call failure separately (prevents infinite loop)
+    if (isRefreshCall && (status === 401 || status === 403)) {
       queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
+      processQueue(error);
       return Promise.reject(error);
     }
 
-    // 401 Unauthorized
-    if (error.response.status === 401 && originalRequest && !originalRequest._retry) {
-      // If the failing request is the refresh call itself, do NOT try to refresh again (avoids deadlock)
-      const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
-      if (isRefreshCall) {
+    // Only try refresh if user has a token and it's not the refresh call itself
+    if ((status === 401 || status === 403) && !originalRequest._retry) {
+      if (!token) {
         queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
+        processQueue(error);
         return Promise.reject(error);
       }
+
+      originalRequest._retry = true;
+
       if (isRefreshing) {
-        // Queue request if token is being refreshed
         return new Promise((resolve, reject) => {
           requestQueue.push({ resolve, reject, config: originalRequest });
         });
       }
 
       isRefreshing = true;
-      originalRequest._retry = true;
 
       try {
-        const response = await api.post<{ accessToken: string }>('/api/auth/refresh');
-
+        const response = await refreshApi.post<{ accessToken: string }>('/api/auth/refresh');
         const { accessToken } = response.data;
         queryClient.setQueryData(AUTH_TOKEN_KEY, accessToken);
 
@@ -127,6 +138,7 @@ api.interceptors.response.use(
         }
         return api(originalRequest);
       } catch (refreshError) {
+        // Refresh failed
         queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
         processQueue(refreshError);
 
@@ -140,8 +152,8 @@ api.interceptors.response.use(
       }
     }
 
-    // For other errors, attach message if available (safely)
-    const data: any = error.response?.data as any;
+    // Other errors: attach backend message if available
+    const data: any = error.response.data;
     if (data?.message && typeof data.message === 'string') {
       error.message = data.message;
     }
