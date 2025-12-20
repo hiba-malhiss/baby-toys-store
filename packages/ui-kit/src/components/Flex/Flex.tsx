@@ -14,7 +14,6 @@ interface FlexProps {
   align?: Align;
   justify?: Justify;
   fullHeight?: boolean;
-  isResponsive?: boolean;
   wrap?: boolean;
   fullWidth?: boolean;
   className?: string;
@@ -42,7 +41,6 @@ const Flex: React.FC<FlexProps> = ({
   fullHeight = false,
   fullWidth = false,
   wrap = false,
-  isResponsive,
 }) => {
   const directionClass = direction === 'horizontal' ? styles.flexHorizontal : styles.flexVertical;
 
@@ -71,7 +69,6 @@ const Flex: React.FC<FlexProps> = ({
     fullHeight && styles.flexFullHeight,
     fullWidth && styles.flexFullWidth,
     wrap && styles.flexWrap,
-    isResponsive && styles.isResponsive,
     className
   );
 

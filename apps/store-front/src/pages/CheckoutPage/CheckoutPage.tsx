@@ -172,7 +172,7 @@ const CheckoutPage: React.FC = () => {
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
                 <div>{formatCurrency(item.totalPrice)}</div>
-                <Divider fullWidth/>
+                <Divider className="bts-marginBl" fullWidth/>
               </div>
             ))}
           </div>

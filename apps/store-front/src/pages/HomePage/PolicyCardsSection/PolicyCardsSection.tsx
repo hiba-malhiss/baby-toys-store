@@ -1,6 +1,7 @@
-import { Flex, InfoCard } from '@baby-toys/ui-kit';
+import { InfoCard } from '@baby-toys/ui-kit';
 import { useHomePageContent } from '../../../api/homepageApi';
 import type { InfoCardDto } from '../../../api/types/homepage';
+import styles from './policy-cards-section.module.scss';
 
 const PolicyCardsSection = () => {
   const { data, isLoading } = useHomePageContent();
@@ -11,7 +12,7 @@ const PolicyCardsSection = () => {
   }
 
   return (
-    <Flex spacing="xxl" align="center" fullWidth justify="center" isResponsive>
+    <div className={styles.policyCardsSection}>
       {infoCards.map((card, index) => {
         const adapted = {
           appearance: card.appearance,
@@ -21,7 +22,7 @@ const PolicyCardsSection = () => {
         } as any;
         return <InfoCard key={card.id ?? index} card={adapted} fullWidth />;
       })}
-    </Flex>
+    </div>
   );
 };
 
