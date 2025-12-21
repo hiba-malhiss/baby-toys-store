@@ -33,6 +33,7 @@
   .footer {
     font-size: 0.95rem;
     gap: 20px;
+    padding: 50px 5%;
   }
   .footer-logo {
     width: 100%;
@@ -45,14 +46,13 @@
 
 @media (max-width: $breakpoint-medium) {
   .footer {
-    padding: 32px 20px;
+    padding: 50px 5%;
     font-size: 0.9rem;
   }
   .footer-description {
     font-size: 0.95rem;
     padding-bottom: 16px;
   }
-
   .footer-customerService {
     display: none;
   }
