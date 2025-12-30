@@ -13,6 +13,7 @@ import CartQuantityInput from '../../components/shared/CartQuantityInput';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useCartQuery, useRemoveFromCart } from '../../api/cartApi';
 import { useAddToWishlist } from '../../api/wishlistApi';
+import { useAuth } from "../../context/AuthContext.tsx";
 
 const ShoppingCartPage = () => {
   const { t } = useTranslation('common');
@@ -30,6 +31,7 @@ const ShoppingCartPage = () => {
   const hasOverAllocated = items.some(
     (i) => (i.availableStock ?? 0) > 0 && i.quantity > (i.availableStock ?? 0)
   );
+  const { isAuthenticated } = useAuth();
 
   const handleConfirmDelete = () => {
     if(itemToDelete) {
@@ -38,11 +40,11 @@ const ShoppingCartPage = () => {
     }
   };
 
-  const handleMoveToWishlist = async (item: { id: number; productId: number; productName: string }) => {
+  const handleMoveToWishlist = async(item: { id: number; productId: number; productName: string }) => {
     try {
       await addToWishlist.mutateAsync({ productId: item.productId });
       removeMutation.mutate({ itemId: item.id });
-    } catch (e) {
+    } catch(e) {
       // noop; UI kit toasts handled inside hooks if any
     }
   };
@@ -144,15 +146,23 @@ const ShoppingCartPage = () => {
                   >
                     {t('common.delete', { defaultValue: 'Delete' })}
                   </Button>
-                  <span>|</span>
-                  <Button
-                    appearance="link"
-                    color="highlighted"
-                    withoutPadding
-                    onClick={() => handleMoveToWishlist({ id: Number(item.id), productId: Number(item.productId), productName: item.productName })}
-                  >
-                    {t('cart.removeAndMoveToWishlist', { defaultValue: 'Remove and move to wishlist' })}
-                  </Button>
+                  {isAuthenticated && (
+                    <>
+                      <span>|</span>
+                      <Button
+                        appearance="link"
+                        color="highlighted"
+                        withoutPadding
+                        onClick={() => handleMoveToWishlist({
+                          id: Number(item.id),
+                          productId: Number(item.productId),
+                          productName: item.productName
+                        })}
+                      >
+                        {t('cart.removeAndMoveToWishlist', { defaultValue: 'Remove and move to wishlist' })}
+                      </Button>
+                    </>
+                  )}
                 </Flex>
               </div>
             </div>
@@ -177,15 +187,15 @@ const ShoppingCartPage = () => {
             hasOOS
               ? t('cart.removeToProceed')
               : hasOverAllocated
-              ? t('cart.reduceToProceed')
-              : undefined
+                ? t('cart.reduceToProceed')
+                : undefined
           }
         >
           {hasOOS
             ? t('cart.removeToProceed')
             : hasOverAllocated
-            ? t('cart.reduceToProceed')
-            : t('cart.proceed')}
+              ? t('cart.reduceToProceed')
+              : t('cart.proceed')}
         </Button>
       </Card>
       <Divider className="bts-marginTxxxxl"/>
