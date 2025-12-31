@@ -63,3 +63,4 @@ export { default as Mask } from './Mask/Mask';
 export { default as Calendar } from './Calendar/Calendar';
 export { default as KPI } from './KPI/KPI';
 export { default as CopyToClipboardButton } from './CopyToClipboardButton/CopyToClipboardButton';
+export { default as HeartButton } from './HeartButton/HeartButton';

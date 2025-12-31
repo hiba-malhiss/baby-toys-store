@@ -3,7 +3,7 @@ import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
 import PriceDisplay from '../PriceDisplay/PriceDisplay';
-import { faHeart, faCartShopping, faRightLeft, faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { faCartShopping, faRightLeft, faCartPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Card from '../Card/Card.tsx';
 import Button from '../Button/Button.tsx';
@@ -11,6 +11,7 @@ import Flex from '../Flex/Flex.tsx';
 import Image from '../Image/Image.tsx';
 import { copyTextToClipboard } from '../../utils';
 import { useToast } from '../Toast/ToastContext.tsx';
+import HeartButton from '../HeartButton/HeartButton.tsx';
 
 export type ProductCard = {
   id: string | number;
@@ -109,15 +110,19 @@ const ProductCard: React.FC<ProductCardProps> = ({
           Add to cart
         </Button>
       )}
-      <Button
-        leftIcon={faHeart}
-        appearance={isHorizontal ? 'outline' : 'link'}
-        color="icon"
-        size={isHorizontal ? 'large' : 'xlarge'}
-        isSelected={isFavorite}
-        isLoading={isLoadingFavorite}
-        onClick={(e) => handleButtonClick(e, onToggleFavorite)}
-        aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+      <HeartButton
+        checked={Boolean(isFavorite)}
+        isLoading={Boolean(isLoadingFavorite)}
+        disabled={Boolean(isLoadingFavorite)}
+        size={isHorizontal ? 'medium' : 'small'}
+        className={styles.productCardHeart}
+        ariaLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+        onToggle={(_, event) => {
+          if ('stopPropagation' in event) {
+            event.stopPropagation();
+          }
+          onToggleFavorite?.(product);
+        }}
       />
       {direction === 'horizontal' && (
         <Button
