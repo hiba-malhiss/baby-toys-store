@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import clsx from 'clsx';
 import styles from './rating.module.scss';
 import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
 import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
@@ -23,8 +24,23 @@ const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChan
     }
   };
 
+  const isInteractive = Boolean(onChange);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+
   return (
-    <Flex direction="horizontal" spacing="xs" className={className} align="center">
+    <Flex
+      direction="horizontal"
+      spacing="xs"
+      className={className}
+      align="center"
+      onMouseLeave={
+        isInteractive
+          ? () => {
+              setHoveredIndex(null);
+            }
+          : undefined
+      }
+    >
       {Array.from({ length: max }).map((_, i) => {
         const diff = value - i;
 
@@ -37,20 +53,46 @@ const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChan
           icon = regularStar; // empty star
         }
 
+        const isHoverChain = isInteractive && hoveredIndex !== null && hoveredIndex >= i;
+        const isHighlighted = diff >= 0.5 || isHoverChain;
+
+        const starClassName = clsx(styles.ratingStar, {
+          [styles.ratingStarHighlighted]: isHighlighted,
+          [styles.ratingStarEmpty]: !isHighlighted,
+          [styles.ratingStarInteractive]: isInteractive,
+          [styles.ratingStarHovered]: isHoverChain,
+        });
+
+        const iconColor = isHighlighted ? IconColor.warning : IconColor.gray;
+
         return (
           <span
             key={i}
+            className={starClassName}
             onClick={() => handleStarClick(i)}
-            style={{ cursor: onChange ? 'pointer' : 'default' }}
+            onMouseEnter={
+              isInteractive
+                ? () => {
+                    setHoveredIndex(i);
+                  }
+                : undefined
+            }
+            onMouseLeave={
+              isInteractive
+                ? () => {
+                    setHoveredIndex((current) => (current === i ? null : current));
+                  }
+                : undefined
+            }
             aria-label={`Rate ${i + 1} star${i > 0 ? 's' : ''}`}
-            tabIndex={onChange ? 0 : -1}
+            tabIndex={isInteractive ? 0 : -1}
             onKeyDown={(e) => {
               if (onChange && (e.key === 'Enter' || e.key === ' ')) {
                 handleStarClick(i);
               }
             }}
           >
-            <Icon key={i} icon={icon} color={IconColor.warning} size={size} />
+            <Icon key={i} icon={icon} color={iconColor} size={size} />
           </span>
         );
       })}

@@ -3,3 +3,142 @@
   color: $color-secondary;
   font-weight: 600;
 }
+
+.ratingStar {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #9ca3af;
+  transition: transform 0.3s ease;
+  margin: 0 2px;
+
+  :global(svg) {
+    color: currentColor;
+    transition:
+      color 0.3s ease,
+      filter 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  &::before,
+  &::after {
+    content: '';
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background-color: rgba(250, 204, 21, 0.75);
+    border-radius: 50%;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.3);
+    transition:
+      transform 0.4s ease,
+      opacity 0.4s ease;
+    pointer-events: none;
+  }
+
+  &::before {
+    top: -12px;
+    left: 50%;
+  }
+
+  &::after {
+    bottom: -12px;
+    left: 50%;
+  }
+}
+
+.ratingStarInteractive {
+  cursor: pointer;
+  &:focus-visible {
+    outline: none;
+    transform: scale(1.1);
+
+    :global(svg) {
+      color: #f59e0b;
+      filter: drop-shadow(0 0 10px rgba(245, 158, 11, 0.7));
+    }
+  }
+}
+
+.ratingStarHighlighted {
+  color: #f59e0b;
+
+  :global(svg) {
+    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.55));
+    animation: rating-glow 1s ease-in-out alternate;
+  }
+}
+
+.ratingStarEmpty {
+  color: #d1d5db;
+
+  :global(svg) {
+    filter: none;
+  }
+}
+
+.ratingStarHovered {
+  color: #f59e0b;
+  transform: scale(1.12);
+  animation: rating-pulse 0.6s ease-in-out alternate infinite;
+
+  &::before,
+  &::after {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1.4);
+    animation: rating-particle 0.8s ease-out forwards;
+  }
+
+  :global(svg) {
+    color: #f59e0b;
+    filter: drop-shadow(0 0 14px rgba(245, 158, 11, 0.85));
+    animation: rating-shimmer 1s ease-in-out alternate;
+  }
+}
+
+.ratingStarInteractive:hover {
+  @extend .ratingStarHovered;
+}
+
+@keyframes rating-shimmer {
+  0% {
+    filter: drop-shadow(0 0 12px rgba(245, 158, 11, 0.6));
+  }
+  100% {
+    filter: drop-shadow(0 0 20px rgba(250, 204, 21, 0.95));
+  }
+}
+
+@keyframes rating-pulse {
+  0% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1.15);
+  }
+}
+
+@keyframes rating-particle {
+  0% {
+    opacity: 0.2;
+    transform: translate(-50%, -50%) scale(0.4);
+  }
+  50% {
+    opacity: 1;
+    transform: translate(-50%, -80%) scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -110%) scale(0.8);
+  }
+}
+
+@keyframes rating-glow {
+  0% {
+    filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.45));
+  }
+  100% {
+    filter: drop-shadow(0 0 16px rgba(252, 211, 77, 0.75));
+  }
+}
