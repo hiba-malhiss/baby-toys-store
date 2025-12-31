@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
-import { Button, Flex, Heading, Tooltip } from '@baby-toys/ui-kit';
+import { Button, Flex, Heading, Tooltip, SocialIconButton } from '@baby-toys/ui-kit';
 import {
   footerInfoConfig,
   exploreLinks,
@@ -30,7 +30,7 @@ const Footer = () => {
       <Flex direction="vertical" className={styles.footerLogo}>
         <img src="/assets/kit-images/logo.png" alt="logo"/>
         <p className={styles.footerDescription}>{t('footer.description')}</p>
-        <Flex spacing="xl">
+        <Flex spacing="m" className={styles.footerSocialButtons}>
           {socialMediaLinks.map(({ icon }) => (
             <Tooltip
               key={icon.iconName}
@@ -38,10 +38,8 @@ const Footer = () => {
                 defaultValue: tooltipKeyByIcon[icon.iconName]
               })}
             >
-              <Button
-                appearance="filled"
-                color="accent"
-                leftIcon={icon}
+              <SocialIconButton
+                icon={icon}
                 onClick={() => handleFooterSocialClick(icon.iconName)}
               />
             </Tooltip>

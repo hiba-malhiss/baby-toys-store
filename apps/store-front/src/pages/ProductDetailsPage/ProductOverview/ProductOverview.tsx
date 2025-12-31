@@ -11,6 +11,7 @@ import {
   CopyToClipboardButton,
   Tooltip,
   HeartButton,
+  SocialIconButton,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
@@ -126,11 +127,9 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
                 defaultValue: 'Share',
               })}
             >
-              <Button
+              <SocialIconButton
+                icon={icon}
                 size="small"
-                color="secondary"
-                leftIcon={icon}
-                isRounded
                 onClick={() => handleSocialShare(icon.iconName)}
               />
             </Tooltip>

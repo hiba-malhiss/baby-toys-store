@@ -1,0 +1,148 @@
+.socialButton {
+  $default-bg: #7f7f7f;
+
+  --sb-size: 40px;
+  --sb-radius: 16px;
+  --sb-icon-size: 20px;
+
+  position: relative;
+  width: var(--sb-size);
+  height: var(--sb-size);
+  border-radius: var(--sb-radius);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  background: $default-bg;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.25s ease;
+  color: #fff;
+  outline: none;
+  z-index: 1;
+  overflow: hidden;
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px rgba(127, 127, 127, 0.35);
+  }
+
+  &:active {
+    transform: scale(0.88);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: var(--sb-radius);
+    background: #7f7f7f;
+    z-index: -1;
+    transform: scale(1);
+    opacity: 1;
+    transition:
+      transform 0.3s cubic-bezier(0.45, 0.05, 0.55, 0.95),
+      opacity 0.3s ease;
+  }
+
+  &:hover::before {
+    transform: scale(0);
+    opacity: 0;
+  }
+
+  &--size-small {
+    --sb-size: 30px;
+    --sb-radius: 12px;
+    --sb-icon-size: 16px;
+  }
+
+  &--size-medium {
+    --sb-size: 40px;
+    --sb-radius: 16px;
+    --sb-icon-size: 20px;
+  }
+
+  &--size-large {
+    --sb-size: 48px;
+    --sb-radius: 20px;
+    --sb-icon-size: 22px;
+  }
+}
+
+.socialButtonInner {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+
+  :global(svg) {
+    width: var(--sb-icon-size);
+    height: var(--sb-icon-size);
+    color: currentColor;
+  }
+}
+
+.socialButton--whatsapp {
+  background: #1ebea5;
+
+  //&::before {
+  //  background: rgba(17, 96, 78, 0.5);
+  //}
+}
+
+.socialButton--twitter {
+  background: #1d9bf0;
+
+  //&::before {
+  //  background: rgba(10, 86, 150, 0.5);
+  //}
+}
+
+.socialButton--facebook {
+  background: #1877f2;
+
+  //&::before {
+  //  background: rgba(11, 58, 150, 0.55);
+  //}
+}
+
+.socialButton--youtube {
+  background: #ff0000;
+
+  //&::before {
+  //  background: rgba(94, 0, 0, 0.55);
+  //}
+}
+
+.socialButton--telegram {
+  background: #2aabee;
+
+  //&::before {
+  //  background: rgba(24, 110, 160, 0.55);
+  //}
+}
+
+.socialButton--github {
+  background: #24292f;
+
+  //&::before {
+  //  background: rgba(12, 14, 16, 0.65);
+  //}
+}
+
+.socialButton.isDisabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+
+  &:hover::before {
+    opacity: 1;
+    width: 100%;
+    height: 100%;
+  }
+
+  &:active {
+    transform: none;
+  }
+}
+
