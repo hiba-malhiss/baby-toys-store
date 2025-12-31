@@ -18,30 +18,55 @@
   }
 
   &--field {
-    padding: 8px 0;
     color: $color-text-grey;
+    padding: 8px 0;
 
     .radioButton-box {
-      color: $color-white;
+      position: relative;
+      width: 20px;
+      height: 20px;
+      border-radius: 8px;
+      border: 2px solid $color-border;
+      background: $color-white;
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 16px;
-      height: 16px;
-      border: 2px solid $color-border;
-      border-radius: 4px;
-      transition:
-        background-color 0.2s,
-        border-color 0.2s;
+
+      transition: background-color 0.2s ease,
+      border-color 0.2s ease,
+      transform 0.2s ease;
+
+      /* Icon animation */
+      svg {
+        transform: scale(0);
+        transition: transform 0.2s ease;
+      }
     }
 
+    /* Hover */
+    &:hover .radioButton-box {
+      transform: scale(1.05);
+      border-color: $color-primary;
+    }
+
+    /* Active (press) */
+    &:active .radioButton-box {
+      transform: scale(0.95);
+    }
+
+    /* Checked state */
     &.is-selected .radioButton-box {
       background-color: $color-primary;
-      border-color: $color-primary-dark;
+      border-color: $color-primary;
+
+      svg {
+        transform: scale(1);
+      }
     }
 
-    &:hover .radioButton-box {
-      border-color: $color-primary;
+    /* Focus reminder */
+    input:focus-visible + .radioButton-box {
+      box-shadow: 0 0 0 4px color.adjust($color-primary, $alpha: -0.8);
     }
   }
 
@@ -110,9 +135,8 @@
       border-radius: 50%;
       border: 2px solid #eee;
       display: inline-block;
-      transition:
-        border 0.2s,
-        box-shadow 0.2s;
+      transition: border 0.2s,
+      box-shadow 0.2s;
       box-sizing: border-box;
       margin: 0;
       background: var(--swatch-color, #eee);
