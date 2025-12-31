@@ -11,6 +11,7 @@
   transition: transform 0.3s ease;
   user-select: none;
   -webkit-tap-highlight-color: transparent;
+  border-radius: 16px;
 
   &.isDisabled {
     cursor: not-allowed;
@@ -19,8 +20,12 @@
 }
 
 .heartContainer_small {
-  width: 36px;
-  height: 36px;
+  width: 40px;
+  height: 40px;
+}
+
+.heartContainerAppearance_outline {
+  border: 1px solid #f43f5e;
 }
 
 .checkbox {

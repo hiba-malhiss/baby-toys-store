@@ -10,10 +10,11 @@ import {
   useToast,
   CopyToClipboardButton,
   Tooltip,
+  HeartButton,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
-import { faHeart, faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import { useAddToCart } from '../../../api/cartApi';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
@@ -172,14 +173,14 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
                 : t('product.tooltips.addToFavorites', { defaultValue: 'Add to favorites' })
             }
           >
-            <Button
-              leftIcon={faHeart}
+            <HeartButton
               appearance="outline"
-              color="icon"
-              isSelected={isFavorite}
+              checked={isFavorite}
               isLoading={isLoading}
-              onClick={() => toggleFavorite()}
-              aria-label={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              disabled={isLoading}
+              size="small"
+              ariaLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              onToggle={() => toggleFavorite()}
             />
           </Tooltip>
 

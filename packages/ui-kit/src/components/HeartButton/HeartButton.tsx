@@ -9,6 +9,7 @@ export interface HeartButtonProps {
   disabled?: boolean;
   isLoading?: boolean;
   size?: HeartButtonSize;
+  appearance?: 'default' | 'outline';
   className?: string;
   title?: string;
   ariaLabel?: string;
@@ -23,6 +24,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
   disabled = false,
   isLoading = false,
   size = 'medium',
+  appearance = 'default',
   className,
   title = 'Toggle favorite',
   ariaLabel,
@@ -49,6 +51,7 @@ const HeartButton: React.FC<HeartButtonProps> = ({
       className={clsx(
         styles.heartContainer,
         styles[`heartContainer_${size}`],
+        styles[`heartContainerAppearance_${appearance}`],
         className,
         (disabled || isLoading) && styles.isDisabled
       )}
