@@ -86,49 +86,49 @@
 .socialButton--whatsapp {
   background: #1ebea5;
 
-  //&::before {
-  //  background: rgba(17, 96, 78, 0.5);
-  //}
+  &.socialButton--variant-overlay::before {
+    background: rgba(17, 96, 78, 0.5);
+  }
 }
 
 .socialButton--twitter {
   background: #1d9bf0;
 
-  //&::before {
-  //  background: rgba(10, 86, 150, 0.5);
-  //}
+  &.socialButton--variant-overlay::before {
+    background: rgba(10, 86, 150, 0.5);
+  }
 }
 
 .socialButton--facebook {
   background: #1877f2;
 
-  //&::before {
-  //  background: rgba(11, 58, 150, 0.55);
-  //}
+  &.socialButton--variant-overlay::before {
+    background: rgba(11, 58, 150, 0.55);
+  }
 }
 
 .socialButton--youtube {
   background: #ff0000;
 
-  //&::before {
-  //  background: rgba(94, 0, 0, 0.55);
-  //}
+  &.socialButton--variant-overlay::before {
+    background: rgba(94, 0, 0, 0.55);
+  }
 }
 
 .socialButton--telegram {
   background: #2aabee;
 
-  //&::before {
-  //  background: rgba(24, 110, 160, 0.55);
-  //}
+  &.socialButton--variant-overlay::before {
+    background: rgba(24, 110, 160, 0.55);
+  }
 }
 
 .socialButton--github {
   background: #24292f;
 
-  //&::before {
-  //  background: rgba(12, 14, 16, 0.65);
-  //}
+  &.socialButton--variant-overlay::before {
+    background: rgba(12, 14, 16, 0.65);
+  }
 }
 
 .socialButton.isDisabled {

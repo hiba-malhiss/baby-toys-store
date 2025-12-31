@@ -40,6 +40,7 @@ const Footer = () => {
             >
               <SocialIconButton
                 icon={icon}
+                useVariantOverlay
                 onClick={() => handleFooterSocialClick(icon.iconName)}
               />
             </Tooltip>

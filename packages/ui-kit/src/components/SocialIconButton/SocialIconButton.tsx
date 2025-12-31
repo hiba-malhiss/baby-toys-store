@@ -26,6 +26,7 @@ export interface SocialIconButtonProps {
   disabled?: boolean;
   type?: 'button' | 'submit' | 'reset';
   size?: SocialIconButtonSize;
+  useVariantOverlay?: boolean;
 }
 
 const iconNameToVariant: Record<string, SocialIconVariant> = {
@@ -47,8 +48,8 @@ const SocialIconButton: React.FC<SocialIconButtonProps> = ({
   disabled = false,
   type = 'button',
   size = 'medium',
+  useVariantOverlay = false,
 }) => {
-  console.log(icon.iconName )
   const resolvedVariant =
     variant ?? iconNameToVariant[icon.iconName ?? ''] ?? ('default' as SocialIconVariant);
   const sizeClass = styles[`socialButton--size-${size}`] ?? styles['socialButton--size-medium'];
@@ -61,6 +62,7 @@ const SocialIconButton: React.FC<SocialIconButtonProps> = ({
       className={clsx(
         styles.socialButton,
         styles[`socialButton--${resolvedVariant}`],
+        useVariantOverlay && styles['socialButton--variant-overlay'],
         sizeClass,
         className,
         {
