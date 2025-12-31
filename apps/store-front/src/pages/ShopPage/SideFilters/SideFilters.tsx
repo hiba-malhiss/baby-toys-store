@@ -76,7 +76,6 @@ export const SideFilters: React.FC<{
   ]);
 
   const handleFilterChange = (key: keyof ShopFilters, value: any) => {
-    console.log(key, value)
     const current = (urlFilters as any)[key];
     const nextValue = current === value ? undefined : value;
     updateUrlFilters({ [key]: nextValue });
@@ -118,7 +117,7 @@ export const SideFilters: React.FC<{
       <Divider className="bts-marginTxl"/>
 
       <Accordion header={t('filters.category')} withoutPadding withoutHeaderPadding isOpenByDefault>
-        <ExpandableContent maxHeight="210px" buttonColor="underline">
+        <ExpandableContent maxHeight="220px" buttonColor="underline">
           <RadioButtonGroup
             name="category"
             selectedValue={urlFilters.categoryId}
@@ -138,7 +137,7 @@ export const SideFilters: React.FC<{
       </Accordion>
 
       <Accordion header={t('filters.color')} withoutPadding withoutHeaderPadding>
-        <ExpandableContent maxHeight="210px" buttonColor="underline">
+        <ExpandableContent maxHeight="220px" buttonColor="underline">
           <RadioButtonGroup
             name="color"
             selectedValue={urlFilters.colorId}
@@ -157,7 +156,7 @@ export const SideFilters: React.FC<{
       </Accordion>
 
       <Accordion header={t('filters.brand')} withoutPadding withoutHeaderPadding>
-        <ExpandableContent maxHeight="210px">
+        <ExpandableContent maxHeight="220px">
           <RadioButtonGroup
             name="brand"
             selectedValue={urlFilters.brandId}
@@ -177,7 +176,7 @@ export const SideFilters: React.FC<{
       </Accordion>
 
       <Accordion header={t('filters.material')} withoutPadding withoutHeaderPadding>
-        <ExpandableContent maxHeight="210px">
+        <ExpandableContent maxHeight="220px">
           <RadioButtonGroup
             name="material"
             selectedValue={urlFilters.materialId}
@@ -198,7 +197,7 @@ export const SideFilters: React.FC<{
 
       <Accordion header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })} withoutPadding
                  withoutHeaderPadding>
-        <ExpandableContent maxHeight="210px" buttonColor="underline">
+        <ExpandableContent maxHeight="220px" buttonColor="underline">
           <RadioButtonGroup
             name="deals-discounts"
             selectedValue={urlFilters.discounts}
