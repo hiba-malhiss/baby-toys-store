@@ -1,5 +1,7 @@
 .cartContainer {
-  --cart-color: #1fa4a9;
+  --cart-color-base: #{$color-secondary};
+  --cart-color-active: #{$color-primary};
+  --cart-color: var(--cart-color-base);
 
   position: relative;
   width: 48px;
@@ -54,6 +56,10 @@
   opacity: 0;
   animation: cart-celebrate 0.6s ease forwards;
   display: none;
+}
+
+.checkbox:checked + .svgContainer {
+  --cart-color: var(--cart-color-active);
 }
 
 .checkbox:checked + .svgContainer .svgFilled {
