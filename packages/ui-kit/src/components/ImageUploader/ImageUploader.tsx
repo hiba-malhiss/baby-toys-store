@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Button, Image, useToast } from '@baby-toys/ui-kit';
+import { resolveImageBaseUrl } from '../Image';
 import styles from './image-uploader.module.scss';
 
 interface ImageUploaderProps {
@@ -23,10 +24,6 @@ export interface PreviewImage {
 
 const MAX_IMAGES = 10;
 const MAX_FILE_SIZE_MB = 5;
-const BASE_URL =
-  (import.meta as any)?.env?.VITE_API_BASE_URL ||
-  ((import.meta as any)?.env?.DEV ? 'http://localhost:8080' : '');
-
 const ImageUploader: React.FC<ImageUploaderProps> = ({
   images = [],
   onImagesChange,
@@ -36,11 +33,30 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   isLoading = false,
 }) => {
   const toast = useToast();
+  const baseUrl = resolveImageBaseUrl();
   const [previewImages, setPreviewImages] = useState<PreviewImage[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const lastValueRef = useRef<(File | string)[]>(['']);
+
+  const resolveBackendUrl = React.useCallback(
+    (url: string) => {
+      if (!url) return '';
+
+      if (
+        url.startsWith('http://') ||
+        url.startsWith('https://') ||
+        url.startsWith('data:') ||
+        url.startsWith('blob:')
+      ) {
+        return url;
+      }
+
+      return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
+    },
+    [baseUrl]
+  );
 
   // Convert input images to preview objects
   useEffect(() => {
@@ -187,7 +203,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
             {previewImages.map((p, index) => (
               <div key={p.url + index} className={styles.imageUploaderFile}>
                 <Image
-                  src={p.isBackend ? `${BASE_URL}${p.url}` : p.url}
+                  src={p.isBackend ? resolveBackendUrl(p.url) : p.url}
                   alt={`preview-${index}`}
                   className={styles.imageUploaderThumbnail}
                 />

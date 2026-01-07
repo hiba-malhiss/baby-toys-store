@@ -1,6 +1,7 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import styles from './image.module.scss';
 import clsx from 'clsx';
+import { resolveUiKitBaseUrl } from '../../utils/runtime-config';
 
 export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src?: string;
@@ -11,9 +12,9 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   disableBaseUrl?: boolean;
 }
 
-export const IMAGE_BASE_URL =
-  (import.meta as any)?.env?.VITE_API_BASE_URL ||
-  ((import.meta as any)?.env?.DEV ? 'http://localhost:8080' : '');
+export const resolveImageBaseUrl = (): string => resolveUiKitBaseUrl();
+
+export const IMAGE_BASE_URL = resolveImageBaseUrl();
 
 export const Image: React.FC<ImageProps> = ({
   src,
@@ -49,7 +50,9 @@ export const Image: React.FC<ImageProps> = ({
     ) {
       return imageSrc;
     }
-    return `${IMAGE_BASE_URL}${imageSrc.startsWith('/') ? '' : '/'}${imageSrc}`;
+    const baseUrl = resolveImageBaseUrl();
+
+    return `${baseUrl}${imageSrc.startsWith('/') ? '' : '/'}${imageSrc}`;
   }, [imageSrc, disableBaseUrl]);
 
   const handleError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {

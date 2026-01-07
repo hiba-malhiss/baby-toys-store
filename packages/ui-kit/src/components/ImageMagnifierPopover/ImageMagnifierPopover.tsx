@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect, useMemo } from 'react';
 import styles from './image-magnifier-popover.module.scss';
 import Popover from '../Popover/Popover';
-import { IMAGE_BASE_URL } from '../Image';
+import { resolveImageBaseUrl } from '../Image';
 
 type Props = {
   src: string;
@@ -37,7 +37,9 @@ const ImageMagnifierPopover: React.FC<Props> = ({
     ) {
       return src;
     }
-    return `${IMAGE_BASE_URL}${src.startsWith('/') ? '' : '/'}${src}`;
+    const baseUrl = resolveImageBaseUrl();
+
+    return `${baseUrl}${src.startsWith('/') ? '' : '/'}${src}`;
   }, [src, disableBaseUrl]);
 
   useEffect(() => {
