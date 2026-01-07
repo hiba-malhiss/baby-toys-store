@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './cart-item-card.module.scss';
 import clsx from 'clsx';
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
-import { Button, Flex, Text } from '@baby-toys/ui-kit';
+import { Button, Flex, Image, Text } from '@baby-toys/ui-kit';
 import CartQuantityInput from '../../shared/CartQuantityInput';
 import { useRemoveFromCart } from '../../../api/cartApi.ts';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +31,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
 
   return (
     <div className={clsx(fullWidth && styles.fullWidth, styles.cartItemCard)}>
-      <img src={image} alt={name} className={styles.cartItemCardImage}/>
+      <Image src={image} alt={name} className={styles.cartItemCardImage}/>
       <Flex   direction="vertical" spacing="s" className={styles.cartItemCardName}>
         {name}
         {(!quantityInStock || quantityInStock <= 0) && (
