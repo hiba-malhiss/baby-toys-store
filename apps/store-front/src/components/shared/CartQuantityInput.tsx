@@ -10,6 +10,7 @@ interface CartQuantityInputProps {
   availableInStock: number;
   fullWidth?: boolean;
   className?: string;
+  size?: string;
   isDisabled?: boolean;
 }
 
@@ -19,6 +20,7 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
   availableInStock,
   fullWidth,
   className,
+  size,
   isDisabled,
 }) => {
   const updateMutation = useUpdateCartItem();
@@ -114,6 +116,7 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
       <StringInput
         fullWidth={fullWidth}
         type="number"
+        size={size}
         min={1}
         max={maxProp}
         withControls

@@ -52,6 +52,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           quantity={quantity}
           fullWidth
           isDisabled={!quantityInStock || quantityInStock <= 0}
+          size="small"
         />
         <Button
           leftIcon={faTrashAlt}
