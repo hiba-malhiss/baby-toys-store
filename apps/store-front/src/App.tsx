@@ -45,7 +45,6 @@ const AppContent: React.FC = () => {
         <LocationAwareToast>
           <ScrollToTop />
           <Layout>
-            hi
             <Routes>
               <Route path="/" element={<Navigate to="/home" replace />} />
               <Route path="/home" element={<HomePage />} />
