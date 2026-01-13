@@ -1,0 +1,85 @@
+services:
+  nginx:
+    image: nginx:latest
+    container_name: nginx-docker
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d:ro
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+      - /var/www/letsencrypt:/var/www/letsencrypt:ro
+    networks:
+      - toystore-net
+    restart: always
+    depends_on:
+      - store
+      - admin
+      - backend
+
+  toystore-mysql:
+    image: mysql:8.0
+    container_name: toystore-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: toystore
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - toystore-net
+    restart: always
+
+  backend:
+    container_name: backend-docker
+    image: toystore-backend:latest
+    build:
+      context: /opt/toystore-repo/toy-store-backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    networks:
+      - toystore-net
+    restart: always
+    depends_on:
+      - toystore-mysql
+
+  store:
+    container_name: store-docker
+    image: toystore-store:latest
+    build:
+      context: /opt/toystore-repo/baby-toys-store
+      dockerfile: apps/store-front/Dockerfile
+    networks:
+      - toystore-net
+    restart: always
+
+  admin:
+    container_name: admin-docker
+    image: toystore-admin:latest
+    build:
+      context: /opt/toystore-repo/baby-toys-store
+      dockerfile: apps/store-admin/Dockerfile
+    networks:
+      - toystore-net
+    restart: always
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: phpmyadmin
+    environment:
+      PMA_HOST: toystore-mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: "1"
+      UPLOAD_LIMIT: 128M
+    networks:
+      - toystore-net
+    restart: always
+    depends_on:
+      - toystore-mysql
+
+volumes:
+  mysql-data:
+
+networks:
+  toystore-net:
+    driver: bridge

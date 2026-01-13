@@ -1,0 +1,9 @@
+// docker images | egrep 'nginx|mysql|phpmyadmin|store|admin|backend'
+
+WARNING: This output is designed for human readability. For machine-readable output, please use --format.
+mysql:8.0                 271aa4b4c844       1.08GB          247MB   U
+nginx:latest              7272239bd214        240MB         65.7MB   U
+phpmyadmin:latest         0d745e282306        821MB          197MB   U
+toystore-admin:latest     bf41080dabdc       95.8MB         26.8MB   U
+toystore-backend:latest   8ff64ebce375        529MB          168MB   U
+toystore-store:latest     30602e3805ba        101MB         29.6MB   U
