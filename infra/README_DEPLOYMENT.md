@@ -413,9 +413,53 @@ docker exec -it nginx-docker sh -lc "curl -sS -o /dev/null -w 'backend:%{http_co
 
 ---
 
-## 16) Where to store this README
+A. Update Store Frontend
 
-Recommended in your repo:
-- `infra/README_DEPLOYMENT.md`
+```bash
+cd /opt/toystore-repo/baby-toys-store
+git pull
 
-So you can deploy any time by copying `infra/` to the server.
+cd /opt/toystore-docker
+docker compose build store
+docker compose up -d store
+docker compose logs -f --tail 80 store-docker
+```
+
+---
+
+## B. Update Admin Panel
+
+```bash
+cd /opt/toystore-repo/baby-toys-store
+git pull
+
+cd /opt/toystore-docker
+docker compose build admin
+docker compose up -d admin
+docker compose logs -f --tail 80 admin-docker
+```
+
+---
+
+## C. Update Backend API
+
+```bash
+cd /opt/toystore-repo/toy-store-backend
+git pull
+
+cd /opt/toystore-docker
+docker compose build --no-cache backend
+docker compose up -d backend
+docker logs -f --tail 120 backend-docker
+```
+
+### ℹ️ Notes
+
+- Use `--no-cache` **only** for clean rebuilds
+
+- Faster rebuilds:
+
+
+```bash
+docker compose build backend
+```
