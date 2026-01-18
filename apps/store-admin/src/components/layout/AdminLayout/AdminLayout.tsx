@@ -1,44 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import { Menu, Button, Toast, BouncingDotsLoader, Mask, Flex } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher.tsx';
-
-const menuItems = [
-  { label: 'Dashboard', route: '/dashboard' },
-  { label: 'Products', route: '/products' },
-  {
-    label: 'Catalog',
-    items: [
-      { label: 'Categories', route: '/categories' },
-      { label: 'Brands', route: '/brands' },
-      { label: 'Colors', route: '/colors' },
-      { label: 'Materials', route: '/materials' },
-    ],
-  },
-  {
-    label: 'Finance',
-    items: [
-      { label: 'Finance', route: '/finance' },
-      { label: 'Expenses', route: '/expenses' },
-    ],
-  },
-  {
-    label: 'Analytics',
-    items: [
-      { label: 'Product Analytics', route: '/analytics/products' },
-    ],
-  },
-  { label: 'Orders', route: '/orders' },
-  { label: 'Coupons', route: '/coupons' },
-  { label: 'Customers', route: '/customers' },
-  { label: 'Contact Messages', route: '/contact-messages' },
-  { label: 'Reviews', route: '/reviews' },
-  { label: 'Home page content', route: '/homepage' },
-  { label: 'Store settings', route: '/settings' },
-  { label: 'Shipping options', route: '/shipping-options' },
-];
+import { useTranslation } from 'react-i18next';
 
 const AdminLayout: React.FC<{
   children: React.ReactNodem;
@@ -46,7 +12,44 @@ const AdminLayout: React.FC<{
   isMaskLoading?: boolean;
 }> = ({ children, isLoading, isMaskLoading }) => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { mutateAsync: logoutApi } = useLogout();
+
+  const menuItems = useMemo(
+    () => [
+      { label: t('menu.dashboard'), route: '/dashboard' },
+      { label: t('menu.products'), route: '/products' },
+      {
+        label: t('menu.catalog'),
+        items: [
+          { label: t('menu.categories'), route: '/categories' },
+          { label: t('menu.brands'), route: '/brands' },
+          { label: t('menu.colors'), route: '/colors' },
+          { label: t('menu.materials'), route: '/materials' },
+        ],
+      },
+      {
+        label: t('menu.finance'),
+        items: [
+          { label: t('menu.finance'), route: '/finance' },
+          { label: t('menu.expenses'), route: '/expenses' },
+        ],
+      },
+      {
+        label: t('menu.analytics'),
+        items: [{ label: t('menu.productAnalytics'), route: '/analytics/products' }],
+      },
+      { label: t('menu.orders'), route: '/orders' },
+      { label: t('menu.coupons'), route: '/coupons' },
+      { label: t('menu.customers'), route: '/customers' },
+      { label: t('menu.contactMessages'), route: '/contact-messages' },
+      { label: t('menu.reviews'), route: '/reviews' },
+      { label: t('menu.homepage'), route: '/homepage' },
+      { label: t('menu.settings'), route: '/settings' },
+      { label: t('menu.shippingOptions'), route: '/shipping-options' },
+    ],
+    [t]
+  );
 
   const logout = useCallback(async() => {
     try {
@@ -74,7 +77,7 @@ const AdminLayout: React.FC<{
             appearance="outline"
             className={`${styles.adminLayoutLogout} bts-marginTl`}
           >
-            Logout
+            {t('app.logout')}
           </Button>
         </aside>
         <main className={styles.adminLayoutContent}>

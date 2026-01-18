@@ -13,8 +13,10 @@ import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Category } from '../../api/types/category';
 import useCategories from './useCategories';
 import CategoryDialog from './CategoryDialog';
+import { useTranslation } from 'react-i18next';
 
 const CategoriesPage: React.FC = () => {
+  const { t } = useTranslation();
   const {
     categories,
     isLoading,
@@ -47,8 +49,8 @@ const CategoriesPage: React.FC = () => {
       <AdminLayout>
         <Alert
           appearance="error"
-          title="Failed to load categories"
-          message={error.message || 'An unexpected error occurred.'}
+          title={t('categories.loadErrorTitle')}
+          message={error.message || t('app.unexpectedError')}
         />
       </AdminLayout>
     );
@@ -58,18 +60,18 @@ const CategoriesPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
-          <Heading>Categories</Heading>
-          <Button onClick={openAddDialog}>Add Category</Button>
+          <Heading>{t('categories.title')}</Heading>
+          <Button onClick={openAddDialog}>{t('categories.add')}</Button>
         </Flex>
 
         <Table
           value={categories}
           columns={[
-            { header: 'Image', field: 'imageUrl', type: 'image' },
-            { header: 'Name', field: 'name' },
-            { header: 'Description', field: 'description' },
+            { header: t('categories.columns.image'), field: 'imageUrl', type: 'image' },
+            { header: t('categories.columns.name'), field: 'name' },
+            { header: t('categories.columns.description'), field: 'description' },
             {
-              header: 'Actions',
+              header: t('app.actions'),
               field: 'actions',
               body: (category: Category) => (
                 <Flex spacing="m">
@@ -89,7 +91,7 @@ const CategoriesPage: React.FC = () => {
               ),
             },
           ]}
-          emptyMessage="No categories found."
+          emptyMessage={t('categories.empty')}
         />
       </Flex>
 
@@ -104,10 +106,10 @@ const CategoriesPage: React.FC = () => {
         visible={confirmDialogVisible}
         onCancel={() => setConfirmDialogVisible(false)}
         onConfirm={handleDelete}
-        header="Confirm Delete"
-        message={`Are you sure you want to delete “${categoryToDelete?.name}”?`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        header={t('common.confirmDeleteTitle')}
+        message={t('categories.deleteConfirm', { name: categoryToDelete?.name })}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
       />
     </AdminLayout>
   );

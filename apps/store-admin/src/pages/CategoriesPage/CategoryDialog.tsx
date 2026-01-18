@@ -30,6 +30,7 @@ import {
 } from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit';
 import { getSupportedLocales } from '../../components/i18n/locale';
+import { useTranslation } from 'react-i18next';
 
 interface CategoryDialogProps {
   visible: boolean;
@@ -44,6 +45,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
                                                          onSuccess,
                                                          category,
                                                        }) => {
+  const { t } = useTranslation();
   const toast = useToast();
   const createCategory = useCreateCategory();
   const updateCategory = useUpdateCategory();
@@ -135,17 +137,19 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
           }
         } catch(error) {
           console.error('Error uploading image:', error);
-          toast.error('Category saved, but there was an error uploading the image');
+          toast.error(t('categories.imageUploadError'));
         }
       }
 
-      toast.success(`Category ${category ? 'updated' : 'created'} successfully`);
+      toast.success(
+        category ? t('categories.updateSuccess') : t('categories.createSuccess')
+      );
       onSuccess();
       onHide();
       setImageFile(null);
       setImagePreview(null);
     } catch(err: any) {
-      toast.error(err?.message || 'Failed to save category');
+      toast.error(err?.message || t('categories.saveError'));
     }
   };
 
@@ -156,7 +160,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       fullWidth
       onClick={handleSubmit(submitForm)}
     >
-      {category ? 'Update' : 'Create'} Category
+      {category ? t('categories.update') : t('categories.create')}
     </Button>
   );
 
@@ -167,7 +171,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         onHide();
         setImageFile(null);
       }}
-      header={category ? 'Edit Category' : 'Add New Category'}
+      header={category ? t('categories.editTitle') : t('categories.addTitle')}
       footer={footer}
     >
       <Flex direction="vertical" spacing="m" fullWidth>
@@ -182,7 +186,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
               <FormFieldWrapper
                 name={`translations.${l}.name`}
                 control={control}
-                label={`Name (${l})`}
+                label={t('categories.fields.name', { locale: l })}
                 required
                 fullWidth
               >
@@ -191,7 +195,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
               <FormFieldWrapper
                 name={`translations.${l}.description`}
                 control={control}
-                label={`Description (${l})`}
+                label={t('categories.fields.description', { locale: l })}
                 fullWidth
                 className="bts-marginTm"
               >
@@ -202,19 +206,19 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         </TabBar>
 
         <Divider thickness="2px"/>
-        <FormFieldWrapper name="isActive" control={control} label="Is Active" fullWidth>
+        <FormFieldWrapper name="isActive" control={control} label={t('categories.fields.isActive')} fullWidth>
           <Select>
-            <Option value={true as any}>Yes</Option>
-            <Option value={false as any}>No</Option>
+            <Option value={true as any}>{t('app.yes')}</Option>
+            <Option value={false as any}>{t('app.no')}</Option>
           </Select>
         </FormFieldWrapper>
-        <FormFieldWrapper name="isMain" control={control} label="Is Main" fullWidth>
+        <FormFieldWrapper name="isMain" control={control} label={t('categories.fields.isMain')} fullWidth>
           <Select>
-            <Option value={true as any}>Yes</Option>
-            <Option value={false as any}>No</Option>
+            <Option value={true as any}>{t('app.yes')}</Option>
+            <Option value={false as any}>{t('app.no')}</Option>
           </Select>
         </FormFieldWrapper>
-        <FormFieldWrapper name="imageUrl" label="Image" fullWidth>
+        <FormFieldWrapper name="imageUrl" label={t('categories.fields.image')} fullWidth>
           <ImageUploader
             images={imageFile ? [imageFile] : imagePreview ? [imagePreview] : []}
             multiple={false}

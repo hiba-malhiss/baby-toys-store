@@ -14,8 +14,10 @@ import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import { Color } from '../../api/types/color';
 import useColorsPage from './useColors';
 import ColorDialog from './ColorDialog';
+import { useTranslation } from 'react-i18next';
 
 const ColorsPage: React.FC = () => {
+  const { t } = useTranslation();
   const {
     colors,
     isLoading,
@@ -48,8 +50,8 @@ const ColorsPage: React.FC = () => {
       <AdminLayout>
         <Alert
           appearance="error"
-          title="Failed to load colors"
-          message={error.message || 'An unexpected error occurred.'}
+          title={t('colors.loadErrorTitle')}
+          message={error.message || t('app.unexpectedError')}
         />
       </AdminLayout>
     );
@@ -59,18 +61,18 @@ const ColorsPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
-          <Heading>Colors</Heading>
-          <Button onClick={openAddDialog}>Add Color</Button>
+          <Heading>{t('colors.title')}</Heading>
+          <Button onClick={openAddDialog}>{t('colors.add')}</Button>
         </Flex>
 
         <Table
           columns={[
             {
-              header: 'Name',
+              header: t('colors.columns.name'),
               field: 'name',
             },
             {
-              header: 'Color',
+              header: t('colors.columns.color'),
               field: 'code',
               body: (row: Color) => (
                 <Flex spacing="s" align="center">
@@ -80,7 +82,7 @@ const ColorsPage: React.FC = () => {
               ),
             },
             {
-              header: 'Actions',
+              header: t('app.actions'),
               field: 'actions',
               body: (color: Color) => (
                 <Flex spacing="m">
@@ -89,21 +91,21 @@ const ColorsPage: React.FC = () => {
                     leftIcon={faPen}
                     appearance="outline"
                     onClick={() => openEditDialog(color)}
-                    aria-label="Edit"
+                    aria-label={t('common.edit')}
                   />
                   <Button
                     size="small"
                     appearance="outline"
                     leftIcon={faTrashAlt}
                     onClick={() => openDeleteDialog(color)}
-                    aria-label="Delete"
+                    aria-label={t('common.delete')}
                   />
                 </Flex>
               ),
             },
           ]}
           value={colors}
-          emptyMessage="No colors found"
+          emptyMessage={t('colors.empty')}
         />
       </Flex>
 
@@ -118,10 +120,10 @@ const ColorsPage: React.FC = () => {
         visible={confirmDialogVisible}
         onCancel={() => setConfirmDialogVisible(false)}
         onConfirm={handleDelete}
-        header="Delete Color"
-        message={`Are you sure you want to delete "${colorToDelete?.name}"? This action cannot be undone.`}
-        confirmText="Delete"
-        cancelText="Cancel"
+        header={t('colors.deleteTitle')}
+        message={t('colors.deleteConfirm', { name: colorToDelete?.name })}
+        confirmText={t('common.delete')}
+        cancelText={t('common.cancel')}
       />
     </AdminLayout>
   );

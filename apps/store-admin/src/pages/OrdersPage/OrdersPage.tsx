@@ -4,9 +4,11 @@ import { Heading, Table, Flex, StringInput, Select, Option } from '@baby-toys/ui
 import { useOrdersPage } from './useOrdersPage.tsx';
 import styles from './orders-page.module.scss';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { orderStatusOptions } from './orders-page.utils';
+import { getOrderStatusOptions } from './orders-page.utils';
+import { useTranslation } from 'react-i18next';
 
 const OrdersPage: React.FC = () => {
+  const { t } = useTranslation();
   const {
     orders,
     totalRecords,
@@ -23,27 +25,28 @@ const OrdersPage: React.FC = () => {
     searchValue,
     setSearchValue,
   } = useOrdersPage();
+  const statusOptions = getOrderStatusOptions(t);
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>Orders</Heading>
+          <Heading>{t('orders.title')}</Heading>
           <Flex spacing="m">
             <Select
               value={statusFilter ?? ''}
               className={styles.orderPageStatus}
               onChange={(value) => setStatusFilter((value as string) || undefined)}
             >
-              <Option value="">All</Option>
-              {orderStatusOptions.map((opt) => (
+              <Option value="">{t('app.all')}</Option>
+              {statusOptions.map((opt) => (
                 <Option key={opt.value} value={opt.value}>
                   {opt.label}
                 </Option>
               ))}
             </Select>
             <StringInput
-              placeholder="Search by order number or user ID..."
+              placeholder={t('orders.searchPlaceholder')}
               className={styles.orderPageSearch}
               fullWidth
               value={searchValue}

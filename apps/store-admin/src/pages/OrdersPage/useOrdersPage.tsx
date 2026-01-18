@@ -8,9 +8,10 @@ import { Chip, Flex, Button, Tooltip } from '@baby-toys/ui-kit';
 import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Tooltips } from '../../constants/tooltips';
+import { useTranslation } from 'react-i18next';
 
 export const useOrdersPage = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchValue, setSearchValue] = React.useState(searchParams.get('query') || '');
@@ -65,58 +66,62 @@ export const useOrdersPage = () => {
 
   const columns = useMemo(
     () => [
-      { field: 'orderNumber', header: 'Order #', sortable: true },
+      { field: 'orderNumber', header: t('orders.orderNumber'), sortable: true },
       {
         field: 'createdAt',
-        header: 'Date',
+        header: t('orders.date'),
         sortable: true,
         body: (row: Order) => new Date(row.createdAt).toLocaleString(),
       },
       {
         field: 'couponCode',
-        header: 'Coupon',
+        header: t('orders.coupon'),
         sortable: false,
         body: (row: Order) => row.couponCode || '-',
       },
       {
         field: 'discountAmount',
-        header: 'Discount',
+        header: t('orders.discount'),
         sortable: true,
         body: (row: Order) => (row.discountAmount ? `-${formatNumber(row.discountAmount)}` : '-'),
       },
       {
         field: 'total',
-        header: 'Total',
+        header: t('orders.total'),
         sortable: true,
         body: (row: Order) => formatNumber(row.total),
       },
       {
         field: 'totalCost',
-        header: 'Total Cost',
+        header: t('orders.totalCost'),
         sortable: false,
         body: (row: Order) => (row.totalCost != null ? formatNumber(row.totalCost) : '-'),
       },
       {
         field: 'totalProfit',
-        header: <HeaderWithTooltip label="Profit" tip={Tooltips.orderHeaders.profit} />,
+        header: <HeaderWithTooltip label={t('orders.profit')} tip={t('tooltips.orderHeaders.profit')} />,
         sortable: false,
         body: (row: Order) => (row.totalProfit ? formatNumber(row.totalProfit) : '-'),
       },
       {
         field: 'profitMargin',
-        header: <HeaderWithTooltip label="Margin" tip={Tooltips.orderHeaders.margin} />,
+        header: <HeaderWithTooltip label={t('orders.margin')} tip={t('tooltips.orderHeaders.margin')} />,
         sortable: false,
         body: (row: Order) =>
           row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',
       },
       {
         field: 'status',
-        header: 'Status',
-        body: (row: Order) => <Chip label={row.status} appearance={statusColorMap[row.status]} />,
+        header: t('orders.status'),
+        body: (row: Order) => {
+          const statusKey = String(row.status || '').toLowerCase();
+          const label = t(`orderStatus.${statusKey}`, row.status as any);
+          return <Chip label={label} appearance={statusColorMap[row.status]} />;
+        },
       },
       {
         field: 'actions',
-        header: 'Actions',
+        header: t('app.actions'),
         body: (row: Order) => (
           <Flex spacing="m">
             <Button
@@ -135,7 +140,7 @@ export const useOrdersPage = () => {
         ),
       },
     ],
-    [navigate]
+    [navigate, t]
   );
 
   const handleSearch = (value: string) => {

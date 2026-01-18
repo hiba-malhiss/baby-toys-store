@@ -1,0 +1,342 @@
+{
+  "app": {
+    "loading": "جارٍ التحميل...",
+    "submit": "إرسال",
+    "logout": "تسجيل الخروج",
+    "actions": "الإجراءات",
+    "all": "الكل",
+    "yes": "نعم",
+    "no": "لا",
+    "unexpectedError": "حدث خطأ غير متوقع."
+  },
+  "common": {
+    "confirmDeleteTitle": "تأكيد الحذف",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "edit": "تعديل"
+  },
+  "menu": {
+    "dashboard": "لوحة التحكم",
+    "products": "المنتجات",
+    "catalog": "الكتالوج",
+    "categories": "الفئات",
+    "brands": "العلامات التجارية",
+    "colors": "الألوان",
+    "materials": "المواد",
+    "finance": "المالية",
+    "expenses": "المصاريف",
+    "analytics": "التحليلات",
+    "productAnalytics": "تحليلات المنتجات",
+    "orders": "الطلبات",
+    "coupons": "القسائم",
+    "customers": "العملاء",
+    "contactMessages": "رسائل التواصل",
+    "reviews": "المراجعات",
+    "homepage": "محتوى الصفحة الرئيسية",
+    "settings": "إعدادات المتجر",
+    "shippingOptions": "خيارات الشحن"
+  },
+  "categories": {
+    "title": "الفئات",
+    "add": "إضافة فئة",
+    "addTitle": "إضافة فئة جديدة",
+    "editTitle": "تعديل الفئة",
+    "empty": "لا توجد فئات.",
+    "loadErrorTitle": "فشل تحميل الفئات",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف “{{name}}”؟",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "createSuccess": "تم إنشاء الفئة بنجاح",
+    "updateSuccess": "تم تحديث الفئة بنجاح",
+    "deleteSuccess": "تم حذف الفئة بنجاح",
+    "deleteError": "فشل حذف الفئة",
+    "saveError": "فشل حفظ الفئة",
+    "imageUploadError": "تم حفظ الفئة، لكن حدث خطأ أثناء رفع الصورة",
+    "columns": {
+      "image": "الصورة",
+      "name": "الاسم",
+      "description": "الوصف"
+    },
+    "fields": {
+      "name": "الاسم ({{locale}})",
+      "description": "الوصف ({{locale}})",
+      "isActive": "نشطة",
+      "isMain": "رئيسية",
+      "image": "الصورة"
+    }
+  },
+  "brands": {
+    "title": "العلامات التجارية",
+    "add": "إضافة علامة تجارية",
+    "addTitle": "إضافة علامة تجارية جديدة",
+    "editTitle": "تعديل العلامة التجارية",
+    "empty": "لا توجد علامات تجارية.",
+    "loadErrorTitle": "فشل تحميل العلامات التجارية",
+    "deleteTitle": "حذف العلامة التجارية",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+    "create": "إنشاء علامة تجارية",
+    "update": "تحديث العلامة التجارية",
+    "createSuccess": "تم إنشاء العلامة التجارية بنجاح",
+    "updateSuccess": "تم تحديث العلامة التجارية بنجاح",
+    "createError": "فشل إنشاء العلامة التجارية",
+    "updateError": "فشل تحديث العلامة التجارية",
+    "deleteSuccess": "تم حذف العلامة التجارية بنجاح",
+    "deleteError": "فشل حذف العلامة التجارية",
+    "imageUploadError": "تم حفظ العلامة التجارية، لكن فشل رفع الصورة",
+    "columns": {
+      "logo": "الشعار",
+      "name": "الاسم",
+      "description": "الوصف"
+    },
+    "fields": {
+      "name": "اسم العلامة التجارية ({{locale}})",
+      "description": "الوصف ({{locale}})",
+      "logo": "الشعار"
+    },
+    "placeholders": {
+      "name": "أدخل اسم العلامة التجارية",
+      "description": "أدخل وصف العلامة التجارية"
+    }
+  },
+  "colors": {
+    "title": "الألوان",
+    "add": "إضافة لون",
+    "addTitle": "إضافة لون جديد",
+    "editTitle": "تعديل اللون",
+    "empty": "لا توجد ألوان",
+    "loadErrorTitle": "فشل تحميل الألوان",
+    "deleteTitle": "حذف اللون",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "createSuccess": "تم إنشاء اللون بنجاح",
+    "updateSuccess": "تم تحديث اللون بنجاح",
+    "createError": "فشل إنشاء اللون",
+    "updateError": "فشل تحديث اللون",
+    "deleteSuccess": "تم حذف اللون بنجاح",
+    "deleteError": "فشل حذف اللون",
+    "invalidCode": "رمز لون غير صالح",
+    "nameRequired": "الاسم ({{locale}}) مطلوب",
+    "tabs": {
+      "en": "الإنجليزية (en)",
+      "ar": "العربية (ar)"
+    },
+    "columns": {
+      "name": "الاسم",
+      "color": "اللون"
+    },
+    "fields": {
+      "name": "اسم اللون ({{locale}})",
+      "code": "رمز اللون"
+    },
+    "placeholders": {
+      "name": "أدخل اسم اللون"
+    }
+  },
+  "language": {
+    "switchToEnglish": "التبديل إلى الإنجليزية",
+    "switchToArabic": "التبديل إلى العربية",
+    "toggleTitleEn": "EN",
+    "toggleTitleAr": "AR",
+    "label": "اللغة",
+    "selectPlaceholder": "اختر اللغة"
+  },
+  "productForm": {
+    "addTitle": "إضافة منتج",
+    "editTitle": "تعديل المنتج",
+    "mainImage": "الصورة الرئيسية",
+    "galleryImages": "معرض الصور",
+    "price": "السعر",
+    "costPrice": "سعر التكلفة",
+    "oldPrice": "السعر القديم (اختياري)",
+    "stockQuantity": "كمية المخزون",
+    "category": "الفئة",
+    "brand": "العلامة التجارية",
+    "colors": "الألوان",
+    "materials": "المواد",
+    "productName": "اسم المنتج {{locale}}",
+    "shortDescription": "وصف مختصر {{locale}}",
+    "description": "الوصف {{locale}}",
+    "productDetails": "تفاصيل المنتج {{locale}}",
+    "featureBullets": "ميزات المنتج {{locale}}",
+    "placeholders": {
+      "productName": "أدخل اسم المنتج",
+      "shortDescription": "أدخل وصفًا مختصرًا",
+      "description": "أدخل وصفًا كاملًا",
+      "detailLabel": "العنوان",
+      "detailValue": "القيمة",
+      "bullet": "أضف نقطة"
+    },
+    "buttons": {
+      "addDetail": "إضافة تفصيل",
+      "addBullet": "إضافة نقطة"
+    }
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "welcome": "مرحبًا بعودتك، المدير!",
+    "revenueLabel": "الإيرادات",
+    "quantityLabel": "الكمية",
+    "currentLabel": "الحالي",
+    "previousLabel": "السابق",
+    "revenueThisMonth": "الإيرادات (هذا الشهر)",
+    "momRevenueChange": "تغير الإيرادات شهريًا",
+    "averageOrderValue": "متوسط قيمة الطلب",
+    "pendingOrders": "طلبات معلّقة",
+    "salesOverTime": "المبيعات عبر الزمن (الحالي مقابل السابق)",
+    "categoryRevenue30d": "إيرادات الفئات (30 يومًا)",
+    "topSelling": "أفضل المنتجات مبيعًا",
+    "productInterest": "اهتمام المنتجات (آخر 30 يومًا)",
+    "productConversionFunnel": "قمع تحويل المنتج (30 يومًا)",
+    "currentRange": "الحالي: {{start}} → {{end}}",
+    "previousRange": "السابق: {{start}} → {{end}}",
+    "views": "المشاهدات",
+    "wishlists": "قوائم الرغبات",
+    "addToCart": "الإضافة إلى السلة",
+    "table": {
+      "product": "المنتج",
+      "viewToWishlist": "نسبة مشاهدة→قائمة رغبات",
+      "wishlistToCart": "نسبة قائمة رغبات→سلة",
+      "cartToPurchase": "نسبة سلة→شراء"
+    }
+  },
+  "finance": {
+    "title": "المالية - الربح الشهري",
+    "month": "الشهر",
+    "income": "الدخل",
+    "cogs": "تكلفة البضاعة المباعة",
+    "expenses": "المصاريف",
+    "profit": "الربح",
+    "viewProduct": "عرض التفاصيل"
+  },
+  "orders": {
+    "title": "الطلبات",
+    "searchPlaceholder": "ابحث برقم الطلب أو رقم المستخدم...",
+    "orderNumber": "رقم الطلب",
+    "date": "التاريخ",
+    "coupon": "القسيمة",
+    "discount": "الخصم",
+    "total": "الإجمالي",
+    "totalCost": "إجمالي التكلفة",
+    "profit": "الربح",
+    "margin": "الهامش",
+    "status": "الحالة"
+  },
+  "orderItems": {
+    "title": "عناصر الطلب",
+    "productImageAlt": "صورة المنتج",
+    "unit": "سعر الوحدة",
+    "qty": "الكمية",
+    "total": "الإجمالي",
+    "deleteItemTitle": "حذف عنصر",
+    "deleteItemConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\" من الطلب؟"
+  },
+  "couponSummary": {
+    "title": "القسيمة والملخص",
+    "couponPlaceholder": "رمز القسيمة",
+    "couponApplied": "تم تطبيق القسيمة",
+    "noCoupon": "لم يتم تطبيق قسيمة",
+    "subtotal": "المجموع الفرعي",
+    "shipping": "الشحن",
+    "discount": "الخصم",
+    "total": "الإجمالي",
+    "totalCost": "إجمالي التكلفة",
+    "totalProfit": "إجمالي الربح",
+    "profitMargin": "هامش الربح"
+  },
+  "shippingAddress": {
+    "title": "عنوان الشحن",
+    "noAddress": "لا يوجد عنوان",
+    "firstName": "الاسم الأول",
+    "lastName": "اسم العائلة",
+    "town": "المدينة",
+    "region": "المنطقة",
+    "detailedAddress": "العنوان التفصيلي",
+    "phone": "رقم الهاتف",
+    "secondPhone": "رقم هاتف ثانٍ",
+    "email": "البريد الإلكتروني"
+  },
+  "orderNote": {
+    "title": "ملاحظة الطلب"
+  },
+  "orderDetails": {
+    "editOrder": "تعديل الطلب",
+    "placedOn": "تم الطلب في {{date}}",
+    "currentStatus": "الحالة الحالية: {{status}}",
+    "changeStatusTitle": "تغيير حالة الطلب",
+    "changeStatusConfirm": "هل أنت متأكد أنك تريد تغيير الحالة إلى \"{{status}}\"؟"
+  },
+  "orderStatus": {
+    "pending": "قيد الانتظار",
+    "processing": "قيد المعالجة",
+    "shipped": "تم الشحن",
+    "delivered": "تم التسليم",
+    "cancelled": "ملغي",
+    "returned": "مرتجع"
+  },
+  "productView": {
+    "fallbackName": "منتج",
+    "idLabel": "المعرّف #{{id}}",
+    "productIdCopied": "تم نسخ معرّف المنتج",
+    "copyProductId": "نسخ معرّف المنتج",
+    "inactive": "غير نشط",
+    "editProduct": "تعديل المنتج",
+    "price": "السعر",
+    "cost": "التكلفة",
+    "revenueLifetime": "الإيرادات (مدى الحياة)",
+    "profitLifetime": "الربح (مدى الحياة)",
+    "margin": "الهامش",
+    "inventory": "المخزون",
+    "stock": "المخزون",
+    "unitsSold": "الوحدات المباعة",
+    "releaseDate": "تاريخ الإطلاق",
+    "active": "نشط",
+    "pricing": "التسعير",
+    "listPrice": "سعر القائمة",
+    "costPrice": "سعر التكلفة",
+    "oldPrice": "السعر القديم",
+    "classification": "التصنيف",
+    "category": "الفئة",
+    "brand": "العلامة التجارية",
+    "colors": "الألوان",
+    "materials": "المواد",
+    "meta": "البيانات",
+    "created": "تم الإنشاء",
+    "updated": "آخر تحديث",
+    "images": "الصور",
+    "content": "المحتوى",
+    "shortDescription": "وصف مختصر",
+    "description": "الوصف"
+  },
+  "tooltips": {
+    "productKPIs": {
+      "revenueLifetime": "إجمالي الإيرادات المسلّمة المرتبطة بهذا المنتج طوال عمره. (إجمالي الأموال المحصّلة من الطلبات المسلّمة لهذا المنتج.)",
+      "profitLifetime": "الربح مدى الحياة = إيرادات المنتج − تكلفة البضاعة المباعة، باستخدام تكلفة الشراء الفعلية للمنتجات المسلّمة.",
+      "margin": "هامش الربح = الربح ÷ الإيرادات (مدى الحياة).",
+      "price": "سعر قائمة المنتج الحالي (قبل الخصومات أو القسائم).",
+      "cost": "سعر التكلفة المستخدم لحساب تكلفة البضاعة المباعة، ويُسجَّل وقت الشراء في الطلبات."
+    },
+    "dashboard": {
+      "revenueThisMonth": "إجمالي الأموال المحصّلة من الطلبات المسلّمة في الشهر المحدد.",
+      "categoryRevenue30d": "إيرادات الطلبات المسلّمة حسب فئة المنتج خلال آخر 30 يومًا.",
+      "momRevenueChange": "مقدار الزيادة أو النقصان في الإيرادات مقارنة بالشهر الماضي.",
+      "salesOverTime": "الحالي = آخر 30 يومًا بما في ذلك اليوم. السابق = 30 يومًا قبل ذلك مباشرة. القيم هي إيرادات الطلبات المسلّمة لكل يوم.",
+      "productInterest": "إجمالي المشاهدات وقوائم الرغبات والإضافات إلى السلة. غيّر المقياس واعرض جدول القمع."
+    },
+    "financeHeaders": {
+      "month": "شهر السنة الذي يتم تلخيصه (مثال: 2025-03).",
+      "income": "الإيرادات المعترف بها في هذا الشهر (إجمالي الأموال المحصّلة للطلبات المسلّمة).",
+      "cogs": "تكلفة البضاعة المباعة للعناصر المسلّمة هذا الشهر باستخدام تكلفة الشراء الفعلية.",
+      "expenses": "المصاريف التشغيلية المسجلة في هذا الشهر.",
+      "profit": "صافي الربح لهذا الشهر = الإيرادات − تكلفة البضاعة المباعة − المصاريف."
+    },
+    "orderHeaders": {
+      "profit": "الأرباح بعد طرح تكلفة البضاعة المباعة من الإيرادات للطلبات المسلّمة في هذا الطلب.",
+      "margin": "الربح كنسبة من الإيراد لهذا الطلب. الهامش = الربح ÷ الإيراد.",
+      "total": "إجمالي الطلب = المجموع الفرعي − الخصم + الشحن.",
+      "totalCost": "مجموع تكلفة الشراء الفعلية × الكمية لهذا الطلب (تكلفة البضاعة المباعة).",
+      "discount": "إجمالي الخصم المطبق على هذا الطلب من القسائم."
+    }
+  }
+}
+

@@ -13,8 +13,10 @@ import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import useBrands from './useBrands';
 import BrandDialog from './BrandDialog';
 import { Brand } from '../../api/types/brand.ts';
+import { useTranslation } from 'react-i18next';
 
 const BrandsPage: React.FC = () => {
+  const { t } = useTranslation();
   const {
     brands,
     isLoading,
@@ -47,8 +49,8 @@ const BrandsPage: React.FC = () => {
       <AdminLayout>
         <Alert
           appearance="error"
-          title="Failed to load brands"
-          message={error.message || 'An unexpected error occurred.'}
+          title={t('brands.loadErrorTitle')}
+          message={error.message || t('app.unexpectedError')}
         />
       </AdminLayout>
     );
@@ -58,27 +60,27 @@ const BrandsPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
-          <Heading>Brands</Heading>
-          <Button onClick={openAddDialog}>Add Brand</Button>
+          <Heading>{t('brands.title')}</Heading>
+          <Button onClick={openAddDialog}>{t('brands.add')}</Button>
         </Flex>
 
         <Table
           columns={[
             {
-              header: 'Logo',
+              header: t('brands.columns.logo'),
               field: 'logoUrl',
               type: 'image',
             },
             {
-              header: 'Name',
+              header: t('brands.columns.name'),
               field: 'name',
             },
             {
-              header: 'Description',
+              header: t('brands.columns.description'),
               field: 'description',
             },
             {
-              header: 'Actions',
+              header: t('app.actions'),
               field: 'actions',
               body: (brand: Brand) => (
                 <Flex spacing="m">
@@ -99,7 +101,7 @@ const BrandsPage: React.FC = () => {
             },
           ]}
           value={brands}
-          emptyMessage="No brands found."
+          emptyMessage={t('brands.empty')}
         />
       </Flex>
 
@@ -114,10 +116,10 @@ const BrandsPage: React.FC = () => {
         visible={confirmDialogVisible}
         onCancel={() => setConfirmDialogVisible(false)}
         onConfirm={handleDelete}
-        header="Delete Brand"
-        message={`Are you sure you want to delete "${brandToDelete?.name}"? This action cannot be undone.`}
-        confirmLabel="Delete"
-        cancelLabel="Cancel"
+        header={t('brands.deleteTitle')}
+        message={t('brands.deleteConfirm', { name: brandToDelete?.name })}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
       />
     </AdminLayout>
   );

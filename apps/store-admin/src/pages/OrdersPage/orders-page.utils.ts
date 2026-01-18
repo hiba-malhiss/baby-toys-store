@@ -1,12 +1,13 @@
 import { OrderStatus } from '../../api/types/order.ts';
+import type { TFunction } from 'i18next';
 
-export const orderStatusOptions = [
-  { label: 'Pending', value: OrderStatus.PENDING },
-  { label: 'Processing', value: OrderStatus.PROCESSING },
-  { label: 'Shipped', value: OrderStatus.SHIPPED },
-  { label: 'Delivered', value: OrderStatus.DELIVERED },
-  { label: 'Cancelled', value: OrderStatus.CANCELLED },
-  { label: 'Returned', value: OrderStatus.RETURNED },
+export const getOrderStatusOptions = (t: TFunction) => [
+  { label: t('orderStatus.pending'), value: OrderStatus.PENDING },
+  { label: t('orderStatus.processing'), value: OrderStatus.PROCESSING },
+  { label: t('orderStatus.shipped'), value: OrderStatus.SHIPPED },
+  { label: t('orderStatus.delivered'), value: OrderStatus.DELIVERED },
+  { label: t('orderStatus.cancelled'), value: OrderStatus.CANCELLED },
+  { label: t('orderStatus.returned'), value: OrderStatus.RETURNED },
 ];
 
 export const statusColorMap: Record<OrderStatus, string> = {
@@ -32,8 +33,8 @@ export function isTransitionAllowed(from: OrderStatus, to: OrderStatus): boolean
   return allowedTransitions[from]?.has(to) ?? false;
 }
 
-export function getAllowedStatusOptions(current: OrderStatus) {
-  return orderStatusOptions.filter((opt) => isTransitionAllowed(current, opt.value));
+export function getAllowedStatusOptions(current: OrderStatus, t: TFunction) {
+  return getOrderStatusOptions(t).filter((opt) => isTransitionAllowed(current, opt.value));
 }
 
 export function canAdminEdit(status: OrderStatus): boolean {

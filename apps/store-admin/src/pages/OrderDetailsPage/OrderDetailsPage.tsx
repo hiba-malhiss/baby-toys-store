@@ -2,7 +2,7 @@ import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Chip, Select, Option, Button, Flex, Heading, ConfirmDialog } from '@baby-toys/ui-kit';
 import styles from './order-details-page.module.scss';
-import { statusColorMap, orderStatusOptions } from '../OrdersPage/orders-page.utils';
+import { statusColorMap, getOrderStatusOptions } from '../OrdersPage/orders-page.utils';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { OrderStatus } from '../../api/types/order';
 import { useOrderDetails } from './useOrderDetails';
@@ -11,12 +11,14 @@ import { CouponAndSummary } from './CouponAndSummary.tsx';
 import { ShippingAddressCard } from './ShippingAddressCard.tsx';
 import { ShippingNoteCard } from './ShippingNoteCard.tsx';
 import { useStoreSettings } from '../../api/settingsApi';
+import { useTranslation } from 'react-i18next';
 
 interface OrderDetailsPageProps {
   isEdit?: boolean;
 }
 
 const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
+  const { t } = useTranslation();
   const {
     order,
     isLoading,
@@ -44,6 +46,7 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
 
   const { data: settings } = useStoreSettings();
   const currency = { symbol: settings?.general?.currencySymbol } as const;
+  const statusOptions = getOrderStatusOptions(t);
 
   return (
     <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMutating}>
@@ -52,11 +55,11 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
         <Flex direction="vertical" spacing="xs">
           <Heading>
             {isEdit
-              ? `Edit Order #${order?.orderNumber || order?.id}`
-              : `Order #${order?.orderNumber || order?.id}`}
+              ? `${t('orderDetails.editOrder')} #${order?.orderNumber || order?.id}`
+              : `${t('orders.orderNumber')} #${order?.orderNumber || order?.id}`}
           </Heading>
           <span className={styles.orderDetailsOrderDate}>
-            Placed on {formatDate(order?.createdAt)}
+            {t('orderDetails.placedOn', { date: formatDate(order?.createdAt) })}
           </span>
         </Flex>
 
@@ -70,9 +73,10 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
             >
               {order?.status && (
                 <Option key={`current-${order.status}`} value={order.status}>
-                  {`Current: ${
-                    orderStatusOptions.find((o) => o.value === order.status)?.label || order.status
-                  }`}
+                  {t('orderDetails.currentStatus', {
+                    status:
+                      statusOptions.find((o) => o.value === order.status)?.label || order.status,
+                  })}
                 </Option>
               )}
               {allowedOptions.map(({ label, value }) => (
@@ -84,9 +88,12 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
           </Flex>
         ) : (
           <Flex align="center" spacing="m">
-            <Chip label={order?.status} appearance={statusColorMap[order?.status]}/>
+            <Chip
+              label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, order?.status as any)}
+              appearance={statusColorMap[order?.status]}
+            />
             <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
-              Edit Order
+              {t('orderDetails.editOrder')}
             </Button>
           </Flex>
         )}
@@ -125,9 +132,11 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
 
       <ConfirmDialog
         visible={statusConfirmVisible}
-        header="Change Order Status"
+        header={t('orderDetails.changeStatusTitle')}
         message={
-          pendingStatus ? `Are you sure you want to change the status to "${pendingStatus}"?` : ''
+          pendingStatus
+            ? t('orderDetails.changeStatusConfirm', { status: pendingStatus })
+            : ''
         }
         onConfirm={confirmStatusChange}
         onCancel={cancelStatusChange}

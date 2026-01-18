@@ -4,7 +4,6 @@ import { Heading, Card, BouncingDotsLoader, KPI, Table, Tooltip, RadioButtonGrou
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
 import KPIWithTooltip from '../../components/KPIWithTooltip/KPIWithTooltip';
-import { Tooltips } from '../../constants/tooltips';
 import { useAdminDashboard } from '../../api/dashboardApi';
 import styles from './dashboard-page.module.scss';
 import { Line, Bar } from 'react-chartjs-2';
@@ -21,6 +20,7 @@ import {
 } from 'chart.js';
 import { buildComparisonSubtitle, formatAbbrevMoney, formatMoney } from './dashboard.helpers';
 import { useStoreSettings } from '../../api/settingsApi.ts';
+import { useTranslation } from 'react-i18next';
 
 ChartJS.register(
   CategoryScale,
@@ -41,6 +41,7 @@ const ChartCard: React.FC<{ title: React.ReactNode; children: React.ReactNode }>
 );
 
 const DashboardPage: React.FC = () => {
+  const { t } = useTranslation();
   const { data, isLoading } = useAdminDashboard();
   const { data: settings } = useStoreSettings();
   const currency = { symbol: settings?.general?.currencySymbol } as const;
@@ -78,14 +79,14 @@ const DashboardPage: React.FC = () => {
       labels: data?.categoryDistribution?.labels ?? [],
       datasets: [
         {
-          label: 'Revenue',
+          label: t('dashboard.revenueLabel'),
           data: (data?.categoryDistribution?.data as number[]) ?? [],
           backgroundColor: palette.accent,
           borderRadius: 4,
         },
       ],
     }),
-    [data]
+    [data, palette.accent, t]
   );
 
   const topSelling = useMemo(
@@ -93,14 +94,14 @@ const DashboardPage: React.FC = () => {
       labels: data?.topSellingProducts?.labels ?? [],
       datasets: [
         {
-          label: 'Qty',
+          label: t('dashboard.quantityLabel'),
           data: (data?.topSellingProducts?.data as number[]) ?? [],
           backgroundColor: palette.info,
           borderRadius: 4,
         },
       ],
     }),
-    [data]
+    [data, palette.info, t]
   );
 
   // Product Interest state and derived dataset
@@ -116,16 +117,21 @@ const DashboardPage: React.FC = () => {
       : interestMetric === 'wishlists'
         ? ((data?.productInterest?.topWishlisted?.data as number[]) ?? [])
         : ((data?.productInterest?.topAddedToCart?.data as number[]) ?? []);
-    const label = interestMetric === 'cart' ? 'Add to Cart' : interestMetric.charAt(0).toUpperCase() + interestMetric.slice(1);
+    const label =
+      interestMetric === 'cart'
+        ? t('dashboard.addToCart')
+        : interestMetric === 'views'
+          ? t('dashboard.views')
+          : t('dashboard.wishlists');
     const color = interestMetric === 'views' ? palette.primary : interestMetric === 'wishlists' ? palette.info : palette.success;
     return { labels, series, label, color } as const;
-  }, [data, interestMetric]);
+  }, [data, interestMetric, palette.info, palette.primary, palette.success, t]);
 
   return (
     <AdminLayout>
-      <Heading className="bts-marginBm">Dashboard</Heading>
+      <Heading className="bts-marginBm">{t('dashboard.title')}</Heading>
       <Heading level="h4" appearance="light" className="bts-marginBxxl">
-        Welcome back, Admin!
+        {t('dashboard.welcome')}
       </Heading>
 
       {isLoading && <BouncingDotsLoader className="bts-marginTxxl"/>}
@@ -135,20 +141,20 @@ const DashboardPage: React.FC = () => {
           {/* Revenue Health KPI Tiles */}
           <div className={styles.kpiGrid}>
             <KPIWithTooltip
-              label="Revenue (This Month)"
-              tooltip={Tooltips.dashboard.revenueThisMonth}
+              label={t('dashboard.revenueThisMonth')}
+              tooltip={t('tooltips.dashboard.revenueThisMonth')}
               value={`${currency.symbol}${data.revenueThisMonth}`}
             />
             <KPIWithTooltip
-              label="MoM Revenue Change"
-              tooltip="How much your revenue increased or decreased compared to last month."
+              label={t('dashboard.momRevenueChange')}
+              tooltip={t('tooltips.dashboard.momRevenueChange')}
               value={`${((data.revenueMoMPercent ?? 0) * 100).toFixed(1)}%`}
             />
             <KPI
-              label="Average Order Value"
+              label={t('dashboard.averageOrderValue')}
               value={`${currency.symbol}${data.aovThisMonth}`}
             />
-            <KPI label="Pending Orders" value={data.pendingOrders}/>
+            <KPI label={t('dashboard.pendingOrders')} value={data.pendingOrders}/>
           </div>
 
           {/* Charts */}
@@ -156,12 +162,11 @@ const DashboardPage: React.FC = () => {
             <ChartCard
               title={
                 <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                  <span>Sales Over Time (Current vs Previous)</span>
+                  <span>{t('dashboard.salesOverTime')}</span>
                   <Tooltip
                     content={
                       <div style={{ maxWidth: 280 }}>
-                        Current = last 30 days including today. Previous = the 30 days immediately before. Values are
-                        delivered-order revenue per day.
+                        {t('tooltips.dashboard.salesOverTime')}
                       </div>
                     }
                     position="top"
@@ -173,8 +178,8 @@ const DashboardPage: React.FC = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
                 <div style={{ fontSize: 12, color: '#666' }}>
-                  <div>Current: {currentStartLabel} → {currentEndLabel}</div>
-                  <div>Previous: {prevStartLabel} → {prevEndLabel}</div>
+                  <div>{t('dashboard.currentRange', { start: currentStartLabel, end: currentEndLabel })}</div>
+                  <div>{t('dashboard.previousRange', { start: prevStartLabel, end: prevEndLabel })}</div>
                 </div>
               </div>
               <div style={{ height: 300 }}>
@@ -183,7 +188,7 @@ const DashboardPage: React.FC = () => {
                     labels: currentLabels,
                     datasets: [
                       {
-                        label: 'Current',
+                        label: t('dashboard.currentLabel'),
                         data: currentSeries,
                         borderColor: palette.primary,
                         backgroundColor: 'rgba(16, 150, 181, 0.15)',
@@ -193,7 +198,7 @@ const DashboardPage: React.FC = () => {
                         borderWidth: 2,
                       },
                       {
-                        label: 'Previous',
+                        label: t('dashboard.previousLabel'),
                         data: prevSeries,
                         borderColor: palette.secondary,
                         backgroundColor: 'rgba(127, 127, 127, 0.1)',
@@ -230,8 +235,8 @@ const DashboardPage: React.FC = () => {
 
             <ChartCard title={
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span>Category Revenue (30 days)</span>
-                <Tooltip content="Delivered revenue per category in the last 30 days." position="top">
+                <span>{t('dashboard.categoryRevenue30d')}</span>
+                <Tooltip content={t('tooltips.dashboard.categoryRevenue30d')} position="top">
                   <span><FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.75, cursor: 'help' }}/></span>
                 </Tooltip>
               </span>
@@ -244,7 +249,7 @@ const DashboardPage: React.FC = () => {
               </div>
             </ChartCard>
 
-            <ChartCard title="Top Selling Products">
+            <ChartCard title={t('dashboard.topSelling')}>
               <div style={{ height: 300 }}>
                 <Bar
                   data={topSelling}
@@ -255,9 +260,9 @@ const DashboardPage: React.FC = () => {
 
             <ChartCard title={
               <span style={{ display: 'inline-flex', alignItems: 'center', gap: 8 }}>
-                <span>Product Interest (Last 30 Days)</span>
+                <span>{t('dashboard.productInterest')}</span>
                 <Tooltip
-                  content="Views, Wishlists, and Adds to Cart combined. Switch metric. Expand to view the funnel table."
+                  content={t('tooltips.dashboard.productInterest')}
                   position="top">
                   <span><FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.75, cursor: 'help' }}/></span>
                 </Tooltip>
@@ -266,9 +271,9 @@ const DashboardPage: React.FC = () => {
               <div>
                 <RadioButtonGroup
                   options={[
-                    { label: 'Views', value: 'views' },
-                    { label: 'Wishlists', value: 'wishlists' },
-                    { label: 'Add to Cart', value: 'cart' },
+                    { label: t('dashboard.views'), value: 'views' },
+                    { label: t('dashboard.wishlists'), value: 'wishlists' },
+                    { label: t('dashboard.addToCart'), value: 'cart' },
                   ]}
                   selectedValue={interestMetric}
                   name="product-interest"
@@ -294,21 +299,21 @@ const DashboardPage: React.FC = () => {
             </ChartCard>
           </div>
           <Table
-            title="Product Conversion Funnel (30 days)"
+            title={t('dashboard.productConversionFunnel')}
             columns={[
-              { header: 'Product', field: 'name' },
+              { header: t('dashboard.table.product'), field: 'name' },
               {
-                header: 'View→Wishlist %',
+                header: t('dashboard.table.viewToWishlist'),
                 field: 'viewToWishlistRate',
                 body: (r: any) => `${(r.viewToWishlistRate * 100).toFixed(1)}%`
               },
               {
-                header: 'Wishlist→Cart %',
+                header: t('dashboard.table.wishlistToCart'),
                 field: 'wishlistToCartRate',
                 body: (r: any) => `${(r.wishlistToCartRate * 100).toFixed(1)}%`
               },
               {
-                header: 'Cart→Purchase %',
+                header: t('dashboard.table.cartToPurchase'),
                 field: 'cartToPurchaseRate',
                 body: (r: any) => `${(r.cartToPurchaseRate * 100).toFixed(1)}%`
               },

@@ -3,6 +3,7 @@ import { Select } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
 import { getSupportedLocales } from '../i18n/locale';
 import type { Control } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 
 type LocaleSelectProps = {
   name?: string;
@@ -19,20 +20,22 @@ const LOCALE_OPTIONS = getSupportedLocales().map((code) => ({
 
 export const LocaleSelect: React.FC<LocaleSelectProps> = ({
   name = 'locale',
-  label = 'Language',
+  label,
   required = true,
   fullWidth = true,
   control,
 }) => {
+  const { t } = useTranslation();
+  const resolvedLabel = label ?? t('language.label');
   return (
     <FormFieldWrapper
       required={required}
       control={control}
       name={name}
-      label={label}
+      label={resolvedLabel}
       fullWidth={fullWidth}
     >
-      <Select options={LOCALE_OPTIONS} placeholder="Select status" />
+      <Select options={LOCALE_OPTIONS} placeholder={t('language.selectPlaceholder')} />
     </FormFieldWrapper>
   );
 };

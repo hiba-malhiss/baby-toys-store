@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   Dialog,
   StringInput,
@@ -16,16 +16,21 @@ import { z } from 'zod';
 import { Color } from '../../api/types/color';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { useCreateColor, useUpdateColor, useColorAdmin } from '../../api/colorApi';
+import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 
-const colorSchema = z.object({
-  code: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, 'Invalid color code'),
-  translations: z.object({
-    en: z.object({ name: z.string().min(1, 'Name (en) is required') }),
-    ar: z.object({ name: z.string().min(1, 'Name (ar) is required') }),
-  }),
-});
+const getColorSchema = (t: TFunction) =>
+  z.object({
+    code: z
+      .string()
+      .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, t('colors.invalidCode')),
+    translations: z.object({
+      en: z.object({ name: z.string().min(1, t('colors.nameRequired', { locale: 'en' })) }),
+      ar: z.object({ name: z.string().min(1, t('colors.nameRequired', { locale: 'ar' })) }),
+    }),
+  });
 
-type ColorFormValues = z.infer<typeof colorSchema>;
+type ColorFormValues = z.infer<ReturnType<typeof getColorSchema>>;
 
 interface ColorDialogProps {
   visible: boolean;
@@ -35,10 +40,12 @@ interface ColorDialogProps {
 }
 
 const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, color }) => {
+  const { t } = useTranslation();
   const toast = useToast();
   const createColor = useCreateColor();
   const updateColor = useUpdateColor();
   const { data: adminColor } = useColorAdmin(color?.id);
+  const colorSchema = useMemo(() => getColorSchema(t), [t]);
 
   const {
     control,
@@ -84,16 +91,16 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
       };
       if (color?.id) {
         await updateColor.mutateAsync({ id: color.id, payload });
-        toast.success('Color updated successfully');
+        toast.success(t('colors.updateSuccess'));
       } else {
         await createColor.mutateAsync(payload);
-        toast.success('Color created successfully');
+        toast.success(t('colors.createSuccess'));
       }
       onSuccess();
       onHide();
       reset();
     } catch (e: any) {
-      toast.error(e?.message || `Failed to ${color ? 'update' : 'create'} color`);
+      toast.error(e?.message || (color ? t('colors.updateError') : t('colors.createError')));
     }
   };
 
@@ -104,7 +111,7 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
       isDisabled={isSubmitting || !isValid}
       fullWidth
     >
-      {color ? 'Update' : 'Create'}
+      {color ? t('colors.update') : t('colors.create')}
     </Button>
   );
 
@@ -112,7 +119,7 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
     <Dialog
       visible={visible}
       onHide={onHide}
-      header={color ? 'Edit Color' : 'Add New Color'}
+      header={color ? t('colors.editTitle') : t('colors.addTitle')}
       footer={footer}
     >
       <Flex direction="vertical" spacing="m" fullWidth>
@@ -120,8 +127,8 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
           fullWidth
           size="small"
           tabs={[
-            { header: 'English (en)', value: 'en' },
-            { header: 'Arabic (ar)', value: 'ar' },
+            { header: t('colors.tabs.en'), value: 'en' },
+            { header: t('colors.tabs.ar'), value: 'ar' },
           ]}
           defaultSelected="en"
         >
@@ -129,28 +136,34 @@ const ColorDialog: React.FC<ColorDialogProps> = ({ visible, onHide, onSuccess, c
             <FormFieldWrapper
               name={`translations.en.name`}
               control={control}
-              label="Color Name (en)"
+              label={t('colors.fields.name', { locale: 'en' })}
               required
               fullWidth
             >
-              <StringInput placeholder="Enter color name" isDisabled={isSubmitting} />
+              <StringInput placeholder={t('colors.placeholders.name')} isDisabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>
           <TabBarItem value="ar">
             <FormFieldWrapper
               name={`translations.ar.name`}
               control={control}
-              label="Color Name (ar)"
+              label={t('colors.fields.name', { locale: 'ar' })}
               required
               fullWidth
             >
-              <StringInput placeholder="Enter color name" isDisabled={isSubmitting} />
+              <StringInput placeholder={t('colors.placeholders.name')} isDisabled={isSubmitting} />
             </FormFieldWrapper>
           </TabBarItem>
         </TabBar>
         <Divider thickness="2px" />
 
-        <FormFieldWrapper name="code" control={control} label="Color Code" required fullWidth>
+        <FormFieldWrapper
+          name="code"
+          control={control}
+          label={t('colors.fields.code')}
+          required
+          fullWidth
+        >
           <ColorPicker isDisabled={isSubmitting} />
         </FormFieldWrapper>
       </Flex>

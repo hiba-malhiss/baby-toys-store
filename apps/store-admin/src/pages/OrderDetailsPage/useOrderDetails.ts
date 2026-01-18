@@ -10,8 +10,10 @@ import {
 } from '../../api/ordersApi';
 import type { OrderStatus } from '../../api/types/order';
 import { getAllowedStatusOptions, canAdminEdit } from '../OrdersPage/orders-page.utils';
+import { useTranslation } from 'react-i18next';
 
 export function useOrderDetails() {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const orderId = id && !isNaN(Number(id)) ? Number(id) : undefined;
   const navigate: NavigateFunction = useNavigate();
@@ -31,7 +33,9 @@ export function useOrderDetails() {
   const [pendingStatus, setPendingStatus] = useState<OrderStatus | null>(null);
   const [selectValue, setSelectValue] = useState<OrderStatus | undefined>();
 
-  const allowedOptions = order?.status ? getAllowedStatusOptions(order.status as OrderStatus) : [];
+  const allowedOptions = order?.status
+    ? getAllowedStatusOptions(order.status as OrderStatus, t)
+    : [];
   const canEditOrder = order?.status ? canAdminEdit(order.status as OrderStatus) : false;
 
   // keep select value in sync with actual order status

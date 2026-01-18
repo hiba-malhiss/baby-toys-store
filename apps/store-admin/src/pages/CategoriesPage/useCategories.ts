@@ -2,9 +2,11 @@ import { useState } from 'react';
 import { useToast } from '@baby-toys/ui-kit';
 import { Category } from '../../api/types/category';
 import { useCategories as useCategoriesQuery, useDeleteCategory } from '../../api/categoryApi';
+import { useTranslation } from 'react-i18next';
 
 export const useCategories = () => {
   const toast = useToast();
+  const { t } = useTranslation();
   const { data: categories = [], isLoading, error } = useCategoriesQuery();
   const deleteCategoryMutation = useDeleteCategory();
 
@@ -18,12 +20,12 @@ export const useCategories = () => {
 
     try {
       await deleteCategoryMutation.mutateAsync(categoryToDelete.id);
-      toast.success('Category deleted successfully');
+      toast.success(t('categories.deleteSuccess'));
       setConfirmDialogVisible(false);
       setCategoryToDelete(null);
       return true;
     } catch (error) {
-      toast.error('Failed to delete category');
+      toast.error(t('categories.deleteError'));
       return false;
     }
   };

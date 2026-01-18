@@ -23,6 +23,7 @@ import {
   useBrandAdmin,
 } from '../../api/brandApi';
 import { getSupportedLocales } from '../../components/i18n/locale';
+import { useTranslation } from 'react-i18next';
 
 interface BrandDialogProps {
   visible: boolean;
@@ -32,6 +33,7 @@ interface BrandDialogProps {
 }
 
 const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, brand }) => {
+  const { t } = useTranslation();
   const toast = useToast();
   const createBrand = useCreateBrand();
   const updateBrand = useUpdateBrand();
@@ -107,18 +109,18 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
           await uploadImageMutation.mutateAsync({ id: targetId, file: imageFile });
         } catch (err) {
           console.error('Image upload failed:', err);
-          toast.error('Brand saved, but image upload failed');
+          toast.error(t('brands.imageUploadError'));
         }
       }
 
-      toast.success(`Brand ${brand ? 'updated' : 'created'} successfully`);
+      toast.success(brand ? t('brands.updateSuccess') : t('brands.createSuccess'));
       onSuccess();
       onHide();
       reset();
       setImageFile(null);
       setImagePreview(null);
     } catch (err) {
-      toast.error(`Failed to ${brand ? 'update' : 'create'} brand`);
+      toast.error(brand ? t('brands.updateError') : t('brands.createError'));
     }
   };
 
@@ -129,7 +131,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
       isDisabled={isSubmitting || uploadImageMutation.isPending || !isValid}
       fullWidth
     >
-      {brand ? 'Update Brand' : 'Create Brand'}
+      {brand ? t('brands.update') : t('brands.create')}
     </Button>
   );
 
@@ -137,7 +139,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
     <Dialog
       visible={visible}
       onHide={onHide}
-      header={brand ? 'Edit Brand' : 'Add New Brand'}
+      header={brand ? t('brands.editTitle') : t('brands.addTitle')}
       footer={footer}
     >
       <Flex direction="vertical" spacing="m" fullwidth>
@@ -152,24 +154,24 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
               <FormFieldWrapper
                 name={`translations.${l}.name`}
                 control={control}
-                label={`Brand Name (${l})`}
+                label={t('brands.fields.name', { locale: l })}
                 required
                 fullWidth
               >
                 <StringInput
-                  placeholder="Enter brand name"
+                  placeholder={t('brands.placeholders.name')}
                   isDisabled={isSubmitting || uploadImageMutation.isPending}
                 />
               </FormFieldWrapper>
               <FormFieldWrapper
                 name={`translations.${l}.description`}
                 control={control}
-                label={`Description (${l})`}
+                label={t('brands.fields.description', { locale: l })}
                 fullWidth
                 className="bts-marginTm"
               >
                 <TextArea
-                  placeholder="Enter brand description"
+                  placeholder={t('brands.placeholders.description')}
                   rows={3}
                   isDisabled={isSubmitting || uploadImageMutation.isPending}
                 />
@@ -178,7 +180,7 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
           ))}
         </TabBar>
         <Divider thickness="2px" />
-        <FormFieldWrapper name="logoUrl" label="Logo" fullWidth>
+        <FormFieldWrapper name="logoUrl" label={t('brands.fields.logo')} fullWidth>
           <ImageUploader
             images={imageFile ? [imageFile] : imagePreview ? [imagePreview] : []}
             multiple={false}

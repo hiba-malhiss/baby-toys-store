@@ -1,14 +1,15 @@
 import React, { useMemo } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, Flex, Heading, Table, Calendar, Tooltip } from '@baby-toys/ui-kit';
-import { Tooltips } from '../../constants/tooltips';
 import { useNavigate } from 'react-router-dom';
 import { useFinancePage } from './useFinancePage';
 import { faEye, faCircleInfo } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import moment from 'moment';
+import { useTranslation } from 'react-i18next';
 
 const FinancePage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const { year, setYear, data, isLoading } = useFinancePage();
 
@@ -24,24 +25,24 @@ const FinancePage: React.FC = () => {
   );
 
   const columns = useMemo(() => [
-    { field: 'month', header: 'Month' },
-    { field: 'income', header: <HeaderWithTooltip label="Income" tip={Tooltips.financeHeaders.income} /> },
-    { field: 'cogs', header: <HeaderWithTooltip label="COGS" tip={Tooltips.financeHeaders.cogs} /> },
-    { field: 'expenses', header: <HeaderWithTooltip label="Expenses" tip={Tooltips.financeHeaders.expenses} /> },
-    { field: 'profit', header: <HeaderWithTooltip label="Profit" tip={Tooltips.financeHeaders.profit} /> },
+    { field: 'month', header: t('finance.month') },
+    { field: 'income', header: <HeaderWithTooltip label={t('finance.income')} tip={t('tooltips.financeHeaders.income')} /> },
+    { field: 'cogs', header: <HeaderWithTooltip label={t('finance.cogs')} tip={t('tooltips.financeHeaders.cogs')} /> },
+    { field: 'expenses', header: <HeaderWithTooltip label={t('finance.expenses')} tip={t('tooltips.financeHeaders.expenses')} /> },
+    { field: 'profit', header: <HeaderWithTooltip label={t('finance.profit')} tip={t('tooltips.financeHeaders.profit')} /> },
     {
-      header: 'Actions',
+      header: t('app.actions'),
       body: (row: any) => (
         <Button
           size="small"
           appearance="outline"
           leftIcon={faEye}
           onClick={() => navigate(`/finance/${row.month}`)}
-          aria-label="View product"
+          aria-label={t('finance.viewProduct')}
         />
       ),
     },
-  ], [navigate]);
+  ], [navigate, t]);
 
   const currentYearMoment = useMemo(() => moment(String(year), 'YYYY') as any, [year]);
 
@@ -49,7 +50,7 @@ const FinancePage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>Finance - Monthly Profit</Heading>
+          <Heading>{t('finance.title')}</Heading>
           <Flex spacing="s" align="center">
             <Calendar
               value={currentYearMoment}

@@ -7,7 +7,7 @@ import { useProduct } from '../../api/productApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './product-view-page.module.scss';
 import KPIWithTooltip from '../../components/KPIWithTooltip/KPIWithTooltip';
-import { Tooltips } from '../../constants/tooltips';
+import { useTranslation } from 'react-i18next';
 
 const StatRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, value }) => (
   <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 8 }}>
@@ -17,6 +17,7 @@ const StatRow: React.FC<{ label: string; value?: React.ReactNode }> = ({ label, 
 );
 
 const ProductViewPage: React.FC = () => {
+  const { t } = useTranslation();
   const { id } = useParams<{ id: string }>();
   const productId = id ? Number(id) : undefined;
   const navigate = useNavigate();
@@ -48,15 +49,17 @@ const ProductViewPage: React.FC = () => {
               )}
               <div>
                 <Heading level="h1" className={styles.title}>
-                  {product?.name || 'Product'}
+                  {product?.name || t('productView.fallbackName')}
                 </Heading>
                 <div className={styles.idRow}>
-                  <span className={styles.fadedId}>ID #{product?.id}</span>
+                  <span className={styles.fadedId}>
+                    {t('productView.idLabel', { id: product?.id })}
+                  </span>
                   {product?.id != null && (
                     <CopyToClipboardButton
                       value={product.id}
-                      successMessage="Product ID copied"
-                      ariaLabel="Copy product ID"
+                      successMessage={t('productView.productIdCopied')}
+                      ariaLabel={t('productView.copyProductId')}
                       appearance="link"
                     />
                   )}
@@ -65,7 +68,7 @@ const ProductViewPage: React.FC = () => {
                   <span className={styles.faded}>
                     {product?.brandName || '-'} • {product?.categoryName || '-'}
                   </span>
-                  {!product?.isActive && <Chip label="Inactive" appearance="error" />}
+                  {!product?.isActive && <Chip label={t('productView.inactive')} appearance="error" />}
                 </div>
               </div>
             </div>
@@ -75,7 +78,7 @@ const ProductViewPage: React.FC = () => {
                 appearance="outline"
                 onClick={() => navigate(`/edit-product/${product?.id}`)}
               >
-                Edit Product
+                {t('productView.editProduct')}
               </Button>
             </div>
           </div>
@@ -83,69 +86,77 @@ const ProductViewPage: React.FC = () => {
 
         {/* KPI row */}
         <div className={styles.kpiGrid}>
-          <KPI label="Price" value={formatMoney(product?.price)} />
-          <KPI label="Cost" value={formatMoney(product?.costPrice)} />
+          <KPI label={t('productView.price')} value={formatMoney(product?.price)} />
+          <KPI label={t('productView.cost')} value={formatMoney(product?.costPrice)} />
           <KPIWithTooltip
-            label="Revenue (lifetime)"
-            tooltip={Tooltips.productKPIs.revenueLifetime}
+            label={t('productView.revenueLifetime')}
+            tooltip={t('tooltips.productKPIs.revenueLifetime')}
             value={formatMoney(product?.totalRevenue)}
           />
           <KPIWithTooltip
-            label="Profit (lifetime)"
-            tooltip={Tooltips.productKPIs.profitLifetime}
+            label={t('productView.profitLifetime')}
+            tooltip={t('tooltips.productKPIs.profitLifetime')}
             value={formatMoney(product?.totalProfit)}
           />
           <KPIWithTooltip
-            label="Margin"
-            tooltip={Tooltips.productKPIs.margin}
+            label={t('productView.margin')}
+            tooltip={t('tooltips.productKPIs.margin')}
             value={formatPercent(product?.profitMargin)}
           />
         </div>
 
         {/* Content grid */}
         <div className={styles.contentGrid}>
-          <Card header={<Heading level="h3">Inventory</Heading>}>
+          <Card header={<Heading level="h3">{t('productView.inventory')}</Heading>}>
             <div className={styles.cardBodyGrid}>
-              <StatRow label="Stock" value={product?.stockQuantity} />
-              <StatRow label="Units Sold" value={product?.sales ?? 0} />
-              <StatRow label="Release Date" value={formatDate(product?.releaseDate)} />
-              <StatRow label="Active" value={product?.isActive ? 'Yes' : 'No'} />
+              <StatRow label={t('productView.stock')} value={product?.stockQuantity} />
+              <StatRow label={t('productView.unitsSold')} value={product?.sales ?? 0} />
+              <StatRow label={t('productView.releaseDate')} value={formatDate(product?.releaseDate)} />
+              <StatRow
+                label={t('productView.active')}
+                value={product?.isActive ? t('app.yes') : t('app.no')}
+              />
             </div>
           </Card>
 
-          <Card header={<Heading level="h3">Pricing</Heading>}>
+          <Card header={<Heading level="h3">{t('productView.pricing')}</Heading>}>
             <div className={styles.cardBodyGrid}>
-              <StatRow label="List Price" value={formatMoney(product?.price)} />
-              <StatRow label="Cost Price" value={formatMoney(product?.costPrice)} />
-              <StatRow label="Old Price" value={formatMoney(product?.oldPrice)} />
+              <StatRow label={t('productView.listPrice')} value={formatMoney(product?.price)} />
+              <StatRow label={t('productView.costPrice')} value={formatMoney(product?.costPrice)} />
+              <StatRow label={t('productView.oldPrice')} value={formatMoney(product?.oldPrice)} />
             </div>
           </Card>
         </div>
 
         <div className={styles.contentGrid}>
-          <Card header={<Heading level="h3">Classification</Heading>}>
+          <Card header={<Heading level="h3">{t('productView.classification')}</Heading>}>
             <div className={styles.cardBodyGrid}>
-              <StatRow label="Category" value={product?.categoryName ?? '-'} />
-              <StatRow label="Brand" value={product?.brandName ?? '-'} />
-              <StatRow label="Colors" value={product?.colorCodes?.join(', ') || '-'} />
-              <StatRow label="Materials" value={product?.materialNames?.join(', ') || '-'} />
+              <StatRow label={t('productView.category')} value={product?.categoryName ?? '-'} />
+              <StatRow label={t('productView.brand')} value={product?.brandName ?? '-'} />
+              <StatRow label={t('productView.colors')} value={product?.colorCodes?.join(', ') || '-'} />
+              <StatRow label={t('productView.materials')} value={product?.materialNames?.join(', ') || '-'} />
             </div>
           </Card>
 
-          <Card header={<Heading level="h3">Meta</Heading>}>
+          <Card header={<Heading level="h3">{t('productView.meta')}</Heading>}>
             <div className={styles.cardBodyGrid}>
-              <StatRow label="Created" value={formatDate(product?.createdAt)} />
-              <StatRow label="Updated" value={formatDate(product?.updatedAt)} />
+              <StatRow label={t('productView.created')} value={formatDate(product?.createdAt)} />
+              <StatRow label={t('productView.updated')} value={formatDate(product?.updatedAt)} />
             </div>
           </Card>
         </div>
 
         {/* Image gallery */}
         {product?.images && product.images.length > 0 && (
-          <Card header={<Heading level="h3">Images</Heading>}>
+          <Card header={<Heading level="h3">{t('productView.images')}</Heading>}>
             <div className={styles.imagesGrid}>
               {product.images.map((src, idx) => (
-                <img key={`${src}-${idx}`} src={src} alt={`Product image ${idx + 1}`} className={styles.thumb} />
+                <img
+                  key={`${src}-${idx}`}
+                  src={src}
+                  alt={`${t('productView.images')} ${idx + 1}`}
+                  className={styles.thumb}
+                />
               ))}
             </div>
           </Card>
@@ -153,15 +164,15 @@ const ProductViewPage: React.FC = () => {
 
         {/* Descriptions */}
         {(product?.shortDescription || product?.description) && (
-          <Card header={<Heading level="h3">Content</Heading>}>
+          <Card header={<Heading level="h3">{t('productView.content')}</Heading>}>
             <div className={styles.contentTextGrid}>
               {product?.shortDescription && (
-                <Card header={<Heading level="h4">Short Description</Heading>}>
+                <Card header={<Heading level="h4">{t('productView.shortDescription')}</Heading>}>
                   <div style={{ whiteSpace: 'pre-wrap' }}>{product.shortDescription}</div>
                 </Card>
               )}
               {product?.description && (
-                <Card header={<Heading level="h4">Description</Heading>}>
+                <Card header={<Heading level="h4">{t('productView.description')}</Heading>}>
                   <div style={{ whiteSpace: 'pre-wrap' }}>{product.description}</div>
                 </Card>
               )}
