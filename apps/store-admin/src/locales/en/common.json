@@ -175,24 +175,10 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, Admin!",
-    "revenueLabel": "Revenue",
-    "quantityLabel": "Qty",
-    "currentLabel": "Current",
-    "previousLabel": "Previous",
     "revenueThisMonth": "Revenue (This Month)",
     "momRevenueChange": "MoM Revenue Change",
     "averageOrderValue": "Average Order Value",
     "pendingOrders": "Pending Orders",
-    "salesOverTime": "Sales Over Time (Current vs Previous)",
-    "categoryRevenue30d": "Category Revenue (30 days)",
-    "topSelling": "Top Selling Products",
-    "productInterest": "Product Interest (Last 30 Days)",
-    "productConversionFunnel": "Product Conversion Funnel (30 days)",
-    "currentRange": "Current: {{start}} → {{end}}",
-    "previousRange": "Previous: {{start}} → {{end}}",
-    "views": "Views",
-    "wishlists": "Wishlists",
-    "addToCart": "Add to Cart",
     "table": {
       "product": "Product",
       "viewToWishlist": "View→Wishlist %",
@@ -318,7 +304,6 @@
     },
     "dashboard": {
       "revenueThisMonth": "Total money collected from delivered orders in the selected month.",
-      "categoryRevenue30d": "Delivered revenue grouped by product category over the last 30 days.",
       "momRevenueChange": "How much your revenue increased or decreased compared to last month.",
       "salesOverTime": "Current = last 30 days including today. Previous = the 30 days immediately before. Values are delivered-order revenue per day.",
       "productInterest": "Views, Wishlists, and Adds to Cart combined. Switch metric. Expand to view the funnel table."

@@ -175,24 +175,10 @@
   "dashboard": {
     "title": "لوحة التحكم",
     "welcome": "مرحبًا بعودتك، المدير!",
-    "revenueLabel": "الإيرادات",
-    "quantityLabel": "الكمية",
-    "currentLabel": "الحالي",
-    "previousLabel": "السابق",
     "revenueThisMonth": "الإيرادات (هذا الشهر)",
     "momRevenueChange": "تغير الإيرادات شهريًا",
     "averageOrderValue": "متوسط قيمة الطلب",
     "pendingOrders": "طلبات معلّقة",
-    "salesOverTime": "المبيعات عبر الزمن (الحالي مقابل السابق)",
-    "categoryRevenue30d": "إيرادات الفئات (30 يومًا)",
-    "topSelling": "أفضل المنتجات مبيعًا",
-    "productInterest": "اهتمام المنتجات (آخر 30 يومًا)",
-    "productConversionFunnel": "قمع تحويل المنتج (30 يومًا)",
-    "currentRange": "الحالي: {{start}} → {{end}}",
-    "previousRange": "السابق: {{start}} → {{end}}",
-    "views": "المشاهدات",
-    "wishlists": "قوائم الرغبات",
-    "addToCart": "الإضافة إلى السلة",
     "table": {
       "product": "المنتج",
       "viewToWishlist": "نسبة مشاهدة→قائمة رغبات",
@@ -318,7 +304,6 @@
     },
     "dashboard": {
       "revenueThisMonth": "إجمالي الأموال المحصّلة من الطلبات المسلّمة في الشهر المحدد.",
-      "categoryRevenue30d": "إيرادات الطلبات المسلّمة حسب فئة المنتج خلال آخر 30 يومًا.",
       "momRevenueChange": "مقدار الزيادة أو النقصان في الإيرادات مقارنة بالشهر الماضي.",
       "salesOverTime": "الحالي = آخر 30 يومًا بما في ذلك اليوم. السابق = 30 يومًا قبل ذلك مباشرة. القيم هي إيرادات الطلبات المسلّمة لكل يوم.",
       "productInterest": "إجمالي المشاهدات وقوائم الرغبات والإضافات إلى السلة. غيّر المقياس واعرض جدول القمع."
