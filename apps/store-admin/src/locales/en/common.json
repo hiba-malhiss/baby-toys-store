@@ -1,327 +1,71 @@
 {
-  "app": {
-    "loading": "Loading...",
-    "submit": "Submit",
-    "logout": "Logout",
-    "actions": "Actions",
-    "all": "All",
-    "yes": "Yes",
-    "no": "No",
-    "unexpectedError": "An unexpected error occurred."
-  },
   "common": {
-    "confirmDeleteTitle": "Confirm Delete",
-    "delete": "Delete",
-    "cancel": "Cancel",
-    "edit": "Edit"
-  },
-  "menu": {
-    "dashboard": "Dashboard",
-    "products": "Products",
-    "catalog": "Catalog",
-    "categories": "Categories",
-    "brands": "Brands",
-    "colors": "Colors",
-    "materials": "Materials",
-    "finance": "Finance",
-    "expenses": "Expenses",
-    "analytics": "Analytics",
-    "productAnalytics": "Product Analytics",
-    "orders": "Orders",
-    "coupons": "Coupons",
-    "customers": "Customers",
-    "contactMessages": "Contact Messages",
-    "reviews": "Reviews",
-    "homepage": "Home page content",
-    "settings": "Store settings",
-    "shippingOptions": "Shipping options"
-  },
-  "categories": {
-    "title": "Categories",
-    "add": "Add Category",
-    "addTitle": "Add New Category",
-    "editTitle": "Edit Category",
-    "empty": "No categories found.",
-    "loadErrorTitle": "Failed to load categories",
-    "deleteConfirm": "Are you sure you want to delete “{{name}}”?",
-    "create": "Create",
-    "update": "Update",
-    "createSuccess": "Category created successfully",
-    "updateSuccess": "Category updated successfully",
-    "deleteSuccess": "Category deleted successfully",
-    "deleteError": "Failed to delete category",
-    "saveError": "Failed to save category",
-    "imageUploadError": "Category saved, but there was an error uploading the image",
-    "columns": {
-      "image": "Image",
-      "name": "Name",
-      "description": "Description"
-    },
-    "fields": {
-      "name": "Name ({{locale}})",
-      "description": "Description ({{locale}})",
-      "isActive": "Is Active",
-      "isMain": "Is Main",
-      "image": "Image"
-    }
-  },
-  "brands": {
-    "title": "Brands",
-    "add": "Add Brand",
-    "addTitle": "Add New Brand",
-    "editTitle": "Edit Brand",
-    "empty": "No brands found.",
-    "loadErrorTitle": "Failed to load brands",
-    "deleteTitle": "Delete Brand",
-    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
-    "create": "Create Brand",
-    "update": "Update Brand",
-    "createSuccess": "Brand created successfully",
-    "updateSuccess": "Brand updated successfully",
-    "createError": "Failed to create brand",
-    "updateError": "Failed to update brand",
-    "deleteSuccess": "Brand deleted successfully",
-    "deleteError": "Failed to delete brand",
-    "imageUploadError": "Brand saved, but image upload failed",
-    "columns": {
-      "logo": "Logo",
-      "name": "Name",
-      "description": "Description"
-    },
-    "fields": {
-      "name": "Brand Name ({{locale}})",
-      "description": "Description ({{locale}})",
-      "logo": "Logo"
-    },
-    "placeholders": {
-      "name": "Enter brand name",
-      "description": "Enter brand description"
-    }
-  },
-  "colors": {
-    "title": "Colors",
-    "add": "Add Color",
-    "addTitle": "Add New Color",
-    "editTitle": "Edit Color",
-    "empty": "No colors found",
-    "loadErrorTitle": "Failed to load colors",
-    "deleteTitle": "Delete Color",
-    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
-    "create": "Create",
-    "update": "Update",
-    "createSuccess": "Color created successfully",
-    "updateSuccess": "Color updated successfully",
-    "createError": "Failed to create color",
-    "updateError": "Failed to update color",
-    "deleteSuccess": "Color deleted successfully",
-    "deleteError": "Failed to delete color",
-    "invalidCode": "Invalid color code",
-    "nameRequired": "Name ({{locale}}) is required",
-    "tabs": {
-      "en": "English (en)",
-      "ar": "Arabic (ar)"
-    },
-    "columns": {
-      "name": "Name",
-      "color": "Color"
-    },
-    "fields": {
-      "name": "Color Name ({{locale}})",
-      "code": "Color Code"
-    },
-    "placeholders": {
-      "name": "Enter color name"
-    }
-  },
-  "language": {
-    "switchToEnglish": "Switch to English",
-    "switchToArabic": "التبديل إلى العربية",
-    "toggleTitleEn": "EN",
-    "toggleTitleAr": "AR",
-    "label": "Language",
-    "selectPlaceholder": "Select language"
-  },
-  "productForm": {
-    "addTitle": "Add Product",
-    "editTitle": "Edit Product",
-    "mainImage": "Main Image",
-    "galleryImages": "Gallery Images",
-    "price": "Price",
-    "costPrice": "Cost Price",
-    "oldPrice": "Old Price (optional)",
-    "stockQuantity": "Stock Quantity",
-    "category": "Category",
-    "brand": "Brand",
-    "colors": "Colors",
-    "materials": "Materials",
-    "productName": "Product name {{locale}}",
-    "shortDescription": "Short Description {{locale}}",
-    "description": "Description {{locale}}",
-    "productDetails": "Product Details {{locale}}",
-    "featureBullets": "Feature Bullets {{locale}}",
-    "placeholders": {
-      "productName": "Enter product name",
-      "shortDescription": "Enter a short description",
-      "description": "Enter a full description",
-      "detailLabel": "Label",
-      "detailValue": "Value",
-      "bullet": "Add bullet"
-    },
-    "buttons": {
-      "addDetail": "Add detail",
-      "addBullet": "Add bullet"
-    }
+    "refresh": "Refresh"
   },
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, Admin!",
     "revenueThisMonth": "Revenue (This Month)",
     "momRevenueChange": "MoM Revenue Change",
-    "averageOrderValue": "Average Order Value",
-    "pendingOrders": "Pending Orders",
+    "todayOrders": "Orders (Today)",
+    "deliveredToday": "Delivered (Today)",
+    "newCustomersToday": "New customers (Today)",
+    "vsYesterday": "vs yesterday",
+    "topProducts": {
+      "todayTitle": "Top Products (Today)"
+    },
+    "metrics": {
+      "title": "Metrics",
+      "metric": "Metric",
+      "value": "Value",
+      "change": "Change",
+      "notes": "Notes",
+      "mtd": "MTD",
+      "salesToday": "Sales Today",
+      "orderIntakeValue": "Order Intake Value",
+      "orderIntakeNote": "New orders value today",
+      "avgRatingToday": "Avg Rating (Today)",
+      "ratingsCount": "{{count}} ratings",
+      "lateStuckOrders": "Late/Stuck Orders",
+      "thresholdDays": "{{days}}d+",
+      "peakHour": "Peak Hour",
+      "topTown": "Top Town",
+      "orders": "orders"
+    },
+    "alerts": {
+      "noUrgentTitle": "All good",
+      "noUrgentMsg": "No urgent alerts right now.",
+      "codeTitle": "Alert #{{code}}"
+    },
+    "goals": {
+      "title": "Goals",
+      "dailyOrders": "Daily Orders Goal",
+      "monthlyRevenue": "Monthly Revenue Goal",
+      "noGoal": "No goal configured",
+      "goal": "goal",
+      "progress": "{{current}} / {{goal}}",
+      "monthlyNoGoal": "{{sales}} / —",
+      "monthlyProgress": "{{sales}} / {{goal}}",
+      "remainingDays": "Remaining days:"
+    },
+    "productConversionFunnel": "Product Conversion Funnel",
     "table": {
       "product": "Product",
+      "soldQty": "Sold Quantity",
+      "revenue": "Revenue",
       "viewToWishlist": "View→Wishlist %",
       "wishlistToCart": "Wishlist→Cart %",
       "cartToPurchase": "Cart→Purchase %"
-    }
-  },
-  "finance": {
-    "title": "Finance - Monthly Profit",
-    "month": "Month",
-    "income": "Income",
-    "cogs": "COGS",
-    "expenses": "Expenses",
-    "profit": "Profit",
-    "viewProduct": "View product"
-  },
-  "orders": {
-    "title": "Orders",
-    "searchPlaceholder": "Search by order number or user ID...",
-    "orderNumber": "Order #",
-    "date": "Date",
-    "coupon": "Coupon",
-    "discount": "Discount",
-    "total": "Total",
-    "totalCost": "Total Cost",
-    "profit": "Profit",
-    "margin": "Margin",
-    "status": "Status"
-  },
-  "orderItems": {
-    "title": "Order Items",
-    "productImageAlt": "Product image",
-    "unit": "Unit",
-    "qty": "Qty",
-    "total": "Total",
-    "deleteItemTitle": "Delete Item",
-    "deleteItemConfirm": "Are you sure you want to delete \"{{name}}\" from the order?"
-  },
-  "couponSummary": {
-    "title": "Coupon & Summary",
-    "couponPlaceholder": "Coupon code",
-    "couponApplied": "Coupon Applied",
-    "noCoupon": "No coupon applied",
-    "subtotal": "Subtotal",
-    "shipping": "Shipping",
-    "discount": "Discount",
-    "total": "Total",
-    "totalCost": "Total Cost",
-    "totalProfit": "Total Profit",
-    "profitMargin": "Profit Margin"
-  },
-  "shippingAddress": {
-    "title": "Shipping Address",
-    "noAddress": "No address",
-    "firstName": "First Name",
-    "lastName": "Last Name",
-    "town": "Town",
-    "region": "Region",
-    "detailedAddress": "Detailed Address",
-    "phone": "Phone Number",
-    "secondPhone": "Second Phone Number",
-    "email": "Email"
-  },
-  "orderNote": {
-    "title": "Order Note"
-  },
-  "orderDetails": {
-    "editOrder": "Edit Order",
-    "placedOn": "Placed on {{date}}",
-    "currentStatus": "Current: {{status}}",
-    "changeStatusTitle": "Change Order Status",
-    "changeStatusConfirm": "Are you sure you want to change the status to \"{{status}}\"?"
-  },
-  "orderStatus": {
-    "pending": "Pending",
-    "processing": "Processing",
-    "shipped": "Shipped",
-    "delivered": "Delivered",
-    "cancelled": "Cancelled",
-    "returned": "Returned"
-  },
-  "productView": {
-    "fallbackName": "Product",
-    "idLabel": "ID #{{id}}",
-    "productIdCopied": "Product ID copied",
-    "copyProductId": "Copy product ID",
-    "inactive": "Inactive",
-    "editProduct": "Edit Product",
-    "price": "Price",
-    "cost": "Cost",
-    "revenueLifetime": "Revenue (lifetime)",
-    "profitLifetime": "Profit (lifetime)",
-    "margin": "Margin",
-    "inventory": "Inventory",
-    "stock": "Stock",
-    "unitsSold": "Units Sold",
-    "releaseDate": "Release Date",
-    "active": "Active",
-    "pricing": "Pricing",
-    "listPrice": "List Price",
-    "costPrice": "Cost Price",
-    "oldPrice": "Old Price",
-    "classification": "Classification",
-    "category": "Category",
-    "brand": "Brand",
-    "colors": "Colors",
-    "materials": "Materials",
-    "meta": "Meta",
-    "created": "Created",
-    "updated": "Updated",
-    "images": "Images",
-    "content": "Content",
-    "shortDescription": "Short Description",
-    "description": "Description"
+    },
+    "pendingOrders": "Pending Orders",
+    "averageOrderValue": "Average Order Value"
   },
   "tooltips": {
-    "productKPIs": {
-      "revenueLifetime": "Sum of delivered revenue attributed to this product over its lifetime. (Total money collected from delivered orders for this product.)",
-      "profitLifetime": "Lifetime profit = product revenue − COGS, using cost-at-purchase for delivered items. (Earnings after subtracting cost of goods sold (COGS) from revenue for delivered items.)",
-      "margin": "Profit margin = Profit ÷ Revenue (lifetime).",
-      "price": "Current list price of the product (before discounts/coupons).",
-      "cost": "Cost price used for COGS calculations, captured at purchase time in orders."
-    },
     "dashboard": {
-      "revenueThisMonth": "Total money collected from delivered orders in the selected month.",
-      "momRevenueChange": "How much your revenue increased or decreased compared to last month.",
-      "salesOverTime": "Current = last 30 days including today. Previous = the 30 days immediately before. Values are delivered-order revenue per day.",
-      "productInterest": "Views, Wishlists, and Adds to Cart combined. Switch metric. Expand to view the funnel table."
-    },
-    "financeHeaders": {
-      "month": "Month of the year being summarized (e.g., 2025-03).",
-      "income": "Delivered revenue recognized in this month (total money collected for delivered orders).",
-      "cogs": "Cost of goods sold for items delivered this month, using cost-at-purchase.",
-      "expenses": "Operating expenses recorded in this month.",
-      "profit": "Net profit for the month = Revenue − COGS − Expenses."
-    },
-    "orderHeaders": {
-      "profit": "Earnings after subtracting COGS from revenue for delivered items in this order.",
-      "margin": "Profit as a proportion of revenue for this order. Margin = Profit ÷ Revenue.",
-      "total": "Order total = Subtotal − Discount + Shipping.",
-      "totalCost": "Sum of item cost-at-purchase × quantity for this order (COGS).",
-      "discount": "Total discount applied to this order from coupon(s)."
+      "revenueThisMonth": "Total money collected from delivered orders in the current month.",
+      "ordersToday": "Orders created today.",
+      "deliveredToday": "Orders delivered today.",
+      "newCustomersToday": "New customers acquired today."
     }
   }
 }
-

@@ -1,42 +1,111 @@
 export interface DashboardStatsResponse {
+  meta?: Meta;
+  kpis?: Kpis;
+
+  today?: Today;
+  customers?: Customers;
+  ratings?: Ratings;
+  alerts?: Alerts;
+
+  topProducts?: TopProducts;
+  topTown?: TopTown;
+
+  monthly?: Monthly;
+  peakHour?: PeakHour;
+  lateStuckOrders?: LateStuckOrders;
+}
+
+// Backend-aligned nested types
+export interface Meta {
+  currentDate?: string; // ISO date (LocalDate)
+  lastLoginAt?: string; // ISO date-time (Instant)
+  timezone?: string;
+}
+
+export interface Kpis {
   pendingOrders: number;
   revenueThisMonth: string | number;
-  revenueMoMPercent: number; // -1..+inf
+  revenueLastMonth: string | number;
+  revenueMoMChangeBps: number | null;
   aovThisMonth: string | number;
-  categoryDistribution: SimpleChart;
-  topSellingProducts: SimpleChart;
-  salesOverTimeComparison: ComparisonChart;
-  productInterest: ProductInterest;
 }
 
-export interface SimpleChart {
-  labels: string[];
-  data: number[];
+export interface Today {
+  salesAmount?: string | number;
+  salesYesterdayAmount?: string | number;
+  salesChangeVsYesterdayBps?: number | null;
+
+  ordersCount?: number;
+  ordersYesterdayCount?: number;
+  ordersChangeVsYesterdayBps?: number | null;
+
+  deliveredOrdersCount?: number;
+  deliveredOrdersYesterdayCount?: number;
+  deliveredOrdersChangeBps?: number | null;
+
+  orderIntakeValue?: string | number;
+  orderIntakeValueYesterday?: string | number;
+  orderIntakeValueChangeBps?: number | null;
+
+  newCustomersCount?: number;
+  returningCustomersCount?: number;
+
+  ordersGoalProgressBps?: number | null;
 }
 
-// NewReturningChart removed (not used on admin dashboard)
-
-export interface ComparisonChart {
-  labels: string[];
-  current: number[];
-  previous: number[];
+export interface Customers {
+  newToday: number;
+  returningToday: number;
 }
 
-export interface ProductInterest {
-  topViewed: SimpleChart;
-  topWishlisted: SimpleChart;
-  topAddedToCart: SimpleChart;
-  funnel: FunnelRow[];
+export interface Ratings {
+  avgToday: string | number; // BigDecimal serialized
+  countToday: number;
 }
 
-export interface FunnelRow {
-  productId: number;
+export interface Alerts {
+  urgentCount: number;
+  preview?: Array<{
+    code: string;
+    message: string;
+    severity: 'INFO' | 'WARN' | 'CRITICAL' | string;
+  }>;
+}
+
+export interface TopProductsItem {
+  productId: string;
   name: string;
-  views: number;
-  wishlist: number;
-  addToCart: number;
-  purchases: number;
-  viewToWishlistRate: number;
-  wishlistToCartRate: number;
-  cartToPurchaseRate: number;
+  imageUrl?: string | null;
+  soldQuantity: number;
+  amount: string | number;
+}
+
+export interface TopProducts {
+  timeframe: 'TODAY' | 'WEEK' | 'MONTH' | string;
+  metric: 'REVENUE' | 'QUANTITY' | string;
+  items: TopProductsItem[];
+}
+
+export interface TopTown {
+  name?: string | null;
+  ordersToday: number;
+  amountToday?: string | number;
+}
+
+export interface Monthly {
+  salesToDate: string | number;
+  goal?: string | number | null;
+  progressBps?: number | null;
+  remainingDaysInMonth: number;
+}
+
+export interface PeakHour {
+  hourLabel?: string | null; // e.g., "14:00"
+  amountToday: string | number;
+}
+
+export interface LateStuckOrders {
+  count: number;
+  amount: string | number;
+  thresholdDays: number; // e.g., 3 days
 }

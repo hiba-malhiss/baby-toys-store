@@ -61,7 +61,7 @@ const Alert: React.FC<AlertProps> = ({
           </div>
         )}
 
-        <Flex align="center" className={styles.alertText} justify={justify || 'start'}>
+        <Flex align="center" className={styles.alertText} justify={justify || 'start'} spacing="s">
           {title && <div className={styles.alertTitle}>{title}</div>}
           <div className={styles.alertMessage}>{message}</div>
           {countdown && (
