@@ -1,6 +1,6 @@
 import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { faPen, faTrashAlt, faStar, faCross, faCheck, faEye } from '@fortawesome/free-solid-svg-icons';
+import { faPen, faTrashAlt, faStar, faCheck, faEye, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
 import { AdminProductBase } from "../../api/types/product.ts";
@@ -85,7 +85,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       sortable: true,
       body: (row: AdminProductBase) => (
         <Icon
-          icon={row.stockQuantity > 0 ? faCheck : faCross}
+          icon={row.stockQuantity > 0 ? faCheck : faXmark}
           color={row.stockQuantity > 0 ? 'success' : 'error'}
         />
       ),
