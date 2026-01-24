@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, BouncingDotsLoader, Table, Button, Flex, Alert, ProgressBar } from '@baby-toys/ui-kit';
+import { Heading, BouncingDotsLoader, Table, Button, Flex, Alert, ProgressBar, Text } from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { faTriangleExclamation, faCircleInfo, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -101,18 +101,24 @@ export default function DashboardPage(){
         change: '—',
         notes: t('dashboard.metrics.mtd', { defaultValue: 'MTD' })
       },
+      {
+        name: t('dashboard.metrics.revenueLastMonth', { defaultValue: 'Revenue (Last Month)' }),
+        value: money(data.kpis?.revenueLastMonth),
+        change: '—',
+        notes: '',
+      },
 
       {
         name: t('dashboard.metrics.salesToday', { defaultValue: 'Sales Today' }),
         value: money(data.today?.salesAmount),
         change: pctFromBps(data.today?.salesChangeVsYesterdayBps),
-        notes: '',
+        notes: t('dashboard.metrics.yesterday', { defaultValue: 'Yesterday: {{val}}', val: money(data.today?.salesYesterdayAmount) }),
       },
       {
         name: t('dashboard.metrics.orderIntakeValue', { defaultValue: 'Order Intake Value' }),
         value: money(data.today?.orderIntakeValue),
         change: pctFromBps(data.today?.orderIntakeValueChangeBps),
-        notes: t('dashboard.metrics.orderIntakeNote', { defaultValue: 'New orders value today' }),
+        notes: `${t('dashboard.metrics.orderIntakeNote', { defaultValue: 'New orders value today' })} • ${t('dashboard.metrics.yesterday', { defaultValue: 'Yesterday: {{val}}', val: money(data.today?.orderIntakeValueYesterday) })}`,
       },
 
       {
@@ -145,6 +151,14 @@ export default function DashboardPage(){
         change: '—',
         notes: '',
       },
+
+      // Newly displayed: Returning customers (Today)
+      {
+        name: t('dashboard.metrics.returningCustomersToday', { defaultValue: 'Returning Customers (Today)' }),
+        value: num(data.today?.returningCustomersCount ?? data.customers?.returningToday),
+        change: '—',
+        notes: '',
+      },
     ];
   }, [data, t, num, money, pctFromBps, safe]);
 
@@ -157,6 +171,24 @@ export default function DashboardPage(){
             <Heading level="h4" appearance="light">
               {t('dashboard.welcome', { defaultValue: 'Welcome back, Admin!' })}
             </Heading>
+            {data?.meta && (
+              <div className={styles.textWeak}>
+                {t('dashboard.meta.lastLogin', { defaultValue: 'Last login:' })}
+                {" "}
+                {(() => {
+                  const iso = data?.meta?.lastLoginAt;
+                  const tz = data?.meta?.timezone;
+                  if (!iso) return '—';
+                  try {
+                    return new Date(iso).toLocaleString(i18n.language, tz ? { timeZone: tz } as any : undefined);
+                  } catch {
+                    return iso;
+                  }
+                })()}
+                {data?.meta?.timezone ? ` • ${t('dashboard.meta.timezone', { defaultValue: 'Timezone' })}: ${data.meta.timezone}` : ''}
+                {data?.meta?.currentDate ? ` • ${t('dashboard.meta.currentDate', { defaultValue: 'Date' })}: ${data.meta.currentDate}` : ''}
+              </div>
+            )}
           </div>
 
           <Button
@@ -318,8 +350,6 @@ export default function DashboardPage(){
                     </Flex>
                   </div>
                 </div>
-
-                {/* Product Conversion Funnel removed */}
               </div>
             </div>
           </>
