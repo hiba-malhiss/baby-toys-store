@@ -9,7 +9,6 @@ import {
   Chip,
   CopyToClipboardButton,
   Table,
-  Flex,
   Accordion,
   AccordionGroup,
 } from '@baby-toys/ui-kit';
@@ -147,7 +146,7 @@ const ProductViewPage: React.FC = () => {
     );
 
     items.push(
-      <Accordion key="pricing" header={t('productView.pricing')}>
+      <Accordion key="pricing" header={t('productView.pricing')} defaultOpen>
         <StatsTable rows={vm.pricingRows}/>
       </Accordion>
     );
