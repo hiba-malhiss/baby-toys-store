@@ -4,10 +4,7 @@
   grid-template-columns: 1fr;
   gap: 12px;
   margin-bottom: 16px;
-
-  @media (min-width: 768px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  width: 100%;
 }
 
 /* Main 2-col layout */

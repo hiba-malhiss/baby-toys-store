@@ -193,6 +193,7 @@ export default function DashboardPage(){
             <div className={styles.alertsTop}>
               {topAlerts.map((a) => (
                 <Alert
+                  fullWidth
                   key={a.key}
                   appearance={a.appearance}
                   size="medium"
