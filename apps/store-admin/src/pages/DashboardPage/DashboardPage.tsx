@@ -13,7 +13,7 @@ import {
 } from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { faTriangleExclamation, faCircleInfo, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTriangleExclamation, faCircleInfo, faCircleCheck, faSync } from '@fortawesome/free-solid-svg-icons';
 
 import { useAdminDashboard, DASHBOARD_QUERY_KEY } from '../../api/dashboardApi';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -233,9 +233,10 @@ export default function DashboardPage(){
 
           <Button
             onClick={refresh}
-            className="bts-button bts-buttonSecondary"
-            disabled={isFetching}
+            appearance="outline"
+            isDisabled={isFetching}
             isLoading={isFetching}
+            leftIcon={faSync}
           >
             {t('common.refresh', { defaultValue: 'Refresh' })}
           </Button>

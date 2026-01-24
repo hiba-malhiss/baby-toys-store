@@ -73,13 +73,14 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const resolvedLoading = !!isLoading;
     const resolvedFullWidth = !!fullWidth;
     const resolvedType = type ?? 'button';
+
     const calculatedClassName = clsx(
       styles.button,
       isRounded && styles.isRounded,
       styles['button--' + size + 'Size'],
       styles['button--' + color + 'Color'],
       styles['button--' + appearance + 'Appearance'],
-      styles['button--' + align + 'Align'],
+      align && styles['button--' + align + 'Align'],
       resolvedDisabled && styles.isDisabled,
       resolvedFullWidth && styles.fullWidth,
       withoutPadding && styles.buttonNoPadding,
@@ -93,41 +94,47 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           ref={ref}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if(e.key === 'Enter') {
               onClick && onClick(e);
             }
           }}
           className={calculatedClassName}
           onClick={onClick}
-          disabled={resolvedDisabled}
+          disabled={resolvedDisabled || resolvedLoading}
           type={resolvedType}
           form={form}
           {...rest}
         >
-          {resolvedLoading ? (
-            <Icon isSpinning icon={faSpinner} className={clsx(styles.buttonIcon)} size={size} />
-          ) : (
-            <>
-              {leftIcon && (
-                <Icon
-                  color={iconColor}
-                  icon={leftIcon}
-                  className={styles.buttonIcon}
-                  size={size}
-                  badge={iconBadge}
-                />
-              )}
-              {children}
-              {rightIcon && (
-                <Icon
-                  color={iconColor}
-                  icon={rightIcon}
-                  className={styles.buttonIcon}
-                  size={size}
-                  badge={iconBadge}
-                />
-              )}
-            </>
+          {/* Loading icon (does NOT replace content) */}
+          {resolvedLoading && (
+            <Icon
+              isSpinning
+              icon={faSpinner}
+              className={clsx(styles.buttonIcon, styles.loadingIcon)}
+              size={size}
+            />
+          )}
+
+          {leftIcon && (
+            <Icon
+              color={iconColor}
+              icon={leftIcon}
+              className={styles.buttonIcon}
+              size={size}
+              badge={iconBadge}
+            />
+          )}
+
+          {children}
+
+          {rightIcon && (
+            <Icon
+              color={iconColor}
+              icon={rightIcon}
+              className={styles.buttonIcon}
+              size={size}
+              badge={iconBadge}
+            />
           )}
         </button>
       </div>
