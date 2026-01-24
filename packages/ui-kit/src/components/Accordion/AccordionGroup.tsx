@@ -19,6 +19,7 @@ interface AccordionGroupProps {
   autoOverflow?: boolean;
   onChange?: (key: string) => void;
   activeKey?: string;
+  withDivider?: boolean;
 }
 
 const AccordionGroup: React.FC<AccordionGroupProps> = ({
@@ -29,6 +30,7 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
   unstyled,
   autoOverflow = false,
   activeKey,
+  withDivider = false,
 }) => {
   // Initialize open state for all accordions; defaultOpen respected if provided
   const [openIndexes, setOpenIndexes] = useState<boolean[]>(
@@ -64,6 +66,8 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
     });
   };
 
+  const total = Children.count(children);
+
   return (
     <div
       className={clsx(
@@ -81,10 +85,17 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
           ? String(key) === activeKey
           : openIndexes[index] || false;
 
-        return cloneElement(child, {
-          isOpen: derivedIsOpen,
-          onToggle: () => toggleIndex(index, key),
-        });
+        return (
+          <>
+            {cloneElement(child, {
+              isOpen: derivedIsOpen,
+              onToggle: () => toggleIndex(index, key),
+            })}
+            {withDivider && index < total - 1 && (
+              <div className={styles.accordionDivider} role="separator" />
+            )}
+          </>
+        );
       })}
     </div>
   );

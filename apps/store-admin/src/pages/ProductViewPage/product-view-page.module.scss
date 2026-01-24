@@ -6,8 +6,12 @@
 .heroCardGrid {
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
+  align-items: start;
   gap: 16px;
+
+  > * {
+    min-width: 0;
+  }
 }
 
 .heroLeftGrid {
@@ -15,6 +19,19 @@
   grid-template-columns: auto 1fr;
   gap: 16px;
   align-items: center;
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.heroText {
+  min-width: 0;
+}
+
+.heroActions {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .mainImage {
@@ -23,13 +40,14 @@
   object-fit: cover;
   border-radius: 8px;
   border: 1px solid #b8b8b8;
+  flex-shrink: 0;
 }
 
 .title {
   margin: 0;
 }
 
-.idRow, .brandRow {
+.metaRow {
   display: grid;
   grid-auto-flow: column;
   gap: 8px;
@@ -48,19 +66,48 @@
 .kpiGrid {
   display: grid;
   gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   align-items: stretch;
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.descBox {
+  background-color: #f8f9fa;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
 }
 
 .contentGrid {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+
+  > * {
+    min-width: 0;
+  }
 }
 
 .cardBodyGrid {
   display: grid;
   gap: 8px;
+}
+
+.keyValueRow {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px;
+  align-items: baseline;
+}
+
+.keyLabel {
+  opacity: 0.8;
+}
+
+.keyValue {
+  justify-self: end;
 }
 
 .imagesGrid {
@@ -76,17 +123,24 @@
   border-radius: 8px;
 }
 
-.statRow {
-  display: grid;
-  grid-template-columns: 1fr auto;
-  gap: 8px;
-}
-.statValue {
-  justify-self: end;
-}
-
 .contentTextGrid {
   display: grid;
   gap: 24px;
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+
+  > * {
+    min-width: 0;
+  }
+}
+
+.preWrap {
+  white-space: pre-wrap;
+}
+
+.statLabel {
+  opacity: 0.8;
+}
+
+.statValue {
+  font-weight: 600;
 }

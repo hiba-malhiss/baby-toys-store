@@ -30,6 +30,7 @@ const Table = forwardRef(
       onPageChange = () => {},
       title,
       useLocalSortAndFilter = false,
+      withoutCard = false,
     }: TableProps,
     ref
   ) => {
@@ -272,8 +273,8 @@ const Table = forwardRef(
       [onPageChange, useLocalSortAndFilter]
     );
 
-    return (
-      <Card fullWidth header={title}>
+    const TableInner = (
+      <>
         <div
           ref={wrapperRef}
           className={styles.tableWrapper}
@@ -300,6 +301,16 @@ const Table = forwardRef(
           />
         )}
         {children}
+      </>
+    );
+
+    if (withoutCard) {
+      return TableInner as any;
+    }
+
+    return (
+      <Card fullWidth header={title}>
+        {TableInner}
       </Card>
     );
   }
