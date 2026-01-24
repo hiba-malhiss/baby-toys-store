@@ -7,9 +7,9 @@ import { formatDate } from '@baby-toys/ui-kit/utils';
 import { OrderStatus } from '../../api/types/order';
 import { useOrderDetails } from './useOrderDetails';
 import { OrderItems } from './OrderItems';
-import { CouponAndSummary } from './CouponAndSummary.tsx';
-import { ShippingAddressCard } from './ShippingAddressCard.tsx';
-import { ShippingNoteCard } from './ShippingNoteCard.tsx';
+import { CouponAndSummary } from './CouponAndSummary';
+import { ShippingAddressCard } from './ShippingAddressCard';
+import { ShippingNoteCard } from './ShippingNoteCard';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
 
@@ -17,8 +17,9 @@ interface OrderDetailsPageProps {
   isEdit?: boolean;
 }
 
-const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
+const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) => {
   const { t } = useTranslation();
+
   const {
     order,
     isLoading,
@@ -45,25 +46,34 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
   } = useOrderDetails();
 
   const { data: settings } = useStoreSettings();
-  const currency = { symbol: settings?.general?.currencySymbol } as const;
+  const currency = { symbol: settings?.general?.currencySymbol ?? '' } as const;
+
   const statusOptions = getOrderStatusOptions(t);
+
+  const orderIdentifier = order?.orderNumber || order?.id || '';
+  const pageTitle = isEdit
+    ? `${t('orderDetails.editOrder')} #${orderIdentifier}`
+    : `${t('orders.orderNumber')} #${orderIdentifier}`;
+
+  const placedOnLabel = t('orderDetails.placedOn', {
+    date: formatDate(order?.createdAt),
+  });
+
+  const resolvedStatusLabel =
+    statusOptions.find((o) => o.value === order?.status)?.label || String(order?.status || '');
+
+  const showEditMode = Boolean(isEdit && canEditOrder);
 
   return (
     <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMutating}>
       {/* Header */}
       <Flex justify="between" align="center" className={styles.orderDetailsHeaderRow}>
         <Flex direction="vertical" spacing="xs">
-          <Heading>
-            {isEdit
-              ? `${t('orderDetails.editOrder')} #${order?.orderNumber || order?.id}`
-              : `${t('orders.orderNumber')} #${order?.orderNumber || order?.id}`}
-          </Heading>
-          <span className={styles.orderDetailsOrderDate}>
-            {t('orderDetails.placedOn', { date: formatDate(order?.createdAt) })}
-          </span>
+          <Heading>{pageTitle}</Heading>
+          <span className={styles.orderDetailsOrderDate}>{placedOnLabel}</span>
         </Flex>
 
-        {isEdit ? (
+        {showEditMode ? (
           <Flex direction="vertical" spacing="xs" align="end">
             <Select
               className={styles.orderDetailsStatus}
@@ -73,12 +83,10 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
             >
               {order?.status && (
                 <Option key={`current-${order.status}`} value={order.status}>
-                  {t('orderDetails.currentStatus', {
-                    status:
-                      statusOptions.find((o) => o.value === order.status)?.label || order.status,
-                  })}
+                  {t('orderDetails.currentStatus', { status: resolvedStatusLabel })}
                 </Option>
               )}
+
               {allowedOptions.map(({ label, value }) => (
                 <Option key={value} value={value}>
                   {label}
@@ -89,7 +97,9 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
         ) : (
           <Flex align="center" spacing="m">
             <Chip
-              label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, order?.status as any)}
+              label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, {
+                defaultValue: String(order?.status || ''),
+              })}
               appearance={statusColorMap[order?.status]}
             />
             <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
@@ -100,10 +110,10 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
       </Flex>
 
       {/* Content */}
-      <Flex spacing="xxl" align="start" className={styles.orderDetailsPageContent} fullHeight>
+      <div className={styles.orderDetailsPageContent}>
         <OrderItems
-          order={order}
-          isEdit={Boolean(isEdit && canEditOrder)}
+          order={order as any} // If order can be undefined in the hook type, keep the AdminLayout guard + cast here.
+          isEdit={showEditMode}
           showHeaderActions={false}
           currency={currency}
           navigate={navigate}
@@ -114,30 +124,28 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit }) => {
           handleDeleteItem={handleDeleteItem}
           setItemIdToDelete={setItemIdToDelete}
         />
-        <Flex direction="vertical" spacing="xxl" align="start" className={styles.orderDetailsPageContent} fullHeight>
+
+        <Flex direction="vertical" spacing="xxl" align="start" fullHeight>
           <CouponAndSummary
-            isEdit={Boolean(isEdit && canEditOrder)}
+            isEdit={showEditMode}
             couponInput={couponInput}
             setCouponInput={setCouponInput}
-            order={order}
+            order={order as any}
             currency={currency}
             handleApplyCoupon={handleApplyCoupon}
             handleRemoveCoupon={handleRemoveCoupon}
             canEditOrder={canEditOrder}
           />
-          <ShippingAddressCard order={order}/>
+
+          <ShippingAddressCard order={order as any}/>
           <ShippingNoteCard note={order?.note}/>
         </Flex>
-      </Flex>
+      </div>
 
       <ConfirmDialog
         visible={statusConfirmVisible}
         header={t('orderDetails.changeStatusTitle')}
-        message={
-          pendingStatus
-            ? t('orderDetails.changeStatusConfirm', { status: pendingStatus })
-            : ''
-        }
+        message={pendingStatus ? t('orderDetails.changeStatusConfirm', { status: pendingStatus }) : ''}
         onConfirm={confirmStatusChange}
         onCancel={cancelStatusChange}
       />
