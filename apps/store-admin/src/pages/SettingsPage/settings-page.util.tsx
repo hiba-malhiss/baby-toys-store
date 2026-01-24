@@ -6,6 +6,8 @@ export const generalSchema = z.object({
   timezone: z.string().min(1).max(100),
   priceRangeMin: z.coerce.string().optional(),
   priceRangeMax: z.coerce.string().optional(),
+  dailyOrdersGoal: z.coerce.string().optional(),
+  monthlyRevenueGoal: z.coerce.string().optional(),
 });
 
 export const contactSchema = z.object({

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, BouncingDotsLoader, Table, Button, Flex, Alert } from '@baby-toys/ui-kit';
+import { Heading, BouncingDotsLoader, Table, Button, Flex, Alert, ProgressBar } from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { faTriangleExclamation, faCircleInfo, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -8,7 +8,6 @@ import { faTriangleExclamation, faCircleInfo, faCircleCheck } from '@fortawesome
 import { useAdminDashboard, DASHBOARD_QUERY_KEY } from '../../api/dashboardApi';
 import { useStoreSettings } from '../../api/settingsApi';
 
-import FunnelBars from './FunnelBars';
 import DashboardStatCard from './DashboardStatCard/DashboardStatCard';
 
 import styles from './dashboard-page.module.scss';
@@ -84,23 +83,7 @@ export default function DashboardPage(){
     }));
   }, [data, t]);
 
-  const funnelItems = useMemo(() => {
-    const funnel = (data as any)?.productInterest?.funnel?.[0];
-
-    const empty = [
-      { label: t('dashboard.table.viewToWishlist', { defaultValue: 'View→Wishlist %' }), value: 0 },
-      { label: t('dashboard.table.wishlistToCart', { defaultValue: 'Wishlist→Cart %' }), value: 0 },
-      { label: t('dashboard.table.cartToPurchase', { defaultValue: 'Cart→Purchase %' }), value: 0 },
-    ];
-
-    if(!funnel) return empty;
-
-    return [
-      { label: empty[0].label, value: Number(funnel.viewToWishlistRate ?? 0) * 100 },
-      { label: empty[1].label, value: Number(funnel.wishlistToCartRate ?? 0) * 100 },
-      { label: empty[2].label, value: Number(funnel.cartToPurchaseRate ?? 0) * 100 },
-    ];
-  }, [data, t]);
+  // productInterest funnel removed (backend doesn't provide it currently)
 
   const metricsRows = useMemo(() => {
     if(!data) return [];
@@ -193,7 +176,6 @@ export default function DashboardPage(){
             <div className={styles.alertsTop}>
               {topAlerts.map((a) => (
                 <Alert
-                  fullWidth
                   key={a.key}
                   appearance={a.appearance}
                   size="medium"
@@ -284,20 +266,18 @@ export default function DashboardPage(){
 
                   <div className={styles.stack}>
                     {/* Daily */}
-                    <div>
-                      <div className="bts-flex bts-justifyBetween bts-alignCenter bts-marginBxs">
-                        <strong>{t('dashboard.goals.dailyOrders', { defaultValue: 'Daily Orders Goal' })}</strong>
+                    <Flex spacing="xs" direction="vertical">
+                      <Flex align="center" spacing="s">
+                        <strong>{t('dashboard.goals.dailyOrders')}</strong>
                         <span className={styles.textWeak}>{pctFromBps(data.today?.ordersGoalProgressBps)}</span>
-                      </div>
+                      </Flex>
 
-                      <div className={styles.progressTrack}>
-                        <div
-                          className={styles.progressFill}
-                          style={{ width: `${clampPct(Number((data.today?.ordersGoalProgressBps ?? 0) / 100))}%` }}
-                        />
-                      </div>
+                      <ProgressBar
+                        className=""
+                        progress={clampPct(Number((data.today?.ordersGoalProgressBps ?? 0) / 100))}
+                      />
 
-                      <div className={`bts-marginTs ${styles.textWeak}`}>
+                      <div className={styles.textWeak}>
                         {data.today?.ordersGoalProgressBps == null
                           ? t('dashboard.goals.noGoal', { defaultValue: 'No goal configured' })
                           : t('dashboard.goals.progress', {
@@ -306,26 +286,24 @@ export default function DashboardPage(){
                             goal: t('dashboard.goals.goal', { defaultValue: 'goal' }),
                           })}
                       </div>
-                    </div>
+                    </Flex>
 
                     {/* Monthly */}
-                    <div>
-                      <div className="bts-flex bts-justifyBetween bts-alignCenter bts-marginBxs">
+                    <Flex spacing="xs" direction="vertical">
+                      <Flex align="center" spacing="s">
                         <strong>{t('dashboard.goals.monthlyRevenue', { defaultValue: 'Monthly Revenue Goal' })}</strong>
                         <span className={styles.textWeak}>{pctFromBps(data.monthly?.progressBps)}</span>
-                      </div>
+                      </Flex>
 
-                      <div className={styles.progressTrack}>
-                        <div
-                          className={styles.progressFill}
-                          style={{ width: `${clampPct(Number((data.monthly?.progressBps ?? 0) / 100))}%` }}
-                        />
-                      </div>
+                      <ProgressBar
+                        className=""
+                        progress={clampPct(Number((data.monthly?.progressBps ?? 0) / 100))}
+                      />
 
-                      <div className={`bts-marginTs ${styles.textWeak}`}>
+                      <div className={styles.textWeak}>
                         {data.monthly?.goal == null
                           ? t('dashboard.goals.monthlyNoGoal', {
-                            defaultValue: '{{sales}} / —',
+                            defaultValue: '{{sales}}',
                             sales: money(data.monthly?.salesToDate)
                           })
                           : t('dashboard.goals.monthlyProgress', {
@@ -337,19 +315,11 @@ export default function DashboardPage(){
                           {t('dashboard.goals.remainingDays', { defaultValue: 'Remaining days:' })} {num(data.monthly?.remainingDaysInMonth)}
                         </span>
                       </div>
-                    </div>
+                    </Flex>
                   </div>
                 </div>
 
-                <div className={styles.card}>
-                  <div className={styles.cardHeader}>
-                    <Heading level="h3" className={styles.sectionTitle}>
-                      {t('dashboard.productConversionFunnel', { defaultValue: 'Product Conversion Funnel' })}
-                    </Heading>
-                  </div>
-
-                  <FunnelBars items={funnelItems}/>
-                </div>
+                {/* Product Conversion Funnel removed */}
               </div>
             </div>
           </>

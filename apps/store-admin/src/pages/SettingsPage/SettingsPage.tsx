@@ -33,6 +33,8 @@ const emptyGeneral = {
   timezone: '',
   priceRangeMin: '',
   priceRangeMax: '',
+  dailyOrdersGoal: '',
+  monthlyRevenueGoal: '',
 };
 
 const emptyContact = {
@@ -168,7 +170,15 @@ const SettingsPage: React.FC = () => {
 
             {/* General */}
             <Accordion header="General" buttonAppearance="outline">
-              {['currency', 'currencySymbol', 'timezone', 'priceRangeMin', 'priceRangeMax'].map(
+              {[
+                'currency',
+                'currencySymbol',
+                'timezone',
+                'priceRangeMin',
+                'priceRangeMax',
+                'dailyOrdersGoal',
+                'monthlyRevenueGoal',
+              ].map(
                 (field) => (
                   <FormFieldWrapper
                     key={field}
@@ -180,7 +190,7 @@ const SettingsPage: React.FC = () => {
                   >
                     <StringInput
                       placeholder={field}
-                      type={field.includes('price') ? 'number' : 'text'}
+                      type={field.includes('price') || field.toLowerCase().includes('goal') ? 'number' : 'text'}
                     />
                   </FormFieldWrapper>
                 )
