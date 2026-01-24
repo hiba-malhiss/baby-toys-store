@@ -31,7 +31,7 @@ export const productSchema = z
   .object({
     price: z.number().min(1, 'Price must be positive'),
     costPrice: z.number().min(0, 'Cost price must be >= 0').optional().or(z.literal(NaN)).transform((v) => (Number.isNaN(v) ? undefined : v)),
-    oldPrice: z.number().nullable(),
+    oldPrice: z.number().nullable().optional(),
     stockQuantity: z.number().min(0, 'Stock quantity must be non-negative'),
     releaseDate: z.string().optional(),
     mainImage: z.string(),
