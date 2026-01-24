@@ -1,6 +1,16 @@
 import React, { useMemo } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, BouncingDotsLoader, Table, Button, Flex, Alert, ProgressBar, Text } from '@baby-toys/ui-kit';
+import {
+  Heading,
+  BouncingDotsLoader,
+  Table,
+  Button,
+  Flex,
+  Alert,
+  ProgressBar,
+  Tooltip,
+  Icon
+} from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { faTriangleExclamation, faCircleInfo, faCircleCheck } from '@fortawesome/free-solid-svg-icons';
@@ -93,32 +103,43 @@ export default function DashboardPage(){
         name: t('dashboard.pendingOrders', { defaultValue: 'Pending Orders' }),
         value: num(data.kpis?.pendingOrders),
         change: '—',
-        notes: ''
+        notes: '',
+        calcInfo: 'Count of orders with status = PENDING'
       },
       {
         name: t('dashboard.averageOrderValue', { defaultValue: 'Average Order Value' }),
         value: money(data.kpis?.aovThisMonth),
         change: '—',
-        notes: t('dashboard.metrics.mtd', { defaultValue: 'MTD' })
+        notes: t('dashboard.metrics.mtd', { defaultValue: 'MTD' }),
+        calcInfo: 'Delivered revenue this month / Delivered count this month'
       },
       {
         name: t('dashboard.metrics.revenueLastMonth', { defaultValue: 'Revenue (Last Month)' }),
         value: money(data.kpis?.revenueLastMonth),
         change: '—',
         notes: '',
+        calcInfo: 'Sum of totals for orders with status = DELIVERED and deliveredAt in previous month'
       },
 
       {
         name: t('dashboard.metrics.salesToday', { defaultValue: 'Sales Today' }),
         value: money(data.today?.salesAmount),
         change: pctFromBps(data.today?.salesChangeVsYesterdayBps),
-        notes: t('dashboard.metrics.yesterday', { defaultValue: 'Yesterday: {{val}}', val: money(data.today?.salesYesterdayAmount) }),
+        notes: t('dashboard.metrics.yesterday', {
+          defaultValue: 'Yesterday: {{val}}',
+          val: money(data.today?.salesYesterdayAmount)
+        }),
+        calcInfo: 'Sum of totals for orders with status = DELIVERED and deliveredAt in today window'
       },
       {
         name: t('dashboard.metrics.orderIntakeValue', { defaultValue: 'Order Intake Value' }),
         value: money(data.today?.orderIntakeValue),
         change: pctFromBps(data.today?.orderIntakeValueChangeBps),
-        notes: `${t('dashboard.metrics.orderIntakeNote', { defaultValue: 'New orders value today' })} • ${t('dashboard.metrics.yesterday', { defaultValue: 'Yesterday: {{val}}', val: money(data.today?.orderIntakeValueYesterday) })}`,
+        notes: `${t('dashboard.metrics.orderIntakeNote', { defaultValue: 'New orders value today' })} • ${t('dashboard.metrics.yesterday', {
+          defaultValue: 'Yesterday: {{val}}',
+          val: money(data.today?.orderIntakeValueYesterday)
+        })}`,
+        calcInfo: 'Sum of totals for orders with createdAt in today window (new orders)'
       },
 
       {
@@ -129,6 +150,7 @@ export default function DashboardPage(){
           count: num(data.ratings?.countToday)
         }),
         notes: '',
+        calcInfo: 'Average of PUBLISHED product reviews created in today window'
       },
       {
         name: t('dashboard.metrics.lateStuckOrders', { defaultValue: 'Late/Stuck Orders' }),
@@ -138,18 +160,21 @@ export default function DashboardPage(){
           defaultValue: '{{days}}d+',
           days: data.lateStuckOrders.thresholdDays
         }) : '',
+        calcInfo: 'Count and sum of orders with status = PENDING and createdAt before (todayStart - thresholdDays)'
       },
       {
         name: t('dashboard.metrics.peakHour', { defaultValue: 'Peak Hour' }),
         value: `${safe(data.peakHour?.hourLabel, '—')}${data.peakHour?.amountToday ? ` • ${money(data.peakHour?.amountToday)}` : ''}`,
         change: '—',
         notes: '',
+        calcInfo: 'Among delivered orders today, bucket totals by deliveredAt hour; pick hour with max revenue'
       },
       {
         name: t('dashboard.metrics.topTown', { defaultValue: 'Top Town' }),
         value: `${safe(data.topTown?.name, '—')}${data.topTown?.ordersToday ? ` • ${num(data.topTown?.ordersToday)} ${t('dashboard.metrics.orders', { defaultValue: 'orders' })}` : ''}`,
         change: '—',
         notes: '',
+        calcInfo: 'Among delivered orders today, group by shippingAddress.town; pick town with most orders and sum amount'
       },
 
       // Newly displayed: Returning customers (Today)
@@ -158,6 +183,21 @@ export default function DashboardPage(){
         value: num(data.today?.returningCustomersCount ?? data.customers?.returningToday),
         change: '—',
         notes: '',
+        calcInfo: 'Count of customers with an order today who are not first-time (first order exists before today)'
+      },
+      {
+        name: t('dashboard.metrics.ordersYesterday', { defaultValue: 'Orders (Yesterday)' }),
+        value: num(data.today?.ordersYesterdayCount),
+        change: '—',
+        notes: '',
+        calcInfo: 'Count of orders with createdAt in yesterday window'
+      },
+      {
+        name: t('dashboard.metrics.deliveredYesterday', { defaultValue: 'Delivered (Yesterday)' }),
+        value: num(data.today?.deliveredOrdersYesterdayCount),
+        change: '—',
+        notes: '',
+        calcInfo: 'Count of orders with status = DELIVERED and deliveredAt in yesterday window'
       },
     ];
   }, [data, t, num, money, pctFromBps, safe]);
@@ -178,7 +218,7 @@ export default function DashboardPage(){
                 {(() => {
                   const iso = data?.meta?.lastLoginAt;
                   const tz = data?.meta?.timezone;
-                  if (!iso) return '—';
+                  if(!iso) return '—';
                   try {
                     return new Date(iso).toLocaleString(i18n.language, tz ? { timeZone: tz } as any : undefined);
                   } catch {
@@ -269,7 +309,7 @@ export default function DashboardPage(){
                         body: (r: any) => money(r.amount)
                       },
                     ]}
-                    data={(data.topProducts?.items ?? []).slice(0, 10)}
+                    value={(data.topProducts?.items ?? []).slice(0, 10)}
                   />
                 </div>
 
@@ -277,12 +317,34 @@ export default function DashboardPage(){
                   <Table
                     title={t('dashboard.metrics.title', { defaultValue: 'Metrics' })}
                     columns={[
-                      { header: t('dashboard.metrics.metric', { defaultValue: 'Metric' }), field: 'name' },
+                      {
+                        header: t('dashboard.metrics.metric', { defaultValue: 'Metric' }),
+                        field: 'name',
+                        body: (r: any) => (
+                          <Flex align="center" spacing="xs">
+                            <span>{r.name}</span>
+                            {r.calcInfo && (
+                              <Tooltip
+                                content={
+                                  <div style={{ maxWidth: 200, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                    {r.calcInfo}
+                                  </div>
+                                }
+                                position="top"
+                              >
+                                <div>
+                                  <Icon icon={faCircleInfo} color="gray"/>
+                                </div>
+                              </Tooltip>
+                            )}
+                          </Flex>
+                        ),
+                      },
                       { header: t('dashboard.metrics.value', { defaultValue: 'Value' }), field: 'value' },
                       { header: t('dashboard.metrics.change', { defaultValue: 'Change' }), field: 'change' },
                       { header: t('dashboard.metrics.notes', { defaultValue: 'Notes' }), field: 'notes' },
                     ]}
-                    data={metricsRows}
+                    value={metricsRows}
                   />
                 </div>
               </div>
