@@ -23,45 +23,53 @@
   font-size: 11px;
   overflow: hidden;
 
+  // Focus ring
   &:focus-within,
   :global(button:focus) & {
     box-shadow: 0 0 0 2px rgba($color-primary, 0.15);
     border-color: $color-accent-light;
   }
 
-  .langText {
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 100%;
-    color: $color-text-muted;
-    transition: color 0.25s;
+  // Base knob shift amount (one half)
+  --shift: calc(100% + 4px);
+  --knob-x: 0;
 
-    // Selected state (scoped to CSS module)
-    &.selected {
-      color: $color-white;
-    }
+  // LTR behavior: AR (left) => 0, EN (right) => +shift
+  &[data-dir='ltr'][data-locale='en'] {
+    --knob-x: var(--shift);
   }
 
-  .knob {
-    position: absolute;
-    top: 2px;
-    left: 2px;
-    width: calc(50% - 4px);
-    height: calc(100% - 4px);
-    border-radius: 999px;
-    background: $color-primary;
-    box-shadow: $shadow-xs;
-    z-index: 1;
-    transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  // RTL behavior: EN (right visually but "start" is right) => 0, AR (left visually) => +shift
+  &[data-dir='rtl'][data-locale='ar'] {
+    --knob-x: var(--shift);
   }
+}
 
-  // Move knob when English is selected (data-locale set by component)
-  &[data-locale='en'] {
-    .knob {
-      transform: translateX(calc(100% + 4px));
-    }
-  }
+.langText {
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: $color-text-muted;
+  transition: color 0.25s;
+}
+
+.selected {
+  color: $color-white;
+}
+
+.knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: calc(50% - 4px);
+  height: calc(100% - 4px);
+  border-radius: 999px;
+  background: $color-primary;
+  box-shadow: $shadow-xs;
+  z-index: 1;
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateX(var(--knob-x));
 }
