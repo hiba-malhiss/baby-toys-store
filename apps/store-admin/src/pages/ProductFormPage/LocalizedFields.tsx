@@ -74,6 +74,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
           max={10}
           fullWidth
           isDisabled={!!isDisabled}
+          textarea
         />
       </FormFieldWrapper>
     </Flex>

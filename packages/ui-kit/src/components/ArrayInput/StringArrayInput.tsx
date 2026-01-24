@@ -1,5 +1,5 @@
 import React from 'react';
-import { StringInput, Button, Flex } from '@baby-toys/ui-kit';
+import { StringInput, TextArea, Button, Flex } from '@baby-toys/ui-kit';
 import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 interface StringArrayInputProps {
@@ -10,24 +10,28 @@ interface StringArrayInputProps {
   min?: number;
   fullwidth?: boolean;
   max?: number;
+  rows?: number;
+  textarea?: boolean;
 }
 
 const StringArrayInput: React.FC<StringArrayInputProps> = ({
-  value,
-  onChange,
-  placeholder,
-  min = 0,
-  addButtonText = 0,
-  fullwidth,
-  max,
+ value,
+ onChange,
+ placeholder,
+ min = 0,
+ addButtonText = 0,
+ fullwidth,
+ max,
+ textarea = false,
+ rows = 1,
 }) => {
   const handleAdd = () => {
-    if (typeof max === 'number' && value.length >= max) return;
+    if(typeof max === 'number' && value.length >= max) return;
     onChange([...value, '']);
   };
 
   const handleRemove = (index: number) => {
-    if (value.length > 1) {
+    if(value.length > 1) {
       const newValue = [...value];
       newValue.splice(index, 1);
       onChange(newValue);
@@ -44,12 +48,22 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
     <div>
       {value.map((item, index) => (
         <Flex key={index} spacing="s" align="center" fullwidth={fullwidth} className="bts-marginBs">
-          <StringInput
-            fullwidth={fullwidth}
-            value={item}
-            onChange={(v) => handleChange(index, v)}
-            placeholder={placeholder}
-          />
+          {textarea ? (
+            <TextArea
+              fullwidth={fullwidth as any}
+              value={item}
+              onChange={(v) => handleChange(index, v)}
+              placeholder={placeholder}
+              rows={rows}
+            />
+          ) : (
+            <StringInput
+              fullwidth={fullwidth}
+              value={item}
+              onChange={(v) => handleChange(index, v)}
+              placeholder={placeholder}
+            />
+          )}
           {index >= min && (
             <Button
               onClick={() => handleRemove(index)}
