@@ -180,6 +180,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
   return (
     <Flex>
       <Table
+        stripedRows
         title={title}
         className={styles.orderDetailsItems}
         value={items}

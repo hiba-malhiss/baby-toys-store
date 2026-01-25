@@ -150,6 +150,7 @@ export default function ReviewsPage() {
           <ReviewsFilters {...filters} onChange={applyFilters} />
         </Flex>
         <Table
+          stripedRows
           value={data?.content ?? []}
           columns={columns}
           paginator

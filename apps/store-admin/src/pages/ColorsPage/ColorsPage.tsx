@@ -66,6 +66,7 @@ const ColorsPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           columns={[
             {
               header: t('colors.columns.name'),

@@ -88,6 +88,7 @@ const ShippingOptionsPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           columns={columns}
           value={rows}
           isLoading={isLoading}

@@ -149,6 +149,7 @@ const CustomersPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           value={customers}
           columns={columns}
           paginator

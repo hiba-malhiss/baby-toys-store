@@ -65,6 +65,7 @@ const CategoriesPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           value={categories}
           columns={[
             { header: t('categories.columns.image'), field: 'imageUrl', type: 'image' },

@@ -25,7 +25,7 @@ export const CouponAndSummary: React.FC<{
       }) => {
   const { t } = useTranslation();
   return (
-    <Card header={<Heading level="h3">{t('couponSummary.title')}</Heading>} fullWidth>
+    <Card header={t('couponSummary.title')} fullWidth>
       <Flex spacing="xl" direction="vertical">
         {isEdit && (
           <Flex spacing="s" align="center" className={styles.couponRow}>

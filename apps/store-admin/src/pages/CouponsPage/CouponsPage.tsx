@@ -137,6 +137,7 @@ const CouponsPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           columns={columns}
           value={coupons}
           isLoading={isLoading}

@@ -61,6 +61,7 @@ const OrdersPage: React.FC = () => {
           </Flex>
         </Flex>
         <Table
+          stripedRows
           value={orders}
           columns={columns}
           paginator

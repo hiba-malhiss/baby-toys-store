@@ -67,6 +67,7 @@ const MaterialsPage: React.FC = () => {
           </Button>
         </Flex>
         <Table
+          stripedRows
           value={materials}
           columns={columns}
           isLoading={isLoading}

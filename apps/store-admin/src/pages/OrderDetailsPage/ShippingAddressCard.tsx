@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Flex, Heading } from '@baby-toys/ui-kit';
+import { Card, Flex } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -10,7 +10,7 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
   const { t } = useTranslation();
   const a = order?.shippingAddress;
   return (
-    <Card header={<Heading level="h3">{t('shippingAddress.title')}</Heading>} fullWidth>
+    <Card header={t('shippingAddress.title')} fullWidth>
       {!a ? (
         <span>{t('shippingAddress.noAddress')}</span>
       ) : (

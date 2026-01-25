@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Flex, Heading } from '@baby-toys/ui-kit';
+import { Card, Flex } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 
 type Props = {
@@ -9,7 +9,7 @@ type Props = {
 export const ShippingNoteCard: React.FC<Props> = ({ note }) => {
   const { t } = useTranslation();
   return (
-    <Card header={<Heading level="h3">{t('orderNote.title')}</Heading>} fullWidth>
+    <Card header={t('orderNote.title')} fullWidth>
       <Flex direction="vertical" spacing="s">
         <span>{note && note.trim() ? note : '-'}</span>
       </Flex>

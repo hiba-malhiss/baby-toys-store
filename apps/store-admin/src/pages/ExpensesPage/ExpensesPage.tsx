@@ -66,7 +66,7 @@ const ExpensesPage: React.FC = () => {
             <Button onClick={() => setIsOpen(true)}>Add Expense</Button>
           </Flex>
         </Flex>
-        <Table value={expenses} columns={columns as any} isLoading={isLoading}/>
+        <Table value={expenses} columns={columns as any} isLoading={isLoading} stripedRows/>
         <Dialog
           visible={isOpen}
           onHide={() => setIsOpen(false)}

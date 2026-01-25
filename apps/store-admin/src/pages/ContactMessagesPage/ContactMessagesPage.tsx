@@ -91,6 +91,7 @@ export default function ContactMessagesPage() {
         </Flex>
 
         <Table
+          stripedRows
           value={data?.content ?? []}
           columns={columns}
           paginator

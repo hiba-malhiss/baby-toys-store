@@ -67,6 +67,7 @@ const FinancePage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           value={data}
           columns={columns as any}
           isLoading={isLoading}

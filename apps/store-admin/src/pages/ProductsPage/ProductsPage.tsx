@@ -108,6 +108,7 @@ const ProductsPage: React.FC = () => {
 
         {/* Table */}
         <Table
+          stripedRows
           columns={columns}
           value={products}
           isLoading={isLoading}

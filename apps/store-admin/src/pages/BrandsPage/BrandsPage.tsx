@@ -65,6 +65,7 @@ const BrandsPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           columns={[
             {
               header: t('brands.columns.logo'),

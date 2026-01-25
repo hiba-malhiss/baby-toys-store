@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Heading,
@@ -59,6 +60,7 @@ function getAlertIcon(severity?: string){
 export default function DashboardPage(){
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   const { data, isLoading, isFetching } = useAdminDashboard();
   const { data: settings } = useStoreSettings();
@@ -297,25 +299,7 @@ export default function DashboardPage(){
 
                 <div className={styles.sectionBlock}>
                   <Table
-                    title={t('dashboard.topProducts.todayTitle', { defaultValue: 'Top Products (Today)' })}
-                    columns={[
-                      { header: t('dashboard.table.product', { defaultValue: 'Product' }), field: 'name' },
-                      {
-                        header: t('dashboard.table.soldQty', { defaultValue: 'Sold Quantity' }),
-                        field: 'soldQuantity'
-                      },
-                      {
-                        header: t('dashboard.table.revenue', { defaultValue: 'Revenue' }),
-                        field: 'amount',
-                        body: (r: any) => money(r.amount)
-                      },
-                    ]}
-                    value={(data.topProducts?.items ?? []).slice(0, 10)}
-                  />
-                </div>
-
-                <div className={styles.sectionBlock}>
-                  <Table
+                    stripedRows
                     title={t('dashboard.metrics.title', { defaultValue: 'Metrics' })}
                     columns={[
                       {
@@ -412,6 +396,35 @@ export default function DashboardPage(){
                       </div>
                     </Flex>
                   </div>
+                </div>
+                <div className={styles.sectionBlock}>
+                  <Table
+                    stripedRows
+                    title={t('dashboard.topProducts.todayTitle', { defaultValue: 'Top Products (Today)' })}
+                    columns={[
+                      {
+                        header: t('dashboard.table.product', { defaultValue: 'Product' }),
+                        field: 'name',
+                        body: (r: any) => (
+                          <Button
+                            appearance="link" color="highlighted" withoutPadding
+                            onClick={() => navigate(`/product/${r.productId}`)}>
+                            {r.name}
+                          </Button>
+                        ),
+                      },
+                      {
+                        header: t('dashboard.table.soldQty', { defaultValue: 'Sold Quantity' }),
+                        field: 'soldQuantity'
+                      },
+                      {
+                        header: t('dashboard.table.revenue', { defaultValue: 'Revenue' }),
+                        field: 'amount',
+                        body: (r: any) => money(r.amount)
+                      },
+                    ]}
+                    value={(data.topProducts?.items ?? []).slice(0, 10)}
+                  />
                 </div>
               </div>
             </div>

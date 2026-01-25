@@ -62,6 +62,8 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
   const resolvedStatusLabel =
     statusOptions.find((o) => o.value === order?.status)?.label || String(order?.status || '');
 
+  // Route edit mode vs. permission to edit
+  const isEditRoute = Boolean(isEdit);
   const showEditMode = Boolean(isEdit && canEditOrder);
 
   return (
@@ -69,16 +71,26 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
       {/* Header */}
       <Flex justify="between" align="center" className={styles.orderDetailsHeaderRow}>
         <Flex direction="vertical" spacing="xs">
-          <Heading>{pageTitle}</Heading>
+          <Heading>
+            <Flex align="center" spacing="s">
+              {pageTitle}
+              {!showEditMode && <Chip
+                label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, {
+                  defaultValue: String(order?.status || ''),
+                })}
+                appearance={statusColorMap[order?.status]}
+              />}
+            </Flex>
+          </Heading>
           <span className={styles.orderDetailsOrderDate}>{placedOnLabel}</span>
         </Flex>
 
-        {showEditMode ? (
+        {isEditRoute ? (
           <Flex direction="vertical" spacing="xs" align="end">
             <Select
               className={styles.orderDetailsStatus}
               value={selectValue}
-              isDisabled={allowedOptions.length === 0}
+              isDisabled={allowedOptions.length === 0 || !canEditOrder}
               onChange={(val) => handleStatusSelectChange(val as OrderStatus)}
             >
               {order?.status && (
@@ -95,17 +107,9 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
             </Select>
           </Flex>
         ) : (
-          <Flex align="center" spacing="m">
-            <Chip
-              label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, {
-                defaultValue: String(order?.status || ''),
-              })}
-              appearance={statusColorMap[order?.status]}
-            />
-            <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
-              {t('orderDetails.editOrder')}
-            </Button>
-          </Flex>
+          <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
+            {t('orderDetails.editOrder')}
+          </Button>
         )}
       </Flex>
 

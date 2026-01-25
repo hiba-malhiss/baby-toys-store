@@ -97,6 +97,7 @@ const ProductAnalyticsPage: React.FC = () => {
         </Flex>
 
         <Table
+          stripedRows
           columns={columns as any}
           value={rows}
           emptyMessage="No analytics data"

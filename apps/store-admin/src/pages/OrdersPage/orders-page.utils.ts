@@ -38,5 +38,9 @@ export function getAllowedStatusOptions(current: OrderStatus, t: TFunction) {
 }
 
 export function canAdminEdit(status: OrderStatus): boolean {
-  return status === OrderStatus.PENDING || status === OrderStatus.PROCESSING;
+  return (
+    status === OrderStatus.PENDING ||
+    status === OrderStatus.PROCESSING ||
+    status === OrderStatus.SHIPPED
+  );
 }

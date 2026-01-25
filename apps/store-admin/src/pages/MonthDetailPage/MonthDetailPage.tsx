@@ -38,9 +38,9 @@ const MonthDetailPage: React.FC = () => {
         )}
 
 
-        <Table fullWidth title="Delivered Orders" value={data?.orders ?? []} columns={orderColumns as any}
+        <Table stripedRows fullWidth title="Delivered Orders" value={data?.orders ?? []} columns={orderColumns as any}
                isLoading={isLoading}/>
-        <Table fullWidth title="Expenses" value={data?.expenses ?? []} columns={expenseColumns as any}
+        <Table stripedRows fullWidth title="Expenses" value={data?.expenses ?? []} columns={expenseColumns as any}
                isLoading={isLoading}/>
       </Flex>
     </AdminLayout>
