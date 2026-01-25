@@ -14,6 +14,7 @@ import ColorsPage from './pages/ColorsPage/ColorsPage';
 import MaterialsPage from './pages/MaterialsPage/MaterialsPage';
 import CustomersPage from './pages/CustomersPage/CustomersPage';
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
+import AdminAuditLogsPage from './pages/AdminAuditLogsPage/AdminAuditLogsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
 import ProductAnalyticsPage from './pages/ProductAnalyticsPage/ProductAnalyticsPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -198,6 +199,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <ReviewsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/audit-logs"
+          element={
+            <PrivateRoute>
+              <AdminAuditLogsPage />
             </PrivateRoute>
           }
         />

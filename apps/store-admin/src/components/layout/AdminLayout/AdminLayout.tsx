@@ -39,6 +39,7 @@ const AdminLayout: React.FC<{
         label: t('menu.analytics'),
         items: [{ label: t('menu.productAnalytics'), route: '/analytics/products' }],
       },
+      { label: t('menu.auditLogs'), route: '/audit-logs' },
       { label: t('menu.orders'), route: '/orders' },
       { label: t('menu.coupons'), route: '/coupons' },
       { label: t('menu.customers'), route: '/customers' },
