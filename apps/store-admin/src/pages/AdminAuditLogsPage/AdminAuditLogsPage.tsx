@@ -1,15 +1,18 @@
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Table, Flex, StringInput, Chip, Button, Dialog } from '@baby-toys/ui-kit';
+import { Heading, Table, Flex, StringInput, Chip, Button } from '@baby-toys/ui-kit';
 import styles from './admin-audit-logs-page.module.scss';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
-import { useAdminAuditLog, useAdminAuditLogs } from '../../api/auditApi';
+import { faEye, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { useAdminAuditLogs } from '../../api/auditApi';
 import { useTranslation } from 'react-i18next';
+import AdminAuditDetailDialog from './AdminAuditDetailDialog';
 
 const AdminAuditLogsPage: React.FC = () => {
   const { t } = useTranslation();
+
   const [page, setPage] = useState(1); // 1-based
   const [rows, setRows] = useState(20);
+
   const [entityIdInput, setEntityIdInput] = useState('');
   const [entityIdFilter, setEntityIdFilter] = useState<string | undefined>(undefined);
 
@@ -26,18 +29,6 @@ const AdminAuditLogsPage: React.FC = () => {
 
   const [detailId, setDetailId] = useState<number | undefined>(undefined);
   const [detailOpen, setDetailOpen] = useState(false);
-  const { data: detail } = useAdminAuditLog(detailId);
-
-  const pretty = useMemo(() => {
-    const safePretty = (raw?: string | null) => {
-      if (!raw) return '';
-      try { return JSON.stringify(JSON.parse(raw), null, 2); } catch { return raw; }
-    };
-    return {
-      before: safePretty(detail?.beforeJson),
-      after: safePretty(detail?.afterJson),
-    };
-  }, [detail]);
 
   const columns = [
     { header: t('auditLogs.timestamp', { defaultValue: 'Timestamp' }), field: 'timestamp' },
@@ -49,24 +40,29 @@ const AdminAuditLogsPage: React.FC = () => {
       header: t('auditLogs.status', { defaultValue: 'Status' }),
       field: 'success',
       body: (r: any) => (
-        <Chip label={r.success ? t('common.success', { defaultValue: 'Success' }) : t('common.failed', { defaultValue: 'Failed' })} appearance={r.success ? 'success' : 'warning'} />
+        <Chip
+          label={r.success ? t('common.success', { defaultValue: 'Success' }) : t('common.failed', { defaultValue: 'Failed' })}
+          appearance={r.success ? 'success' : 'warning'}
+        />
       ),
     },
     { header: t('auditLogs.error', { defaultValue: 'Error' }), field: 'errorMessage' },
     { header: t('auditLogs.path', { defaultValue: 'Path' }), field: 'path' },
     { header: t('auditLogs.ip', { defaultValue: 'IP' }), field: 'ip' },
     {
-      header: t('auditLogs.details', { defaultValue: 'Details' }),
+      header: t('auditLogs.action', { defaultValue: 'Action' }),
       field: 'id',
       body: (r: any) => (
         <Button
-          size="s"
+          size="small"
           appearance="outline"
+          leftIcon={faEye}
           onClick={() => {
             setDetailId(r.id);
             setDetailOpen(true);
           }}
-        >{t('app.view', { defaultValue: 'View' })}</Button>
+        >
+        </Button>
       ),
     },
   ];
@@ -81,7 +77,7 @@ const AdminAuditLogsPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>{t('auditLogs.title', { defaultValue: 'Audit Logs' })}</Heading>
-          <Flex spacing="s" align="center">
+          <Flex spacing="s" align="center" className={styles.toolbar}>
             <StringInput
               placeholder={t('auditLogs.searchByEntityId', { defaultValue: 'Search by Entity ID' })}
               className={styles.search}
@@ -89,7 +85,7 @@ const AdminAuditLogsPage: React.FC = () => {
               value={entityIdInput}
               onChange={(v) => {
                 setEntityIdInput(v);
-                if (!v.trim()) {
+                if(!v.trim()) {
                   setPage(1);
                   setEntityIdFilter(undefined);
                   refetch();
@@ -120,23 +116,7 @@ const AdminAuditLogsPage: React.FC = () => {
           isLoading={isLoading}
           onPageChange={handlePageChange}
         />
-        <Dialog
-          visible={detailOpen}
-          onHide={() => setDetailOpen(false)}
-          header={t('auditLogs.changeDetails', { defaultValue: 'Change Details' })}
-          fullWidth
-        >
-          <Flex spacing="l" fullWidth>
-            <Flex direction="vertical" fullWidth>
-              <Heading level="h4">{t('auditLogs.before', { defaultValue: 'Before' })}</Heading>
-              <pre style={{ maxHeight: 300, overflow: 'auto' }}>{pretty.before}</pre>
-            </Flex>
-            <Flex direction="vertical" fullWidth>
-              <Heading level="h4">{t('auditLogs.after', { defaultValue: 'After' })}</Heading>
-              <pre style={{ maxHeight: 300, overflow: 'auto' }}>{pretty.after}</pre>
-            </Flex>
-          </Flex>
-        </Dialog>
+        <AdminAuditDetailDialog open={detailOpen} logId={detailId} onClose={() => setDetailOpen(false)}/>
       </Flex>
     </AdminLayout>
   );

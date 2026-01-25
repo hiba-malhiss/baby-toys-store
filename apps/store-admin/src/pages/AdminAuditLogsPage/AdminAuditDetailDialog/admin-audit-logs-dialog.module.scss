@@ -1,0 +1,184 @@
+.detailHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  width: 100%;
+}
+
+.detailMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.detailTitle {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.detailDim {
+  opacity: 0.65;
+  font-weight: 600;
+}
+
+.detailSub {
+  opacity: 0.75;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 900px;
+}
+
+.detailActions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.summaryRow {
+  flex-wrap: wrap;
+}
+
+.truncatedNote {
+  font-size: 12px;
+  opacity: 0.75;
+  margin-left: 6px;
+}
+
+.changeToolbar {
+  margin-top: 4px;
+}
+
+.maxChanges {
+  width: 140px;
+}
+
+.loadingBlock {
+  padding: 16px;
+  opacity: 0.8;
+}
+
+.emptyState {
+  padding: 16px;
+  opacity: 0.75;
+}
+
+.parseError {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: rgba(255, 193, 7, 0.18);
+  border: 1px solid rgba(255, 193, 7, 0.35);
+  font-size: 12px;
+}
+
+.changesList {
+  width: 100%;
+}
+
+.changeTable {
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.changeRow {
+  display: grid;
+  grid-template-columns: 2.1fr 0.8fr 1.5fr 1.5fr;
+  gap: 12px;
+  padding: 10px 12px;
+  align-items: center;
+}
+
+.changeHeader {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.75;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.changeRow:nth-child(even) {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.pathCell {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.typeCell {
+  display: flex;
+  align-items: center;
+}
+
+.valueCell {
+  font-size: 12px;
+  opacity: 0.9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.rawGrid {
+  width: 100%;
+}
+
+.rawCol {
+  min-width: 0;
+  width: 50%;
+}
+
+.rawTitle {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.8;
+  margin-bottom: 6px;
+}
+
+.rawPre {
+  max-height: 340px;
+  overflow: auto;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+/* Line-diff view */
+.rawPreLines {
+  max-height: 340px;
+  overflow: auto;
+  padding: 8px 0;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  font-size: 12px;
+  line-height: 1.35;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+}
+
+.rawLine {
+  white-space: pre-wrap;
+  padding: 2px 10px;
+}
+
+.added {
+  background: rgba(40, 167, 69, 0.12);
+}
+
+.removed {
+  background: rgba(220, 53, 69, 0.12);
+}
+
+.changed {
+  background: rgba(255, 193, 7, 0.18);
+}
