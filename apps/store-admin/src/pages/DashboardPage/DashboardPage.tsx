@@ -407,6 +407,7 @@ export default function DashboardPage(){
                         field: 'name',
                         body: (r: any) => (
                           <Button
+                            align="start"
                             appearance="link" color="highlighted" withoutPadding
                             onClick={() => navigate(`/product/${r.productId}`)}>
                             {r.name}

@@ -1,6 +1,6 @@
-import { useState, useMemo, useCallback } from 'react';
+import React, { useState, useMemo, useCallback } from 'react';
 import { Heading, Table, Flex, Chip, Button, Rating, CopyToClipboardButton } from '@baby-toys/ui-kit';
-import { useSearchParams, Link } from 'react-router-dom';
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import ReviewsFilters from './ReviewsFilters.tsx';
 import { useAdminReviews, useHideReview, useUnhideReview } from '../../api/reviewsApi';
@@ -8,8 +8,9 @@ import { ReviewDto, ReviewStatus } from '../../api/types/review';
 import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import styles from './reviews-page.module.scss';
 
-export default function ReviewsPage() {
+export default function ReviewsPage(){
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // filters from URL
   const [filters, setFilters] = useState({
@@ -31,7 +32,7 @@ export default function ReviewsPage() {
       setFilters(next);
       const params: Record<string, string> = {};
       Object.entries(next).forEach(([k, v]) => {
-        if (v) params[k] = v;
+        if(v) params[k] = v;
       });
       setSearchParams(params, { replace: true });
       setPage(1);
@@ -61,7 +62,10 @@ export default function ReviewsPage() {
         header: 'Product',
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
-            <Link to={`/edit-product/${row.productId}`}>
+            <Button
+              align="start"
+              appearance="link" color="highlighted" withoutPadding
+              onClick={() => navigate(`/edit-product/${row.productId}`)}>
               {row.productName ? (
                 <span className={styles.reviewsPageTruncate} title={row.productName}>
                   {row.productName}
@@ -69,8 +73,8 @@ export default function ReviewsPage() {
               ) : (
                 `#${row.productId}`
               )}
-            </Link>
-            <CopyToClipboardButton value={row.productId} successMessage="Product ID copied" />
+            </Button>
+            <CopyToClipboardButton value={row.productId} successMessage="Product ID copied"/>
           </Flex>
         ),
       },
@@ -85,7 +89,7 @@ export default function ReviewsPage() {
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
             <span>{row.userEmail ?? `#${row.userId}`}</span>
-            <CopyToClipboardButton value={row.userId} successMessage="User ID copied" />
+            <CopyToClipboardButton value={row.userId} successMessage="User ID copied"/>
           </Flex>
         ),
       },
@@ -99,7 +103,7 @@ export default function ReviewsPage() {
         header: 'Rating',
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
-            <Rating value={row.rating} />
+            <Rating value={row.rating}/>
             <span>({row.rating})</span>
           </Flex>
         ),
@@ -117,7 +121,7 @@ export default function ReviewsPage() {
         field: 'status',
         header: 'Status',
         body: (row: ReviewDto) => (
-          <Chip label={row.status} appearance={row.status === 'HIDDEN' ? 'warning' : 'success'} />
+          <Chip label={row.status} appearance={row.status === 'HIDDEN' ? 'warning' : 'success'}/>
         ),
       },
       {
@@ -147,7 +151,7 @@ export default function ReviewsPage() {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
           <Heading>Reviews</Heading>
-          <ReviewsFilters {...filters} onChange={applyFilters} />
+          <ReviewsFilters {...filters} onChange={applyFilters}/>
         </Flex>
         <Table
           stripedRows
