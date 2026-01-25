@@ -5,7 +5,7 @@ import styles from './admin-audit-logs-page.module.scss';
 import { faEye, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useAdminAuditLogs } from '../../api/auditApi';
 import { useTranslation } from 'react-i18next';
-import AdminAuditDetailDialog from './AdminAuditDetailDialog';
+import AdminAuditDetailDialog from './AdminAuditDetailDialog/AdminAuditDetailDialog';
 
 const AdminAuditLogsPage: React.FC = () => {
   const { t } = useTranslation();

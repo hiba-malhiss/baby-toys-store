@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Button, Chip, Dialog, Flex, StringInput } from '@baby-toys/ui-kit';
 import styles from './admin-audit-logs-dialog.module.scss';
 import { useTranslation } from 'react-i18next';
-import { useAdminAuditLog } from '../../api/auditApi';
+import { useAdminAuditLog } from '../../../api/auditApi';
 import {
   diffJson,
   safeParseJson,
