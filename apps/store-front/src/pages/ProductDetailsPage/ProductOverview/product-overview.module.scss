@@ -1,9 +1,22 @@
 .productOverview {
   display: grid;
   grid-template-columns: 40fr 60fr;
+  grid-template-areas: "gallery details";
   gap: 50px;
   margin-bottom: 50px;
   width: 100%;
+
+  &-galleryArea {
+    grid-area: gallery;
+  }
+
+  &-detailsArea {
+    grid-area: details;
+  }
+
+  &-titleArea {
+    grid-area: title; // only used on mobile grid
+  }
 
   &-featureBullets {
     padding-left: 1.5em;
@@ -53,8 +66,16 @@
 @media (max-width: $breakpoint-medium) {
   .productOverview {
     grid-template-columns: 100%;
+    grid-template-areas:
+      "title"
+      "gallery"
+      "details";
     margin-bottom: 12px;
-    gap: 32px;
+    gap: 24px
+  }
+
+  .productOverview-titleArea h3 {
+    font-size: 18px;
   }
 
   .productOverview-actions {
