@@ -207,7 +207,7 @@ export default function DashboardPage(){
             </Heading>
             {data?.meta && (
               <div className={styles.textWeak}>
-                {data?.meta?.timezone ? ` • ${t('dashboard.meta.timezone', { defaultValue: 'Timezone' })}: ${data.meta.timezone}` : ''}
+                {data?.meta?.timezone ? `${t('dashboard.meta.timezone', { defaultValue: 'Timezone' })}: ${data.meta.timezone}` : ''}
                 {data?.meta?.currentDate ? ` • ${t('dashboard.meta.currentDate', { defaultValue: 'Date' })}: ${data.meta.currentDate}` : ''}
               </div>
             )}

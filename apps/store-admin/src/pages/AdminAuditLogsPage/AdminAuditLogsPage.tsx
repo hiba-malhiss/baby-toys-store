@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Heading, Table, Flex, StringInput, Chip, Button } from '@baby-toys/ui-kit';
+import { formatDateTime } from '@baby-toys/ui-kit';
 import styles from './admin-audit-logs-page.module.scss';
 import { faEye, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { useAdminAuditLogs } from '../../api/auditApi';
@@ -31,7 +32,11 @@ const AdminAuditLogsPage: React.FC = () => {
   const [detailOpen, setDetailOpen] = useState(false);
 
   const columns = [
-    { header: t('auditLogs.timestamp', { defaultValue: 'Timestamp' }), field: 'timestamp' },
+    {
+      header: t('auditLogs.timestamp', { defaultValue: 'Timestamp' }),
+      field: 'timestamp',
+      body: (r: any) => formatDateTime(r.timestamp),
+    },
     { header: t('auditLogs.action', { defaultValue: 'Action' }), field: 'action' },
     { header: t('auditLogs.entity', { defaultValue: 'Entity' }), field: 'entity' },
     { header: t('auditLogs.entityId', { defaultValue: 'Entity ID' }), field: 'entityId' },
@@ -76,7 +81,7 @@ const AdminAuditLogsPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('auditLogs.title', { defaultValue: 'Audit Logs' })}</Heading>
+          <Heading>{t('auditLogs.title', { defaultValue: 'Audit Logs\nAudit Logs' })}</Heading>
           <Flex spacing="s" align="center" className={styles.toolbar}>
             <StringInput
               placeholder={t('auditLogs.searchByEntityId', { defaultValue: 'Search by Entity ID' })}
