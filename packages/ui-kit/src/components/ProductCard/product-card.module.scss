@@ -198,12 +198,6 @@
   @media (max-width: $breakpoint-medium) {
     gap: 16px;
 
-    &-box {
-      height: auto;
-      max-height: 280px;
-      aspect-ratio: 1 / 1;
-    }
-
     &-info {
       max-width: 100%;
     }
