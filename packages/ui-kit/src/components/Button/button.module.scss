@@ -143,6 +143,11 @@
       padding-left: 8px;
       padding-right: 8px;
 
+      &:not(.button--linkAppearance) {
+        padding-top: 4px;
+        padding-bottom: 4px;
+      }
+
       .buttonIcon {
         &--left {
           margin-right: 4px;
@@ -273,6 +278,14 @@ $appearances: (
             text-disabled: $color-disabled-text,
             border-disabled: $color-disabled,
             bg-disabled: transparent,
+        ),
+        secondary-light: (
+            text-default: $color-secondary,
+            text-hover: $color-primary-dark,
+            border-default: $color-secondary-light,
+            border-hover: $color-primary-dark,
+            text-disabled: $color-disabled-text,
+            border-disabled: $color-disabled,
         ),
         error: (
             text-default: $color-error,

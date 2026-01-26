@@ -34,7 +34,6 @@ const Header = () => {
     });
   };
 
-  const isShopPage = location.pathname === '/shop' || location.pathname.startsWith('/shop/');
   const { data: wishlistCount } = useWishlistCount();
   const { t } = useTranslation('common');
 
@@ -106,38 +105,35 @@ const Header = () => {
           />
         </Flex>
       </Flex>
-
-      {!isShopPage && (
-        <div className={clsx('bts-paddingLxl bts-paddingRxl', styles.headerCategoriesContainer)}>
-          <Flex
-            fullWidth
-            spacing="xxxl"
-            justify="center"
-            align="center"
-            className={clsx(styles.headerCategories, 'bts-hideScrollbar')}
+      <div className={clsx('bts-paddingLxl bts-paddingRxl', styles.headerCategoriesContainer)}>
+        <Flex
+          fullWidth
+          spacing="s"
+          justify="center"
+          align="center"
+          className={clsx(styles.headerCategories, 'bts-hideScrollbar')}
+        >
+          <Button
+            size="xsmall"
+            appearance="outline"
+            color="secondary-light"
+            onClick={() => handleCategoryClick()}
           >
+            {t('shop.all', { defaultValue: 'All' })}
+          </Button>
+          {categories.map(({ name, id }) => (
             <Button
-              size="large"
-              withoutPadding
-              appearance="link"
-              onClick={() => handleCategoryClick()}
+              key={name}
+              size="xsmall"
+              appearance="outline"
+              color="secondary-light"
+              onClick={() => handleCategoryClick(id)}
             >
-              {t('shop.all', { defaultValue: 'All' })}
+              {name}
             </Button>
-            {categories.map(({ name, id }) => (
-              <Button
-                withoutPadding
-                key={name}
-                size="large"
-                appearance="link"
-                onClick={() => handleCategoryClick(id)}
-              >
-                {name}
-              </Button>
-            ))}
-          </Flex>
-        </div>
-      )}
+          ))}
+        </Flex>
+      </div>
     </header>
   );
 };

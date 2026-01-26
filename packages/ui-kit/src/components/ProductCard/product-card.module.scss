@@ -142,7 +142,7 @@
     }
 
     &-description {
-      @include line-clamp(5);
+      @include line-clamp(3);
       width: 100%;
       margin: 16px 0 10px 0;
       color: $color-text-grey;

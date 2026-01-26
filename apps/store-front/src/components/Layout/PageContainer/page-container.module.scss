@@ -13,3 +13,12 @@
   align-items: center;
   display: flex;
 }
+
+@media (max-width: $breakpoint-small) {
+  .breadcrumb {
+    display: none;
+  }
+  .pageContainer {
+    padding-top: 36px;
+  }
+}
