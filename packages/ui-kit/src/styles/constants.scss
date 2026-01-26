@@ -327,7 +327,7 @@ $header-min-height: 204px;
 // Text utilities
 @mixin line-clamp($lines) {
   display: -webkit-box;
-  -webkit-line-clamp: #{$lines};
+  -webkit-line-clamp: $lines;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
