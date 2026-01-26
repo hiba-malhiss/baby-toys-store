@@ -39,10 +39,11 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   const { t } = useTranslation('common');
 
   const tooltipKeyByIcon: Record<string, string> = {
-    whatsapp: 'product.tooltips.shareWhatsapp',
+    'whatsapp': 'product.tooltips.shareWhatsapp',
     'facebook-f': 'product.tooltips.shareFacebook',
   };
 
+  // Use favorite hook here for this product
   const { isFavorite, isLoading, toggleFavorite } = useWishlist(product);
 
   const handleCopyUrl = useCallback(
@@ -79,135 +80,132 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
 
   return (
     <div className={styles.productOverview}>
-      <div className={styles.productOverviewTitleArea}>
+      <ImageGallery images={product.images} productName={product.name}/>
+      <Flex direction="vertical">
         <Heading level="h3" className="bts-marginBxs">
           {product.name}
         </Heading>
-      </div>
-
-      <div className={styles.productOverviewGalleryArea}>
-        <ImageGallery images={product.images} productName={product.name}/>
-      </div>
-
-      <div className={styles.productOverviewDetailsArea}>
-        <Flex direction="vertical">
-          {product.productSku && (
-            <Flex className={styles.productOverviewSkuLine}>
-              <span>
-                {t('product.productNumber', { defaultValue: 'Product Number' })}: {product.productSku}
-              </span>
-              <Tooltip content={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}>
-                <CopyToClipboardButton
-                  value={product.productSku}
-                  successMessage={t('product.productNumberCopied', { defaultValue: 'Product number copied' })}
-                  ariaLabel={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
-                  appearance="link"
-                  withoutPadding
-                />
-              </Tooltip>
-              <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} className="bts-marginLm"/>
-            </Flex>
-          )}
-
-          <Heading
-            level="h2"
-            className={clsx('bts-marginBl', product.oldPrice && styles.productOverviewWithDiscount)}
-          >
-            <span className={styles.productOverviewPriceNew}>{formatCurrency(product.price)}</span>
-            {product.oldPrice && (
-              <span className={styles.productOverviewPriceOld}>{formatCurrency(product.oldPrice)}</span>
-            )}
-          </Heading>
-
-          <ExpandableContent className="bts-marginBxxl bts-marginTs" maxHeight="200px">
-            <ul className={styles.productOverviewFeatureBullets}>
-              {product.featureBullets?.map((item: string, index: number) => (
-                <li key={index}>{item}</li>
-              ))}
-            </ul>
-          </ExpandableContent>
-
-          <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
-            <span className="bts-marginRs">{t('common.share')}</span>
-            {socialMediaLinks.map(({ icon }) => (
-              <Tooltip
-                key={icon.iconName}
-                content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', { defaultValue: 'Share' })}
-              >
-                <SocialIconButton icon={icon} size="small" onClick={() => handleSocialShare(icon.iconName)}/>
-              </Tooltip>
-            ))}
-          </Flex>
-
-          <Flex
-            direction="horizontal"
-            className={clsx('bts-marginBxxxl', styles.productOverviewActions)}
-            spacing="s"
-            align="center"
-          >
-            <StringInput
-              type="number"
-              min={1}
-              max={product.availableInStock}
-              withControls
-              value={quantity}
-              onChange={(val) => setQuantity(Number(val))}
-              isDisabled={addToCartMutation.isPending || product.outOfStock}
-              maxTooltip={`Only ${product.availableInStock} left in stock`}
-            />
-
-            <Button
-              leftIcon={faShoppingCart}
-              isDisabled={addToCartMutation.isPending || product.outOfStock}
-              isLoading={addToCartMutation.isPending}
-              onClick={async() => {
-                await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity });
-                openShippingCartDrawer();
-              }}
-              aria-label={product.outOfStock ? 'Out of stock' : t('product.addToCart')}
-            >
-              {product.outOfStock ? t('common.outOfStock', { defaultValue: 'Out of stock' }) : t('product.addToCart')}
-            </Button>
-
-            <Tooltip
-              content={
-                isFavorite
-                  ? t('product.tooltips.removeFromFavorites', { defaultValue: 'Remove from favorites' })
-                  : t('product.tooltips.addToFavorites', { defaultValue: 'Add to favorites' })
-              }
-            >
-              <HeartButton
-                appearance="outline"
-                checked={isFavorite}
-                isLoading={isLoading}
-                disabled={isLoading}
-                size="small"
-                ariaLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
-                onToggle={() => toggleFavorite()}
+        {product.productSku && (
+          <Flex className={styles.productOverviewSkuLine}>
+            <span>{t('product.productNumber', { defaultValue: 'Product Number' })}: {product.productSku}</span>
+            <Tooltip content={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}>
+              <CopyToClipboardButton
+                value={product.productSku}
+                successMessage={t('product.productNumberCopied', { defaultValue: 'Product number copied' })}
+                ariaLabel={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
+                appearance="link"
+                withoutPadding
               />
             </Tooltip>
-
-            <Tooltip content={t('product.tooltips.copyLink', { defaultValue: 'Copy product link' })}>
-              <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl}/>
-            </Tooltip>
+            <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} className="bts-marginLm"/>
           </Flex>
-
-          {!!product.details?.length && (
-            <Card fullWidth size="small" header={t('product.details')}>
-              <ExpandableContent>
-                <div className={styles.productOverviewDetails}>
-                  {product.details?.map(({ label, value }, index) => (
-                    <React.Fragment key={`${label}-${index}`}>
-                      <label>{label}</label>
-                      <span>{value}</span>
-                    </React.Fragment>
-                  ))}
-                </div>
-              </ExpandableContent>
-            </Card>
+        )}
+        <Heading
+          level="h2"
+          className={clsx('bts-marginBl', product.oldPrice && styles.productOverviewWithDiscount)}
+        >
+          <span className={styles.productOverviewPriceNew}>{formatCurrency(product.price)}</span>
+          {product.oldPrice && (
+            <span className={styles.productOverviewPriceOld}>
+              {formatCurrency(product.oldPrice)}
+            </span>
           )}
+        </Heading>
+        <ExpandableContent className="bts-marginBxxl bts-marginTs" maxHeight="200px">
+          <ul className={styles.productOverviewFeatureBullets}>
+            {product.featureBullets?.map((item: string, index: number) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </ExpandableContent>
+        <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
+          <span className="bts-marginRs"> {t('common.share')}</span>
+          {socialMediaLinks.map(({ icon }) => (
+            <Tooltip
+              key={icon.iconName}
+              content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', {
+                defaultValue: 'Share',
+              })}
+            >
+              <SocialIconButton
+                icon={icon}
+                size="small"
+                onClick={() => handleSocialShare(icon.iconName)}
+              />
+            </Tooltip>
+          ))}
         </Flex>
-      </div>
+        <Flex
+          direction="horizontal"
+          className={clsx('bts-marginBxxxl', styles.productOverviewActions)}
+          spacing="s"
+          align="center"
+        >
+          <StringInput
+            type="number"
+            min={1}
+            max={product.availableInStock}
+            withControls
+            value={quantity}
+            onChange={(val) => setQuantity(Number(val))}
+            isDisabled={addToCartMutation.isPending || product.outOfStock}
+            maxTooltip={`Only ${product.availableInStock} left in stock`}
+          />
+          <Button
+            leftIcon={faShoppingCart}
+            isDisabled={addToCartMutation.isPending || product.outOfStock}
+            isLoading={addToCartMutation.isPending}
+            onClick={async () => {
+              await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity });
+              openShippingCartDrawer();
+            }}
+            aria-label={product.outOfStock ? 'Out of stock' : t('product.addToCart')}
+          >
+            {product.outOfStock
+              ? t('common.outOfStock', { defaultValue: 'Out of stock' })
+              : t('product.addToCart')}
+          </Button>
+          <Tooltip
+            content={
+              isFavorite
+                ? t('product.tooltips.removeFromFavorites', { defaultValue: 'Remove from favorites' })
+                : t('product.tooltips.addToFavorites', { defaultValue: 'Add to favorites' })
+            }
+          >
+            <HeartButton
+              appearance="outline"
+              checked={isFavorite}
+              isLoading={isLoading}
+              disabled={isLoading}
+              size="small"
+              ariaLabel={isFavorite ? 'Remove from favorites' : 'Add to favorites'}
+              onToggle={() => toggleFavorite()}
+            />
+          </Tooltip>
+
+          <Tooltip content={t('product.tooltips.copyLink', { defaultValue: 'Copy product link' })}>
+            <Button
+              leftIcon={faRightLeft}
+              appearance="outline"
+              onClick={handleCopyUrl}
+            />
+          </Tooltip>
+        </Flex>
+        {!!product.details?.length && (
+          <Card fullWidth size="small" header={t('product.details')}>
+            <ExpandableContent>
+              <div className={styles.productOverviewDetails}>
+                {product.details?.map(({ label, value }, index) => (
+                  <React.Fragment key={`${label}-${index}`}>
+                    <label>{label}</label>
+                    <span>{value}</span>
+                  </React.Fragment>
+                ))}
+              </div>
+            </ExpandableContent>
+          </Card>
+        )}
+      </Flex>
     </div>
   );
 };
