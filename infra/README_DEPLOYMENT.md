@@ -48,6 +48,11 @@ Inside `/opt/toystore-docker`:
 - `nginx/conf.d/store.conf`
 - `nginx/conf.d/api.conf`
 - `nginx/conf.d/pma.conf`
+- `nginx/conf.d/pwn.alkatatib.cloud.conf`
+- `/opt/toystore-docker/docker-compose.yml`
+
+after updating any of the nginx conf file 
+reload `docker exec -it nginx-docker nginx -s reload`
 
 Host paths used by nginx container (mounted read-only):
 - `/etc/letsencrypt` → TLS certificates
