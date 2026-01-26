@@ -18,7 +18,6 @@ export interface DashboardStatsResponse {
 // Backend-aligned nested types
 export interface Meta {
   currentDate?: string; // ISO date (LocalDate)
-  lastLoginAt?: string; // ISO date-time (Instant)
   timezone?: string;
 }
 

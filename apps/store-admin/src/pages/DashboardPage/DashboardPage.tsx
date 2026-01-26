@@ -207,18 +207,6 @@ export default function DashboardPage(){
             </Heading>
             {data?.meta && (
               <div className={styles.textWeak}>
-                {t('dashboard.meta.lastLogin', { defaultValue: 'Last login:' })}
-                {" "}
-                {(() => {
-                  const iso = data?.meta?.lastLoginAt;
-                  const tz = data?.meta?.timezone;
-                  if(!iso) return '—';
-                  try {
-                    return new Date(iso).toLocaleString(i18n.language, tz ? { timeZone: tz } as any : undefined);
-                  } catch {
-                    return iso;
-                  }
-                })()}
                 {data?.meta?.timezone ? ` • ${t('dashboard.meta.timezone', { defaultValue: 'Timezone' })}: ${data.meta.timezone}` : ''}
                 {data?.meta?.currentDate ? ` • ${t('dashboard.meta.currentDate', { defaultValue: 'Date' })}: ${data.meta.currentDate}` : ''}
               </div>
