@@ -35,7 +35,8 @@
     "reviews": "Reviews",
     "homepage": "Home page content",
     "settings": "Store settings",
-    "shippingOptions": "Shipping options"
+    "shippingOptions": "Shipping options",
+    "auditLogs": "Audit Logs"
   },
   "categories": {
     "title": "Categories",

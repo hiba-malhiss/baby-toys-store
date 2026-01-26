@@ -410,7 +410,16 @@ Test internal connectivity (nginx → backend):
 ```bash
 docker exec -it nginx-docker sh -lc "curl -sS -o /dev/null -w 'backend:%{http_code}\n' http://backend-docker:8080/"
 ```
+---
 
+If you updated the package.json file run
+```bash
+pnpm install
+git status
+git add pnpm-lock.yaml
+git commit -m "Update pnpm lockfile"
+git push
+```
 ---
 
 A. Update Store Frontend

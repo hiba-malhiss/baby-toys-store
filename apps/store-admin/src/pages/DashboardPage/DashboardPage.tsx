@@ -75,15 +75,7 @@ export default function DashboardPage(){
     const preview = (data?.alerts?.preview ?? []).slice(0, 2);
 
     if(!urgentCount) {
-      return [
-        {
-          key: 'no-urgent',
-          appearance: 'success' as const,
-          icon: faCircleCheck,
-          title: t('dashboard.alerts.noUrgentTitle', { defaultValue: 'All good' }),
-          message: t('dashboard.alerts.noUrgentMsg', { defaultValue: 'No urgent alerts right now.' }),
-        },
-      ];
+      return [];
     }
 
     return preview.map((a: any) => ({
@@ -95,7 +87,7 @@ export default function DashboardPage(){
     }));
   }, [data, t]);
 
-  // productInterest funnel removed (backend doesn't provide it currently)
+  // productInterest funnel removed (backend doesn't provide it currently)t(
 
   const metricsRows = useMemo(() => {
     if(!data) return [];
