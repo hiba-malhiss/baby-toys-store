@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
-import Popover from '../Popover/Popover.tsx';
+import Popover from '../Popover/Popover';
+import useIsTouchScreen from '../../hooks/useIsTouchScreen';
 
 type TooltipMode = 'hover' | 'manual';
 
@@ -24,6 +25,7 @@ const Tooltip = ({
   mode = 'hover',
   open: openProp,
 }: TooltipProps) => {
+  const isTouch = useIsTouchScreen();
   const targetRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const showTimeout = useRef<number>();
@@ -35,12 +37,14 @@ const Tooltip = ({
   };
 
   const handleShow = () => {
+    if (isTouch) return;
     if (mode === 'manual') return;
     clearTimers();
     showTimeout.current = window.setTimeout(() => setOpen(!!content), showDelay);
   };
 
   const handleHide = () => {
+    if (isTouch) return;
     if (mode === 'manual') return;
     clearTimers();
     hideTimeout.current = window.setTimeout(() => setOpen(false), hideDelay);
@@ -49,24 +53,34 @@ const Tooltip = ({
   const child = React.cloneElement(children, {
     ref: (node: HTMLElement) => {
       targetRef.current = node;
+
       const { ref } = children as any;
       if (typeof ref === 'function') ref(node);
       else if (ref) ref.current = node;
     },
-    onMouseEnter: handleShow,
-    onMouseLeave: handleHide,
-    onFocus: handleShow,
-    onBlur: handleHide,
+
+    // Only attach hover/focus handlers if NOT touch
+    ...(isTouch
+      ? {}
+      : {
+        onMouseEnter: handleShow,
+        onMouseLeave: handleHide,
+        onFocus: handleShow,
+        onBlur: handleHide,
+      }),
   });
 
   useEffect(() => clearTimers, []);
+
+  // Force closed on touch
+  const resolvedOpen = isTouch ? false : mode === 'manual' ? !!openProp : open;
 
   return (
     <>
       {child}
       <Popover
         targetRef={targetRef}
-        open={mode === 'manual' ? !!openProp : open}
+        open={resolvedOpen}
         position={position}
         dismissible={dismissible}
         onClose={() => setOpen(false)}
