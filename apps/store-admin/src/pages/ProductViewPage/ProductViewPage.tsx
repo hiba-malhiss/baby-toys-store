@@ -49,7 +49,6 @@ const StatsTable: React.FC<{ rows: StatRow[] }> = ({ rows }) => {
   return (
     <div className={styles.statsTableWrapper}>
       <Table
-        stripedRows
         value={rows}
         columns={columns as any}
         paginator={false}

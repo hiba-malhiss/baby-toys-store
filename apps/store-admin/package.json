@@ -19,6 +19,7 @@
     "axios": "^1.12.2",
     "chart.js": "^4.5.0",
     "chartjs-plugin-datalabels": "^2.2.0",
+    "lucide-react": "^0.462.0",
     "i18next": "^23.10.1",
     "i18next-browser-languagedetector": "^7.2.0",
     "moment": "^2.30.1",

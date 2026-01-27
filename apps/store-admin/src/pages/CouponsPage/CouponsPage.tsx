@@ -143,7 +143,6 @@ const CouponsPage: React.FC = () => {
           sortOrder={sortDirection === 'ASC' ? 1 : -1}
           selectionMode="multiple"
           emptyMessage="No coupons found"
-          stripedRows
         />
 
         <CouponDialog
