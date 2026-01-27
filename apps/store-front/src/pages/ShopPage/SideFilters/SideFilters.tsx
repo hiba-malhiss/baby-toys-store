@@ -248,7 +248,7 @@ export const SideFilters: React.FC<{
         <div className={className}>
           <Button
             appearance="link"
-            color="secondary"
+            color="icon"
             size="xlarge"
             leftIconComp={Filter}
             withoutPadding

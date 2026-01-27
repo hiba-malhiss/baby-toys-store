@@ -222,14 +222,15 @@ $appearances: (
       text-disabled: $color-disabled-text,
     ),
     icon: (
-      text-default: $color-secondary,
+      text-default: $color-secondary-hover,
       text-hover: $color-secondary-dark,
-      text-selected: $color-accent-hover,
+      text-selected: $color-secondary-hover,
       text-disabled: $color-disabled-text,
     ),
     secondary: (
-      text-default: $color-secondary,
-      text-hover: $color-secondary-hover,
+      text-default: $color-secondary-hover,
+      text-hover: $color-secondary,
+      text-selected: $color-primary,
       text-disabled: $color-disabled-text,
     ),
     highlighted: (

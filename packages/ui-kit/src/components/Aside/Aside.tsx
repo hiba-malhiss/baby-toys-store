@@ -105,7 +105,7 @@ const Aside: React.FC<AsideProps> = ({
                       {item.iconComp && (
                         <Icon
                           icon={item.iconComp}
-                          color={defaultOpen ? undefined : IconColor.text}
+                          color={defaultOpen ? undefined : "secondary"}
                           size="large"
                         />
                       )}
@@ -199,7 +199,7 @@ const Aside: React.FC<AsideProps> = ({
           <span className={styles.toggleIcon} aria-hidden>
             <Icon
               icon={isLockedOpen ? ChevronLeft : ChevronRight}
-              color={IconColor.text}
+              color="secondary"
             />
           </span>
         </button>

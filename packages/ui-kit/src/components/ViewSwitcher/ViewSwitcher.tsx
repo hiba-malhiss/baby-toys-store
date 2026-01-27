@@ -170,6 +170,7 @@ function ViewSwitcher({
               onClick={() => changeView('grid')}
               isSelected={viewMode === 'grid'}
               appearance="link"
+              color="secondary"
               size="xlarge"
               withoutPadding
               leftIconComp={Grid3x3}
@@ -178,6 +179,7 @@ function ViewSwitcher({
               onClick={() => changeView('list')}
               isSelected={viewMode === 'list'}
               appearance="link"
+              color="secondary"
               size="xlarge"
               withoutPadding
               leftIconComp={List}

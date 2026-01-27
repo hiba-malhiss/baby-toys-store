@@ -99,8 +99,8 @@ const Header = () => {
             appearance="link"
             size="xlarge"
             withoutPadding
-            color="secondary"
             leftIconComp={Heart}
+            color="secondary"
             iconBadge={wishlistCount ?? 0}
             onClick={() => navigate('/wish-list')}
           />

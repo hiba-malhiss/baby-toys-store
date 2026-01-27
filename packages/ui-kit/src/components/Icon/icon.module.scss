@@ -80,10 +80,6 @@
     color: $color-text-primary;
   }
 
-  &--textColor {
-    color: $color-text-grey;
-  }
-
   &--grayColor {
     color: $color-icon;
   }
@@ -117,7 +113,7 @@
   }
 
   &--secondaryColor {
-    color: $color-secondary;
+    color: $color-text-grey;
   }
 
   &--secondary-lightColor {

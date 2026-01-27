@@ -472,7 +472,7 @@ docker exec -it nginx-docker sh -lc "curl -sS -o /dev/null -w 'backend:%{http_co
 
 ---
 
-If you updated the package.json file run
+If you updated the package.json file run OR --frozen-lockfile issue
 
 ```bash
 pnpm install
