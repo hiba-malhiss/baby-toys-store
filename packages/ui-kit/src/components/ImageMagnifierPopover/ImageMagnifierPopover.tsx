@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './image-magnifier-popover.module.scss';
 import Popover from '../Popover/Popover';
 import { resolveImageBaseUrl } from '../Image';
+import useIsTouchScreen from '../../hooks/useIsTouchScreen';
 
 type Props = {
   src: string;
@@ -20,13 +21,13 @@ const ImageMagnifierPopover: React.FC<Props> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [canHover, setCanHover] = useState(false);
-  const [isHovering, setIsHovering] = useState(false);
+  const isTouch = useIsTouchScreen();
+  const canHover = !isTouch;
 
+  const [isHovering, setIsHovering] = useState(false);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
   const [imageReady, setImageReady] = useState(false);
-
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
   const resolvedSrc = useMemo(() => {
@@ -45,18 +46,6 @@ const ImageMagnifierPopover: React.FC<Props> = ({
     return `${baseUrl}${src.startsWith('/') ? '' : '/'}${src}`;
   }, [src, disableBaseUrl]);
 
-  // Detect hover capability (avoid magnifier on touch devices)
-  useEffect(() => {
-    const checkHover = () => {
-      setCanHover(window.matchMedia('(hover: hover) and (pointer: fine)').matches);
-    };
-
-    checkHover();
-    window.addEventListener('resize', checkHover);
-    return () => window.removeEventListener('resize', checkHover);
-  }, []);
-
-  // Keep container size updated
   useEffect(() => {
     const updateSize = () => {
       if(!containerRef.current) return;
@@ -229,15 +218,12 @@ const ImageMagnifierPopover: React.FC<Props> = ({
             width: '100%',
             height: '100%',
             display: 'block',
-            // disable hover interactions on touch devices
-            pointerEvents: canHover ? 'auto' : 'none',
+            pointerEvents: 'auto',
           }}
           draggable={false}
         />
 
-        {canHover && isHovering && (
-          <div className={styles.imageMagnifierLens} style={lensStyle}/>
-        )}
+        {showPopover && <div className={styles.imageMagnifierLens} style={lensStyle}/>}
       </div>
 
       {showPopover && (
