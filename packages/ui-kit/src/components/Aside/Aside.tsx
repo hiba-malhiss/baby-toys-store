@@ -9,7 +9,6 @@ import Tooltip from '../Tooltip/Tooltip';
 import Icon from '../Icon/Icon';
 import type { MenuItem } from '../Menu/Menu';
 import styles from './aside.module.scss';
-import { IconColor } from '../Icon/icon.constant.ts';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export type AsideProps = {
@@ -24,33 +23,48 @@ export type AsideProps = {
 };
 
 const Aside: React.FC<AsideProps> = ({
-  model,
-  className,
-  header,
-  footer,
-  footerExpanded,
-  footerCollapsed,
-  defaultExpanded = true,
-  autoOverflow = true,
-}) => {
+                                       model,
+                                       className,
+                                       header,
+                                       footer,
+                                       footerExpanded,
+                                       footerCollapsed,
+                                       defaultExpanded = true,
+                                       autoOverflow = true,
+                                     }) => {
   const [isLockedOpen, setIsLockedOpen] = useState(defaultExpanded);
   const [isHovering, setIsHovering] = useState(false);
+
   const containerRef = useRef<HTMLDivElement | null>(null);
   const hoverTimer = useRef<number | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
 
-  const isExpanded = isLockedOpen || isHovering;
+  /**
+   * ✅ Enable hover behavior ONLY on devices that truly support hover
+   * (mouse / trackpad). Touch screens will never trigger expand-on-hover.
+   */
+  const canHover = useMemo(() => {
+    return (
+      typeof window !== 'undefined' &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    );
+  }, []);
 
-  const toggleLock = useCallback(() => setIsLockedOpen((v) => !v), []);
+  const isExpanded = isLockedOpen || (canHover && isHovering);
+
+  const toggleLock = useCallback(() => {
+    setIsLockedOpen((v) => !v);
+  }, []);
 
   const setHovering = useCallback((val: boolean, delay = 0) => {
-    if (hoverTimer.current) {
+    if(hoverTimer.current) {
       window.clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
     }
-    if (delay > 0) {
+
+    if(delay > 0) {
       hoverTimer.current = window.setTimeout(() => {
         setIsHovering(val);
         hoverTimer.current = null;
@@ -62,7 +76,7 @@ const Aside: React.FC<AsideProps> = ({
 
   const handleItemClick = useCallback(
     (item: MenuItem) => () => {
-      if (item.route) navigate(item.route);
+      if(item.route) navigate(item.route);
       else item.command?.();
     },
     [navigate]
@@ -71,7 +85,11 @@ const Aside: React.FC<AsideProps> = ({
   const isRouteInSubtree = useCallback(
     (items: MenuItem[] = []): boolean =>
       items.some((item) =>
-        item.route === location.pathname ? true : item.items ? isRouteInSubtree(item.items) : false
+        item.route === location.pathname
+          ? true
+          : item.items
+            ? isRouteInSubtree(item.items)
+            : false
       ),
     [location.pathname]
   );
@@ -109,8 +127,9 @@ const Aside: React.FC<AsideProps> = ({
             const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;
             const isSelected = item.route === location.pathname;
 
-            if (hasSubmenu) {
+            if(hasSubmenu) {
               const defaultOpen = isRouteInSubtree(item.items ?? []);
+
               return (
                 <Accordion
                   key={idx}
@@ -119,7 +138,7 @@ const Aside: React.FC<AsideProps> = ({
                       {item.iconComp && (
                         <Icon
                           icon={item.iconComp}
-                          color={defaultOpen ? undefined : "secondary"}
+                          color={defaultOpen ? undefined : 'secondary'}
                           size="large"
                         />
                       )}
@@ -186,10 +205,16 @@ const Aside: React.FC<AsideProps> = ({
     >
       <div
         className={styles.content}
-        onPointerEnter={() => setHovering(true)}
-        onPointerLeave={() => setHovering(false, 80)}
-        onPointerDown={() => !isLockedOpen && setHovering(true)}
-        onPointerUp={() => !isLockedOpen && setHovering(false, 80)}
+        onPointerEnter={() => canHover && setHovering(true)}
+        onPointerLeave={() => canHover && setHovering(false, 80)}
+        onPointerDown={() => {
+          if(!canHover) return;
+          if(!isLockedOpen) setHovering(true);
+        }}
+        onPointerUp={() => {
+          if(!canHover) return;
+          if(!isLockedOpen) setHovering(false, 80);
+        }}
       >
         <div className={styles.header}>{isExpanded ? header : null}</div>
 
@@ -209,11 +234,12 @@ const Aside: React.FC<AsideProps> = ({
           className={styles.toggle}
           onClick={toggleLock}
         >
-          <span className={styles.sidebarTool} aria-hidden />
+          <span className={styles.sidebarTool} aria-hidden/>
           <span className={styles.toggleIcon} aria-hidden>
             <Icon
               icon={isLockedOpen ? ChevronLeft : ChevronRight}
               color="secondary"
+              size="xlarge"
             />
           </span>
         </button>
