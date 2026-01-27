@@ -6,22 +6,22 @@ import { useLogout } from '../../../api/authApi.ts';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher.tsx';
 import { useTranslation } from 'react-i18next';
 import {
-  faGauge,
-  faBox,
-  faLayerGroup,
-  faSackDollar,
-  faChartLine,
-  faListCheck,
-  faShoppingCart,
-  faTicket,
-  faUsers,
-  faEnvelope,
-  faStar,
-  faHouse,
-  faGear,
-  faTruck,
-  faRightFromBracket,
-} from '@fortawesome/free-solid-svg-icons';
+  LayoutDashboard,
+  Box,
+  Layers,
+  Wallet,
+  LineChart,
+  ListChecks,
+  ShoppingCart,
+  Ticket,
+  Users,
+  Mail,
+  Star,
+  Home,
+  Settings,
+  Truck,
+  LogOut,
+} from 'lucide-react';
 
 const AdminLayout: React.FC<{
   children: React.ReactNode;
@@ -34,11 +34,11 @@ const AdminLayout: React.FC<{
 
   const menuItems = useMemo(
     () => [
-      { label: t('menu.dashboard'), route: '/dashboard', icon: faGauge },
-      { label: t('menu.products'), route: '/products', icon: faBox },
+      { label: t('menu.dashboard'), route: '/dashboard', iconComp: LayoutDashboard },
+      { label: t('menu.products'), route: '/products', iconComp: Box },
       {
         label: t('menu.catalog'),
-        icon: faLayerGroup,
+        iconComp: Layers,
         items: [
           { label: t('menu.categories'), route: '/categories' },
           { label: t('menu.brands'), route: '/brands' },
@@ -48,7 +48,7 @@ const AdminLayout: React.FC<{
       },
       {
         label: t('menu.finance'),
-        icon: faSackDollar,
+        iconComp: Wallet,
         items: [
           { label: t('menu.finance'), route: '/finance' },
           { label: t('menu.expenses'), route: '/expenses' },
@@ -56,35 +56,35 @@ const AdminLayout: React.FC<{
       },
       {
         label: t('menu.analytics'),
-        icon: faChartLine,
+        iconComp: LineChart,
         items: [{ label: t('menu.productAnalytics'), route: '/analytics/products' }],
       },
-      { label: t('menu.auditLogs'), route: '/audit-logs', icon: faListCheck },
-      { label: t('menu.orders'), route: '/orders', icon: faShoppingCart },
-      { label: t('menu.coupons'), route: '/coupons', icon: faTicket },
-      { label: t('menu.customers'), route: '/customers', icon: faUsers },
-      { label: t('menu.contactMessages'), route: '/contact-messages', icon: faEnvelope },
-      { label: t('menu.reviews'), route: '/reviews', icon: faStar },
-      { label: t('menu.homepage'), route: '/homepage', icon: faHouse },
-      { label: t('menu.settings'), route: '/settings', icon: faGear },
-      { label: t('menu.shippingOptions'), route: '/shipping-options', icon: faTruck },
+      { label: t('menu.auditLogs'), route: '/audit-logs', iconComp: ListChecks },
+      { label: t('menu.orders'), route: '/orders', iconComp: ShoppingCart },
+      { label: t('menu.coupons'), route: '/coupons', iconComp: Ticket },
+      { label: t('menu.customers'), route: '/customers', iconComp: Users },
+      { label: t('menu.contactMessages'), route: '/contact-messages', iconComp: Mail },
+      { label: t('menu.reviews'), route: '/reviews', iconComp: Star },
+      { label: t('menu.homepage'), route: '/homepage', iconComp: Home },
+      { label: t('menu.settings'), route: '/settings', iconComp: Settings },
+      { label: t('menu.shippingOptions'), route: '/shipping-options', iconComp: Truck },
     ],
     [t]
   );
 
-  const logout = useCallback(async () => {
+  const logout = useCallback(async() => {
     try {
       await logoutApi();
       navigate('/login');
-    } catch (error) {
+    } catch(error) {
       console.error('Logout failed:', error);
     }
   }, [logoutApi]);
 
   return (
     <>
-      <Mask visible={isMaskLoading} />
-      <Toast />
+      <Mask visible={isMaskLoading}/>
+      <Toast/>
       <div className={styles.adminLayout}>
         <Aside
           autoOverflow
@@ -96,7 +96,7 @@ const AdminLayout: React.FC<{
                 alt="logo"
                 className={styles.adminLayoutLogo}
               />
-              <LanguageSwitcher />
+              <LanguageSwitcher/>
             </Flex>
           }
           footerExpanded={
@@ -116,12 +116,12 @@ const AdminLayout: React.FC<{
               withoutPadding
               fullWidth
               align="center"
-              leftIcon={faRightFromBracket}
+              leftIconComp={LogOut}
             />
           }
         />
         <main className={styles.adminLayoutContent}>
-          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl" /> : children}
+          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl"/> : children}
         </main>
       </div>
     </>

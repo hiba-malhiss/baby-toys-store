@@ -4,12 +4,15 @@ import Accordion from '../Accordion/Accordion.tsx';
 import AccordionGroup from '../Accordion/AccordionGroup.tsx';
 import Button from '../Button/Button.tsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { ComponentType } from 'react';
 import { Flex } from '../index';
 import { Spacing } from '../Flex/Flex';
 
 export type MenuItem = {
   label: string;
   icon?: IconDefinition;
+  iconName?: string;
+  iconComp?: ComponentType<any> | null;
   badge?: string | number;
   disabled?: boolean;
   items?: MenuItem[];
@@ -78,6 +81,8 @@ const Menu: React.FC<PanelMenuProps> = ({
           }}
           isDisabled={item.disabled}
           leftIcon={item.icon}
+          leftIconName={item.iconName}
+          leftIconComp={item.iconComp}
           fullWidth
           align="start"
           withoutPadding
@@ -126,6 +131,8 @@ const Menu: React.FC<PanelMenuProps> = ({
                 }}
                 isDisabled={item.disabled}
                 leftIcon={item.icon}
+                leftIconName={item.iconName}
+                leftIconComp={item.iconComp}
                 fullWidth
                 appearance="link"
                 align="start"

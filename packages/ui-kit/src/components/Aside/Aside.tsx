@@ -9,8 +9,7 @@ import Tooltip from '../Tooltip/Tooltip';
 import Icon from '../Icon/Icon';
 import type { MenuItem } from '../Menu/Menu';
 import styles from './aside.module.scss';
-import { IconColor, IconSize } from "../Icon/icon.constant.ts";
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { IconColor } from '../Icon/icon.constant.ts';
 
 export type AsideProps = {
   model: MenuItem[];
@@ -42,13 +41,13 @@ const Aside: React.FC<AsideProps> = ({
 
   const isExpanded = isLockedOpen || isHovering;
 
-  const toggleLock = useCallback(() => setIsLockedOpen(v => !v), []);
+  const toggleLock = useCallback(() => setIsLockedOpen((v) => !v), []);
   const onMouseEnter = useCallback(() => setIsHovering(true), []);
   const onMouseLeave = useCallback(() => setIsHovering(false), []);
 
   const handleItemClick = useCallback(
     (item: MenuItem) => () => {
-      if(item.route) navigate(item.route);
+      if (item.route) navigate(item.route);
       else item.command?.();
     },
     [navigate]
@@ -56,12 +55,8 @@ const Aside: React.FC<AsideProps> = ({
 
   const isRouteInSubtree = useCallback(
     (items: MenuItem[] = []): boolean =>
-      items.some(item =>
-        item.route === location.pathname
-          ? true
-          : item.items
-            ? isRouteInSubtree(item.items)
-            : false
+      items.some((item) =>
+        item.route === location.pathname ? true : item.items ? isRouteInSubtree(item.items) : false
       ),
     [location.pathname]
   );
@@ -82,6 +77,9 @@ const Aside: React.FC<AsideProps> = ({
               fullWidth
               align="center"
               leftIcon={item.icon}
+              leftIconName={item.iconName}
+              leftIconComp={item.iconComp}
+              size="large"
               onClick={hasSubmenu ? () => setIsLockedOpen(true) : handleItemClick(item)}
               isDisabled={item.disabled}
               isSelected={isSelected}
@@ -99,14 +97,21 @@ const Aside: React.FC<AsideProps> = ({
             const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;
             const isSelected = item.route === location.pathname;
 
-            if(hasSubmenu) {
+            if (hasSubmenu) {
               const defaultOpen = isRouteInSubtree(item.items ?? []);
               return (
                 <Accordion
                   key={idx}
                   header={
                     <Flex align="center" spacing="s">
-                      {item.icon && <Icon icon={item.icon} color={defaultOpen ? undefined : IconColor.text}/>}
+                      {(item.icon || item.iconName || item.iconComp) && (
+                        <Icon
+                          icon={item.icon}
+                          iconName={item.iconName}
+                          lucideComp={item.iconComp}
+                          color={defaultOpen ? undefined : IconColor.text}
+                        />
+                      )}
                       <span>{item.label}</span>
                     </Flex>
                   }
@@ -127,6 +132,7 @@ const Aside: React.FC<AsideProps> = ({
                         fullWidth
                         align="start"
                         withoutPadding
+                        size="large"
                         className="bts-marginLxl"
                         isSelected={sub.route === location.pathname}
                       >
@@ -145,6 +151,9 @@ const Aside: React.FC<AsideProps> = ({
                 onClick={handleItemClick(item)}
                 isDisabled={item.disabled}
                 leftIcon={item.icon}
+                leftIconName={item.iconName}
+                leftIconComp={item.iconComp}
+                size="large"
                 fullWidth
                 appearance="link"
                 align="start"
@@ -180,7 +189,9 @@ const Aside: React.FC<AsideProps> = ({
           {isExpanded ? content.renderExpanded(model) : content.renderCollapsed(model)}
         </nav>
 
-        <div className={styles.footer}>{isExpanded ? footerExpanded ?? footer : footerCollapsed ?? footer}</div>
+        <div className={styles.footer}>
+          {isExpanded ? (footerExpanded ?? footer) : (footerCollapsed ?? footer)}
+        </div>
       </div>
 
       <Tooltip content={isLockedOpen ? 'Close sidebar' : 'Open sidebar'} position="right">
@@ -190,12 +201,11 @@ const Aside: React.FC<AsideProps> = ({
           className={styles.toggle}
           onClick={toggleLock}
         >
-          <span className={styles.sidebarTool} aria-hidden/>
+          <span className={styles.sidebarTool} aria-hidden />
           <span className={styles.toggleIcon} aria-hidden>
             <Icon
-              icon={isLockedOpen ? faChevronLeft : faChevronRight}
+              iconName={isLockedOpen ? 'lucide:chevron-left' : 'lucide:chevron-right'}
               color={IconColor.text}
-              size={IconSize.large}
             />
           </span>
         </button>

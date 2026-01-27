@@ -1,4 +1,4 @@
-import { forwardRef, type MouseEventHandler, type ReactNode } from 'react';
+import { forwardRef, type MouseEventHandler, type ReactNode, type ComponentType } from 'react';
 import styles from './button.module.scss';
 import clsx from 'clsx';
 import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -25,7 +25,11 @@ type ButtonProps = {
   color?: ButtonColor;
   size?: ButtonSize;
   leftIcon?: IconDefinition;
+  leftIconName?: string;
+  leftIconComp?: ComponentType<any> | null;
   rightIcon?: IconDefinition;
+  rightIconName?: string;
+  rightIconComp?: ComponentType<any> | null;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
   isRounded?: boolean;
@@ -50,7 +54,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       color = 'primary',
       size = 'medium',
       leftIcon,
+      leftIconName,
+      leftIconComp,
       rightIcon,
+      rightIconName,
+      rightIconComp,
       onClick,
       isDisabled = false,
       isLoading = false,
@@ -115,10 +123,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
             />
           )}
 
-          {leftIcon && (
+          {(leftIcon || leftIconName || leftIconComp) && (
             <Icon
               color={iconColor}
               icon={leftIcon}
+              iconName={leftIconName}
+              lucideComp={leftIconComp}
               className={styles.buttonIcon}
               size={size}
               badge={iconBadge}
@@ -127,10 +137,12 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
           {children}
 
-          {rightIcon && (
+          {(rightIcon || rightIconName || rightIconComp) && (
             <Icon
               color={iconColor}
               icon={rightIcon}
+              iconName={rightIconName}
+              lucideComp={rightIconComp}
               className={styles.buttonIcon}
               size={size}
               badge={iconBadge}
