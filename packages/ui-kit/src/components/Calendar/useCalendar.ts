@@ -1,8 +1,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import moment, { Moment } from 'moment';
 import { createMonth } from './utils/calendarUtils';
-import { CalendarTypeView, DayInfo, SelectionMode } from "./calendarTypes";
-import { getSelectionStatus } from "./utils/getSelectionStatus";
+import { CalendarTypeView, DayInfo, SelectionMode } from './calendarTypes';
+import { getSelectionStatus } from './utils/getSelectionStatus';
 
 interface UseCalendarProps {
   value: Moment | Moment[];
@@ -13,7 +13,11 @@ interface UseCalendarProps {
   onChange: (value: Moment | Moment[]) => void;
   minDate?: Moment;
   maxDate?: Moment;
-  getLabel?: (value: Moment | Moment[], selectionMode: SelectionMode, typeView: CalendarTypeView) => string;
+  getLabel?: (
+    value: Moment | Moment[],
+    selectionMode: SelectionMode,
+    typeView: CalendarTypeView
+  ) => string;
 }
 
 export const useCalendar = ({
@@ -25,7 +29,7 @@ export const useCalendar = ({
   onChange,
   minDate,
   maxDate,
-  getLabel
+  getLabel,
 }: UseCalendarProps) => {
   const today = moment();
   const shortMonthNames = moment.monthsShort();
@@ -46,8 +50,8 @@ export const useCalendar = ({
 
   useEffect(() => {
     if (!currentView || currentView != typeView) reset();
-    setCurrentView(typeView)
-  }, [typeView])
+    setCurrentView(typeView);
+  }, [typeView]);
 
   useEffect(() => {
     if (selectionMode === 'single') {
@@ -60,7 +64,7 @@ export const useCalendar = ({
     } else {
       if (Array.isArray(value)) {
         setVisibleDate(value[value.length - 1].clone());
-        setSelectedDates(value.map(v => v.clone()));
+        setSelectedDates(value.map((v) => v.clone()));
       } else {
         setSelectedDates([]);
       }
@@ -97,17 +101,17 @@ export const useCalendar = ({
   };
 
   const shiftVisibleDate = (unit: 'year' | 'month', amount: number) => {
-    setVisibleDate(prev => prev.clone().add(amount, unit));
+    setVisibleDate((prev) => prev.clone().add(amount, unit));
   };
 
   const goToPrevious = () => {
-    if (currentView === 'year') setDecadeBaseYear(prev => prev - 10);
+    if (currentView === 'year') setDecadeBaseYear((prev) => prev - 10);
     else if (currentView === 'month') shiftVisibleDate('year', -1);
     else shiftVisibleDate('month', -1);
   };
 
   const goToNext = () => {
-    if (currentView === 'year') setDecadeBaseYear(prev => prev + 10);
+    if (currentView === 'year') setDecadeBaseYear((prev) => prev + 10);
     else if (currentView === 'month') shiftVisibleDate('year', 1);
     else shiftVisibleDate('month', 1);
   };
@@ -167,20 +171,22 @@ export const useCalendar = ({
 
   const updateSelectedDates = (date: Moment) => {
     let updated = [...selectedDates];
-    const isSelected = selectedDates.some(d => d.isSame(date));
+    const isSelected = selectedDates.some((d) => d.isSame(date));
 
     if (selectionMode === 'single') {
       updated = [date];
     } else if (selectionMode === 'range') {
-      if (selectedDates.length === 0 || selectedDates.length === 2 || date.isBefore(selectedDates[0])) {
+      if (
+        selectedDates.length === 0 ||
+        selectedDates.length === 2 ||
+        date.isBefore(selectedDates[0])
+      ) {
         updated = [date];
       } else {
         updated = [selectedDates[0].clone(), date];
       }
     } else if (selectionMode === 'multiple') {
-      updated = isSelected
-        ? updated.filter(d => !d.isSame(date))
-        : [...updated, date];
+      updated = isSelected ? updated.filter((d) => !d.isSame(date)) : [...updated, date];
     }
 
     setSelectedDates(updated);
@@ -221,10 +227,10 @@ export const useCalendar = ({
   const onInputClick = (e) => {
     toggleOverlay();
     e.stopPropagation();
-  }
+  };
 
   const reset = () => {
-    onChange(null)
+    onChange(null);
     setVisibleDate(today.clone());
     setSelectedDates([]);
     setCurrentView(typeView);
@@ -232,16 +238,19 @@ export const useCalendar = ({
     setOverlayVisible(false);
   };
 
-  const getSelectionBtnStatus = useCallback((type, value) => {
-    return getSelectionStatus(
-      typeView,
-      type,
-      value,
-      selectedDates,
-      selectionMode,
-      visibleDate.year()
-    )
-  }, [visibleDate, selectionMode, typeView, selectedDates])
+  const getSelectionBtnStatus = useCallback(
+    (type, value) => {
+      return getSelectionStatus(
+        typeView,
+        type,
+        value,
+        selectedDates,
+        selectionMode,
+        visibleDate.year()
+      );
+    },
+    [visibleDate, selectionMode, typeView, selectedDates]
+  );
 
   return {
     month,
@@ -267,6 +276,6 @@ export const useCalendar = ({
     setOverlayVisible,
     getSelectionBtnStatus,
     onInputClick,
-    reset
+    reset,
   };
 };

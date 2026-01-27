@@ -23,7 +23,7 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
   appearance = 'ghost',
   stopPropagation = true,
   ariaLabel = 'Copy to clipboard',
-  withoutPadding
+  withoutPadding,
 }) => {
   const toast = useToast();
 

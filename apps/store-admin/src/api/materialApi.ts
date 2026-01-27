@@ -32,7 +32,10 @@ export const useUpdateMaterial = () => {
 
   return useMutation({
     mutationFn: async ({ id, ...payload }: { id: number } & MaterialUpsertRequest) => {
-      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/materials/${id}`, payload);
+      const response = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/materials/${id}`,
+        payload
+      );
       return response.data.data.id;
     },
     onSuccess: (_res, variables) => {
@@ -63,7 +66,9 @@ export const useMaterialAdmin = (id?: number) => {
     queryKey: ['material-admin', id],
     enabled: !!id,
     queryFn: async () => {
-      const response = await api.get<ApiEnvelope<MaterialDetailsAdminDto>>(`/api/admin/materials/${id}`);
+      const response = await api.get<ApiEnvelope<MaterialDetailsAdminDto>>(
+        `/api/admin/materials/${id}`
+      );
       return response.data.data;
     },
   });

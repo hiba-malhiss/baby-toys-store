@@ -29,19 +29,30 @@ const MonthDetailPage: React.FC = () => {
 
         {data?.summary && (
           <Flex justify="between" align="stretch" spacing="l" fullWidth>
-            <KPI label="Income" value={String(data.summary.income)} fullWidth/>
-            <KPI label="COGS" value={String(data.summary.cogs)} fullWidth/>
-            <KPI label="Expenses" value={String(data.summary.expenses)} fullWidth/>
-            <KPI label="Profit" value={String(data.summary.profit)} fullWidth/>
-            <KPI label="# Orders" value={String(data.summary.ordersCount)} fullWidth/>
+            <KPI label="Income" value={String(data.summary.income)} fullWidth />
+            <KPI label="COGS" value={String(data.summary.cogs)} fullWidth />
+            <KPI label="Expenses" value={String(data.summary.expenses)} fullWidth />
+            <KPI label="Profit" value={String(data.summary.profit)} fullWidth />
+            <KPI label="# Orders" value={String(data.summary.ordersCount)} fullWidth />
           </Flex>
         )}
 
-
-        <Table stripedRows fullWidth title="Delivered Orders" value={data?.orders ?? []} columns={orderColumns as any}
-               isLoading={isLoading}/>
-        <Table stripedRows fullWidth title="Expenses" value={data?.expenses ?? []} columns={expenseColumns as any}
-               isLoading={isLoading}/>
+        <Table
+          stripedRows
+          fullWidth
+          title="Delivered Orders"
+          value={data?.orders ?? []}
+          columns={orderColumns as any}
+          isLoading={isLoading}
+        />
+        <Table
+          stripedRows
+          fullWidth
+          title="Expenses"
+          value={data?.expenses ?? []}
+          columns={expenseColumns as any}
+          isLoading={isLoading}
+        />
       </Flex>
     </AdminLayout>
   );

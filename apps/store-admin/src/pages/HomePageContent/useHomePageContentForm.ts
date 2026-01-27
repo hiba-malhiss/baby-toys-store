@@ -78,7 +78,9 @@ export const useHomePageContentForm = () => {
         const current = byLocale[code] || (byLocale[code] = [] as T[]);
         if (current.length >= count) return;
         const needed = count - current.length;
-        const templates = defaults.filter((d) => String(d.locale).toLowerCase() === code).slice(0, needed);
+        const templates = defaults
+          .filter((d) => String(d.locale).toLowerCase() === code)
+          .slice(0, needed);
         byLocale[code].push(...templates);
       };
 

@@ -31,8 +31,8 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
 
   return (
     <div className={clsx(fullWidth && styles.fullWidth, styles.cartItemCard)}>
-      <Image src={image} alt={name} className={styles.cartItemCardImage}/>
-      <Flex   direction="vertical" spacing="s" className={styles.cartItemCardName}>
+      <Image src={image} alt={name} className={styles.cartItemCardImage} />
+      <Flex direction="vertical" spacing="s" className={styles.cartItemCardName}>
         {name}
         {(!quantityInStock || quantityInStock <= 0) && (
           <Text size="sm" color="error" className="bts-marginTs">
@@ -62,7 +62,12 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           isLoading={removeMutation.isPending}
         ></Button>
       </Flex>
-      <span className={clsx(styles.cartItemCardPrice, (!quantityInStock || quantityInStock <= 0) && styles.oosPrice)}>
+      <span
+        className={clsx(
+          styles.cartItemCardPrice,
+          (!quantityInStock || quantityInStock <= 0) && styles.oosPrice
+        )}
+      >
         {totalPrice}
       </span>
     </div>

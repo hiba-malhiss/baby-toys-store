@@ -65,7 +65,7 @@
     position: relative;
 
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       background-color: $color-info-light;
       border-radius: 50% 0 0 50%;
@@ -79,7 +79,7 @@
     position: relative;
 
     &:before {
-      content: "";
+      content: '';
       position: absolute;
       background-color: $color-info-light;
       border-radius: 0 50% 50% 0;

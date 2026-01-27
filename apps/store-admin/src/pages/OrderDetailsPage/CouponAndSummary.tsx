@@ -14,15 +14,15 @@ export const CouponAndSummary: React.FC<{
   handleRemoveCoupon: () => void;
   canEditOrder: boolean;
 }> = ({
-        isEdit,
-        couponInput,
-        setCouponInput,
-        order,
-        currency,
-        handleApplyCoupon,
-        handleRemoveCoupon,
-        canEditOrder,
-      }) => {
+  isEdit,
+  couponInput,
+  setCouponInput,
+  order,
+  currency,
+  handleApplyCoupon,
+  handleRemoveCoupon,
+  canEditOrder,
+}) => {
   const { t } = useTranslation();
   return (
     <Card header={t('couponSummary.title')} fullWidth>
@@ -84,7 +84,7 @@ export const CouponAndSummary: React.FC<{
             {order?.total} {currency?.symbol}
           </span>
         </Flex>
-        <Divider/>
+        <Divider />
         <Flex spacing="s" justify="between">
           <strong>{t('couponSummary.totalCost')}:</strong>
           <span>

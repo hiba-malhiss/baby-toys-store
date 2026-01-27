@@ -3,20 +3,12 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2020",
     "useDefineForClassFields": true,
-    "lib": [
-      "ES2020",
-      "DOM",
-      "DOM.Iterable"
-    ],
+    "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
     "paths": {
-      "@baby-toys/ui-kit": [
-        "../../packages/ui-kit/src"
-      ],
-      "@baby-toys/ui-kit/*": [
-        "../../packages/ui-kit/src/*"
-      ]
+      "@baby-toys/ui-kit": ["../../packages/ui-kit/src"],
+      "@baby-toys/ui-kit/*": ["../../packages/ui-kit/src/*"]
     },
     /* Bundler mode */
     "moduleResolution": "bundler",
@@ -33,11 +25,7 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true,
     "allowSyntheticDefaultImports": true,
-    "types": [
-      "vite/client"
-    ]
+    "types": ["vite/client"]
   },
-  "include": [
-    "src"
-  ]
+  "include": ["src"]
 }

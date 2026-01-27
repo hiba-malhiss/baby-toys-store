@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
-import { getAppLocale } from "../components/i18n/locale.ts";
-import { useMemo } from "react";
+import { getAppLocale } from '../components/i18n/locale.ts';
+import { useMemo } from 'react';
 
 export type StoreSettingsGrouped = {
   general: {
@@ -39,7 +39,7 @@ export type StoreSettingUpdateItem = {
 export const useAdminStoreSettingsMap = () =>
   useQuery<Record<string, StoreSettingsGrouped>>({
     queryKey: ['storeSettings', 'map'],
-    queryFn: async() => {
+    queryFn: async () => {
       const { data } = await api.get<ApiEnvelope<Record<string, StoreSettingsGrouped>>>(
         '/api/admin/store-settings'
       );
@@ -51,15 +51,15 @@ export const useAdminStoreSettingsMap = () =>
 export const useStoreSettings = () => {
   const { data } = useAdminStoreSettingsMap();
   const dataLocal = useMemo(() => {
-    return data?.[getAppLocale() || 'en'] || {}
-  }, [data])
+    return data?.[getAppLocale() || 'en'] || {};
+  }, [data]);
   return { data: dataLocal };
 };
 
 export const useUpsertStoreSettings = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(items: StoreSettingUpdateItem[]) => {
+    mutationFn: async (items: StoreSettingUpdateItem[]) => {
       const { data } = await api.put<ApiEnvelope<{ updated: number }>>(
         '/api/admin/store-settings',
         items

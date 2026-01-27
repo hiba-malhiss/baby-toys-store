@@ -39,7 +39,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   const { t } = useTranslation('common');
 
   const tooltipKeyByIcon: Record<string, string> = {
-    'whatsapp': 'product.tooltips.shareWhatsapp',
+    whatsapp: 'product.tooltips.shareWhatsapp',
     'facebook-f': 'product.tooltips.shareFacebook',
   };
 
@@ -66,11 +66,11 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
 
   const handleSocialShare = useCallback(
     (iconName: string) => {
-      if(iconName === 'whatsapp') {
+      if (iconName === 'whatsapp') {
         shareProduct('whatsapp', product.id);
         return;
       }
-      if(iconName === 'facebook-f') {
+      if (iconName === 'facebook-f') {
         shareProduct('facebook', product.id);
         return;
       }
@@ -80,24 +80,34 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
 
   return (
     <div className={styles.productOverview}>
-      <ImageGallery images={product.images} productName={product.name}/>
+      <ImageGallery images={product.images} productName={product.name} />
       <Flex direction="vertical">
         <Heading level="h3" className="bts-marginBxs">
           {product.name}
         </Heading>
         {product.productSku && (
           <Flex className={styles.productOverviewSkuLine}>
-            <span>{t('product.productNumber', { defaultValue: 'Product Number' })}: {product.productSku}</span>
-            <Tooltip content={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}>
+            <span>
+              {t('product.productNumber', { defaultValue: 'Product Number' })}: {product.productSku}
+            </span>
+            <Tooltip
+              content={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
+            >
               <CopyToClipboardButton
                 value={product.productSku}
-                successMessage={t('product.productNumberCopied', { defaultValue: 'Product number copied' })}
+                successMessage={t('product.productNumberCopied', {
+                  defaultValue: 'Product number copied',
+                })}
                 ariaLabel={t('product.copyProductNumber', { defaultValue: 'Copy product number' })}
                 appearance="link"
                 withoutPadding
               />
             </Tooltip>
-            <Rating value={product.rating} reviewsCount={product.numberOfRatings || 0} className="bts-marginLm"/>
+            <Rating
+              value={product.rating}
+              reviewsCount={product.numberOfRatings || 0}
+              className="bts-marginLm"
+            />
           </Flex>
         )}
         <Heading
@@ -168,7 +178,9 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           <Tooltip
             content={
               isFavorite
-                ? t('product.tooltips.removeFromFavorites', { defaultValue: 'Remove from favorites' })
+                ? t('product.tooltips.removeFromFavorites', {
+                    defaultValue: 'Remove from favorites',
+                  })
                 : t('product.tooltips.addToFavorites', { defaultValue: 'Add to favorites' })
             }
           >
@@ -184,11 +196,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           </Tooltip>
 
           <Tooltip content={t('product.tooltips.copyLink', { defaultValue: 'Copy product link' })}>
-            <Button
-              leftIcon={faRightLeft}
-              appearance="outline"
-              onClick={handleCopyUrl}
-            />
+            <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
           </Tooltip>
         </Flex>
         {!!product.details?.length && (

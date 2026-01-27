@@ -46,10 +46,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
       handleClose();
       onSuccess?.();
     } catch (error: any) {
-      toast.error(
-        error.response?.data?.message ||
-          t('auth.dialogs.login.failure')
-      );
+      toast.error(error.response?.data?.message || t('auth.dialogs.login.failure'));
     }
   };
 

@@ -43,7 +43,11 @@ const ProductFormPage: React.FC = () => {
             >
               {getSupportedLocales().map((l) => (
                 <TabBarItem key={l} value={l}>
-                  <LocalizedFields control={control} locale={l as any} isDisabled={isDeletingImage}/>
+                  <LocalizedFields
+                    control={control}
+                    locale={l as any}
+                    isDisabled={isDeletingImage}
+                  />
                 </TabBarItem>
               ))}
             </TabBar>
@@ -72,8 +76,14 @@ const ProductFormPage: React.FC = () => {
               </FormFieldWrapper>
 
               <Flex spacing="l" fullWidth align="center">
-                <FormFieldWrapper name="price" control={control} label={t('productForm.price')} fullWidth required>
-                  <StringInput type="number" min={0} isDisabled={isDeletingImage}/>
+                <FormFieldWrapper
+                  name="price"
+                  control={control}
+                  label={t('productForm.price')}
+                  fullWidth
+                  required
+                >
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
                 </FormFieldWrapper>
                 <FormFieldWrapper
                   name="costPrice"
@@ -81,7 +91,7 @@ const ProductFormPage: React.FC = () => {
                   label={t('productForm.costPrice')}
                   fullWidth
                 >
-                  <StringInput type="number" min={0} isDisabled={isDeletingImage}/>
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
                 </FormFieldWrapper>
                 <FormFieldWrapper
                   name="oldPrice"
@@ -89,7 +99,7 @@ const ProductFormPage: React.FC = () => {
                   label={t('productForm.oldPrice')}
                   fullWidth
                 >
-                  <StringInput type="number" min={0} isDisabled={isDeletingImage}/>
+                  <StringInput type="number" min={0} isDisabled={isDeletingImage} />
                 </FormFieldWrapper>
               </Flex>
 
@@ -100,11 +110,16 @@ const ProductFormPage: React.FC = () => {
                 fullWidth
                 required
               >
-                <StringInput type="number" isDisabled={isDeletingImage}/>
+                <StringInput type="number" isDisabled={isDeletingImage} />
               </FormFieldWrapper>
 
               {/* Category (non-localized) */}
-              <FormFieldWrapper name="categoryId" control={control} label={t('productForm.category')} fullWidth>
+              <FormFieldWrapper
+                name="categoryId"
+                control={control}
+                label={t('productForm.category')}
+                fullWidth
+              >
                 <Select fullWidth isDisabled={isDeletingImage}>
                   {categories.map((cat) => (
                     <Option key={cat.id} value={cat.id}>
@@ -115,7 +130,12 @@ const ProductFormPage: React.FC = () => {
               </FormFieldWrapper>
 
               {/* Brand (non-localized) */}
-              <FormFieldWrapper name="brandId" control={control} label={t('productForm.brand')} fullWidth>
+              <FormFieldWrapper
+                name="brandId"
+                control={control}
+                label={t('productForm.brand')}
+                fullWidth
+              >
                 <Select fullWidth isDisabled={isDeletingImage}>
                   {brands.map((b) => (
                     <Option key={b.id} value={b.id}>
@@ -126,7 +146,12 @@ const ProductFormPage: React.FC = () => {
               </FormFieldWrapper>
 
               {/* Colors (non-localized) */}
-              <FormFieldWrapper name="colorIds" control={control} label={t('productForm.colors')} fullWidth>
+              <FormFieldWrapper
+                name="colorIds"
+                control={control}
+                label={t('productForm.colors')}
+                fullWidth
+              >
                 <Select multiple fullWidth isDisabled={isDeletingImage}>
                   {colors.map((c) => (
                     <Option key={c.id} value={c.id}>
@@ -137,7 +162,12 @@ const ProductFormPage: React.FC = () => {
               </FormFieldWrapper>
 
               {/* Materials (non-localized) */}
-              <FormFieldWrapper name="materialIds" control={control} label={t('productForm.materials')} fullWidth>
+              <FormFieldWrapper
+                name="materialIds"
+                control={control}
+                label={t('productForm.materials')}
+                fullWidth
+              >
                 <Select multiple fullWidth isDisabled={isDeletingImage}>
                   {materials.map((m) => (
                     <Option key={m.id} value={m.id}>

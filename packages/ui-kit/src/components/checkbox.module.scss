@@ -19,7 +19,9 @@ $checkmark-border: $color-border;
     border-radius: $radius-xs;
     position: relative;
     background-color: $color-white;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease;
 
     display: flex;
     align-items: center;

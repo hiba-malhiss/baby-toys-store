@@ -33,7 +33,10 @@ const HomePageContent: React.FC = () => {
             <TabBar
               fullWidth
               size="small"
-              tabs={locales.map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: `${l}-banner` }))}
+              tabs={locales.map((l) => ({
+                header: `${l.toUpperCase()} (${l})`,
+                value: `${l}-banner`,
+              }))}
             >
               {locales.map((l) => (
                 <TabBarItem key={l} value={`${l}-banner`}>
@@ -52,7 +55,10 @@ const HomePageContent: React.FC = () => {
             <TabBar
               fullWidth
               size="small"
-              tabs={locales.map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: `${l}-info` }))}
+              tabs={locales.map((l) => ({
+                header: `${l.toUpperCase()} (${l})`,
+                value: `${l}-info`,
+              }))}
             >
               {locales.map((l) => (
                 <TabBarItem key={l} value={`${l}-info`}>

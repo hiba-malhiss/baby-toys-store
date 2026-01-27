@@ -22,7 +22,7 @@ const Header = () => {
 
   const handleCategoryClick = (category?: string) => {
     const params = new URLSearchParams(location.search);
-    if(category) {
+    if (category) {
       params.set('categoryId', String(category));
     } else {
       params.delete('categoryId');
@@ -52,7 +52,7 @@ const Header = () => {
           {t('nav.orders')}
         </Button>
       )}
-      <AuthButtonsWithDialogs isDarkMode={isDarkMode} onAfterClick={onAfterClick}/>
+      <AuthButtonsWithDialogs isDarkMode={isDarkMode} onAfterClick={onAfterClick} />
     </>
   );
 
@@ -60,14 +60,14 @@ const Header = () => {
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
         <Flex spacing="m">
-          <Icon icon={faTruckFast} color={IconColor.light}/>
+          <Icon icon={faTruckFast} color={IconColor.light} />
           <span>{t('nav.welcome')}</span>
         </Flex>
         <Flex align="center" spacing="s" className="bts-hideOnMobile">
           {authButtons(true)}
-          <LanguageSwitcher/>
+          <LanguageSwitcher />
         </Flex>
-        <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)}/>
+        <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>
 
       <Flex className={styles.headerMain} justify="stretch" align="center" fullWidth spacing="xl">
@@ -82,7 +82,7 @@ const Header = () => {
         </div>
 
         <div className={styles.headerSearch}>
-          <SearchInputWithUrl/>
+          <SearchInputWithUrl />
         </div>
 
         <Flex align="center">

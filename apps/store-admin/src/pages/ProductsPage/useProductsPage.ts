@@ -49,8 +49,8 @@ export const useProductsPage = () => {
     setConfirmDialogVisible(true);
   };
 
-  const handleConfirmDelete = async() => {
-    if(!productToDelete) return;
+  const handleConfirmDelete = async () => {
+    if (!productToDelete) return;
     await deleteMutation.mutateAsync(productToDelete.id);
     setConfirmDialogVisible(false);
     setProductToDelete(null);
@@ -62,7 +62,7 @@ export const useProductsPage = () => {
   };
 
   const confirmBulkDelete = () => {
-    if(selectedProducts.length > 0) {
+    if (selectedProducts.length > 0) {
       deleteProducts.mutate(selectedProducts.map((p) => p.id));
       setSelectedProducts([]);
     }

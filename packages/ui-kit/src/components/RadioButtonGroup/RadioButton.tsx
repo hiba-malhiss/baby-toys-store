@@ -33,21 +33,24 @@ const RadioButton: React.FC<RadioButtonProps> = ({
 
   // Native radios do not fire onChange when clicking the already-selected option.
   // We manually trigger onChange so outer logic can toggle it off.
-  const handleMouseDown = useCallback((e: React.MouseEvent) => {
-    if(timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-    if(isSelected) {
-      e.preventDefault();
-      timerRef.current = setTimeout(() => {
-        onChange?.(value);
-      }, 150); // 150ms debounce time
-    }
-  }, [isSelected, onChange, value]);
+  const handleMouseDown = useCallback(
+    (e: React.MouseEvent) => {
+      if (timerRef.current) {
+        clearTimeout(timerRef.current);
+      }
+      if (isSelected) {
+        e.preventDefault();
+        timerRef.current = setTimeout(() => {
+          onChange?.(value);
+        }, 150); // 150ms debounce time
+      }
+    },
+    [isSelected, onChange, value]
+  );
 
   useEffect(() => {
     return () => {
-      if(timerRef.current) {
+      if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
     };
@@ -72,7 +75,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
 
       {appearance === 'field' && (
         <span className={styles.radioButtonBox}>
-          <Icon icon={faCheck} size={IconSize.small} color={IconColor.light}/>
+          <Icon icon={faCheck} size={IconSize.small} color={IconColor.light} />
         </span>
       )}
 

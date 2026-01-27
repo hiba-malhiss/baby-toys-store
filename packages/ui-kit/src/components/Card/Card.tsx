@@ -19,7 +19,14 @@ const sizeClassMap: Record<string, string> = {
   large: styles.cardLarge,
 };
 
-const Card: React.FC<CardProps> = ({ withoutBorder, fullWidth, children, className, header, size = 'medium' }) => {
+const Card: React.FC<CardProps> = ({
+  withoutBorder,
+  fullWidth,
+  children,
+  className,
+  header,
+  size = 'medium',
+}) => {
   return (
     <div
       className={clsx(

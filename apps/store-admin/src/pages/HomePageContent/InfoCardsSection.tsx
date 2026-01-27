@@ -56,10 +56,18 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
                 required
               >
                 <Select>
-                  <Option value="primary" key="primary">Primary</Option>
-                  <Option value="info" key="info">Info</Option>
-                  <Option value="success" key="success">Success</Option>
-                  <Option value="warning" key="warning">Warning</Option>
+                  <Option value="primary" key="primary">
+                    Primary
+                  </Option>
+                  <Option value="info" key="info">
+                    Info
+                  </Option>
+                  <Option value="success" key="success">
+                    Success
+                  </Option>
+                  <Option value="warning" key="warning">
+                    Warning
+                  </Option>
                 </Select>
               </FormFieldWrapper>
             </Flex>

@@ -2,7 +2,6 @@
   position: relative;
   display: inline-block;
 
-
   &-preview {
     width: 32px;
     height: 32px;
@@ -30,8 +29,9 @@
     height: 150px;
     position: relative;
     cursor: crosshair;
-    background-image: linear-gradient(to right, #fff, rgba(255, 255, 255, 0)),
-    linear-gradient(to top, #000, rgba(0, 0, 0, 0));
+    background-image:
+      linear-gradient(to right, #fff, rgba(255, 255, 255, 0)),
+      linear-gradient(to top, #000, rgba(0, 0, 0, 0));
     border-radius: $radius-sm;
   }
 
@@ -49,10 +49,7 @@
   &-hueSlider {
     width: 200px;
     height: 16px;
-    background: linear-gradient(
-            to right,
-            red, yellow, lime, cyan, blue, magenta, red
-    );
+    background: linear-gradient(to right, red, yellow, lime, cyan, blue, magenta, red);
     position: relative;
     cursor: pointer;
     border-radius: $radius-xs;
@@ -68,5 +65,4 @@
     transform: translateY(-10px);
     pointer-events: none;
   }
-
 }

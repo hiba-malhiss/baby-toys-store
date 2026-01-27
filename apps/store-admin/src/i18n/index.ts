@@ -36,4 +36,3 @@ applyDir(i18n.language);
 i18n.on('languageChanged', applyDir);
 
 export default i18n;
-

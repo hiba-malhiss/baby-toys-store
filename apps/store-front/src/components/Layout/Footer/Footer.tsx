@@ -17,7 +17,7 @@ const Footer = () => {
   const { data: settings } = useStoreSettings();
   const { t } = useTranslation('common');
   const tooltipKeyByIcon: Record<string, string> = {
-    'whatsapp': 'product.tooltips.shareWhatsapp',
+    whatsapp: 'product.tooltips.shareWhatsapp',
     'facebook-f': 'product.tooltips.shareFacebook',
   };
   const footerInfo = useMemo(
@@ -28,14 +28,14 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <Flex direction="vertical" className={styles.footerLogo}>
-        <img src="/assets/kit-images/logo.png" alt="logo"/>
+        <img src="/assets/kit-images/logo.png" alt="logo" />
         <p className={styles.footerDescription}>{t('footer.description')}</p>
         <Flex spacing="m" className={styles.footerSocialButtons}>
           {socialMediaLinks.map(({ icon }) => (
             <Tooltip
               key={icon.iconName}
               content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', {
-                defaultValue: tooltipKeyByIcon[icon.iconName]
+                defaultValue: tooltipKeyByIcon[icon.iconName],
               })}
             >
               <SocialIconButton
@@ -75,7 +75,7 @@ const Footer = () => {
         <Flex direction="vertical" spacing="s" justify="center">
           {footerInfo.map((item) => {
             const config = footerInfoConfig[item.id] || {};
-            if(config.isLink && config.label) {
+            if (config.isLink && config.label) {
               const dynamicLink = linkPrefixes[item.id]
                 ? `${linkPrefixes[item.id]}${item.content}`
                 : config.link;

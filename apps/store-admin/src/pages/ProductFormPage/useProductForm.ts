@@ -78,7 +78,7 @@ export const useProductForm = () => {
     if (product) {
       setExistingImages(product.images || []);
       setMainImageUrl(product.mainImage || null);
-      
+
       // Build locale maps from admin translations
       const trMap = new Map<string, any>();
       (product as any).translations?.forEach((t: any) => {
@@ -121,14 +121,20 @@ export const useProductForm = () => {
             name: enTr.name || '',
             shortDescription: enTr.shortDescription || '',
             description: enTr.description || '',
-            featureBullets: Array.isArray(enTr.featureBullets) && enTr.featureBullets.length ? enTr.featureBullets : [''],
+            featureBullets:
+              Array.isArray(enTr.featureBullets) && enTr.featureBullets.length
+                ? enTr.featureBullets
+                : [''],
             details: detailsArrayEn,
           },
           ar: {
             name: arTr.name || '',
             shortDescription: arTr.shortDescription || '',
             description: arTr.description || '',
-            featureBullets: Array.isArray(arTr.featureBullets) && arTr.featureBullets.length ? arTr.featureBullets : [''],
+            featureBullets:
+              Array.isArray(arTr.featureBullets) && arTr.featureBullets.length
+                ? arTr.featureBullets
+                : [''],
             details: detailsArrayAr,
           },
         },
@@ -163,12 +169,17 @@ export const useProductForm = () => {
           .map((f: string) => (f || '').trim().slice(0, MAX.featureBullet))
           .filter(Boolean)
           .slice(0, MAX.featureBulletsCount);
-        const detailsObj = (t.details || []).reduce<Record<string, string>>((acc: any, item: any) => {
-          const key = (item?.label || '').trim().slice(0, MAX.detailsLabel);
-          const val = (String(item?.value || '')).trim().slice(0, MAX.detailsValue);
-          if (key) acc[key] = val;
-          return acc;
-        }, {});
+        const detailsObj = (t.details || []).reduce<Record<string, string>>(
+          (acc: any, item: any) => {
+            const key = (item?.label || '').trim().slice(0, MAX.detailsLabel);
+            const val = String(item?.value || '')
+              .trim()
+              .slice(0, MAX.detailsValue);
+            if (key) acc[key] = val;
+            return acc;
+          },
+          {}
+        );
         return { name, shortDescription, description, featureBullets, details: detailsObj };
       };
 

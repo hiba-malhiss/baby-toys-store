@@ -1,5 +1,5 @@
-import { CalendarTypeView, DayInfo } from "./calendarTypes";
-import moment from "moment";
+import { CalendarTypeView, DayInfo } from './calendarTypes';
+import moment from 'moment';
 
 export interface SelectionStatus {
   isSelected: boolean;
@@ -59,7 +59,7 @@ export const getSelectionStatus = (
   value: DayInfo | number,
   selectedDates: moment.Moment[],
   selectionMode: 'single' | 'range',
-  visibleYear?: number,
+  visibleYear?: number
 ): SelectionStatus => {
   const defaultStatus: SelectionStatus = {
     isSelected: false,
@@ -78,7 +78,7 @@ export const getSelectionStatus = (
   const isBetween = () =>
     end && momentValue.isAfter(start, type) && momentValue.isBefore(end, type);
 
-  const isExact = selectedDates.some(d => isExactMatch(type, value, d, visibleYear));
+  const isExact = selectedDates.some((d) => isExactMatch(type, value, d, visibleYear));
 
   const isSelected = isPrimarySelection(view, type) && isExact;
   const isSelectedSecondary = !isPrimarySelection(view, type) && isExact;

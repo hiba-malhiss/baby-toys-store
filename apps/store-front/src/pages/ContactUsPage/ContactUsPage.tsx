@@ -67,9 +67,7 @@ const ContactUsPage: React.FC = () => {
           navigate('/home');
         },
         onError: (error: any) => {
-          toast.error(
-            error?.response?.data?.message || t('contact.sendFailed')
-          );
+          toast.error(error?.response?.data?.message || t('contact.sendFailed'));
         },
       }
     );
@@ -84,10 +82,22 @@ const ContactUsPage: React.FC = () => {
       </div>
       <form className={styles.contactUsPage} onSubmit={onSubmit}>
         <Heading level="h2">{t('contact.title')}</Heading>
-        <FormFieldWrapper control={control} name="name" label={t('contact.name')} required fullWidth>
+        <FormFieldWrapper
+          control={control}
+          name="name"
+          label={t('contact.name')}
+          required
+          fullWidth
+        >
           <StringInput fullWidth placeholder={t('contact.placeholder.name')} />
         </FormFieldWrapper>
-        <FormFieldWrapper control={control} name="subject" label={t('contact.subject')} required fullWidth>
+        <FormFieldWrapper
+          control={control}
+          name="subject"
+          label={t('contact.subject')}
+          required
+          fullWidth
+        >
           <StringInput fullWidth placeholder={t('contact.placeholder.subject')} />
         </FormFieldWrapper>
         <FormFieldWrapper control={control} name="email" label={t('contact.email')} fullWidth>
@@ -96,7 +106,13 @@ const ContactUsPage: React.FC = () => {
         <FormFieldWrapper control={control} name="phone" label={t('contact.phoneNumber')} fullWidth>
           <StringInput fullWidth placeholder={t('contact.placeholder.phone')} />
         </FormFieldWrapper>
-        <FormFieldWrapper control={control} name="message" label={t('contact.message')} required fullWidth>
+        <FormFieldWrapper
+          control={control}
+          name="message"
+          label={t('contact.message')}
+          required
+          fullWidth
+        >
           <TextArea fullWidth placeholder={t('contact.placeholder.message')} />
         </FormFieldWrapper>
         <Button type="submit" isLoading={sendMutation.isPending} aria-label={t('contact.send')}>

@@ -1,9 +1,16 @@
 import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { faPen, faTrashAlt, faStar, faCheck, faEye, faXmark } from '@fortawesome/free-solid-svg-icons';
+import {
+  faPen,
+  faTrashAlt,
+  faStar,
+  faCheck,
+  faEye,
+  faXmark,
+} from '@fortawesome/free-solid-svg-icons';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
-import { AdminProductBase } from "../../api/types/product.ts";
+import { AdminProductBase } from '../../api/types/product.ts';
 
 export const useProductsTableColumns = (handleDelete: (product: AdminProductBase) => void) => {
   const navigate = useNavigate();
@@ -70,7 +77,11 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       header: 'Revenue',
       sortable: true,
       body: (row: AdminProductBase) =>
-        row.totalRevenue != null ? (symbol ? `${symbol}${row.totalRevenue}` : String(row.totalRevenue)) : '-',
+        row.totalRevenue != null
+          ? symbol
+            ? `${symbol}${row.totalRevenue}`
+            : String(row.totalRevenue)
+          : '-',
     },
     {
       field: 'profitMargin',

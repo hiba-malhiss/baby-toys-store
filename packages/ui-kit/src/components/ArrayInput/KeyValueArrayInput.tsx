@@ -93,7 +93,5 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
       </Button>
     </Flex>
   );
-}
-;
-
+};
 export default KeyValueArrayInput;

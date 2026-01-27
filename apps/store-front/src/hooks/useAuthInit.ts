@@ -1,7 +1,7 @@
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import api from '../api/axiosConfig';
 import { getGuestCartToken, setGuestCartToken } from '../utils/guestCart';
-import { AUTH_TOKEN_KEY } from "../api/authApi.ts";
+import { AUTH_TOKEN_KEY } from '../api/authApi.ts';
 
 interface AuthInitResult {
   isAuthenticated: boolean;

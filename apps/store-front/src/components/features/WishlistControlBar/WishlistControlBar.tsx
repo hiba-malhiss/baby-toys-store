@@ -19,7 +19,10 @@ type Props = {
 };
 
 const WishlistControlBar: React.FC<Props> = ({ value, onChange, onReset, categories = [] }) => {
-  const sortValue = useMemo(() => `${value.sortBy}:${value.sortDirection}`, [value.sortBy, value.sortDirection]);
+  const sortValue = useMemo(
+    () => `${value.sortBy}:${value.sortDirection}`,
+    [value.sortBy, value.sortDirection]
+  );
   const { t } = useTranslation('common');
 
   return (
@@ -33,10 +36,18 @@ const WishlistControlBar: React.FC<Props> = ({ value, onChange, onReset, categor
           }}
           placeholder={t('shop.sortBy')}
         >
-          <Option value="id:DESC">{t('wishlist.sort.recentlyAdded', { defaultValue: 'Recently added' })}</Option>
-          <Option value="price:ASC">{t('shop.sort.price_asc', { defaultValue: 'Price: Low to High' })}</Option>
-          <Option value="price:DESC">{t('shop.sort.price_desc', { defaultValue: 'Price: High to Low' })}</Option>
-          <Option value="rating:DESC">{t('shop.sort.rating', { defaultValue: 'Rating: High to Low' })}</Option>
+          <Option value="id:DESC">
+            {t('wishlist.sort.recentlyAdded', { defaultValue: 'Recently added' })}
+          </Option>
+          <Option value="price:ASC">
+            {t('shop.sort.price_asc', { defaultValue: 'Price: Low to High' })}
+          </Option>
+          <Option value="price:DESC">
+            {t('shop.sort.price_desc', { defaultValue: 'Price: High to Low' })}
+          </Option>
+          <Option value="rating:DESC">
+            {t('shop.sort.rating', { defaultValue: 'Rating: High to Low' })}
+          </Option>
         </Select>
 
         {categories.length > 0 && (
@@ -64,12 +75,16 @@ const WishlistControlBar: React.FC<Props> = ({ value, onChange, onReset, categor
         >
           <Option value="ALL">{t('filters.status', { defaultValue: 'Status' })}</Option>
           <Option value="IN_STOCK">{t('filters.inStock', { defaultValue: 'In stock' })}</Option>
-          <Option value="OUT_OF_STOCK">{t('filters.outOfStock', { defaultValue: 'Out of stock' })}</Option>
+          <Option value="OUT_OF_STOCK">
+            {t('filters.outOfStock', { defaultValue: 'Out of stock' })}
+          </Option>
           <Option value="ON_SALE">{t('filters.onSale', { defaultValue: 'On sale' })}</Option>
         </Select>
 
         {onReset && (
-          <Button color="secondary-light" onClick={onReset}>{t('filters.reset', { defaultValue: 'Reset' })}</Button>
+          <Button color="secondary-light" onClick={onReset}>
+            {t('filters.reset', { defaultValue: 'Reset' })}
+          </Button>
         )}
       </Flex>
     </div>

@@ -77,12 +77,12 @@ export const Select: React.FC<SelectProps> = ({
       }
       const selectedLabels = options
         ? (internalValue as string[]).map((v) => options.find((o) => o.value === v)?.label || '')
-        : (Children.map(children, (child) => {
+        : Children.map(children, (child) => {
             if (isValidElement(child) && (internalValue as string[]).includes(child.props.value)) {
               return child.props.children as string;
             }
             return null;
-          }) || []);
+          }) || [];
       return (selectedLabels as (string | null)[]).filter(Boolean).join(', ');
     }
 
@@ -125,7 +125,8 @@ export const Select: React.FC<SelectProps> = ({
         {renderSelected()}
         <Flex>
           {clearable &&
-            ((Array.isArray(internalValue) && internalValue.length > 0) || (!Array.isArray(internalValue) && !!internalValue)) && (
+            ((Array.isArray(internalValue) && internalValue.length > 0) ||
+              (!Array.isArray(internalValue) && !!internalValue)) && (
               <span
                 onClick={(e) => {
                   e.stopPropagation();
@@ -169,7 +170,9 @@ export const Select: React.FC<SelectProps> = ({
                   }
                 >
                   <Flex align="center" spacing="m">
-                    {multiple && <Checkbox checked={(internalValue as string[]).includes(option.value)} />}
+                    {multiple && (
+                      <Checkbox checked={(internalValue as string[]).includes(option.value)} />
+                    )}
                     <span>{option.label}</span>
                   </Flex>
                 </Option>

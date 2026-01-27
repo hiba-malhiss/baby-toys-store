@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { DayInfo, Month } from "../calendarTypes";
+import { DayInfo, Month } from '../calendarTypes';
 
 export const DEFAULT_DATE_FORMAT = 'YYYY/MM/DD';
 
@@ -9,14 +9,9 @@ export function createMonth(month: number, year: number, dateFormat: string): Mo
   // Get the weekday of the first day, total days in current and previous month
   const firstDay = moment([year, month, 1]).day();
   const daysInMonth = moment([year, month, 1]).daysInMonth();
-  const prevMonthDays = moment([
-    year,
-    month - 1 < 0 ? 11 : month - 1,
-    1
-  ]).daysInMonth();
+  const prevMonthDays = moment([year, month - 1 < 0 ? 11 : month - 1, 1]).daysInMonth();
 
-  const isCurrentMonth =
-    currentDate.month() === month && currentDate.year() === year;
+  const isCurrentMonth = currentDate.month() === month && currentDate.year() === year;
 
   let dayNumber = 1;
   const dates: DayInfo[][] = [];
@@ -38,7 +33,7 @@ export function createMonth(month: number, year: number, dateFormat: string): Mo
           year: prevYear,
           isFromOtherMonth: true,
           today: isCurrentMonth && j === currentDate.date(),
-          formattedDate: date.format(dateFormat)
+          formattedDate: date.format(dateFormat),
         });
       }
 
@@ -53,7 +48,7 @@ export function createMonth(month: number, year: number, dateFormat: string): Mo
           year,
           today: isCurrentMonth && dayNumber === currentDate.date(),
           isFromOtherMonth: false,
-          formattedDate: date.format(dateFormat)
+          formattedDate: date.format(dateFormat),
         });
         dayNumber++;
       }
@@ -72,7 +67,7 @@ export function createMonth(month: number, year: number, dateFormat: string): Mo
             year,
             today: isCurrentMonth && dayNumber === currentDate.date(),
             isFromOtherMonth: false,
-            formattedDate: date.format(dateFormat)
+            formattedDate: date.format(dateFormat),
           });
           dayNumber++;
         } else {
@@ -87,7 +82,7 @@ export function createMonth(month: number, year: number, dateFormat: string): Mo
             year: nextYear,
             today: false,
             isFromOtherMonth: true,
-            formattedDate: date.format(dateFormat)
+            formattedDate: date.format(dateFormat),
           });
           dayNumber++;
         }
@@ -100,6 +95,6 @@ export function createMonth(month: number, year: number, dateFormat: string): Mo
   return {
     month,
     year,
-    dates
+    dates,
   };
 }

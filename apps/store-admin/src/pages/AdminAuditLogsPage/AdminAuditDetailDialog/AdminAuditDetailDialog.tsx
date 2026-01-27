@@ -3,12 +3,7 @@ import { Button, Chip, Dialog, Flex, StringInput } from '@baby-toys/ui-kit';
 import styles from './admin-audit-logs-dialog.module.scss';
 import { useTranslation } from 'react-i18next';
 import { useAdminAuditLog } from '../../../api/auditApi';
-import {
-  diffJson,
-  safeParseJson,
-  summarizeValue,
-  type ChangeType,
-} from './jsonDiff';
+import { diffJson, safeParseJson, summarizeValue, type ChangeType } from './jsonDiff';
 
 type Props = {
   open: boolean;
@@ -43,7 +38,11 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
     if (!parsed.before.ok || !parsed.after.ok) {
       return { changes: [] as any[], truncated: false };
     }
-    const { changes, truncated } = diffJson(parsed.before.value ?? undefined, parsed.after.value ?? undefined, 200);
+    const { changes, truncated } = diffJson(
+      parsed.before.value ?? undefined,
+      parsed.after.value ?? undefined,
+      200
+    );
     return { changes, truncated };
   }, [open, parsed.before.ok, parsed.after.ok, parsed.before.value, parsed.after.value]);
 
@@ -59,27 +58,50 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
   const renderChangeTypeChip = (type: ChangeType) => {
     const map: Record<ChangeType, { label: string; appearance: any }> = {
       added: { label: t('auditLogs.added', { defaultValue: 'Added' }), appearance: 'success' },
-      removed: { label: t('auditLogs.removed', { defaultValue: 'Removed' }), appearance: 'warning' },
+      removed: {
+        label: t('auditLogs.removed', { defaultValue: 'Removed' }),
+        appearance: 'warning',
+      },
       updated: { label: t('auditLogs.updated', { defaultValue: 'Updated' }), appearance: 'info' },
-      'type-changed': { label: t('auditLogs.typeChanged', { defaultValue: 'Type changed' }), appearance: 'warning' },
+      'type-changed': {
+        label: t('auditLogs.typeChanged', { defaultValue: 'Type changed' }),
+        appearance: 'warning',
+      },
     };
     const cfg = map[type];
     return <Chip label={cfg.label} appearance={cfg.appearance} />;
   };
 
   const rawFallbackBlock = () => {
-    const beforeText = parsed.before.ok ? JSON.stringify(parsed.before.value, null, 2) : String(parsed.before.value ?? '');
-    const afterText = parsed.after.ok ? JSON.stringify(parsed.after.value, null, 2) : String(parsed.after.value ?? '');
+    const beforeText = parsed.before.ok
+      ? JSON.stringify(parsed.before.value, null, 2)
+      : String(parsed.before.value ?? '');
+    const afterText = parsed.after.ok
+      ? JSON.stringify(parsed.after.value, null, 2)
+      : String(parsed.after.value ?? '');
 
     // If both parse OK, show line-diff with highlights; else fallback to plain pre blocks
     const bothOk = parsed.before.ok && parsed.after.ok;
 
-    const renderLines = (lines: { text: string; type: 'same' | 'added' | 'removed' | 'changed' }[]) => (
+    const renderLines = (
+      lines: { text: string; type: 'same' | 'added' | 'removed' | 'changed' }[]
+    ) => (
       <div className={styles.rawPreLines}>
         {lines.map((l, idx) => (
-          <div key={idx} className={`${styles.rawLine} ${
-            l.type === 'added' ? styles.added : l.type === 'removed' ? styles.removed : l.type === 'changed' ? styles.changed : ''
-          }`}>{l.text}</div>
+          <div
+            key={idx}
+            className={`${styles.rawLine} ${
+              l.type === 'added'
+                ? styles.added
+                : l.type === 'removed'
+                  ? styles.removed
+                  : l.type === 'changed'
+                    ? styles.changed
+                    : ''
+            }`}
+          >
+            {l.text}
+          </div>
         ))}
       </div>
     );
@@ -87,7 +109,8 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
     const computeLineDiff = (a: string, b: string) => {
       const aLines = a.split('\n');
       const bLines = b.split('\n');
-      const n = aLines.length, m = bLines.length;
+      const n = aLines.length,
+        m = bLines.length;
       // LCS dp
       const dp: number[][] = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
       for (let i = n - 1; i >= 0; i--) {
@@ -99,12 +122,14 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
       // reconstruct
       const left: { text: string; type: 'same' | 'added' | 'removed' | 'changed' }[] = [];
       const right: { text: string; type: 'same' | 'added' | 'removed' | 'changed' }[] = [];
-      let i = 0, j = 0;
+      let i = 0,
+        j = 0;
       while (i < n && j < m) {
         if (aLines[i] === bLines[j]) {
           left.push({ text: aLines[i], type: 'same' });
           right.push({ text: bLines[j], type: 'same' });
-          i++; j++;
+          i++;
+          j++;
         } else if (dp[i + 1][j] >= dp[i][j + 1]) {
           left.push({ text: aLines[i], type: 'removed' });
           right.push({ text: '', type: 'removed' });
@@ -141,12 +166,16 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
       <Flex direction="vertical" spacing="m" fullWidth>
         {(!parsed.before.ok || !parsed.after.ok) && (
           <div className={styles.parseError}>
-            {t('auditLogs.invalidJson', { defaultValue: 'Unable to diff: invalid JSON stored in logs.' })}
+            {t('auditLogs.invalidJson', {
+              defaultValue: 'Unable to diff: invalid JSON stored in logs.',
+            })}
           </div>
         )}
         <Flex spacing="l" fullWidth className={styles.rawGrid}>
           <div className={styles.rawCol}>
-            <div className={styles.rawTitle}>{t('auditLogs.before', { defaultValue: 'Before' })}</div>
+            <div className={styles.rawTitle}>
+              {t('auditLogs.before', { defaultValue: 'Before' })}
+            </div>
             {bothOk ? renderLines(diff!.left) : <pre className={styles.rawPre}>{beforeText}</pre>}
           </div>
           <div className={styles.rawCol}>
@@ -177,8 +206,13 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
           </div>
 
           <div className={styles.detailActions}>
-            <Button appearance={showRaw ? 'filled' : 'outline'} onClick={() => setShowRaw((v) => !v)}>
-              {showRaw ? t('auditLogs.hideRaw', { defaultValue: 'Hide raw' }) : t('auditLogs.showRaw', { defaultValue: 'Show raw' })}
+            <Button
+              appearance={showRaw ? 'filled' : 'outline'}
+              onClick={() => setShowRaw((v) => !v)}
+            >
+              {showRaw
+                ? t('auditLogs.hideRaw', { defaultValue: 'Hide raw' })
+                : t('auditLogs.showRaw', { defaultValue: 'Show raw' })}
             </Button>
           </div>
         </div>
@@ -189,7 +223,9 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
         {!showRaw && (
           <Flex spacing="s" align="center" fullWidth className={styles.changeToolbar}>
             <StringInput
-              placeholder={t('auditLogs.searchChanges', { defaultValue: 'Search changes (field/value)' })}
+              placeholder={t('auditLogs.searchChanges', {
+                defaultValue: 'Search changes (field/value)',
+              })}
               fullWidth
               value={changeSearch}
               onChange={(v) => setChangeSearch(v)}
@@ -199,12 +235,14 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
 
         {/* Main content */}
         {isDetailLoading ? (
-          <div className={styles.loadingBlock}>{t('app.loading', { defaultValue: 'Loading…' })}</div>
+          <div className={styles.loadingBlock}>
+            {t('app.loading', { defaultValue: 'Loading…' })}
+          </div>
         ) : (
           <>
             {!showRaw ? (
               <div className={styles.changesList}>
-                {(!parsed.before.ok || !parsed.after.ok) ? (
+                {!parsed.before.ok || !parsed.after.ok ? (
                   rawFallbackBlock()
                 ) : filteredChanges.length === 0 ? (
                   <div className={styles.emptyState}>
@@ -221,10 +259,16 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
 
                     {filteredChanges.map((c: any, idx: number) => (
                       <div key={`${c.path}-${idx}`} className={styles.changeRow}>
-                        <div className={styles.pathCell} title={c.path}>{c.path}</div>
+                        <div className={styles.pathCell} title={c.path}>
+                          {c.path}
+                        </div>
                         <div className={styles.typeCell}>{renderChangeTypeChip(c.type)}</div>
-                        <div className={styles.valueCell} title={summarizeValue(c.before)}>{summarizeValue(c.before)}</div>
-                        <div className={styles.valueCell} title={summarizeValue(c.after)}>{summarizeValue(c.after)}</div>
+                        <div className={styles.valueCell} title={summarizeValue(c.before)}>
+                          {summarizeValue(c.before)}
+                        </div>
+                        <div className={styles.valueCell} title={summarizeValue(c.after)}>
+                          {summarizeValue(c.after)}
+                        </div>
                       </div>
                     ))}
                   </div>

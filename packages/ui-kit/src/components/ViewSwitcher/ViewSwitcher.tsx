@@ -8,7 +8,7 @@ import styles from './view-switcher.module.scss';
 import Paginator, { type PaginationMode } from '../Paginator/Paginator.tsx';
 import SkeletonProductCard from '../Skeleton/SkeletonProductCard.tsx';
 import NoDataFound from '../NoDataFound';
-import { BREAKPOINTS } from "../../constants/breakpoints.ts";
+import { BREAKPOINTS } from '../../constants/breakpoints.ts';
 
 type ResponsiveOption = {
   breakpoint: number | string;
@@ -68,7 +68,7 @@ function ViewSwitcher({
   emptyMessage,
   emptySubtext,
   emptyAlign,
-}: ViewSwitcherProps){
+}: ViewSwitcherProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [viewMode, setViewMode] = useState<ViewMode>(initialView);
   const [columns, setColumns] = useState<number | undefined>(undefined);
@@ -76,7 +76,7 @@ function ViewSwitcher({
 
   // Inform parent about initial view
   useEffect(() => {
-    if(!isStaticView && isInitialMount.current) {
+    if (!isStaticView && isInitialMount.current) {
       isInitialMount.current = false;
       onViewChange?.(initialView);
     }
@@ -86,12 +86,14 @@ function ViewSwitcher({
     typeof bp === 'number' ? bp : parseInt(String(bp), 10);
 
   const sortedOptions = useMemo(() => {
-    return [...responsiveOptions].sort((a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint));
+    return [...responsiveOptions].sort(
+      (a, b) => toBpNumber(a.breakpoint) - toBpNumber(b.breakpoint)
+    );
   }, [responsiveOptions]);
 
   useEffect(() => {
     const element = containerRef.current;
-    if(!element || responsiveOptions.length === 0) {
+    if (!element || responsiveOptions.length === 0) {
       setColumns(undefined);
       return;
     }
@@ -99,7 +101,7 @@ function ViewSwitcher({
     let resizeTimeout: NodeJS.Timeout;
 
     const updateResponsive = (width: number) => {
-      if(sortedOptions.length > 0) {
+      if (sortedOptions.length > 0) {
         const match = sortedOptions.find((opt) => width <= toBpNumber(opt.breakpoint));
         const matchedCols = match
           ? match.gridColumns
@@ -109,7 +111,7 @@ function ViewSwitcher({
     };
 
     const observer = new ResizeObserver((entries) => {
-      for(const entry of entries) {
+      for (const entry of entries) {
         const newWidth = entry.contentRect.width;
         clearTimeout(resizeTimeout);
         resizeTimeout = setTimeout(() => updateResponsive(newWidth), 100);
@@ -127,7 +129,7 @@ function ViewSwitcher({
 
   const changeView = useCallback(
     (view: ViewMode) => {
-      if(isStaticView || view === viewMode) return;
+      if (isStaticView || view === viewMode) return;
       setViewMode(view);
       onViewChange?.(view);
     },
@@ -139,9 +141,9 @@ function ViewSwitcher({
 
   const handlePageChange = useCallback(
     (newPage: number) => {
-      if(newPage !== page) {
+      if (newPage !== page) {
         onPaginationChange?.(newPage, pageSize);
-        if(paginationMode === 'default' && containerRef.current) {
+        if (paginationMode === 'default' && containerRef.current) {
           const top = containerRef.current.getBoundingClientRect().top + window.pageYOffset - 100;
           window.scrollTo({ top, behavior: 'smooth' });
         }
@@ -199,8 +201,8 @@ function ViewSwitcher({
         style={
           viewMode === 'grid'
             ? {
-              gridTemplateColumns: `repeat(${columns || 'auto-fill'}, 1fr)`,
-            }
+                gridTemplateColumns: `repeat(${columns || 'auto-fill'}, 1fr)`,
+              }
             : undefined
         }
       >
@@ -226,9 +228,7 @@ function ViewSwitcher({
         {isLoading &&
           (paginationMode === 'show-more' || paginationMode === 'infinite-scroll') &&
           items.length > 0 && (
-            <SkeletonProductCard
-              direction={viewMode === 'list' ? 'horizontal' : 'vertical'}
-            />
+            <SkeletonProductCard direction={viewMode === 'list' ? 'horizontal' : 'vertical'} />
           )}
       </div>
 

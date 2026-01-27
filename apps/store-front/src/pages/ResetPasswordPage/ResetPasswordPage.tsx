@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useValidateResetToken, useResetPassword } from '../../api/authApi';
-import {
-  Dialog,
-  StringInput,
-  Button,
-  Flex,
-  BouncingDotsLoader,
-  useToast,
-} from '@baby-toys/ui-kit';
+import { Dialog, StringInput, Button, Flex, BouncingDotsLoader, useToast } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
@@ -72,7 +65,13 @@ const ResetPasswordPage: React.FC = () => {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
-      <Dialog visible={true} onHide={() => {}} header={t('auth.reset.header')} closable={false} modal>
+      <Dialog
+        visible={true}
+        onHide={() => {}}
+        header={t('auth.reset.header')}
+        closable={false}
+        modal
+      >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
             <FormFieldWrapper

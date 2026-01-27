@@ -20,7 +20,7 @@ import {
   faHouse,
   faGear,
   faTruck,
-  faRightFromBracket
+  faRightFromBracket,
 } from '@fortawesome/free-solid-svg-icons';
 
 const AdminLayout: React.FC<{
@@ -72,27 +72,31 @@ const AdminLayout: React.FC<{
     [t]
   );
 
-  const logout = useCallback(async() => {
+  const logout = useCallback(async () => {
     try {
       await logoutApi();
       navigate('/login');
-    } catch(error) {
+    } catch (error) {
       console.error('Logout failed:', error);
     }
   }, [logoutApi]);
 
   return (
     <>
-      <Mask visible={isMaskLoading}/>
-      <Toast/>
+      <Mask visible={isMaskLoading} />
+      <Toast />
       <div className={styles.adminLayout}>
         <Aside
           autoOverflow
           model={menuItems}
           header={
             <Flex justify="between" align="center" wrap fullWidth>
-              <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo}/>
-              <LanguageSwitcher/>
+              <img
+                src="/assets/kit-images/logo.png"
+                alt="logo"
+                className={styles.adminLayoutLogo}
+              />
+              <LanguageSwitcher />
             </Flex>
           }
           footerExpanded={
@@ -117,7 +121,7 @@ const AdminLayout: React.FC<{
           }
         />
         <main className={styles.adminLayoutContent}>
-          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl"/> : children}
+          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl" /> : children}
         </main>
       </div>
     </>

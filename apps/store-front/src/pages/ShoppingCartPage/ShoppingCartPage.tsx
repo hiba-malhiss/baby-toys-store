@@ -3,7 +3,17 @@ import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
 import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
-import { Button, Card, Divider, Flex, NoDataFound, Text, PriceDisplay, ConfirmDialog, Alert } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Card,
+  Divider,
+  Flex,
+  NoDataFound,
+  Text,
+  PriceDisplay,
+  ConfirmDialog,
+  Alert,
+} from '@baby-toys/ui-kit';
 
 import styles from './shopping-cart-page.module.scss';
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
@@ -13,7 +23,7 @@ import CartQuantityInput from '../../components/shared/CartQuantityInput';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useCartQuery, useRemoveFromCart } from '../../api/cartApi';
 import { useAddToWishlist } from '../../api/wishlistApi';
-import { useAuth } from "../../context/AuthContext.tsx";
+import { useAuth } from '../../context/AuthContext.tsx';
 
 const ShoppingCartPage = () => {
   const { t } = useTranslation('common');
@@ -34,29 +44,30 @@ const ShoppingCartPage = () => {
   const { isAuthenticated } = useAuth();
 
   const handleConfirmDelete = () => {
-    if(itemToDelete) {
+    if (itemToDelete) {
       removeMutation.mutate({ itemId: itemToDelete.id });
       setItemToDelete(null);
     }
   };
 
-  const handleMoveToWishlist = async(item: { id: number; productId: number; productName: string }) => {
+  const handleMoveToWishlist = async (item: {
+    id: number;
+    productId: number;
+    productName: string;
+  }) => {
     try {
       await addToWishlist.mutateAsync({ productId: item.productId });
       removeMutation.mutate({ itemId: item.id });
-    } catch(e) {
+    } catch (e) {
       // noop; UI kit toasts handled inside hooks if any
     }
   };
 
-  if(!isLoading && items.length === 0) {
+  if (!isLoading && items.length === 0) {
     return (
       <PageContainer
         isBreadcrumbHidden
-        className={clsx(
-          styles.shoppingCartPage,
-          styles.shoppingCartPageIsEmpty
-        )}
+        className={clsx(styles.shoppingCartPage, styles.shoppingCartPageIsEmpty)}
       >
         <NoDataFound
           icon={faBoxOpen}
@@ -100,7 +111,7 @@ const ShoppingCartPage = () => {
           {items.map((item) => (
             <div key={item.id} className={styles.shoppingCartPageTableRow}>
               <div className={styles.shoppingCartPageImage}>
-                <img src={item.productImage || ''} alt={item.productName}/>
+                <img src={item.productImage || ''} alt={item.productName} />
               </div>
               <Button
                 appearance="link"
@@ -134,8 +145,9 @@ const ShoppingCartPage = () => {
                   </Text>
                 )}
               </div>
-              <div
-                className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}>{formatCurrency(item.totalPrice)}</div>
+              <div className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}>
+                {formatCurrency(item.totalPrice)}
+              </div>
               <div>
                 <Flex spacing="xs" align="center">
                   <Button
@@ -153,13 +165,17 @@ const ShoppingCartPage = () => {
                         appearance="link"
                         color="highlighted"
                         withoutPadding
-                        onClick={() => handleMoveToWishlist({
-                          id: Number(item.id),
-                          productId: Number(item.productId),
-                          productName: item.productName
-                        })}
+                        onClick={() =>
+                          handleMoveToWishlist({
+                            id: Number(item.id),
+                            productId: Number(item.productId),
+                            productName: item.productName,
+                          })
+                        }
                       >
-                        {t('cart.removeAndMoveToWishlist', { defaultValue: 'Remove and move to wishlist' })}
+                        {t('cart.removeAndMoveToWishlist', {
+                          defaultValue: 'Remove and move to wishlist',
+                        })}
                       </Button>
                     </>
                   )}
@@ -171,7 +187,9 @@ const ShoppingCartPage = () => {
       </div>
       <Card header={t('cart.subtotal')} className={styles.shoppingCartPageSummary}>
         <Flex justify="between">
-          <Text weight="bold" size="lg">{t('cart.subtotal')}</Text>
+          <Text weight="bold" size="lg">
+            {t('cart.subtotal')}
+          </Text>
           <Text weight="bold" size="lg">
             {formatCurrency(subtotal || 0)}
           </Text>
@@ -198,8 +216,8 @@ const ShoppingCartPage = () => {
               : t('cart.proceed')}
         </Button>
       </Card>
-      <Divider className="bts-marginTxxxxl"/>
-      <YouMayAlsoLikeSection mode="flex"/>
+      <Divider className="bts-marginTxxxxl" />
+      <YouMayAlsoLikeSection mode="flex" />
 
       <ConfirmDialog
         visible={!!itemToDelete}
@@ -209,7 +227,7 @@ const ShoppingCartPage = () => {
             ns="common"
             i18nKey="cart.deleteItemMessage"
             values={{ itemName: itemToDelete?.name }}
-            components={{ strong: <strong className={styles['shoppingCartPage-dialogStrong']}/> }}
+            components={{ strong: <strong className={styles['shoppingCartPage-dialogStrong']} /> }}
           />
         }
         confirmLabel={t('common.delete')}

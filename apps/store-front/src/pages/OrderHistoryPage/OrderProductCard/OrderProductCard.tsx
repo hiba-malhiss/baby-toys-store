@@ -25,7 +25,13 @@ interface OrderProductCardProps {
   order: Order;
 }
 
-const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel, isCancelling }: OrderProductCardProps) => {
+const OrderProductCard = ({
+  order,
+  onBuyAgain,
+  onAddReview,
+  onCancel,
+  isCancelling,
+}: OrderProductCardProps) => {
   const formatCurrency = useCurrencyFormatter();
   const navigate = useNavigate();
   const { t } = useTranslation('common');
@@ -110,18 +116,35 @@ const OrderProductCard = ({ order, onBuyAgain, onAddReview, onCancel, isCancelli
             >
               {expanded
                 ? t('orders.showLess', { defaultValue: 'Show less' })
-                : t('orders.showMore', { defaultValue: 'Show more ({{count}})', count: items.length - 2 })}
+                : t('orders.showMore', {
+                    defaultValue: 'Show more ({{count}})',
+                    count: items.length - 2,
+                  })}
             </Button>
           </div>
         )}
       </div>
 
       <footer className={styles.orderCardFooter}>
-        <div>{t('orders.subtotal')}: {formatCurrency(order.subtotal)}</div>
-        {order.couponCode ? <div>{t('orders.coupon')}: {order.couponCode}</div> : null}
-        {order.discountAmount ? <div>{t('orders.discount')}: {order.discountAmount}</div> : null}
-        <div>{t('orders.shipping')}: {formatCurrency(order.shippingCost)}</div>
-        <div>{t('orders.total')}: {formatCurrency(order.total)}</div>
+        <div>
+          {t('orders.subtotal')}: {formatCurrency(order.subtotal)}
+        </div>
+        {order.couponCode ? (
+          <div>
+            {t('orders.coupon')}: {order.couponCode}
+          </div>
+        ) : null}
+        {order.discountAmount ? (
+          <div>
+            {t('orders.discount')}: {order.discountAmount}
+          </div>
+        ) : null}
+        <div>
+          {t('orders.shipping')}: {formatCurrency(order.shippingCost)}
+        </div>
+        <div>
+          {t('orders.total')}: {formatCurrency(order.total)}
+        </div>
       </footer>
     </Card>
   );

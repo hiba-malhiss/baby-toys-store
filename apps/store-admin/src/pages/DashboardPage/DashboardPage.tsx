@@ -10,11 +10,16 @@ import {
   Alert,
   ProgressBar,
   Tooltip,
-  Icon
+  Icon,
 } from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { faTriangleExclamation, faCircleInfo, faCircleCheck, faSync } from '@fortawesome/free-solid-svg-icons';
+import {
+  faTriangleExclamation,
+  faCircleInfo,
+  faCircleCheck,
+  faSync,
+} from '@fortawesome/free-solid-svg-icons';
 
 import { useAdminDashboard, DASHBOARD_QUERY_KEY } from '../../api/dashboardApi';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -25,7 +30,7 @@ import styles from './dashboard-page.module.scss';
 
 const clampPct = (pct: number) => Math.max(0, Math.min(100, pct));
 
-function useFormatters(currencyCode: string, locale: string){
+function useFormatters(currencyCode: string, locale: string) {
   const currencyFmt = useMemo(
     () =>
       new Intl.NumberFormat(locale, {
@@ -47,17 +52,17 @@ function useFormatters(currencyCode: string, locale: string){
   return { money, num, pctFromBps, safe };
 }
 
-function getAlertAppearance(severity?: string){
-  if(severity === 'CRITICAL') return 'error';
-  if(severity === 'WARN') return 'warning';
+function getAlertAppearance(severity?: string) {
+  if (severity === 'CRITICAL') return 'error';
+  if (severity === 'WARN') return 'warning';
   return 'info';
 }
 
-function getAlertIcon(severity?: string){
+function getAlertIcon(severity?: string) {
   return severity === 'CRITICAL' ? faTriangleExclamation : faCircleInfo;
 }
 
-export default function DashboardPage(){
+export default function DashboardPage() {
   const { t, i18n } = useTranslation();
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -74,7 +79,7 @@ export default function DashboardPage(){
     const urgentCount = data?.alerts?.urgentCount ?? 0;
     const preview = (data?.alerts?.preview ?? []).slice(0, 2);
 
-    if(!urgentCount) {
+    if (!urgentCount) {
       return [];
     }
 
@@ -90,7 +95,7 @@ export default function DashboardPage(){
   // productInterest funnel removed (backend doesn't provide it currently)t(
 
   const metricsRows = useMemo(() => {
-    if(!data) return [];
+    if (!data) return [];
 
     return [
       {
@@ -98,21 +103,22 @@ export default function DashboardPage(){
         value: num(data.kpis?.pendingOrders),
         change: '—',
         notes: '',
-        calcInfo: 'Count of orders with status = PENDING'
+        calcInfo: 'Count of orders with status = PENDING',
       },
       {
         name: t('dashboard.averageOrderValue', { defaultValue: 'Average Order Value' }),
         value: money(data.kpis?.aovThisMonth),
         change: '—',
         notes: t('dashboard.metrics.mtd', { defaultValue: 'MTD' }),
-        calcInfo: 'Delivered revenue this month / Delivered count this month'
+        calcInfo: 'Delivered revenue this month / Delivered count this month',
       },
       {
         name: t('dashboard.metrics.revenueLastMonth', { defaultValue: 'Revenue (Last Month)' }),
         value: money(data.kpis?.revenueLastMonth),
         change: '—',
         notes: '',
-        calcInfo: 'Sum of totals for orders with status = DELIVERED and deliveredAt in previous month'
+        calcInfo:
+          'Sum of totals for orders with status = DELIVERED and deliveredAt in previous month',
       },
 
       {
@@ -121,19 +127,23 @@ export default function DashboardPage(){
         change: pctFromBps(data.today?.salesChangeVsYesterdayBps),
         notes: t('dashboard.metrics.yesterday', {
           defaultValue: 'Yesterday: {{val}}',
-          val: money(data.today?.salesYesterdayAmount)
+          val: money(data.today?.salesYesterdayAmount),
         }),
-        calcInfo: 'Sum of totals for orders with status = DELIVERED and deliveredAt in today window'
+        calcInfo:
+          'Sum of totals for orders with status = DELIVERED and deliveredAt in today window',
       },
       {
         name: t('dashboard.metrics.orderIntakeValue', { defaultValue: 'Order Intake Value' }),
         value: money(data.today?.orderIntakeValue),
         change: pctFromBps(data.today?.orderIntakeValueChangeBps),
-        notes: `${t('dashboard.metrics.orderIntakeNote', { defaultValue: 'New orders value today' })} • ${t('dashboard.metrics.yesterday', {
-          defaultValue: 'Yesterday: {{val}}',
-          val: money(data.today?.orderIntakeValueYesterday)
-        })}`,
-        calcInfo: 'Sum of totals for orders with createdAt in today window (new orders)'
+        notes: `${t('dashboard.metrics.orderIntakeNote', { defaultValue: 'New orders value today' })} • ${t(
+          'dashboard.metrics.yesterday',
+          {
+            defaultValue: 'Yesterday: {{val}}',
+            val: money(data.today?.orderIntakeValueYesterday),
+          }
+        )}`,
+        calcInfo: 'Sum of totals for orders with createdAt in today window (new orders)',
       },
 
       {
@@ -141,57 +151,65 @@ export default function DashboardPage(){
         value: `${safe(data.ratings?.avgToday, '—')} / 5`,
         change: t('dashboard.metrics.ratingsCount', {
           defaultValue: '{{count}} ratings',
-          count: num(data.ratings?.countToday)
+          count: num(data.ratings?.countToday),
         }),
         notes: '',
-        calcInfo: 'Average of PUBLISHED product reviews created in today window'
+        calcInfo: 'Average of PUBLISHED product reviews created in today window',
       },
       {
         name: t('dashboard.metrics.lateStuckOrders', { defaultValue: 'Late/Stuck Orders' }),
         value: `${num(data.lateStuckOrders?.count)}${data.lateStuckOrders?.amount ? ` • ${money(data.lateStuckOrders?.amount)}` : ''}`,
         change: '—',
-        notes: data.lateStuckOrders?.thresholdDays ? t('dashboard.metrics.thresholdDays', {
-          defaultValue: '{{days}}d+',
-          days: data.lateStuckOrders.thresholdDays
-        }) : '',
-        calcInfo: 'Count and sum of orders with status = PENDING and createdAt before (todayStart - thresholdDays)'
+        notes: data.lateStuckOrders?.thresholdDays
+          ? t('dashboard.metrics.thresholdDays', {
+              defaultValue: '{{days}}d+',
+              days: data.lateStuckOrders.thresholdDays,
+            })
+          : '',
+        calcInfo:
+          'Count and sum of orders with status = PENDING and createdAt before (todayStart - thresholdDays)',
       },
       {
         name: t('dashboard.metrics.peakHour', { defaultValue: 'Peak Hour' }),
         value: `${safe(data.peakHour?.hourLabel, '—')}${data.peakHour?.amountToday ? ` • ${money(data.peakHour?.amountToday)}` : ''}`,
         change: '—',
         notes: '',
-        calcInfo: 'Among delivered orders today, bucket totals by deliveredAt hour; pick hour with max revenue'
+        calcInfo:
+          'Among delivered orders today, bucket totals by deliveredAt hour; pick hour with max revenue',
       },
       {
         name: t('dashboard.metrics.topTown', { defaultValue: 'Top Town' }),
         value: `${safe(data.topTown?.name, '—')}${data.topTown?.ordersToday ? ` • ${num(data.topTown?.ordersToday)} ${t('dashboard.metrics.orders', { defaultValue: 'orders' })}` : ''}`,
         change: '—',
         notes: '',
-        calcInfo: 'Among delivered orders today, group by shippingAddress.town; pick town with most orders and sum amount'
+        calcInfo:
+          'Among delivered orders today, group by shippingAddress.town; pick town with most orders and sum amount',
       },
 
       // Newly displayed: Returning customers (Today)
       {
-        name: t('dashboard.metrics.returningCustomersToday', { defaultValue: 'Returning Customers (Today)' }),
+        name: t('dashboard.metrics.returningCustomersToday', {
+          defaultValue: 'Returning Customers (Today)',
+        }),
         value: num(data.today?.returningCustomersCount ?? data.customers?.returningToday),
         change: '—',
         notes: '',
-        calcInfo: 'Count of customers with an order today who are not first-time (first order exists before today)'
+        calcInfo:
+          'Count of customers with an order today who are not first-time (first order exists before today)',
       },
       {
         name: t('dashboard.metrics.ordersYesterday', { defaultValue: 'Orders (Yesterday)' }),
         value: num(data.today?.ordersYesterdayCount),
         change: '—',
         notes: '',
-        calcInfo: 'Count of orders with createdAt in yesterday window'
+        calcInfo: 'Count of orders with createdAt in yesterday window',
       },
       {
         name: t('dashboard.metrics.deliveredYesterday', { defaultValue: 'Delivered (Yesterday)' }),
         value: num(data.today?.deliveredOrdersYesterdayCount),
         change: '—',
         notes: '',
-        calcInfo: 'Count of orders with status = DELIVERED and deliveredAt in yesterday window'
+        calcInfo: 'Count of orders with status = DELIVERED and deliveredAt in yesterday window',
       },
     ];
   }, [data, t, num, money, pctFromBps, safe]);
@@ -201,14 +219,20 @@ export default function DashboardPage(){
       <div className={styles.page}>
         <Flex justify="between" align="center" className="bts-marginBm">
           <div>
-            <Heading className="bts-marginBxs">{t('dashboard.title', { defaultValue: 'Dashboard' })}</Heading>
+            <Heading className="bts-marginBxs">
+              {t('dashboard.title', { defaultValue: 'Dashboard' })}
+            </Heading>
             <Heading level="h4" appearance="light">
               {t('dashboard.welcome', { defaultValue: 'Welcome back, Admin!' })}
             </Heading>
             {data?.meta && (
               <div className={styles.textWeak}>
-                {data?.meta?.timezone ? `${t('dashboard.meta.timezone', { defaultValue: 'Timezone' })}: ${data.meta.timezone}` : ''}
-                {data?.meta?.currentDate ? ` • ${t('dashboard.meta.currentDate', { defaultValue: 'Date' })}: ${data.meta.currentDate}` : ''}
+                {data?.meta?.timezone
+                  ? `${t('dashboard.meta.timezone', { defaultValue: 'Timezone' })}: ${data.meta.timezone}`
+                  : ''}
+                {data?.meta?.currentDate
+                  ? ` • ${t('dashboard.meta.currentDate', { defaultValue: 'Date' })}: ${data.meta.currentDate}`
+                  : ''}
               </div>
             )}
           </div>
@@ -224,7 +248,7 @@ export default function DashboardPage(){
           </Button>
         </Flex>
 
-        {isLoading && <BouncingDotsLoader className="bts-marginTxxl"/>}
+        {isLoading && <BouncingDotsLoader className="bts-marginTxxl" />}
 
         {!isLoading && data && (
           <>
@@ -248,7 +272,9 @@ export default function DashboardPage(){
                   <DashboardStatCard
                     tone="pink"
                     title={t('dashboard.revenueThisMonth', { defaultValue: 'Revenue (MTD)' })}
-                    tooltip={t('tooltips.dashboard.revenueThisMonth', { defaultValue: 'Revenue for current month' })}
+                    tooltip={t('tooltips.dashboard.revenueThisMonth', {
+                      defaultValue: 'Revenue for current month',
+                    })}
                     value={money(data.kpis?.revenueThisMonth)}
                     subValue={`${t('dashboard.momRevenueChange', { defaultValue: 'MoM' })}: ${pctFromBps(data.kpis?.revenueMoMChangeBps)}`}
                   />
@@ -256,7 +282,9 @@ export default function DashboardPage(){
                   <DashboardStatCard
                     tone="yellow"
                     title={t('dashboard.todayOrders', { defaultValue: 'Orders (Today)' })}
-                    tooltip={t('tooltips.dashboard.ordersToday', { defaultValue: 'Orders created today' })}
+                    tooltip={t('tooltips.dashboard.ordersToday', {
+                      defaultValue: 'Orders created today',
+                    })}
                     value={num(data.today?.ordersCount)}
                     subValue={`${t('dashboard.vsYesterday', { defaultValue: 'vs yesterday' })}: ${pctFromBps(data.today?.ordersChangeVsYesterdayBps)}`}
                   />
@@ -264,15 +292,21 @@ export default function DashboardPage(){
                   <DashboardStatCard
                     tone="green"
                     title={t('dashboard.deliveredToday', { defaultValue: 'Delivered (Today)' })}
-                    tooltip={t('tooltips.dashboard.deliveredToday', { defaultValue: 'Orders delivered today' })}
+                    tooltip={t('tooltips.dashboard.deliveredToday', {
+                      defaultValue: 'Orders delivered today',
+                    })}
                     value={num(data.today?.deliveredOrdersCount)}
                     subValue={`${t('dashboard.vsYesterday', { defaultValue: 'vs yesterday' })}: ${pctFromBps(data.today?.deliveredOrdersChangeBps)}`}
                   />
 
                   <DashboardStatCard
                     tone="purple"
-                    title={t('dashboard.newCustomersToday', { defaultValue: 'New customers (Today)' })}
-                    tooltip={t('tooltips.dashboard.newCustomersToday', { defaultValue: 'New customers acquired today' })}
+                    title={t('dashboard.newCustomersToday', {
+                      defaultValue: 'New customers (Today)',
+                    })}
+                    tooltip={t('tooltips.dashboard.newCustomersToday', {
+                      defaultValue: 'New customers acquired today',
+                    })}
                     value={num(data.customers?.newToday ?? data.today?.newCustomersCount)}
                   />
                 </div>
@@ -291,23 +325,38 @@ export default function DashboardPage(){
                             {r.calcInfo && (
                               <Tooltip
                                 content={
-                                  <div style={{ maxWidth: 200, whiteSpace: 'normal', wordBreak: 'break-word' }}>
+                                  <div
+                                    style={{
+                                      maxWidth: 200,
+                                      whiteSpace: 'normal',
+                                      wordBreak: 'break-word',
+                                    }}
+                                  >
                                     {r.calcInfo}
                                   </div>
                                 }
                                 position="top"
                               >
                                 <div>
-                                  <Icon icon={faCircleInfo} color="gray"/>
+                                  <Icon icon={faCircleInfo} color="gray" />
                                 </div>
                               </Tooltip>
                             )}
                           </Flex>
                         ),
                       },
-                      { header: t('dashboard.metrics.value', { defaultValue: 'Value' }), field: 'value' },
-                      { header: t('dashboard.metrics.change', { defaultValue: 'Change' }), field: 'change' },
-                      { header: t('dashboard.metrics.notes', { defaultValue: 'Notes' }), field: 'notes' },
+                      {
+                        header: t('dashboard.metrics.value', { defaultValue: 'Value' }),
+                        field: 'value',
+                      },
+                      {
+                        header: t('dashboard.metrics.change', { defaultValue: 'Change' }),
+                        field: 'change',
+                      },
+                      {
+                        header: t('dashboard.metrics.notes', { defaultValue: 'Notes' }),
+                        field: 'notes',
+                      },
                     ]}
                     value={metricsRows}
                   />
@@ -328,7 +377,9 @@ export default function DashboardPage(){
                     <Flex spacing="xs" direction="vertical">
                       <Flex align="center" spacing="s">
                         <strong>{t('dashboard.goals.dailyOrders')}</strong>
-                        <span className={styles.textWeak}>{pctFromBps(data.today?.ordersGoalProgressBps)}</span>
+                        <span className={styles.textWeak}>
+                          {pctFromBps(data.today?.ordersGoalProgressBps)}
+                        </span>
                       </Flex>
 
                       <ProgressBar
@@ -340,18 +391,24 @@ export default function DashboardPage(){
                         {data.today?.ordersGoalProgressBps == null
                           ? t('dashboard.goals.noGoal', { defaultValue: 'No goal configured' })
                           : t('dashboard.goals.progress', {
-                            defaultValue: '{{current}} / {{goal}}',
-                            current: num(data.today?.ordersCount),
-                            goal: t('dashboard.goals.goal', { defaultValue: 'goal' }),
-                          })}
+                              defaultValue: '{{current}} / {{goal}}',
+                              current: num(data.today?.ordersCount),
+                              goal: t('dashboard.goals.goal', { defaultValue: 'goal' }),
+                            })}
                       </div>
                     </Flex>
 
                     {/* Monthly */}
                     <Flex spacing="xs" direction="vertical">
                       <Flex align="center" spacing="s">
-                        <strong>{t('dashboard.goals.monthlyRevenue', { defaultValue: 'Monthly Revenue Goal' })}</strong>
-                        <span className={styles.textWeak}>{pctFromBps(data.monthly?.progressBps)}</span>
+                        <strong>
+                          {t('dashboard.goals.monthlyRevenue', {
+                            defaultValue: 'Monthly Revenue Goal',
+                          })}
+                        </strong>
+                        <span className={styles.textWeak}>
+                          {pctFromBps(data.monthly?.progressBps)}
+                        </span>
                       </Flex>
 
                       <ProgressBar
@@ -362,16 +419,17 @@ export default function DashboardPage(){
                       <div className={styles.textWeak}>
                         {data.monthly?.goal == null
                           ? t('dashboard.goals.monthlyNoGoal', {
-                            defaultValue: '{{sales}}',
-                            sales: money(data.monthly?.salesToDate)
-                          })
+                              defaultValue: '{{sales}}',
+                              sales: money(data.monthly?.salesToDate),
+                            })
                           : t('dashboard.goals.monthlyProgress', {
-                            defaultValue: '{{sales}} / {{goal}}',
-                            sales: money(data.monthly?.salesToDate),
-                            goal: money(data.monthly?.goal),
-                          })}
+                              defaultValue: '{{sales}} / {{goal}}',
+                              sales: money(data.monthly?.salesToDate),
+                              goal: money(data.monthly?.goal),
+                            })}
                         <span className="bts-marginLs">
-                          {t('dashboard.goals.remainingDays', { defaultValue: 'Remaining days:' })} {num(data.monthly?.remainingDaysInMonth)}
+                          {t('dashboard.goals.remainingDays', { defaultValue: 'Remaining days:' })}{' '}
+                          {num(data.monthly?.remainingDaysInMonth)}
                         </span>
                       </div>
                     </Flex>
@@ -380,7 +438,9 @@ export default function DashboardPage(){
                 <div className={styles.sectionBlock}>
                   <Table
                     stripedRows
-                    title={t('dashboard.topProducts.todayTitle', { defaultValue: 'Top Products (Today)' })}
+                    title={t('dashboard.topProducts.todayTitle', {
+                      defaultValue: 'Top Products (Today)',
+                    })}
                     columns={[
                       {
                         header: t('dashboard.table.product', { defaultValue: 'Product' }),
@@ -388,20 +448,23 @@ export default function DashboardPage(){
                         body: (r: any) => (
                           <Button
                             align="start"
-                            appearance="link" color="highlighted" withoutPadding
-                            onClick={() => navigate(`/product/${r.productId}`)}>
+                            appearance="link"
+                            color="highlighted"
+                            withoutPadding
+                            onClick={() => navigate(`/product/${r.productId}`)}
+                          >
                             {r.name}
                           </Button>
                         ),
                       },
                       {
                         header: t('dashboard.table.soldQty', { defaultValue: 'Sold Quantity' }),
-                        field: 'soldQuantity'
+                        field: 'soldQuantity',
                       },
                       {
                         header: t('dashboard.table.revenue', { defaultValue: 'Revenue' }),
                         field: 'amount',
-                        body: (r: any) => money(r.amount)
+                        body: (r: any) => money(r.amount),
                       },
                     ]}
                     value={(data.topProducts?.items ?? []).slice(0, 10)}

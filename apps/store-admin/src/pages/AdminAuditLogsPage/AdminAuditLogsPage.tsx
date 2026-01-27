@@ -46,7 +46,11 @@ const AdminAuditLogsPage: React.FC = () => {
       field: 'success',
       body: (r: any) => (
         <Chip
-          label={r.success ? t('common.success', { defaultValue: 'Success' }) : t('common.failed', { defaultValue: 'Failed' })}
+          label={
+            r.success
+              ? t('common.success', { defaultValue: 'Success' })
+              : t('common.failed', { defaultValue: 'Failed' })
+          }
           appearance={r.success ? 'success' : 'warning'}
         />
       ),
@@ -66,8 +70,7 @@ const AdminAuditLogsPage: React.FC = () => {
             setDetailId(r.id);
             setDetailOpen(true);
           }}
-        >
-        </Button>
+        ></Button>
       ),
     },
   ];
@@ -90,7 +93,7 @@ const AdminAuditLogsPage: React.FC = () => {
               value={entityIdInput}
               onChange={(v) => {
                 setEntityIdInput(v);
-                if(!v.trim()) {
+                if (!v.trim()) {
                   setPage(1);
                   setEntityIdFilter(undefined);
                   refetch();
@@ -121,7 +124,11 @@ const AdminAuditLogsPage: React.FC = () => {
           isLoading={isLoading}
           onPageChange={handlePageChange}
         />
-        <AdminAuditDetailDialog open={detailOpen} logId={detailId} onClose={() => setDetailOpen(false)}/>
+        <AdminAuditDetailDialog
+          open={detailOpen}
+          logId={detailId}
+          onClose={() => setDetailOpen(false)}
+        />
       </Flex>
     </AdminLayout>
   );

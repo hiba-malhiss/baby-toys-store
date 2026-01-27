@@ -4,7 +4,16 @@ import styles from './text.module.scss';
 
 type TextSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl';
 type TextWeight = 'light' | 'normal' | 'medium' | 'semibold' | 'bold';
-type TextColor = 'primary' | 'secondary' | 'muted' | 'error' | 'success' | 'warning' | 'info' | 'dark' | 'light';
+type TextColor =
+  | 'primary'
+  | 'secondary'
+  | 'muted'
+  | 'error'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'dark'
+  | 'light';
 type TextAlign = 'left' | 'center' | 'right' | 'justify';
 
 export interface TextProps {

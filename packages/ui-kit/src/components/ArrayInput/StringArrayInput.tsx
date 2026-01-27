@@ -15,23 +15,23 @@ interface StringArrayInputProps {
 }
 
 const StringArrayInput: React.FC<StringArrayInputProps> = ({
- value,
- onChange,
- placeholder,
- min = 0,
- addButtonText = 0,
- fullwidth,
- max,
- textarea = false,
- rows = 1,
+  value,
+  onChange,
+  placeholder,
+  min = 0,
+  addButtonText = 0,
+  fullwidth,
+  max,
+  textarea = false,
+  rows = 1,
 }) => {
   const handleAdd = () => {
-    if(typeof max === 'number' && value.length >= max) return;
+    if (typeof max === 'number' && value.length >= max) return;
     onChange([...value, '']);
   };
 
   const handleRemove = (index: number) => {
-    if(value.length > 1) {
+    if (value.length > 1) {
       const newValue = [...value];
       newValue.splice(index, 1);
       onChange(newValue);

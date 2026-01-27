@@ -43,14 +43,14 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
             iconSize === 'xxxlarge'
               ? IconSize.xxxlarge
               : iconSize === 'xxlarge'
-              ? IconSize.xxlarge
-              : iconSize === 'xlarge'
-              ? IconSize.xlarge
-              : iconSize === 'large'
-              ? IconSize.large
-              : iconSize === 'small'
-              ? IconSize.small
-              : IconSize.medium
+                ? IconSize.xxlarge
+                : iconSize === 'xlarge'
+                  ? IconSize.xlarge
+                  : iconSize === 'large'
+                    ? IconSize.large
+                    : iconSize === 'small'
+                      ? IconSize.small
+                      : IconSize.medium
           }
           color={IconColor.gray}
           className={styles.noDataFoundIcon}

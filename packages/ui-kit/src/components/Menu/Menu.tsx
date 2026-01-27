@@ -25,7 +25,12 @@ interface PanelMenuProps {
   autoOverflow?: boolean;
 }
 
-const Menu: React.FC<PanelMenuProps> = ({ spacing, model, multiple = false, autoOverflow = false }) => {
+const Menu: React.FC<PanelMenuProps> = ({
+  spacing,
+  model,
+  multiple = false,
+  autoOverflow = false,
+}) => {
   const location = useLocation();
   const navigate = useNavigate();
 

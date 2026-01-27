@@ -33,7 +33,10 @@ export const useUpdateBrand = () => {
 
   return useMutation<number, AxiosError, { id: number } & BrandUpsertRequest>({
     mutationFn: async ({ id, ...payload }) => {
-      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/brands/${id}`, payload);
+      const response = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/brands/${id}`,
+        payload
+      );
       return response.data.data.id;
     },
     onSuccess: (_, variables) => {

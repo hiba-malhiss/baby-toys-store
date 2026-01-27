@@ -61,7 +61,13 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
-            <FormFieldWrapper name="email" control={control} label={t('auth.dialogs.forgot.emailLabel')} required fullWidth>
+            <FormFieldWrapper
+              name="email"
+              control={control}
+              label={t('auth.dialogs.forgot.emailLabel')}
+              required
+              fullWidth
+            >
               <StringInput
                 type="email"
                 placeholder={t('auth.dialogs.forgot.emailPlaceholder')}

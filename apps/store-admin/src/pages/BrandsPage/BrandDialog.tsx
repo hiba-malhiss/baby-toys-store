@@ -146,7 +146,10 @@ const BrandDialog: React.FC<BrandDialogProps> = ({ visible, onHide, onSuccess, b
         <TabBar
           fullWidth
           size="small"
-          tabs={getSupportedLocales().map((l) => ({ header: `${l.toUpperCase()} (${l})`, value: l }))}
+          tabs={getSupportedLocales().map((l) => ({
+            header: `${l.toUpperCase()} (${l})`,
+            value: l,
+          }))}
           defaultSelected={getSupportedLocales()[0]}
         >
           {getSupportedLocales().map((l) => (

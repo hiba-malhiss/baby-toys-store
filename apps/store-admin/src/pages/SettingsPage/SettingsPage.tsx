@@ -86,12 +86,8 @@ const SettingsPage: React.FC = () => {
     resolver: zodResolver(settingsSchema(locales)),
     defaultValues: {
       general: emptyGeneral,
-      contact: Object.fromEntries(
-        locales.map((l) => [l, emptyContact])
-      ) as any,
-      policies: Object.fromEntries(
-        locales.map((l) => [l, emptyPolicies])
-      ) as any,
+      contact: Object.fromEntries(locales.map((l) => [l, emptyContact])) as any,
+      policies: Object.fromEntries(locales.map((l) => [l, emptyPolicies])) as any,
       policiesGlobal: emptyPoliciesGlobal,
     },
   });
@@ -101,14 +97,16 @@ const SettingsPage: React.FC = () => {
   const [activePoliciesTab, setActivePoliciesTab] = useState(locales[0]);
 
   useEffect(() => {
-    if(!settingsMap) return;
+    if (!settingsMap) return;
     const localeKeys = Object.keys(settingsMap);
     const base = localeKeys.length > 0 ? settingsMap[localeKeys[0]] : undefined;
 
     reset({
       general: base?.general ?? emptyGeneral,
       contact: Object.fromEntries(locales.map((l) => [l, settingsMap[l]?.contact ?? emptyContact])),
-      policies: Object.fromEntries(locales.map((l) => [l, settingsMap[l]?.policies ?? emptyPolicies])),
+      policies: Object.fromEntries(
+        locales.map((l) => [l, settingsMap[l]?.policies ?? emptyPolicies])
+      ),
       policiesGlobal: base?.policies ?? emptyPoliciesGlobal,
     });
   }, [settingsMap, reset, locales]);
@@ -120,7 +118,7 @@ const SettingsPage: React.FC = () => {
     clearErrors('policiesGlobal');
   };
 
-  const onSubmit = async(values: SettingsFormValues) => {
+  const onSubmit = async (values: SettingsFormValues) => {
     const payload: StoreSettingUpdateItem[] = [
       ...Object.entries(values.general).map(([key, value]) => ({
         section: 'GENERAL',
@@ -156,7 +154,7 @@ const SettingsPage: React.FC = () => {
     try {
       await upsertMutation.mutateAsync(payload);
       toast.success('Store settings updated');
-    } catch(e: any) {
+    } catch (e: any) {
       toast.error(e?.response?.data?.message || 'Failed to update settings');
     }
   };
@@ -179,23 +177,25 @@ const SettingsPage: React.FC = () => {
                   'priceRangeMax',
                   'dailyOrdersGoal',
                   'monthlyRevenueGoal',
-                ].map(
-                  (field) => (
-                    <FormFieldWrapper
-                      key={field}
-                      control={control}
-                      name={`general.${field}`}
-                      label={field.replace(/([A-Z])/g, ' $1')}
-                      required
-                      fullWidth
-                    >
-                      <StringInput
-                        placeholder={field}
-                        type={field.includes('price') || field.toLowerCase().includes('goal') ? 'number' : 'text'}
-                      />
-                    </FormFieldWrapper>
-                  )
-                )}
+                ].map((field) => (
+                  <FormFieldWrapper
+                    key={field}
+                    control={control}
+                    name={`general.${field}`}
+                    label={field.replace(/([A-Z])/g, ' $1')}
+                    required
+                    fullWidth
+                  >
+                    <StringInput
+                      placeholder={field}
+                      type={
+                        field.includes('price') || field.toLowerCase().includes('goal')
+                          ? 'number'
+                          : 'text'
+                      }
+                    />
+                  </FormFieldWrapper>
+                ))}
               </Flex>
             </Accordion>
 
@@ -220,7 +220,7 @@ const SettingsPage: React.FC = () => {
                           required
                           fullWidth
                         >
-                          {key === 'address' ? <TextArea rows={3}/> : <StringInput/>}
+                          {key === 'address' ? <TextArea rows={3} /> : <StringInput />}
                         </FormFieldWrapper>
                       ))}
                     </Flex>
@@ -250,7 +250,7 @@ const SettingsPage: React.FC = () => {
                           required
                           fullWidth
                         >
-                          <TextArea rows={4}/>
+                          <TextArea rows={4} />
                         </FormFieldWrapper>
                       ))}
                     </Flex>
@@ -273,7 +273,7 @@ const SettingsPage: React.FC = () => {
                     label="Minimum Subtotal"
                     fullWidth
                   >
-                    <StringInput placeholder="50.00" type="number"/>
+                    <StringInput placeholder="50.00" type="number" />
                   </FormFieldWrapper>
                   <Button type="button" appearance="outline" onClick={handleResetFreeShipping}>
                     Clear
@@ -287,7 +287,7 @@ const SettingsPage: React.FC = () => {
                     label="Starts At"
                     fullWidth
                   >
-                    <CalendarFieldAdapter/>
+                    <CalendarFieldAdapter />
                   </FormFieldWrapper>
 
                   <FormFieldWrapper
@@ -296,7 +296,7 @@ const SettingsPage: React.FC = () => {
                     label="Ends At"
                     fullWidth
                   >
-                    <CalendarFieldAdapter/>
+                    <CalendarFieldAdapter />
                   </FormFieldWrapper>
                 </Flex>
               </Flex>

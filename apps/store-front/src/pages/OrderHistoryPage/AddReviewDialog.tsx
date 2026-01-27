@@ -31,7 +31,10 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
   const isEdit = !!item?.canEditReview && !!item?.reviewId;
 
   const schema = z.object({
-    rating: z.number({ message: t('reviews.dialog.rating') as string }).min(1).max(5),
+    rating: z
+      .number({ message: t('reviews.dialog.rating') as string })
+      .min(1)
+      .max(5),
     comment: z.string().trim().min(1, 'Comment too short').max(500),
   });
   type FormValues = z.infer<typeof schema>;
@@ -110,11 +113,22 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
           </Heading>
         </Flex>
 
-        <FormFieldWrapper control={control} name="rating" label={t('reviews.dialog.rating')} required fullWidth>
+        <FormFieldWrapper
+          control={control}
+          name="rating"
+          label={t('reviews.dialog.rating')}
+          required
+          fullWidth
+        >
           <Rating size="xlarge" />
         </FormFieldWrapper>
 
-        <FormFieldWrapper control={control} name="comment" label={t('reviews.dialog.comment')} fullWidth>
+        <FormFieldWrapper
+          control={control}
+          name="comment"
+          label={t('reviews.dialog.comment')}
+          fullWidth
+        >
           <TextArea fullWidth placeholder={t('reviews.dialog.commentPlaceholder')} />
         </FormFieldWrapper>
 

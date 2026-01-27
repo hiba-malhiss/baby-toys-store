@@ -31,18 +31,18 @@ const LoginPage: React.FC = () => {
     defaultValues: { email: '', password: '' },
   });
 
-  const onSubmit = async(data: LoginFormData) => {
+  const onSubmit = async (data: LoginFormData) => {
     try {
       const response = await loginMutation.mutateAsync(data);
       // Backend must enforce role security
-      if(!response?.role || response?.role !== USER_ROLE.ADMIN) {
+      if (!response?.role || response?.role !== USER_ROLE.ADMIN) {
         toast.error('Access denied. Admin privileges required.');
         await logoutMutation.mutateAsync(); // clean cookies
         return;
       }
       setAccessToken(response.accessToken);
       toast.success(response.message || 'Login successful!');
-    } catch(error: any) {
+    } catch (error: any) {
       // Better error handling for network/backend errors
       const message =
         error.response?.data?.message ||
@@ -55,8 +55,8 @@ const LoginPage: React.FC = () => {
   const isSubmitting = formState.isSubmitting || loginMutation.isPending || isInitializing;
 
   useEffect(() => {
-    console.log(user)
-    if(user?.role === USER_ROLE.ADMIN) {
+    console.log(user);
+    if (user?.role === USER_ROLE.ADMIN) {
       setTimeout(() => navigate('/dashboard', { replace: true }), 200);
     }
   }, [user?.role, navigate]);
@@ -65,7 +65,7 @@ const LoginPage: React.FC = () => {
     <div className={styles.loginPage}>
       <Card className={styles.loginPageCard}>
         <Flex direction="vertical" spacing="m" className={styles.loginPageContainer}>
-          <img src="/assets/kit-images/logo.png" alt="logo" className={styles.loginPageLogo}/>
+          <img src="/assets/kit-images/logo.png" alt="logo" className={styles.loginPageLogo} />
           <Heading tag="h1" align="center">
             Admin Login
           </Heading>

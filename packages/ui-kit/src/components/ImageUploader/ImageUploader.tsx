@@ -180,7 +180,13 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         onDrop={handleDrop}
         onClick={() => !isDisabled && fileInputRef.current?.click()}
       >
-        <Button type="button" color="secondary-light" className={styles.uploadButton} isDisabled={isDisabled} isLoading={isLoading}>
+        <Button
+          type="button"
+          color="secondary-light"
+          className={styles.uploadButton}
+          isDisabled={isDisabled}
+          isLoading={isLoading}
+        >
           Upload {multiple ? 'Images' : 'Image'}
         </Button>
 

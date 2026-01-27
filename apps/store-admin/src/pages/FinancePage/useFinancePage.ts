@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { getMonthlyFinance, type MonthlyFinance } from '../../api/financeApi';
 
-export function useFinancePage(){
+export function useFinancePage() {
   const [year, setYear] = useState<number>(new Date().getFullYear());
 
   const { data, isLoading, refetch } = useQuery<MonthlyFinance[]>({

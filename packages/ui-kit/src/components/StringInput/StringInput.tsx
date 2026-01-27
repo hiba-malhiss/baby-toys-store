@@ -90,17 +90,17 @@ const StringInput: React.FC<StringInputProps> = ({
   getSuggestions,
   onSuggestionSelected,
   suggestionsDebounceMs = 250,
-  }) => {
+}) => {
   const isControlled = value !== undefined && onChange !== undefined;
   const [internalValue, setInternalValue] = useState<string>(() => {
-    if(!isControlled) return value !== undefined && value !== null ? String(value) : '';
+    if (!isControlled) return value !== undefined && value !== null ? String(value) : '';
     return '';
   });
 
   useEffect(() => {
-    if(!isControlled) {
+    if (!isControlled) {
       const valStr = value !== undefined && value !== null ? String(value) : '';
-      if(valStr !== internalValue) setInternalValue(valStr);
+      if (valStr !== internalValue) setInternalValue(valStr);
     }
   }, [value, isControlled]);
 
@@ -116,19 +116,19 @@ const StringInput: React.FC<StringInputProps> = ({
   const resolvedIconPosition: IconPosition = iconRight ? 'right' : iconPosition;
 
   const handleChange = (newVal: string, byControls = false) => {
-    if(!isControlled) setInternalValue(newVal);
+    if (!isControlled) setInternalValue(newVal);
 
-    if(type === 'number') {
+    if (type === 'number') {
       const trimmed = newVal.trim();
-      if(!trimmed) {
+      if (!trimmed) {
         onChange?.(null as any, byControls);
         return;
       }
       const parsed = parseFloat(trimmed);
-      if(!isNaN(parsed)) {
+      if (!isNaN(parsed)) {
         onChange?.(parsed as any, byControls);
         const maxVal = max !== undefined ? parseFloat(String(max)) : undefined;
-        if(parsed && maxVal !== undefined && parsed >= maxVal && maxTooltip) {
+        if (parsed && maxVal !== undefined && parsed >= maxVal && maxTooltip) {
           setShowMaxTooltip(true);
           setTimeout(() => setShowMaxTooltip(false), 1500);
         }
@@ -139,17 +139,17 @@ const StringInput: React.FC<StringInputProps> = ({
       onChange?.(newVal as any, byControls);
     }
 
-    if(autoCompleteEnabled && type !== 'number') {
+    if (autoCompleteEnabled && type !== 'number') {
       const trimmed = newVal.trim();
-      if(!trimmed) {
+      if (!trimmed) {
         setSuggestions([]);
         setActiveIndex(-1);
         setOpen(false);
         return;
       }
-      if(getSuggestions) {
+      if (getSuggestions) {
         window.clearTimeout(debounceRef.current);
-        debounceRef.current = window.setTimeout(async() => {
+        debounceRef.current = window.setTimeout(async () => {
           try {
             setLoading(true);
             const items = await getSuggestions(trimmed);
@@ -168,34 +168,36 @@ const StringInput: React.FC<StringInputProps> = ({
   };
 
   const handleStep = (step: number) => {
-    if(isDisabled) return;
+    if (isDisabled) return;
     const currentValue = isControlled ? String(value ?? '') : internalValue;
     const current = parseFloat(currentValue || String(min ?? '0'));
     const next = current + step;
     const minVal = min !== undefined ? parseFloat(String(min)) : undefined;
     const maxVal = max !== undefined ? parseFloat(String(max)) : undefined;
-    if(minVal !== undefined && next < minVal) return;
-    if(maxVal !== undefined && next > maxVal) return;
+    if (minVal !== undefined && next < minVal) return;
+    if (maxVal !== undefined && next > maxVal) return;
     handleChange(next.toString(), true);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     onKeyDown?.(e);
-    if(!autoCompleteEnabled || !open) return;
+    if (!autoCompleteEnabled || !open) return;
 
-    if(e.key === 'ArrowDown') {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
       setActiveIndex((prev) => (suggestions.length === 0 ? -1 : (prev + 1) % suggestions.length));
-    } else if(e.key === 'ArrowUp') {
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
-      setActiveIndex((prev) => (suggestions.length === 0 ? -1 : (prev - 1 + suggestions.length) % suggestions.length));
-    } else if(e.key === 'Enter') {
-      if(activeIndex >= 0 && activeIndex < suggestions.length) {
+      setActiveIndex((prev) =>
+        suggestions.length === 0 ? -1 : (prev - 1 + suggestions.length) % suggestions.length
+      );
+    } else if (e.key === 'Enter') {
+      if (activeIndex >= 0 && activeIndex < suggestions.length) {
         const item = suggestions[activeIndex];
         onSuggestionSelected?.(item);
         setOpen(false);
       }
-    } else if(e.key === 'Escape') {
+    } else if (e.key === 'Escape') {
       setOpen(false);
     }
   };
@@ -208,32 +210,51 @@ const StringInput: React.FC<StringInputProps> = ({
     {
       [styles.stringWithControls]: withControls,
       [styles.stringInputFullWidth]: fullWidth,
-      [styles.stringInputWithControls]: type === 'number' && withControls
+      [styles.stringInputWithControls]: type === 'number' && withControls,
     }
   );
   const resolvedDisabled = !!isDisabled;
-  const inputClass = clsx(styles.input, styles[`input--${size}Size`], styles[`${size}Size-${resolvedIconPosition}Icon`], {
-    [styles.isDisabled]: resolvedDisabled,
-    [styles.hasIcon]: resolvedIcon,
-    [styles.hasError]: !!hasError
-  });
+  const inputClass = clsx(
+    styles.input,
+    styles[`input--${size}Size`],
+    styles[`${size}Size-${resolvedIconPosition}Icon`],
+    {
+      [styles.isDisabled]: resolvedDisabled,
+      [styles.hasIcon]: resolvedIcon,
+      [styles.hasError]: !!hasError,
+    }
+  );
   const currentStr = isControlled ? String(value ?? '') : internalValue;
   const currentLen = currentStr?.length ?? 0;
 
   const highlightMatch = useCallback((label: string, query: string) => {
     const regex = new RegExp(`(${query})`, 'gi');
-    return label.split(regex).map((part, i) => (regex.test(part) ? <strong key={i}>{part}</strong> : part));
+    return label
+      .split(regex)
+      .map((part, i) => (regex.test(part) ? <strong key={i}>{part}</strong> : part));
   }, []);
 
   return (
-    <div ref={anchorRef} className={clsx(className, fullWidth && styles.fullWidth)} onClick={onClick}>
+    <div
+      ref={anchorRef}
+      className={clsx(className, fullWidth && styles.fullWidth)}
+      onClick={onClick}
+    >
       <div className={containerClass}>
         {type === 'number' && withControls && (
-          <Button appearance="link" color="primary" size={size} onClick={(e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            handleStep(-1);
-          }} leftIcon={faMinus} isDisabled={resolvedDisabled} className={styles.stringInputDecreaseControl}/>
+          <Button
+            appearance="link"
+            color="primary"
+            size={size}
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              handleStep(-1);
+            }}
+            leftIcon={faMinus}
+            isDisabled={resolvedDisabled}
+            className={styles.stringInputDecreaseControl}
+          />
         )}
 
         <input
@@ -257,30 +278,58 @@ const StringInput: React.FC<StringInputProps> = ({
 
         {type === 'number' && withControls && (
           <Tooltip content={maxTooltip} position="top" mode="manual" open={showMaxTooltip}>
-            <Button appearance="link" color="primary" size={size} onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              handleStep(1);
-            }} leftIcon={faPlus} isDisabled={resolvedDisabled} className={styles.stringInputIncreaseControl}/>
+            <Button
+              appearance="link"
+              color="primary"
+              size={size}
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleStep(1);
+              }}
+              leftIcon={faPlus}
+              isDisabled={resolvedDisabled}
+              className={styles.stringInputIncreaseControl}
+            />
           </Tooltip>
         )}
 
         {resolvedIcon && (
           <div
-            className={clsx(styles.icon, withIconBackground && styles.iconButton, withIconBackground && styles[`iconButton--${size}Size`])}
+            className={clsx(
+              styles.icon,
+              withIconBackground && styles.iconButton,
+              withIconBackground && styles[`iconButton--${size}Size`]
+            )}
             onClick={(e) => {
-              if(isDisabled) return;
+              if (isDisabled) return;
               onIconClick?.(e);
             }}
-            role={onIconClick ? 'button' : undefined} aria-disabled={isDisabled}>
-            <Icon icon={resolvedIcon} className={clsx(styles.icon)} color={iconColor}
-                  size={size === 'small' ? IconSize.small : size === 'large' ? IconSize.large : IconSize.medium}/>
+            role={onIconClick ? 'button' : undefined}
+            aria-disabled={isDisabled}
+          >
+            <Icon
+              icon={resolvedIcon}
+              className={clsx(styles.icon)}
+              color={iconColor}
+              size={
+                size === 'small'
+                  ? IconSize.small
+                  : size === 'large'
+                    ? IconSize.large
+                    : IconSize.medium
+              }
+            />
           </div>
         )}
       </div>
 
-      {showCounter && <div
-        className={styles.stringInputCounter}>{currentLen}{typeof maxLength === 'number' ? ` / ${maxLength}` : ''}</div>}
+      {showCounter && (
+        <div className={styles.stringInputCounter}>
+          {currentLen}
+          {typeof maxLength === 'number' ? ` / ${maxLength}` : ''}
+        </div>
+      )}
 
       {autoCompleteEnabled && (
         <Popover
@@ -293,20 +342,26 @@ const StringInput: React.FC<StringInputProps> = ({
         >
           <div className={styles.suggestions} role="listbox" aria-label="Suggestions">
             {loading && <div className={styles.suggestionItem}>Loading...</div>}
-            {!loading && suggestions.length === 0 && <div className={styles.suggestionItem}>No results</div>}
-            {!loading && suggestions.map((item, idx) => (
-              <button
-                type="button"
-                key={`${item.id}-${item.label}`}
-                className={clsx(styles.suggestionItem, idx === activeIndex && styles.suggestionItemActive)}
-                onClick={() => {
-                  onSuggestionSelected?.(item);
-                  setOpen(false);
-                }}
-              >
-                {highlightMatch(item.label, currentStr)}
-              </button>
-            ))}
+            {!loading && suggestions.length === 0 && (
+              <div className={styles.suggestionItem}>No results</div>
+            )}
+            {!loading &&
+              suggestions.map((item, idx) => (
+                <button
+                  type="button"
+                  key={`${item.id}-${item.label}`}
+                  className={clsx(
+                    styles.suggestionItem,
+                    idx === activeIndex && styles.suggestionItemActive
+                  )}
+                  onClick={() => {
+                    onSuggestionSelected?.(item);
+                    setOpen(false);
+                  }}
+                >
+                  {highlightMatch(item.label, currentStr)}
+                </button>
+              ))}
           </div>
         </Popover>
       )}
@@ -314,4 +369,4 @@ const StringInput: React.FC<StringInputProps> = ({
   );
 };
 
-export default StringInput
+export default StringInput;

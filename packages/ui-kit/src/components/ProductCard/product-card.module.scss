@@ -4,8 +4,9 @@
   grid-template-columns: 1fr;
   gap: 18px;
   width: 100%;
-  transition: $transition-transform,
-  box-shadow $transition-normal;
+  transition:
+    $transition-transform,
+    box-shadow $transition-normal;
 
   @include animate-fade-in-up();
 

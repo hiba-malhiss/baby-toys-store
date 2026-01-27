@@ -32,7 +32,7 @@ const ProductAnalyticsPage: React.FC = () => {
       header: 'Month',
       field: 'month',
       sortable: true,
-      body: (r: ProductAnalyticsRow) => String(r.month).padStart(2, '0')
+      body: (r: ProductAnalyticsRow) => String(r.month).padStart(2, '0'),
     },
     { header: 'Views', field: 'viewsCount', sortable: true },
     { header: 'Wishlists', field: 'wishlistCount', sortable: true },
@@ -46,7 +46,7 @@ const ProductAnalyticsPage: React.FC = () => {
             position="top"
           >
             <span>
-              <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }}/>
+              <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }} />
             </span>
           </Tooltip>
         </span>
@@ -62,7 +62,9 @@ const ProductAnalyticsPage: React.FC = () => {
         <Flex justify="between" align="center" fullWidth>
           <Flex direction="vertical" spacing="s">
             <Heading>Product Analytics</Heading>
-            <Heading level="h4" appearance="light">Monthly counters for views, wishlists, and add-to-cart.</Heading>
+            <Heading level="h4" appearance="light">
+              Monthly counters for views, wishlists, and add-to-cart.
+            </Heading>
           </Flex>
           <Flex spacing="s" align="center">
             <StringInput
@@ -74,8 +76,10 @@ const ProductAnalyticsPage: React.FC = () => {
               value={moment(from + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if(!d) return;
-                const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
+                if (!d) return;
+                const ym = (d as any).format
+                  ? (d as any).format('YYYY-MM')
+                  : moment(d).format('YYYY-MM');
                 setFrom(ym);
               }}
               selectionMode="single"
@@ -85,8 +89,10 @@ const ProductAnalyticsPage: React.FC = () => {
               value={moment(to + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if(!d) return;
-                const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
+                if (!d) return;
+                const ym = (d as any).format
+                  ? (d as any).format('YYYY-MM')
+                  : moment(d).format('YYYY-MM');
                 setTo(ym);
               }}
               selectionMode="single"

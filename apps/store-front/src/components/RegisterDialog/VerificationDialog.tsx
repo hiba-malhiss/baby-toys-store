@@ -21,11 +21,7 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
   const base = `auth.dialogs.verification.${variant}` as const;
 
   return (
-    <Dialog
-      visible={visible}
-      onHide={onClose}
-      header={t(`${base}.title`)}
-    >
+    <Dialog visible={visible} onHide={onClose} header={t(`${base}.title`)}>
       <div className={styles.content}>
         <Icon icon={faCheckCircle} color={IconColor.success} size={IconSize.xxlarge} />
         <p className={styles.successText}>{t(`${base}.heading`)}</p>

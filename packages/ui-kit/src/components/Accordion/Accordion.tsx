@@ -3,7 +3,7 @@ import styles from './accordion.module.scss';
 import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
 import Button, { type ButtonAppearance, type ButtonColor } from '../Button/Button.tsx';
-import { Heading } from "../index.ts";
+import { Heading } from '../index.ts';
 
 interface AccordionProps {
   header: ReactNode;
@@ -38,15 +38,13 @@ const Accordion: React.FC<AccordionProps> = ({
   unstyled,
 }) => {
   // If controlled, use controlledIsOpen, else manage local open state
-  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(
-    defaultOpen || isOpenByDefault
-  );
+  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(defaultOpen || isOpenByDefault);
   const isControlled = controlledIsOpen !== undefined;
   const isOpen = isControlled ? controlledIsOpen : uncontrolledIsOpen;
 
   const handleToggle = () => {
-    if(disabled) return;
-    if(isControlled) {
+    if (disabled) return;
+    if (isControlled) {
       onToggle && onToggle();
     } else {
       setUncontrolledIsOpen((open) => !open);

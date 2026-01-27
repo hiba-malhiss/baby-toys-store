@@ -2,7 +2,15 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
 import clsx from 'clsx';
-import { Drawer, Divider, Flex, Button, NoDataFound, BouncingDotsLoader, Alert } from '@baby-toys/ui-kit';
+import {
+  Drawer,
+  Divider,
+  Flex,
+  Button,
+  NoDataFound,
+  BouncingDotsLoader,
+  Alert,
+} from '@baby-toys/ui-kit';
 import styles from './shopping-cart-drawer.module.scss';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
@@ -42,11 +50,15 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
     handleClose();
   };
 
-  if(isPending) {
+  if (isPending) {
     return (
-      <Drawer visible={isOpen} header={t('cart.orderSummary', { defaultValue: 'Order Summary' })} position="right"
-              onClose={handleClose}>
-        <BouncingDotsLoader/>
+      <Drawer
+        visible={isOpen}
+        header={t('cart.orderSummary', { defaultValue: 'Order Summary' })}
+        position="right"
+        onClose={handleClose}
+      >
+        <BouncingDotsLoader />
       </Drawer>
     );
   }
@@ -101,12 +113,17 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
       <Flex direction="vertical" spacing="l" fullWidth className={styles.drawerContent}>
         {hasOOS && (
           <Alert appearance="warning">
-            {t('cart.removeOOSGlobal', { defaultValue: 'Some items are out of stock. Remove them to continue to checkout.' })}
+            {t('cart.removeOOSGlobal', {
+              defaultValue: 'Some items are out of stock. Remove them to continue to checkout.',
+            })}
           </Alert>
         )}
         {hasOverAllocated && (
           <Alert appearance="warning">
-            {t('cart.reduceQtyGlobal', { defaultValue: 'Some items exceed available stock. Please reduce quantities to proceed.' })}
+            {t('cart.reduceQtyGlobal', {
+              defaultValue:
+                'Some items exceed available stock. Please reduce quantities to proceed.',
+            })}
           </Alert>
         )}
         {(cart?.items || []).map((item, index) => (
@@ -120,15 +137,15 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               quantityInStock={item.availableStock}
               quantity={item.quantity}
             />
-            {index < (cart?.items?.length || 0) - 1 && <Divider/>}
+            {index < (cart?.items?.length || 0) - 1 && <Divider />}
           </React.Fragment>
         ))}
         {(cart?.items?.length || 0) === 0 && (
-          <NoDataFound withoutPadding icon={faShoppingCart} message={t('cart.empty')}/>
+          <NoDataFound withoutPadding icon={faShoppingCart} message={t('cart.empty')} />
         )}
         {(isCartSyncing || isAddCartSyncing) && (
           <div className={styles.drawerOverlay}>
-            <BouncingDotsLoader/>
+            <BouncingDotsLoader />
           </div>
         )}
       </Flex>

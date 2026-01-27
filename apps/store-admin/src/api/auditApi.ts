@@ -28,7 +28,9 @@ export interface UseAdminAuditLogsParams {
   entityId?: string;
 }
 
-function toUpper(val?: string) { return val ? val.toUpperCase() : val; }
+function toUpper(val?: string) {
+  return val ? val.toUpperCase() : val;
+}
 
 export const useAdminAuditLogs = (params?: UseAdminAuditLogsParams) =>
   useQuery<Page<AdminAuditLog>>({
@@ -60,7 +62,9 @@ export const useAdminAuditLog = (id?: number) =>
     queryKey: ['admin-audit-log', id],
     enabled: !!id,
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<AdminAuditLogDetail>>(`/api/admin/audit-logs/${id}`);
+      const { data } = await api.get<ApiEnvelope<AdminAuditLogDetail>>(
+        `/api/admin/audit-logs/${id}`
+      );
       return data.data;
     },
   });

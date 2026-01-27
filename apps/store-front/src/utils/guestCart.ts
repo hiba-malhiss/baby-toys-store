@@ -1,6 +1,6 @@
 /**
  * Guest Cart Token Management
- * 
+ *
  * Simple localStorage utilities for guest cart tokens.
  * Token fetching is now handled by React Query in guestTokenApi.ts
  */

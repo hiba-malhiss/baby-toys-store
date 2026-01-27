@@ -17,7 +17,16 @@ export function useMyWishlist(
   const { isAuthenticated } = useAuth();
   const zeroBased = Math.max(0, (page || 1) - 1);
   return useQuery<{ items: UiProduct[]; page: number; totalPages: number; totalItems: number }>({
-    queryKey: ['myWishlist', isAuthenticated, zeroBased, size, sortBy, sortDirection, categoryId ?? null, stock],
+    queryKey: [
+      'myWishlist',
+      isAuthenticated,
+      zeroBased,
+      size,
+      sortBy,
+      sortDirection,
+      categoryId ?? null,
+      stock,
+    ],
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<Page<Product>>>('/api/customer/wishlist', {
         params: {

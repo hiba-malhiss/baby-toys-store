@@ -40,7 +40,7 @@
   &-cartItemName {
     font-weight: 600;
     max-width: 600px;
-    @include line-clamp(2)
+    @include line-clamp(2);
   }
 
   &-cartItemQuantity {

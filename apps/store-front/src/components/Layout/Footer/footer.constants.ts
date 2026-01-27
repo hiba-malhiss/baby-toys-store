@@ -8,10 +8,7 @@ export const exploreLinks = [
   { label: 'Shipping Policy', path: '/policies?section=shippingPolicy' },
 ];
 
-export const socialMediaLinks = [
-  { icon: faFacebookF },
-  { icon: faWhatsapp },
-];
+export const socialMediaLinks = [{ icon: faFacebookF }, { icon: faWhatsapp }];
 
 // UI config for each ID
 export const footerInfoConfig: Record<

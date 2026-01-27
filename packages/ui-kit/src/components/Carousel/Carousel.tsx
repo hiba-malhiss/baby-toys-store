@@ -177,7 +177,8 @@ const Carousel: React.FC<CarouselProps> = ({
           isRounded
           leftIcon={ChevronIcons[orientation].prev}
           isDisabled={
-            !circular && (isHorizontal && isRtl ? currentPage === totalPages - 1 : currentPage === 0)
+            !circular &&
+            (isHorizontal && isRtl ? currentPage === totalPages - 1 : currentPage === 0)
           }
         />
       )}
@@ -214,7 +215,8 @@ const Carousel: React.FC<CarouselProps> = ({
           size="large"
           leftIcon={ChevronIcons[orientation].next}
           isDisabled={
-            !circular && (isHorizontal && isRtl ? currentPage === 0 : currentPage === totalPages - 1)
+            !circular &&
+            (isHorizontal && isRtl ? currentPage === 0 : currentPage === totalPages - 1)
           }
         />
       )}

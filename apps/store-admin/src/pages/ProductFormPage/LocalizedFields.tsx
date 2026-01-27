@@ -1,6 +1,12 @@
 import React from 'react';
 import { Control } from 'react-hook-form';
-import { Flex, StringInput, TextArea, StringArrayInput, KeyValueArrayInput } from '@baby-toys/ui-kit';
+import {
+  Flex,
+  StringInput,
+  TextArea,
+  StringArrayInput,
+  KeyValueArrayInput,
+} from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { useTranslation } from 'react-i18next';
 
@@ -24,7 +30,10 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
         fullWidth
         required
       >
-        <StringInput placeholder={t('productForm.placeholders.productName')} isDisabled={!!isDisabled} />
+        <StringInput
+          placeholder={t('productForm.placeholders.productName')}
+          isDisabled={!!isDisabled}
+        />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -34,7 +43,10 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
         fullWidth
         required
       >
-        <TextArea placeholder={t('productForm.placeholders.shortDescription')} isDisabled={!!isDisabled} />
+        <TextArea
+          placeholder={t('productForm.placeholders.shortDescription')}
+          isDisabled={!!isDisabled}
+        />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -43,7 +55,10 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
         label={t('productForm.description', { locale: labelSuffix })}
         fullWidth
       >
-        <TextArea placeholder={t('productForm.placeholders.description')} isDisabled={!!isDisabled} />
+        <TextArea
+          placeholder={t('productForm.placeholders.description')}
+          isDisabled={!!isDisabled}
+        />
       </FormFieldWrapper>
 
       <FormFieldWrapper

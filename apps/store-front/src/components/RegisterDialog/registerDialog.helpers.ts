@@ -2,31 +2,39 @@ import { z } from 'zod';
 import type { RegisterRequest } from '../../api/authApi.ts';
 
 export const registerSchema = z.object({
-  email: z.string()
-    .nonempty('Email is required')
-    .email(),
+  email: z.string().nonempty('Email is required').email(),
 
-  password: z.string()
+  password: z
+    .string()
     .nonempty('Password is required')
-    .refine((password) => password.length >= 6, { message: 'Password must be at least 6 characters' }),
+    .refine((password) => password.length >= 6, {
+      message: 'Password must be at least 6 characters',
+    }),
 
-  firstName: z.string()
+  firstName: z
+    .string()
     .nonempty('First name is required')
     .refine((val) => val.trim().length > 0, { message: 'First name is required' }),
 
-  lastName: z.string()
+  lastName: z
+    .string()
     .nonempty('Last name is required')
     .refine((val) => val.trim().length > 0, { message: 'Last name is required' }),
 
-  phoneNumber: z.string()
+  phoneNumber: z
+    .string()
     .optional()
-    .refine((val) => !val || /^[0-9\-+()\s]+$/.test(val), { message: 'Please enter a valid phone number' }),
-  age: z.coerce.number()
+    .refine((val) => !val || /^[0-9\-+()\s]+$/.test(val), {
+      message: 'Please enter a valid phone number',
+    }),
+  age: z.coerce
+    .number()
     .optional()
     .refine((val) => val === undefined || (Number.isFinite(val) && val >= 5 && val <= 120), {
-      message: 'Please enter a valid age (5-120)'
+      message: 'Please enter a valid age (5-120)',
     }),
-  country: z.string()
+  country: z
+    .string()
     .optional()
     .refine((val) => !val || val.trim().length > 0, { message: 'Please enter a valid country' }),
 });

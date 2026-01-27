@@ -98,7 +98,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
         field: 'pricePerUnit',
         style: { minWidth: 140 },
         body: (item: OrderItem) => (
-          <PriceDisplay price={item?.pricePerUnit} oldPrice={item?.originalPrice}/>
+          <PriceDisplay price={item?.pricePerUnit} oldPrice={item?.originalPrice} />
         ),
       },
       {
@@ -106,7 +106,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
         field: 'quantity',
         style: { width: 160 },
         body: (item: OrderItem) => {
-          if(!isEdit) {
+          if (!isEdit) {
             return <div className={styles.orderDetailsQuantityLabel}>{item.quantity}</div>;
           }
 
@@ -173,7 +173,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
   );
 
   const itemNameToDelete = useMemo(() => {
-    if(itemIdToDelete == null) return '';
+    if (itemIdToDelete == null) return '';
     return items.find((i) => i.id === itemIdToDelete)?.productName ?? '';
   }, [itemIdToDelete, items]);
 
@@ -196,7 +196,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
             : ''
         }
         onConfirm={() => {
-          if(itemIdToDelete !== null) handleDeleteItem(itemIdToDelete);
+          if (itemIdToDelete !== null) handleDeleteItem(itemIdToDelete);
           setItemIdToDelete(null);
         }}
         onCancel={() => setItemIdToDelete(null)}

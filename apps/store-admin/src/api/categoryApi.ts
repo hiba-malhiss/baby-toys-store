@@ -19,7 +19,10 @@ export const useCreateCategory = () => {
 
   return useMutation<number, AxiosError, CategoryUpsertRequest>({
     mutationFn: async (payload) => {
-      const response = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/categories', payload);
+      const response = await api.post<ApiEnvelope<{ id: number }>>(
+        '/api/admin/categories',
+        payload
+      );
       return response.data.data.id;
     },
     onSuccess: () => {
@@ -33,7 +36,10 @@ export const useUpdateCategory = () => {
 
   return useMutation<number, AxiosError, CategoryUpsertRequest & { id: number }>({
     mutationFn: async ({ id, ...payload }) => {
-      const response = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/categories/${id}`, payload);
+      const response = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/categories/${id}`,
+        payload
+      );
       return response.data.data.id;
     },
     onSuccess: (_res, variables) => {
@@ -90,7 +96,9 @@ export const useCategoryAdmin = (id?: number) => {
     queryKey: ['category-admin', id],
     enabled: !!id,
     queryFn: async () => {
-      const response = await api.get<ApiEnvelope<CategoryDetailsAdminDto>>(`/api/admin/categories/${id}`);
+      const response = await api.get<ApiEnvelope<CategoryDetailsAdminDto>>(
+        `/api/admin/categories/${id}`
+      );
       return response.data.data;
     },
   });

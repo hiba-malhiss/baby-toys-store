@@ -74,7 +74,10 @@ export const useFilterChips = (
         break;
 
       case 'discounts':
-        chips.push({ key: 'discounts', label: t('filters.discounts', { defaultValue: 'Discounts' }) });
+        chips.push({
+          key: 'discounts',
+          label: t('filters.discounts', { defaultValue: 'Discounts' }),
+        });
         break;
 
       default:

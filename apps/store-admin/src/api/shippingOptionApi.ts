@@ -22,13 +22,15 @@ export function useShippingOptions(params: {
   return useQuery({
     queryKey: ['admin-shipping-options', page, size, sortBy, sortDirection],
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<{
-        content: ShippingOption[];
-        totalElements: number;
-        totalPages: number;
-        number: number;
-        size: number;
-      }>>(ADMIN_BASE, { params: { page: Math.max(0, page - 1), size, sortBy, sortDirection } });
+      const { data } = await api.get<
+        ApiEnvelope<{
+          content: ShippingOption[];
+          totalElements: number;
+          totalPages: number;
+          number: number;
+          size: number;
+        }>
+      >(ADMIN_BASE, { params: { page: Math.max(0, page - 1), size, sortBy, sortDirection } });
       return data.data;
     },
     placeholderData: keepPreviousData,

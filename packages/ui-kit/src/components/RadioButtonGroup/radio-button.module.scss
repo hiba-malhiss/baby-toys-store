@@ -32,9 +32,10 @@
       align-items: center;
       justify-content: center;
 
-      transition: background-color 0.2s ease,
-      border-color 0.2s ease,
-      transform 0.2s ease;
+      transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        transform 0.2s ease;
 
       /* Icon animation */
       svg {
@@ -135,8 +136,9 @@
       border-radius: 50%;
       border: 2px solid #eee;
       display: inline-block;
-      transition: border 0.2s,
-      box-shadow 0.2s;
+      transition:
+        border 0.2s,
+        box-shadow 0.2s;
       box-sizing: border-box;
       margin: 0;
       background: var(--swatch-color, #eee);

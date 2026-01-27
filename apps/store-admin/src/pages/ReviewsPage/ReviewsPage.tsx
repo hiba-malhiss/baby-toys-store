@@ -1,5 +1,13 @@
 import React, { useState, useMemo, useCallback } from 'react';
-import { Heading, Table, Flex, Chip, Button, Rating, CopyToClipboardButton } from '@baby-toys/ui-kit';
+import {
+  Heading,
+  Table,
+  Flex,
+  Chip,
+  Button,
+  Rating,
+  CopyToClipboardButton,
+} from '@baby-toys/ui-kit';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import ReviewsFilters from './ReviewsFilters.tsx';
@@ -8,7 +16,7 @@ import { ReviewDto, ReviewStatus } from '../../api/types/review';
 import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
 import styles from './reviews-page.module.scss';
 
-export default function ReviewsPage(){
+export default function ReviewsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -32,7 +40,7 @@ export default function ReviewsPage(){
       setFilters(next);
       const params: Record<string, string> = {};
       Object.entries(next).forEach(([k, v]) => {
-        if(v) params[k] = v;
+        if (v) params[k] = v;
       });
       setSearchParams(params, { replace: true });
       setPage(1);
@@ -64,8 +72,11 @@ export default function ReviewsPage(){
           <Flex spacing="s" align="center">
             <Button
               align="start"
-              appearance="link" color="highlighted" withoutPadding
-              onClick={() => navigate(`/edit-product/${row.productId}`)}>
+              appearance="link"
+              color="highlighted"
+              withoutPadding
+              onClick={() => navigate(`/edit-product/${row.productId}`)}
+            >
               {row.productName ? (
                 <span className={styles.reviewsPageTruncate} title={row.productName}>
                   {row.productName}
@@ -74,7 +85,7 @@ export default function ReviewsPage(){
                 `#${row.productId}`
               )}
             </Button>
-            <CopyToClipboardButton value={row.productId} successMessage="Product ID copied"/>
+            <CopyToClipboardButton value={row.productId} successMessage="Product ID copied" />
           </Flex>
         ),
       },
@@ -89,7 +100,7 @@ export default function ReviewsPage(){
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
             <span>{row.userEmail ?? `#${row.userId}`}</span>
-            <CopyToClipboardButton value={row.userId} successMessage="User ID copied"/>
+            <CopyToClipboardButton value={row.userId} successMessage="User ID copied" />
           </Flex>
         ),
       },
@@ -103,7 +114,7 @@ export default function ReviewsPage(){
         header: 'Rating',
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
-            <Rating value={row.rating}/>
+            <Rating value={row.rating} />
             <span>({row.rating})</span>
           </Flex>
         ),
@@ -121,7 +132,7 @@ export default function ReviewsPage(){
         field: 'status',
         header: 'Status',
         body: (row: ReviewDto) => (
-          <Chip label={row.status} appearance={row.status === 'HIDDEN' ? 'warning' : 'success'}/>
+          <Chip label={row.status} appearance={row.status === 'HIDDEN' ? 'warning' : 'success'} />
         ),
       },
       {
@@ -151,7 +162,7 @@ export default function ReviewsPage(){
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
           <Heading>Reviews</Heading>
-          <ReviewsFilters {...filters} onChange={applyFilters}/>
+          <ReviewsFilters {...filters} onChange={applyFilters} />
         </Flex>
         <Table
           stripedRows

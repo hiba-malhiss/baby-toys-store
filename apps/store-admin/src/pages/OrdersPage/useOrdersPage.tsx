@@ -99,13 +99,17 @@ export const useOrdersPage = () => {
       },
       {
         field: 'totalProfit',
-        header: <HeaderWithTooltip label={t('orders.profit')} tip={t('tooltips.orderHeaders.profit')} />,
+        header: (
+          <HeaderWithTooltip label={t('orders.profit')} tip={t('tooltips.orderHeaders.profit')} />
+        ),
         sortable: false,
         body: (row: Order) => (row.totalProfit ? formatNumber(row.totalProfit) : '-'),
       },
       {
         field: 'profitMargin',
-        header: <HeaderWithTooltip label={t('orders.margin')} tip={t('tooltips.orderHeaders.margin')} />,
+        header: (
+          <HeaderWithTooltip label={t('orders.margin')} tip={t('tooltips.orderHeaders.margin')} />
+        ),
         sortable: false,
         body: (row: Order) =>
           row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',

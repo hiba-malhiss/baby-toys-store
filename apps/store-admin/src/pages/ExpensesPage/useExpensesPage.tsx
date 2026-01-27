@@ -1,13 +1,23 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { createExpense, deleteExpense, listExpensesByMonth, type Expense } from '../../api/expensesApi';
+import {
+  createExpense,
+  deleteExpense,
+  listExpensesByMonth,
+  type Expense,
+} from '../../api/expensesApi';
 import { useForm } from 'react-hook-form';
 import { Button } from '@baby-toys/ui-kit';
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
-export type FormValues = { date: Date | null; amount: string; category: string; description: string };
+export type FormValues = {
+  date: Date | null;
+  amount: string;
+  category: string;
+  description: string;
+};
 
-export function useExpensesPage(){
+export function useExpensesPage() {
   const queryClient = useQueryClient();
   const [yearMonth, setYearMonth] = useState<string>(() => {
     const d = new Date();
@@ -18,7 +28,12 @@ export function useExpensesPage(){
   const [isOpen, setIsOpen] = useState(false);
 
   // Form state (moved from page)
-  const { control, handleSubmit, reset, formState: { isSubmitting } } = useForm<FormValues>({
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm<FormValues>({
     defaultValues: {
       date: null,
       amount: '',
@@ -37,7 +52,7 @@ export function useExpensesPage(){
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses', yearMonth] });
       queryClient.invalidateQueries({ queryKey: ['monthlyFinance'] });
-    }
+    },
   });
 
   const deleteMut = useMutation({
@@ -45,31 +60,34 @@ export function useExpensesPage(){
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['expenses', yearMonth] });
       queryClient.invalidateQueries({ queryKey: ['monthlyFinance'] });
-    }
+    },
   });
 
   useEffect(() => {
     refetch();
   }, [yearMonth, refetch]);
 
-  const columns = useMemo(() => [
-    { field: 'date', header: 'Date' },
-    { field: 'category', header: 'Category' },
-    { field: 'amount', header: 'Amount' },
-    { field: 'description', header: 'Description' },
-    {
-      header: 'Actions',
-      body: (row: any) => (
-        <Button
-          size="small"
-          appearance="outline"
-          leftIcon={faTrashAlt}
-          onClick={() => deleteMut.mutateAsync(row.id)}
-          aria-label="Delete"
-        />
-      )
-    }
-  ], [deleteMut]);
+  const columns = useMemo(
+    () => [
+      { field: 'date', header: 'Date' },
+      { field: 'category', header: 'Category' },
+      { field: 'amount', header: 'Amount' },
+      { field: 'description', header: 'Description' },
+      {
+        header: 'Actions',
+        body: (row: any) => (
+          <Button
+            size="small"
+            appearance="outline"
+            leftIcon={faTrashAlt}
+            onClick={() => deleteMut.mutateAsync(row.id)}
+            aria-label="Delete"
+          />
+        ),
+      },
+    ],
+    [deleteMut]
+  );
 
   return {
     yearMonth,

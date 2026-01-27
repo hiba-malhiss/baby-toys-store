@@ -1,6 +1,15 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Dialog, Flex, Heading, StringInput, Table, Calendar, useToast } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Dialog,
+  Flex,
+  Heading,
+  StringInput,
+  Table,
+  Calendar,
+  useToast,
+} from '@baby-toys/ui-kit';
 import { useExpensesPage } from './useExpensesPage.tsx';
 import moment from 'moment';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
@@ -10,10 +19,12 @@ const CalendarFieldAdapter: React.FC<{
   onChange?: (d: Date | null) => void;
 }> = ({ value, onChange }) => (
   <Calendar
-    value={value ? moment(value) as any : (undefined as any)}
+    value={value ? (moment(value) as any) : (undefined as any)}
     onChange={(m) => {
       const next = Array.isArray(m)
-        ? (m[0] ? m[0].toDate() : null)
+        ? m[0]
+          ? m[0].toDate()
+          : null
         : ((m as any)?.toDate?.() ?? null);
       onChange?.(next);
     }}
@@ -56,8 +67,10 @@ const ExpensesPage: React.FC = () => {
               value={moment(yearMonth + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if(!d) return;
-                const ym = (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM');
+                if (!d) return;
+                const ym = (d as any).format
+                  ? (d as any).format('YYYY-MM')
+                  : moment(d).format('YYYY-MM');
                 setYearMonth(ym);
               }}
               selectionMode="single"
@@ -66,18 +79,20 @@ const ExpensesPage: React.FC = () => {
             <Button onClick={() => setIsOpen(true)}>Add Expense</Button>
           </Flex>
         </Flex>
-        <Table value={expenses} columns={columns as any} isLoading={isLoading} stripedRows/>
+        <Table value={expenses} columns={columns as any} isLoading={isLoading} stripedRows />
         <Dialog
           visible={isOpen}
           onHide={() => setIsOpen(false)}
           header="Add Expense"
           footer={
             <Flex justify="end" spacing="s">
-              <Button appearance="outline" onClick={() => setIsOpen(false)}>Cancel</Button>
+              <Button appearance="outline" onClick={() => setIsOpen(false)}>
+                Cancel
+              </Button>
               <Button
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
-                onClick={handleSubmit(async(data) => {
+                onClick={handleSubmit(async (data) => {
                   try {
                     const payload = {
                       date: data.date ? moment(data.date).format('YYYY-MM-DD') : '',
@@ -89,26 +104,28 @@ const ExpensesPage: React.FC = () => {
                     setIsOpen(false);
                     reset();
                     toast.success('Expense added');
-                  } catch(e: any) {
+                  } catch (e: any) {
                     toast.error(e?.message || 'Failed to add expense');
                   }
                 })}
-              >Save</Button>
+              >
+                Save
+              </Button>
             </Flex>
           }
         >
           <Flex direction="vertical" spacing="m">
             <FormFieldWrapper name="date" control={control} label="Date" required fullWidth>
-              <CalendarFieldAdapter/>
+              <CalendarFieldAdapter />
             </FormFieldWrapper>
             <FormFieldWrapper name="amount" control={control} label="Amount" required fullWidth>
-              <StringInput type="number" placeholder="0.00"/>
+              <StringInput type="number" placeholder="0.00" />
             </FormFieldWrapper>
             <FormFieldWrapper name="category" control={control} label="Category" fullWidth>
-              <StringInput placeholder="e.g., Delivery cost"/>
+              <StringInput placeholder="e.g., Delivery cost" />
             </FormFieldWrapper>
             <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-              <StringInput placeholder="Optional description"/>
+              <StringInput placeholder="Optional description" />
             </FormFieldWrapper>
           </Flex>
         </Dialog>

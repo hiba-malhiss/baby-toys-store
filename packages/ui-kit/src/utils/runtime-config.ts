@@ -7,14 +7,17 @@ const GLOBAL_KEY = '__BABY_TOYS_UI_KIT_RUNTIME_CONFIG__';
 const DEFAULT_DEV_BASE_URL = 'http://localhost:8080';
 
 const importMetaEnv = (import.meta as any)?.env ?? {};
-const processEnv = typeof process !== 'undefined' ? process.env ?? {} : {};
+const processEnv = typeof process !== 'undefined' ? (process.env ?? {}) : {};
 
 const initialConfig: UiKitRuntimeConfig = {
   apiBaseUrl: undefined,
   isDev: undefined,
 };
 
-if (typeof importMetaEnv?.VITE_API_BASE_URL === 'string' && importMetaEnv.VITE_API_BASE_URL.length > 0) {
+if (
+  typeof importMetaEnv?.VITE_API_BASE_URL === 'string' &&
+  importMetaEnv.VITE_API_BASE_URL.length > 0
+) {
   initialConfig.apiBaseUrl = importMetaEnv.VITE_API_BASE_URL;
 } else if (
   typeof (processEnv as Record<string, unknown>)?.VITE_API_BASE_URL === 'string' &&
@@ -55,7 +58,8 @@ export const configureUiKitRuntime = (config: UiKitRuntimeConfig) => {
 
 export const getUiKitRuntimeConfig = (): UiKitRuntimeConfig => ({ ...ensureStore() });
 
-export const getUiKitApiBaseUrl = (): string | undefined => ensureStore().apiBaseUrl ?? initialConfig.apiBaseUrl;
+export const getUiKitApiBaseUrl = (): string | undefined =>
+  ensureStore().apiBaseUrl ?? initialConfig.apiBaseUrl;
 
 export const isUiKitDevMode = (): boolean => {
   const store = ensureStore();
@@ -85,5 +89,3 @@ export const resolveUiKitBaseUrl = (): string => {
 
   return '';
 };
-
-

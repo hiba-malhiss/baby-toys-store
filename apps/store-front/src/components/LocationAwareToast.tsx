@@ -1,6 +1,6 @@
-import React, { useEffect, useRef } from "react";
-import { useLocation } from "react-router-dom";
-import { useToast } from "@baby-toys/ui-kit";
+import React, { useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
+import { useToast } from '@baby-toys/ui-kit';
 
 const LocationAwareToast: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const location = useLocation();
@@ -9,7 +9,7 @@ const LocationAwareToast: React.FC<{ children: React.ReactNode }> = ({ children 
 
   useEffect(() => {
     // Show toast only if location state has showToast and hasn't been shown yet
-    if(location.state?.showToast && !hasShownToast.current) {
+    if (location.state?.showToast && !hasShownToast.current) {
       const { toastMessage, toastType = 'success' } = location.state;
       toast[toastType](toastMessage);
       hasShownToast.current = true;

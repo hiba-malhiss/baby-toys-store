@@ -21,9 +21,7 @@ import type { TFunction } from 'i18next';
 
 const getColorSchema = (t: TFunction) =>
   z.object({
-    code: z
-      .string()
-      .regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, t('colors.invalidCode')),
+    code: z.string().regex(/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/, t('colors.invalidCode')),
     translations: z.object({
       en: z.object({ name: z.string().min(1, t('colors.nameRequired', { locale: 'en' })) }),
       ar: z.object({ name: z.string().min(1, t('colors.nameRequired', { locale: 'ar' })) }),

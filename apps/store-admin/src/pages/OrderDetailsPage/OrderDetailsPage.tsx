@@ -74,12 +74,14 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
           <Heading>
             <Flex align="center" spacing="s">
               {pageTitle}
-              {!showEditMode && <Chip
-                label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, {
-                  defaultValue: String(order?.status || ''),
-                })}
-                appearance={statusColorMap[order?.status]}
-              />}
+              {!showEditMode && (
+                <Chip
+                  label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, {
+                    defaultValue: String(order?.status || ''),
+                  })}
+                  appearance={statusColorMap[order?.status]}
+                />
+              )}
             </Flex>
           </Heading>
           <span className={styles.orderDetailsOrderDate}>{placedOnLabel}</span>
@@ -141,15 +143,17 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
             canEditOrder={canEditOrder}
           />
 
-          <ShippingAddressCard order={order as any}/>
-          <ShippingNoteCard note={order?.note}/>
+          <ShippingAddressCard order={order as any} />
+          <ShippingNoteCard note={order?.note} />
         </Flex>
       </div>
 
       <ConfirmDialog
         visible={statusConfirmVisible}
         header={t('orderDetails.changeStatusTitle')}
-        message={pendingStatus ? t('orderDetails.changeStatusConfirm', { status: pendingStatus }) : ''}
+        message={
+          pendingStatus ? t('orderDetails.changeStatusConfirm', { status: pendingStatus }) : ''
+        }
         onConfirm={confirmStatusChange}
         onCancel={cancelStatusChange}
       />

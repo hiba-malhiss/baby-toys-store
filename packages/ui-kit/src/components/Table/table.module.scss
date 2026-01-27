@@ -8,13 +8,13 @@
   flex-direction: column;
   height: 100%;
   -webkit-overflow-scrolling: touch;
-  
+
   &::-webkit-scrollbar {
     -webkit-appearance: none;
     width: 8px;
     height: 8px;
   }
-  
+
   &::-webkit-scrollbar-thumb {
     border-radius: 4px;
     background-color: rgba(0, 0, 0, 0.2);
@@ -54,13 +54,13 @@
   border-spacing: 0;
   font-size: 15px;
   color: $color-text-primary;
-  
+
   .emptyMessage {
     text-align: center;
     padding: 3rem 1rem;
     color: $color-text-secondary;
     font-style: italic;
-    
+
     &Content {
       display: flex;
       justify-content: center;

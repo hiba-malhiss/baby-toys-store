@@ -2,7 +2,11 @@ import { z } from 'zod';
 
 const localizedSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  description: z.string().max(500, 'Description must be under 500 characters').optional().or(z.literal('')),
+  description: z
+    .string()
+    .max(500, 'Description must be under 500 characters')
+    .optional()
+    .or(z.literal('')),
 });
 
 export const categorySchema = z.object({

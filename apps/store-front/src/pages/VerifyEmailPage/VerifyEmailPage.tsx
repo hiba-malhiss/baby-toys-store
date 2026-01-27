@@ -12,17 +12,11 @@ export const VerifyEmailPage: React.FC = () => {
   const token = searchParams.get('token');
   const { t } = useTranslation('common');
 
-  const {
-    isPending,
-    isError,
-    error,
-    isSuccess,
-    data
-  } = useVerifyEmail(token);
+  const { isPending, isError, error, isSuccess, data } = useVerifyEmail(token);
 
   // Handle successful verification
   useEffect(() => {
-    if(isSuccess && data) {
+    if (isSuccess && data) {
       navigate('/', {
         state: {
           showToast: true,
@@ -33,7 +27,7 @@ export const VerifyEmailPage: React.FC = () => {
     }
   }, [isSuccess, data, navigate]);
 
-  if(!token) {
+  if (!token) {
     return (
       <div className={styles.verifyEmailPage}>
         <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.invalidLink')}</div>
@@ -46,12 +40,12 @@ export const VerifyEmailPage: React.FC = () => {
     <div className={styles.verifyEmailPage}>
       {isPending && (
         <>
-          <BouncingDotsLoader/>
+          <BouncingDotsLoader />
           <div className={styles.verifyEmailPageLoading}>{t('auth.verifyEmail.verifying')}</div>
         </>
       )}
 
-      {(isError) && (
+      {isError && (
         <>
           <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.failed')}</div>
           <div className={styles.verifyEmailPageErrorMessage}>

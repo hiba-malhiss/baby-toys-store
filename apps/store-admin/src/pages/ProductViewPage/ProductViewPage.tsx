@@ -105,26 +105,54 @@ const ProductViewPage: React.FC = () => {
       inventoryRows: [
         { id: 'stock', label: t('productView.stock'), value: product?.stockQuantity ?? '-' },
         { id: 'unitsSold', label: t('productView.unitsSold'), value: product?.sales ?? 0 },
-        { id: 'releaseDate', label: t('productView.releaseDate'), value: formatDateTime(product?.releaseDate) },
-        { id: 'active', label: t('productView.active'), value: product?.isActive ? t('app.yes') : t('app.no') },
+        {
+          id: 'releaseDate',
+          label: t('productView.releaseDate'),
+          value: formatDateTime(product?.releaseDate),
+        },
+        {
+          id: 'active',
+          label: t('productView.active'),
+          value: product?.isActive ? t('app.yes') : t('app.no'),
+        },
       ] as StatRow[],
 
       pricingRows: [
         { id: 'listPrice', label: t('productView.listPrice'), value: formatMoney(product?.price) },
-        { id: 'costPrice', label: t('productView.costPrice'), value: formatMoney(product?.costPrice) },
+        {
+          id: 'costPrice',
+          label: t('productView.costPrice'),
+          value: formatMoney(product?.costPrice),
+        },
         { id: 'oldPrice', label: t('productView.oldPrice'), value: formatMoney(product?.oldPrice) },
       ] as StatRow[],
 
       classificationRows: [
         { id: 'category', label: t('productView.category'), value: product?.categoryName ?? '-' },
         { id: 'brand', label: t('productView.brand'), value: product?.brandName ?? '-' },
-        { id: 'colors', label: t('productView.colors'), value: product?.colorCodes?.join(', ') || '-' },
-        { id: 'materials', label: t('productView.materials'), value: product?.materialNames?.join(', ') || '-' },
+        {
+          id: 'colors',
+          label: t('productView.colors'),
+          value: product?.colorCodes?.join(', ') || '-',
+        },
+        {
+          id: 'materials',
+          label: t('productView.materials'),
+          value: product?.materialNames?.join(', ') || '-',
+        },
       ] as StatRow[],
 
       metaRows: [
-        { id: 'created', label: t('productView.created'), value: formatDateTime(product?.createdAt) },
-        { id: 'updated', label: t('productView.updated'), value: formatDateTime(product?.updatedAt) },
+        {
+          id: 'created',
+          label: t('productView.created'),
+          value: formatDateTime(product?.createdAt),
+        },
+        {
+          id: 'updated',
+          label: t('productView.updated'),
+          value: formatDateTime(product?.updatedAt),
+        },
       ] as StatRow[],
 
       images: product?.images ?? [],
@@ -142,16 +170,15 @@ const ProductViewPage: React.FC = () => {
 
     items.push(
       <Accordion key="inventory" header={t('productView.inventory')} defaultOpen>
-        <StatsTable rows={vm.inventoryRows}/>
+        <StatsTable rows={vm.inventoryRows} />
       </Accordion>
     );
 
     items.push(
       <Accordion key="pricing" header={t('productView.pricing')} defaultOpen>
-        <StatsTable rows={vm.pricingRows}/>
+        <StatsTable rows={vm.pricingRows} />
       </Accordion>
     );
-
 
     if (vm.shortDescription) {
       items.push(
@@ -171,17 +198,17 @@ const ProductViewPage: React.FC = () => {
 
     items.push(
       <Accordion key="classification" header={t('productView.classification')}>
-        <StatsTable rows={vm.classificationRows}/>
+        <StatsTable rows={vm.classificationRows} />
       </Accordion>
     );
 
     items.push(
       <Accordion key="meta" header={t('productView.meta')}>
-        <StatsTable rows={vm.metaRows}/>
+        <StatsTable rows={vm.metaRows} />
       </Accordion>
     );
 
-    if(hasImages){
+    if (hasImages) {
       items.push(
         <Accordion key="images" header={t('productView.images')}>
           <div className={styles.imagesGrid}>
@@ -199,7 +226,18 @@ const ProductViewPage: React.FC = () => {
     }
 
     return items;
-  }, [hasContent, hasImages, t, vm.classificationRows, vm.description, vm.images, vm.inventoryRows, vm.metaRows, vm.pricingRows, vm.shortDescription]);
+  }, [
+    hasContent,
+    hasImages,
+    t,
+    vm.classificationRows,
+    vm.description,
+    vm.images,
+    vm.inventoryRows,
+    vm.metaRows,
+    vm.pricingRows,
+    vm.shortDescription,
+  ]);
 
   return (
     <AdminLayout isLoading={isLoading || !product}>
@@ -208,7 +246,9 @@ const ProductViewPage: React.FC = () => {
         <Card>
           <div className={styles.heroCardGrid}>
             <div className={styles.heroLeftGrid}>
-              {vm.mainImage && <img src={vm.mainImage} alt={vm.name} className={styles.mainImage}/>}
+              {vm.mainImage && (
+                <img src={vm.mainImage} alt={vm.name} className={styles.mainImage} />
+              )}
 
               <div className={styles.heroText}>
                 <Heading level="h1" className={styles.title}>
@@ -231,7 +271,9 @@ const ProductViewPage: React.FC = () => {
                   <span className={styles.faded}>
                     {vm.brandName || '-'} • {vm.categoryName || '-'}
                   </span>
-                  {vm.isActive === false && <Chip label={t('productView.inactive')} appearance="error"/>}
+                  {vm.isActive === false && (
+                    <Chip label={t('productView.inactive')} appearance="error" />
+                  )}
                 </div>
               </div>
             </div>
@@ -251,8 +293,8 @@ const ProductViewPage: React.FC = () => {
 
         {/* KPIs */}
         <div className={styles.kpiGrid}>
-          <KPI label={t('productView.price')} value={vm.kpis.price}/>
-          <KPI label={t('productView.cost')} value={vm.kpis.cost}/>
+          <KPI label={t('productView.price')} value={vm.kpis.price} />
+          <KPI label={t('productView.cost')} value={vm.kpis.cost} />
 
           <KPIWithTooltip
             label={t('productView.revenueLifetime')}

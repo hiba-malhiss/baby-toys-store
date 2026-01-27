@@ -17,7 +17,14 @@ type RatingProps = {
   reviewsCount?: number;
 };
 
-const Rating: React.FC<RatingProps> = ({ size, className, value, max = 5, onChange, reviewsCount }) => {
+const Rating: React.FC<RatingProps> = ({
+  size,
+  className,
+  value,
+  max = 5,
+  onChange,
+  reviewsCount,
+}) => {
   const handleStarClick = (starIndex: number) => {
     if (onChange) {
       onChange(starIndex + 1);

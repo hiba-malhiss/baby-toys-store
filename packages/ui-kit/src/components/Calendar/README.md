@@ -6,15 +6,15 @@ A flexible, interactive calendar component built with React and `moment.js`, sup
 
 ## ✨ Features
 
-* **Date, Month, and Year View Switching**
-* **Single, Multiple or Range Date Selection**
-* **Min/Max Date Constraints**
-* **Disable Future Dates Option**
-* **Custom Date Format**
-* **Clear Selection Footer Option**
-* **Floating Anchored Dropdown UI**
-* **Fully Keyboard and Mouse Accessible**
-* **Styled with SCSS Modules**
+- **Date, Month, and Year View Switching**
+- **Single, Multiple or Range Date Selection**
+- **Min/Max Date Constraints**
+- **Disable Future Dates Option**
+- **Custom Date Format**
+- **Clear Selection Footer Option**
+- **Floating Anchored Dropdown UI**
+- **Fully Keyboard and Mouse Accessible**
+- **Styled with SCSS Modules**
 
 ---
 
@@ -53,7 +53,7 @@ const MyComponent = () => {
 ## 📌 Props
 
 | Prop                 | Type                                                                                            | Default        | Description                                                                  |
-| -------------------- |-------------------------------------------------------------------------------------------------| -------------- | ---------------------------------------------------------------------------- |
+| -------------------- | ----------------------------------------------------------------------------------------------- | -------------- | ---------------------------------------------------------------------------- |
 | `value`              | `Moment , Moment[]`                                                                             | **Required**   | Currently selected date(s).                                                  |
 | `onChange`           | `(value) => void`                                                                               | **Required**   | Callback when a date is selected.                                            |
 | `typeView`           | `'date' , 'month' , 'year'`                                                                     | `'date'`       | Initial calendar view.                                                       |
@@ -71,10 +71,10 @@ const MyComponent = () => {
 
 ## 🧠 Internal Behavior
 
-* Uses a custom hook `useCalendar` to manage state and logic.
-* Handles navigation (prev/next) with constraints.
-* Dynamically switches between views.
-* Renders calendar buttons with appropriate accessibility and layout logic.
+- Uses a custom hook `useCalendar` to manage state and logic.
+- Handles navigation (prev/next) with constraints.
+- Dynamically switches between views.
+- Renders calendar buttons with appropriate accessibility and layout logic.
 
 ---
 

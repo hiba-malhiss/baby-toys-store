@@ -94,7 +94,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           ref={ref}
           onKeyDown={(e) => {
-            if(e.key === 'Enter') {
+            if (e.key === 'Enter') {
               onClick && onClick(e);
             }
           }}

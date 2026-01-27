@@ -67,14 +67,14 @@
 
   // Spacing modifiers
   $spacing-values: (
-      xs: 4px,
-      s: 8px,
-      m: 10px,
-      l: 12px,
-      xl: 16px,
-      xxl: 20px,
-      xxxl: 32px,
-      xxxxl: 40px,
+    xs: 4px,
+    s: 8px,
+    m: 10px,
+    l: 12px,
+    xl: 16px,
+    xxl: 20px,
+    xxxl: 32px,
+    xxxxl: 40px,
   );
 
   @each $key, $value in $spacing-values {

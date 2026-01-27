@@ -11,7 +11,15 @@ import {
 } from 'chart.js';
 import { Line, Bar } from 'react-chartjs-2';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, BarElement, Tooltip, Legend);
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  Tooltip,
+  Legend
+);
 
 const baseOptions: any = {
   responsive: true,

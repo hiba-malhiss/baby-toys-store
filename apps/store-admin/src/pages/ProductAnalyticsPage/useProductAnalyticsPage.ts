@@ -43,7 +43,7 @@ export const useProductAnalyticsPage = () => {
     setSortField(nextSortField);
     setSortOrder(nextSortOrder);
     // If we already have a dataset, re-run with same filters
-    if(lastParams) {
+    if (lastParams) {
       const next = {
         ...lastParams,
         page: 0,
@@ -53,7 +53,7 @@ export const useProductAnalyticsPage = () => {
       setLastParams(next);
       mutateAsync(next);
     }
-  }
+  };
 
   const applyFilters = () => {
     const trimmed = (productQuery || '').trim();
@@ -71,7 +71,7 @@ export const useProductAnalyticsPage = () => {
   };
 
   const setPageWrapped = (newPage: number) => {
-    if(!lastParams) return; // no-op until first Apply
+    if (!lastParams) return; // no-op until first Apply
     const next = {
       ...lastParams,
       page: Math.max(0, newPage - 1),

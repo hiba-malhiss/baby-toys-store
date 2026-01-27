@@ -68,7 +68,7 @@ export const useLogin = () => {
       return response.data;
     },
     onSuccess: (data) => {
-      if(!data?.accessToken) return;
+      if (!data?.accessToken) return;
       qc.setQueryData(AUTH_TOKEN_KEY, data.accessToken);
       qc.invalidateQueries({ queryKey: [ROOT_KEYS.profile] });
     },
@@ -92,13 +92,13 @@ export const useFetchProfile = () => {
   return useQuery<User, AxiosError>({
     queryKey: [ROOT_KEYS.profile],
     enabled: !!token,
-    queryFn: async() => {
+    queryFn: async () => {
       const res = await api.get<ApiEnvelope<User>>('/users/profile');
       return res.data.data;
     },
     retry: 1,
   });
-}
+};
 
 export interface VerifyEmailResponse {
   message: string;

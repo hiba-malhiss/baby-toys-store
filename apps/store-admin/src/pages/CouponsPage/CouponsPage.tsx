@@ -1,13 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import {
-  Button,
-  Flex,
-  Table,
-  Heading,
-  ConfirmDialog,
-  StringInput,
-} from '@baby-toys/ui-kit';
+import { Button, Flex, Table, Heading, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
 import { faPlus, faPen, faTrashAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
 import useCouponsPage from './useCouponsPage';
 import CouponDialog from './CouponDialog';
@@ -109,8 +102,8 @@ const CouponsPage: React.FC = () => {
           <Flex direction="vertical" spacing="s">
             <Heading level="h1">Coupons</Heading>
             <Heading level="h4" appearance="light">
-              Single coupon per order. Supports fixed amount or percentage (with optional max discount),
-              minimum order amount, validity dates, and usage limits per code.
+              Single coupon per order. Supports fixed amount or percentage (with optional max
+              discount), minimum order amount, validity dates, and usage limits per code.
             </Heading>
           </Flex>
           <Flex align="center" spacing="xl">

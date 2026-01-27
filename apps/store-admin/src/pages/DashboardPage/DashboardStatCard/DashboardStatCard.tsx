@@ -17,13 +17,13 @@ type Props = {
 };
 
 export default function DashboardStatCard({
-                                            tone = 'green',
-                                            title,
-                                            tooltip,
-                                            value,
-                                            subValue,
-                                            className,
-                                          }: Props){
+  tone = 'green',
+  title,
+  tooltip,
+  value,
+  subValue,
+  className,
+}: Props) {
   return (
     <div className={clsx(styles.card, styles[tone], className)}>
       <div className={styles.titleRow}>
@@ -32,7 +32,7 @@ export default function DashboardStatCard({
           {tooltip ? (
             <Tooltip content={<div className={styles.tip}>{tooltip}</div>} position="top">
               <span className={styles.infoIcon} aria-label="info">
-                <FontAwesomeIcon icon={faCircleInfo}/>
+                <FontAwesomeIcon icon={faCircleInfo} />
               </span>
             </Tooltip>
           ) : null}

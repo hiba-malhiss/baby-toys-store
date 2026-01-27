@@ -3,7 +3,7 @@ import { faBars } from '@fortawesome/free-solid-svg-icons';
 import { Button, Drawer, Flex } from '@baby-toys/ui-kit';
 import styles from './header.module.scss';
 import { useNavigate } from 'react-router-dom';
-import LanguageSwitcher from "../../i18n/LanguageSwitcher.tsx";
+import LanguageSwitcher from '../../i18n/LanguageSwitcher.tsx';
 
 interface BurgerMenuProps {
   authButtons: (onClose: () => void) => ReactNode;
@@ -47,7 +47,7 @@ const BurgerMenu = ({ authButtons }: BurgerMenuProps) => {
         }
       >
         <Flex align="center" direction="vertical" spacing="s">
-          <LanguageSwitcher/>
+          <LanguageSwitcher />
           {authButtons(handleClose)}
         </Flex>
       </Drawer>

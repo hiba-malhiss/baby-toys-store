@@ -23,7 +23,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useBrands, useCategories, useColors, useMaterials } from '../../../api/catalogApi.ts';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
-import clsx from "clsx";
+import clsx from 'clsx';
 
 export const SideFilters: React.FC<{
   className?: string;
@@ -63,7 +63,7 @@ export const SideFilters: React.FC<{
 
   useEffect(() => {
     const filterLoading = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
-    if(!filterLoading) {
+    if (!filterLoading) {
       onFiltersChange(debouncedFilters);
     }
   }, [
@@ -86,7 +86,7 @@ export const SideFilters: React.FC<{
   };
 
   const removeFilter = (key: keyof ShopFilters) => {
-    if(key === 'priceRange') {
+    if (key === 'priceRange') {
       handleFilterChange(key, priceRange);
     } else {
       handleFilterChange(key, undefined);
@@ -114,7 +114,7 @@ export const SideFilters: React.FC<{
         )}
       </Flex>
 
-      <Divider className="bts-marginTxl"/>
+      <Divider className="bts-marginTxl" />
 
       <Accordion header={t('filters.category')} withoutPadding withoutHeaderPadding isOpenByDefault>
         <ExpandableContent maxHeight="220px" buttonColor="underline">
@@ -149,7 +149,7 @@ export const SideFilters: React.FC<{
             className="bts-marginTm"
           >
             {colors.map(({ id, code }) => (
-              <RadioButton key={id} value={String(id)} name="color" swatchColor={code}/>
+              <RadioButton key={id} value={String(id)} name="color" swatchColor={code} />
             ))}
           </RadioButtonGroup>
         </ExpandableContent>
@@ -195,8 +195,11 @@ export const SideFilters: React.FC<{
         </ExpandableContent>
       </Accordion>
 
-      <Accordion header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })} withoutPadding
-                 withoutHeaderPadding>
+      <Accordion
+        header={t('filters.dealsAndDiscounts', { defaultValue: 'Deals & Discounts' })}
+        withoutPadding
+        withoutHeaderPadding
+      >
         <ExpandableContent maxHeight="220px" buttonColor="underline">
           <RadioButtonGroup
             name="deals-discounts"
@@ -222,7 +225,7 @@ export const SideFilters: React.FC<{
             step={1}
             range
             value={urlFilters.priceRange || priceRange}
-            className={clsx(styles.sideFilterPriceSlider, "bts-marginTxxxl")}
+            className={clsx(styles.sideFilterPriceSlider, 'bts-marginTxxxl')}
             onChange={(val: [number, number]) => handleFilterChange('priceRange', val)}
           />
         </ExpandableContent>
@@ -231,15 +234,15 @@ export const SideFilters: React.FC<{
   );
 
   const isLoadingFilters = loadingCategories || loadingBrands || loadingColors || loadingMaterials;
-  if(isLoadingFilters) {
+  if (isLoadingFilters) {
     return (
       <Card className={className} header={t('filters.header')} withoutBorder size="xsmall">
-        <BouncingDotsLoader size="medium" className="bts-marginTl"/>
+        <BouncingDotsLoader size="medium" className="bts-marginTl" />
       </Card>
     );
   }
 
-  if(isDrawer) {
+  if (isDrawer) {
     return (
       <>
         <div className={className}>
