@@ -9,6 +9,7 @@
   background: $color-bg-primary;
   border-right: 1px solid $color-border;
   will-change: width;
+  transition: width 220ms cubic-bezier(0.22, 1, 0.36, 1);
   overflow: visible;
 
   &.expanded {
@@ -22,6 +23,9 @@
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+  backface-visibility: hidden;
+  transform: translateZ(0); // promote to its own layer for smoother anims on iOS
+  touch-action: pan-y; // allow vertical scroll, prevent accidental horizontal gestures
 }
 
 .header {
@@ -41,6 +45,8 @@
   overflow: auto;
   @extend .bts-hideScrollbar;
   padding: $spacing-md;
+  -webkit-overflow-scrolling: touch; // momentum scrolling on iOS
+  overscroll-behavior: contain;
 
   button {
     span {
@@ -74,6 +80,7 @@
     transform 0.2s;
   background: transparent;
   border: none;
+  -webkit-tap-highlight-color: transparent; // remove gray highlight on iOS
 
   &:hover {
     background: transparent;

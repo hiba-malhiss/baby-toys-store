@@ -36,6 +36,7 @@ const Aside: React.FC<AsideProps> = ({
   const [isLockedOpen, setIsLockedOpen] = useState(defaultExpanded);
   const [isHovering, setIsHovering] = useState(false);
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const hoverTimer = useRef<number | null>(null);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -43,8 +44,21 @@ const Aside: React.FC<AsideProps> = ({
   const isExpanded = isLockedOpen || isHovering;
 
   const toggleLock = useCallback(() => setIsLockedOpen((v) => !v), []);
-  const onMouseEnter = useCallback(() => setIsHovering(true), []);
-  const onMouseLeave = useCallback(() => setIsHovering(false), []);
+
+  const setHovering = useCallback((val: boolean, delay = 0) => {
+    if (hoverTimer.current) {
+      window.clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+    if (delay > 0) {
+      hoverTimer.current = window.setTimeout(() => {
+        setIsHovering(val);
+        hoverTimer.current = null;
+      }, delay);
+    } else {
+      setIsHovering(val);
+    }
+  }, []);
 
   const handleItemClick = useCallback(
     (item: MenuItem) => () => {
@@ -172,10 +186,10 @@ const Aside: React.FC<AsideProps> = ({
     >
       <div
         className={styles.content}
-        onMouseEnter={onMouseEnter}
-        onMouseLeave={onMouseLeave}
-        onTouchStart={() => !isLockedOpen && setIsHovering(true)}
-        onTouchEnd={() => !isLockedOpen && setIsHovering(false)}
+        onPointerEnter={() => setHovering(true)}
+        onPointerLeave={() => setHovering(false, 80)}
+        onPointerDown={() => !isLockedOpen && setHovering(true)}
+        onPointerUp={() => !isLockedOpen && setHovering(false, 80)}
       >
         <div className={styles.header}>{isExpanded ? header : null}</div>
 
