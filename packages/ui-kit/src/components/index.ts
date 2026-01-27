@@ -65,3 +65,4 @@ export { default as KPI } from './KPI/KPI';
 export { default as CopyToClipboardButton } from './CopyToClipboardButton/CopyToClipboardButton';
 export { default as HeartButton } from './HeartButton/HeartButton';
 export { default as SocialIconButton } from './SocialIconButton/SocialIconButton';
+export { default as Aside } from './Aside/Aside';

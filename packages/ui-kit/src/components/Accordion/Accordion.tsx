@@ -76,7 +76,7 @@ const Accordion: React.FC<AccordionProps> = ({
         color={buttonColor}
         withoutPadding={withoutHeaderPadding}
       >
-        <Heading level="h5">{header}</Heading>
+        {unstyled ? <span>{header}</span> : <Heading level="h5">{header}</Heading>}
       </Button>
       {isOpen && <div className={styles.accordionContent}>{children}</div>}
     </div>

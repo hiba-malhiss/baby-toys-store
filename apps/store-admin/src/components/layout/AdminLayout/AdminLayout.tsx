@@ -1,13 +1,30 @@
 import React, { useCallback, useMemo } from 'react';
-import { Menu, Button, Toast, BouncingDotsLoader, Mask, Flex } from '@baby-toys/ui-kit';
+import { Aside, Button, Toast, BouncingDotsLoader, Mask, Flex } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher.tsx';
 import { useTranslation } from 'react-i18next';
+import {
+  faGauge,
+  faBox,
+  faLayerGroup,
+  faSackDollar,
+  faChartLine,
+  faListCheck,
+  faShoppingCart,
+  faTicket,
+  faUsers,
+  faEnvelope,
+  faStar,
+  faHouse,
+  faGear,
+  faTruck,
+  faRightFromBracket
+} from '@fortawesome/free-solid-svg-icons';
 
 const AdminLayout: React.FC<{
-  children: React.ReactNodem;
+  children: React.ReactNode;
   isLoading?: boolean;
   isMaskLoading?: boolean;
 }> = ({ children, isLoading, isMaskLoading }) => {
@@ -17,10 +34,11 @@ const AdminLayout: React.FC<{
 
   const menuItems = useMemo(
     () => [
-      { label: t('menu.dashboard'), route: '/dashboard' },
-      { label: t('menu.products'), route: '/products' },
+      { label: t('menu.dashboard'), route: '/dashboard', icon: faGauge },
+      { label: t('menu.products'), route: '/products', icon: faBox },
       {
         label: t('menu.catalog'),
+        icon: faLayerGroup,
         items: [
           { label: t('menu.categories'), route: '/categories' },
           { label: t('menu.brands'), route: '/brands' },
@@ -30,6 +48,7 @@ const AdminLayout: React.FC<{
       },
       {
         label: t('menu.finance'),
+        icon: faSackDollar,
         items: [
           { label: t('menu.finance'), route: '/finance' },
           { label: t('menu.expenses'), route: '/expenses' },
@@ -37,17 +56,18 @@ const AdminLayout: React.FC<{
       },
       {
         label: t('menu.analytics'),
+        icon: faChartLine,
         items: [{ label: t('menu.productAnalytics'), route: '/analytics/products' }],
       },
-      { label: t('menu.auditLogs'), route: '/audit-logs' },
-      { label: t('menu.orders'), route: '/orders' },
-      { label: t('menu.coupons'), route: '/coupons' },
-      { label: t('menu.customers'), route: '/customers' },
-      { label: t('menu.contactMessages'), route: '/contact-messages' },
-      { label: t('menu.reviews'), route: '/reviews' },
-      { label: t('menu.homepage'), route: '/homepage' },
-      { label: t('menu.settings'), route: '/settings' },
-      { label: t('menu.shippingOptions'), route: '/shipping-options' },
+      { label: t('menu.auditLogs'), route: '/audit-logs', icon: faListCheck },
+      { label: t('menu.orders'), route: '/orders', icon: faShoppingCart },
+      { label: t('menu.coupons'), route: '/coupons', icon: faTicket },
+      { label: t('menu.customers'), route: '/customers', icon: faUsers },
+      { label: t('menu.contactMessages'), route: '/contact-messages', icon: faEnvelope },
+      { label: t('menu.reviews'), route: '/reviews', icon: faStar },
+      { label: t('menu.homepage'), route: '/homepage', icon: faHouse },
+      { label: t('menu.settings'), route: '/settings', icon: faGear },
+      { label: t('menu.shippingOptions'), route: '/shipping-options', icon: faTruck },
     ],
     [t]
   );
@@ -66,21 +86,36 @@ const AdminLayout: React.FC<{
       <Mask visible={isMaskLoading}/>
       <Toast/>
       <div className={styles.adminLayout}>
-        <aside className={styles.adminLayoutSidebar}>
-          <Flex justify="between" align="center">
-            <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo}/>
-            <LanguageSwitcher/>
-          </Flex>
-          <Menu autoOverflow model={menuItems} spacing="s" className={styles.adminLayoutNav}/>
-          <Button
-            fullWidth
-            onClick={logout}
-            appearance="outline"
-            className={`${styles.adminLayoutLogout} bts-marginTl`}
-          >
-            {t('app.logout')}
-          </Button>
-        </aside>
+        <Aside
+          autoOverflow
+          model={menuItems}
+          header={
+            <Flex justify="between" align="center" wrap fullWidth>
+              <img src="/assets/kit-images/logo.png" alt="logo" className={styles.adminLayoutLogo}/>
+              <LanguageSwitcher/>
+            </Flex>
+          }
+          footerExpanded={
+            <Button
+              fullWidth
+              onClick={logout}
+              appearance="outline"
+              className={`${styles.adminLayoutLogout} bts-marginTl`}
+            >
+              {t('app.logout')}
+            </Button>
+          }
+          footerCollapsed={
+            <Button
+              onClick={logout}
+              appearance="link"
+              withoutPadding
+              fullWidth
+              align="center"
+              leftIcon={faRightFromBracket}
+            />
+          }
+        />
         <main className={styles.adminLayoutContent}>
           {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl"/> : children}
         </main>
