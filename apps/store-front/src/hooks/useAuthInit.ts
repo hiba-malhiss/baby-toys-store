@@ -56,8 +56,10 @@ export function useAuthInit() {
 async function initializeGuestToken(): Promise<AuthInitResult> {
   if (getGuestCartToken()) return { isAuthenticated: false, isGuest: true };
   try {
-    const response = await api.post<GuestTokenResponse>('/api/cart/token');
-    const token = response.data?.data?.token;
+    const response = await api.post<GuestTokenResponse | { data?: { token?: string } }>(
+      '/api/cart/token'
+    );
+    const token = (response as any)?.data?.data?.token || (response as any)?.data?.token;
     if (token) {
       setGuestCartToken(token);
       console.log('Guest token initialized from backend');
