@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './image-magnifier-popover.module.scss';
 import Popover from '../Popover/Popover';
 import { resolveImageBaseUrl } from '../Image';
@@ -19,16 +19,19 @@ const ImageMagnifierPopover: React.FC<Props> = ({
   disableBaseUrl = false,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [canHover, setCanHover] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [dimensions, setDimensions] = useState({ width: 1, height: 1 }); // container size
-  const [natural, setNatural] = useState({ width: 1, height: 1 }); // image intrinsic size
+
+  const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
+  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
   const [imageReady, setImageReady] = useState(false);
 
-  // Resolve src similarly to Image component
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+
   const resolvedSrc = useMemo(() => {
-    if (!src) return '';
-    if (
+    if(!src) return '';
+    if(
       disableBaseUrl ||
       src.startsWith('http') ||
       src.startsWith('data:') ||
@@ -37,153 +40,213 @@ const ImageMagnifierPopover: React.FC<Props> = ({
     ) {
       return src;
     }
-    const baseUrl = resolveImageBaseUrl();
 
+    const baseUrl = resolveImageBaseUrl();
     return `${baseUrl}${src.startsWith('/') ? '' : '/'}${src}`;
   }, [src, disableBaseUrl]);
 
+  // Detect hover capability (avoid magnifier on touch devices)
   useEffect(() => {
-    if (containerRef.current) {
-      const { clientWidth, clientHeight } = containerRef.current;
-      setDimensions({ width: clientWidth, height: clientHeight });
-    }
+    const checkHover = () => {
+      setCanHover(window.matchMedia('(hover: hover) and (pointer: fine)').matches);
+    };
+
+    checkHover();
+    window.addEventListener('resize', checkHover);
+    return () => window.removeEventListener('resize', checkHover);
   }, []);
 
-  // Listen to window resize to recompute container
+  // Keep container size updated
   useEffect(() => {
-    const onResize = () => {
-      if (!containerRef.current) return;
-      const { clientWidth, clientHeight } = containerRef.current;
-      setDimensions({ width: clientWidth, height: clientHeight });
+    const updateSize = () => {
+      if(!containerRef.current) return;
+      setContainerSize({
+        width: containerRef.current.clientWidth,
+        height: containerRef.current.clientHeight,
+      });
     };
-    window.addEventListener('resize', onResize);
-    return () => window.removeEventListener('resize', onResize);
+
+    updateSize();
+    window.addEventListener('resize', updateSize);
+    return () => window.removeEventListener('resize', updateSize);
   }, []);
 
   // Load natural image dimensions
   useEffect(() => {
-    if (!resolvedSrc) return;
+    if(!resolvedSrc) return;
+
+    setImageReady(false);
     const img = new window.Image();
+
     img.onload = () => {
-      setNatural({ width: img.naturalWidth || 1, height: img.naturalHeight || 1 });
+      setNaturalSize({
+        width: img.naturalWidth || 1,
+        height: img.naturalHeight || 1,
+      });
       setImageReady(true);
     };
+
     img.onerror = () => {
-      // stop magnifier if image can't load
       setIsHovering(false);
       setImageReady(false);
     };
+
     img.src = resolvedSrc;
   }, [resolvedSrc]);
 
-  // Compute the rendered image box within the container for object-fit: contain
+  // Rendered image box inside container (object-fit: contain)
   const imageBox = useMemo(() => {
-    const cw = dimensions.width;
-    const ch = dimensions.height;
-    const iw = natural.width;
-    const ih = natural.height;
-    if (!cw || !ch || !iw || !ih) return { x: 0, y: 0, w: cw, h: ch };
+    const cw = containerSize.width;
+    const ch = containerSize.height;
+    const iw = naturalSize.width;
+    const ih = naturalSize.height;
+
+    if(!cw || !ch) return { x: 0, y: 0, w: 0, h: 0 };
+    if(!iw || !ih) return { x: 0, y: 0, w: cw, h: ch };
+
     const containerAR = cw / ch;
     const imageAR = iw / ih;
-    if (containerAR > imageAR) {
+
+    if(containerAR > imageAR) {
       // image fills height
       const h = ch;
       const w = h * imageAR;
       const x = (cw - w) / 2;
       return { x, y: 0, w, h };
-    } else {
-      // image fills width
-      const w = cw;
-      const h = w / imageAR;
-      const y = (ch - h) / 2;
-      return { x: 0, y, w, h };
     }
-  }, [dimensions, natural]);
 
-  const handleMouseMove = (e: React.MouseEvent) => {
-    const rect = containerRef.current?.getBoundingClientRect();
-    if (!rect) return;
+    // image fills width
+    const w = cw;
+    const h = w / imageAR;
+    const y = (ch - h) / 2;
+    return { x: 0, y, w, h };
+  }, [containerSize, naturalSize]);
 
-    // mouse position relative to container
-    const rawX = e.clientX - rect.left;
-    const rawY = e.clientY - rect.top;
+  const clamp = (value: number, min: number, max: number) => Math.max(min, Math.min(value, max));
 
-    // Clamp lens center within the rendered image box
+  const setLensToCenter = useCallback(() => {
     const minX = imageBox.x + lensSize / 2;
     const maxX = imageBox.x + imageBox.w - lensSize / 2;
     const minY = imageBox.y + lensSize / 2;
     const maxY = imageBox.y + imageBox.h - lensSize / 2;
-    const clampedX = Math.max(minX, Math.min(rawX, maxX));
-    const clampedY = Math.max(minY, Math.min(rawY, maxY));
 
-    setMousePos({ x: clampedX, y: clampedY });
-  };
+    const centerX = imageBox.x + imageBox.w / 2;
+    const centerY = imageBox.y + imageBox.h / 2;
 
-  const lensStyle = {
-    width: lensSize,
-    height: lensSize,
-    left: mousePos.x - lensSize / 2,
-    top: mousePos.y - lensSize / 2,
-  };
+    setMousePos({
+      x: clamp(centerX, minX, maxX),
+      y: clamp(centerY, minY, maxY),
+    });
+  }, [imageBox, lensSize]);
+
+  const handleMouseEnter = useCallback(() => {
+    if(!canHover) return;
+
+    setIsHovering(true);
+
+    // Refresh size when user hovers (helps if layout changed)
+    if(containerRef.current) {
+      setContainerSize({
+        width: containerRef.current.clientWidth,
+        height: containerRef.current.clientHeight,
+      });
+    }
+
+    // Initialize lens to center so popover doesn't start "blank"
+    if(imageBox.w > 0 && imageBox.h > 0) {
+      setLensToCenter();
+    }
+  }, [canHover, imageBox.w, imageBox.h, setLensToCenter]);
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if(!canHover) return;
+
+      const rect = containerRef.current?.getBoundingClientRect();
+      if(!rect) return;
+
+      const rawX = e.clientX - rect.left;
+      const rawY = e.clientY - rect.top;
+
+      const minX = imageBox.x + lensSize / 2;
+      const maxX = imageBox.x + imageBox.w - lensSize / 2;
+      const minY = imageBox.y + lensSize / 2;
+      const maxY = imageBox.y + imageBox.h - lensSize / 2;
+
+      setMousePos({
+        x: clamp(rawX, minX, maxX),
+        y: clamp(rawY, minY, maxY),
+      });
+    },
+    [canHover, imageBox, lensSize]
+  );
+
+  const lensStyle = useMemo(
+    () => ({
+      width: lensSize,
+      height: lensSize,
+      left: mousePos.x - lensSize / 2,
+      top: mousePos.y - lensSize / 2,
+    }),
+    [lensSize, mousePos]
+  );
 
   const scale = popoverSize / lensSize;
 
-  // Mouse position within the rendered image box
-  const imgX = mousePos.x - imageBox.x;
-  const imgY = mousePos.y - imageBox.y;
+  const magnifiedImageStyle = useMemo(() => {
+    // Mouse position within the rendered image box
+    const imgX = mousePos.x - imageBox.x;
+    const imgY = mousePos.y - imageBox.y;
 
-  // Magnified image scales from the rendered image size (object-fit: contain)
-  const imageStyle = {
-    width: imageBox.w * scale,
-    height: imageBox.h * scale,
-    transform: `translate(-${imgX * scale - popoverSize / 2}px, -${imgY * scale - popoverSize / 2}px)`,
-  } as React.CSSProperties;
+    return {
+      width: imageBox.w * scale,
+      height: imageBox.h * scale,
+      transform: `translate(-${imgX * scale - popoverSize / 2}px, -${imgY * scale - popoverSize / 2}px)`,
+      display: 'block',
+      userSelect: 'none',
+      pointerEvents: 'none',
+    } as React.CSSProperties;
+  }, [mousePos, imageBox, scale, popoverSize]);
+
+  const showPopover = canHover && isHovering && imageReady && imageBox.w > 0 && imageBox.h > 0;
 
   return (
     <div className={styles.imageMagnifier}>
       <div
         className={styles.imageMagnifierContainer}
         ref={containerRef}
-        onMouseEnter={() => {
-          setIsHovering(true);
-          const { clientWidth, clientHeight } = containerRef.current!;
-          setDimensions({ width: clientWidth, height: clientHeight });
-          // Initialize lens to image center to avoid blank popover before first move
-          const centerX = imageBox.x + Math.max(imageBox.w, 0) / 2;
-          const centerY = imageBox.y + Math.max(imageBox.h, 0) / 2;
-          const minX = imageBox.x + lensSize / 2;
-          const maxX = imageBox.x + imageBox.w - lensSize / 2;
-          const minY = imageBox.y + lensSize / 2;
-          const maxY = imageBox.y + imageBox.h - lensSize / 2;
-          const initX = Math.max(minX, Math.min(centerX, maxX));
-          const initY = Math.max(minY, Math.min(centerY, maxY));
-          setMousePos({ x: initX, y: initY });
-        }}
+        onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovering(false)}
         onMouseMove={handleMouseMove}
+        style={{ cursor: canHover ? 'none' : 'default' }}
       >
         <img
           src={resolvedSrc}
           alt={alt}
           className={styles.imageMagnifierImage}
-          style={{ objectFit: 'contain', width: '100%', height: '100%', display: 'block' }}
+          style={{
+            objectFit: 'contain',
+            width: '100%',
+            height: '100%',
+            display: 'block',
+            // disable hover interactions on touch devices
+            pointerEvents: canHover ? 'auto' : 'none',
+          }}
           draggable={false}
         />
-        {isHovering && <div className={styles.imageMagnifierLens} style={lensStyle} />}
+
+        {canHover && isHovering && (
+          <div className={styles.imageMagnifierLens} style={lensStyle}/>
+        )}
       </div>
 
-      {isHovering && imageReady && imageBox.w > 0 && imageBox.h > 0 && (
+      {showPopover && (
         <Popover open targetRef={containerRef} position="right" width="auto">
           <div
             className={styles.imageMagnifierPopover}
             style={{ width: popoverSize, height: popoverSize, overflow: 'hidden' }}
           >
-            <img
-              src={resolvedSrc}
-              alt={alt}
-              style={{ ...imageStyle, display: 'block', userSelect: 'none', pointerEvents: 'none' }}
-              draggable={false}
-            />
+            <img src={resolvedSrc} alt={alt} style={magnifiedImageStyle} draggable={false}/>
           </div>
         </Popover>
       )}
