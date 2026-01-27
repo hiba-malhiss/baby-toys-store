@@ -1,13 +1,49 @@
 export type SharePlatform = 'whatsapp' | 'facebook';
 
+function isMobileLike() {
+  if (typeof navigator === 'undefined') return false;
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+}
+
+// Attempt to open a URL in a new tab/window. If blocked by a popup blocker,
+// fall back to navigating the current tab.
+function safeOpen(url: string) {
+  const win = window.open(url, '_blank', 'noopener,noreferrer');
+  if (!win) {
+    // Popup blocked; fall back to same-tab navigation
+    window.location.href = url;
+  }
+}
+
 export function shareTo(platform: SharePlatform, url: string) {
   const encoded = encodeURIComponent(url);
+
   if (platform === 'whatsapp') {
-    window.open(`https://wa.me/?text=${encoded}`, '_blank');
+    safeOpen(`https://wa.me/?text=${encoded}`);
     return;
   }
+
   if (platform === 'facebook') {
-    window.open(`https://www.facebook.com/sharer/sharer.php?u=${encoded}`, '_blank');
+    // On mobile, try to open the Facebook app if available, otherwise fall back to web sharer
+    if (isMobileLike()) {
+      // Known deep link pattern to open Facebook app share modal
+      const appUrl = `fb://facewebmodal/f?href=${encodeURIComponent(
+        `https://www.facebook.com/sharer/sharer.php?u=${encoded}`
+      )}`;
+
+      // Try opening the app link first; if it fails (no app), quickly fall back to web
+      const appWin = window.open(appUrl, '_blank', 'noopener,noreferrer');
+      // If popup blocked or app not installed, fall back after a short delay
+      setTimeout(() => {
+        if (!appWin || appWin.closed) {
+          safeOpen(`https://www.facebook.com/sharer/sharer.php?u=${encoded}`);
+        }
+      }, 500);
+      return;
+    }
+
+    // Desktop: use the web sharer directly
+    safeOpen(`https://www.facebook.com/sharer/sharer.php?u=${encoded}`);
     return;
   }
 }
