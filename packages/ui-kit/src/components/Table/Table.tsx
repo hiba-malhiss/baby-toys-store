@@ -2,7 +2,7 @@ import React, { useState, useRef, useCallback, forwardRef, useImperativeHandle }
 import { Paginator, StringInput, Icon, Card, Image } from '../index';
 import { TableProps } from './table.types';
 import styles from './table.module.scss';
-import { faSort, faSortDown, faSortUp } from '@fortawesome/free-solid-svg-icons';
+import { ArrowUpDown, ArrowDown, ArrowUp } from 'lucide-react';
 import Overlay from '../Overlay/Overlay';
 
 const Table = forwardRef(
@@ -145,8 +145,8 @@ const Table = forwardRef(
     );
 
     const renderSortIcon = (field: string) => {
-      if (state.sortField !== field) return <Icon icon={faSort} />;
-      return state.sortOrder === 1 ? <Icon icon={faSortUp} /> : <Icon icon={faSortDown} />;
+      if (state.sortField !== field) return <Icon icon={ArrowUpDown} />;
+      return state.sortOrder === 1 ? <Icon icon={ArrowUp} /> : <Icon icon={ArrowDown} />;
     };
 
     const renderFilter = useCallback(

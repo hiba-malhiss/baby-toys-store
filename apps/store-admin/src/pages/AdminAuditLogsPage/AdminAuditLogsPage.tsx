@@ -3,7 +3,7 @@ import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Heading, Table, Flex, StringInput, Chip, Button } from '@baby-toys/ui-kit';
 import { formatDateTime } from '@baby-toys/ui-kit';
 import styles from './admin-audit-logs-page.module.scss';
-import { faEye, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Eye, Search } from 'lucide-react';
 import { useAdminAuditLogs } from '../../api/auditApi';
 import { useTranslation } from 'react-i18next';
 import AdminAuditDetailDialog from './AdminAuditDetailDialog/AdminAuditDetailDialog';
@@ -65,7 +65,7 @@ const AdminAuditLogsPage: React.FC = () => {
         <Button
           size="small"
           appearance="outline"
-          leftIcon={faEye}
+          leftIconComp={Eye}
           onClick={() => {
             setDetailId(r.id);
             setDetailOpen(true);
@@ -99,7 +99,7 @@ const AdminAuditLogsPage: React.FC = () => {
                   refetch();
                 }
               }}
-              iconRight={faSearch}
+              iconRight={Search}
               withIconBackground
               onIconClick={() => {
                 setPage(1);

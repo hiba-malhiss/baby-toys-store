@@ -1,7 +1,7 @@
 import styles from './toast.module.scss';
 import { useToast } from './ToastContext';
 import Button from '../Button/Button.tsx';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { X } from 'lucide-react';
 import clsx from 'clsx';
 
 export type ToastType = 'success' | 'error' | 'info';
@@ -24,7 +24,7 @@ const Toast = () => {
           {toast.message && <p>{toast.message}</p>}
           <Button
             appearance="link"
-            leftIcon={faClose}
+            leftIconComp={X}
             className={styles.toastCloseButton}
             onClick={() => removeToast(toast.id)}
             withoutPadding

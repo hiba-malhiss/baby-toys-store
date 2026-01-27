@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
 import Button from '../Button/Button.tsx';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import styles from './paginator.module.scss';
 import BouncingDotsLoader from '../BouncingDotsLoader/BouncingDotsLoader.tsx';
@@ -150,7 +150,7 @@ function Paginator({
       <Button
         onClick={() => gotoPage(currentPage - 1)}
         isDisabled={currentPage <= 1}
-        leftIcon={faChevronLeft}
+        leftIconComp={ChevronLeft}
         appearance="outline"
         isRounded
         className={clsx(styles.paginationButton, styles.paginationPrev)}
@@ -174,7 +174,7 @@ function Paginator({
       <Button
         onClick={() => gotoPage(currentPage + 1)}
         isDisabled={currentPage >= totalPages}
-        leftIcon={faChevronRight}
+        leftIconComp={ChevronRight}
         appearance="outline"
         isRounded
         className={clsx(styles.paginationButton, styles.paginationNext)}

@@ -8,12 +8,12 @@ import {
   Rating,
   CopyToClipboardButton,
 } from '@baby-toys/ui-kit';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import ReviewsFilters from './ReviewsFilters.tsx';
 import { useAdminReviews, useHideReview, useUnhideReview } from '../../api/reviewsApi';
 import { ReviewDto, ReviewStatus } from '../../api/types/review';
-import { faEyeSlash, faEye } from '@fortawesome/free-solid-svg-icons';
+import { EyeOff, Eye } from 'lucide-react';
 import styles from './reviews-page.module.scss';
 
 export default function ReviewsPage() {
@@ -144,7 +144,7 @@ export default function ReviewsPage() {
             <Button
               size="small"
               appearance="outline"
-              leftIcon={hidden ? faEye : faEyeSlash}
+              leftIconComp={hidden ? Eye : EyeOff}
               isLoading={isHiding || isUnhiding}
               onClick={() => (hidden ? unhideReview(row.id) : hideReview(row.id))}
             >

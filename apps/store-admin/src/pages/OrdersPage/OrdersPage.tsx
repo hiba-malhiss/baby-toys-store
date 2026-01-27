@@ -3,7 +3,7 @@ import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Heading, Table, Flex, StringInput, Select, Option } from '@baby-toys/ui-kit';
 import { useOrdersPage } from './useOrdersPage.tsx';
 import styles from './orders-page.module.scss';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Search } from 'lucide-react';
 import { getOrderStatusOptions } from './orders-page.utils';
 import { useTranslation } from 'react-i18next';
 
@@ -54,7 +54,7 @@ const OrdersPage: React.FC = () => {
                 setSearchValue(v);
                 if (!v?.trim() && searchValue) handleSearch('');
               }}
-              iconRight={faSearch}
+              iconRight={Search}
               withIconBackground
               onIconClick={() => handleSearch(searchValue.trim())}
             />

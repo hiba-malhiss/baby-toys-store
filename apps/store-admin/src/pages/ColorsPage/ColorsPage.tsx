@@ -10,7 +10,7 @@ import {
   ColorPicker,
   BouncingDotsLoader,
 } from '@baby-toys/ui-kit';
-import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Pencil, Trash2 } from 'lucide-react';
 import { Color } from '../../api/types/color';
 import useColorsPage from './useColors';
 import ColorDialog from './ColorDialog';
@@ -89,7 +89,7 @@ const ColorsPage: React.FC = () => {
                 <Flex spacing="m">
                   <Button
                     size="small"
-                    leftIcon={faPen}
+                    leftIconComp={Pencil}
                     appearance="outline"
                     onClick={() => openEditDialog(color)}
                     aria-label={t('common.edit')}
@@ -97,7 +97,7 @@ const ColorsPage: React.FC = () => {
                   <Button
                     size="small"
                     appearance="outline"
-                    leftIcon={faTrashAlt}
+                    leftIconComp={Trash2}
                     onClick={() => openDeleteDialog(color)}
                     aria-label={t('common.delete')}
                   />

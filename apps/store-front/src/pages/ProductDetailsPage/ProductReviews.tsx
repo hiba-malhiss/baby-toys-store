@@ -2,7 +2,7 @@ import React from 'react';
 import { ReviewCard } from '@baby-toys/ui-kit';
 import { ViewSwitcher } from '@baby-toys/ui-kit';
 import { useProductReviews } from '../../api/reviewsApi.ts';
-import { faComments } from '@fortawesome/free-solid-svg-icons';
+import { MessageSquare } from 'lucide-react';
 
 interface ProductReviewsProps {
   productId: string;
@@ -25,7 +25,7 @@ export const ProductReviews: React.FC<ProductReviewsProps> = ({ productId }) => 
       pageSize={PRODUCT_REVIEWS_PAGE_SIZE}
       totalSize={totalSize}
       isLoading={isLoading}
-      emptyIcon={faComments}
+      emptyIcon={MessageSquare}
       emptyMessage="No reviews yet"
       emptySubtext="Be the first to review this product."
       emptyAlign="center"

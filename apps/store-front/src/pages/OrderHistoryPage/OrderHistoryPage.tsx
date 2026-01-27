@@ -13,7 +13,7 @@ import {
 import { useAuth } from '../../context/AuthContext';
 import { useAddToCart } from '../../api/cartApi';
 import { useCartStore } from '../../store/useCartStore';
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { Package } from 'lucide-react';
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
 import AddReviewDialog from './AddReviewDialog.tsx';
 import OrderProductCard from './OrderProductCard/OrderProductCard.tsx';
@@ -108,7 +108,7 @@ const OrderHistoryPage: React.FC = () => {
       </Flex>
       {!isLoading && items.length === 0 ? (
         <NoDataFound
-          icon={faBoxOpen}
+          icon={Package}
           message={t('orders.emptyTitle')}
           subtext={t('orders.emptySubtitle')}
           withoutPadding

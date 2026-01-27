@@ -2,7 +2,7 @@ import React, { useEffect, useState, type ReactNode, useRef, useMemo, useCallbac
 import clsx from 'clsx';
 import Flex from '../Flex/Flex.tsx';
 import Button from '../Button/Button.tsx';
-import { faTh, faBars, faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { Grid3x3, List, Package } from 'lucide-react';
 import Heading from '../Heading/Heading.tsx';
 import styles from './view-switcher.module.scss';
 import Paginator, { type PaginationMode } from '../Paginator/Paginator.tsx';
@@ -172,7 +172,7 @@ function ViewSwitcher({
               appearance="link"
               size="xlarge"
               withoutPadding
-              leftIcon={faTh}
+              leftIconComp={Grid3x3}
             />
             <Button
               onClick={() => changeView('list')}
@@ -180,7 +180,7 @@ function ViewSwitcher({
               appearance="link"
               size="xlarge"
               withoutPadding
-              leftIcon={faBars}
+              leftIconComp={List}
             />
           </Flex>
 
@@ -216,7 +216,7 @@ function ViewSwitcher({
           ))
         ) : items.length === 0 ? (
           <NoDataFound
-            icon={emptyIcon ?? faBoxOpen}
+            iconComp={emptyIcon ?? Package}
             message={emptyMessage ?? 'No toys found'}
             subtext={emptySubtext ?? 'Try changing your search or filters.'}
             align={emptyAlign ?? 'center'}

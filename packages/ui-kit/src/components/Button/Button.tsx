@@ -1,9 +1,8 @@
 import { forwardRef, type MouseEventHandler, type ReactNode, type ComponentType } from 'react';
 import styles from './button.module.scss';
 import clsx from 'clsx';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import Icon from '../Icon/Icon.tsx';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { LoaderCircle } from 'lucide-react';
 import type { IconColor } from '../Icon/icon.constant.ts';
 
 export type ButtonSize = 'xsmall' | 'small' | 'medium' | 'large' | 'xlarge' | 'xxlarge';
@@ -24,16 +23,12 @@ type ButtonProps = {
   appearance?: ButtonAppearance;
   color?: ButtonColor;
   size?: ButtonSize;
-  leftIcon?: IconDefinition;
-  leftIconName?: string;
   leftIconComp?: ComponentType<any> | null;
-  rightIcon?: IconDefinition;
-  rightIconName?: string;
   rightIconComp?: ComponentType<any> | null;
+  iconColor?: IconColor | ButtonColor | string;
   onClick?: MouseEventHandler<HTMLButtonElement>;
   isDisabled?: boolean;
   isRounded?: boolean;
-  iconColor?: IconColor;
   withoutPadding?: boolean;
   withAutoHeight?: boolean;
   isSelected?: boolean;
@@ -53,12 +48,9 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       appearance = 'filled',
       color = 'primary',
       size = 'medium',
-      leftIcon,
-      leftIconName,
       leftIconComp,
-      rightIcon,
-      rightIconName,
       rightIconComp,
+      iconColor,
       onClick,
       isDisabled = false,
       isLoading = false,
@@ -69,7 +61,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isSelected,
       className,
       align,
-      iconColor,
       iconBadge,
       type,
       form,
@@ -81,6 +72,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const resolvedLoading = !!isLoading;
     const resolvedFullWidth = !!fullWidth;
     const resolvedType = type ?? 'button';
+    const resolvedIconColor = iconColor ?? 'inherit';
 
     const calculatedClassName = clsx(
       styles.button,
@@ -117,18 +109,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           {resolvedLoading && (
             <Icon
               isSpinning
-              icon={faSpinner}
+              icon={LoaderCircle}
               className={clsx(styles.buttonIcon, styles.loadingIcon)}
               size={size}
+              color={resolvedIconColor}
             />
           )}
 
-          {(leftIcon || leftIconName || leftIconComp) && (
+          {leftIconComp && (
             <Icon
-              color={iconColor}
-              icon={leftIcon}
-              iconName={leftIconName}
-              lucideComp={leftIconComp}
+              color={resolvedIconColor}
+              icon={leftIconComp}
               className={styles.buttonIcon}
               size={size}
               badge={iconBadge}
@@ -137,12 +128,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
           {children}
 
-          {(rightIcon || rightIconName || rightIconComp) && (
+          {rightIconComp && (
             <Icon
-              color={iconColor}
-              icon={rightIcon}
-              iconName={rightIconName}
-              lucideComp={rightIconComp}
+              color={resolvedIconColor}
+              icon={rightIconComp}
               className={styles.buttonIcon}
               size={size}
               badge={iconBadge}

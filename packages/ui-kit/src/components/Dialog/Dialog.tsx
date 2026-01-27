@@ -9,10 +9,10 @@ import React, {
 } from 'react';
 import { createPortal } from 'react-dom';
 import {
-  faXmark,
-  faUpRightAndDownLeftFromCenter,
-  faDownLeftAndUpRightToCenter,
-} from '@fortawesome/free-solid-svg-icons';
+  X,
+  Maximize2,
+  Minimize2,
+} from 'lucide-react';
 import styles from './dialog.module.scss';
 import Button from '../Button/Button.tsx';
 
@@ -181,8 +181,8 @@ const Dialog = forwardRef((props: any, ref) => {
                 <Button
                   onClick={maximize}
                   appearance="link"
-                  leftIcon={
-                    maximized ? faDownLeftAndUpRightToCenter : faUpRightAndDownLeftFromCenter
+                  leftIconComp={
+                    maximized ? Minimize2 : Maximize2
                   }
                   size="medium"
                   withoutPadding
@@ -192,7 +192,7 @@ const Dialog = forwardRef((props: any, ref) => {
                 <Button
                   withoutPadding
                   onClick={close}
-                  leftIcon={faXmark}
+                  leftIconComp={X}
                   appearance="link"
                   size="large"
                 />

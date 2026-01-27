@@ -8,7 +8,7 @@ import {
 } from '../../api/expensesApi';
 import { useForm } from 'react-hook-form';
 import { Button } from '@baby-toys/ui-kit';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Trash2 } from 'lucide-react';
 
 export type FormValues = {
   date: Date | null;
@@ -79,7 +79,7 @@ export function useExpensesPage() {
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faTrashAlt}
+            leftIconComp={Trash2}
             onClick={() => deleteMut.mutateAsync(row.id)}
             aria-label="Delete"
           />

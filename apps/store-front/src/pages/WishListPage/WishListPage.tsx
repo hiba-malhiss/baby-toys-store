@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { ViewSwitcher, NoDataFound, Divider } from '@baby-toys/ui-kit';
-import { faHeart, faInbox } from '@fortawesome/free-solid-svg-icons';
+import { Heart, Inbox } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { useLoginDialogStore } from '../../store/useLoginDialogStore';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
@@ -50,7 +50,7 @@ const WishListPage = () => {
     if (!isAuthenticated && !isLoading) {
       return (
         <NoDataFound
-          icon={faInbox}
+          iconComp={Inbox}
           message={t('wishlist.loginPromptTitle')}
           subtext={t('wishlist.loginPromptSubtitle')}
           align="center"
@@ -63,7 +63,7 @@ const WishListPage = () => {
     if (localItems.length === 0 && !isLoading) {
       return (
         <NoDataFound
-          icon={faHeart}
+          iconComp={Heart}
           message={t('wishlist.emptyTitle')}
           subtext={t('wishlist.emptySubtitle')}
           align="center"

@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './cart-item-card.module.scss';
 import clsx from 'clsx';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Trash2 } from 'lucide-react';
 import { Button, Flex, Image, Text } from '@baby-toys/ui-kit';
 import CartQuantityInput from '../../shared/CartQuantityInput';
 import { useRemoveFromCart } from '../../../api/cartApi.ts';
@@ -55,7 +55,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
           size="small"
         />
         <Button
-          leftIcon={faTrashAlt}
+          leftIconComp={Trash2}
           appearance="link"
           color="secondary"
           onClick={() => removeMutation.mutate({ itemId: Number(id) })}

@@ -1,12 +1,11 @@
-import React, { useMemo } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Flex, Heading, Table, Calendar, Tooltip } from '@baby-toys/ui-kit';
+import { Button, Flex, Heading, Table, Calendar, Tooltip, Icon } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useFinancePage } from './useFinancePage';
-import { faEye, faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import moment from 'moment';
+import { Eye, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import moment from 'moment';
+import { useMemo } from "react";
 
 const FinancePage: React.FC = () => {
   const { t } = useTranslation();
@@ -17,9 +16,7 @@ const FinancePage: React.FC = () => {
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
       <span>{label}</span>
       <Tooltip position="top" content={tip}>
-        <span>
-          <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }} />
-        </span>
+        <div><Icon icon={Info}></Icon></div>
       </Tooltip>
     </span>
   );
@@ -39,7 +36,7 @@ const FinancePage: React.FC = () => {
       {
         field: 'cogs',
         header: (
-          <HeaderWithTooltip label={t('finance.cogs')} tip={t('tooltips.financeHeaders.cogs')} />
+          <HeaderWithTooltip label={t('finance.cogs')} tip={t('tooltips.financeHeaders.cogs')}/>
         ),
       },
       {
@@ -66,7 +63,7 @@ const FinancePage: React.FC = () => {
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faEye}
+            leftIconComp={Eye}
             onClick={() => navigate(`/finance/${row.month}`)}
             aria-label={t('finance.viewProduct')}
           />
@@ -90,7 +87,7 @@ const FinancePage: React.FC = () => {
               typeView="year"
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if (!d) return;
+                if(!d) return;
                 const y = (d as any).year ? (d as any).year() : moment(d).year();
                 setYear(Number(y));
               }}
@@ -98,7 +95,7 @@ const FinancePage: React.FC = () => {
           </Flex>
         </Flex>
 
-        <Table stripedRows value={data} columns={columns as any} isLoading={isLoading} />
+        <Table stripedRows value={data} columns={columns as any} isLoading={isLoading}/>
       </Flex>
     </AdminLayout>
   );

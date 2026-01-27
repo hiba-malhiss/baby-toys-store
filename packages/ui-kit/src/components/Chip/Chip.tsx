@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './chip.module.scss';
 import clsx from 'clsx';
 import Button from '../Button/Button.tsx';
-import { faClose } from '@fortawesome/free-solid-svg-icons';
+import { X } from 'lucide-react';
 
 type ChipProps = {
   label: string;
@@ -34,7 +34,7 @@ const Chip: React.FC<ChipProps> = ({ size, onClose, label, appearance = 'primary
       {onClose && (
         <Button
           withoutPadding
-          rightIcon={faClose}
+          leftIconComp={X}
           appearance="link"
           size="xsmall"
           onClick={onClose}

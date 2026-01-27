@@ -4,7 +4,7 @@ import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import { useNavigate } from 'react-router-dom';
 import { formatDate } from '@baby-toys/ui-kit/utils';
 import { Button, Card, Chip, Image } from '@baby-toys/ui-kit';
-import { faCircleArrowDown, faCircleArrowUp } from '@fortawesome/free-solid-svg-icons';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import type { Order, OrderItem } from '../../../api/ordersApi.ts';
 import { useTranslation } from 'react-i18next';
 
@@ -111,7 +111,7 @@ const OrderProductCard = ({
             <Button
               appearance="link"
               color="primary"
-              leftIcon={expanded ? faCircleArrowUp : faCircleArrowDown}
+              leftIconComp={expanded ? ChevronUp : ChevronDown}
               onClick={() => setExpanded((v) => !v)}
             >
               {expanded

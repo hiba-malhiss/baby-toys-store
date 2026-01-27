@@ -8,7 +8,7 @@ import {
   PriceDisplay,
   Table,
 } from '@baby-toys/ui-kit';
-import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Pencil, Trash2 } from 'lucide-react';
 import styles from './order-details-page.module.scss';
 import { NavigateFunction } from 'react-router-dom';
 import { Order } from '../../api/types/order';
@@ -58,7 +58,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
 
         {showHeaderActions && (
           <Button
-            leftIcon={faPen}
+            leftIconComp={Pencil}
             appearance="outline"
             onClick={() => navigate(`/order-edit/${order.id}`)}
           />
@@ -153,7 +153,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
             <Button
               appearance="outline"
               color="error"
-              leftIcon={faTrashAlt}
+              leftIconComp={Trash2}
               onClick={() => setItemIdToDelete(item.id)}
             />
           ) : null,

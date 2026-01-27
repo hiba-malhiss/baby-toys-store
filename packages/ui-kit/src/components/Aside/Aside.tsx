@@ -10,6 +10,7 @@ import Icon from '../Icon/Icon';
 import type { MenuItem } from '../Menu/Menu';
 import styles from './aside.module.scss';
 import { IconColor } from '../Icon/icon.constant.ts';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 export type AsideProps = {
   model: MenuItem[];
@@ -76,15 +77,12 @@ const Aside: React.FC<AsideProps> = ({
               withoutPadding
               fullWidth
               align="center"
-              leftIcon={item.icon}
-              leftIconName={item.iconName}
               leftIconComp={item.iconComp}
               size="large"
               onClick={hasSubmenu ? () => setIsLockedOpen(true) : handleItemClick(item)}
               isDisabled={item.disabled}
               isSelected={isSelected}
               aria-label={item.label}
-              iconColor={isSelected ? undefined : IconColor.text}
             />
           </Tooltip>
         );
@@ -104,12 +102,11 @@ const Aside: React.FC<AsideProps> = ({
                   key={idx}
                   header={
                     <Flex align="center" spacing="s">
-                      {(item.icon || item.iconName || item.iconComp) && (
+                      {item.iconComp && (
                         <Icon
-                          icon={item.icon}
-                          iconName={item.iconName}
-                          lucideComp={item.iconComp}
+                          icon={item.iconComp}
                           color={defaultOpen ? undefined : IconColor.text}
+                          size="large"
                         />
                       )}
                       <span>{item.label}</span>
@@ -150,14 +147,11 @@ const Aside: React.FC<AsideProps> = ({
                 withoutPadding
                 onClick={handleItemClick(item)}
                 isDisabled={item.disabled}
-                leftIcon={item.icon}
-                leftIconName={item.iconName}
                 leftIconComp={item.iconComp}
                 size="large"
                 fullWidth
                 appearance="link"
                 align="start"
-                iconColor={isSelected ? undefined : IconColor.text}
                 isSelected={isSelected}
               >
                 {item.label}
@@ -204,7 +198,7 @@ const Aside: React.FC<AsideProps> = ({
           <span className={styles.sidebarTool} aria-hidden />
           <span className={styles.toggleIcon} aria-hidden>
             <Icon
-              iconName={isLockedOpen ? 'lucide:chevron-left' : 'lucide:chevron-right'}
+              icon={isLockedOpen ? ChevronLeft : ChevronRight}
               color={IconColor.text}
             />
           </span>

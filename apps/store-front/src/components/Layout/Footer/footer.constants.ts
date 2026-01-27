@@ -1,4 +1,6 @@
-import { faFacebookF, faWhatsapp } from '@fortawesome/free-brands-svg-icons';
+import { Facebook, MessageCircle } from 'lucide-react';
+import type { ComponentType } from 'react';
+import type { SharePlatform } from '../../../utils/share';
 
 export const exploreLinks = [
   { label: 'Shop', path: '/shop' },
@@ -8,7 +10,10 @@ export const exploreLinks = [
   { label: 'Shipping Policy', path: '/policies?section=shippingPolicy' },
 ];
 
-export const socialMediaLinks = [{ icon: faFacebookF }, { icon: faWhatsapp }];
+export const socialMediaLinks: Array<{ icon: ComponentType<any>; platform: SharePlatform }> = [
+  { icon: Facebook, platform: 'facebook' },
+  { icon: MessageCircle, platform: 'whatsapp' },
+];
 
 // UI config for each ID
 export const footerInfoConfig: Record<

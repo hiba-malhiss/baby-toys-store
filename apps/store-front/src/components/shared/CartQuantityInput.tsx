@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { StringInput, Tooltip } from '@baby-toys/ui-kit';
+import { Icon, StringInput, Tooltip } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
-import Icon from '@baby-toys/ui-kit/components/Icon/Icon';
+import { LoaderCircle } from 'lucide-react';
 import { useUpdateCartItem } from '../../api/cartApi';
 
 interface CartQuantityInputProps {
@@ -134,7 +134,7 @@ const CartQuantityInput: React.FC<CartQuantityInputProps> = ({
       <Tooltip content={isAtOrOverMax ? maxTooltip : undefined} position="top">
         <span>{inputEl}</span>
       </Tooltip>
-      {isLoading && <Icon iconName="faSpinner" isSpinning />}
+      {isLoading && <Icon icon={LoaderCircle} isSpinning />}
     </span>
   );
 };

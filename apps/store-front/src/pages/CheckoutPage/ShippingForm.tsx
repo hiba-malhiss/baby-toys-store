@@ -12,12 +12,7 @@ import {
   TextArea,
 } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
-import {
-  faCheck,
-  faTrashAlt,
-  faTriangleExclamation,
-  faCheckCircle,
-} from '@fortawesome/free-solid-svg-icons';
+import { Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
 import { type ShippingOption, useActiveShippingOptions } from '../../api/shippingOptionsApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './checkout-page.module.scss';
@@ -191,13 +186,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
     const code = (getValues('couponCode') || '').trim();
     if (code) onCouponPreview?.({ code });
   };
-
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.checkoutPageForm}>
         {/* Alert for saved address */}
         {isAuthenticated && usingSavedAddress && (
-          <Alert icon={faCheck} title={t('checkout.form.alertUsingSaved')}>
+          <Alert icon={CheckCircle} title={t('checkout.form.alertUsingSaved')}>
             <Button
               appearance="link"
               color="underline"
@@ -326,7 +320,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
               fullWidth
               placeholder={t('checkout.form.placeholder.coupon')}
               iconRight={
-                !watch('couponCode') ? null : couponValid ? faCheckCircle : faTriangleExclamation
+                !watch('couponCode') ? null : couponValid ? CheckCircle : AlertTriangle
               }
               iconColor={couponValid ? IconColor.success : IconColor.warning}
               onKeyDown={(e) => {
@@ -346,7 +340,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             <Button
               size="medium"
               appearance="outline"
-              leftIcon={faTrashAlt}
+              leftIconComp={Trash2}
               onClick={() => {
                 setValue('couponCode', '');
                 onCouponPreview?.({ code: '' });

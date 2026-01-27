@@ -1,7 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import Icon from '../Icon/Icon.tsx';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { ComponentType } from 'react';
 import { IconSize } from '../Icon/icon.constant.ts';
 import styles from './social-icon-button.module.scss';
 
@@ -18,7 +18,7 @@ export type SocialIconVariant =
 export type SocialIconButtonSize = 'small' | 'medium' | 'large';
 
 export interface SocialIconButtonProps {
-  icon: IconDefinition;
+  icon: ComponentType<any>;
   onClick?: React.MouseEventHandler<HTMLButtonElement>;
   variant?: SocialIconVariant;
   ariaLabel?: string;
@@ -28,16 +28,6 @@ export interface SocialIconButtonProps {
   size?: SocialIconButtonSize;
   useVariantOverlay?: boolean;
 }
-
-const iconNameToVariant: Record<string, SocialIconVariant> = {
-  instagram: 'instagram',
-  whatsapp: 'whatsapp',
-  twitter: 'twitter',
-  'facebook-f': 'facebook',
-  youtube: 'youtube',
-  telegram: 'telegram',
-  github: 'github',
-};
 
 const SocialIconButton: React.FC<SocialIconButtonProps> = ({
   icon,
@@ -50,8 +40,7 @@ const SocialIconButton: React.FC<SocialIconButtonProps> = ({
   size = 'medium',
   useVariantOverlay = false,
 }) => {
-  const resolvedVariant =
-    variant ?? iconNameToVariant[icon.iconName ?? ''] ?? ('default' as SocialIconVariant);
+  const resolvedVariant = variant ?? 'default';
   const sizeClass = styles[`socialButton--size-${size}`] ?? styles['socialButton--size-medium'];
   const iconSize =
     size === 'small' ? IconSize.small : size === 'large' ? IconSize.large : IconSize.medium;

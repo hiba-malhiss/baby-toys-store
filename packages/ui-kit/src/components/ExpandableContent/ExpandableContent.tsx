@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, type ReactNode } from 'react';
-import { faChevronDown, faChevronUp } from '@fortawesome/free-solid-svg-icons';
+import { ChevronDown, ChevronUp } from 'lucide-react';
 import './expandable-content.scss';
 import Button, { type ButtonColor } from '../Button/Button.tsx';
 
@@ -47,13 +47,12 @@ const ExpandableContent: React.FC<ExpandableContentProps> = ({
       >
         {children}
       </div>
-
       {truncated && (
         <Button
           withoutPadding
           appearance="link"
           color={buttonColor}
-          leftIcon={expanded ? faChevronUp : faChevronDown}
+          leftIconComp={expanded ? ChevronUp : ChevronDown}
           onClick={() => setExpanded(!expanded)}
         >
           {expanded ? 'Show Less' : 'Show More'}

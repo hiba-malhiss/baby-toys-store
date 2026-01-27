@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import styles from './rating.module.scss';
-import { faStar as solidStar, faStarHalfAlt } from '@fortawesome/free-solid-svg-icons';
-import { faStar as regularStar } from '@fortawesome/free-regular-svg-icons';
+import { Star, StarHalf } from 'lucide-react';
 import Flex from '../Flex/Flex.tsx';
 import Icon from '../Icon/Icon.tsx';
 import type { IconSize } from '../Icon/icon.constant.ts';
@@ -53,11 +52,11 @@ const Rating: React.FC<RatingProps> = ({
 
         let icon;
         if (diff >= 1) {
-          icon = solidStar; // full star
+          icon = Star; // full star
         } else if (diff >= 0.5) {
-          icon = faStarHalfAlt; // half star
+          icon = StarHalf; // half star
         } else {
-          icon = regularStar; // empty star
+          icon = Star; // empty star
         }
 
         const isHoverChain = isInteractive && hoveredIndex !== null && hoveredIndex >= i;

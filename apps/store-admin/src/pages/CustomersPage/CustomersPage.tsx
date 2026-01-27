@@ -12,7 +12,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAdminUsers } from '../../api/usersApi';
 import type { AdminUser } from '../../api/types/user';
 import styles from './customer-page.module.scss';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Eye, Search } from 'lucide-react';
 
 const CustomersPage: React.FC = () => {
   const navigate = useNavigate();
@@ -143,11 +143,11 @@ const CustomersPage: React.FC = () => {
           <StringInput
             className={styles.customersPageSearch}
             placeholder="Search by name, email, or ID"
-            value={queryInput}
+            leftIconComp={Eye}
             onChange={(v) => setQueryInput(String(v ?? ''))}
             fullWidth
             withIconBackground
-            iconRight={faSearch}
+            iconRight={Search}
             onIconClick={() => {
               setQuery(queryInput.trim());
               setPage(1);

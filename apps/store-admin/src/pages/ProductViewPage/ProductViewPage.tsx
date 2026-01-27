@@ -12,7 +12,7 @@ import {
   Accordion,
   AccordionGroup,
 } from '@baby-toys/ui-kit';
-import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { Pencil } from 'lucide-react';
 import { useProduct } from '../../api/productApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './product-view-page.module.scss';
@@ -280,7 +280,7 @@ const ProductViewPage: React.FC = () => {
 
             <div className={styles.heroActions}>
               <Button
-                leftIcon={faPen}
+                leftIconComp={Pencil}
                 appearance="outline"
                 isDisabled={vm.id == null}
                 onClick={() => vm.id != null && navigate(`/edit-product/${vm.id}`)}

@@ -1,9 +1,49 @@
-import { ComponentType, useEffect, useMemo, useState } from 'react';
-import { icon as faIcon, type IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { ComponentType, useMemo } from 'react';
 import clsx from 'clsx';
 import { IconColor, IconSize } from './icon.constant';
 import styles from './icon.module.scss';
-import * as LucideIcons from './lucide-icons';
+import {
+  ArrowLeftRight,
+  ArrowUpDown,
+  Box,
+  Check,
+  CheckCircle,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+  Copy,
+  CreditCard,
+  Eye,
+  EyeOff,
+  Facebook,
+  Filter,
+  Gift,
+  Heart,
+  Inbox,
+  Info,
+  LayoutGrid,
+  LoaderCircle,
+  Mail,
+  MapPin,
+  Menu,
+  MessageCircle,
+  Minus,
+  Package,
+  PackageOpen,
+  Pencil,
+  Phone,
+  Plus,
+  RotateCw,
+  Search,
+  ShieldCheck,
+  ShoppingCart,
+  Star,
+  StarHalf,
+  Trash2,
+  Truck,
+  X,
+} from 'lucide-react';
 
 type LucideIconComponent = ComponentType<{
   size?: number | string;
@@ -13,11 +53,10 @@ type LucideIconComponent = ComponentType<{
 }>;
 
 interface IconProps {
-  icon?: IconDefinition;
-  iconName?: string;
-  lucideComp?: LucideIconComponent | null;
+  icon?: LucideIconComponent | null;
+  iconName?: string | null;
   size?: IconSize;
-  color?: IconColor;
+  color?: IconColor | string;
   isRotating?: boolean;
   isSpinning?: boolean;
   className?: string;
@@ -26,117 +65,143 @@ interface IconProps {
   ariaLabel?: string;
 }
 
-export async function loadSolidIcon(name: string): Promise<IconDefinition | undefined>{
-  const mod = await import('@fortawesome/free-solid-svg-icons');
-  return (mod as Record<string, IconDefinition>)[name];
-}
+const ICON_MAP: Record<string, LucideIconComponent> = {
+  truck: Truck,
+  'truck-fast': Truck,
+  shipping: Truck,
+  'shipping-fast': Truck,
+  phone: Phone,
+  'phone-alt': Phone,
+  email: Mail,
+  envelope: Mail,
+  mail: Mail,
+  map: MapPin,
+  'map-marker': MapPin,
+  'map-marker-alt': MapPin,
+  box: Box,
+  package: Package,
+  'box-open': PackageOpen,
+  'package-open': PackageOpen,
+  heart: Heart,
+  star: Star,
+  'star-half-alt': StarHalf,
+  'star-half': StarHalf,
+  check: Check,
+  'check-circle': CheckCircle,
+  times: X,
+  close: X,
+  x: X,
+  search: Search,
+  filter: Filter,
+  copy: Copy,
+  trash: Trash2,
+  'trash-alt': Trash2,
+  plus: Plus,
+  minus: Minus,
+  'chevron-left': ChevronLeft,
+  'chevron-right': ChevronRight,
+  'chevron-up': ChevronUp,
+  'chevron-down': ChevronDown,
+  sort: ArrowUpDown,
+  'sort-up': ChevronUp,
+  'sort-down': ChevronDown,
+  cart: ShoppingCart,
+  'cart-shopping': ShoppingCart,
+  'cart-plus': ShoppingCart,
+  refresh: RotateCw,
+  'arrow-left-right': ArrowLeftRight,
+  grid: LayoutGrid,
+  th: LayoutGrid,
+  bars: Menu,
+  info: Info,
+  'circle-info': Info,
+  eye: Eye,
+  'eye-slash': EyeOff,
+  pen: Pencil,
+  pencil: Pencil,
+  spinner: LoaderCircle,
+  loader: LoaderCircle,
+  facebook: Facebook,
+  'facebook-f': Facebook,
+  whatsapp: MessageCircle,
+  message: MessageCircle,
+  inbox: Inbox,
+  gift: Gift,
+  'credit-card': CreditCard,
+  creditcard: CreditCard,
+  shield: ShieldCheck,
+};
 
-function toPascalCase(name: string){
-  // supports: "chevron-down", "chevron_down", "chevron down"
-  return name
-    .trim()
-    .split(/[-_\s]+/)
-    .filter(Boolean)
-    .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-    .join('');
-}
+const resolveIconByName = (iconName?: string | null): LucideIconComponent | null => {
+  if (!iconName) return null;
 
-function getLucideFromName(iconName?: string): LucideIconComponent | null{
-  if(!iconName) return null;
-  if(!iconName.startsWith('lucide:')) return null;
+  const normalize = (name: string) =>
+    name
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g, '-');
 
-  const raw = iconName.slice('lucide:'.length);
-  if(!raw) return null;
+  let key = normalize(iconName);
 
-  const compName = toPascalCase(raw);
-  const Comp = (LucideIcons as Record<string, LucideIconComponent | undefined>)[compName];
-  return Comp ?? null;
-}
+  if (!key) return null;
+
+  if (key.startsWith('lucide:')) {
+    key = key.substring('lucide:'.length);
+  }
+
+  if (ICON_MAP[key]) return ICON_MAP[key];
+
+  if (key.startsWith('fa-')) {
+    const faKey = key.substring(3);
+    if (ICON_MAP[faKey]) return ICON_MAP[faKey];
+  }
+
+  return null;
+};
 
 const Icon = ({
-                iconName,
-                icon,
-                lucideComp,
-                size = IconSize.medium,
-                color,
-                isRotating = false,
-                isSpinning = false,
-                className,
-                badge,
-                title,
-                ariaLabel,
-              }: IconProps) => {
-  const [svgHtml, setSvgHtml] = useState('');
-  const [LucideComp, setLucideComp] = useState<LucideIconComponent | null>(null);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    setSvgHtml('');
-    setLucideComp(null);
-
-    // 1) FontAwesome by definition
-    if(icon) {
-      const svg = faIcon(icon)?.html?.join('\n') || '';
-      if(!cancelled) setSvgHtml(svg);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    // 2) Lucide by direct component
-    if(lucideComp) {
-      if(!cancelled) setLucideComp(() => lucideComp);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    // 3) Lucide by "lucide:*" name
-    const namedLucide = getLucideFromName(iconName);
-    if(namedLucide) {
-      if(!cancelled) setLucideComp(() => namedLucide);
-      return () => {
-        cancelled = true;
-      };
-    }
-
-    // 4) Fallback: old FontAwesome iconName (migration only)
-    if(iconName) {
-      loadSolidIcon(iconName).then((def) => {
-        if(cancelled) return;
-        const svg = faIcon(def)?.html?.join('\n') ?? '';
-        setSvgHtml(svg);
-      });
-    }
-
-    return () => {
-      cancelled = true;
-    };
-  }, [iconName, icon, lucideComp]);
+  icon,
+  iconName,
+  size = IconSize.medium,
+  color,
+  isRotating = false,
+  isSpinning = false,
+  className,
+  badge,
+  title,
+  ariaLabel,
+}: IconProps) => {
+  const LucideComp = useMemo(() => {
+    if (icon) return icon;
+    return resolveIconByName(iconName);
+  }, [icon, iconName]);
 
   const iconClass = useMemo(
     () =>
-      clsx(styles.icon, styles[`icon--${color}Color`], styles[`icon--${size}Size`], {
-        [styles.isRotating]: isRotating || isSpinning,
-      }),
+      clsx(
+        styles.icon,
+        color && color !== 'inherit' ? styles[`icon--${color}Color`] : undefined,
+        styles[`icon--${size}Size`],
+        {
+          [styles.isRotating]: isRotating || isSpinning,
+        }
+      ),
     [color, size, isRotating, isSpinning]
   );
 
   const a11yProps =
     ariaLabel || title
       ? { role: 'img', 'aria-label': ariaLabel ?? title }
-      : { 'aria-hidden': true as const };
+      : ({ 'aria-hidden': true } as const);
+
+  if (!LucideComp) {
+    return null;
+  }
 
   return (
     <span className={clsx(styles.iconWrapper, className)}>
       <span className={iconClass}>
-        {LucideComp ? (
-          <LucideComp size="1em" {...a11yProps} />
-        ) : (
-          // temp
-          <span dangerouslySetInnerHTML={{ __html: svgHtml }} {...a11yProps} />
-        )}
+        <LucideComp size="1em" {...a11yProps} />
       </span>
 
       {!!badge && <span className={styles.iconBadge}>{badge}</span>}

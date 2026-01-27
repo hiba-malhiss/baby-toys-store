@@ -15,11 +15,11 @@ import {
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import {
-  faTriangleExclamation,
-  faCircleInfo,
-  faCircleCheck,
-  faSync,
-} from '@fortawesome/free-solid-svg-icons';
+  AlertTriangle,
+  Info,
+  CheckCircle,
+  RefreshCw,
+} from 'lucide-react';
 
 import { useAdminDashboard, DASHBOARD_QUERY_KEY } from '../../api/dashboardApi';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -53,13 +53,12 @@ function useFormatters(currencyCode: string, locale: string) {
 }
 
 function getAlertAppearance(severity?: string) {
-  if (severity === 'CRITICAL') return 'error';
   if (severity === 'WARN') return 'warning';
   return 'info';
 }
 
 function getAlertIcon(severity?: string) {
-  return severity === 'CRITICAL' ? faTriangleExclamation : faCircleInfo;
+  return severity === 'CRITICAL' ? AlertTriangle : Info;
 }
 
 export default function DashboardPage() {
@@ -242,7 +241,7 @@ export default function DashboardPage() {
             appearance="outline"
             isDisabled={isFetching}
             isLoading={isFetching}
-            leftIcon={faSync}
+            leftIconComp={RefreshCw}
           >
             {t('common.refresh', { defaultValue: 'Refresh' })}
           </Button>
@@ -338,7 +337,7 @@ export default function DashboardPage() {
                                 position="top"
                               >
                                 <div>
-                                  <Icon icon={faCircleInfo} color="gray" />
+                                  <Icon icon={Info} color="gray" />
                                 </div>
                               </Tooltip>
                             )}

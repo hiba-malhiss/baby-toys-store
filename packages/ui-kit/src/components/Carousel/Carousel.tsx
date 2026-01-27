@@ -175,7 +175,7 @@ const Carousel: React.FC<CarouselProps> = ({
           appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
           size="large"
           isRounded
-          leftIcon={ChevronIcons[orientation].prev}
+          leftIconComp={ChevronIcons[orientation].prev}
           isDisabled={
             !circular &&
             (isHorizontal && isRtl ? currentPage === totalPages - 1 : currentPage === 0)
@@ -213,7 +213,7 @@ const Carousel: React.FC<CarouselProps> = ({
           appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
           isRounded
           size="large"
-          leftIcon={ChevronIcons[orientation].next}
+          leftIconComp={ChevronIcons[orientation].next}
           isDisabled={
             !circular &&
             (isHorizontal && isRtl ? currentPage === 0 : currentPage === totalPages - 1)

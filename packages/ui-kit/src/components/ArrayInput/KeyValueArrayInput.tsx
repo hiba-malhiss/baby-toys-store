@@ -1,6 +1,6 @@
 import React from 'react';
 import { StringInput, Button, Flex } from '@baby-toys/ui-kit';
-import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Plus, Trash2 } from 'lucide-react';
 
 export interface KeyValuePair {
   label: string;
@@ -74,7 +74,7 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
               onClick={() => handleRemove(index)}
               appearance="outline"
               color="secondary"
-              leftIcon={faTrashAlt}
+              leftIconComp={Trash2}
               isDisabled={isDisabled}
             />
           )}
@@ -86,7 +86,7 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
         className="bts-marginTs"
         withoutPadding
         color="underline"
-        leftIcon={faPlus}
+        leftIconComp={Plus}
         isDisabled={isDisabled}
       >
         {addButtonText}

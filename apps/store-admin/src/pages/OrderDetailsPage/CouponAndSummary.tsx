@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './order-details-page.module.scss';
-import { faCheck, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Check, Trash2 } from 'lucide-react';
 import { Button, Card, Divider, Flex, Heading, StringInput } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 
@@ -37,14 +37,14 @@ export const CouponAndSummary: React.FC<{
             />
             <Button
               onClick={handleApplyCoupon}
-              leftIcon={faCheck}
+              leftIconComp={Check}
               isDisabled={!couponInput.trim() || !canEditOrder}
             />
             {order?.couponCode && (
               <Button
                 appearance="outline"
                 onClick={handleRemoveCoupon}
-                leftIcon={faTrashAlt}
+                leftIconComp={Trash2}
                 isDisabled={!canEditOrder}
               />
             )}

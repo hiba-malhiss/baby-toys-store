@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
-import { faBoxOpen } from '@fortawesome/free-solid-svg-icons';
+import { Package } from 'lucide-react';
 import {
   Button,
   Card,
@@ -70,7 +70,7 @@ const ShoppingCartPage = () => {
         className={clsx(styles.shoppingCartPage, styles.shoppingCartPageIsEmpty)}
       >
         <NoDataFound
-          icon={faBoxOpen}
+          iconComp={Package}
           message={t('cart.empty')}
           buttonText={t('cart.browse')}
           onButtonClick={() => navigate('/shop')}

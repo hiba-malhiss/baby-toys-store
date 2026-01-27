@@ -45,7 +45,7 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
                 fullWidth
                 required
               >
-                <StringInput placeholder="e.g., fa-truck" />
+                <StringInput placeholder="e.g., lucide:truck" />
               </FormFieldWrapper>
 
               <FormFieldWrapper

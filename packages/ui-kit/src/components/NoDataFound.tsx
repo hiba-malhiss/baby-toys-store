@@ -1,13 +1,13 @@
 import Icon from './Icon/Icon.tsx';
 import Flex, { type Align } from './Flex/Flex.tsx';
 import Button from './Button/Button.tsx';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import styles from './no-data-found.module.scss';
 import { IconColor, IconSize } from './Icon/icon.constant.ts';
 import clsx from 'clsx';
+import type { ComponentType } from 'react';
 
 type NoDataFoundProps = {
-  icon?: IconDefinition;
+  iconComp?: ComponentType<any> | null;
   message?: string;
   buttonText?: string;
   withoutPadding?: boolean;
@@ -18,7 +18,7 @@ type NoDataFoundProps = {
 };
 
 const NoDataFound: React.FC<NoDataFoundProps> = ({
-  icon,
+  iconComp,
   message,
   buttonText,
   onButtonClick,
@@ -36,22 +36,10 @@ const NoDataFound: React.FC<NoDataFoundProps> = ({
       fullWidth
       className={clsx(styles.noDataFound, withoutPadding && styles.withoutPadding)}
     >
-      {icon && (
+      {iconComp && (
         <Icon
-          icon={icon}
-          size={
-            iconSize === 'xxxlarge'
-              ? IconSize.xxxlarge
-              : iconSize === 'xxlarge'
-                ? IconSize.xxlarge
-                : iconSize === 'xlarge'
-                  ? IconSize.xlarge
-                  : iconSize === 'large'
-                    ? IconSize.large
-                    : iconSize === 'small'
-                      ? IconSize.small
-                      : IconSize.medium
-          }
+          icon={iconComp}
+          size={iconSize}
           color={IconColor.gray}
           className={styles.noDataFoundIcon}
         />

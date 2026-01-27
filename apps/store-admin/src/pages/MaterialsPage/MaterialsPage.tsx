@@ -1,7 +1,7 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, Flex, Table, Heading, ConfirmDialog } from '@baby-toys/ui-kit';
-import { faPen, faTrashAlt, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 import type { Material } from '../../api/types/material';
 import useMaterials from './useMaterials';
 import MaterialDialog from './MaterialDialog';
@@ -35,7 +35,7 @@ const MaterialsPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPen}
+            leftIconComp={Pencil}
             appearance="outline"
             onClick={() => openEditDialog(row)}
             aria-label={`Edit ${row.name}`}
@@ -43,7 +43,7 @@ const MaterialsPage: React.FC = () => {
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faTrashAlt}
+            leftIconComp={Trash2}
             onClick={() => openDeleteDialog(row)}
             aria-label={`Delete ${row.name}`}
           />
@@ -58,7 +58,7 @@ const MaterialsPage: React.FC = () => {
         <Flex justify="between" fullWidth>
           <Heading>Materials</Heading>
           <Button
-            leftIcon={faPlus}
+            leftIconComp={Plus}
             onClick={() => {
               setDialogVisible(true);
             }}

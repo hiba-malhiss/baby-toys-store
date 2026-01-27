@@ -9,7 +9,7 @@ import {
   Alert,
   BouncingDotsLoader,
 } from '@baby-toys/ui-kit';
-import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Pencil, Trash2 } from 'lucide-react';
 import { Category } from '../../api/types/category';
 import useCategories from './useCategories';
 import CategoryDialog from './CategoryDialog';
@@ -78,14 +78,14 @@ const CategoriesPage: React.FC = () => {
                 <Flex spacing="m">
                   <Button
                     size="small"
-                    leftIcon={faPen}
+                    leftIconComp={Pencil}
                     appearance="outline"
                     onClick={() => openEditDialog(category)}
                   />
                   <Button
                     size="small"
                     appearance="outline"
-                    leftIcon={faTrashAlt}
+                    leftIconComp={Trash2}
                     onClick={() => openDeleteDialog(category)}
                   />
                 </Flex>

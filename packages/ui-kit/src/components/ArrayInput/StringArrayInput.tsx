@@ -1,6 +1,6 @@
 import React from 'react';
 import { StringInput, TextArea, Button, Flex } from '@baby-toys/ui-kit';
-import { faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Plus, Trash2 } from 'lucide-react';
 
 interface StringArrayInputProps {
   value: string[];
@@ -69,7 +69,7 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
               onClick={() => handleRemove(index)}
               appearance="outline"
               color="secondary"
-              leftIcon={faTrashAlt}
+              leftIconComp={Trash2}
             />
           )}
         </Flex>
@@ -80,7 +80,7 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
         className="bts-marginTs"
         withoutPadding
         color="underline"
-        leftIcon={faPlus}
+        leftIconComp={Plus}
         isDisabled={typeof max === 'number' && value.length >= max}
       >
         {addButtonText || 'Add item'}

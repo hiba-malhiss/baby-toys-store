@@ -1,4 +1,4 @@
-@keyframes faSpin {
+@keyframes iconSpin {
   0% {
     transform: rotate(0deg);
   }
@@ -37,19 +37,19 @@
   }
 
   &--mediumSize {
-    font-size: 14px;
+    font-size: 16px;
   }
 
   &--smallSize {
-    font-size: 12px;
+    font-size: 18px;
   }
 
   &--xsmallSize {
-    font-size: 10px;
+    font-size: 18px;
   }
 
   &--xlargeSize {
-    font-size: 24px;
+    font-size: 28px;
   }
 
   &--xxlargeSize {
@@ -65,7 +65,7 @@
   }
 
   &.isRotating {
-    animation: faSpin 1s infinite linear;
+    animation: iconSpin 1s infinite linear;
   }
 
   &--primaryColor {
@@ -110,5 +110,29 @@
 
   &--warning-brandColor {
     color: $color-warning-brand;
+  }
+
+  &--accentColor {
+    color: $color-accent;
+  }
+
+  &--secondaryColor {
+    color: $color-secondary;
+  }
+
+  &--secondary-lightColor {
+    color: $color-secondary-light;
+  }
+
+  &--iconColor {
+    color: $color-secondary;
+  }
+
+  &--highlightedColor {
+    color: $color-primary-dark;
+  }
+
+  &--underlineColor {
+    color: $color-text-grey;
   }
 }

@@ -1,8 +1,8 @@
 import React from 'react';
 import styles from './checkbox.module.scss';
 import clsx from 'clsx';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Icon } from './index';
+import { Check } from "lucide-react";
 
 interface CheckboxProps {
   label?: string;
@@ -47,7 +47,7 @@ const Checkbox: React.FC<CheckboxProps> = ({
       onKeyDown={handleKeyDown}
     >
       <span className={styles.checkboxCheckmark}>
-        {checked && <Icon icon={faCheck} className={styles.checkmarkIcon} />}
+        {checked && <Icon icon={Check} className={styles.checkmarkIcon} />}
       </span>
       {label && <span className={styles.checkboxLabel}>{label}</span>}
     </div>

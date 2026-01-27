@@ -1,7 +1,6 @@
 import React from 'react';
 import { KPI, Tooltip } from '@baby-toys/ui-kit';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Info } from 'lucide-react';
 
 export type KPIWithTooltipProps = {
   label: string;
@@ -22,7 +21,7 @@ const KPIWithTooltip: React.FC<KPIWithTooltipProps> = ({ label, value, tooltip }
         position="top"
       >
         <span>
-          <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }} />
+          <Info style={{ opacity: 0.7, cursor: 'help', width: 16, height: 16 }} />
         </span>
       </Tooltip>
     </span>

@@ -1,5 +1,5 @@
 import { useState, type ReactNode } from 'react';
-import { faBars } from '@fortawesome/free-solid-svg-icons';
+import { Menu } from 'lucide-react';
 import { Button, Drawer, Flex } from '@baby-toys/ui-kit';
 import styles from './header.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -27,7 +27,7 @@ const BurgerMenu = ({ authButtons }: BurgerMenuProps) => {
         appearance="link"
         color="light"
         size="large"
-        leftIcon={faBars}
+        leftIconComp={Menu}
         onClick={toggleMenu}
         className={styles.burgerIcon}
       ></Button>

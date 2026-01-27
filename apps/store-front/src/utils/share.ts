@@ -21,13 +21,6 @@ export function shareProduct(platform: SharePlatform, productId: string | number
   shareTo(platform, url);
 }
 
-export function handleFooterSocialClick(iconName: string) {
-  if (iconName === 'whatsapp') {
-    shareCurrentPage('whatsapp');
-    return;
-  }
-  if (iconName === 'facebook-f') {
-    shareCurrentPage('facebook');
-    return;
-  }
+export function handleFooterSocialClick(platform: SharePlatform) {
+  shareCurrentPage(platform);
 }

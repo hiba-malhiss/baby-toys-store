@@ -2,14 +2,14 @@ import React from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import clsx from 'clsx';
 
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import type { ComponentType } from 'react';
 import Flex from '../Flex/Flex.tsx';
 import Button from '../Button/Button.tsx';
 
 type NavItem = {
   path: string;
   label: string;
-  icon?: IconDefinition;
+  icon?: ComponentType<any>;
 };
 
 type NavProps = {
@@ -39,7 +39,7 @@ const Nav: React.FC<NavProps> = ({ config, isActivePath, direction = 'horizontal
               appearance="link"
               color="primary"
               size="medium"
-              leftIcon={icon}
+              leftIconComp={icon}
               isSelected={isActive}
               withoutPadding={direction === 'vertical'}
             >

@@ -1,17 +1,17 @@
 import {
-  faChevronDown,
-  faChevronLeft,
-  faChevronRight,
-  faChevronUp,
-} from '@fortawesome/free-solid-svg-icons';
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  ChevronUp,
+} from 'lucide-react';
 
 export const ChevronIcons = {
   horizontal: {
-    prev: faChevronLeft,
-    next: faChevronRight,
+    prev: ChevronLeft,
+    next: ChevronRight,
   },
   vertical: {
-    prev: faChevronUp,
-    next: faChevronDown,
+    prev: ChevronUp,
+    next: ChevronDown,
   },
 };

@@ -1,13 +1,13 @@
 import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import {
-  faPen,
-  faTrashAlt,
-  faStar,
-  faCheck,
-  faEye,
-  faXmark,
-} from '@fortawesome/free-solid-svg-icons';
+  Pencil,
+  Trash2,
+  Star,
+  Check,
+  Eye,
+  X,
+} from 'lucide-react';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
 import { AdminProductBase } from '../../api/types/product.ts';
@@ -96,7 +96,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       sortable: true,
       body: (row: AdminProductBase) => (
         <Icon
-          icon={row.stockQuantity > 0 ? faCheck : faXmark}
+          icon={row.stockQuantity > 0 ? Check : X}
           color={row.stockQuantity > 0 ? 'success' : 'error'}
         />
       ),
@@ -128,20 +128,20 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faEye}
+            leftIconComp={Eye}
             onClick={() => navigate(`/product/${row.id}`)}
             aria-label="View product"
           />
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faPen}
+            leftIconComp={Pencil}
             onClick={() => navigate(`/edit-product/${row.id}`)}
           />
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faStar}
+            leftIconComp={Star}
             onClick={(e) => {
               e.stopPropagation();
               navigate(`/reviews?productId=${row.id}`);
@@ -150,7 +150,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
           <Button
             size="small"
             appearance="outline"
-            leftIcon={faTrashAlt}
+            leftIconComp={Trash2}
             onClick={(e) => {
               e.stopPropagation();
               handleDelete(row);

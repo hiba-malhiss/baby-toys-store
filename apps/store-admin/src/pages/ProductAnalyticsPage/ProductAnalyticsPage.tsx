@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button, StringInput, Flex, Heading, Calendar, Table, Tooltip } from '@baby-toys/ui-kit';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { Info } from 'lucide-react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import moment from 'moment';
 import { type ProductAnalyticsRow } from '../../api/analyticsApi';
@@ -46,7 +45,7 @@ const ProductAnalyticsPage: React.FC = () => {
             position="top"
           >
             <span>
-              <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }} />
+              <Info style={{ opacity: 0.7, cursor: 'help' }} />
             </span>
           </Tooltip>
         </span>

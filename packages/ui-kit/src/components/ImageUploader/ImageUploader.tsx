@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import clsx from 'clsx';
-import { faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Trash2 } from 'lucide-react';
 import { Button, Image, useToast } from '@baby-toys/ui-kit';
 import { resolveImageBaseUrl } from '../Image';
 import styles from './image-uploader.module.scss';
@@ -220,7 +220,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
                     e.stopPropagation();
                     handleRemove(index);
                   }}
-                  leftIcon={faTrashAlt}
+                  leftIconComp={Trash2}
                   className={styles.imageUploaderRemove}
                   withoutPadding
                   isLoading={isDeleting || isLoading}

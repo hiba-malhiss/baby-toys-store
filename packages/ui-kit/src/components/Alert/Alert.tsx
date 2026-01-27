@@ -2,7 +2,7 @@ import React from 'react';
 import clsx from 'clsx';
 import Icon from '../Icon/Icon.tsx';
 import Button from '../Button/Button.tsx';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { X } from 'lucide-react';
 import Flex from '../Flex/Flex.tsx';
 import styles from './alert.module.scss';
 
@@ -77,7 +77,7 @@ const Alert: React.FC<AlertProps> = ({
             appearance="link"
             size="medium"
             onClick={onClose}
-            leftIcon={faTimes}
+            leftIconComp={X}
             className={styles.alertCloseButton}
             aria-label="Close alert"
           />

@@ -7,8 +7,7 @@ import CalendarButton from './CalendarButton/CalendarButton';
 import { DEFAULT_DATE_FORMAT } from './utils/calendarUtils';
 
 import styles from './Calendar.module.scss';
-import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons';
-import { faCalendar } from '@fortawesome/free-regular-svg-icons';
+import { ChevronLeft, ChevronRight, Calendar as CalendarIcon } from 'lucide-react';
 import Button from '../Button/Button';
 import { useCalendar } from './useCalendar';
 import { CalendarTypeView, SelectionMode } from './calendarTypes';
@@ -102,7 +101,7 @@ const Calendar = ({
           fullWidth
           onClick={onInputClick}
           placeholder="Select Date"
-          iconRight={faCalendar}
+          iconRight={CalendarIcon}
           readOnly
           isDisabled={isDisabled}
           isCalculated={isCalculated}
@@ -118,7 +117,7 @@ const Calendar = ({
       >
         <div className={styles.calendarHeader}>
           <Button
-            leftIcon={faChevronLeft}
+            leftIconComp={ChevronLeft}
             appearance="link"
             isDisabled={isPrevDisabled()}
             onClick={goToPrevious}
@@ -154,7 +153,7 @@ const Calendar = ({
             </Button>
           )}
           <Button
-            leftIcon={faChevronRight}
+            leftIconComp={ChevronRight}
             appearance="link"
             onClick={goToNext}
             isDisabled={isNextDisabled()}

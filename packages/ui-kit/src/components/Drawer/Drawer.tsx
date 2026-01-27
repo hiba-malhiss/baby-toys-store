@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom';
 import clsx from 'clsx';
 import styles from './drawer.module.scss';
-import { faTimes } from '@fortawesome/free-solid-svg-icons';
+import { X } from 'lucide-react';
 import Button from '../Button/Button';
 
 export type DrawerPosition = 'left' | 'right' | 'top' | 'bottom' | 'full';
@@ -89,7 +89,7 @@ const Drawer: React.FC<DrawerProps> = ({
               color="secondary"
               size="large"
               onClick={onClose}
-              leftIcon={faTimes}
+              leftIconComp={X}
               className={styles.drawerCloseBtn}
             />
           )}

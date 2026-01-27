@@ -1,5 +1,5 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import { faHeart, faShoppingCart, faTruckFast } from '@fortawesome/free-solid-svg-icons';
+import { Heart, ShoppingCart, Truck } from 'lucide-react';
 import { Icon, IconColor, Flex, Button } from '@baby-toys/ui-kit';
 import styles from './header.module.scss';
 import SearchInputWithUrl from './SearchInputWithUrl.tsx';
@@ -59,8 +59,8 @@ const Header = () => {
   return (
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
-        <Flex spacing="m">
-          <Icon icon={faTruckFast} color={IconColor.light} />
+        <Flex spacing="m" align="center">
+          <Icon icon={Truck} color={IconColor.light} size="large" />
           <span>{t('nav.welcome')}</span>
         </Flex>
         <Flex align="center" spacing="s" className="bts-hideOnMobile">
@@ -91,7 +91,8 @@ const Header = () => {
             size="xlarge"
             withoutPadding
             iconBadge={cartCount ?? 0}
-            leftIcon={faShoppingCart}
+            leftIconComp={ShoppingCart}
+            color="secondary"
             onClick={() => navigate('/shopping-cart')}
           />
           <Button
@@ -99,7 +100,7 @@ const Header = () => {
             size="xlarge"
             withoutPadding
             color="secondary"
-            leftIcon={faHeart}
+            leftIconComp={Heart}
             iconBadge={wishlistCount ?? 0}
             onClick={() => navigate('/wish-list')}
           />

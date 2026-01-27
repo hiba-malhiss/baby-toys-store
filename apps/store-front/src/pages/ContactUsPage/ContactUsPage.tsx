@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { faPhone, faEnvelope, faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons';
+import { Phone, Mail, MapPin } from 'lucide-react';
 import styles from './contact-us-page.module.scss';
 import { useNavigate } from 'react-router-dom';
 import { TextArea, InfoCard, Heading, Button, StringInput, useToast } from '@baby-toys/ui-kit';
@@ -30,27 +30,26 @@ const ContactUsPage: React.FC = () => {
         id: 'phone',
         title: t('contact.phone'),
         content: contact.phone,
-        icon: faPhone,
+        icon: Phone,
         appearance: 'primary',
       },
       {
         id: 'email',
         title: t('contact.email'),
         content: contact.email,
-        icon: faEnvelope,
+        icon: Mail,
         appearance: 'primary',
       },
       {
         id: 'address',
         title: t('contact.address'),
         content: contact.address,
-        icon: faMapMarkerAlt,
+        icon: MapPin,
         appearance: 'primary',
       },
     ];
     return raw.filter((i) => i.content);
   }, [settings?.contact, t]);
-
   const onSubmit = handleSubmit(async (values) => {
     sendMutation.mutate(
       {
@@ -77,7 +76,7 @@ const ContactUsPage: React.FC = () => {
     <PageContainer header={t('contact.header')}>
       <div className={styles.contactUsPageCards}>
         {contactInfo.map((item) => (
-          <InfoCard key={item.id} card={item} size="medium" fullWidth />
+          <InfoCard key={item.id} card={item} size="large" fullWidth />
         ))}
       </div>
       <form className={styles.contactUsPage} onSubmit={onSubmit}>

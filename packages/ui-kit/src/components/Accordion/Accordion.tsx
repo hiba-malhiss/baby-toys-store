@@ -1,6 +1,6 @@
 import React, { useState, type ReactNode } from 'react';
 import styles from './accordion.module.scss';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Minus, Plus } from 'lucide-react';
 import clsx from 'clsx';
 import Button, { type ButtonAppearance, type ButtonColor } from '../Button/Button.tsx';
 import { Heading } from '../index.ts';
@@ -65,13 +65,14 @@ const Accordion: React.FC<AccordionProps> = ({
     >
       <Button
         onClick={handleToggle}
-        leftIcon={iconPosition === 'left' && (!isOpen ? faPlus : faMinus)}
-        rightIcon={iconPosition === 'right' && (!isOpen ? faPlus : faMinus)}
+        leftIconComp={iconPosition === 'left' ? (!isOpen ? Plus : Minus) : undefined}
+        rightIconComp={iconPosition === 'right' ? (!isOpen ? Plus : Minus) : undefined}
         fullWidth
-        iconColor={buttonColor === 'error' ? 'error' : ''}
+        iconColor={buttonColor === 'error' ? 'error' : undefined}
         align={iconPosition === 'left' ? 'start' : 'between'}
         appearance={buttonAppearance}
         color={buttonColor}
+        size="large"
         withoutPadding={withoutHeaderPadding}
       >
         {unstyled ? <span>{header}</span> : <Heading level="h5">{header}</Heading>}

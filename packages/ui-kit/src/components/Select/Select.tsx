@@ -11,7 +11,7 @@ import React, {
 import styles from './select.module.scss';
 import Popover from '../Popover/Popover.tsx';
 import clsx from 'clsx';
-import { faChevronDown, faChevronUp, faTimes } from '@fortawesome/free-solid-svg-icons';
+import { ChevronDown, ChevronUp, X } from 'lucide-react';
 import Icon from '../Icon/Icon.tsx';
 import Option from './Option.tsx';
 import Checkbox from '../Checkbox';
@@ -141,10 +141,10 @@ export const Select: React.FC<SelectProps> = ({
                 role="button"
                 aria-label="clear selection"
               >
-                <Icon icon={faTimes} />
+                <Icon icon={X} />
               </span>
             )}
-          <Icon icon={isOpen ? faChevronUp : faChevronDown} />
+          <Icon icon={isOpen ? ChevronUp : ChevronDown} />
         </Flex>
       </div>
       <Popover

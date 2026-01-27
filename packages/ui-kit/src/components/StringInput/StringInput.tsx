@@ -5,7 +5,7 @@ import Icon from '../Icon/Icon.tsx';
 import Button from '../Button/Button.tsx';
 import Tooltip from '../Tooltip/Tooltip.tsx';
 import Popover from '../Popover/Popover.tsx';
-import { faMinus, faPlus } from '@fortawesome/free-solid-svg-icons';
+import { Minus, Plus } from 'lucide-react';
 import type { IconColor } from '../Icon/icon.constant.ts';
 import { IconSize } from '../Icon/icon.constant.ts';
 
@@ -251,7 +251,7 @@ const StringInput: React.FC<StringInputProps> = ({
               e.stopPropagation();
               handleStep(-1);
             }}
-            leftIcon={faMinus}
+            leftIconComp={Minus}
             isDisabled={resolvedDisabled}
             className={styles.stringInputDecreaseControl}
           />
@@ -287,7 +287,7 @@ const StringInput: React.FC<StringInputProps> = ({
                 e.stopPropagation();
                 handleStep(1);
               }}
-              leftIcon={faPlus}
+              leftIconComp={Plus}
               isDisabled={resolvedDisabled}
               className={styles.stringInputIncreaseControl}
             />

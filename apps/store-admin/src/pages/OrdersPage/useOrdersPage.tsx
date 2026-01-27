@@ -5,9 +5,7 @@ import type { Order } from '../../api/types/order';
 import { statusColorMap } from './orders-page.utils';
 import { formatNumber } from '@baby-toys/ui-kit/utils';
 import { Chip, Flex, Button, Tooltip } from '@baby-toys/ui-kit';
-import { faEye, faPen } from '@fortawesome/free-solid-svg-icons';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Eye, Pencil, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 
 export const useOrdersPage = () => {
@@ -58,7 +56,7 @@ export const useOrdersPage = () => {
       <span>{label}</span>
       <Tooltip position="top" content={tip}>
         <span>
-          <FontAwesomeIcon icon={faCircleInfo} style={{ opacity: 0.7, cursor: 'help' }} />
+          <Info style={{ opacity: 0.7, cursor: 'help' }} />
         </span>
       </Tooltip>
     </span>
@@ -131,13 +129,13 @@ export const useOrdersPage = () => {
             <Button
               size="small"
               appearance="outline"
-              leftIcon={faEye}
+              leftIconComp={Eye}
               onClick={() => navigate(`/order-details/${row.id}`)}
             />
             <Button
               size="small"
               appearance="outline"
-              leftIcon={faPen}
+              leftIconComp={Pencil}
               onClick={() => navigate(`/order-edit/${row.id}`)}
             />
           </Flex>

@@ -1,8 +1,9 @@
 import React from 'react';
 import Button from '../Button/Button';
 import { useToast } from '../Toast/ToastContext';
-import { faCopy } from '@fortawesome/free-solid-svg-icons';
+import { Copy } from 'lucide-react';
 import { copyTextToClipboard } from '../../utils';
+import { IconColor } from '../Icon/icon.constant.ts';
 
 export interface CopyToClipboardButtonProps {
   value: string | number | undefined | null;
@@ -31,10 +32,10 @@ export const CopyToClipboardButton: React.FC<CopyToClipboardButtonProps> = ({
     <Button
       size={size as any}
       appearance={appearance as any}
-      leftIcon={faCopy}
+      leftIconComp={Copy}
       aria-label={ariaLabel}
       withoutPadding={withoutPadding}
-      iconColor="gray-dark"
+      iconColor={IconColor.grayDark}
       onClick={async (e) => {
         if (stopPropagation) e.stopPropagation();
         if (value == null) return;

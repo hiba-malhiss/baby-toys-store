@@ -1,8 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import { Tooltip } from '@baby-toys/ui-kit';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCircleInfo } from '@fortawesome/free-solid-svg-icons';
+import { Info } from 'lucide-react';
 import styles from './dashboard-stat-card.module.scss';
 
 type Tone = 'pink' | 'yellow' | 'green' | 'purple';
@@ -32,7 +31,7 @@ export default function DashboardStatCard({
           {tooltip ? (
             <Tooltip content={<div className={styles.tip}>{tooltip}</div>} position="top">
               <span className={styles.infoIcon} aria-label="info">
-                <FontAwesomeIcon icon={faCircleInfo} />
+                <Info style={{ width: 16, height: 16 }} />
               </span>
             </Tooltip>
           ) : null}

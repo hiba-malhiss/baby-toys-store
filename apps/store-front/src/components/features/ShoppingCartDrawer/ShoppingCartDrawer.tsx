@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { ShoppingCart } from 'lucide-react';
 import clsx from 'clsx';
 import {
   Drawer,
@@ -141,7 +141,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
           </React.Fragment>
         ))}
         {(cart?.items?.length || 0) === 0 && (
-          <NoDataFound withoutPadding icon={faShoppingCart} message={t('cart.empty')} />
+          <NoDataFound withoutPadding iconComp={ShoppingCart} message={t('cart.empty')} />
         )}
         {(isCartSyncing || isAddCartSyncing) && (
           <div className={styles.drawerOverlay}>

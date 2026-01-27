@@ -1,6 +1,5 @@
 import React from 'react';
 import type { ComponentType } from 'react';
-import type { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import clsx from 'clsx';
 
 import styles from './breadcrumb-item.module.scss';
@@ -10,7 +9,7 @@ import Icon from '../Icon/Icon.tsx';
 export type BreadcrumbItemData = {
   label?: string;
   path?: string;
-  icon?: IconDefinition;
+  icon?: ComponentType<any>;
 };
 
 interface BreadcrumbItemProps {

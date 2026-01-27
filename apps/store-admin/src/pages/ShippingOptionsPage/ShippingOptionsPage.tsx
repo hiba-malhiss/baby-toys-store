@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, ConfirmDialog, Flex, Heading, Table } from '@baby-toys/ui-kit';
-import { faPen, faPlus, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 import {
   useShippingOptions,
   useDeleteShippingOption,
   type ShippingOption,
 } from '../../api/shippingOptionApi';
-import ShippingOptionDialog from './ShippingOptionDialog';
+import ShippingOptionDialog from "./ShippingOptionDialog.tsx";
 
 const ROWS_PER_PAGE = 10;
 
@@ -48,7 +48,7 @@ const ShippingOptionsPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPen}
+            leftIconComp={Pencil}
             appearance="outline"
             onClick={() => {
               setEditing(row);
@@ -57,7 +57,7 @@ const ShippingOptionsPage: React.FC = () => {
           />
           <Button
             size="small"
-            leftIcon={faTrashAlt}
+            leftIconComp={Trash2}
             appearance="outline"
             onClick={() => {
               setToDelete(row);
@@ -76,7 +76,7 @@ const ShippingOptionsPage: React.FC = () => {
           <Heading level="h1">Shipping Options</Heading>
           <Flex align="center" spacing="xl">
             <Button
-              leftIcon={faPlus}
+              leftIconComp={Plus}
               onClick={() => {
                 setEditing(null);
                 setDialogVisible(true);
@@ -103,7 +103,6 @@ const ShippingOptionsPage: React.FC = () => {
           sortField={sortBy}
           sortOrder={sortDirection === 'ASC' ? 1 : -1}
           emptyMessage="No shipping options found"
-          stripedRows
         />
 
         <ShippingOptionDialog

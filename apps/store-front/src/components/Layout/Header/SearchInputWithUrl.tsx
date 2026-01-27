@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { StringInput } from '@baby-toys/ui-kit';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Search } from 'lucide-react';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 import { useTranslation } from 'react-i18next';
 import { suggest } from '../../../api/searchApi';
@@ -44,7 +44,7 @@ const SearchInputWithUrl = () => {
             navigate({ pathname: '/shop' });
           }
         }}
-        iconRight={faSearch}
+        iconRight={Search}
         withIconBackground
         onIconClick={handleSearch}
         autoCompleteEnabled

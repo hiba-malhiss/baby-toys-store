@@ -19,7 +19,7 @@ import styles from './side-filters.module.scss';
 import { useUrlFilters } from '../../../hooks/useUrlFilters.ts';
 import { type ShopFilters, urlFilterParsers } from './side-filters.utils.ts';
 import { useDebounce } from '@baby-toys/ui-kit/hooks';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { Filter } from 'lucide-react';
 import { useBrands, useCategories, useColors, useMaterials } from '../../../api/catalogApi.ts';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
@@ -250,7 +250,7 @@ export const SideFilters: React.FC<{
             appearance="link"
             color="secondary"
             size="xlarge"
-            leftIcon={faFilter}
+            leftIconComp={Filter}
             withoutPadding
             isSelected={filtersCount > 0}
             iconBadge={filtersCount}

@@ -9,7 +9,7 @@ import {
   Alert,
   BouncingDotsLoader,
 } from '@baby-toys/ui-kit';
-import { faPen, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Pencil, Trash2 } from 'lucide-react';
 import useBrands from './useBrands';
 import BrandDialog from './BrandDialog';
 import { Brand } from '../../api/types/brand.ts';
@@ -87,14 +87,14 @@ const BrandsPage: React.FC = () => {
                 <Flex spacing="m">
                   <Button
                     size="small"
-                    leftIcon={faPen}
+                    leftIconComp={Pencil}
                     appearance="outline"
                     onClick={() => openEditDialog(brand)}
                   />
                   <Button
                     size="small"
                     appearance="outline"
-                    leftIcon={faTrashAlt}
+                    leftIconComp={Trash2}
                     onClick={() => openDeleteDialog(brand)}
                   />
                 </Flex>

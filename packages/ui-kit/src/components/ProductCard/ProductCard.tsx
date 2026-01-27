@@ -3,7 +3,7 @@ import styles from './product-card.module.scss';
 import Chip from '../Chip/Chip';
 import Rating from '../Rating/Rating';
 import PriceDisplay from '../PriceDisplay/PriceDisplay';
-import { faCartShopping, faRightLeft, faCartPlus } from '@fortawesome/free-solid-svg-icons';
+import { ShoppingCart, ArrowLeftRight } from 'lucide-react';
 import clsx from 'clsx';
 import Card from '../Card/Card.tsx';
 import Button from '../Button/Button.tsx';
@@ -93,7 +93,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
     >
       {direction === 'vertical' && (
         <Button
-          leftIcon={faCartShopping}
+          leftIconComp={ShoppingCart}
           appearance="link"
           color="secondary"
           size="xlarge"
@@ -105,8 +105,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
       {direction === 'horizontal' && (
         <Button
-          leftIcon={faCartShopping}
-          size="large"
+          leftIconComp={ShoppingCart}
+          size="xlarge"
           onClick={(e) => handleButtonClick(e, onAddToCart)}
           isLoading={isLoadingAddToCart}
           isDisabled={isOutOfStock}
@@ -130,9 +130,9 @@ const ProductCard: React.FC<ProductCardProps> = ({
       />
       {direction === 'horizontal' && (
         <Button
-          leftIcon={faRightLeft}
+          leftIconComp={ArrowLeftRight}
           appearance="outline"
-          size="large"
+          size="xlarge"
           onClick={(e) => handleButtonClick(e, handleCopyUrl)}
         ></Button>
       )}
@@ -187,10 +187,10 @@ const ProductCard: React.FC<ProductCardProps> = ({
           </Flex>
           {!hideMobileCart && (
             <Button
-              leftIcon={faCartPlus}
+              leftIconComp={ShoppingCart}
               onClick={(e) => handleButtonClick(e, onAddToCart)}
               appearance="outline"
-              size="small"
+              size="medium"
               className={styles.productCardMobileCart}
             />
           )}

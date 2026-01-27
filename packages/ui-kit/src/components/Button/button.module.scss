@@ -34,7 +34,6 @@
   $color,
   $background,
   $border: transparent,
-  $icon-color: $color,
   $text-underline-decoration: transparent
 ) {
   &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
@@ -42,10 +41,6 @@
     color: $color;
     border-color: $border;
     text-decoration-color: $text-underline-decoration;
-
-    .button-icon {
-      color: $icon-color;
-    }
   }
 }
 
@@ -135,11 +130,6 @@
     line-height: 18px;
     height: 32px;
 
-    .button-icon {
-      position: relative;
-      top: -1px;
-    }
-
     &.button--withText {
       padding-left: 8px;
       padding-right: 8px;
@@ -173,7 +163,7 @@
   &--xlargeSize,
   &--xxlargeSize {
     font-size: 20px;
-    height: 56px;
+    height: 54px;
 
     &.button--withText {
       padding-left: 32px;
@@ -363,7 +353,6 @@ $appearances: (
         map-get($styleMap, text-hover),
         map-get($styleMap, bg-hover),
         map-get($styleMap, border-hover),
-        map-get($styleMap, icon-color),
         map-get($styleMap, text-decoration)
       );
 

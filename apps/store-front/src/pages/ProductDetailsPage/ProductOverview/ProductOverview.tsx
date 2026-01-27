@@ -15,7 +15,7 @@ import {
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
-import { faRightLeft, faShoppingCart } from '@fortawesome/free-solid-svg-icons';
+import { ArrowLeftRight, ShoppingCart } from 'lucide-react';
 import clsx from 'clsx';
 import { useAddToCart } from '../../../api/cartApi';
 import { useWishlist } from '../../../hooks/useWishlist.ts';
@@ -25,7 +25,8 @@ import { useTranslation } from 'react-i18next';
 import { socialMediaLinks } from '../../../components/Layout/Footer/footer.constants.ts';
 import type { UiProduct } from '../../../api/normalizers/productNormalizer.ts';
 import { useCartStore } from '../../../store/useCartStore';
-import { shareProduct } from '../../../utils/share.ts';
+import { shareProduct } from '../../../utils/share';
+import type { SharePlatform } from '../../../utils/share';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
 
 export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) => {
@@ -38,9 +39,9 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   const formatCurrency = useCurrencyFormatter(symbol);
   const { t } = useTranslation('common');
 
-  const tooltipKeyByIcon: Record<string, string> = {
+  const tooltipKeyByPlatform: Record<string, string> = {
     whatsapp: 'product.tooltips.shareWhatsapp',
-    'facebook-f': 'product.tooltips.shareFacebook',
+    facebook: 'product.tooltips.shareFacebook',
   };
 
   // Use favorite hook here for this product
@@ -65,15 +66,8 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
   );
 
   const handleSocialShare = useCallback(
-    (iconName: string) => {
-      if (iconName === 'whatsapp') {
-        shareProduct('whatsapp', product.id);
-        return;
-      }
-      if (iconName === 'facebook-f') {
-        shareProduct('facebook', product.id);
-        return;
-      }
+    (platform: SharePlatform) => {
+      shareProduct(platform, product.id);
     },
     [product.id]
   );
@@ -130,17 +124,18 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
         </ExpandableContent>
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
           <span className="bts-marginRs"> {t('common.share')}</span>
-          {socialMediaLinks.map(({ icon }) => (
+          {socialMediaLinks.map(({ icon, platform }) => (
             <Tooltip
-              key={icon.iconName}
-              content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', {
+              key={platform}
+              content={t(tooltipKeyByPlatform[platform] ?? 'product.tooltips.share', {
                 defaultValue: 'Share',
               })}
             >
               <SocialIconButton
                 icon={icon}
                 size="small"
-                onClick={() => handleSocialShare(icon.iconName)}
+                variant={platform}
+                onClick={() => handleSocialShare(platform)}
               />
             </Tooltip>
           ))}
@@ -162,7 +157,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
             maxTooltip={`Only ${product.availableInStock} left in stock`}
           />
           <Button
-            leftIcon={faShoppingCart}
+            leftIconComp={ShoppingCart}
             isDisabled={addToCartMutation.isPending || product.outOfStock}
             isLoading={addToCartMutation.isPending}
             onClick={async () => {
@@ -196,7 +191,7 @@ export const ProductOverview: React.FC<{ product: UiProduct }> = ({ product }) =
           </Tooltip>
 
           <Tooltip content={t('product.tooltips.copyLink', { defaultValue: 'Copy product link' })}>
-            <Button leftIcon={faRightLeft} appearance="outline" onClick={handleCopyUrl} />
+            <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl} />
           </Tooltip>
         </Flex>
         {!!product.details?.length && (

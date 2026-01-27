@@ -1,7 +1,7 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, Flex, Table, Heading, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
-import { faPlus, faPen, faTrashAlt, faSearch } from '@fortawesome/free-solid-svg-icons';
+import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import useCouponsPage from './useCouponsPage';
 import CouponDialog from './CouponDialog';
 import { Coupon } from '../../api/types/coupon';
@@ -80,13 +80,13 @@ const CouponsPage: React.FC = () => {
         <Flex spacing="m">
           <Button
             size="small"
-            leftIcon={faPen}
+            leftIconComp={Pencil}
             appearance="outline"
             onClick={() => openEditDialog(coupon)}
           />
           <Button
             size="small"
-            leftIcon={faTrashAlt}
+            leftIconComp={Trash2}
             appearance="outline"
             onClick={() => openDeleteDialog(coupon)}
           />
@@ -118,12 +118,12 @@ const CouponsPage: React.FC = () => {
                   handleSearch('');
                 }
               }}
-              iconRight={faSearch}
+              iconRight={Search}
               withIconBackground
               onIconClick={() => handleSearch(searchInput)}
               fullWidth
             />
-            <Button onClick={openAddDialog} leftIcon={faPlus} className={styles.couponsPageAddBtn}>
+            <Button onClick={openAddDialog} leftIconComp={Plus} className={styles.couponsPageAddBtn}>
               Add Coupon
             </Button>
           </Flex>

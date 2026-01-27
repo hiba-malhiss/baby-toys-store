@@ -1,6 +1,6 @@
 import React from 'react';
 import { Dialog, Button, Icon, IconColor, IconSize } from '@baby-toys/ui-kit';
-import { faCheckCircle, faEnvelope } from '@fortawesome/free-solid-svg-icons';
+import { CheckCircle, Mail } from 'lucide-react';
 import styles from './VerificationDialog.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -23,11 +23,11 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
   return (
     <Dialog visible={visible} onHide={onClose} header={t(`${base}.title`)}>
       <div className={styles.content}>
-        <Icon icon={faCheckCircle} color={IconColor.success} size={IconSize.xxlarge} />
+        <Icon icon={CheckCircle} color={IconColor.success} size={IconSize.xxlarge} />
         <p className={styles.successText}>{t(`${base}.heading`)}</p>
 
         <p className={styles.message}>
-          <Icon icon={faEnvelope} color={IconColor.gray} />
+          <Icon icon={Mail} color={IconColor.gray} />
           {t(`${base}.messagePrefix`)}
           <span className={styles.emailText}>{email}</span>.
           {t('auth.dialogs.verification.inboxPrompt')}

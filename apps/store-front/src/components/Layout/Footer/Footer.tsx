@@ -16,9 +16,9 @@ const Footer = () => {
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
   const { t } = useTranslation('common');
-  const tooltipKeyByIcon: Record<string, string> = {
+  const tooltipKeyByPlatform: Record<string, string> = {
     whatsapp: 'product.tooltips.shareWhatsapp',
-    'facebook-f': 'product.tooltips.shareFacebook',
+    facebook: 'product.tooltips.shareFacebook',
   };
   const footerInfo = useMemo(
     () => Object.entries(settings?.contact || {}).map(([id, content]) => ({ id, content })),
@@ -31,17 +31,18 @@ const Footer = () => {
         <img src="/assets/kit-images/logo.png" alt="logo" />
         <p className={styles.footerDescription}>{t('footer.description')}</p>
         <Flex spacing="m" className={styles.footerSocialButtons}>
-          {socialMediaLinks.map(({ icon }) => (
+          {socialMediaLinks.map(({ icon, platform }) => (
             <Tooltip
-              key={icon.iconName}
-              content={t(tooltipKeyByIcon[icon.iconName] ?? 'product.tooltips.share', {
-                defaultValue: tooltipKeyByIcon[icon.iconName],
+              key={platform}
+              content={t(tooltipKeyByPlatform[platform] ?? 'product.tooltips.share', {
+                defaultValue: tooltipKeyByPlatform[platform],
               })}
             >
               <SocialIconButton
                 icon={icon}
                 useVariantOverlay
-                onClick={() => handleFooterSocialClick(icon.iconName)}
+                variant={platform}
+                onClick={() => handleFooterSocialClick(platform)}
               />
             </Tooltip>
           ))}

@@ -10,7 +10,7 @@ import {
   Select,
   Option,
 } from '@baby-toys/ui-kit';
-import { faPlus, faSearch, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import { Plus, Search, Trash2 } from 'lucide-react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useProductsTableColumns } from './useProductsTableColumns';
 import { useProductsPage } from './useProductsPage';
@@ -82,13 +82,13 @@ const ProductsPage: React.FC = () => {
                 setSearchValue(v);
                 if (!v.length) handleSearch('');
               }}
-              iconRight={faSearch}
+              iconRight={Search}
               withIconBackground
               onIconClick={() => handleSearch(searchValue)}
             />
             <Button
               onClick={navigateToCreate}
-              leftIcon={faPlus}
+              leftIconComp={Plus}
               color="primary"
               className={styles.productsPageAddButton}
             >
@@ -96,7 +96,7 @@ const ProductsPage: React.FC = () => {
             </Button>
             <Button
               onClick={handleBulkDelete}
-              leftIcon={faTrashAlt}
+              leftIconComp={Trash2}
               color="secondary"
               className={styles.productsPageAddButton}
               isDisabled={!selectedProducts?.length}

@@ -23,7 +23,7 @@ A flexible, interactive calendar component built with React and `moment.js`, sup
 Ensure you have the following dependencies:
 
 ```bash
-npm install react moment clsx @fortawesome/react-fontawesome
+npm install react moment clsx
 ```
 
 ---

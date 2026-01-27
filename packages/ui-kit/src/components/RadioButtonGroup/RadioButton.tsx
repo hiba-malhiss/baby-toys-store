@@ -2,7 +2,7 @@ import React, { type ReactNode, useCallback, useEffect, useRef } from 'react';
 import clsx from 'clsx';
 import Icon from '../Icon/Icon.tsx';
 import { IconColor, IconSize } from '../Icon/icon.constant.ts';
-import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Check } from 'lucide-react';
 import styles from './radio-button.module.scss';
 
 interface RadioButtonProps {
@@ -75,7 +75,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
 
       {appearance === 'field' && (
         <span className={styles.radioButtonBox}>
-          <Icon icon={faCheck} size={IconSize.small} color={IconColor.light} />
+          <Icon icon={Check} size={IconSize.small} color={IconColor.light} />
         </span>
       )}
 
