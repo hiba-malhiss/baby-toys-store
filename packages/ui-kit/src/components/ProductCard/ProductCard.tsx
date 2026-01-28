@@ -116,6 +116,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
       )}
       <HeartButton
         checked={Boolean(isFavorite)}
+        appearance={direction !== 'vertical' ? 'outline' : 'default'}
         isLoading={Boolean(isLoadingFavorite)}
         disabled={Boolean(isLoadingFavorite)}
         size={isHorizontal ? 'medium' : 'small'}
@@ -132,7 +133,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         <Button
           leftIconComp={ArrowLeftRight}
           appearance="outline"
-          size="xlarge"
+          size="large"
           onClick={(e) => handleButtonClick(e, handleCopyUrl)}
         ></Button>
       )}
