@@ -5,7 +5,7 @@ import { useProductForm } from './useProductForm';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import LocalizedFields from './LocalizedFields';
-import { getSupportedLocales } from '../../components/i18n/locale';
+import { getSupportedLocales } from "../../i18n/locale.ts";
 import { useTranslation } from 'react-i18next';
 
 const ProductFormPage: React.FC = () => {

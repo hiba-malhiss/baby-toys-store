@@ -1,7 +1,7 @@
 import React from 'react';
 import { Select } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
-import { getSupportedLocales } from '../i18n/locale';
+import { getSupportedLocales } from '../../i18n/locale';
 import type { Control } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 

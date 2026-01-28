@@ -23,7 +23,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { settingsSchema, SettingsFormValues } from './settings-page.util';
-import { getSupportedLocales } from '../../components/i18n/locale';
+import { getSupportedLocales } from "../../i18n/locale.ts";
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
 

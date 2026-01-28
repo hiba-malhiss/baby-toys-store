@@ -3,7 +3,6 @@ import { Aside, Button, Toast, BouncingDotsLoader, Mask, Flex } from '@baby-toys
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';
-import LanguageSwitcher from '../../i18n/LanguageSwitcher.tsx';
 import { useTranslation } from 'react-i18next';
 import {
   LayoutDashboard,
@@ -22,6 +21,7 @@ import {
   Truck,
   LogOut,
 } from 'lucide-react';
+import LanguageSwitcher from "../../../i18n/LanguageSwitcher.tsx";
 
 const AdminLayout: React.FC<{
   children: React.ReactNode;

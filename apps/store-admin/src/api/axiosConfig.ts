@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import type { QueryKey } from '@tanstack/react-query';
 import { queryClient } from '../App';
-import { getAppLocale } from '../components/i18n/locale';
+import { getAppLocale } from "../i18n/locale.ts";
 
 type RequestQueueItem = {
   resolve: (value: any) => void;

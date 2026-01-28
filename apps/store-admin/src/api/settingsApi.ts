@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
-import { getAppLocale } from '../components/i18n/locale.ts';
+import { getAppLocale } from "./../i18n/locale.ts";
 import { useMemo } from 'react';
 
 export type StoreSettingsGrouped = {

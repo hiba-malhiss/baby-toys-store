@@ -1,5 +1,5 @@
 import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem } from '@baby-toys/ui-kit';
-import { getSupportedLocales } from '../../components/i18n/locale';
+import { getSupportedLocales } from "../../i18n/locale.ts";
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import HeroBannersSection from './HeroBannersSection';
