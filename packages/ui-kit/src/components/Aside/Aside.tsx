@@ -134,7 +134,7 @@ const Aside: React.FC<AsideProps> = ({
                 <Accordion
                   key={idx}
                   header={
-                    <Flex align="center" fullWidth>
+                    <Flex align="center" fullWidth spacing="s">
                       {item.iconComp && (
                         <Icon
                           icon={item.iconComp}
