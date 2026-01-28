@@ -73,6 +73,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     const resolvedFullWidth = !!fullWidth;
     const resolvedType = type ?? 'button';
     const resolvedIconColor = iconColor ?? 'inherit';
+    const isIconOnly = !children && (!!leftIconComp || !!rightIconComp);
 
     const calculatedClassName = clsx(
       styles.button,
@@ -94,7 +95,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           ref={ref}
           onKeyDown={(e) => {
-            if (e.key === 'Enter') {
+            if(e.key === 'Enter') {
               onClick && onClick(e);
             }
           }}
@@ -105,18 +106,18 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           form={form}
           {...rest}
         >
-          {/* Loading icon (does NOT replace content) */}
+
           {resolvedLoading && (
             <Icon
               isSpinning
               icon={LoaderCircle}
-              className={clsx(styles.buttonIcon, styles.loadingIcon)}
+              className={clsx(styles.buttonIcon)}
               size={size}
               color={resolvedIconColor}
             />
           )}
 
-          {leftIconComp && (
+          {leftIconComp && (!resolvedLoading || !isIconOnly) && (
             <Icon
               color={resolvedIconColor}
               icon={leftIconComp}
@@ -128,7 +129,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
           {children}
 
-          {rightIconComp && (
+          {rightIconComp && (!resolvedLoading || !isIconOnly) && (
             <Icon
               color={resolvedIconColor}
               icon={rightIconComp}

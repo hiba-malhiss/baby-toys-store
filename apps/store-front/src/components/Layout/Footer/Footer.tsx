@@ -42,7 +42,6 @@ const Footer = () => {
             >
               <SocialIconButton
                 icon={icon}
-                useVariantOverlay
                 variant={platform}
                 onClick={() => handleFooterSocialClick(platform, isMobileLike)}
               />
