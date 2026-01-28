@@ -55,20 +55,36 @@ export function useAuthInit() {
  */
 async function initializeGuestToken(): Promise<AuthInitResult> {
   if (getGuestCartToken()) return { isAuthenticated: false, isGuest: true };
-  try {
-    const response = await api.post<GuestTokenResponse | { data?: { token?: string } }>(
-      '/api/cart/token'
-    );
-    const token = (response as any)?.data?.data?.token || (response as any)?.data?.token;
-    if (token) {
-      setGuestCartToken(token);
-      console.log('Guest token initialized from backend');
-    }
+  const sleep = (ms: number) => new Promise((res) => setTimeout(res, ms));
+  const maxAttempts = 3;
+  let attempt = 0;
 
-    return { isAuthenticated: false, isGuest: true };
-  } catch (error) {
-    console.error('Failed to initialize guest token:', error);
-    // Continue anyway - token will be created on first cart interaction
-    return { isAuthenticated: false, isGuest: true };
+  while (attempt < maxAttempts) {
+    try {
+      const response = await api.post<GuestTokenResponse | { data?: { token?: string } }>(
+        '/api/cart/token'
+      );
+      const token = (response as any)?.data?.data?.token || (response as any)?.data?.token;
+      if (token) {
+        setGuestCartToken(token);
+        if (attempt > 0) console.log('Guest token initialized after retry:', attempt + 1);
+        else console.log('Guest token initialized from backend');
+        break;
+      }
+      // No token in response - treat as failure to retry
+      throw new Error('No guest token in response');
+    } catch (error) {
+      attempt += 1;
+      console.error(`Failed to initialize guest token (attempt ${attempt}):`, error);
+      if (attempt >= maxAttempts) {
+        // Give up but continue as guest; token may be created on first cart interaction
+        break;
+      }
+      // Exponential backoff: 200ms, 400ms, 800ms
+      const delay = 200 * Math.pow(2, attempt - 1);
+      await sleep(delay);
+    }
   }
+
+  return { isAuthenticated: false, isGuest: true };
 }
