@@ -21,6 +21,7 @@ interface IconProps {
   badge?: string | number;
   title?: string;
   ariaLabel?: string;
+  filled?: boolean;
 }
 
 const Icon = ({
@@ -33,6 +34,7 @@ const Icon = ({
   badge,
   title,
   ariaLabel,
+  filled
 }: IconProps) => {
   const LucideComp = icon
 
@@ -44,9 +46,10 @@ const Icon = ({
         styles[`icon--${size}Size`],
         {
           [styles.isRotating]: isRotating || isSpinning,
+          [styles.isFilled]: Boolean(filled),
         }
       ),
-    [color, size, isRotating, isSpinning]
+    [color, size, isRotating, isSpinning, filled]
   );
 
   const a11yProps =

@@ -131,4 +131,10 @@
   &--underlineColor {
     color: $color-text-grey;
   }
+
+  &.isFilled {
+    :global(svg path) {
+      fill: currentColor;
+    }
+  }
 }

@@ -98,7 +98,7 @@ const Rating: React.FC<RatingProps> = ({
               }
             }}
           >
-            <Icon key={i} icon={icon} color={iconColor} size={size} />
+            <Icon key={i} icon={icon} color={iconColor} size={size} filled={isHighlighted} />
           </span>
         );
       })}
