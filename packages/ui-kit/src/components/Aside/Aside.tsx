@@ -106,7 +106,7 @@ const Aside: React.FC<AsideProps> = ({
           <Tooltip key={idx} content={item.label} position="right">
             <Button
               appearance="link"
-              withoutPadding
+              color="secondary-light"
               fullWidth
               align="center"
               leftIconComp={item.iconComp}
@@ -122,7 +122,7 @@ const Aside: React.FC<AsideProps> = ({
 
     const renderExpanded = (items: MenuItem[]) => (
       <AccordionGroup allowMultipleOpen fullWidth unstyled autoOverflow={autoOverflow}>
-        <Flex direction="vertical" spacing="s">
+        <Flex direction="vertical" fullWidth>
           {items.map((item, idx) => {
             const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;
             const isSelected = item.route === location.pathname;
@@ -134,7 +134,7 @@ const Aside: React.FC<AsideProps> = ({
                 <Accordion
                   key={idx}
                   header={
-                    <Flex align="center" spacing="s">
+                    <Flex align="center" fullWidth>
                       {item.iconComp && (
                         <Icon
                           icon={item.iconComp}
@@ -147,8 +147,8 @@ const Aside: React.FC<AsideProps> = ({
                   }
                   disabled={item.disabled}
                   withoutPadding
+                  buttonColor="secondary-light"
                   buttonAppearance="link"
-                  withoutHeaderPadding
                   unstyled
                   defaultOpen={defaultOpen}
                 >
@@ -157,11 +157,11 @@ const Aside: React.FC<AsideProps> = ({
                       <Button
                         key={sidx}
                         appearance="link"
+                        color="secondary-light"
                         onClick={handleItemClick(sub)}
                         isDisabled={sub.disabled}
                         fullWidth
                         align="start"
-                        withoutPadding
                         size="large"
                         className="bts-marginLxl"
                         isSelected={sub.route === location.pathname}
@@ -177,7 +177,7 @@ const Aside: React.FC<AsideProps> = ({
             return (
               <Button
                 key={idx}
-                withoutPadding
+                color="secondary-light"
                 onClick={handleItemClick(item)}
                 isDisabled={item.disabled}
                 leftIconComp={item.iconComp}
