@@ -1,0 +1,79 @@
+.buttonGroup {
+  display: inline-flex;
+
+  &.horizontal {
+    flex-direction: row;
+  }
+  &.vertical {
+    flex-direction: column;
+  }
+
+  &.fullWidth {
+    width: 100%;
+    > * { flex: 1 1 auto; }
+  }
+}
+
+.groupItem {
+  // Button outer wrapper uses this class via cloned className
+  display: inline-block;
+
+  // Remove gap between siblings to collapse borders (logical inline end works for RTL/LTR)
+  margin-inline-end: -1px;
+
+  &.vertical {
+    display: block;
+    margin-inline-end: 0;
+    margin-bottom: -1px;
+  }
+
+  // First item rounded on inline-start (or block-start in vertical)
+  &.isFirst {
+    :global(button) {
+      // Horizontal: round inline-start corners (auto-flips in RTL)
+      border-start-start-radius: 8px;
+      border-end-start-radius: 8px;
+      border-start-end-radius: 0;
+      border-end-end-radius: 0;
+    }
+
+    &.vertical :global(button) {
+      // Vertical: round block-start corners
+      border-start-start-radius: 8px;
+      border-start-end-radius: 8px;
+      border-end-start-radius: 0;
+      border-end-end-radius: 0;
+    }
+  }
+
+  // Middle items: no border radius
+  &.hasSiblings:not(.isFirst):not(.isLast) {
+    :global(button) {
+      border-radius: 0;
+    }
+  }
+
+  // Last item rounded on inline-end (or block-end in vertical)
+  &.isLast {
+    :global(button) {
+      // Horizontal: round inline-end corners (auto-flips in RTL)
+      border-start-end-radius: 8px;
+      border-end-end-radius: 8px;
+      border-start-start-radius: 0;
+      border-end-start-radius: 0;
+    }
+
+    &.vertical :global(button) {
+      // Vertical: round block-end corners
+      border-start-start-radius: 0;
+      border-start-end-radius: 0;
+      border-end-start-radius: 8px;
+      border-end-end-radius: 8px;
+    }
+  }
+
+  // Make adjacent borders appear as one
+  :global(button) {
+    position: relative;
+  }
+}

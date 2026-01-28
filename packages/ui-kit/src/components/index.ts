@@ -6,6 +6,7 @@ export { default as BouncingDotsLoader } from './BouncingDotsLoader/BouncingDots
 export { default as Breadcrumb } from './Breadcrumb/Breadcrumb';
 export { default as BreadcrumbItem } from './Breadcrumb/BreadcrumbItem';
 export { default as Button } from './Button/Button';
+export { default as ButtonGroup } from './ButtonGroup/ButtonGroup';
 export { default as Card } from './Card/Card';
 export { default as Carousel } from './Carousel/Carousel';
 export { default as Chip } from './Chip/Chip';
