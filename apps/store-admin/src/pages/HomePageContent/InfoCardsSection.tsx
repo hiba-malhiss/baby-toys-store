@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Flex, Select, StringInput, TextArea, Option } from '@baby-toys/ui-kit';
+import { Card, Flex, Select, TextArea, Option, StringInput } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { HomePageFormValues } from './homePage.helper';
 import { Control } from 'react-hook-form';
@@ -45,7 +45,14 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
                 fullWidth
                 required
               >
-                <StringInput placeholder="e.g., lucide:truck" />
+                <Select>
+                  <Option value="truck" key="truck">Truck</Option>
+                  <Option value="star" key="star">Star</Option>
+                  <Option value="brain" key="brain">Brain</Option>
+                  <Option value="puzzle" key="puzzle">Puzzle</Option>
+                  <Option value="gift" key="gift">Gift</Option>
+                  <Option value="heart" key="heart">Heart</Option>
+                </Select>
               </FormFieldWrapper>
 
               <FormFieldWrapper

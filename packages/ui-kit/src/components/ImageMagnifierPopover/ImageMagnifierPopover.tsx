@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import styles from './image-magnifier-popover.module.scss';
 import Popover from '../Popover/Popover';
 import { resolveImageBaseUrl } from '../Image';
-import useIsTouchScreen from '../../hooks/useIsTouchScreen';
+import useDeviceInfo from "../../hooks/useDeviceInfo.ts";
 
 type Props = {
   src: string;
@@ -21,7 +21,7 @@ const ImageMagnifierPopover: React.FC<Props> = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const isTouch = useIsTouchScreen();
+  const { isTouchScreen: isTouch } = useDeviceInfo();
   const canHover = !isTouch;
 
   const [isHovering, setIsHovering] = useState(false);

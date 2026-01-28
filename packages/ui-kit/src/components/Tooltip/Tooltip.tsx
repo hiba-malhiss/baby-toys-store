@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Popover from '../Popover/Popover';
-import useIsTouchScreen from '../../hooks/useIsTouchScreen';
+import useDeviceInfo from "../../hooks/useDeviceInfo.ts";
 
 type TooltipMode = 'hover' | 'manual';
 
@@ -25,7 +25,7 @@ const Tooltip = ({
   mode = 'hover',
   open: openProp,
 }: TooltipProps) => {
-  const isTouch = useIsTouchScreen();
+  const { isTouchScreen: isTouch } = useDeviceInfo();
   const targetRef = useRef<HTMLElement>(null);
   const [open, setOpen] = useState(false);
   const showTimeout = useRef<number>();

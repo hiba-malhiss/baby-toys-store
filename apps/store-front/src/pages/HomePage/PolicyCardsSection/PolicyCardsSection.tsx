@@ -1,7 +1,17 @@
 import { InfoCard } from '@baby-toys/ui-kit';
+import { Truck, Star, Brain, Puzzle, Gift, Heart } from 'lucide-react';
 import { useHomePageContent } from '../../../api/homepageApi';
 import type { InfoCardDto } from '../../../api/types/homepage';
 import styles from './policy-cards-section.module.scss';
+
+const iconMap: Record<string, any> = {
+  truck: Truck,
+  star: Star,
+  brain: Brain,
+  puzzle: Puzzle,
+  gift: Gift,
+  heart: Heart,
+};
 
 const PolicyCardsSection = () => {
   const { data, isLoading } = useHomePageContent();
@@ -16,7 +26,7 @@ const PolicyCardsSection = () => {
       {infoCards.map((card, index) => {
         const adapted = {
           appearance: card.appearance,
-          iconName: card.icon,
+          icon: iconMap[String(card.icon || '')] ?? null,
           title: card.title,
           content: card.subtitle,
         } as any;

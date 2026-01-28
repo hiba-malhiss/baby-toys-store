@@ -22,6 +22,7 @@ export { IconColor, IconSize } from './Icon/icon.constant';
 export { default as ImageGallery } from './ImageGallery/ImageGallery';
 export { default as ImageMagnifierPopover } from './ImageMagnifierPopover/ImageMagnifierPopover';
 export { default as InfoCard } from './InfoCard/InfoCard';
+export { default as WhatsAppWidget } from './WhatsAppWidget/WhatsAppWidget';
 export { default as Menu } from './Menu/Menu';
 export { default as Nav } from './Nav/Nav';
 export { default as NoDataFound } from './NoDataFound';

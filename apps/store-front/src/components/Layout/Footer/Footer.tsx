@@ -2,6 +2,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './footer.module.scss';
 import { Button, Flex, Heading, Tooltip, SocialIconButton } from '@baby-toys/ui-kit';
+import { useDeviceInfo } from '@baby-toys/ui-kit/hooks';
 import {
   footerInfoConfig,
   exploreLinks,
@@ -15,6 +16,7 @@ import { useTranslation } from 'react-i18next';
 const Footer = () => {
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
+  const { isMobileLike } = useDeviceInfo();
   const { t } = useTranslation('common');
   const tooltipKeyByPlatform: Record<string, string> = {
     whatsapp: 'product.tooltips.shareWhatsapp',
@@ -42,7 +44,7 @@ const Footer = () => {
                 icon={icon}
                 useVariantOverlay
                 variant={platform}
-                onClick={() => handleFooterSocialClick(platform)}
+                onClick={() => handleFooterSocialClick(platform, isMobileLike)}
               />
             </Tooltip>
           ))}

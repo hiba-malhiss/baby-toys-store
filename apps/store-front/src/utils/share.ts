@@ -1,10 +1,4 @@
 export type SharePlatform = 'whatsapp' | 'facebook';
-
-function isMobileLike() {
-  if (typeof navigator === 'undefined') return false;
-  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-}
-
 // Attempt to open a URL in a new tab/window. If blocked by a popup blocker,
 // fall back to navigating the current tab.
 function safeOpen(url: string) {
@@ -15,7 +9,7 @@ function safeOpen(url: string) {
   }
 }
 
-export function shareTo(platform: SharePlatform, url: string) {
+export function shareTo(platform: SharePlatform, url: string, isMobile: boolean) {
   const encoded = encodeURIComponent(url);
 
   if (platform === 'whatsapp') {
@@ -25,7 +19,7 @@ export function shareTo(platform: SharePlatform, url: string) {
 
   if (platform === 'facebook') {
     // On mobile, try to open the Facebook app if available, otherwise fall back to web sharer
-    if (isMobileLike()) {
+    if (isMobile) {
       // Known deep link pattern to open Facebook app share modal
       const appUrl = `fb://facewebmodal/f?href=${encodeURIComponent(
         `https://www.facebook.com/sharer/sharer.php?u=${encoded}`
@@ -48,15 +42,15 @@ export function shareTo(platform: SharePlatform, url: string) {
   }
 }
 
-export function shareCurrentPage(platform: SharePlatform) {
-  shareTo(platform, window.location.href);
+export function shareCurrentPage(platform: SharePlatform, isMobile: boolean) {
+  shareTo(platform, window.location.href, isMobile);
 }
 
-export function shareProduct(platform: SharePlatform, productId: string | number) {
+export function shareProduct(platform: SharePlatform, productId: string | number, isMobile: boolean) {
   const url = `${window.location.origin}/product-details/${productId}`;
-  shareTo(platform, url);
+  shareTo(platform, url, isMobile);
 }
 
-export function handleFooterSocialClick(platform: SharePlatform) {
-  shareCurrentPage(platform);
+export function handleFooterSocialClick(platform: SharePlatform, isMobile: boolean) {
+  shareCurrentPage(platform, isMobile);
 }

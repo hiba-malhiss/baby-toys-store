@@ -1,9 +1,16 @@
 import React from 'react';
+import type { ComponentType } from 'react';
 import styles from './info-card.module.scss';
 import Flex from '../Flex/Flex.tsx';
 import clsx from 'clsx';
-import type { InfoCardType } from '../../../types/product.types.ts';
 import Icon from '../Icon/Icon.tsx';
+
+export type InfoCardType = {
+  appearance?: 'info' | 'warning' | 'success' | 'primary';
+  icon?: ComponentType<any> | null;
+  title: string;
+  content: string;
+};
 
 type InfoCardProps = {
   card: InfoCardType;
@@ -26,7 +33,7 @@ const IconColor: Record<string, string> = {
 };
 
 const InfoCard: React.FC<InfoCardProps> = ({ card, size, fullWidth }) => {
-  const { appearance = 'info', iconName, icon, title, content } = card;
+  const { appearance = 'info', icon, title, content } = card;
 
   return (
     <Flex
@@ -43,7 +50,6 @@ const InfoCard: React.FC<InfoCardProps> = ({ card, size, fullWidth }) => {
     >
       <Icon
         icon={icon}
-        iconName={iconName}
         color={IconColor[appearance]}
         size={size == 'medium' ? 'xxlarge' : 'xxxlarge'}
       />

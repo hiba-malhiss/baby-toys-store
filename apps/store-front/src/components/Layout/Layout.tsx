@@ -1,6 +1,7 @@
 import React, { type ReactNode } from 'react';
 import { Flex, Toast } from '@baby-toys/ui-kit';
 import Footer from './Footer/Footer.tsx';
+import WhatsAppWidgetWrapper from '../WhatsAppWidget/WhatsAppWidgetWrapper';
 import styles from './layout.module.scss';
 import Header from './Header/Header.tsx';
 import ShoppingCartDrawer from '../features/ShoppingCartDrawer/ShoppingCartDrawer.tsx';
@@ -29,6 +30,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           setIsOpen={(val) => (val ? openShippingCartDrawer() : closeShippingCartDrawer())}
         ></ShoppingCartDrawer>
       </Flex>
+      <WhatsAppWidgetWrapper />
     </>
   );
 };

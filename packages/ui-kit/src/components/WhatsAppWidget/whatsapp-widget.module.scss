@@ -1,0 +1,58 @@
+.Btn {
+  position: fixed;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 45px;
+  height: 45px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  overflow: hidden;
+  transition-duration: 0.3s;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.199);
+  background-color: #00d757;
+}
+
+.sign {
+  width: 100%;
+  transition-duration: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialSvg {
+  width: 25px;
+}
+
+.socialSvg path {
+  fill: white;
+}
+
+.text {
+  position: absolute;
+  right: 0%;
+  width: 0%;
+  opacity: 0;
+  color: white;
+  font-size: 1.2em;
+  font-weight: 600;
+  transition-duration: 0.3s;
+  display: none;
+}
+
+.Btn:active {
+  transform: translate(2px, 2px);
+}
+
+.bottom-right {
+  right: 24px;
+  bottom: 24px;
+}
+
+.bottom-left {
+  left: 24px;
+  bottom: 24px;
+}
