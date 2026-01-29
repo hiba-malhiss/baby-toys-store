@@ -17,7 +17,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './checkout-page.module.scss';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import { useActiveTowns, type DeliveryTown } from '../../api/locationsApi';
-import { useIsRtl } from '../../utils/i18n.ts';
+import TownSelect from '../../components/shared/TownSelect';
 
 export type ShippingFormValues = {
   country: string;
@@ -25,7 +25,6 @@ export type ShippingFormValues = {
   lastName: string;
   region: string;
   address: string;
-  town: string;
   townCode: string; // used for pricing + stored on order
   phone: string;
   secondPhone?: string;
@@ -64,7 +63,6 @@ const shippingSchema = z.object({
   lastName: z.string().min(1, 'Last name is required'),
   region: z.string().min(1, 'Village/Region is required'),
   address: z.string().min(1, 'Detailed address is required'),
-  town: z.string().min(1, 'Town is required'),
   townCode: z.string().min(1, 'Town is required'),
   phone: z
     .string()
@@ -113,7 +111,6 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
 }) => {
   const { t } = useTranslation('common');
   const { data: towns = [], isPending: loadingTowns } = useActiveTowns();
-  const isRtl = useIsRtl();
 
   const formMethods = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema),
@@ -128,15 +125,6 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
 
   const townCode = useWatch({ control, name: 'townCode' });
   const couponCode = useWatch({ control, name: 'couponCode' });
-
-  const townSelectOptions = useMemo(
-    () =>
-      towns?.map((o) => ({
-        label: `${!isRtl ? o.nameEn : o.nameAr} (${o.zoneCode?.toLowerCase()})`,
-        value: o.code,
-      })),
-    [towns, isRtl]
-  );
 
   // init: prefill from saved address (if any), and also ensure a default townCode
   useEffect(() => {
@@ -153,7 +141,6 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
       lastName: a.lastName || '',
       region: a.region || '',
       address: a.detailedAddress || '',
-      town: a.town || firstTown?.nameEn || '',
       townCode: firstTown?.code || '',
       phone: a.phoneNumber || '',
     });
@@ -254,12 +241,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             control={control}
             label={t('checkout.form.town')}
           >
-            <Select
-              options={townSelectOptions}
-              isLoading={loadingTowns}
-              placeholder={t('checkout.form.placeholder.town')}
-              isSearchableInternally
-            />
+            <TownSelect placeholder={t('checkout.form.placeholder.town')} />
           </FormFieldWrapper>
 
           <FormFieldWrapper

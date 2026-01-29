@@ -105,7 +105,7 @@ const CheckoutPage: React.FC = () => {
         shippingAddress: {
           firstName: values.firstName,
           lastName: values.lastName,
-          town: values.town,
+          townCode: values.townCode || selectedTown?.code || '',
           region: values.region,
           detailedAddress: values.address,
           phoneNumber: values.phone,
@@ -113,7 +113,6 @@ const CheckoutPage: React.FC = () => {
         },
         saveAddress: values.saveAddress,
         couponCode: values.couponCode?.trim() || undefined,
-        townCode: values.townCode || selectedTown?.code || '',
         note: values.note?.trim() || null,
       });
 

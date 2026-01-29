@@ -7,6 +7,7 @@ import VerificationDialog from './VerificationDialog';
 import { registerFields, registerSchema } from './registerDialog.helpers.ts';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
 import { useTranslation } from 'react-i18next';
+import TownSelect from '../shared/TownSelect';
 
 interface RegisterDialogProps {
   open: boolean;
@@ -35,6 +36,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
       phoneNumber: '',
       age: undefined,
       country: '',
+      townCode: '',
     },
     resolver: zodResolver(registerSchema),
   });
@@ -137,6 +139,19 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                 );
               })}
             </Flex>
+
+            <FormFieldWrapper
+              name="townCode"
+              control={control}
+              label={t('checkout.form.town')}
+              required={false}
+              fullWidth
+            >
+              <TownSelect
+                placeholder={t('checkout.form.placeholder.town')}
+                isSearchableInternally
+              />
+            </FormFieldWrapper>
 
             <Button
               type="submit"

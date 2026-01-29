@@ -24,7 +24,7 @@ export interface OrderItem {
 export interface ShippingAddress {
   firstName: string;
   lastName: string;
-  town: string;
+  townCode: string;
   region: string;
   detailedAddress: string;
   phoneNumber: string;
@@ -42,8 +42,6 @@ export interface Order {
   discountAmount: string;
   total: string;
   couponCode?: string | null;
-  townCode?: string | null;
-  zoneCode?: string | null;
   items: OrderItem[];
   totalCost?: string;
   totalProfit?: string;

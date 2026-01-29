@@ -38,6 +38,7 @@ export interface RegisterRequest {
   phoneNumber?: string;
   age?: number;
   country?: string;
+  townCode?: string;
 }
 
 export const AUTH_TOKEN_KEY = ['authToken'];

@@ -26,7 +26,7 @@ export type CreateOrderRequest = {
   shippingAddress: {
     firstName: string;
     lastName: string;
-    town: string;
+    townCode: string;
     region: string;
     detailedAddress: string;
     phoneNumber: string;
@@ -34,7 +34,6 @@ export type CreateOrderRequest = {
   };
   saveAddress?: boolean;
   couponCode?: string | null;
-  townCode: string;
   note?: string | null;
 };
 

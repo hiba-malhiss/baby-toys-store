@@ -37,6 +37,10 @@ export const registerSchema = z.object({
     .string()
     .optional()
     .refine((val) => !val || val.trim().length > 0, { message: 'Please enter a valid country' }),
+  townCode: z
+    .string()
+    .optional()
+    .refine((val) => !val || val.trim().length > 0, { message: 'Please select a town' }),
 });
 
 export type RegisterField = {

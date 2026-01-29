@@ -25,7 +25,7 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
           </Flex>
           <Flex justify="between" spacing="s">
             <strong>{t('shippingAddress.town')}</strong>
-            <span>{a.town || '-'}</span>
+            <span>{a.townCode || '-'}</span>
           </Flex>
           <Flex justify="between" spacing="s">
             <strong>{t('shippingAddress.region')}</strong>
@@ -46,14 +46,6 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
           <Flex justify="between" spacing="s">
             <strong>{t('shippingAddress.email')}</strong>
             <span>{a.email || '-'}</span>
-          </Flex>
-          <Flex justify="between" spacing="s">
-            <strong>Town Code</strong>
-            <span>{order?.townCode || '-'}</span>
-          </Flex>
-          <Flex justify="between" spacing="s">
-            <strong>Zone Code</strong>
-            <span>{order?.zoneCode || '-'}</span>
           </Flex>
         </Flex>
       )}
