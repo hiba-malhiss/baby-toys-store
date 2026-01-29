@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { hasGuestCartToken } from '../utils/guestCart.ts';
 
 export type QuoteRequest = {
-  shippingOptionId: number;
+  townCode: string;
   couponCode?: string;
 };
 
@@ -14,16 +14,14 @@ export type QuoteResponse = {
   discountAmount: number;
   shippingCost: number;
   total: number;
-  freeShipping: boolean;
+  isFreeShipping: boolean;
   coupon?: {
     code: string;
     valid: boolean;
     message?: string;
   } | null;
-  shipping?: {
-    id: number;
-    name: string;
-  } | null;
+  townCode?: string | null;
+  zoneCode?: string | null;
 };
 
 export function useCheckoutQuote() {

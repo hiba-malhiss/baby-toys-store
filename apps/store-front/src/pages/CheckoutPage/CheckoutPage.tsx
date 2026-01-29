@@ -21,6 +21,7 @@ import { useCurrencyFormatter } from '../../hooks/useCurrencyFormatter';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
 import { useCheckoutQuote, type QuoteResponse } from '../../api/checkoutApi';
+import type { DeliveryTown } from '../../api/locationsApi';
 import { useCartQuery } from '../../api/cartApi';
 import { useTranslation } from 'react-i18next';
 import clsx from 'clsx';
@@ -43,9 +44,7 @@ const CheckoutPage: React.FC = () => {
 
   // Local state
   const [couponCode, setCouponCode] = useState('');
-  const [selectedShipping, setSelectedShipping] = useState<{ id: number; cost: number } | null>(
-    null
-  );
+  const [selectedTown, setSelectedTown] = useState<DeliveryTown | null>(null);
   const [quote, setQuote] = useState<QuoteResponse | null>(null);
 
   // Derived values
@@ -66,10 +65,10 @@ const CheckoutPage: React.FC = () => {
   const stockBlocked = hasOOS || hasOverAllocated;
 
   // Handlers
-  const refreshQuote = (shippingId?: number, code?: string) => {
-    if (!shippingId) return setQuote(null);
+  const refreshQuote = (townCode?: string, code?: string) => {
+    if (!townCode) return setQuote(null);
     quoteMutation.mutate(
-      { shippingOptionId: shippingId, couponCode: code || undefined },
+      { townCode, couponCode: code || undefined },
       {
         onSuccess: (resp) => {
           setQuote(resp);
@@ -89,14 +88,13 @@ const CheckoutPage: React.FC = () => {
   const handleCouponPreview = (info: { code: string }) => {
     const code = info.code.trim();
     setCouponCode(code);
-    refreshQuote(selectedShipping?.id, code);
+    refreshQuote(selectedTown?.code, code);
   };
 
-  const handleShippingChange = useCallback(
-    (opt: { id: number; cost: number } | null) => {
-      const sel = opt ? { id: opt.id, cost: Number(opt.cost) } : null;
-      setSelectedShipping(sel);
-      refreshQuote(sel?.id, couponCode);
+  const handleTownChange = useCallback(
+    (town: DeliveryTown | null) => {
+      setSelectedTown(town);
+      refreshQuote(town?.code, couponCode);
     },
     [couponCode]
   );
@@ -115,9 +113,7 @@ const CheckoutPage: React.FC = () => {
         },
         saveAddress: values.saveAddress,
         couponCode: values.couponCode?.trim() || undefined,
-        shippingOptionId: values.shippingOptionId
-          ? Number(values.shippingOptionId)
-          : (selectedShipping?.id ?? null),
+        townCode: values.townCode || selectedTown?.code || '',
         note: values.note?.trim() || null,
       });
       navigate('/home');
@@ -157,7 +153,7 @@ const CheckoutPage: React.FC = () => {
             onAlterCart={() => navigate('/shopping-cart')}
             onCouponPreview={handleCouponPreview}
             couponValid={quote?.coupon?.valid ?? null}
-            onShippingOptionChange={handleShippingChange}
+            onTownChange={handleTownChange}
           />
         </Card>
 
@@ -190,7 +186,7 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryRow}>
             <span>
               {t('checkout.shipping')}{' '}
-              {quote?.freeShipping && (
+              {quote?.isFreeShipping && (
                 <Chip label={t('checkout.freeShippingApplied')} appearance="success" size="small" />
               )}
             </span>

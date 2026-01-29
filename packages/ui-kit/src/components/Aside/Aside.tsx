@@ -163,7 +163,7 @@ const Aside: React.FC<AsideProps> = ({
                         fullWidth
                         align="start"
                         size="large"
-                        className="bts-marginLxl"
+                        className="bts-paddingLxl"
                         isSelected={sub.route === location.pathname}
                       >
                         {sub.label}

@@ -34,7 +34,7 @@ export type CreateOrderRequest = {
   };
   saveAddress?: boolean;
   couponCode?: string | null;
-  shippingOptionId?: number | null;
+  townCode: string;
   note?: string | null;
 };
 

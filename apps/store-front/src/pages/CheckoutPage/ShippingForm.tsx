@@ -13,8 +13,7 @@ import {
 } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import { Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
-import { type ShippingOption, useActiveShippingOptions } from '../../api/shippingOptionsApi';
-import { useStoreSettings } from '../../api/settingsApi';
+import { useActiveTowns, type DeliveryTown } from '../../api/locationsApi';
 import styles from './checkout-page.module.scss';
 import { useTranslation } from 'react-i18next';
 
@@ -25,12 +24,12 @@ export type ShippingFormValues = {
   region: string;
   address: string;
   town: string;
+  townCode: string; // code used for pricing and order
   phone: string;
   secondPhone?: string;
   note?: string;
   saveAddress: boolean;
   couponCode?: string;
-  shippingOptionId?: number | null;
 };
 
 type Address = {
@@ -49,7 +48,7 @@ type ShippingFormProps = {
   placing?: boolean;
   disableSubmit?: boolean;
   onCouponPreview?: (info: { code: string }) => void;
-  onShippingOptionChange?: (opt: ShippingOption | null) => void;
+  onTownChange?: (town: DeliveryTown | null) => void;
   couponValid?: boolean | null;
   stockBlocked?: boolean;
   onAlterCart?: () => void;
@@ -66,6 +65,7 @@ const shippingSchema = z.object({
   region: z.string().min(1, 'Village/Region is required'),
   address: z.string().min(1, 'Detailed address is required'),
   town: z.string().min(1, 'Town is required'),
+  townCode: z.string().min(1, 'Town is required'),
   phone: z
     .string()
     .regex(/^[0-9+\-\s()]{7,20}$/, 'Invalid phone number')
@@ -82,21 +82,20 @@ const shippingSchema = z.object({
     .or(z.literal('').transform(() => undefined)),
   saveAddress: z.boolean().default(true),
   couponCode: z.string().optional(),
-  shippingOptionId: z.string().optional(),
 });
 
 const ShippingForm: React.FC<ShippingFormProps> = ({
-  isAuthenticated,
-  addresses,
-  onSubmit,
-  placing,
-  disableSubmit,
-  onCouponPreview,
-  onShippingOptionChange,
-  couponValid,
-  stockBlocked,
-  onAlterCart,
-}) => {
+   isAuthenticated,
+   addresses,
+   onSubmit,
+   placing,
+   disableSubmit,
+   onCouponPreview,
+   couponValid,
+   stockBlocked,
+   onAlterCart,
+   onTownChange,
+  }) => {
   const formMethods = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema),
     mode: 'onChange',
@@ -107,12 +106,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
       region: '',
       address: '',
       town: '',
+      townCode: '',
       phone: '',
       secondPhone: '',
       note: '',
       saveAddress: true,
       couponCode: '',
-      shippingOptionId: null,
     },
   });
 
@@ -120,71 +119,55 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
 
   const [usingSavedAddress, setUsingSavedAddress] = useState(false);
   const initializedRef = useRef(false);
-
-  // Shipping options
-  const { data: shippingOptions = [], isPending: loadingShipping } = useActiveShippingOptions();
-  const { data: settings } = useStoreSettings();
-  const symbol = settings?.general?.currencySymbol || '';
+  const { data: towns = [], isPending: loadingTowns } = useActiveTowns();
   const { t } = useTranslation('common');
 
-  const shippingSelectOptions = useMemo(
+  const townSelectOptions = useMemo(
     () =>
-      (shippingOptions || []).map((o) => ({
-        label: `${o.name} (${symbol}${Number(o.cost).toFixed(2)})`,
-        value: String(o.id),
+      (towns || []).map((o) => ({
+        label: `${o.nameEn} (${o.zoneCode}) ()`,
+        value: o.code,
       })),
-    [shippingOptions, symbol]
+    [towns]
   );
 
   useEffect(() => {
-    if (!isAuthenticated || !addresses?.length) return;
-    if (initializedRef.current) return;
+    if(!isAuthenticated || !addresses?.length) return;
+    if(initializedRef.current) return;
     const a = addresses[0];
-    const firstOpt = shippingOptions[0] ?? null;
+    const firstTown = towns[0] ?? null;
     reset({
       country: 'palestine',
       firstName: a.firstName || '',
       lastName: a.lastName || '',
       region: a.region || '',
       address: a.detailedAddress || '',
-      town: a.town || '',
+      town: a.town || (firstTown?.nameEn || ''),
+      townCode: firstTown?.code || '',
       phone: a.phoneNumber || '',
       secondPhone: '',
       note: '',
       saveAddress: true,
       couponCode: '',
-      shippingOptionId: firstOpt ? String(firstOpt.id) : null,
     });
     setUsingSavedAddress(true);
     initializedRef.current = true;
-  }, [isAuthenticated, addresses, shippingOptions, reset]);
+  }, [isAuthenticated, addresses, towns, reset]);
 
-  // Ensure default shipping option
+  // When towns load and none selected, pick first
   useEffect(() => {
-    // After options load, ensure a default is set once.
-    const current = getValues('shippingOptionId');
-    const first = shippingOptions[0];
-    if (!first || current) return;
-    setValue('shippingOptionId', String(first.id), { shouldDirty: false, shouldTouch: false });
-  }, [shippingOptions, getValues, setValue]);
-
-  // Notify parent when shipping option changes
-  const lastNotifiedShipId = useRef<number | null>(null);
-  const selectedShipId = watch('shippingOptionId');
-  useEffect(() => {
-    const idNum = selectedShipId != null ? Number(selectedShipId) : null;
-    if (!idNum) return;
-    if (lastNotifiedShipId.current === idNum) return;
-    const found = shippingOptions?.find((o) => o.id === idNum) || null;
-    if (!found) return;
-    onShippingOptionChange?.(found);
-    lastNotifiedShipId.current = idNum;
-  }, [selectedShipId, shippingOptions, onShippingOptionChange]);
+    const currentCode = getValues('townCode');
+    const first = towns[0];
+    if(!first || currentCode) return;
+    setValue('townCode', first.code, { shouldDirty: false, shouldTouch: false });
+    setValue('town', first.nameEn, { shouldDirty: false, shouldTouch: false });
+    onTownChange?.(first);
+  }, [towns, getValues, setValue, onTownChange]);
 
   // Coupon preview
   const handleCouponPreview = () => {
     const code = (getValues('couponCode') || '').trim();
-    if (code) onCouponPreview?.({ code });
+    if(code) onCouponPreview?.({ code });
   };
   return (
     <FormProvider {...formMethods}>
@@ -204,12 +187,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
                   region: '',
                   address: '',
                   town: '',
+                  townCode: '',
                   phone: '',
                   secondPhone: '',
                   note: '',
                   saveAddress: true,
                   couponCode: '',
-                  shippingOptionId: null,
                 });
                 setUsingSavedAddress(false);
               }}
@@ -243,7 +226,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             control={control}
             label={t('checkout.form.firstName')}
           >
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')}/>
           </FormFieldWrapper>
           <FormFieldWrapper
             required
@@ -251,14 +234,25 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             control={control}
             label={t('checkout.form.lastName')}
           >
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')}/>
           </FormFieldWrapper>
         </div>
 
         {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper required name="town" control={control} label={t('checkout.form.town')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.town')} />
+          <FormFieldWrapper required name="townCode" control={control} label={t('checkout.form.town')}>
+            <Select
+              options={townSelectOptions}
+              isLoading={loadingTowns}
+              placeholder={t('checkout.form.placeholder.town')}
+              onChange={(opt: any) => {
+                const code = opt?.value || '';
+                const town = towns.find((t) => t.code === code) || null;
+                setValue('townCode', code);
+                setValue('town', town?.nameEn || '');
+                onTownChange?.(town);
+              }}
+            />
           </FormFieldWrapper>
           <FormFieldWrapper
             required
@@ -266,7 +260,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             control={control}
             label={t('checkout.form.region')}
           >
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')} />
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')}/>
           </FormFieldWrapper>
         </div>
 
@@ -277,12 +271,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           control={control}
           label={t('checkout.form.address')}
         >
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')} />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')}/>
         </FormFieldWrapper>
 
         {/* Phone */}
         <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')} />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')}/>
         </FormFieldWrapper>
 
         {/* Second Phone (optional) */}
@@ -291,26 +285,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           control={control}
           label={t('checkout.form.secondPhone')}
         >
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')} />
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')}/>
         </FormFieldWrapper>
 
         {/* Note (optional) */}
         <FormFieldWrapper name="note" control={control} label={t('checkout.form.note')}>
-          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3} />
-        </FormFieldWrapper>
-
-        {/* Shipping option */}
-        <FormFieldWrapper
-          required
-          name="shippingOptionId"
-          control={control}
-          label={t('checkout.form.shippingMethod')}
-        >
-          <Select
-            options={shippingSelectOptions}
-            isLoading={loadingShipping}
-            placeholder={t('checkout.form.selectShipping')}
-          />
+          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3}/>
         </FormFieldWrapper>
 
         {/* Coupon */}
@@ -324,7 +304,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
               }
               iconColor={couponValid ? IconColor.success : IconColor.warning}
               onKeyDown={(e) => {
-                if (e.key === 'Enter') {
+                if(e.key === 'Enter') {
                   e.preventDefault();
                   handleCouponPreview();
                 }
@@ -350,7 +330,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
             />
           </div>
         </FormFieldWrapper>
-        <Divider className="bts-marginVl" />
+        <Divider className="bts-marginVl"/>
         {stockBlocked ? (
           <Button fullWidth onClick={onAlterCart} appearance="outline" color="error">
             {t('cart.goToCart')}
