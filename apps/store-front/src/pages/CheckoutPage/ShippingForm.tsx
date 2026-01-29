@@ -174,14 +174,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   // keep "town" field and parent state in sync with townCode (single source of truth: townCode)
   useEffect(() => {
     if (!townCode) {
-      setValue('town', '', { shouldDirty: false, shouldTouch: false });
       onTownChange?.(null);
       return;
     }
 
-    setValue('town', townCode || '', { shouldDirty: false, shouldTouch: false });
-    onTownChange?.(townCode);
-  }, [townCode, towns, setValue, onTownChange]);
+    onTownChange?.(towns?.find((t) => t.code === townCode));
+  }, [townCode, towns, onTownChange]);
 
   const handleCouponPreview = () => {
     const code = (couponCode || '').trim();
