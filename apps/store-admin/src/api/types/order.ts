@@ -42,6 +42,8 @@ export interface Order {
   discountAmount: string;
   total: string;
   couponCode?: string | null;
+  townCode?: string | null;
+  zoneCode?: string | null;
   items: OrderItem[];
   totalCost?: string;
   totalProfit?: string;

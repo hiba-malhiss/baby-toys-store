@@ -1,5 +1,5 @@
 import React, { useCallback, useMemo } from 'react';
-import { Aside, Button, Toast, BouncingDotsLoader, Mask, Flex } from '@baby-toys/ui-kit';
+import { Aside, Button, BouncingDotsLoader, Mask, Flex } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import styles from './admin-layout.module.scss';
 import { useLogout } from '../../../api/authApi.ts';
@@ -67,7 +67,14 @@ const AdminLayout: React.FC<{
       { label: t('menu.reviews'), route: '/reviews', iconComp: Star },
       { label: t('menu.homepage'), route: '/homepage', iconComp: Home },
       { label: t('menu.settings'), route: '/settings', iconComp: Settings },
-      { label: t('menu.shippingOptions'), route: '/shipping-options', iconComp: Truck },
+      {
+        label: 'Delivery',
+        iconComp: Truck,
+        items: [
+          { label: 'Zones', route: '/delivery/zones' },
+          { label: 'Towns', route: '/delivery/towns' },
+        ],
+      },
     ],
     [t]
   );
@@ -79,12 +86,11 @@ const AdminLayout: React.FC<{
     } catch(error) {
       console.error('Logout failed:', error);
     }
-  }, [logoutApi]);
+  }, [logoutApi, navigate]);
 
   return (
     <>
       <Mask visible={isMaskLoading}/>
-      <Toast/>
       <div className={styles.adminLayout}>
         <Aside
           autoOverflow

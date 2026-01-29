@@ -47,6 +47,14 @@ export const ShippingAddressCard: React.FC<Props> = ({ order }) => {
             <strong>{t('shippingAddress.email')}</strong>
             <span>{a.email || '-'}</span>
           </Flex>
+          <Flex justify="between" spacing="s">
+            <strong>Town Code</strong>
+            <span>{order?.townCode || '-'}</span>
+          </Flex>
+          <Flex justify="between" spacing="s">
+            <strong>Zone Code</strong>
+            <span>{order?.zoneCode || '-'}</span>
+          </Flex>
         </Flex>
       )}
     </Card>

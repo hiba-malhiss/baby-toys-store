@@ -19,7 +19,8 @@ import HomePageContent from './pages/HomePageContent/HomePageContent';
 import ProductAnalyticsPage from './pages/ProductAnalyticsPage/ProductAnalyticsPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
-import ShippingOptionsPage from './pages/ShippingOptionsPage/ShippingOptionsPage';
+import DeliveryTownsPage from './pages/DeliveryTownsPage/DeliveryTownsPage';
+import DeliveryZonesPage from './pages/DeliveryZonesPage/DeliveryZonesPage';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 import { BouncingDotsLoader, Toast, ToastProvider } from '@baby-toys/ui-kit';
 import CouponsPage from './pages/CouponsPage/CouponsPage.tsx';
@@ -163,10 +164,18 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-          path="/shipping-options"
+          path="/delivery/zones"
           element={
             <PrivateRoute>
-              <ShippingOptionsPage />
+              <DeliveryZonesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/delivery/towns"
+          element={
+            <PrivateRoute>
+              <DeliveryTownsPage />
             </PrivateRoute>
           }
         />
