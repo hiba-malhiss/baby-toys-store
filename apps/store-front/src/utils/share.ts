@@ -46,7 +46,11 @@ export function shareCurrentPage(platform: SharePlatform, isMobile: boolean) {
   shareTo(platform, window.location.href, isMobile);
 }
 
-export function shareProduct(platform: SharePlatform, productId: string | number, isMobile: boolean) {
+export function shareProduct(
+  platform: SharePlatform,
+  productId: string | number,
+  isMobile: boolean
+) {
   const url = `${window.location.origin}/product-details/${productId}`;
   shareTo(platform, url, isMobile);
 }

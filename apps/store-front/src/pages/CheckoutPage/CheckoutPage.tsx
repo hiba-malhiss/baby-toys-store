@@ -84,22 +84,22 @@ const CheckoutPage: React.FC = () => {
   // Avoid spamming the same invalid-coupon toast on refetch
   const lastCouponToastRef = useRef<string | null>(null);
   useEffect(() => {
-    if(!quote) return;
+    if (!quote) return;
 
     const invalid = !!normalizedCouponCode && (!quote.coupon || quote.coupon.valid === false);
-    if(!invalid) {
+    if (!invalid) {
       lastCouponToastRef.current = null;
       return;
     }
 
     const msg = quote.coupon?.message || t('checkout.invalidCoupon');
-    if(lastCouponToastRef.current !== msg) {
+    if (lastCouponToastRef.current !== msg) {
       toast.error(msg);
       lastCouponToastRef.current = msg;
     }
   }, [quote, normalizedCouponCode, toast, t]);
 
-  const onSubmit = async(values: ShippingFormValues) => {
+  const onSubmit = async (values: ShippingFormValues) => {
     try {
       await placeOrder.mutateAsync({
         shippingAddress: {
@@ -163,13 +163,13 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryList}>
             {view.items.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
-                <img src={item.productImage || ''} alt={item.productName}/>
+                <img src={item.productImage || ''} alt={item.productName} />
                 <div>
                   <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
                 <div>{formatCurrency(item.totalPrice)}</div>
-                <Divider className="bts-marginBl" fullWidth/>
+                <Divider className="bts-marginBl" fullWidth />
               </div>
             ))}
           </div>
@@ -190,24 +190,18 @@ const CheckoutPage: React.FC = () => {
             <span>
               {t('checkout.shipping')}{' '}
               {quote?.isFreeShipping && (
-                <Chip
-                  label={t('checkout.freeShippingApplied')}
-                  appearance="success"
-                  size="small"
-                />
+                <Chip label={t('checkout.freeShippingApplied')} appearance="success" size="small" />
               )}
             </span>
-            <span>
-              {view.shippingCost == null ? '-' : formatCurrency(view.shippingCost)}
-            </span>
+            <span>{view.shippingCost == null ? '-' : formatCurrency(view.shippingCost)}</span>
           </div>
 
-          <Divider className="bts-marginBl"/>
+          <Divider className="bts-marginBl" />
 
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>{t('checkout.total')}</span>
             <span>
-              {isQuoting ? <BouncingDotsLoader size="small"/> : formatCurrency(view.total)}
+              {isQuoting ? <BouncingDotsLoader size="small" /> : formatCurrency(view.total)}
             </span>
           </div>
         </Card>

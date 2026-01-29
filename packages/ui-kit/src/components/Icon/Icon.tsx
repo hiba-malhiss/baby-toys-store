@@ -34,9 +34,9 @@ const Icon = ({
   badge,
   title,
   ariaLabel,
-  filled
+  filled,
 }: IconProps) => {
-  const LucideComp = icon
+  const LucideComp = icon;
 
   const iconClass = useMemo(
     () =>
@@ -57,7 +57,7 @@ const Icon = ({
       ? { role: 'img', 'aria-label': ariaLabel ?? title }
       : ({ 'aria-hidden': true } as const);
 
-  if(!LucideComp) {
+  if (!LucideComp) {
     return null;
   }
 

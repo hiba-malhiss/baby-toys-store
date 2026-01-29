@@ -67,7 +67,10 @@ export function useCreateZone() {
   const toast = useToast();
   return useMutation<{ id: number }, any, Omit<AdminDeliveryZone, 'id'>>({
     mutationFn: async (payload) => {
-      const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/delivery-zones', payload);
+      const { data } = await api.post<ApiEnvelope<{ id: number }>>(
+        '/api/admin/delivery-zones',
+        payload
+      );
       return data.data;
     },
     onSuccess: () => {
@@ -83,7 +86,10 @@ export function useUpdateZone() {
   const toast = useToast();
   return useMutation<{ id: number }, any, { id: number } & Omit<AdminDeliveryZone, 'id'>>({
     mutationFn: async ({ id, ...payload }) => {
-      const { data } = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/delivery-zones/${id}`, payload);
+      const { data } = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/delivery-zones/${id}`,
+        payload
+      );
       return data.data;
     },
     onSuccess: () => {
@@ -99,7 +105,9 @@ export function useDeactivateZone() {
   const toast = useToast();
   return useMutation<{ id: number }, any, { id: number }>({
     mutationFn: async ({ id }) => {
-      const { data } = await api.patch<ApiEnvelope<{ id: number }>>(`/api/admin/delivery-zones/${id}/deactivate`);
+      const { data } = await api.patch<ApiEnvelope<{ id: number }>>(
+        `/api/admin/delivery-zones/${id}/deactivate`
+      );
       return data.data;
     },
     onSuccess: () => {
@@ -115,7 +123,10 @@ export function useCreateTown() {
   const toast = useToast();
   return useMutation<{ id: number }, any, Omit<AdminDeliveryTown, 'id'>>({
     mutationFn: async (payload) => {
-      const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/delivery-towns', payload);
+      const { data } = await api.post<ApiEnvelope<{ id: number }>>(
+        '/api/admin/delivery-towns',
+        payload
+      );
       return data.data;
     },
     onSuccess: () => {
@@ -131,7 +142,10 @@ export function useUpdateTown() {
   const toast = useToast();
   return useMutation<{ id: number }, any, { id: number } & Omit<AdminDeliveryTown, 'id'>>({
     mutationFn: async ({ id, ...payload }) => {
-      const { data } = await api.put<ApiEnvelope<{ id: number }>>(`/api/admin/delivery-towns/${id}`, payload);
+      const { data } = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/delivery-towns/${id}`,
+        payload
+      );
       return data.data;
     },
     onSuccess: () => {
@@ -147,7 +161,9 @@ export function useDeactivateTown() {
   const toast = useToast();
   return useMutation<{ id: number }, any, { id: number }>({
     mutationFn: async ({ id }) => {
-      const { data } = await api.patch<ApiEnvelope<{ id: number }>>(`/api/admin/delivery-towns/${id}/deactivate`);
+      const { data } = await api.patch<ApiEnvelope<{ id: number }>>(
+        `/api/admin/delivery-towns/${id}/deactivate`
+      );
       return data.data;
     },
     onSuccess: () => {

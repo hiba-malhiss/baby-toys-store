@@ -21,7 +21,7 @@ import {
   Truck,
   LogOut,
 } from 'lucide-react';
-import LanguageSwitcher from "../../../i18n/LanguageSwitcher.tsx";
+import LanguageSwitcher from '../../../i18n/LanguageSwitcher.tsx';
 
 const AdminLayout: React.FC<{
   children: React.ReactNode;
@@ -79,18 +79,18 @@ const AdminLayout: React.FC<{
     [t]
   );
 
-  const logout = useCallback(async() => {
+  const logout = useCallback(async () => {
     try {
       await logoutApi();
       navigate('/login');
-    } catch(error) {
+    } catch (error) {
       console.error('Logout failed:', error);
     }
   }, [logoutApi, navigate]);
 
   return (
     <>
-      <Mask visible={isMaskLoading}/>
+      <Mask visible={isMaskLoading} />
       <div className={styles.adminLayout}>
         <Aside
           autoOverflow
@@ -102,7 +102,7 @@ const AdminLayout: React.FC<{
                 alt="logo"
                 className={styles.adminLayoutLogo}
               />
-              <LanguageSwitcher/>
+              <LanguageSwitcher />
             </Flex>
           }
           footerExpanded={
@@ -127,7 +127,7 @@ const AdminLayout: React.FC<{
           }
         />
         <main className={styles.adminLayoutContent}>
-          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl"/> : children}
+          {isLoading ? <BouncingDotsLoader className="bts-marginTxxxl" /> : children}
         </main>
       </div>
     </>

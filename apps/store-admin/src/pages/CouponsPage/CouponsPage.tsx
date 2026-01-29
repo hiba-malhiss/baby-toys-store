@@ -123,7 +123,11 @@ const CouponsPage: React.FC = () => {
               onIconClick={() => handleSearch(searchInput)}
               fullWidth
             />
-            <Button onClick={openAddDialog} leftIconComp={Plus} className={styles.couponsPageAddBtn}>
+            <Button
+              onClick={openAddDialog}
+              leftIconComp={Plus}
+              className={styles.couponsPageAddBtn}
+            >
               Add Coupon
             </Button>
           </Flex>

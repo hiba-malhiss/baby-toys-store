@@ -95,7 +95,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         <button
           ref={ref}
           onKeyDown={(e) => {
-            if(e.key === 'Enter') {
+            if (e.key === 'Enter') {
               onClick && onClick(e);
             }
           }}
@@ -106,7 +106,6 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           form={form}
           {...rest}
         >
-
           {resolvedLoading && (
             <Icon
               isSpinning

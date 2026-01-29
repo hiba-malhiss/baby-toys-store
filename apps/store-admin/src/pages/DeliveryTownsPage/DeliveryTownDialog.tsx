@@ -1,5 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Dialog, Button, Flex, FieldWrapper, StringInput, Checkbox, Select } from '@baby-toys/ui-kit';
+import {
+  Dialog,
+  Button,
+  Flex,
+  FieldWrapper,
+  StringInput,
+  Checkbox,
+  Select,
+} from '@baby-toys/ui-kit';
 import type { AdminDeliveryTown } from '../../api/deliveryLocationsApi';
 import { useCreateTown, useUpdateTown, useAdminZones } from '../../api/deliveryLocationsApi';
 import { useTranslation } from 'react-i18next';
@@ -20,7 +28,12 @@ const emptyForm: Omit<AdminDeliveryTown, 'id'> = {
   active: true,
 };
 
-const DeliveryTownDialog: React.FC<DeliveryTownDialogProps> = ({ visible, town, onHide, onSuccess }) => {
+const DeliveryTownDialog: React.FC<DeliveryTownDialogProps> = ({
+  visible,
+  town,
+  onHide,
+  onSuccess,
+}) => {
   const [form, setForm] = useState<Omit<AdminDeliveryTown, 'id'>>(emptyForm);
   const createTown = useCreateTown();
   const updateTown = useUpdateTown();
@@ -49,7 +62,9 @@ const DeliveryTownDialog: React.FC<DeliveryTownDialogProps> = ({ visible, town, 
     const payload = {
       ...form,
       feeOverride:
-        form.feeOverride === null || form.feeOverride === undefined || (form.feeOverride as any) === ''
+        form.feeOverride === null ||
+        form.feeOverride === undefined ||
+        (form.feeOverride as any) === ''
           ? null
           : Number(form.feeOverride),
     } as Omit<AdminDeliveryTown, 'id'>;
@@ -117,7 +132,15 @@ const DeliveryTownDialog: React.FC<DeliveryTownDialogProps> = ({ visible, town, 
             type="number"
             fullWidth
             value={form.feeOverride ?? ''}
-            onChange={(val) => setForm((f) => ({ ...f, feeOverride: (val === null || val === undefined || Number.isNaN(val as any)) ? null : Number(val) }))}
+            onChange={(val) =>
+              setForm((f) => ({
+                ...f,
+                feeOverride:
+                  val === null || val === undefined || Number.isNaN(val as any)
+                    ? null
+                    : Number(val),
+              }))
+            }
             placeholder={t('delivery.placeholders.leaveBlankForDefault')}
           />
         </FieldWrapper>
@@ -125,7 +148,7 @@ const DeliveryTownDialog: React.FC<DeliveryTownDialogProps> = ({ visible, town, 
           <Flex align="center" spacing="s">
             <Checkbox
               checked={form.active}
-              onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))}
+              onChange={(checked) => setForm((f) => ({ ...f, active: checked }))}
             />
             <span>{t('delivery.fields.active')}</span>
           </Flex>

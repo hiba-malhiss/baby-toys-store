@@ -54,7 +54,7 @@ function extractKeys(content) {
   while ((m = r3.exec(content))) keys.add(m[1]);
 
   // Normalize to default namespace 'common' (strip explicit 'common:')
-  return Array.from(keys).map(k => (k.startsWith('common:') ? k.slice('common:'.length) : k));
+  return Array.from(keys).map((k) => (k.startsWith('common:') ? k.slice('common:'.length) : k));
 }
 
 /** Set nested path if missing */
@@ -79,7 +79,7 @@ function startCase(s) {
     .replace(/([a-z])([A-Z])/g, '$1 $2')
     .replace(/\s+/g, ' ')
     .trim()
-    .replace(/\b\w/g, c => c.toUpperCase());
+    .replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
 function main() {

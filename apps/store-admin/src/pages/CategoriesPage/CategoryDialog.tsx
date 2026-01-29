@@ -29,7 +29,7 @@ import {
   useCategoryAdmin,
 } from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit';
-import { getSupportedLocales } from "../../i18n/locale.ts";
+import { getSupportedLocales } from '../../i18n/locale.ts';
 import { useTranslation } from 'react-i18next';
 
 interface CategoryDialogProps {

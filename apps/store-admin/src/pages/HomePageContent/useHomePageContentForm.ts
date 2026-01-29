@@ -10,7 +10,7 @@ import {
 } from '../../api/homePageApi';
 import type { UpdateHomePageContentRequest } from '../../api/types/homePage';
 import { HomePageFormValues, homePageSchema } from './homePage.helper';
-import { getSupportedLocales } from "../../i18n/locale.ts";
+import { getSupportedLocales } from '../../i18n/locale.ts';
 
 const locales = getSupportedLocales();
 

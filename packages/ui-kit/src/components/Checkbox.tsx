@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './checkbox.module.scss';
 import clsx from 'clsx';
 import { Icon } from './index';
-import { Check } from "lucide-react";
+import { Check } from 'lucide-react';
 
 interface CheckboxProps {
   label?: string;

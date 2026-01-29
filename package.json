@@ -7,6 +7,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prettier": "npx prettier . --write",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "start:eslint": "eslint . --ext .js,.jsx,.ts,.tsx --cache --max-warnings=0",

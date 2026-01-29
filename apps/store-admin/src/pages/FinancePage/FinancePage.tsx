@@ -5,7 +5,7 @@ import { useFinancePage } from './useFinancePage';
 import { Eye, Info } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import moment from 'moment';
-import { useMemo } from "react";
+import { useMemo } from 'react';
 
 const FinancePage: React.FC = () => {
   const { t } = useTranslation();
@@ -16,7 +16,9 @@ const FinancePage: React.FC = () => {
     <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
       <span>{label}</span>
       <Tooltip position="top" content={tip}>
-        <div><Icon icon={Info}></Icon></div>
+        <div>
+          <Icon icon={Info}></Icon>
+        </div>
       </Tooltip>
     </span>
   );
@@ -36,7 +38,7 @@ const FinancePage: React.FC = () => {
       {
         field: 'cogs',
         header: (
-          <HeaderWithTooltip label={t('finance.cogs')} tip={t('tooltips.financeHeaders.cogs')}/>
+          <HeaderWithTooltip label={t('finance.cogs')} tip={t('tooltips.financeHeaders.cogs')} />
         ),
       },
       {
@@ -87,7 +89,7 @@ const FinancePage: React.FC = () => {
               typeView="year"
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
-                if(!d) return;
+                if (!d) return;
                 const y = (d as any).year ? (d as any).year() : moment(d).year();
                 setYear(Number(y));
               }}
@@ -95,7 +97,7 @@ const FinancePage: React.FC = () => {
           </Flex>
         </Flex>
 
-        <Table stripedRows value={data} columns={columns as any} isLoading={isLoading}/>
+        <Table stripedRows value={data} columns={columns as any} isLoading={isLoading} />
       </Flex>
     </AdminLayout>
   );

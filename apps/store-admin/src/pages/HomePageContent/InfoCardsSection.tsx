@@ -46,12 +46,24 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
                 required
               >
                 <Select>
-                  <Option value="truck" key="truck">Truck</Option>
-                  <Option value="star" key="star">Star</Option>
-                  <Option value="brain" key="brain">Brain</Option>
-                  <Option value="puzzle" key="puzzle">Puzzle</Option>
-                  <Option value="gift" key="gift">Gift</Option>
-                  <Option value="heart" key="heart">Heart</Option>
+                  <Option value="truck" key="truck">
+                    Truck
+                  </Option>
+                  <Option value="star" key="star">
+                    Star
+                  </Option>
+                  <Option value="brain" key="brain">
+                    Brain
+                  </Option>
+                  <Option value="puzzle" key="puzzle">
+                    Puzzle
+                  </Option>
+                  <Option value="gift" key="gift">
+                    Gift
+                  </Option>
+                  <Option value="heart" key="heart">
+                    Heart
+                  </Option>
                 </Select>
               </FormFieldWrapper>
 

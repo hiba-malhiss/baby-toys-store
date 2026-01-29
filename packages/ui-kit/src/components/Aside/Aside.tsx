@@ -23,15 +23,15 @@ export type AsideProps = {
 };
 
 const Aside: React.FC<AsideProps> = ({
-                                       model,
-                                       className,
-                                       header,
-                                       footer,
-                                       footerExpanded,
-                                       footerCollapsed,
-                                       defaultExpanded = true,
-                                       autoOverflow = true,
-                                     }) => {
+  model,
+  className,
+  header,
+  footer,
+  footerExpanded,
+  footerCollapsed,
+  defaultExpanded = true,
+  autoOverflow = true,
+}) => {
   const [isLockedOpen, setIsLockedOpen] = useState(defaultExpanded);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -59,12 +59,12 @@ const Aside: React.FC<AsideProps> = ({
   }, []);
 
   const setHovering = useCallback((val: boolean, delay = 0) => {
-    if(hoverTimer.current) {
+    if (hoverTimer.current) {
       window.clearTimeout(hoverTimer.current);
       hoverTimer.current = null;
     }
 
-    if(delay > 0) {
+    if (delay > 0) {
       hoverTimer.current = window.setTimeout(() => {
         setIsHovering(val);
         hoverTimer.current = null;
@@ -76,7 +76,7 @@ const Aside: React.FC<AsideProps> = ({
 
   const handleItemClick = useCallback(
     (item: MenuItem) => () => {
-      if(item.route) navigate(item.route);
+      if (item.route) navigate(item.route);
       else item.command?.();
     },
     [navigate]
@@ -85,11 +85,7 @@ const Aside: React.FC<AsideProps> = ({
   const isRouteInSubtree = useCallback(
     (items: MenuItem[] = []): boolean =>
       items.some((item) =>
-        item.route === location.pathname
-          ? true
-          : item.items
-            ? isRouteInSubtree(item.items)
-            : false
+        item.route === location.pathname ? true : item.items ? isRouteInSubtree(item.items) : false
       ),
     [location.pathname]
   );
@@ -127,7 +123,7 @@ const Aside: React.FC<AsideProps> = ({
             const hasSubmenu = Array.isArray(item.items) && item.items.length > 0;
             const isSelected = item.route === location.pathname;
 
-            if(hasSubmenu) {
+            if (hasSubmenu) {
               const defaultOpen = isRouteInSubtree(item.items ?? []);
 
               return (
@@ -208,12 +204,12 @@ const Aside: React.FC<AsideProps> = ({
         onPointerEnter={() => canHover && setHovering(true)}
         onPointerLeave={() => canHover && setHovering(false, 80)}
         onPointerDown={() => {
-          if(!canHover) return;
-          if(!isLockedOpen) setHovering(true);
+          if (!canHover) return;
+          if (!isLockedOpen) setHovering(true);
         }}
         onPointerUp={() => {
-          if(!canHover) return;
-          if(!isLockedOpen) setHovering(false, 80);
+          if (!canHover) return;
+          if (!isLockedOpen) setHovering(false, 80);
         }}
       >
         <div className={styles.header}>{isExpanded ? header : null}</div>
@@ -234,7 +230,7 @@ const Aside: React.FC<AsideProps> = ({
           className={styles.toggle}
           onClick={toggleLock}
         >
-          <span className={styles.sidebarTool} aria-hidden/>
+          <span className={styles.sidebarTool} aria-hidden />
           <span className={styles.toggleIcon} aria-hidden>
             <Icon
               icon={isLockedOpen ? ChevronLeft : ChevronRight}

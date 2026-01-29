@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Popover from '../Popover/Popover';
-import useDeviceInfo from "../../hooks/useDeviceInfo.ts";
+import useDeviceInfo from '../../hooks/useDeviceInfo.ts';
 
 type TooltipMode = 'hover' | 'manual';
 
@@ -63,11 +63,11 @@ const Tooltip = ({
     ...(isTouch
       ? {}
       : {
-        onMouseEnter: handleShow,
-        onMouseLeave: handleHide,
-        onFocus: handleShow,
-        onBlur: handleHide,
-      }),
+          onMouseEnter: handleShow,
+          onMouseLeave: handleHide,
+          onFocus: handleShow,
+          onBlur: handleHide,
+        }),
   });
 
   useEffect(() => clearTimers, []);

@@ -1,8 +1,20 @@
 import React, { useMemo, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Flex, Table, Heading, BouncingDotsLoader, Alert, ConfirmDialog } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Table,
+  Heading,
+  BouncingDotsLoader,
+  Alert,
+  ConfirmDialog,
+} from '@baby-toys/ui-kit';
 import { Pencil, Trash2, Plus } from 'lucide-react';
-import { useAdminZones, useDeactivateZone, type AdminDeliveryZone } from '../../api/deliveryLocationsApi';
+import {
+  useAdminZones,
+  useDeactivateZone,
+  type AdminDeliveryZone,
+} from '../../api/deliveryLocationsApi';
 import DeliveryZoneDialog from './DeliveryZoneDialog';
 import { useTranslation } from 'react-i18next';
 
@@ -79,7 +91,9 @@ const DeliveryZonesPage: React.FC = () => {
   if (isLoading) {
     return (
       <AdminLayout>
-        <Flex justify="center"><BouncingDotsLoader /></Flex>
+        <Flex justify="center">
+          <BouncingDotsLoader />
+        </Flex>
       </AdminLayout>
     );
   }
@@ -99,12 +113,23 @@ const DeliveryZonesPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>{t('delivery.zones.title')}</Heading>
-          <Button leftIconComp={Plus} onClick={() => { setEditing(null); setDialogVisible(true); }}>
+          <Button
+            leftIconComp={Plus}
+            onClick={() => {
+              setEditing(null);
+              setDialogVisible(true);
+            }}
+          >
             {t('delivery.zones.add')}
           </Button>
         </Flex>
 
-        <Table columns={columns as any} value={zones} stripedRows emptyMessage={t('delivery.zones.empty')} />
+        <Table
+          columns={columns as any}
+          value={zones}
+          stripedRows
+          emptyMessage={t('delivery.zones.empty')}
+        />
       </Flex>
 
       <DeliveryZoneDialog
@@ -119,7 +144,14 @@ const DeliveryZonesPage: React.FC = () => {
         onCancel={() => setConfirmVisible(false)}
         onConfirm={doDeactivate}
         header={t('delivery.zones.deactivateTitle')}
-        message={toDeactivate ? t('delivery.zones.deactivateConfirm', { name: toDeactivate.nameEn, code: toDeactivate.code }) : ''}
+        message={
+          toDeactivate
+            ? t('delivery.zones.deactivateConfirm', {
+                name: toDeactivate.nameEn,
+                code: toDeactivate.code,
+              })
+            : ''
+        }
       />
     </AdminLayout>
   );

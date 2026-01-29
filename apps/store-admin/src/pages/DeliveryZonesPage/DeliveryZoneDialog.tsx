@@ -19,7 +19,12 @@ const emptyForm: Omit<AdminDeliveryZone, 'id'> = {
   active: true,
 };
 
-const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({ visible, zone, onHide, onSuccess }) => {
+const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({
+  visible,
+  zone,
+  onHide,
+  onSuccess,
+}) => {
   const [form, setForm] = useState<Omit<AdminDeliveryZone, 'id'>>(emptyForm);
   const createZone = useCreateZone();
   const updateZone = useUpdateZone();
@@ -43,7 +48,10 @@ const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({ visible, zone, 
   const isSaving = createZone.isPending || updateZone.isPending;
 
   const handleSave = async () => {
-    const payload = { ...form, defaultFee: Number(form.defaultFee) } as Omit<AdminDeliveryZone, 'id'>;
+    const payload = { ...form, defaultFee: Number(form.defaultFee) } as Omit<
+      AdminDeliveryZone,
+      'id'
+    >;
     if (zone) {
       await updateZone.mutateAsync({ id: zone.id, ...payload });
     } else {
@@ -100,7 +108,10 @@ const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({ visible, zone, 
         </FieldWrapper>
         <FieldWrapper label={t('delivery.fields.active')}>
           <Flex align="center" spacing="s">
-            <Checkbox checked={form.active} onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))} />
+            <Checkbox
+              checked={form.active}
+              onChange={(e) => setForm((f) => ({ ...f, active: e.target.checked }))}
+            />
             <span>{t('delivery.fields.active')}</span>
           </Flex>
         </FieldWrapper>

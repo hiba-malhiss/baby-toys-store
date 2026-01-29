@@ -22,7 +22,7 @@ import {
   useUploadBrandImage,
   useBrandAdmin,
 } from '../../api/brandApi';
-import { getSupportedLocales } from "../../i18n/locale.ts";
+import { getSupportedLocales } from '../../i18n/locale.ts';
 import { useTranslation } from 'react-i18next';
 
 interface BrandDialogProps {

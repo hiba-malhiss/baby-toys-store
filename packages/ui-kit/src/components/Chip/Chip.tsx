@@ -32,13 +32,7 @@ const Chip: React.FC<ChipProps> = ({ size, onClose, label, appearance = 'primary
     >
       <span>{label}</span>
       {onClose && (
-        <Button
-          withoutPadding
-          leftIconComp={X}
-          appearance="link"
-          size="xsmall"
-          onClick={onClose}
-        />
+        <Button withoutPadding leftIconComp={X} appearance="link" size="xsmall" onClick={onClose} />
       )}
     </span>
   );

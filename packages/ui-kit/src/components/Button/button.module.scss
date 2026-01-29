@@ -54,8 +54,9 @@
   justify-content: center;
   border: 1px solid transparent;
   cursor: pointer;
-  transition: background 0.3s ease,
-  color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
   gap: 0.5rem;
   border-radius: 16px;
 
@@ -204,178 +205,178 @@
 
 /* Appearance and color */
 $appearances: (
-    link: (
-        underline: (
-            text-default: $color-text-grey,
-            text-hover: $color-primary-hover,
-            text-selected: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-            text-decoration: underline,
-        ),
-        primary: (
-            text-default: $color-text-grey,
-            text-hover: $color-primary-hover,
-            text-selected: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-        ),
-        light: (
-            text-default: $color-white,
-            text-hover: $color-accent-light-hover,
-            text-selected: $color-primary,
-            text-disabled: $color-disabled-text,
-        ),
-        icon: (
-            text-default: $color-secondary-hover,
-            text-hover: $color-secondary-dark,
-            text-selected: $color-secondary-hover,
-            text-disabled: $color-disabled-text,
-        ),
-        secondary: (
-            text-default: $color-secondary-hover,
-            text-hover: $color-secondary,
-            text-selected: $color-primary,
-            text-disabled: $color-disabled-text,
-        ),
-        highlighted: (
-            text-default: $color-primary-dark,
-            text-hover: $color-primary-hover,
-            text-disabled: $color-disabled-text,
-        ),
-        secondary-light: (
-            text-default: $color-text-primary,
-            bg-default: white,
-            bg-hover: rgba(0, 0, 0, .1),
-            bg-selected: rgba(0, 0, 0, .1),
-        ),
+  link: (
+    underline: (
+      text-default: $color-text-grey,
+      text-hover: $color-primary-hover,
+      text-selected: $color-primary-dark,
+      text-disabled: $color-disabled-text,
+      text-decoration: underline,
     ),
-    outline: (
-        primary: (
-            text-default: $color-secondary,
-            text-hover: $color-primary-dark,
-            border-default: $color-secondary,
-            border-hover: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-            border-disabled: $color-disabled,
-        ),
-        icon: (
-            text-default: $color-secondary,
-            text-hover: $color-secondary-dark,
-            border-default: $color-secondary,
-            border-hover: $color-secondary-dark,
-            text-selected: $color-accent-hover,
-            border-selected: $color-accent-hover,
-            text-disabled: $color-disabled-text,
-            border-disabled: $color-disabled,
-        ),
-        highlighted: (
-            text-default: $color-secondary,
-            border-default: $color-border,
-            text-hover: $color-white,
-            bg-hover: $color-primary-dark,
-            border-hover: $color-primary-dark,
-            text-selected: $color-white,
-            bg-selected: $color-primary-dark,
-            border-selected: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-            border-disabled: $color-disabled,
-            bg-disabled: transparent,
-        ),
-        secondary-light: (
-            text-default: $color-secondary,
-            text-hover: $color-primary-dark,
-            border-default: $color-secondary-light,
-            border-hover: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-            border-disabled: $color-disabled,
-        ),
-        error: (
-            text-default: $color-error,
-            text-hover: $color-error,
-            border-default: $color-error,
-            border-hover: $color-error,
-            text-disabled: $color-disabled-text,
-            border-disabled: $color-error,
-        ),
+    primary: (
+      text-default: $color-text-grey,
+      text-hover: $color-primary-hover,
+      text-selected: $color-primary-dark,
+      text-disabled: $color-disabled-text,
     ),
-    filled: (
-        primary: (
-            text-default: $color-white,
-            text-hover: $color-white,
-            text-selected: $color-white,
-            bg-default: $color-primary,
-            bg-hover: $color-info-hover,
-            bg-selected: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-            bg-disabled: $color-disabled,
-            border-disabled: $color-disabled,
-        ),
-        light: (
-            text-default: $color-text-grey,
-            text-hover: $color-text-grey,
-            bg-default: $color-white,
-            bg-hover: $color-primary-light,
-            text-selected: $color-primary-dark,
-            text-disabled: $color-disabled-text,
-            bg-disabled: $color-disabled,
-            border-disabled: $color-disabled,
-        ),
-        accent: (
-            text-default: $color-white,
-            text-hover: $color-white,
-            text-selected: $color-white,
-            bg-default: $color-accent,
-            bg-hover: $color-accent-hover,
-            bg-selected: $color-accent-hover,
-            text-disabled: $color-disabled-text,
-            bg-disabled: $color-disabled,
-            border-disabled: $color-disabled,
-        ),
-        secondary: (
-            text-default: $color-white,
-            bg-default: $color-secondary,
-            bg-hover: $color-secondary-hover,
-            text-disabled: $color-disabled-text,
-            bg-disabled: $color-disabled,
-            border-disabled: $color-disabled,
-        ),
-        secondary-light: (
-            text-default: $color-text-grey,
-            bg-default: $color-secondary-light,
-            bg-hover: $color-secondary-light-hover,
-            text-disabled: $color-disabled-text,
-            bg-disabled: $color-disabled,
-            border-disabled: $color-disabled,
-        ),
+    light: (
+      text-default: $color-white,
+      text-hover: $color-accent-light-hover,
+      text-selected: $color-primary,
+      text-disabled: $color-disabled-text,
     ),
+    icon: (
+      text-default: $color-secondary-hover,
+      text-hover: $color-secondary-dark,
+      text-selected: $color-secondary-hover,
+      text-disabled: $color-disabled-text,
+    ),
+    secondary: (
+      text-default: $color-secondary-hover,
+      text-hover: $color-secondary,
+      text-selected: $color-primary,
+      text-disabled: $color-disabled-text,
+    ),
+    highlighted: (
+      text-default: $color-primary-dark,
+      text-hover: $color-primary-hover,
+      text-disabled: $color-disabled-text,
+    ),
+    secondary-light: (
+      text-default: $color-text-primary,
+      bg-default: white,
+      bg-hover: rgba(0, 0, 0, 0.1),
+      bg-selected: rgba(0, 0, 0, 0.1),
+    ),
+  ),
+  outline: (
+    primary: (
+      text-default: $color-secondary,
+      text-hover: $color-primary-dark,
+      border-default: $color-secondary,
+      border-hover: $color-primary-dark,
+      text-disabled: $color-disabled-text,
+      border-disabled: $color-disabled,
+    ),
+    icon: (
+      text-default: $color-secondary,
+      text-hover: $color-secondary-dark,
+      border-default: $color-secondary,
+      border-hover: $color-secondary-dark,
+      text-selected: $color-accent-hover,
+      border-selected: $color-accent-hover,
+      text-disabled: $color-disabled-text,
+      border-disabled: $color-disabled,
+    ),
+    highlighted: (
+      text-default: $color-secondary,
+      border-default: $color-border,
+      text-hover: $color-white,
+      bg-hover: $color-primary-dark,
+      border-hover: $color-primary-dark,
+      text-selected: $color-white,
+      bg-selected: $color-primary-dark,
+      border-selected: $color-primary-dark,
+      text-disabled: $color-disabled-text,
+      border-disabled: $color-disabled,
+      bg-disabled: transparent,
+    ),
+    secondary-light: (
+      text-default: $color-secondary,
+      text-hover: $color-primary-dark,
+      border-default: $color-secondary-light,
+      border-hover: $color-primary-dark,
+      text-disabled: $color-disabled-text,
+      border-disabled: $color-disabled,
+    ),
+    error: (
+      text-default: $color-error,
+      text-hover: $color-error,
+      border-default: $color-error,
+      border-hover: $color-error,
+      text-disabled: $color-disabled-text,
+      border-disabled: $color-error,
+    ),
+  ),
+  filled: (
+    primary: (
+      text-default: $color-white,
+      text-hover: $color-white,
+      text-selected: $color-white,
+      bg-default: $color-primary,
+      bg-hover: $color-info-hover,
+      bg-selected: $color-primary-dark,
+      text-disabled: $color-disabled-text,
+      bg-disabled: $color-disabled,
+      border-disabled: $color-disabled,
+    ),
+    light: (
+      text-default: $color-text-grey,
+      text-hover: $color-text-grey,
+      bg-default: $color-white,
+      bg-hover: $color-primary-light,
+      text-selected: $color-primary-dark,
+      text-disabled: $color-disabled-text,
+      bg-disabled: $color-disabled,
+      border-disabled: $color-disabled,
+    ),
+    accent: (
+      text-default: $color-white,
+      text-hover: $color-white,
+      text-selected: $color-white,
+      bg-default: $color-accent,
+      bg-hover: $color-accent-hover,
+      bg-selected: $color-accent-hover,
+      text-disabled: $color-disabled-text,
+      bg-disabled: $color-disabled,
+      border-disabled: $color-disabled,
+    ),
+    secondary: (
+      text-default: $color-white,
+      bg-default: $color-secondary,
+      bg-hover: $color-secondary-hover,
+      text-disabled: $color-disabled-text,
+      bg-disabled: $color-disabled,
+      border-disabled: $color-disabled,
+    ),
+    secondary-light: (
+      text-default: $color-text-grey,
+      bg-default: $color-secondary-light,
+      bg-hover: $color-secondary-light-hover,
+      text-disabled: $color-disabled-text,
+      bg-disabled: $color-disabled,
+      border-disabled: $color-disabled,
+    ),
+  ),
 );
 
 @each $appearance, $colorsMap in $appearances {
   @each $colorName, $styleMap in $colorsMap {
     .button--#{$colorName}Color.button--#{$appearance}Appearance {
       @include bts-button-default(
-              map-get($styleMap, text-default),
-              map-get($styleMap, bg-default),
-              map-get($styleMap, border-default),
-              map-get($styleMap, text-decoration)
+        map-get($styleMap, text-default),
+        map-get($styleMap, bg-default),
+        map-get($styleMap, border-default),
+        map-get($styleMap, text-decoration)
       );
 
       @include bts-button-hover(
-              map-get($styleMap, text-hover),
-              map-get($styleMap, bg-hover),
-              map-get($styleMap, border-hover),
-              map-get($styleMap, text-decoration)
+        map-get($styleMap, text-hover),
+        map-get($styleMap, bg-hover),
+        map-get($styleMap, border-hover),
+        map-get($styleMap, text-decoration)
       );
 
       @include bts-button-selected(
-              map-get($styleMap, text-selected),
-              map-get($styleMap, bg-selected),
-              map-get($styleMap, border-selected)
+        map-get($styleMap, text-selected),
+        map-get($styleMap, bg-selected),
+        map-get($styleMap, border-selected)
       );
 
       @include bts-button-disabled(
-              map-get($styleMap, text-disabled),
-              map-get($styleMap, bg-disabled),
-              map-get($styleMap, border-disabled)
+        map-get($styleMap, text-disabled),
+        map-get($styleMap, bg-disabled),
+        map-get($styleMap, border-disabled)
       );
     }
   }

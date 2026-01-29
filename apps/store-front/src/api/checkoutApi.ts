@@ -24,19 +24,22 @@ export type QuoteResponse = {
   zoneCode?: string | null;
 };
 
-export function useCheckoutQuote(townCode?: string, couponCode?: string){
+export function useCheckoutQuote(townCode?: string, couponCode?: string) {
   const { isAuthenticated } = useAuth();
-  const enabled = (!!townCode && (isAuthenticated || hasGuestCartToken()));
+  const enabled = !!townCode && (isAuthenticated || hasGuestCartToken());
   const normalizedCoupon = couponCode?.trim() || '';
 
   return useQuery<QuoteResponse>({
     queryKey: ['checkout-quote', townCode ?? null, normalizedCoupon, isAuthenticated],
     enabled,
-    queryFn: async() => {
+    queryFn: async () => {
       const endpoint = isAuthenticated
         ? '/api/customer/checkout/quote'
         : '/api/guest/checkout/quote';
-      const payload: QuoteRequest = { townCode: townCode!, couponCode: normalizedCoupon || undefined };
+      const payload: QuoteRequest = {
+        townCode: townCode!,
+        couponCode: normalizedCoupon || undefined,
+      };
       const { data } = await api.post<ApiEnvelope<QuoteResponse>>(endpoint, payload);
       return data.data as QuoteResponse;
     },

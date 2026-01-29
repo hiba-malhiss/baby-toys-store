@@ -13,9 +13,7 @@ const WhatsAppWidgetWrapper: React.FC<Props> = ({ position = 'bottom-right', def
 
   if (!phone) return null;
 
-  return (
-    <WhatsAppWidget phoneNumber={phone} defaultMessage={defaultMessage} position={position} />
-  );
+  return <WhatsAppWidget phoneNumber={phone} defaultMessage={defaultMessage} position={position} />;
 };
 
 export default WhatsAppWidgetWrapper;

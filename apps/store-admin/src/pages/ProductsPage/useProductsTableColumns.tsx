@@ -1,13 +1,6 @@
 import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import {
-  Pencil,
-  Trash2,
-  Star,
-  Check,
-  Eye,
-  X,
-} from 'lucide-react';
+import { Pencil, Trash2, Star, Check, Eye, X } from 'lucide-react';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
 import { AdminProductBase } from '../../api/types/product.ts';

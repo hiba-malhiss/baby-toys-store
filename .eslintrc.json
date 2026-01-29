@@ -29,7 +29,16 @@
   },
   "rules": {
     "prettier/prettier": ["error"],
-    "space-in-parens": ["error", "always"],
+    "space-in-parens": "off",
+    "object-curly-newline": [
+      "error",
+      {
+        "ObjectExpression": { "multiline": true, "consistent": true },
+        "ObjectPattern": { "multiline": true, "minProperties": 5 },
+        "ImportDeclaration": { "consistent": true },
+        "ExportDeclaration": { "consistent": true }
+      }
+    ],
     "no-restricted-syntax": [
       "error",
       {

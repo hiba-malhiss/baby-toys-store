@@ -8,11 +8,7 @@ import React, {
   useImperativeHandle,
 } from 'react';
 import { createPortal } from 'react-dom';
-import {
-  X,
-  Maximize2,
-  Minimize2,
-} from 'lucide-react';
+import { X, Maximize2, Minimize2 } from 'lucide-react';
 import styles from './dialog.module.scss';
 import Button from '../Button/Button.tsx';
 
@@ -181,9 +177,7 @@ const Dialog = forwardRef((props: any, ref) => {
                 <Button
                   onClick={maximize}
                   appearance="link"
-                  leftIconComp={
-                    maximized ? Minimize2 : Maximize2
-                  }
+                  leftIconComp={maximized ? Minimize2 : Maximize2}
                   size="medium"
                   withoutPadding
                 />
