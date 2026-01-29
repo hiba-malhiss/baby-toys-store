@@ -531,7 +531,6 @@ docker logs -f --tail 120 backend-docker
 - Faster rebuilds: after updating the docker call:
 
 ```bash
-cd /opt/toystore-docker
-docker compose build backend
-docker compose up -d --no-deps backend
+cd /opt/toystore-repo/toy-store-backend 
+nano Dockerfile
 ```
