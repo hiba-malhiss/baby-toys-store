@@ -17,6 +17,7 @@ import { useTranslation } from 'react-i18next';
 import styles from './checkout-page.module.scss';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import { useActiveTowns, type DeliveryTown } from '../../api/locationsApi';
+import { useIsRtl } from '../../utils/i18n.ts';
 
 export type ShippingFormValues = {
   country: string;
@@ -99,19 +100,20 @@ const emptyValues: ShippingFormValues = {
 };
 
 const ShippingForm: React.FC<ShippingFormProps> = ({
- isAuthenticated,
- addresses,
- onSubmit,
- placing,
- disableSubmit,
- onCouponPreview,
- couponValid,
- stockBlocked,
- onAlterCart,
- onTownChange,
+  isAuthenticated,
+  addresses,
+  onSubmit,
+  placing,
+  disableSubmit,
+  onCouponPreview,
+  couponValid,
+  stockBlocked,
+  onAlterCart,
+  onTownChange,
 }) => {
   const { t } = useTranslation('common');
   const { data: towns = [], isPending: loadingTowns } = useActiveTowns();
+  const isRtl = useIsRtl();
 
   const formMethods = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema),
@@ -130,16 +132,16 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
   const townSelectOptions = useMemo(
     () =>
       towns?.map((o) => ({
-        label: `${o.nameEn} (${o.zoneCode?.toLowerCase()})`,
+        label: `${!isRtl ? o.nameEn : o.nameAr} (${o.zoneCode?.toLowerCase()})`,
         value: o.code,
       })),
-    [towns]
+    [towns, isRtl]
   );
 
   // init: prefill from saved address (if any), and also ensure a default townCode
   useEffect(() => {
-    if(!isAuthenticated || !addresses?.length) return;
-    if(initializedRef.current) return;
+    if (!isAuthenticated || !addresses?.length) return;
+    if (initializedRef.current) return;
 
     const a = addresses[0];
     const firstTown = towns[0] ?? null;
@@ -162,8 +164,8 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
 
   // if towns loaded and no townCode yet, pick first (guests / no saved address)
   useEffect(() => {
-    if(!towns.length) return;
-    if(getValues('townCode')) return;
+    if (!towns.length) return;
+    if (getValues('townCode')) return;
 
     const first = towns[0];
     setValue('townCode', first.code, { shouldDirty: false, shouldTouch: false });
@@ -171,15 +173,14 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
 
   // keep "town" field and parent state in sync with townCode (single source of truth: townCode)
   useEffect(() => {
-    if(!townCode) {
+    if (!townCode) {
       setValue('town', '', { shouldDirty: false, shouldTouch: false });
       onTownChange?.(null);
       return;
     }
 
-    const selected = towns.find((t) => t.code === townCode) ?? null;
-    setValue('town', selected?.nameEn || '', { shouldDirty: false, shouldTouch: false });
-    onTownChange?.(selected);
+    setValue('town', townCode || '', { shouldDirty: false, shouldTouch: false });
+    onTownChange?.(townCode);
   }, [townCode, towns, setValue, onTownChange]);
 
   const handleCouponPreview = () => {
@@ -214,7 +215,12 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           </Alert>
         )}
 
-        <FormFieldWrapper required name="country" control={control} label={t('checkout.form.country')}>
+        <FormFieldWrapper
+          required
+          name="country"
+          control={control}
+          label={t('checkout.form.country')}
+        >
           <Select
             options={COUNTRIES.map((c) => ({
               ...c,
@@ -225,42 +231,72 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
         </FormFieldWrapper>
 
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper required name="firstName" control={control} label={t('checkout.form.firstName')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')}/>
+          <FormFieldWrapper
+            required
+            name="firstName"
+            control={control}
+            label={t('checkout.form.firstName')}
+          >
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')} />
           </FormFieldWrapper>
-          <FormFieldWrapper required name="lastName" control={control} label={t('checkout.form.lastName')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')}/>
+          <FormFieldWrapper
+            required
+            name="lastName"
+            control={control}
+            label={t('checkout.form.lastName')}
+          >
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')} />
           </FormFieldWrapper>
         </div>
 
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper required name="townCode" control={control} label={t('checkout.form.town')}>
+          <FormFieldWrapper
+            required
+            name="townCode"
+            control={control}
+            label={t('checkout.form.town')}
+          >
             <Select
               options={townSelectOptions}
               isLoading={loadingTowns}
               placeholder={t('checkout.form.placeholder.town')}
+              isSearchableInternally
             />
           </FormFieldWrapper>
 
-          <FormFieldWrapper required name="region" control={control} label={t('checkout.form.region')}>
-            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')}/>
+          <FormFieldWrapper
+            required
+            name="region"
+            control={control}
+            label={t('checkout.form.region')}
+          >
+            <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')} />
           </FormFieldWrapper>
         </div>
 
-        <FormFieldWrapper required name="address" control={control} label={t('checkout.form.address')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')}/>
+        <FormFieldWrapper
+          required
+          name="address"
+          control={control}
+          label={t('checkout.form.address')}
+        >
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')} />
         </FormFieldWrapper>
 
         <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')}/>
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')} />
         </FormFieldWrapper>
 
-        <FormFieldWrapper name="secondPhone" control={control} label={t('checkout.form.secondPhone')}>
-          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')}/>
+        <FormFieldWrapper
+          name="secondPhone"
+          control={control}
+          label={t('checkout.form.secondPhone')}
+        >
+          <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')} />
         </FormFieldWrapper>
 
         <FormFieldWrapper name="note" control={control} label={t('checkout.form.note')}>
-          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3}/>
+          <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3} />
         </FormFieldWrapper>
 
         <FormFieldWrapper name="couponCode" control={control} label={t('checkout.form.coupon')}>
@@ -271,7 +307,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
               iconRight={couponIcon}
               iconColor={couponIconColor}
               onKeyDown={(e) => {
-                if(e.key === 'Enter') {
+                if (e.key === 'Enter') {
                   e.preventDefault();
                   handleCouponPreview();
                 }
@@ -294,14 +330,19 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           </div>
         </FormFieldWrapper>
 
-        <Divider className="bts-marginVl"/>
+        <Divider className="bts-marginVl" />
 
         {stockBlocked ? (
           <Button fullWidth onClick={onAlterCart} appearance="outline" color="error">
             {t('cart.goToCart')}
           </Button>
         ) : (
-          <Button type="submit" fullWidth isLoading={placing} isDisabled={!!placing || !!disableSubmit}>
+          <Button
+            type="submit"
+            fullWidth
+            isLoading={placing}
+            isDisabled={!!placing || !!disableSubmit}
+          >
             {t('cart.placeOrder')}
           </Button>
         )}
