@@ -1,4 +1,4 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
 import { useAuth } from '../context/AuthContext';
@@ -24,19 +24,21 @@ export type QuoteResponse = {
   zoneCode?: string | null;
 };
 
-export function useCheckoutQuote() {
+export function useCheckoutQuote(townCode?: string, couponCode?: string){
   const { isAuthenticated } = useAuth();
+  const enabled = (!!townCode && (isAuthenticated || hasGuestCartToken()));
+  const normalizedCoupon = couponCode?.trim() || '';
 
-  return useMutation<QuoteResponse, any, QuoteRequest>({
-    mutationKey: ['checkout-quote'],
-    enabled: isAuthenticated || hasGuestCartToken(),
-    mutationFn: async (payload) => {
+  return useQuery<QuoteResponse>({
+    queryKey: ['checkout-quote', townCode ?? null, normalizedCoupon, isAuthenticated],
+    enabled,
+    queryFn: async() => {
       const endpoint = isAuthenticated
         ? '/api/customer/checkout/quote'
         : '/api/guest/checkout/quote';
-
+      const payload: QuoteRequest = { townCode: townCode!, couponCode: normalizedCoupon || undefined };
       const { data } = await api.post<ApiEnvelope<QuoteResponse>>(endpoint, payload);
-      return data.data as any;
+      return data.data as QuoteResponse;
     },
   });
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { FormProvider, useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -11,11 +11,12 @@ import {
   StringInput,
   TextArea,
 } from '@baby-toys/ui-kit';
-import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import { Trash2, AlertTriangle, CheckCircle } from 'lucide-react';
-import { useActiveTowns, type DeliveryTown } from '../../api/locationsApi';
-import styles from './checkout-page.module.scss';
 import { useTranslation } from 'react-i18next';
+
+import styles from './checkout-page.module.scss';
+import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
+import { useActiveTowns, type DeliveryTown } from '../../api/locationsApi';
 
 export type ShippingFormValues = {
   country: string;
@@ -24,7 +25,7 @@ export type ShippingFormValues = {
   region: string;
   address: string;
   town: string;
-  townCode: string; // code used for pricing and order
+  townCode: string; // used for pricing + stored on order
   phone: string;
   secondPhone?: string;
   note?: string;
@@ -54,10 +55,8 @@ type ShippingFormProps = {
   onAlterCart?: () => void;
 };
 
-// Allowed countries
 const COUNTRIES = [{ label: 'Palestine', value: 'palestine' }];
 
-// Validation schema
 const shippingSchema = z.object({
   country: z.string().min(1, 'Country is required'),
   firstName: z.string().min(1, 'First name is required'),
@@ -84,95 +83,121 @@ const shippingSchema = z.object({
   couponCode: z.string().optional(),
 });
 
+const emptyValues: ShippingFormValues = {
+  country: '',
+  firstName: '',
+  lastName: '',
+  region: '',
+  address: '',
+  town: '',
+  townCode: '',
+  phone: '',
+  secondPhone: '',
+  note: '',
+  saveAddress: true,
+  couponCode: '',
+};
+
 const ShippingForm: React.FC<ShippingFormProps> = ({
-   isAuthenticated,
-   addresses,
-   onSubmit,
-   placing,
-   disableSubmit,
-   onCouponPreview,
-   couponValid,
-   stockBlocked,
-   onAlterCart,
-   onTownChange,
-  }) => {
+ isAuthenticated,
+ addresses,
+ onSubmit,
+ placing,
+ disableSubmit,
+ onCouponPreview,
+ couponValid,
+ stockBlocked,
+ onAlterCart,
+ onTownChange,
+}) => {
+  const { t } = useTranslation('common');
+  const { data: towns = [], isPending: loadingTowns } = useActiveTowns();
+
   const formMethods = useForm<ShippingFormValues>({
     resolver: zodResolver(shippingSchema),
     mode: 'onChange',
-    defaultValues: {
-      country: '',
-      firstName: '',
-      lastName: '',
-      region: '',
-      address: '',
-      town: '',
-      townCode: '',
-      phone: '',
-      secondPhone: '',
-      note: '',
-      saveAddress: true,
-      couponCode: '',
-    },
+    defaultValues: emptyValues,
   });
 
-  const { control, handleSubmit, reset, getValues, setValue, watch } = formMethods;
+  const { control, handleSubmit, reset, setValue, getValues } = formMethods;
 
   const [usingSavedAddress, setUsingSavedAddress] = useState(false);
   const initializedRef = useRef(false);
-  const { data: towns = [], isPending: loadingTowns } = useActiveTowns();
-  const { t } = useTranslation('common');
+
+  const townCode = useWatch({ control, name: 'townCode' });
+  const couponCode = useWatch({ control, name: 'couponCode' });
 
   const townSelectOptions = useMemo(
     () =>
-      (towns || []).map((o) => ({
-        label: `${o.nameEn} (${o.zoneCode}) ()`,
+      towns?.map((o) => ({
+        label: `${o.nameEn} (${o.zoneCode?.toLowerCase()})`,
         value: o.code,
       })),
     [towns]
   );
 
+  // init: prefill from saved address (if any), and also ensure a default townCode
   useEffect(() => {
     if(!isAuthenticated || !addresses?.length) return;
     if(initializedRef.current) return;
+
     const a = addresses[0];
     const firstTown = towns[0] ?? null;
+
     reset({
+      ...emptyValues,
       country: 'palestine',
       firstName: a.firstName || '',
       lastName: a.lastName || '',
       region: a.region || '',
       address: a.detailedAddress || '',
-      town: a.town || (firstTown?.nameEn || ''),
+      town: a.town || firstTown?.nameEn || '',
       townCode: firstTown?.code || '',
       phone: a.phoneNumber || '',
-      secondPhone: '',
-      note: '',
-      saveAddress: true,
-      couponCode: '',
     });
+
     setUsingSavedAddress(true);
     initializedRef.current = true;
   }, [isAuthenticated, addresses, towns, reset]);
 
-  // When towns load and none selected, pick first
+  // if towns loaded and no townCode yet, pick first (guests / no saved address)
   useEffect(() => {
-    const currentCode = getValues('townCode');
-    const first = towns[0];
-    if(!first || currentCode) return;
-    setValue('townCode', first.code, { shouldDirty: false, shouldTouch: false });
-    setValue('town', first.nameEn, { shouldDirty: false, shouldTouch: false });
-    onTownChange?.(first);
-  }, [towns, getValues, setValue, onTownChange]);
+    if(!towns.length) return;
+    if(getValues('townCode')) return;
 
-  // Coupon preview
+    const first = towns[0];
+    setValue('townCode', first.code, { shouldDirty: false, shouldTouch: false });
+  }, [towns, getValues, setValue]);
+
+  // keep "town" field and parent state in sync with townCode (single source of truth: townCode)
+  useEffect(() => {
+    if(!townCode) {
+      setValue('town', '', { shouldDirty: false, shouldTouch: false });
+      onTownChange?.(null);
+      return;
+    }
+
+    const selected = towns.find((t) => t.code === townCode) ?? null;
+    setValue('town', selected?.nameEn || '', { shouldDirty: false, shouldTouch: false });
+    onTownChange?.(selected);
+  }, [townCode, towns, setValue, onTownChange]);
+
   const handleCouponPreview = () => {
-    const code = (getValues('couponCode') || '').trim();
-    if(code) onCouponPreview?.({ code });
+    const code = (couponCode || '').trim();
+    onCouponPreview?.({ code }); // allow empty string to clear quote/coupon
   };
+
+  const canApplyCoupon = !!String(couponCode || '').trim();
+  const couponIcon = !canApplyCoupon ? null : couponValid ? CheckCircle : AlertTriangle;
+  const couponIconColor = !canApplyCoupon
+    ? undefined
+    : couponValid
+      ? IconColor.success
+      : IconColor.warning;
+
   return (
     <FormProvider {...formMethods}>
       <form onSubmit={handleSubmit(onSubmit)} className={styles.checkoutPageForm}>
-        {/* Alert for saved address */}
         {isAuthenticated && usingSavedAddress && (
           <Alert icon={CheckCircle} title={t('checkout.form.alertUsingSaved')}>
             <Button
@@ -180,20 +205,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
               color="underline"
               size="small"
               onClick={() => {
-                reset({
-                  country: '',
-                  firstName: '',
-                  lastName: '',
-                  region: '',
-                  address: '',
-                  town: '',
-                  townCode: '',
-                  phone: '',
-                  secondPhone: '',
-                  note: '',
-                  saveAddress: true,
-                  couponCode: '',
-                });
+                reset(emptyValues);
                 setUsingSavedAddress(false);
               }}
             >
@@ -202,13 +214,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           </Alert>
         )}
 
-        {/* Country */}
-        <FormFieldWrapper
-          required
-          name="country"
-          control={control}
-          label={t('checkout.form.country')}
-        >
+        <FormFieldWrapper required name="country" control={control} label={t('checkout.form.country')}>
           <Select
             options={COUNTRIES.map((c) => ({
               ...c,
@@ -218,91 +224,52 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
           />
         </FormFieldWrapper>
 
-        {/* First + Last name */}
         <div className={styles.checkoutPageFormRow}>
-          <FormFieldWrapper
-            required
-            name="firstName"
-            control={control}
-            label={t('checkout.form.firstName')}
-          >
+          <FormFieldWrapper required name="firstName" control={control} label={t('checkout.form.firstName')}>
             <StringInput fullWidth placeholder={t('checkout.form.placeholder.firstName')}/>
           </FormFieldWrapper>
-          <FormFieldWrapper
-            required
-            name="lastName"
-            control={control}
-            label={t('checkout.form.lastName')}
-          >
+          <FormFieldWrapper required name="lastName" control={control} label={t('checkout.form.lastName')}>
             <StringInput fullWidth placeholder={t('checkout.form.placeholder.lastName')}/>
           </FormFieldWrapper>
         </div>
 
-        {/* Town + Region */}
         <div className={styles.checkoutPageFormRow}>
           <FormFieldWrapper required name="townCode" control={control} label={t('checkout.form.town')}>
             <Select
               options={townSelectOptions}
               isLoading={loadingTowns}
               placeholder={t('checkout.form.placeholder.town')}
-              onChange={(opt: any) => {
-                const code = opt?.value || '';
-                const town = towns.find((t) => t.code === code) || null;
-                setValue('townCode', code);
-                setValue('town', town?.nameEn || '');
-                onTownChange?.(town);
-              }}
             />
           </FormFieldWrapper>
-          <FormFieldWrapper
-            required
-            name="region"
-            control={control}
-            label={t('checkout.form.region')}
-          >
+
+          <FormFieldWrapper required name="region" control={control} label={t('checkout.form.region')}>
             <StringInput fullWidth placeholder={t('checkout.form.placeholder.region')}/>
           </FormFieldWrapper>
         </div>
 
-        {/* Address */}
-        <FormFieldWrapper
-          required
-          name="address"
-          control={control}
-          label={t('checkout.form.address')}
-        >
+        <FormFieldWrapper required name="address" control={control} label={t('checkout.form.address')}>
           <StringInput fullWidth placeholder={t('checkout.form.placeholder.address')}/>
         </FormFieldWrapper>
 
-        {/* Phone */}
         <FormFieldWrapper required name="phone" control={control} label={t('checkout.form.phone')}>
           <StringInput fullWidth placeholder={t('checkout.form.placeholder.phone')}/>
         </FormFieldWrapper>
 
-        {/* Second Phone (optional) */}
-        <FormFieldWrapper
-          name="secondPhone"
-          control={control}
-          label={t('checkout.form.secondPhone')}
-        >
+        <FormFieldWrapper name="secondPhone" control={control} label={t('checkout.form.secondPhone')}>
           <StringInput fullWidth placeholder={t('checkout.form.placeholder.secondPhone')}/>
         </FormFieldWrapper>
 
-        {/* Note (optional) */}
         <FormFieldWrapper name="note" control={control} label={t('checkout.form.note')}>
           <TextArea fullWidth placeholder={t('checkout.form.placeholder.note')} rows={3}/>
         </FormFieldWrapper>
 
-        {/* Coupon */}
         <FormFieldWrapper name="couponCode" control={control} label={t('checkout.form.coupon')}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
             <StringInput
               fullWidth
               placeholder={t('checkout.form.placeholder.coupon')}
-              iconRight={
-                !watch('couponCode') ? null : couponValid ? CheckCircle : AlertTriangle
-              }
-              iconColor={couponValid ? IconColor.success : IconColor.warning}
+              iconRight={couponIcon}
+              iconColor={couponIconColor}
               onKeyDown={(e) => {
                 if(e.key === 'Enter') {
                   e.preventDefault();
@@ -310,11 +277,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
                 }
               }}
             />
-            <Button
-              appearance="outline"
-              onClick={handleCouponPreview}
-              isDisabled={!String(watch('couponCode') || '').trim()}
-            >
+            <Button appearance="outline" onClick={handleCouponPreview} isDisabled={!canApplyCoupon}>
               Apply
             </Button>
             <Button
@@ -326,17 +289,19 @@ const ShippingForm: React.FC<ShippingFormProps> = ({
                 onCouponPreview?.({ code: '' });
               }}
               aria-label="Delete"
-              isDisabled={!String(watch('couponCode') || '').trim()}
+              isDisabled={!canApplyCoupon}
             />
           </div>
         </FormFieldWrapper>
+
         <Divider className="bts-marginVl"/>
+
         {stockBlocked ? (
           <Button fullWidth onClick={onAlterCart} appearance="outline" color="error">
             {t('cart.goToCart')}
           </Button>
         ) : (
-          <Button type="submit" fullWidth isLoading={placing} isDisabled={placing || disableSubmit}>
+          <Button type="submit" fullWidth isLoading={placing} isDisabled={!!placing || !!disableSubmit}>
             {t('cart.placeOrder')}
           </Button>
         )}
