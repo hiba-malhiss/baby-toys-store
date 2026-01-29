@@ -528,8 +528,10 @@ docker logs -f --tail 120 backend-docker
 
 - Use `--no-cache` **only** for clean rebuilds
 
-- Faster rebuilds:
+- Faster rebuilds: after updating the docker call:
 
 ```bash
+cd /opt/toystore-docker
 docker compose build backend
+docker compose up -d --no-deps backend
 ```
