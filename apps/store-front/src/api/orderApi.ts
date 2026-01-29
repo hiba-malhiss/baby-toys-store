@@ -16,7 +16,7 @@ export type AddressDTO = {
   id: number;
   firstName: string;
   lastName: string;
-  town: string;
+  townCode: string;
   region: string;
   detailedAddress: string;
   phoneNumber: string;
