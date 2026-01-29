@@ -80,7 +80,10 @@
     "homepage": "محتوى الصفحة الرئيسية",
     "settings": "إعدادات المتجر",
     "shippingOptions": "خيارات الشحن",
-    "auditLogs": "سجل التدقيق"
+    "auditLogs": "سجل التدقيق",
+    "zones": "مناطق التوصيل",
+    "delivery": "إدارة التوصيل",
+    "towns": "البلدات"
   },
   "categories": {
     "title": "التصنيفات",

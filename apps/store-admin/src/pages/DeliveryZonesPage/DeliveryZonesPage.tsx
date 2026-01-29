@@ -53,7 +53,7 @@ const DeliveryZonesPage: React.FC = () => {
       {
         header: t('delivery.columns.active'),
         field: 'active',
-        body: (row: AdminDeliveryZone) => (row.active ? t('common.yes') : t('common.no')),
+        body: (row: AdminDeliveryZone) => (row.active ? t('app.yes') : t('app.no')),
       },
       {
         header: t('app.actions'),

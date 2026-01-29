@@ -80,7 +80,9 @@
     "homepage": "Home page content",
     "settings": "Store settings",
     "shippingOptions": "Shipping options",
-    "auditLogs": "Audit Logs"
+    "zones": "Delivery Zones",
+    "delivery": "Delivery Management",
+    "towns": "Towns"
   },
   "categories": {
     "title": "Categories",

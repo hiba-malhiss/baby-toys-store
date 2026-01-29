@@ -68,11 +68,11 @@ const AdminLayout: React.FC<{
       { label: t('menu.homepage'), route: '/homepage', iconComp: Home },
       { label: t('menu.settings'), route: '/settings', iconComp: Settings },
       {
-        label: 'Delivery',
+        label: t('menu.delivery'),
         iconComp: Truck,
         items: [
-          { label: 'Zones', route: '/delivery/zones' },
-          { label: 'Towns', route: '/delivery/towns' },
+          { label: t('menu.zones'), route: '/delivery/zones' },
+          { label: t('menu.towns'), route: '/delivery/towns' },
         ],
       },
     ],
