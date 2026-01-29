@@ -7,6 +7,7 @@
     "all": "All",
     "yes": "Yes",
     "no": "No",
+    "error": "Error",
     "unexpectedError": "An unexpected error occurred."
   },
   "common": {
@@ -14,7 +15,50 @@
     "delete": "Delete",
     "cancel": "Cancel",
     "edit": "Edit",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "create": "Create",
+    "update": "Update",
+    "deactivate": "Deactivate"
+  },
+  "checkout": {
+    "shippingInfo": "Shipping information",
+    "cartSummary": "Cart summary",
+    "total": "Total",
+    "shipping": "Shipping",
+    "discount": "Discount",
+    "freeShippingApplied": "Free shipping",
+    "invalidCoupon": "Invalid coupon",
+    "validateCouponFailed": "Failed to validate coupon. Please try again.",
+    "placeOrderFailed": "Failed to place order. Please try again.",
+    "form": {
+      "alertUsingSaved": "We prefilled this form using your saved address.",
+      "useDifferentAddress": "Use a different address",
+      "country": "Country",
+      "selectCountry": "Select country",
+      "countryOptions": {
+        "palestine": "Palestine"
+      },
+      "firstName": "First name",
+      "lastName": "Last name",
+      "town": "Town",
+      "region": "Village / Region",
+      "address": "Detailed address",
+      "phone": "Phone number",
+      "secondPhone": "Second phone number",
+      "note": "Note (optional)",
+      "coupon": "Coupon",
+      "placeholder": {
+        "firstName": "Enter first name",
+        "lastName": "Enter last name",
+        "town": "Select town",
+        "region": "Enter village/region",
+        "address": "Enter detailed address",
+        "phone": "Enter phone number",
+        "secondPhone": "Enter second phone number",
+        "note": "Add a note for the order (optional)",
+        "coupon": "Enter coupon code"
+      }
+    }
   },
   "menu": {
     "dashboard": "Dashboard",
@@ -98,6 +142,50 @@
     "placeholders": {
       "name": "Enter brand name",
       "description": "Enter brand description"
+    }
+  },
+  "delivery": {
+    "fields": {
+      "code": "Code",
+      "nameEn": "Name (EN)",
+      "nameAr": "Name (AR)",
+      "defaultFee": "Default Fee",
+      "feeOverride": "Fee Override",
+      "zone": "Zone",
+      "active": "Active"
+    },
+    "placeholders": {
+      "selectZone": "Select zone",
+      "leaveBlankForDefault": "Leave blank to use zone default"
+    },
+    "columns": {
+      "code": "Code",
+      "nameEn": "Name (EN)",
+      "nameAr": "Name (AR)",
+      "defaultFee": "Default Fee",
+      "feeOverride": "Fee Override",
+      "zone": "Zone",
+      "active": "Active"
+    },
+    "zones": {
+      "title": "Delivery Zones",
+      "add": "Add Delivery Zone",
+      "addTitle": "Add Delivery Zone",
+      "editTitle": "Edit Delivery Zone",
+      "empty": "No zones",
+      "loadError": "Failed to load zones",
+      "deactivateTitle": "Deactivate zone",
+      "deactivateConfirm": "Are you sure you want to deactivate {{name}} ({{code}})?"
+    },
+    "towns": {
+      "title": "Delivery Towns",
+      "add": "Add Delivery Town",
+      "addTitle": "Add Delivery Town",
+      "editTitle": "Edit Delivery Town",
+      "empty": "No towns",
+      "loadError": "Failed to load towns",
+      "deactivateTitle": "Deactivate town",
+      "deactivateConfirm": "Are you sure you want to deactivate {{name}} ({{code}})?"
     }
   },
   "colors": {

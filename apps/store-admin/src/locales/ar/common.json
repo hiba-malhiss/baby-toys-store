@@ -7,6 +7,7 @@
     "all": "الكل",
     "yes": "نعم",
     "no": "لا",
+    "error": "خطأ",
     "unexpectedError": "حدث خطأ غير متوقع."
   },
   "common": {
@@ -14,7 +15,50 @@
     "delete": "حذف",
     "cancel": "إلغاء",
     "edit": "تعديل",
-    "refresh": "تحديث"
+    "refresh": "تحديث",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "deactivate": "تعطيل"
+  },
+  "checkout": {
+    "shippingInfo": "معلومات الشحن",
+    "cartSummary": "ملخص السلة",
+    "total": "الإجمالي",
+    "shipping": "الشحن",
+    "discount": "الخصم",
+    "freeShippingApplied": "شحن مجاني",
+    "invalidCoupon": "الكوبون غير صالح",
+    "validateCouponFailed": "فشل التحقق من الكوبون. حاول مرة أخرى.",
+    "placeOrderFailed": "فشل إتمام الطلب. حاول مرة أخرى.",
+    "form": {
+      "alertUsingSaved": "قمنا بتعبئة النموذج تلقائيًا باستخدام عنوانك المحفوظ.",
+      "useDifferentAddress": "استخدم عنوانًا مختلفًا",
+      "country": "الدولة",
+      "selectCountry": "اختر الدولة",
+      "countryOptions": {
+        "palestine": "فلسطين"
+      },
+      "firstName": "الاسم الأول",
+      "lastName": "اسم العائلة",
+      "town": "المدينة",
+      "region": "القرية / المنطقة",
+      "address": "العنوان بالتفصيل",
+      "phone": "رقم الهاتف",
+      "secondPhone": "رقم هاتف إضافي",
+      "note": "ملاحظة (اختياري)",
+      "coupon": "كوبون",
+      "placeholder": {
+        "firstName": "أدخل الاسم الأول",
+        "lastName": "أدخل اسم العائلة",
+        "town": "اختر المدينة",
+        "region": "أدخل القرية/المنطقة",
+        "address": "أدخل العنوان بالتفصيل",
+        "phone": "أدخل رقم الهاتف",
+        "secondPhone": "أدخل رقم هاتف إضافي",
+        "note": "أضف ملاحظة للطلب (اختياري)",
+        "coupon": "أدخل رمز الكوبون"
+      }
+    }
   },
   "menu": {
     "dashboard": "لوحة التحكم",
@@ -98,6 +142,50 @@
     "placeholders": {
       "name": "أدخل اسم العلامة التجارية",
       "description": "أدخل وصف العلامة التجارية"
+    }
+  },
+  "delivery": {
+    "fields": {
+      "code": "الرمز",
+      "nameEn": "الاسم (بالإنجليزية)",
+      "nameAr": "الاسم (بالعربية)",
+      "defaultFee": "رسوم الشحن الافتراضية",
+      "feeOverride": "رسوم مخصصة",
+      "zone": "المنطقة",
+      "active": "مفعّل"
+    },
+    "placeholders": {
+      "selectZone": "اختر المنطقة",
+      "leaveBlankForDefault": "اتركه فارغًا لاستخدام الرسوم الافتراضية للمنطقة"
+    },
+    "columns": {
+      "code": "الرمز",
+      "nameEn": "الاسم (بالإنجليزية)",
+      "nameAr": "الاسم (بالعربية)",
+      "defaultFee": "الرسوم الافتراضية",
+      "feeOverride": "رسوم مخصصة",
+      "zone": "المنطقة",
+      "active": "مفعّل"
+    },
+    "zones": {
+      "title": "مناطق التوصيل",
+      "add": "إضافة منطقة توصيل",
+      "addTitle": "إضافة منطقة توصيل",
+      "editTitle": "تعديل منطقة التوصيل",
+      "empty": "لا توجد مناطق",
+      "loadError": "فشل تحميل المناطق",
+      "deactivateTitle": "تعطيل المنطقة",
+      "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل {{name}} ({{code}})؟"
+    },
+    "towns": {
+      "title": "مدن/بلدات التوصيل",
+      "add": "إضافة مدينة/بلدة",
+      "addTitle": "إضافة مدينة/بلدة",
+      "editTitle": "تعديل المدينة/البلدة",
+      "empty": "لا توجد مدن/بلدات",
+      "loadError": "فشل تحميل المدن/البلدات",
+      "deactivateTitle": "تعطيل المدينة/البلدة",
+      "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل {{name}} ({{code}})؟"
     }
   },
   "colors": {
