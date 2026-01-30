@@ -531,6 +531,6 @@ docker logs -f --tail 120 backend-docker
 - Faster rebuilds: after updating the docker call:
 
 ```bash
-cd /opt/toystore-repo/toy-store-backend 
+cd /opt/toystore-repo/toy-store-backend
 nano Dockerfile
 ```

@@ -17,6 +17,7 @@ import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
 import AdminAuditLogsPage from './pages/AdminAuditLogsPage/AdminAuditLogsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
 import ProductAnalyticsPage from './pages/ProductAnalyticsPage/ProductAnalyticsPage';
+import TownAnalyticsPage from './pages/TownAnalyticsPage/TownAnalyticsPage';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import DeliveryTownsPage from './pages/DeliveryTownsPage/DeliveryTownsPage';
@@ -240,6 +241,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <ProductAnalyticsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/analytics/towns"
+          element={
+            <PrivateRoute>
+              <TownAnalyticsPage />
             </PrivateRoute>
           }
         />
