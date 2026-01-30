@@ -9,7 +9,11 @@
   }
 
   &-icon {
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-xs;
+
+    svg {
+      font-size: 72px;
+    }
   }
 
   &_text {

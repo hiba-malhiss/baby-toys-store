@@ -82,7 +82,7 @@ const OrderHistoryPage: React.FC = () => {
           <Calendar
             typeView="month"
             value={selectedMoment}
-            disableFutureDates
+            disableFutureDates={false}
             fullWidth
             getLabel={() => (month ? selectedMoment.format('MMM YYYY') : '')}
             onChange={(val) => {
@@ -108,10 +108,9 @@ const OrderHistoryPage: React.FC = () => {
       </Flex>
       {!isLoading && items.length === 0 ? (
         <NoDataFound
-          icon={Package}
+          iconComp={Package}
           message={t('orders.emptyTitle')}
           subtext={t('orders.emptySubtitle')}
-          withoutPadding
         />
       ) : (
         <ViewSwitcher
