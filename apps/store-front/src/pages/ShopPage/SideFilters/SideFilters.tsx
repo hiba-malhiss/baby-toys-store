@@ -272,8 +272,6 @@ export const SideFilters: React.FC<{
 
   return (
     <Card
-      withoutBorder
-      size="xsmall"
       header={
         <Flex justify="between" align="center" fullWidth spacing="s">
           <span>
