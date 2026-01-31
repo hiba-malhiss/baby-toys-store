@@ -9,8 +9,7 @@ export type WhatsAppWidgetProps = {
 };
 
 function safeOpen(url: string) {
-  const win = window.open(url, '_blank', 'noopener,noreferrer');
-  if (!win) window.location.href = url;
+  window.open(url, '_blank', 'noopener,noreferrer');
 }
 
 function normalizePhone(phoneRaw: string): string {
