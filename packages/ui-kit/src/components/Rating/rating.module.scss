@@ -1,6 +1,6 @@
 .ratingCount {
   font-size: 12px;
-  color: $color-secondary;
+  color: var(--color-secondary, $color-secondary);
   font-weight: 600;
 }
 

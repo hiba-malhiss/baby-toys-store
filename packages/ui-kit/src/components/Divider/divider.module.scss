@@ -3,7 +3,7 @@
   border-top-style: solid;
   width: 100%;
   opacity: 0.3;
-  border-color: $color-border-dark;
+  border-color: var(--color-border-dark, $color-border-dark);
 
   &.fullWidth {
     width: 100%;

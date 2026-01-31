@@ -8,25 +8,25 @@
   padding: 10px;
   text-align: left;
   height: 40px;
-  background-color: $color-white;
-  color: $color-text-grey;
+  background-color: var(--color-white, $color-white);
+  color: var(--color-text-grey, $color-text-grey);
 
   &:hover {
-    background-color: $color-secondary-light;
+    background-color: var(--color-secondary-light, $color-secondary-light);
   }
 
   &.is-selected {
-    background-color: $color-primary;
-    color: $color-white;
+    background-color: var(--color-primary, $color-primary);
+    color: var(--color-white, $color-white);
 
     &:hover {
-      background-color: $color-primary-hover;
+      background-color: var(--color-primary-hover, $color-primary-hover);
     }
   }
 
   &.is-disabled {
-    color: $color-text-muted !important;
-    background-color: $color-secondary-light-hover !important;
+    color: var(--color-text-muted, $color-text-muted) !important;
+    background-color: var(--color-secondary-light-hover, $color-secondary-light-hover) !important;
     cursor: not-allowed;
   }
 }

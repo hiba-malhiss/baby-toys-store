@@ -19,16 +19,16 @@
   }
 
   &-title {
-    color: $color-primary;
+    color: var(--color-primary);
     font-size: 67px;
-    text-shadow: 5px 0 $color-white;
+    text-shadow: 5px 0 var(--color-bg-primary);
     font-family: 'BalooBhaina', serif !important;
   }
 
   &-subTitle {
     font-weight: bold;
     font-size: 20px;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary);
     padding-top: 16px;
     padding-bottom: 68px;
     max-width: 545px;

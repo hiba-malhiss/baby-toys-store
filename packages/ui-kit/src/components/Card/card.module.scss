@@ -1,6 +1,6 @@
 .card {
-  border: 1px solid $color-border;
-  background-color: $color-white;
+  border: 1px solid var(--color-border, $color-border);
+  background-color: var(--color-white, $color-white);
   box-shadow: $shadow-xs;
   position: relative;
   overflow: hidden;

@@ -5,7 +5,7 @@
   &-preview {
     width: 32px;
     height: 32px;
-    border: 1px solid $color-border;
+    border: 1px solid var(--color-border, $color-border);
     border-radius: $radius-sm;
     cursor: pointer;
   }
@@ -15,7 +15,7 @@
     top: 40px;
     left: 0;
     padding: $spacing-sm;
-    background: $color-bg-primary;
+    background: var(--color-bg-primary, $color-bg-primary);
     box-shadow: $shadow-md;
     border-radius: $radius-md;
     z-index: $z-popover;
@@ -38,8 +38,8 @@
   &-handle {
     width: 12px;
     height: 12px;
-    background: $color-white;
-    border: 2px solid $color-black;
+    background: var(--color-white, $color-white);
+    border: 2px solid var(--color-black, $color-black);
     border-radius: $radius-full;
     position: absolute;
     transform: translate(-6px, -6px);
@@ -58,8 +58,8 @@
   &-hueHandle {
     width: 10px;
     height: 20px;
-    background: $color-white;
-    border: 1px solid $color-text-dark;
+    background: var(--color-white, $color-white);
+    border: 1px solid var(--color-text-dark, $color-text-dark);
     position: absolute;
     left: 0;
     transform: translateY(-10px);

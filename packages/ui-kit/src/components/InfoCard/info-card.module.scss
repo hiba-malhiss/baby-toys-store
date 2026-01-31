@@ -21,7 +21,7 @@
 
   .infoCard-content {
     font-size: 16px;
-    color: $color-text-dark;
+    color: var(--color-text-dark, $color-text-dark);
   }
 
   &-medium {
@@ -31,38 +31,38 @@
   }
 
   &-Info {
-    background-color: $color-bg-info;
+    background-color: var(--color-bg-info, $color-bg-info);
 
     .infoCard-title {
-      color: $color-info;
+      color: var(--color-info, $color-info);
     }
   }
 
   &-Warning {
-    background-color: $color-bg-warning;
+    background-color: var(--color-bg-warning, $color-bg-warning);
 
     .infoCard-title {
-      color: $color-warning-brand;
+      color: var(--color-warning-brand, $color-warning-brand);
     }
   }
 
   &-primary {
-    border: 1px solid $color-border;
+    border: 1px solid var(--color-border, $color-border);
     border-radius: 16px;
-    background-color: $color-white;
+    background-color: var(--color-white, $color-white);
 
     .infoCard-title {
-      color: $color-text-dark;
+      color: var(--color-text-dark, $color-text-dark);
     }
 
     .infoCard-content {
-      color: $color-text-grey;
+      color: var(--color-text-grey, $color-text-grey);
       padding-top: 12px;
     }
   }
 
   &-Success {
-    background-color: $color-bg-success;
+    background-color: var(--color-bg-success, $color-bg-success);
 
     .infoCard-title {
       color: #06c825;

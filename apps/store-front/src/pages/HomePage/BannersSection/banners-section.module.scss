@@ -15,9 +15,9 @@
     p {
       width: 60%;
       text-align: center;
-      text-shadow: 3px 0 $color-white;
+      text-shadow: 3px 0 var(--color-white);
       font-size: 2rem;
-      color: $color-primary;
+      color: var(--color-primary);
     }
 
     &-center {

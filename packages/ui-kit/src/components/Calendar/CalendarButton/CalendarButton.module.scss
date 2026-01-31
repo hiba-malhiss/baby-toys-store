@@ -8,32 +8,32 @@
   border-radius: $radius-xs;
   box-sizing: border-box;
   cursor: pointer;
-  color: $color-text-primary;
+  color: var(--color-text-primary, $color-text-primary);
   min-width: 40px;
   min-height: 40px;
 
   &:hover:not(.is-disabled):not(.is-selected):not(.is-highlightedMiddle) {
-    border: 1px solid $color-primary;
-    background-color: $color-bg-hover;
+    border: 1px solid var(--color-primary, $color-primary);
+    background-color: var(--color-bg-hover, $color-bg-hover);
   }
 
   &.is-disabled {
-    color: $color-text-disabled;
+    color: var(--color-text-disabled, $color-text-disabled);
     cursor: default;
   }
 
   &.is-selected {
-    color: $color-text-light;
-    background: $color-primary;
+    color: var(--color-text-light, $color-text-light);
+    background: var(--color-primary, $color-primary);
     font-weight: 500;
   }
 
   &.is-highlighted {
-    background-color: $color-info-light;
+    background-color: var(--color-info-light, $color-info-light);
   }
 
   &.is-highlightedMiddle {
-    background-color: $color-info-light;
+    background-color: var(--color-info-light, $color-info-light);
     border-radius: 0;
 
     &.is-firstColumn {
@@ -67,7 +67,7 @@
     &:before {
       content: '';
       position: absolute;
-      background-color: $color-info-light;
+      background-color: var(--color-info-light, $color-info-light);
       border-radius: 50% 0 0 50%;
       height: 100%;
       width: 100%;
@@ -81,7 +81,7 @@
     &:before {
       content: '';
       position: absolute;
-      background-color: $color-info-light;
+      background-color: var(--color-info-light, $color-info-light);
       border-radius: 0 50% 50% 0;
       height: 100%;
       width: 100%;

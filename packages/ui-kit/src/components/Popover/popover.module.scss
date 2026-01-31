@@ -55,11 +55,11 @@
   }
 
   &--dark {
-    background-color: $color-text-dark;
-    color: $color-white;
+    background-color: var(--color-text-dark, $color-text-dark);
+    color: var(--color-white, $color-white);
 
     &.popoverWithArrow:before {
-      background-color: $color-text-dark;
+      background-color: var(--color-text-dark, $color-text-dark);
     }
   }
 }

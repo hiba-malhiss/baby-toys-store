@@ -23,7 +23,7 @@
     .connector {
       width: 100%;
       height: 2px;
-      background: $color-border-dark;
+      background: var(--color-border-dark, $color-border-dark);
     }
 
     .opposite,
@@ -83,24 +83,24 @@
         align-items: center;
         justify-content: center;
         align-self: baseline;
-        border: 2px solid $color-primary;
+        border: 2px solid var(--color-primary, $color-primary);
         border-radius: $radius-full;
         width: 20px;
         height: 20px;
-        background: $color-primary-light;
+        background: var(--color-primary-light, $color-primary-light);
 
         &::before {
           content: '';
           border-radius: 50%;
           width: 10px;
           height: 10px;
-          background: $color-primary;
+          background: var(--color-primary, $color-primary);
         }
       }
 
       .connector {
         flex-grow: 1;
-        background: $color-border-dark;
+        background: var(--color-border-dark, $color-border-dark);
         width: 2px;
       }
     }

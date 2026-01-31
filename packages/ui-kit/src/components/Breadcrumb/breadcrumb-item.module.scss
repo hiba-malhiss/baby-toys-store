@@ -2,10 +2,10 @@
   cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: $color-text-grey-light;
+  color: var(--color-text-grey-light, $color-text-grey-light);
 
   &-content {
-    color: $color-text-grey-light;
+    color: var(--color-text-grey-light, $color-text-grey-light);
     font-size: 12px;
     font-weight: 600;
   }

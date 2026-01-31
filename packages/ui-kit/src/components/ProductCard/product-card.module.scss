@@ -56,7 +56,7 @@
   &-reviewCount {
     font-size: 12px;
     line-height: 16px !important;
-    color: $color-text-grey;
+    color: var(--color-text-grey, $color-text-grey);
   }
 
   &--vertical {
@@ -147,7 +147,7 @@
       @include line-clamp(3);
       width: 100%;
       margin: 16px 0 10px 0;
-      color: $color-text-grey;
+      color: var(--color-text-grey, $color-text-grey);
     }
   }
 

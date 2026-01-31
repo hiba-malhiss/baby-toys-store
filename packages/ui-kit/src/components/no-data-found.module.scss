@@ -1,6 +1,6 @@
 .noDataFound {
   width: 100%;
-  color: $color-text-muted;
+  color: var(--color-text-muted, $color-text-muted);
   background: none;
   padding: $spacing-2xl 0 $spacing-xl 0;
 
@@ -20,7 +20,7 @@
     font-size: 1.3rem;
     font-weight: 500;
     margin-bottom: $spacing-xs;
-    color: $color-text-grey-dark;
+    color: var(--color-text-grey-dark, $color-text-grey-dark);
     background: none;
   }
 

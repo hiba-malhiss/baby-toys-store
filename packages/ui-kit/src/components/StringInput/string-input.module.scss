@@ -48,12 +48,12 @@
 
   &-decreaseControl {
     left: 0;
-    border-right: 1px solid $color-border;
+    border-right: 1px solid var(--color-border, $color-border);
   }
 
   &-increaseControl {
     right: 0;
-    border-left: 1px solid $color-border;
+    border-left: 1px solid var(--color-border, $color-border);
   }
 
   .icon {
@@ -68,7 +68,7 @@
   }
 
   .iconButton {
-    background: $color-primary;
+    background: var(--color-primary, $color-primary);
     position: relative;
     right: 1px;
     height: calc(100% - 2px);
@@ -78,7 +78,7 @@
     transition: background-color 0.2s ease;
 
     &:hover {
-      background-color: $color-primary-dark;
+      background-color: var(--color-primary-dark, $color-primary-dark);
     }
 
     &--mediumSize {
@@ -102,7 +102,7 @@
 
   // Input styles
   .input {
-    color: $color-text-primary;
+    color: var(--color-text-primary, $color-text-primary);
     direction: ltr;
     grid-column: 1/-1;
     grid-row: 1/2;
@@ -128,7 +128,7 @@
     }
 
     &.has-error {
-      border: 1.5px solid $color-error !important;
+      border: 1.5px solid var(--color-error, $color-error) !important;
     }
 
     &[type='date'] {
@@ -148,11 +148,11 @@
     }
 
     &::placeholder {
-      color: $color-text-muted;
+      color: var(--color-text-muted, $color-text-muted);
     }
 
     &:not(:focus):not(:hover).has-error {
-      border-color: $color-error;
+      border-color: var(--color-error, $color-error);
     }
 
     &.has-icon {
@@ -200,17 +200,17 @@
     border: none;
     padding: 12px;
     cursor: pointer;
-    color: $color-text-primary;
+    color: var(--color-text-primary, $color-text-primary);
     font-size: 14px;
     transition: background-color 0.2s ease;
 
     &:hover,
     &.suggestionItemActive {
-      background-color: $color-bg-hover;
+      background-color: var(--color-bg-hover, $color-bg-hover);
     }
 
     strong {
-      color: $color-primary;
+      color: var(--color-primary, $color-primary);
       font-weight: bold;
     }
   }
@@ -219,7 +219,7 @@
 // Input counter
 .stringInputCounter {
   font-size: 12px;
-  color: $color-text-muted;
+  color: var(--color-text-muted, $color-text-muted);
   margin-top: 4px;
   text-align: right;
 }

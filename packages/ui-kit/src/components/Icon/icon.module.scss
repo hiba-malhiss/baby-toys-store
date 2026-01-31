@@ -69,67 +69,67 @@
   }
 
   &--primaryColor {
-    color: $color-primary;
+    color: var(--color-primary, $color-primary);
   }
 
   &--lightColor {
-    color: $color-white;
+    color: var(--color-white, $color-white);
   }
 
   &--darkColor {
-    color: $color-text-primary;
+    color: var(--color-text-primary, $color-text-primary);
   }
 
   &--grayColor {
-    color: $color-icon;
+    color: var(--color-icon, $color-icon);
   }
 
   &--gray-darkColor {
-    color: $color-secondary;
+    color: var(--color-secondary, $color-secondary);
   }
 
   &--infoColor {
-    color: $color-info;
+    color: var(--color-info, $color-info);
   }
 
   &--successColor {
-    color: $color-success;
+    color: var(--color-success, $color-success);
   }
 
   &--errorColor {
-    color: $color-error;
+    color: var(--color-error, $color-error);
   }
 
   &--warningColor {
-    color: $color-warning;
+    color: var(--color-warning, $color-warning);
   }
 
   &--warning-brandColor {
-    color: $color-warning-brand;
+    color: var(--color-warning-brand, $color-warning-brand);
   }
 
   &--accentColor {
-    color: $color-accent;
+    color: var(--color-accent, $color-accent);
   }
 
   &--secondaryColor {
-    color: $color-text-grey;
+    color: var(--color-text-grey, $color-text-grey);
   }
 
   &--secondary-lightColor {
-    color: $color-secondary-light;
+    color: var(--color-secondary-light, $color-secondary-light);
   }
 
   &--iconColor {
-    color: $color-secondary;
+    color: var(--color-secondary, $color-secondary);
   }
 
   &--highlightedColor {
-    color: $color-primary-dark;
+    color: var(--color-primary-dark, $color-primary-dark);
   }
 
   &--underlineColor {
-    color: $color-text-grey;
+    color: var(--color-text-grey, $color-text-grey);
   }
 
   &.isFilled {

@@ -17,7 +17,7 @@
   }
 
   &-skuLine {
-    color: $color-secondary;
+    color: var(--color-secondary);
     font-size: 12px;
     align-items: center;
     margin-bottom: 12px;
@@ -38,13 +38,13 @@
 
   &-WithDiscount {
     .productOverview-priceNew {
-      color: $color-success;
+      color: var(--color-success);
     }
 
     .productOverview-priceOld {
       text-decoration: line-through;
       font-size: 14px;
-      color: $color-text-muted;
+      color: var(--color-text-muted);
       padding-left: 4px;
     }
   }

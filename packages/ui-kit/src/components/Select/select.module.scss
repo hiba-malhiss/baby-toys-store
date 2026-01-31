@@ -15,7 +15,7 @@
 
 .selectHasError {
   .selectLabel {
-    border: 1.5px solid $color-error !important;
+    border: 1.5px solid var(--color-error, $color-error) !important;
   }
 }
 
@@ -34,7 +34,7 @@
 
 .selectSearch {
   padding: 8px;
-  border-bottom: 1px solid $color-border;
+  border-bottom: 1px solid var(--color-border, $color-border);
 }
 
 .noResults {

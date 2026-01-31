@@ -14,15 +14,15 @@
   }
 
   &--darkAppearance {
-    color: $color-text-dark;
+    color: var(--color-text-dark, $color-text-dark);
   }
 
   &--lightAppearance {
-    color: $color-secondary;
+    color: var(--color-secondary, $color-secondary);
   }
 
   &--whiteAppearance {
-    color: $color-text-light;
+    color: var(--color-text-light, $color-text-light);
   }
 
   &--h0Level {

@@ -1,13 +1,13 @@
 .priceDisplay {
   &-hasOld &-priceNew {
-    color: $color-success-dark;
+    color: var(--color-success-dark, $color-success-dark);
   }
 
   &-price {
     display: flex;
     align-items: end;
     gap: 8px;
-    color: $color-text-primary;
+    color: var(--color-text-primary, $color-text-primary);
   }
 
   &-priceNew {
@@ -18,7 +18,7 @@
   &-priceOld {
     text-decoration: line-through;
     font-size: 14px;
-    color: $color-text-muted;
+    color: var(--color-text-muted, $color-text-muted);
     padding-left: 4px;
   }
 }

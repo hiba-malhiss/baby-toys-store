@@ -1,5 +1,6 @@
 import React from 'react';
 import './styles/App.scss';
+import './styles/main.scss';
 import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage.tsx';
 import Layout from './components/Layout/Layout.tsx';
@@ -20,6 +21,7 @@ import { AuthProvider, useAuth } from './context/AuthContext.tsx';
 import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from './components/LocationAwareToast.tsx';
+import { ThemeProvider } from '@baby-toys/ui-kit/theme/ThemeProvider';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,7 +75,9 @@ const App: React.FC = () => {
     <QueryClientProvider client={queryClient}>
       <ToastProvider>
         <AuthProvider>
-          <AppContent />
+          <ThemeProvider>
+            <AppContent />
+          </ThemeProvider>
         </AuthProvider>
       </ToastProvider>
     </QueryClientProvider>

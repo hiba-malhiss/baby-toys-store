@@ -10,22 +10,22 @@
 }
 
 .dot {
-  fill: $color-warning;
+  fill: var(--color-warning, $color-warning);
   animation: bounce 1s infinite ease-in-out;
   transform-origin: center;
 }
 
 .dot:nth-child(2) {
-  fill: $color-accent;
+  fill: var(--color-accent, $color-accent);
   animation-delay: 0.17s;
 }
 
 .dot:nth-child(3) {
-  fill: $color-primary;
+  fill: var(--color-primary, $color-primary);
   animation-delay: 0.33s;
 }
 
 .dot:nth-child(4) {
-  fill: $color-warning;
+  fill: var(--color-warning, $color-warning);
   animation-delay: 0.5s;
 }

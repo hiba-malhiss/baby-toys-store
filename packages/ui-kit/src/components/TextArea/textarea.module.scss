@@ -16,7 +16,7 @@
   }
 
   &.has-error {
-    border: 1.5px solid $color-error !important;
+    border: 1.5px solid var(--color-error, $color-error) !important;
   }
 
   &.fullWidth {
@@ -24,6 +24,6 @@
   }
 
   &::placeholder {
-    color: $color-text-muted;
+    color: var(--color-text-muted, $color-text-muted);
   }
 }

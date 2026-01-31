@@ -15,7 +15,7 @@
   }
 
   &-footer {
-    border-top: 1px solid $color-border-disabled;
+    border-top: 1px solid var(--color-border-disabled, $color-border-disabled);
     display: flex;
     align-items: center;
     justify-content: end;
@@ -25,10 +25,10 @@
   &-header {
     display: flex;
     align-items: center;
-    color: $color-text-secondary;
+    color: var(--color-text-secondary, $color-text-secondary);
     min-width: 160px;
     margin: $spacing-sm $spacing-md;
-    border-bottom: 1px solid $color-border-disabled;
+    border-bottom: 1px solid var(--color-border-disabled, $color-border-disabled);
     direction: ltr;
 
     .decade-range {
@@ -68,7 +68,7 @@
       grid-template-columns: repeat(7, 1fr);
 
       .days {
-        color: $color-text-secondary;
+        color: var(--color-text-secondary, $color-text-secondary);
         font-weight: 600;
         margin-bottom: $spacing-sm;
       }

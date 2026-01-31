@@ -60,39 +60,39 @@
 
   // Colors
   &.color-primary {
-    color: $color-text-primary;
+    color: var(--color-text-primary, $color-text-primary);
   }
 
   &.color-secondary {
-    color: $color-text-secondary;
+    color: var(--color-text-secondary, $color-text-secondary);
   }
 
   &.color-muted {
-    color: $color-text-muted;
+    color: var(--color-text-muted, $color-text-muted);
   }
 
   &.color-error {
-    color: $color-error;
+    color: var(--color-error, $color-error);
   }
 
   &.color-success {
-    color: $color-success;
+    color: var(--color-success, $color-success);
   }
 
   &.color-warning {
-    color: $color-warning;
+    color: var(--color-warning, $color-warning);
   }
 
   &.color-info {
-    color: $color-info;
+    color: var(--color-info, $color-info);
   }
 
   &.color-dark {
-    color: $color-text-dark;
+    color: var(--color-text-dark, $color-text-dark);
   }
 
   &.color-light {
-    color: $color-text-light;
+    color: var(--color-text-light, $color-text-light);
   }
 
   // Alignment

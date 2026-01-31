@@ -18,7 +18,7 @@
   }
 
   &--field {
-    color: $color-text-grey;
+    color: var(--color-text-grey, $color-text-grey);
     padding: 8px 0;
 
     .radioButton-box {
@@ -26,8 +26,8 @@
       width: 20px;
       height: 20px;
       border-radius: 8px;
-      border: 2px solid $color-border;
-      background: $color-white;
+      border: 2px solid var(--color-border, $color-border);
+      background: var(--color-white, $color-white);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -47,7 +47,7 @@
     /* Hover */
     &:hover .radioButton-box {
       transform: scale(1.05);
-      border-color: $color-primary;
+      border-color: var(--color-primary, $color-primary);
     }
 
     /* Active (press) */
@@ -57,8 +57,8 @@
 
     /* Checked state */
     &.is-selected .radioButton-box {
-      background-color: $color-primary;
-      border-color: $color-primary;
+      background-color: var(--color-primary, $color-primary);
+      border-color: var(--color-primary, $color-primary);
 
       svg {
         transform: scale(1);
@@ -67,34 +67,34 @@
 
     /* Focus reminder */
     input:focus-visible + .radioButton-box {
-      box-shadow: 0 0 0 4px rgba($color-primary, 0.18);
+      box-shadow: 0 0 0 4px rgba(var(--color-primary-rgb, 16, 150, 181), 0.18);
     }
   }
 
   &--chip {
     background-color: transparent;
-    color: $color-black;
-    border: 1px solid $color-accent-light;
+    color: var(--color-black, $color-black);
+    border: 1px solid var(--color-accent-light, $color-accent-light);
 
     &.is-selected {
-      background-color: $color-accent-light;
+      background-color: var(--color-accent-light, $color-accent-light);
     }
 
     &:hover {
-      background-color: $color-accent-light-hover;
+      background-color: var(--color-accent-light-hover, $color-accent-light-hover);
     }
   }
 
   &--link {
     padding: 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary, $color-text-primary);
 
     &.is-selected {
-      color: $color-primary-dark;
+      color: var(--color-primary-dark, $color-primary-dark);
     }
 
     &:hover {
-      color: $color-primary;
+      color: var(--color-primary, $color-primary);
     }
   }
 
@@ -104,11 +104,11 @@
     border-bottom: 2px solid transparent;
 
     &.is-selected {
-      border-bottom: 2px solid $color-primary-dark;
+      border-bottom: 2px solid var(--color-primary-dark, $color-primary-dark);
     }
 
     &:hover {
-      border-bottom: 2px solid $color-primary;
+      border-bottom: 2px solid var(--color-primary, $color-primary);
     }
   }
 
@@ -149,18 +149,18 @@
     }
 
     &:hover .radioButton-swatch {
-      border: 2px solid $color-primary;
-      box-shadow: 0 0 5px $color-primary;
+      border: 2px solid var(--color-primary, $color-primary);
+      box-shadow: 0 0 5px var(--color-primary, $color-primary);
     }
 
     &.is-selected .radioButton-swatch {
-      border: 2.5px solid $color-primary-dark;
-      box-shadow: 0 0 0 2px color.adjust($color-primary, $alpha: -0.7);
+      border: 2.5px solid var(--color-primary-dark, $color-primary-dark);
+      box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb, 16, 150, 181), 0.3);
     }
   }
 }
 
 .radioButton-swatch--selected {
-  border: 2.5px solid $color-primary-dark;
-  box-shadow: 0 0 0 2px color.adjust($color-primary, $alpha: -0.7);
+  border: 2.5px solid var(--color-primary-dark, $color-primary-dark);
+  box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb, 16, 150, 181), 0.3);
 }

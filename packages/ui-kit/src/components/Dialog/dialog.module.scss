@@ -17,7 +17,7 @@
 }
 
 .dialog-root {
-  background: $color-white;
+  background: var(--color-white, $color-white);
   border-radius: $radius-md;
   width: 600px;
   max-width: 95%;
@@ -41,14 +41,14 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: $color-bg-secondary;
-  border-bottom: 1px solid $color-border-light;
+  background-color: var(--color-bg-secondary, $color-bg-secondary);
+  border-bottom: 1px solid var(--color-border-light, $color-border-light);
 }
 
 .dialog-title {
   font-size: 1.25rem;
   font-weight: 600;
-  color: $color-text-primary;
+  color: var(--color-text-primary, $color-text-primary);
   padding: 16px 0;
 }
 
@@ -61,14 +61,14 @@
   padding: $spacing-lg;
   overflow-y: auto;
   flex-grow: 1;
-  color: $color-text-primary;
+  color: var(--color-text-primary, $color-text-primary);
   line-height: 20px;
 }
 
 .dialog-footer {
   padding: $spacing-md $spacing-lg;
-  background-color: $color-bg-secondary;
-  border-top: 1px solid $color-border-light;
+  background-color: var(--color-bg-secondary, $color-bg-secondary);
+  border-top: 1px solid var(--color-border-light, $color-border-light);
   display: flex;
   justify-content: end;
 }

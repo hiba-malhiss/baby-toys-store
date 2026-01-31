@@ -13,19 +13,19 @@
       font-size: 20px;
       position: relative;
       top: 5px;
-      color: $color-error-dark;
+      color: var(--color-error-dark, $color-error-dark);
     }
   }
 
   &-label {
     font-weight: 500;
     margin-bottom: 4px;
-    color: $color-text-dark;
+    color: var(--color-text-dark, $color-text-dark);
     font-size: 16px;
   }
 
   &-errorMessage {
-    color: $color-error;
+    color: var(--color-error, $color-error);
     font-size: 12px;
     margin-top: 4px;
     margin-left: 2px;

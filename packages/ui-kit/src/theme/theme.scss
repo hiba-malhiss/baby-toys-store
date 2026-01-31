@@ -1,0 +1,104 @@
+@import '../styles/constants.scss';
+
+/*
+  Store-front theme variables
+  - Default variables mirror shared SCSS tokens
+  - Alternate theme overrides a subset of variables
+*/
+:root {
+  --color-primary: #{$color-primary};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-primary-hover: #{$color-primary-hover};
+  --color-primary-light: #{$color-primary-light};
+  --color-primary-rgb: #{red($color-primary)}, #{green($color-primary)}, #{blue($color-primary)};
+
+  --color-accent: #{$color-accent};
+  --color-accent-hover: #{$color-accent-hover};
+  --color-accent-light: #{$color-accent-light};
+  --color-accent-light-hover: #{$color-accent-light};
+  --color-accent-dark: #{$color-accent-dark};
+
+  --color-secondary: #{$color-secondary};
+  --color-secondary-light: #{$color-secondary-light};
+
+  --color-text-primary: #{$color-text-primary};
+  --color-text-primary-rgb:
+    #{red($color-text-primary)}, #{green($color-text-primary)}, #{blue($color-text-primary)};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-light: #{$color-text-light};
+
+  --color-bg-primary: #{$color-bg-primary};
+  --color-bg-secondary: #{$color-bg-secondary};
+  --color-bg-tertiary: #{$color-bg-tertiary};
+
+  --color-border: #{$color-border};
+  --color-border-dark: #{$color-border-dark};
+
+  --color-white: #{$color-white};
+  --color-black: #{$color-black};
+  --color-black-rgb: #{red($color-black)}, #{green($color-black)}, #{blue($color-black)};
+  --color-border-light: #{$color-border-light};
+  --color-border-disabled: #{$color-border-disabled};
+  --color-bg-info: #{$color-bg-info};
+  --color-bg-warning: #{$color-bg-warning};
+  --color-bg-success: #{$color-bg-success};
+  --color-bg-overlay: #{$color-bg-overlay};
+  --color-bg-hover: #{$color-bg-hover};
+  --color-bg-avatar: #{$color-bg-avatar};
+  --color-secondary-hover: #{$color-secondary-hover};
+  --color-secondary-dark: #{$color-secondary-dark};
+  --color-secondary-light-hover: #{$color-secondary-light-hover};
+  --color-success: #{$color-success};
+  --color-success-hover: #{$color-success-hover};
+  --color-success-light: #{$color-success-light};
+  --color-success-dark: #{$color-success-dark};
+  --color-info: #{$color-info};
+  --color-info-hover: #{$color-info-hover};
+  --color-info-light: #{$color-info-light};
+  --color-info-dark: #{$color-info-dark};
+  --color-warning: #{$color-warning};
+  --color-warning-hover: #{$color-warning-hover};
+  --color-warning-light: #{$color-warning-light};
+  --color-warning-dark: #{$color-warning-dark};
+  --color-warning-brand: #{$color-warning-brand};
+  --color-error: #{$color-error};
+  --color-error-hover: #{$color-error-hover};
+  --color-error-light: #{$color-error-light};
+  --color-error-dark: #{$color-error-dark};
+  --color-text-dark: #{$color-text-dark};
+  --color-text-grey: #{$color-text-grey};
+  --color-text-grey-light: #{$color-text-grey-light};
+  --color-text-grey-dark: #{$color-text-grey-dark};
+  --color-text-disabled: #{$color-text-disabled};
+  --color-text-review: #{$color-text-review};
+  --color-icon: #{$color-icon};
+  --color-disabled: #{$color-disabled};
+  --color-disabled2: #{$color-disabled2};
+  --color-disabled-text: #{$color-disabled-text};
+}
+
+/* Example alternate theme: apply by adding class on <html> or <body> */
+.theme-kids {
+  --color-primary: #ff7bbf;
+  --color-primary-dark: #e062a8;
+  --color-primary-hover: #d24f96;
+  --color-primary-light: #fff0f7;
+  --color-primary-rgb: 255, 123, 191;
+
+  --color-accent: #6c8ef2;
+  --color-accent-hover: #5477db;
+  --color-accent-light: #e7edff;
+  --color-accent-light-hover: #e7edff;
+  --color-accent-dark: #3f5fbf;
+
+  --color-text-primary: #222222;
+  --color-text-primary-rgb: 34, 34, 34;
+  --color-text-secondary: #3c4a5a;
+
+  --color-bg-primary: #ffffff;
+  --color-bg-secondary: #f7f9fc;
+  --color-bg-tertiary: #eef2f7;
+
+  --color-border: #e6ebf2;
+}

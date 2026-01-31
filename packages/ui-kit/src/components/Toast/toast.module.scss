@@ -20,12 +20,12 @@
   padding: $spacing-sm $spacing-lg;
   border-left: 5px solid;
   border-radius: $radius-md;
-  background-color: $color-white;
+  background-color: var(--color-white, $color-white);
   box-shadow: $box-shadow-m;
   animation:
     fadeIn 0.3s ease,
     fadeOut 0.3s ease 2.7s;
-  color: $color-text-primary;
+  color: var(--color-text-primary, $color-text-primary);
   font-size: 14px;
 
   strong,
@@ -36,18 +36,18 @@
   }
 
   &-success {
-    border-color: $color-success;
-    background-color: $color-bg-success;
+    border-color: var(--color-success, $color-success);
+    background-color: var(--color-bg-success, $color-bg-success);
   }
 
   &-error {
-    border-color: $color-accent;
-    background-color: $color-accent-light;
+    border-color: var(--color-accent, $color-accent);
+    background-color: var(--color-accent-light, $color-accent-light);
   }
 
   &-info {
-    border-color: $color-info;
-    background-color: $color-bg-info;
+    border-color: var(--color-info, $color-info);
+    background-color: var(--color-bg-info, $color-bg-info);
   }
 
   &-closeButton {
@@ -58,11 +58,11 @@
     display: block;
     font-weight: 600;
     margin-bottom: 4px;
-    color: $color-text-dark;
+    color: var(--color-text-dark, $color-text-dark);
   }
 
   p {
-    color: $color-text-muted;
+    color: var(--color-text-muted, $color-text-muted);
   }
 }
 

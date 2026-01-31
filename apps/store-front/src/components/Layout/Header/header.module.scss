@@ -5,12 +5,12 @@
   width: 100%;
   justify-content: start;
   min-height: $header-min-height;
-  box-shadow: 0 2px 4px 0 rgba($color-text-primary, 0.03);
+  box-shadow: 0 2px 4px 0 rgba(var(--color-text-primary-rgb), 0.03);
 
   &-categories {
     overflow-x: auto;
     white-space: nowrap;
-    background: $color-white;
+    background: var(--color-white);
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
 
@@ -43,11 +43,15 @@
   }
 
   &-announcement {
-    background-image: url('/assets/images/wave.svg');
-    background-position: center;
-    background-repeat: repeat-x;
     height: 51px;
     padding: 0 100px;
+    background-color: var(--color-primary);
+    mask-image: url(/assets/images/wave.svg);
+    mask-repeat: repeat-x;
+    mask-position: center;
+    -webkit-mask-image: url(/assets/images/wave.svg);
+    -webkit-mask-repeat: repeat-x;
+    -webkit-mask-position: center;
     color: white;
   }
 

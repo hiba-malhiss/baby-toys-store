@@ -21,56 +21,56 @@
   }
 
   &--primary {
-    background-color: $color-accent;
-    color: $color-white;
+    background-color: var(--color-accent, $color-accent);
+    color: var(--color-white, $color-white);
   }
 
   &--success {
-    background-color: $color-success;
-    color: $color-white;
+    background-color: var(--color-success, $color-success);
+    color: var(--color-white, $color-white);
   }
 
   &--secondary-outline {
-    background-color: $color-white;
-    color: $color-text-grey;
-    border: 1px solid $color-border;
+    background-color: var(--color-white, $color-white);
+    color: var(--color-text-grey, $color-text-grey);
+    border: 1px solid var(--color-border, $color-border);
     border-radius: 16px;
   }
 
   &--primary {
-    background-color: $color-accent;
-    color: $color-white;
+    background-color: var(--color-accent, $color-accent);
+    color: var(--color-white, $color-white);
   }
 
   &--success {
-    background-color: $color-success;
-    color: $color-white;
+    background-color: var(--color-success, $color-success);
+    color: var(--color-white, $color-white);
   }
 
   &--secondary-outline {
-    background-color: $color-white;
-    color: $color-text-grey;
-    border: 1px solid $color-border;
+    background-color: var(--color-white, $color-white);
+    color: var(--color-text-grey, $color-text-grey);
+    border: 1px solid var(--color-border, $color-border);
     border-radius: 16px;
   }
 
   &--warning {
-    background-color: $color-warning-dark;
-    color: $color-white;
+    background-color: var(--color-warning-dark, $color-warning-dark);
+    color: var(--color-white, $color-white);
   }
 
   &--secondary {
-    background-color: $color-secondary;
-    color: $color-white;
+    background-color: var(--color-secondary, $color-secondary);
+    color: var(--color-white, $color-white);
   }
 
   &--info {
-    background-color: $color-info-dark;
-    color: $color-white;
+    background-color: var(--color-info-dark, $color-info-dark);
+    color: var(--color-white, $color-white);
   }
 
   &--danger {
-    background-color: $color-error-dark;
-    color: $color-white;
+    background-color: var(--color-error-dark, $color-error-dark);
+    color: var(--color-white, $color-white);
   }
 }

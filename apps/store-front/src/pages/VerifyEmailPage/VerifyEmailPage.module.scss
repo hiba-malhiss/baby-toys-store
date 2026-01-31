@@ -11,14 +11,14 @@
   &-error {
     font-size: 1.25rem;
     font-weight: bold;
-    color: $color-error;
+    color: var(--color-error);
     margin-bottom: 1rem;
   }
 
   &-success {
     font-size: 1.25rem;
     font-weight: bold;
-    color: $color-success;
+    color: var(--color-success);
     margin-bottom: 1rem;
   }
 
@@ -29,11 +29,11 @@
 
   &-message {
     margin: 1rem 0;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
   }
 
   &-errorMessage {
     margin: 1rem 0 1.5rem;
-    color: $color-text-primary;
+    color: var(--color-text-primary);
   }
 }
