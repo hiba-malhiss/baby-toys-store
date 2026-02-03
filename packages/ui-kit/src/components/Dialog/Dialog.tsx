@@ -12,13 +12,47 @@ import { X, Maximize2, Minimize2 } from 'lucide-react';
 import styles from './dialog.module.scss';
 import Button from '../Button/Button.tsx';
 
-const Dialog = forwardRef((props: any, ref) => {
+type DialogWidth = number | string;
+
+export type DialogProps = {
+  header?: React.ReactNode;
+  footer?: React.ReactNode;
+
+  modal?: boolean;
+  closeOnEscape?: boolean;
+  dismissibleMask?: boolean;
+  closable?: boolean;
+  showHeader?: boolean;
+  blockScroll?: boolean;
+  autoZIndex?: boolean;
+  baseZIndex?: number;
+  focusOnShow?: boolean;
+  maximizable?: boolean;
+  transitionOptions?: string;
+
+  visible?: boolean;
+  role?: string;
+
+  onShow?: () => void;
+  onHide?: () => void;
+  onVisibleChange?: (visible: boolean) => void;
+  onMaximize?: (e: { maximized: boolean }) => void;
+
+  appendTo?: HTMLElement;
+  id?: string;
+
+  width?: DialogWidth;
+  maxWidth?: DialogWidth;
+  children?: React.ReactNode;
+};
+
+const Dialog = forwardRef((props: DialogProps, ref) => {
   const {
     header,
     footer,
     modal = false,
     closeOnEscape = true,
-    dismissibleMask,
+    dismissibleMask = false,
     closable = true,
     showHeader = true,
     blockScroll = false,
@@ -27,6 +61,8 @@ const Dialog = forwardRef((props: any, ref) => {
     focusOnShow = true,
     maximizable = false,
     transitionOptions = '150ms cubic-bezier(0, 0, 0.2, 1)',
+    width,
+    maxWidth,
     visible: propsVisible,
     role = 'dialog',
     onShow,
@@ -38,7 +74,7 @@ const Dialog = forwardRef((props: any, ref) => {
     id: propsId,
   } = props;
 
-  const [visible, setVisible] = useState(propsVisible || false);
+  const [visible, setVisible] = useState(!!propsVisible);
   const [maskVisible, setMaskVisible] = useState(false);
   const [maximized, setMaximized] = useState(false);
 
@@ -52,7 +88,7 @@ const Dialog = forwardRef((props: any, ref) => {
 
   useEffect(() => {
     if (propsVisible !== undefined && propsVisible !== visible) {
-      setVisible(propsVisible);
+      setVisible(!!propsVisible);
       if (propsVisible && !maskVisible) {
         setMaskVisible(true);
       }
@@ -147,12 +183,29 @@ const Dialog = forwardRef((props: any, ref) => {
       onHide?.();
       setMaskVisible(false);
     }
-  }, [visible]);
+  }, [visible, maskVisible, focus, onShow, onHide]);
 
   useImperativeHandle(ref, () => ({
     close,
     maximize,
   }));
+
+  const dialogStyle = useMemo<React.CSSProperties>(() => {
+    // When maximized, CSS class controls full screen
+    if (maximized) return {};
+
+    const style: React.CSSProperties = {};
+
+    if (width !== undefined) {
+      style.width = typeof width === 'number' ? `${width}px` : width;
+    }
+
+    if (maxWidth !== undefined) {
+      style.maxWidth = typeof maxWidth === 'number' ? `${maxWidth}px` : maxWidth;
+    }
+
+    return style;
+  }, [width, maxWidth, maximized]);
 
   if (!visible && !maskVisible) return null;
 
@@ -167,7 +220,10 @@ const Dialog = forwardRef((props: any, ref) => {
         role={role}
         aria-modal="true"
         id={id}
-        style={{ transition: transitionOptions }}
+        style={{
+          transition: transitionOptions,
+          ...dialogStyle, // ✅ width/maxWidth support
+        }}
       >
         {showHeader && (
           <div className={styles.dialogHeader}>
