@@ -9,7 +9,8 @@ import {
   BouncingDotsLoader,
   Dialog,
   StringInput,
-  Tooltip, FieldWrapper,
+  Tooltip,
+  FieldWrapper,
 } from '@baby-toys/ui-kit';
 import { useOptionTypes, useCreateOptionType } from '../../api/optionApi';
 import type { OptionType } from '../../api/types/option';
@@ -24,9 +25,9 @@ const AttributesPage: React.FC = () => {
 
   const createType = useCreateOptionType();
 
-  const handleCreateType = async() => {
+  const handleCreateType = async () => {
     const name = newTypeName.trim();
-    if(!name) return;
+    if (!name) return;
 
     await createType.mutateAsync({ name });
     setNewTypeName('');
@@ -49,16 +50,14 @@ const AttributesPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>
-            {t('options.types', { defaultValue: 'Option Types' })}
-          </Heading>
+          <Heading>{t('options.types', { defaultValue: 'Option Types' })}</Heading>
           <Button onClick={() => setShowAddType(true)}>
             {t('options.addType', { defaultValue: 'Add Option Type' })}
           </Button>
         </Flex>
 
         {loadingTypes ? (
-          <BouncingDotsLoader/>
+          <BouncingDotsLoader />
         ) : (
           <Table
             value={types}
@@ -105,12 +104,7 @@ const AttributesPage: React.FC = () => {
                         defaultValue: 'Delete endpoint not wired yet',
                       })}
                     >
-                      <Button
-                        size="small"
-                        appearance="link"
-                        color="highlighted"
-                        isDisabled
-                      >
+                      <Button size="small" appearance="link" color="highlighted" isDisabled>
                         {t('app.delete', { defaultValue: 'Delete' })}
                       </Button>
                     </Tooltip>
@@ -126,9 +120,7 @@ const AttributesPage: React.FC = () => {
             expandedRows={expandedRows}
             onRowExpand={handleRowExpand as any}
             onRowCollapse={handleRowCollapse as any}
-            rowExpansionTemplate={(row: OptionType) => (
-              <AttributesValuesRow activeType={row}/>
-            )}
+            rowExpansionTemplate={(row: OptionType) => <AttributesValuesRow activeType={row} />}
           />
         )}
 
@@ -140,10 +132,7 @@ const AttributesPage: React.FC = () => {
           modal
         >
           <Flex direction="vertical" spacing="m">
-            <FieldWrapper
-              label="Option name"
-              required
-            >
+            <FieldWrapper label="Option name" required>
               <StringInput
                 placeholder={t('options.typeName', { defaultValue: 'Name' })}
                 value={newTypeName}

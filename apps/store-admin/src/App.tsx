@@ -29,6 +29,7 @@ import ContactMessagesPage from './pages/ContactMessagesPage/ContactMessagesPage
 import FinancePage from './pages/FinancePage/FinancePage';
 import MonthDetailPage from './pages/MonthDetailPage/MonthDetailPage';
 import ExpensesPage from './pages/ExpensesPage/ExpensesPage';
+import AttributesPage from './pages/AttributesPage/AttributesPage.tsx';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -193,6 +194,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <MaterialsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/attributes"
+          element={
+            <PrivateRoute>
+              <AttributesPage />
             </PrivateRoute>
           }
         />

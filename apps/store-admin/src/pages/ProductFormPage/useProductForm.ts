@@ -103,10 +103,6 @@ export const useProductForm = () => {
       const defaultValues: ProductFormValues = {
         ...defaultProductValues,
         // non-localized
-        price: product.price as unknown as number,
-        costPrice: (product as any).costPrice as number | undefined,
-        oldPrice: (product.oldPrice as number | null) ?? undefined,
-        stockQuantity: product.stockQuantity as unknown as number,
         releaseDate: product.releaseDate || '',
         images: product.images || [],
         mainImage: product.mainImage || '',
@@ -187,11 +183,7 @@ export const useProductForm = () => {
       const ar = sanitizeLocale('ar');
 
       const payload = {
-        // non-localized
-        price: data.price,
-        costPrice: (data as any).costPrice ?? null,
-        oldPrice: data.oldPrice ?? null,
-        stockQuantity: data.stockQuantity,
+        // non-localized (variant-first)
         releaseDate: data.releaseDate || undefined,
         images: existingImages.slice(0, MAX.images),
         mainImage: mainImageUrl || '',

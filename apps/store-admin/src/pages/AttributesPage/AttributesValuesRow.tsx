@@ -7,7 +7,8 @@ import {
   Table,
   BouncingDotsLoader,
   Tooltip,
-  Dialog, FieldWrapper,
+  Dialog,
+  FieldWrapper,
 } from '@baby-toys/ui-kit';
 import type { OptionType, OptionValue } from '../../api/types/option';
 import { useOptionValues, useCreateOptionValue } from '../../api/optionApi';
@@ -31,9 +32,9 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
     setNewDisplay('');
   };
 
-  const handleCreateValue = async() => {
+  const handleCreateValue = async () => {
     const value = newValue.trim();
-    if(!value) return;
+    if (!value) return;
 
     await createValue.mutateAsync({
       value,
@@ -43,8 +44,8 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
     closeAdd();
   };
 
-  if(loadingValues) {
-    return <BouncingDotsLoader/>
+  if (loadingValues) {
+    return <BouncingDotsLoader />;
   }
 
   return (
@@ -52,11 +53,13 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
       <Table
         value={values}
         rows={values.length || 1}
-        title={<Flex justify="end" align="center" fullWidth>
-          <Button appearance="outline" size="small" onClick={() => setShowAdd(true)}>
-            {t('options.addValue', { defaultValue: 'Add Value' })}
-          </Button>
-        </Flex>}
+        title={
+          <Flex justify="end" align="center" fullWidth>
+            <Button appearance="outline" size="small" onClick={() => setShowAdd(true)}>
+              {t('options.addValue', { defaultValue: 'Add Value' })}
+            </Button>
+          </Flex>
+        }
         columns={[
           {
             header: t('options.value', { defaultValue: 'Value' }),
@@ -114,19 +117,14 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
       >
         <Flex direction="vertical" spacing="m">
           <Flex spacing="m">
-            <FieldWrapper
-              label="value"
-              required
-            >
+            <FieldWrapper label="value" required>
               <StringInput
                 placeholder={t('options.value', { defaultValue: 'Value' })}
                 value={newValue}
                 onChange={(v) => setNewValue(String(v ?? ''))}
               />
             </FieldWrapper>
-            <FieldWrapper
-              label="display"
-            >
+            <FieldWrapper label="display">
               <StringInput
                 placeholder={t('options.display', { defaultValue: 'Display (optional)' })}
                 value={newDisplay}

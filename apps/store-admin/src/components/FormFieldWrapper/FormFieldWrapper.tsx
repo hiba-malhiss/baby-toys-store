@@ -3,7 +3,7 @@ import { Controller, type Control, type FieldValues } from 'react-hook-form';
 import { FieldWrapper } from '@baby-toys/ui-kit';
 
 interface FormFieldWrapperProps<T extends FieldValues> {
-  name: string;
+  name?: string;
   control?: Control<T>;
   children: ReactElement;
   label: string;

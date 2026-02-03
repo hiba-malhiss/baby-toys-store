@@ -54,10 +54,13 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       body: (row: AdminProductBase) => row.categoryName || '-',
     },
     {
-      field: 'price',
+      field: 'lowestActivePrice',
       header: 'Price',
       sortable: true,
-      body: (row: AdminProductBase) => (symbol ? `${symbol}${row.price}` : String(row.price ?? '')),
+      body: (row: AdminProductBase) => {
+        const p = row.lowestActivePrice ?? row.price;
+        return p != null ? (symbol ? `From ${symbol}${p}` : `From ${String(p)}`) : '-';
+      },
     },
     {
       field: 'sales',
@@ -84,15 +87,13 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
         row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',
     },
     {
-      field: 'stockQuantity',
+      field: 'activeVariantsTotalStock',
       header: 'Stock',
       sortable: true,
-      body: (row: AdminProductBase) => (
-        <Icon
-          icon={row.stockQuantity > 0 ? Check : X}
-          color={row.stockQuantity > 0 ? 'success' : 'error'}
-        />
-      ),
+      body: (row: AdminProductBase) => {
+        const stock = row.activeVariantsTotalStock ?? row.stockQuantity ?? 0;
+        return <Icon icon={stock > 0 ? Check : X} color={stock > 0 ? 'success' : 'error'} />;
+      },
     },
     {
       field: 'averageRating',

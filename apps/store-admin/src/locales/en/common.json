@@ -83,7 +83,8 @@
     "shippingOptions": "Shipping options",
     "zones": "Delivery Zones",
     "delivery": "Delivery Management",
-    "towns": "Towns"
+    "towns": "Towns",
+    "attributes": "Attributes"
   },
   "categories": {
     "title": "Categories",

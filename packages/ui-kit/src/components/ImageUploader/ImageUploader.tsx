@@ -12,6 +12,7 @@ interface ImageUploaderProps {
   onBackendDelete?: (imageUrl: string) => Promise<void>;
   isDisabled?: boolean;
   isLoading?: boolean;
+  fullHeight?: boolean;
 }
 
 export interface PreviewImage {
@@ -24,6 +25,7 @@ export interface PreviewImage {
 
 const MAX_IMAGES = 10;
 const MAX_FILE_SIZE_MB = 5;
+
 const ImageUploader: React.FC<ImageUploaderProps> = ({
   images = [],
   onImagesChange,
@@ -31,6 +33,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   onBackendDelete,
   isDisabled = false,
   isLoading = false,
+  fullHeight = false,
 }) => {
   const toast = useToast();
   const baseUrl = resolveImageBaseUrl();
@@ -43,7 +46,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const resolveBackendUrl = React.useCallback(
     (url: string) => {
       if (!url) return '';
-
       if (
         url.startsWith('http://') ||
         url.startsWith('https://') ||
@@ -52,13 +54,11 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       ) {
         return url;
       }
-
       return `${baseUrl}${url.startsWith('/') ? '' : '/'}${url}`;
     },
     [baseUrl]
   );
 
-  // Convert input images to preview objects
   useEffect(() => {
     const arr = Array.isArray(images) ? images : [];
     const previews: PreviewImage[] = arr.map((item) => {
@@ -75,7 +75,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
     lastValueRef.current = arr;
   }, [images]);
 
-  // Cleanup blob URLs
   useEffect(() => {
     return () => {
       previewImages.forEach((p) => {
@@ -88,6 +87,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const addFiles = (files: File[]) => {
     if (isDisabled) return;
+
     const validFiles = files.filter((f) => f.type.startsWith('image/'));
     validFiles.forEach((f) => {
       if (f.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
@@ -119,10 +119,9 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
   const handleRemove = async (index: number) => {
     const target = previewImages[index];
-    if (!target) return;
-    if (isDisabled) return;
-    setIsDeleting(true);
+    if (!target || isDisabled) return;
 
+    setIsDeleting(true);
     try {
       if (target.isBackend && onBackendDelete) {
         await onBackendDelete(target.url);
@@ -132,9 +131,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
       setPreviewImages(newPreviews);
       onImagesChange?.(newPreviews.map((p) => p.file || p.url));
       lastValueRef.current = newPreviews.map((p) => p.file || p.url);
-    } catch (err) {
-      console.error('Error deleting image:', err);
-      throw err;
     } finally {
       setIsDeleting(false);
     }
@@ -158,7 +154,7 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   const containerClass = clsx(styles.imageUploaderContent, isDragging && styles.isDragover);
 
   return (
-    <div className={styles.imageUploaderContainer}>
+    <div className={clsx(styles.imageUploaderContainer, fullHeight && styles.fullHeight)}>
       <div
         className={containerClass}
         onDragEnter={(e) => {
@@ -173,7 +169,6 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
         onDragLeave={(e) => {
           e.preventDefault();
           e.stopPropagation();
-          // only reset if actually left the container
           if (e.currentTarget.contains(e.relatedTarget as Node)) return;
           if (!isDisabled) setIsDragging(false);
         }}

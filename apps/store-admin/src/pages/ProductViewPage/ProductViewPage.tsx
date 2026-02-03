@@ -12,6 +12,7 @@ import {
   Accordion,
   AccordionGroup,
 } from '@baby-toys/ui-kit';
+import ProductVariations from '../ProductVariations/ProductVariations';
 import { Pencil } from 'lucide-react';
 import { useProduct } from '../../api/productApi';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -176,6 +177,19 @@ const ProductViewPage: React.FC = () => {
     items.push(
       <Accordion key="pricing" header={t('productView.pricing')} defaultOpen>
         <StatsTable rows={vm.pricingRows} />
+      </Accordion>
+    );
+
+    items.push(
+      <Accordion
+        key="variations"
+        header={t('productView.variations', { defaultValue: 'Variations' })}
+      >
+        <ProductVariations
+          productId={productId}
+          productOptions={(product as any)?.options || []}
+          readOnly
+        />
       </Accordion>
     );
 

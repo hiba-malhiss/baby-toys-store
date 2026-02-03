@@ -84,7 +84,8 @@
     "auditLogs": "سجل التدقيق",
     "zones": "مناطق التوصيل",
     "delivery": "إدارة التوصيل",
-    "towns": "البلدات"
+    "towns": "البلدات",
+    "attributes": "Attributes"
   },
   "categories": {
     "title": "التصنيفات",

@@ -44,6 +44,7 @@ const AdminLayout: React.FC<{
           { label: t('menu.brands'), route: '/brands' },
           { label: t('menu.colors'), route: '/colors' },
           { label: t('menu.materials'), route: '/materials' },
+          { label: t('menu.attributes'), route: '/attributes' },
         ],
       },
       {

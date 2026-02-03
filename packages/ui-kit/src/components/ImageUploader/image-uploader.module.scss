@@ -5,6 +5,14 @@
     gap: $spacing-md;
     width: 100%;
     font-family: 'Comfortaa', sans-serif;
+
+    &.fullHeight {
+      height: 100%;
+
+      .imageUploader-content {
+        height: 100%;
+      }
+    }
   }
 
   &-content {

@@ -27,67 +27,24 @@ const localizedFieldsSchema = z.object({
     .default([]),
 });
 
-export const productSchema = z
-  .object({
-    price: z.number().min(1, 'Price must be positive'),
-    costPrice: z
-      .number()
-      .min(0, 'Cost price must be >= 0')
-      .optional()
-      .or(z.literal(NaN))
-      .transform((v) => (Number.isNaN(v) ? undefined : v)),
-    oldPrice: z.number().nullable().optional(),
-    stockQuantity: z.number().min(0, 'Stock quantity must be non-negative'),
-    releaseDate: z.string().optional(),
-    mainImage: z.string(),
-    images: z.array(z.string()).max(10, 'You can upload at most 10 images').optional().default([]),
-    isActive: z.boolean().optional().default(true),
-    categoryId: z.number().min(1, 'Category is required').optional(),
-    brandId: z.number().optional(),
-    materialIds: z.array(z.number()).optional().default([]),
-    colorIds: z.array(z.number()).optional().default([]),
-    // localized
-    translations: z.object({
-      en: localizedFieldsSchema,
-      ar: localizedFieldsSchema,
-    }),
-  })
-  .superRefine((val, ctx) => {
-    if (val.oldPrice != null) {
-      if (typeof val.oldPrice !== 'number' || Number.isNaN(val.oldPrice)) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Old price must be a number',
-          path: ['oldPrice'],
-        });
-      } else if (val.price != null && val.oldPrice < val.price) {
-        ctx.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Old price must be greater than or equal to price',
-          path: ['oldPrice'],
-        });
-      }
-    }
-
-    if (
-      typeof val.costPrice === 'number' &&
-      typeof val.price === 'number' &&
-      val.costPrice > val.price
-    ) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: 'Cost price cannot exceed price',
-        path: ['costPrice'],
-      });
-    }
-  });
+export const productSchema = z.object({
+  releaseDate: z.string().optional(),
+  mainImage: z.string(),
+  images: z.array(z.string()).max(10, 'You can upload at most 10 images').optional().default([]),
+  isActive: z.boolean().optional().default(true),
+  categoryId: z.number().min(1, 'Category is required').optional(),
+  brandId: z.number().optional(),
+  materialIds: z.array(z.number()).optional().default([]),
+  colorIds: z.array(z.number()).optional().default([]),
+  // localized
+  translations: z.object({
+    en: localizedFieldsSchema,
+    ar: localizedFieldsSchema,
+  }),
+});
 
 export const defaultProductValues = {
   // non-localized
-  price: undefined as unknown as number,
-  costPrice: undefined as unknown as number | undefined,
-  oldPrice: undefined as unknown as number | undefined,
-  stockQuantity: undefined as unknown as number,
   releaseDate: '',
   mainImage: '',
   images: [] as string[],

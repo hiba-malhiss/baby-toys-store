@@ -1,7 +1,13 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import api from './axiosConfig';
 import { ApiEnvelope } from './types/common';
-import { OptionType, OptionValue, CreateOptionTypeRequest, CreateOptionValueRequest, AttachProductOptionValueRequest } from './types/option';
+import {
+  OptionType,
+  OptionValue,
+  CreateOptionTypeRequest,
+  CreateOptionValueRequest,
+  AttachProductOptionValueRequest,
+} from './types/option';
 
 // ---- Queries ----
 export const useOptionTypes = () =>
@@ -18,7 +24,9 @@ export const useOptionValues = (typeId?: number) =>
     enabled: !!typeId,
     queryKey: ['optionValues', typeId],
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<OptionValue[]>>(`/api/admin/options/types/${typeId}/values`);
+      const { data } = await api.get<ApiEnvelope<OptionValue[]>>(
+        `/api/admin/options/types/${typeId}/values`
+      );
       return data.data;
     },
   });
@@ -28,7 +36,10 @@ export const useCreateOptionType = () => {
   const qc = useQueryClient();
   return useMutation({
     mutationFn: async (payload: CreateOptionTypeRequest) => {
-      const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/options/types', payload);
+      const { data } = await api.post<ApiEnvelope<{ id: number }>>(
+        '/api/admin/options/types',
+        payload
+      );
       return data.data.id;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['optionTypes'] }),
@@ -40,7 +51,10 @@ export const useCreateOptionValue = (typeId: number) => {
   return useMutation({
     mutationFn: async (payload: Omit<CreateOptionValueRequest, 'optionTypeId'>) => {
       const body: CreateOptionValueRequest = { optionTypeId: typeId, ...payload };
-      const { data } = await api.post<ApiEnvelope<{ id: number }>>('/api/admin/options/values', body);
+      const { data } = await api.post<ApiEnvelope<{ id: number }>>(
+        '/api/admin/options/values',
+        body
+      );
       return data.data.id;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['optionValues', typeId] }),
@@ -48,12 +62,20 @@ export const useCreateOptionValue = (typeId: number) => {
 };
 
 export const attachTypeToProduct = async (productId: number, typeId: number) => {
-  const { data } = await api.post<ApiEnvelope<{ id: number }>>(`/api/admin/options/products/${productId}/types/${typeId}`);
+  const { data } = await api.post<ApiEnvelope<{ id: number }>>(
+    `/api/admin/options/products/${productId}/types/${typeId}`
+  );
   return data.data.id;
 };
 
-export const attachValueToProduct = async (productId: number, payload: AttachProductOptionValueRequest) => {
-  const { data } = await api.post<ApiEnvelope<{ id: number }>>(`/api/admin/options/products/${productId}/values`, payload);
+export const attachValueToProduct = async (
+  productId: number,
+  payload: AttachProductOptionValueRequest
+) => {
+  const { data } = await api.post<ApiEnvelope<{ id: number }>>(
+    `/api/admin/options/products/${productId}/values`,
+    payload
+  );
   return data.data.id;
 };
 

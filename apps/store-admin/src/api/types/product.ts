@@ -3,8 +3,13 @@ export interface AdminProductBase {
   name: string;
   description?: string;
   shortDescription?: string;
-  price: number;
-  stockQuantity: number;
+  // Variant-level aggregates from backend
+  lowestActivePrice?: number | null;
+  oldPriceForLowestPrice?: number | null;
+  activeVariantsTotalStock?: number | null;
+  // Legacy fields (may be undefined now)
+  price?: number | null;
+  stockQuantity?: number | null;
   releaseDate?: string;
   mainImage?: string | null;
   images?: string[];
@@ -25,7 +30,7 @@ export interface AdminProductBase {
   colorCodes?: string[];
 
   // Optional extra data
-  oldPrice?: number | null;
+  oldPrice?: number | null; // legacy; prefer oldPriceForLowestPrice
   averageRating?: number | null;
   numberOfRatings?: number | null;
   sales?: number | null;
@@ -47,18 +52,30 @@ export interface ProductTranslationDto {
   details?: Record<string, string>;
 }
 
+export interface ProductOptionDto {
+  type: {
+    id: number;
+    name: string;
+  };
+  values: Array<{
+    id: number;
+    value: string;
+    display?: string | null;
+  }>;
+}
+
+import type { VariantDto } from './variant';
+
 // Admin: product details with all translations
 export interface ProductDetailsAdminDto extends AdminProductBase {
   translations: ProductTranslationDto[];
+  variants: VariantDto[];
+  options: ProductOptionDto[];
 }
 
 // Backend upsert payload with translations
 export interface ProductUpsertRequest {
-  // Non-localized fields
-  price: number;
-  costPrice?: number | null;
-  oldPrice?: number | null;
-  stockQuantity: number;
+  // Non-localized fields (variant-first; price/stock are variant-level)
   releaseDate?: string;
   mainImage: string;
   images?: string[];
@@ -68,6 +85,7 @@ export interface ProductUpsertRequest {
   brandId?: number;
   materialIds?: number[];
   colorIds?: number[];
+  productSku?: string;
 
   // Localized content per locale (e.g., en, ar)
   translations: Array<{
