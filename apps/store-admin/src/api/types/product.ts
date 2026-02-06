@@ -19,15 +19,9 @@ export interface AdminProductBase {
   createdAt?: string;
   updatedAt?: string;
   categoryId?: number | null;
-  brandId?: number | null;
-  materialIds?: number[];
-  colorIds?: number[];
 
   // Human-readable relation names from the API
   categoryName?: string | null;
-  brandName?: string | null;
-  materialNames?: string[];
-  colorCodes?: string[];
 
   // Optional extra data
   oldPrice?: number | null; // legacy; prefer oldPriceForLowestPrice
@@ -82,9 +76,6 @@ export interface ProductUpsertRequest {
   isActive?: boolean;
 
   categoryId?: number;
-  brandId?: number;
-  materialIds?: number[];
-  colorIds?: number[];
   productSku?: string;
 
   // Localized content per locale (e.g., en, ar)

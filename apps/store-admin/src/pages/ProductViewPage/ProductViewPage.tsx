@@ -90,7 +90,6 @@ const ProductViewPage: React.FC = () => {
       id: product?.id,
       name,
       mainImage: product?.mainImage,
-      brandName: product?.brandName,
       categoryName: product?.categoryName,
       isActive: product?.isActive,
 
@@ -129,17 +128,6 @@ const ProductViewPage: React.FC = () => {
 
       classificationRows: [
         { id: 'category', label: t('productView.category'), value: product?.categoryName ?? '-' },
-        { id: 'brand', label: t('productView.brand'), value: product?.brandName ?? '-' },
-        {
-          id: 'colors',
-          label: t('productView.colors'),
-          value: product?.colorCodes?.join(', ') || '-',
-        },
-        {
-          id: 'materials',
-          label: t('productView.materials'),
-          value: product?.materialNames?.join(', ') || '-',
-        },
       ] as StatRow[],
 
       metaRows: [
@@ -282,7 +270,7 @@ const ProductViewPage: React.FC = () => {
 
                 <div className={styles.metaRow}>
                   <span className={styles.faded}>
-                    {vm.brandName || '-'} • {vm.categoryName || '-'}
+                    {vm.categoryName || '-'}
                   </span>
                   {vm.isActive === false && (
                     <Chip label={t('productView.inactive')} appearance="error" />

@@ -9,9 +9,6 @@ import ProductsPage from './pages/ProductsPage/ProductsPage.tsx';
 import ProductViewPage from './pages/ProductViewPage/ProductViewPage';
 import OrdersPage from './pages/OrdersPage/OrdersPage.tsx';
 import CategoriesPage from './pages/CategoriesPage/CategoriesPage.tsx';
-import BrandsPage from './pages/BrandsPage/BrandsPage.tsx';
-import ColorsPage from './pages/ColorsPage/ColorsPage';
-import MaterialsPage from './pages/MaterialsPage/MaterialsPage';
 import CustomersPage from './pages/CustomersPage/CustomersPage';
 import ReviewsPage from './pages/ReviewsPage/ReviewsPage';
 import AdminAuditLogsPage from './pages/AdminAuditLogsPage/AdminAuditLogsPage';
@@ -29,6 +26,7 @@ import ContactMessagesPage from './pages/ContactMessagesPage/ContactMessagesPage
 import FinancePage from './pages/FinancePage/FinancePage';
 import MonthDetailPage from './pages/MonthDetailPage/MonthDetailPage';
 import ExpensesPage from './pages/ExpensesPage/ExpensesPage';
+import OptionsPage from './pages/OptionsPage/OptionsPage.tsx';
 import AttributesPage from './pages/AttributesPage/AttributesPage.tsx';
 
 export const queryClient = new QueryClient({
@@ -150,14 +148,6 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-          path="/brands"
-          element={
-            <PrivateRoute>
-              <BrandsPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/coupons"
           element={
             <PrivateRoute>
@@ -182,26 +172,18 @@ const AppContent: React.FC = () => {
           }
         />
         <Route
-          path="/colors"
-          element={
-            <PrivateRoute>
-              <ColorsPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/materials"
-          element={
-            <PrivateRoute>
-              <MaterialsPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
           path="/attributes"
           element={
             <PrivateRoute>
               <AttributesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/options"
+          element={
+            <PrivateRoute>
+              <OptionsPage />
             </PrivateRoute>
           }
         />

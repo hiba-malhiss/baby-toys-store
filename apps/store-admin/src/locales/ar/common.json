@@ -65,9 +65,8 @@
     "products": "المنتجات",
     "catalog": "الكتالوج",
     "categories": "التصنيفات",
-    "brands": "العلامات التجارية",
-    "colors": "الألوان",
-    "materials": "المواد",
+    "attributes": "السمات",
+    "options": "الخيارات",
     "finance": "المالية",
     "expenses": "المصاريف",
     "analytics": "التحليلات",
@@ -84,8 +83,7 @@
     "auditLogs": "سجل التدقيق",
     "zones": "مناطق التوصيل",
     "delivery": "إدارة التوصيل",
-    "towns": "البلدات",
-    "attributes": "Attributes"
+    "towns": "البلدات"
   },
   "categories": {
     "title": "التصنيفات",
@@ -114,39 +112,6 @@
       "isActive": "مفعّل",
       "isMain": "رئيسي",
       "image": "الصورة"
-    }
-  },
-  "brands": {
-    "title": "العلامات التجارية",
-    "add": "إضافة علامة تجارية",
-    "addTitle": "إضافة علامة تجارية جديدة",
-    "editTitle": "تعديل العلامة التجارية",
-    "empty": "لا توجد علامات تجارية.",
-    "loadErrorTitle": "فشل تحميل العلامات التجارية",
-    "deleteTitle": "حذف علامة تجارية",
-    "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
-    "create": "إنشاء علامة تجارية",
-    "update": "تحديث العلامة التجارية",
-    "createSuccess": "تم إنشاء العلامة التجارية بنجاح",
-    "updateSuccess": "تم تحديث العلامة التجارية بنجاح",
-    "createError": "فشل إنشاء العلامة التجارية",
-    "updateError": "فشل تحديث العلامة التجارية",
-    "deleteSuccess": "تم حذف العلامة التجارية بنجاح",
-    "deleteError": "فشل حذف العلامة التجارية",
-    "imageUploadError": "تم حفظ العلامة التجارية، لكن فشل رفع الصورة",
-    "columns": {
-      "logo": "الشعار",
-      "name": "الاسم",
-      "description": "الوصف"
-    },
-    "fields": {
-      "name": "اسم العلامة التجارية ({{locale}})",
-      "description": "الوصف ({{locale}})",
-      "logo": "الشعار"
-    },
-    "placeholders": {
-      "name": "أدخل اسم العلامة التجارية",
-      "description": "أدخل وصف العلامة التجارية"
     }
   },
   "delivery": {
@@ -193,41 +158,6 @@
       "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل {{name}} ({{code}})؟"
     }
   },
-  "colors": {
-    "title": "الألوان",
-    "add": "إضافة لون",
-    "addTitle": "إضافة لون جديد",
-    "editTitle": "تعديل اللون",
-    "empty": "لا توجد ألوان",
-    "loadErrorTitle": "فشل تحميل الألوان",
-    "deleteTitle": "حذف لون",
-    "deleteConfirm": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟ لا يمكن التراجع عن هذا الإجراء.",
-    "create": "إنشاء",
-    "update": "تحديث",
-    "createSuccess": "تم إنشاء اللون بنجاح",
-    "updateSuccess": "تم تحديث اللون بنجاح",
-    "createError": "فشل إنشاء اللون",
-    "updateError": "فشل تحديث اللون",
-    "deleteSuccess": "تم حذف اللون بنجاح",
-    "deleteError": "فشل حذف اللون",
-    "invalidCode": "رمز اللون غير صحيح",
-    "nameRequired": "الاسم ({{locale}}) مطلوب",
-    "tabs": {
-      "en": "الإنجليزية (en)",
-      "ar": "العربية (ar)"
-    },
-    "columns": {
-      "name": "الاسم",
-      "color": "اللون"
-    },
-    "fields": {
-      "name": "اسم اللون ({{locale}})",
-      "code": "رمز اللون"
-    },
-    "placeholders": {
-      "name": "أدخل اسم اللون"
-    }
-  },
   "language": {
     "switchToEnglish": "التبديل إلى الإنجليزية",
     "switchToArabic": "التبديل إلى العربية",
@@ -246,9 +176,6 @@
     "oldPrice": "السعر القديم (اختياري)",
     "stockQuantity": "كمية المخزون",
     "category": "التصنيف",
-    "brand": "العلامة التجارية",
-    "colors": "الألوان",
-    "materials": "المواد",
     "productName": "اسم المنتج ({{locale}})",
     "shortDescription": "وصف مختصر ({{locale}})",
     "description": "الوصف ({{locale}})",
@@ -408,9 +335,6 @@
     "oldPrice": "السعر القديم",
     "classification": "التصنيف",
     "category": "التصنيف",
-    "brand": "العلامة التجارية",
-    "colors": "الألوان",
-    "materials": "المواد",
     "meta": "معلومات",
     "created": "تاريخ الإنشاء",
     "updated": "آخر تحديث",

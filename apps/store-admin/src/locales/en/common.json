@@ -65,9 +65,8 @@
     "products": "Products",
     "catalog": "Catalog",
     "categories": "Categories",
-    "brands": "Brands",
-    "colors": "Colors",
-    "materials": "Materials",
+    "attributes": "Attributes",
+    "options": "Options",
     "finance": "Finance",
     "expenses": "Expenses",
     "analytics": "Analytics",
@@ -81,10 +80,10 @@
     "homepage": "Home page content",
     "settings": "Store settings",
     "shippingOptions": "Shipping options",
+    "auditLogs": "Audit Logs",
     "zones": "Delivery Zones",
     "delivery": "Delivery Management",
-    "towns": "Towns",
-    "attributes": "Attributes"
+    "towns": "Towns"
   },
   "categories": {
     "title": "Categories",
@@ -113,39 +112,6 @@
       "isActive": "Is Active",
       "isMain": "Is Main",
       "image": "Image"
-    }
-  },
-  "brands": {
-    "title": "Brands",
-    "add": "Add Brand",
-    "addTitle": "Add New Brand",
-    "editTitle": "Edit Brand",
-    "empty": "No brands found.",
-    "loadErrorTitle": "Failed to load brands",
-    "deleteTitle": "Delete Brand",
-    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
-    "create": "Create Brand",
-    "update": "Update Brand",
-    "createSuccess": "Brand created successfully",
-    "updateSuccess": "Brand updated successfully",
-    "createError": "Failed to create brand",
-    "updateError": "Failed to update brand",
-    "deleteSuccess": "Brand deleted successfully",
-    "deleteError": "Failed to delete brand",
-    "imageUploadError": "Brand saved, but image upload failed",
-    "columns": {
-      "logo": "Logo",
-      "name": "Name",
-      "description": "Description"
-    },
-    "fields": {
-      "name": "Brand Name ({{locale}})",
-      "description": "Description ({{locale}})",
-      "logo": "Logo"
-    },
-    "placeholders": {
-      "name": "Enter brand name",
-      "description": "Enter brand description"
     }
   },
   "delivery": {
@@ -192,41 +158,6 @@
       "deactivateConfirm": "Are you sure you want to deactivate {{name}} ({{code}})?"
     }
   },
-  "colors": {
-    "title": "Colors",
-    "add": "Add Color",
-    "addTitle": "Add New Color",
-    "editTitle": "Edit Color",
-    "empty": "No colors found",
-    "loadErrorTitle": "Failed to load colors",
-    "deleteTitle": "Delete Color",
-    "deleteConfirm": "Are you sure you want to delete \"{{name}}\"? This action cannot be undone.",
-    "create": "Create",
-    "update": "Update",
-    "createSuccess": "Color created successfully",
-    "updateSuccess": "Color updated successfully",
-    "createError": "Failed to create color",
-    "updateError": "Failed to update color",
-    "deleteSuccess": "Color deleted successfully",
-    "deleteError": "Failed to delete color",
-    "invalidCode": "Invalid color code",
-    "nameRequired": "Name ({{locale}}) is required",
-    "tabs": {
-      "en": "English (en)",
-      "ar": "Arabic (ar)"
-    },
-    "columns": {
-      "name": "Name",
-      "color": "Color"
-    },
-    "fields": {
-      "name": "Color Name ({{locale}})",
-      "code": "Color Code"
-    },
-    "placeholders": {
-      "name": "Enter color name"
-    }
-  },
   "language": {
     "switchToEnglish": "Switch to English",
     "switchToArabic": "Switch to Arabic",
@@ -245,9 +176,6 @@
     "oldPrice": "Old Price (optional)",
     "stockQuantity": "Stock Quantity",
     "category": "Category",
-    "brand": "Brand",
-    "colors": "Colors",
-    "materials": "Materials",
     "productName": "Product name {{locale}}",
     "shortDescription": "Short Description {{locale}}",
     "description": "Description {{locale}}",
@@ -407,9 +335,6 @@
     "oldPrice": "Old Price",
     "classification": "Classification",
     "category": "Category",
-    "brand": "Brand",
-    "colors": "Colors",
-    "materials": "Materials",
     "meta": "Meta",
     "created": "Created",
     "updated": "Updated",

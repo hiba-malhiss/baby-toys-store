@@ -41,10 +41,8 @@ const AdminLayout: React.FC<{
         iconComp: Layers,
         items: [
           { label: t('menu.categories'), route: '/categories' },
-          { label: t('menu.brands'), route: '/brands' },
-          { label: t('menu.colors'), route: '/colors' },
-          { label: t('menu.materials'), route: '/materials' },
           { label: t('menu.attributes'), route: '/attributes' },
+          { label: t('menu.options'), route: '/options' },
         ],
       },
       {

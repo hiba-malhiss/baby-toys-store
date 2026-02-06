@@ -11,7 +11,6 @@ export interface UseProductsParams {
   sortBy?: string;
   sortDirection?: 'ASC' | 'DESC';
   categoryId?: number;
-  brandId?: number;
   minPrice?: number;
   maxPrice?: number;
   query?: string;
@@ -28,7 +27,6 @@ export const useProducts = (params?: UseProductsParams) =>
       params?.sortBy ?? '',
       (params?.sortDirection ?? '').toString().toUpperCase(),
       params?.categoryId ?? '',
-      params?.brandId ?? '',
       params?.minPrice ?? '',
       params?.maxPrice ?? '',
       params?.query ?? '',

@@ -33,9 +33,6 @@ export const productSchema = z.object({
   images: z.array(z.string()).max(10, 'You can upload at most 10 images').optional().default([]),
   isActive: z.boolean().optional().default(true),
   categoryId: z.number().min(1, 'Category is required').optional(),
-  brandId: z.number().optional(),
-  materialIds: z.array(z.number()).optional().default([]),
-  colorIds: z.array(z.number()).optional().default([]),
   // localized
   translations: z.object({
     en: localizedFieldsSchema,
@@ -50,9 +47,6 @@ export const defaultProductValues = {
   images: [] as string[],
   isActive: true,
   categoryId: undefined as unknown as number | undefined,
-  brandId: undefined as unknown as number | undefined,
-  materialIds: [] as number[],
-  colorIds: [] as number[],
   // localized for en and ar
   translations: {
     en: {

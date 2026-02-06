@@ -7,152 +7,191 @@ import {
   Heading,
   Table,
   BouncingDotsLoader,
-  Dialog,
-  StringInput,
-  Tooltip,
-  FieldWrapper,
+  ConfirmDialog,
 } from '@baby-toys/ui-kit';
-import { useOptionTypes, useCreateOptionType } from '../../api/optionApi';
-import type { OptionType } from '../../api/types/option';
+import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeApi';
 import AttributesValuesRow from './AttributesValuesRow';
+import { useToast } from '@baby-toys/ui-kit';
+import TypeUpsertDialog from './TypeUpsertDialog';
+import { AttributeType } from "../../api/types/attribute.ts";
+import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 const AttributesPage: React.FC = () => {
   const { t } = useTranslation();
-  const { data: types = [], isLoading: loadingTypes } = useOptionTypes();
+  const { data: types = [], isLoading: loadingTypes } = useAttributeTypes();
+  const toast = useToast();
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
   const [showAddType, setShowAddType] = React.useState(false);
-  const [newTypeName, setNewTypeName] = React.useState('');
 
-  const createType = useCreateOptionType();
+  // Edit/Delete state
+  const [editRow, setEditRow] = React.useState<AttributeType | null>(null);
+  const [deleteRow, setDeleteRow] = React.useState<AttributeType | null>(null);
 
-  const handleCreateType = async () => {
-    const name = newTypeName.trim();
-    if (!name) return;
+  const deleteType = useDeleteAttributeType();
 
-    await createType.mutateAsync({ name });
-    setNewTypeName('');
-    setShowAddType(false);
+  const handleDeleteType = async() => {
+    if(!deleteRow) return;
+    try {
+      await deleteType.mutateAsync(deleteRow.id);
+      toast.success(t('common.delete', { defaultValue: 'Delete' }));
+      setDeleteRow(null);
+    } catch(e: any) {
+      toast.error(e?.message || t('app.unexpectedError'));
+    }
   };
 
-  const handleRowExpand = ({ data }: { data: OptionType }) => {
+  const handleRowExpand = ({ data }: { data: AttributeType }) => {
     setExpandedRows((prev) => ({ ...prev, [String(data.id)]: true }));
   };
 
-  const handleRowCollapse = ({ data }: { data: OptionType }) => {
+  const handleRowCollapse = ({ data }: { data: AttributeType }) => {
     setExpandedRows((prev) => {
       const next = { ...prev };
       delete next[String(data.id)];
       return next;
     });
   };
-
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('options.types', { defaultValue: 'Option Types' })}</Heading>
+          <Heading>{t('attributes.types', { defaultValue: 'Attributes' })}</Heading>
           <Button onClick={() => setShowAddType(true)}>
-            {t('options.addType', { defaultValue: 'Add Option Type' })}
+            {t('attributes.addType', { defaultValue: 'Add Attribute' })}
           </Button>
         </Flex>
 
         {loadingTypes ? (
-          <BouncingDotsLoader />
+          <BouncingDotsLoader/>
         ) : (
           <Table
             value={types}
             rows={types.length || 1}
             columns={[
               {
-                header: t('options.typeName', { defaultValue: 'Name' }),
-                field: 'name',
+                header: t('attributes.code', { defaultValue: 'Code' }),
+                field: 'code',
                 filter: true,
                 sortable: true,
               },
               {
+                header: t('attributes.displayEn', { defaultValue: 'Display (EN)' }),
+                field: 'displayNameEn',
+                sortable: false,
+                body: (row: AttributeType) => {
+                  const tr = (row as any).translations || [];
+                  const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
+                  return en?.displayName ?? row.displayName ?? '-';
+                },
+              },
+              {
+                header: t('attributes.displayAr', { defaultValue: 'Display (AR)' }),
+                field: 'displayNameAr',
+                sortable: false,
+                body: (row: AttributeType) => {
+                  const tr = (row as any).translations || [];
+                  const ar = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'ar');
+                  return ar?.displayName ?? '-';
+                },
+              },
+              {
+                header: t('attributes.sortOrder', { defaultValue: 'Sort Order' }),
+                field: 'sortOrder',
+                sortable: true,
+                body: (row: AttributeType) => row.sortOrder ?? 0,
+              },
+              {
+                header: t('attributes.filterable', { defaultValue: 'Filterable' }),
+                field: 'isFilterable',
+                body: (row: AttributeType) => (row.isFilterable ? t('app.yes') : t('app.no')),
+              },
+              {
+                header: t('attributes.multi', { defaultValue: 'Multi-select' }),
+                field: 'isMultiselect',
+                body: (row: AttributeType) => (row.isMultiselect ? t('app.yes') : t('app.no')),
+              },
+              {
+                header: t('attributes.active', { defaultValue: 'Active' }),
+                field: 'isActive',
+                body: (row: AttributeType) => (row.isActive ? t('app.yes') : t('app.no')),
+              },
+              {
                 header: t('app.actions', { defaultValue: 'Actions' }),
                 field: 'actions',
-                body: (row: OptionType) => (
-                  <Flex spacing="s">
+                body: (row: AttributeType) => (
+                  <Flex spacing="m">
                     <Button
                       size="small"
-                      appearance="link"
-                      color="highlighted"
-                      onClick={() => {
+                      appearance="outline"
+                      leftIconComp={Eye}
+                      aria-label={t('attributes.manage', { defaultValue: 'Manage Values' })}
+                      onClick={(e) => {
+                        e.stopPropagation();
                         const key = String(row.id);
-                        setExpandedRows((prev) => ({
-                          ...prev,
-                          [key]: !prev[key],
-                        }));
+                        setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
                       }}
-                    >
-                      {t('options.manage', { defaultValue: 'Manage' })}
-                    </Button>
-
-                    <Tooltip
-                      content={t('options.editDisabled', {
-                        defaultValue: 'Edit endpoint not wired yet',
-                      })}
-                    >
-                      <Button size="small" appearance="link" color="highlighted" isDisabled>
-                        {t('app.edit', { defaultValue: 'Edit' })}
-                      </Button>
-                    </Tooltip>
-
-                    <Tooltip
-                      content={t('options.deleteDisabled', {
-                        defaultValue: 'Delete endpoint not wired yet',
-                      })}
-                    >
-                      <Button size="small" appearance="link" color="highlighted" isDisabled>
-                        {t('app.delete', { defaultValue: 'Delete' })}
-                      </Button>
-                    </Tooltip>
+                    />
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      leftIconComp={Pencil}
+                      aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setEditRow({ ...row });
+                      }}
+                    />
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      leftIconComp={Trash2}
+                      aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteRow(row);
+                      }}
+                    />
                   </Flex>
                 ),
               },
             ]}
             paginator={false}
             stripedRows
-            emptyMessage={t('options.noTypes', { defaultValue: 'No option types' })}
+            emptyMessage={t('attributes.noTypes', { defaultValue: 'No attributes' })}
             useLocalSortAndFilter
             rowHover
             expandedRows={expandedRows}
             onRowExpand={handleRowExpand as any}
             onRowCollapse={handleRowCollapse as any}
-            rowExpansionTemplate={(row: OptionType) => <AttributesValuesRow activeType={row} />}
+            rowExpansionTemplate={(row: AttributeType) => <AttributesValuesRow activeType={row}/>}
           />
         )}
 
-        <Dialog
-          header={t('options.addType', { defaultValue: 'Add Option Type' })}
+        <TypeUpsertDialog
+          mode="create"
           visible={showAddType}
-          onVisibleChange={setShowAddType as any}
-          dismissibleMask
-          modal
-        >
-          <Flex direction="vertical" spacing="m">
-            <FieldWrapper label="Option name" required>
-              <StringInput
-                placeholder={t('options.typeName', { defaultValue: 'Name' })}
-                value={newTypeName}
-                onChange={(v) => setNewTypeName(String(v ?? ''))}
-              />
-            </FieldWrapper>
-            <Flex justify="end" spacing="s">
-              <Button appearance="outline" onClick={() => setShowAddType(false)}>
-                {t('app.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button
-                onClick={handleCreateType}
-                isLoading={createType.isPending}
-                isDisabled={!newTypeName.trim()}
-              >
-                {t('app.save', { defaultValue: 'Save' })}
-              </Button>
-            </Flex>
-          </Flex>
-        </Dialog>
+          onClose={() => setShowAddType(false)}
+          onSuccess={() => toast.success(t('common.create', { defaultValue: 'Create' }))}
+        />
+
+        <TypeUpsertDialog
+          mode="edit"
+          visible={!!editRow}
+          initial={editRow as any}
+          onClose={() => setEditRow(null)}
+          onSuccess={() => toast.success(t('common.update', { defaultValue: 'Update' }))}
+        />
+
+        <ConfirmDialog
+          visible={!!deleteRow}
+          header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
+          message={t('categories.deleteConfirm', {
+            defaultValue: 'Are you sure you want to delete “{{name}}”?',
+            name: deleteRow?.code,
+          })}
+          onConfirm={handleDeleteType}
+          onCancel={() => setDeleteRow(null)}
+        />
       </Flex>
     </AdminLayout>
   );

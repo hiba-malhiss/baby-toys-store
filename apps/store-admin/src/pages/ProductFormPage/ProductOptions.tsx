@@ -24,7 +24,7 @@ import { useToast } from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 
-const ProductAttribute: React.FC<{ productId: number }> = ({ productId }) => {
+const ProductOptions: React.FC<{ productId: number }> = ({ productId }) => {
   const toast = useToast();
   const qc = useQueryClient();
   const { data: allTypes = [], isLoading } = useOptionTypes();
@@ -233,4 +233,4 @@ const ProductAttribute: React.FC<{ productId: number }> = ({ productId }) => {
   );
 };
 
-export default ProductAttribute;
+export default ProductOptions;

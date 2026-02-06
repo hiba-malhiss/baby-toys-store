@@ -14,9 +14,6 @@ import {
   useDeleteProductImage,
 } from '../../api/productApi';
 import { useCategories } from '../../api/categoryApi';
-import { useBrands } from '../../api/brandApi';
-import { useColors } from '../../api/colorApi';
-import { useMaterials } from '../../api/materialApi';
 import { useParams } from 'react-router-dom';
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -28,9 +25,6 @@ export const useProductForm = () => {
   const { id: productId } = useParams<{ id?: string }>();
   const { data: product, isLoading: isLoadingProduct } = useProduct(productId);
   const { data: categories = [] } = useCategories();
-  const { data: brands = [] } = useBrands();
-  const { data: colors = [] } = useColors();
-  const { data: materials = [] } = useMaterials();
   const deleteImageMutation = useDeleteProductImage(Number(productId));
 
   // Separate existing images (URLs) and new images (File)
@@ -107,10 +101,7 @@ export const useProductForm = () => {
         images: product.images || [],
         mainImage: product.mainImage || '',
         isActive: product.isActive ?? true,
-        colorIds: product.colorIds || [],
-        materialIds: product.materialIds || [],
         categoryId: product.categoryId ?? undefined,
-        brandId: product.brandId ?? undefined,
         // localized (prefill from admin translations)
         translations: {
           en: {
@@ -189,9 +180,6 @@ export const useProductForm = () => {
         mainImage: mainImageUrl || '',
         isActive: data.isActive,
         categoryId: data.categoryId,
-        brandId: data.brandId,
-        materialIds: data.materialIds,
-        colorIds: data.colorIds,
         // localized
         translations: [
           { locale: 'en', ...en },
@@ -282,9 +270,6 @@ export const useProductForm = () => {
     isSubmitting,
     isLoadingProduct,
     categories,
-    brands,
-    colors,
-    materials,
     existingImages,
     setExistingImages,
     newImages,

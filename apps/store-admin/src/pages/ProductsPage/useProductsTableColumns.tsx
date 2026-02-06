@@ -42,12 +42,6 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       ),
     },
     {
-      field: 'brandName',
-      header: 'Brand',
-      sortable: false,
-      body: (row: AdminProductBase) => row.brandName || '-',
-    },
-    {
       field: 'categoryName',
       header: 'Category',
       sortable: false,

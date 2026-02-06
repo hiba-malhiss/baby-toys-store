@@ -15,9 +15,6 @@
 - Price management and stock management
 - Product images management
 - Categories: CRUD
-- Brands: CRUD
-- Colors: CRUD
-- Materials: CRUD
 
 #### Pricing Management
 

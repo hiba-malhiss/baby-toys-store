@@ -1,48 +1,28 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Flex,
-  StringInput,
-  Table,
-  BouncingDotsLoader,
-  Tooltip,
-  Dialog,
-  FieldWrapper,
-} from '@baby-toys/ui-kit';
-import type { OptionType, OptionValue } from '../../api/types/option';
-import { useOptionValues, useCreateOptionValue } from '../../api/optionApi';
+import { Button, Flex, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
+import type { AttributeType, AttributeValue } from '../../api/types/attribute';
+import { Pencil, Trash2 } from 'lucide-react';
+import { useDeleteAttributeValue } from '../../api/attributeApi';
+import { useToast } from '@baby-toys/ui-kit';
+import ValueUpsertDialog from './ValueUpsertDialog';
 
 type Props = {
-  activeType: OptionType;
+  activeType: AttributeType;
 };
 
 const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
   const { t } = useTranslation();
+  const toast = useToast();
   const typeId = activeType.id;
-  const { data: values = [], isLoading: loadingValues } = useOptionValues(typeId);
-  const createValue = useCreateOptionValue(typeId);
+  const values = (activeType.values || []) as AttributeValue[];
+  const loadingValues = false; // values are embedded in type payload
+  const deleteValueHook = useDeleteAttributeValue();
   const [showAdd, setShowAdd] = React.useState(false);
-  const [newValue, setNewValue] = React.useState('');
-  const [newDisplay, setNewDisplay] = React.useState('');
+  const [editValue, setEditValue] = React.useState<AttributeValue | null>(null);
+  const [deleteValue, setDeleteValue] = React.useState<AttributeValue | null>(null);
 
-  const closeAdd = () => {
-    setShowAdd(false);
-    setNewValue('');
-    setNewDisplay('');
-  };
-
-  const handleCreateValue = async () => {
-    const value = newValue.trim();
-    if (!value) return;
-
-    await createValue.mutateAsync({
-      value,
-      display: newDisplay.trim() || undefined,
-    });
-
-    closeAdd();
-  };
+  const closeAdd = () => setShowAdd(false);
 
   if (loadingValues) {
     return <BouncingDotsLoader />;
@@ -56,96 +36,120 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
         title={
           <Flex justify="end" align="center" fullWidth>
             <Button appearance="outline" size="small" onClick={() => setShowAdd(true)}>
-              {t('options.addValue', { defaultValue: 'Add Value' })}
+              {t('attributes.addValue', { defaultValue: 'Add Value' })}
             </Button>
           </Flex>
         }
         columns={[
           {
-            header: t('options.value', { defaultValue: 'Value' }),
-            field: 'value',
+            header: t('attributes.code', { defaultValue: 'Code' }),
+            field: 'code',
             filter: true,
             sortable: true,
           },
           {
-            header: t('options.display', { defaultValue: 'Display' }),
-            field: 'display',
+            header: t('attributes.displayEn', { defaultValue: 'Display (EN)' }),
+            field: 'displayEn',
             filter: true,
+            sortable: false,
+            body: (row: AttributeValue) => {
+              const tr = row.translations || [];
+              const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
+              return en?.displayValue ?? row.display ?? '-';
+            },
+          },
+          {
+            header: t('attributes.displayAr', { defaultValue: 'Display (AR)' }),
+            field: 'displayAr',
+            filter: true,
+            sortable: false,
+            body: (row: AttributeValue) => {
+              const tr = row.translations || [];
+              const ar = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'ar');
+              return ar?.displayValue ?? '-';
+            },
+          },
+          {
+            header: t('attributes.sortOrder', { defaultValue: 'Sort Order' }),
+            field: 'sortOrder',
             sortable: true,
+            body: (row: AttributeValue) => row.sortOrder ?? 0,
+          },
+          {
+            header: t('attributes.active', { defaultValue: 'Active' }),
+            field: 'isActive',
+            sortable: false,
+            body: (row: AttributeValue) => (row.isActive ? t('app.yes') : t('app.no')),
           },
           {
             header: t('app.actions', { defaultValue: 'Actions' }),
             field: 'actions',
-            body: (row: OptionValue) => (
-              <Flex spacing="s">
-                <Tooltip
-                  content={t('options.editDisabled', {
-                    defaultValue: 'Edit endpoint not wired yet',
-                  })}
-                >
-                  <Button size="small" appearance="outline" isDisabled>
-                    {t('app.edit', { defaultValue: 'Edit' })}
-                  </Button>
-                </Tooltip>
-
-                <Tooltip
-                  content={t('options.deleteDisabled', {
-                    defaultValue: 'Delete endpoint not wired yet',
-                  })}
-                >
-                  <Button size="small" appearance="outline" color="secondary" isDisabled>
-                    {t('app.delete', { defaultValue: 'Delete' })}
-                  </Button>
-                </Tooltip>
+            body: (row: AttributeValue) => (
+              <Flex spacing="m">
+                <Button
+                  size="small"
+                  appearance="outline"
+                  leftIconComp={Pencil}
+                  aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditValue({ ...row });
+                  }}
+                />
+                <Button
+                  size="small"
+                  appearance="outline"
+                  leftIconComp={Trash2}
+                  aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setDeleteValue(row);
+                  }}
+                />
               </Flex>
             ),
           },
         ]}
         paginator={false}
         stripedRows
-        emptyMessage={t('options.noValues', { defaultValue: 'No values' })}
+        emptyMessage={t('attributes.noValues', { defaultValue: 'No values' })}
         useLocalSortAndFilter
         rowHover
       />
 
-      <Dialog
-        header={t('options.addValue', { defaultValue: 'Add Value' })}
+      <ValueUpsertDialog
+        mode="create"
         visible={showAdd}
-        onVisibleChange={setShowAdd as any}
-        dismissibleMask
-        modal
-      >
-        <Flex direction="vertical" spacing="m">
-          <Flex spacing="m">
-            <FieldWrapper label="value" required>
-              <StringInput
-                placeholder={t('options.value', { defaultValue: 'Value' })}
-                value={newValue}
-                onChange={(v) => setNewValue(String(v ?? ''))}
-              />
-            </FieldWrapper>
-            <FieldWrapper label="display">
-              <StringInput
-                placeholder={t('options.display', { defaultValue: 'Display (optional)' })}
-                value={newDisplay}
-                onChange={(v) => setNewDisplay(String(v ?? ''))}
-              />
-            </FieldWrapper>
-          </Flex>
-          <Flex justify="end" spacing="s">
-            <Button appearance="outline" onClick={closeAdd}>
-              {t('app.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button
-              onClick={handleCreateValue}
-              isLoading={createValue.isPending}
-              isDisabled={!newValue.trim()}
-            >
-              {t('app.save', { defaultValue: 'Save' })}
-            </Button>
-          </Flex>
-        </Flex>
-      </Dialog>
+        onClose={closeAdd}
+        typeId={typeId}
+        onSuccess={() => toast.success(t('common.create', { defaultValue: 'Create' }))}
+      />
+
+
+      <ValueUpsertDialog
+        mode="edit"
+        visible={!!editValue}
+        onClose={() => setEditValue(null)}
+        initial={editValue as any}
+        onSuccess={() => toast.success(t('common.update', { defaultValue: 'Update' }))}
+      />
+
+      <ConfirmDialog
+        visible={!!deleteValue}
+        header="Confirm Delete"
+        message={t('common.delete', { defaultValue: 'Delete' })}
+        onConfirm={async () => {
+          if (!deleteValue) return;
+          try {
+            await deleteValueHook.mutateAsync(deleteValue.id);
+            toast.success(t('common.delete', { defaultValue: 'Delete' }));
+            setDeleteValue(null);
+          } catch (e: any) {
+            toast.error(e?.message || t('app.unexpectedError'));
+          }
+        }}
+        onCancel={() => setDeleteValue(null)}
+      />
     </>
   );
 };
