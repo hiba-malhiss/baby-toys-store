@@ -33,6 +33,16 @@ export const productSchema = z.object({
   images: z.array(z.string()).max(10, 'You can upload at most 10 images').optional().default([]),
   isActive: z.boolean().optional().default(true),
   categoryId: z.number().min(1, 'Category is required').optional(),
+  // product attributes (type + one or more values)
+  attributes: z
+    .array(
+      z.object({
+        attributeTypeId: z.coerce.number().min(1, 'Attribute type is required'),
+        valueIds: z.array(z.coerce.number()).optional().default([]),
+      })
+    )
+    .optional()
+    .default([]),
   // localized
   translations: z.object({
     en: localizedFieldsSchema,
@@ -47,6 +57,7 @@ export const defaultProductValues = {
   images: [] as string[],
   isActive: true,
   categoryId: undefined as unknown as number | undefined,
+  attributes: [] as Array<{ attributeTypeId: number; valueIds: number[] }>,
   // localized for en and ar
   translations: {
     en: {

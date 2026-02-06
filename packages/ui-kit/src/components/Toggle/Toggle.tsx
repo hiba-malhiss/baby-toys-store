@@ -19,31 +19,29 @@ interface ToggleProps {
 }
 
 const Toggle: React.FC<ToggleProps> = ({
-                                         value,
-                                         checked,
-                                         defaultValue = false,
-                                         size = 'medium',
-                                         onChange,
-                                         disabled,
-                                         isDisabled,
-                                       }) => {
+  value,
+  checked,
+  defaultValue = false,
+  size = 'medium',
+  onChange,
+  disabled,
+  isDisabled,
+}) => {
   // Support both "value" and "checked"
   const controlledValue = value ?? checked;
   const resolvedDisabled = (disabled ?? isDisabled) === true;
 
-  const [internalValue, setInternalValue] = useState<boolean>(
-    controlledValue ?? defaultValue
-  );
+  const [internalValue, setInternalValue] = useState<boolean>(controlledValue ?? defaultValue);
 
   // Sync internal state when controlled value changes
   useEffect(() => {
-    if(controlledValue !== undefined) {
+    if (controlledValue !== undefined) {
       setInternalValue(!!controlledValue);
     }
   }, [controlledValue]);
 
   const handleToggle = () => {
-    if(resolvedDisabled) return;
+    if (resolvedDisabled) return;
 
     const newValue = !internalValue;
     setInternalValue(newValue);
@@ -51,9 +49,9 @@ const Toggle: React.FC<ToggleProps> = ({
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
-    if(resolvedDisabled) return;
+    if (resolvedDisabled) return;
 
-    if(event.key === 'Enter' || event.key === ' ') {
+    if (event.key === 'Enter' || event.key === ' ') {
       event.preventDefault();
       handleToggle();
     }
@@ -77,7 +75,7 @@ const Toggle: React.FC<ToggleProps> = ({
       aria-disabled={resolvedDisabled}
       disabled={resolvedDisabled}
     >
-      <span className={styles.toggleThumb}/>
+      <span className={styles.toggleThumb} />
     </button>
   );
 };

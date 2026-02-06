@@ -269,9 +269,7 @@ const ProductViewPage: React.FC = () => {
                 </div>
 
                 <div className={styles.metaRow}>
-                  <span className={styles.faded}>
-                    {vm.categoryName || '-'}
-                  </span>
+                  <span className={styles.faded}>{vm.categoryName || '-'}</span>
                   {vm.isActive === false && (
                     <Chip label={t('productView.inactive')} appearance="error" />
                   )}

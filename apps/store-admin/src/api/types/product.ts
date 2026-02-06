@@ -77,6 +77,11 @@ export interface ProductUpsertRequest {
 
   categoryId?: number;
   productSku?: string;
+  // Product-level attributes
+  attributes?: Array<{
+    attributeTypeId: number;
+    valueIds: number[];
+  }>;
 
   // Localized content per locale (e.g., en, ar)
   translations: Array<{

@@ -56,7 +56,7 @@ export const useAttributeTypes = () =>
 export const useCreateAttributeType = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(payload: AttributeTypeUpsertRequest) => {
+    mutationFn: async (payload: AttributeTypeUpsertRequest) => {
       // Backend returns ApiResponse-wrapped DTO
       const res = await api.post<ApiResponse<any>>('/api/admin/attributes/types', payload);
       return res.data.data?.id;
@@ -68,7 +68,7 @@ export const useCreateAttributeType = () => {
 export const useUpdateAttributeType = (id: number) => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(payload: AttributeTypeUpsertRequest) => {
+    mutationFn: async (payload: AttributeTypeUpsertRequest) => {
       const res = await api.put<ApiResponse<any>>(`/api/admin/attributes/types/${id}`, payload);
       return res.data.data?.id;
     },
@@ -79,7 +79,7 @@ export const useUpdateAttributeType = (id: number) => {
 export const useDeleteAttributeType = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(id: number) => {
+    mutationFn: async (id: number) => {
       await api.delete(`/api/admin/attributes/types/${id}`);
       return id;
     },
@@ -90,18 +90,19 @@ export const useDeleteAttributeType = () => {
 export const useCreateAttributeValue = (typeId: number) => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(payload: {
+    mutationFn: async (payload: {
       code: string;
       display?: string | null;
       sortOrder?: number;
       isActive?: boolean;
-      displayByLocale?: Record<string, string>
+      displayByLocale?: Record<string, string>;
     }) => {
       const params: Record<string, any> = { code: payload.code };
-      if(payload.sortOrder != null) params.sortOrder = payload.sortOrder;
-      if(payload.isActive != null) params.isActive = payload.isActive;
+      if (payload.sortOrder != null) params.sortOrder = payload.sortOrder;
+      if (payload.isActive != null) params.isActive = payload.isActive;
       // Prefer explicit displayByLocale, fallback to single-locale 'en'
-      const body = payload.displayByLocale ?? (payload.display ? { en: payload.display } : undefined);
+      const body =
+        payload.displayByLocale ?? (payload.display ? { en: payload.display } : undefined);
       const res = await api.post<ApiResponse<any>>(
         `/api/admin/attributes/types/${typeId}/values`,
         body,
@@ -116,21 +117,20 @@ export const useCreateAttributeValue = (typeId: number) => {
 export const useUpdateAttributeValue = (valueId: number) => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(payload: {
+    mutationFn: async (payload: {
       sortOrder?: number;
       isActive?: boolean;
       display?: string | null;
-      displayByLocale?: Record<string, string>
+      displayByLocale?: Record<string, string>;
     }) => {
       const params: Record<string, any> = {};
-      if(payload.sortOrder != null) params.sortOrder = payload.sortOrder;
-      if(payload.isActive != null) params.isActive = payload.isActive;
-      const body = payload.displayByLocale ?? (payload.display ? { en: payload.display } : undefined);
-      const res = await api.put<ApiResponse<any>>(
-        `/api/admin/attributes/values/${valueId}`,
-        body,
-        { params }
-      );
+      if (payload.sortOrder != null) params.sortOrder = payload.sortOrder;
+      if (payload.isActive != null) params.isActive = payload.isActive;
+      const body =
+        payload.displayByLocale ?? (payload.display ? { en: payload.display } : undefined);
+      const res = await api.put<ApiResponse<any>>(`/api/admin/attributes/values/${valueId}`, body, {
+        params,
+      });
       return res.data.data?.id;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['attributeTypes'] }),
@@ -140,7 +140,7 @@ export const useUpdateAttributeValue = (valueId: number) => {
 export const useDeleteAttributeValue = () => {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: async(valueId: number) => {
+    mutationFn: async (valueId: number) => {
       await api.delete(`/api/admin/attributes/values/${valueId}`);
       return valueId;
     },

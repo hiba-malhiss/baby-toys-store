@@ -22,9 +22,11 @@ import { useProductForm } from './useProductForm';
 import { useProduct } from '../../api/productApi';
 
 import ProductOptions from './ProductOptions.tsx';
+import { useAttributeTypes } from '../../api/attributeApi';
 import ProductVariations from '../ProductVariations/ProductVariations';
 
 import styles from './Productsform.module.scss';
+import AttributesSection from './AttributesSection.tsx';
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
@@ -32,6 +34,7 @@ const ProductFormPage: React.FC = () => {
   const pid = id ? Number(id) : undefined;
 
   const { data: productForTabs } = useProduct(pid);
+  const { data: attributeTypes = [] } = useAttributeTypes();
 
   const {
     control,
@@ -43,6 +46,7 @@ const ProductFormPage: React.FC = () => {
     imageUploaderProps,
     mainImageUploaderProps,
     isDeletingImage,
+    setValue,
   } = useProductForm();
 
   if (isLoadingProduct) {
@@ -59,14 +63,22 @@ const ProductFormPage: React.FC = () => {
               <Card fullWidth>
                 <Flex direction="vertical" spacing="m" fullWidth>
                   <Heading level="h4">AR</Heading>
-                  <LocalizedFields control={control} locale={'ar' as any} isDisabled={isDeletingImage} />
+                  <LocalizedFields
+                    control={control}
+                    locale={'ar' as any}
+                    isDisabled={isDeletingImage}
+                  />
                 </Flex>
               </Card>
 
               <Card fullWidth>
                 <Flex direction="vertical" spacing="m" fullWidth>
                   <Heading level="h4">EN</Heading>
-                  <LocalizedFields control={control} locale={'en' as any} isDisabled={isDeletingImage} />
+                  <LocalizedFields
+                    control={control}
+                    locale={'en' as any}
+                    isDisabled={isDeletingImage}
+                  />
                 </Flex>
               </Card>
 
@@ -86,6 +98,15 @@ const ProductFormPage: React.FC = () => {
                       ))}
                     </Select>
                   </FormFieldWrapper>
+                  <Heading level="h4">
+                    {t('productForm.attributes', { defaultValue: 'Attributes' })}
+                  </Heading>
+                  <AttributesSection
+                    control={control}
+                    attributeTypes={attributeTypes}
+                    isDisabled={isDeletingImage}
+                    setValue={setValue}
+                  />
                 </Flex>
               </Card>
             </div>

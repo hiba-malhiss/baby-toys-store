@@ -40,6 +40,7 @@ export const useProductForm = () => {
     handleSubmit,
     formState: { isSubmitting },
     reset,
+    setValue,
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: defaultProductValues,
@@ -173,6 +174,16 @@ export const useProductForm = () => {
       const en = sanitizeLocale('en');
       const ar = sanitizeLocale('ar');
 
+      // Coerce attributes into backend shape with numeric IDs
+      const attributes = (data as any).attributes
+        ? (data as any).attributes
+            .filter((a: any) => a && a.attributeTypeId)
+            .map((a: any) => ({
+              attributeTypeId: Number(a.attributeTypeId),
+              valueIds: Array.isArray(a.valueIds) ? a.valueIds.map((v: any) => Number(v)) : [],
+            }))
+        : [];
+
       const payload = {
         // non-localized (variant-first)
         releaseDate: data.releaseDate || undefined,
@@ -180,6 +191,7 @@ export const useProductForm = () => {
         mainImage: mainImageUrl || '',
         isActive: data.isActive,
         categoryId: data.categoryId,
+        attributes: attributes.length ? attributes : undefined,
         // localized
         translations: [
           { locale: 'en', ...en },
@@ -269,6 +281,7 @@ export const useProductForm = () => {
     handleSubmit: handleSubmit(submitForm),
     isSubmitting,
     isLoadingProduct,
+    setValue,
     categories,
     existingImages,
     setExistingImages,
