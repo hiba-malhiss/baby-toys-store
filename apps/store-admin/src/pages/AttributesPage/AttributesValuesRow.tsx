@@ -125,7 +125,6 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
         onSuccess={() => toast.success(t('common.create', { defaultValue: 'Create' }))}
       />
 
-
       <ValueUpsertDialog
         mode="edit"
         visible={!!editValue}

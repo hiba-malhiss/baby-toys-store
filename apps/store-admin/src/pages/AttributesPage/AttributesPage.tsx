@@ -1,19 +1,12 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Flex,
-  Heading,
-  Table,
-  BouncingDotsLoader,
-  ConfirmDialog,
-} from '@baby-toys/ui-kit';
+import { Button, Flex, Heading, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
 import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeApi';
 import AttributesValuesRow from './AttributesValuesRow';
 import { useToast } from '@baby-toys/ui-kit';
 import TypeUpsertDialog from './TypeUpsertDialog';
-import { AttributeType } from "../../api/types/attribute.ts";
+import { AttributeType } from '../../api/types/attribute.ts';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 const AttributesPage: React.FC = () => {
@@ -29,13 +22,13 @@ const AttributesPage: React.FC = () => {
 
   const deleteType = useDeleteAttributeType();
 
-  const handleDeleteType = async() => {
-    if(!deleteRow) return;
+  const handleDeleteType = async () => {
+    if (!deleteRow) return;
     try {
       await deleteType.mutateAsync(deleteRow.id);
       toast.success(t('common.delete', { defaultValue: 'Delete' }));
       setDeleteRow(null);
-    } catch(e: any) {
+    } catch (e: any) {
       toast.error(e?.message || t('app.unexpectedError'));
     }
   };
@@ -62,7 +55,7 @@ const AttributesPage: React.FC = () => {
         </Flex>
 
         {loadingTypes ? (
-          <BouncingDotsLoader/>
+          <BouncingDotsLoader />
         ) : (
           <Table
             value={types}
@@ -163,7 +156,7 @@ const AttributesPage: React.FC = () => {
             expandedRows={expandedRows}
             onRowExpand={handleRowExpand as any}
             onRowCollapse={handleRowCollapse as any}
-            rowExpansionTemplate={(row: AttributeType) => <AttributesValuesRow activeType={row}/>}
+            rowExpansionTemplate={(row: AttributeType) => <AttributesValuesRow activeType={row} />}
           />
         )}
 
