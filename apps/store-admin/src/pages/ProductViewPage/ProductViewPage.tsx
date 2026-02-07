@@ -19,6 +19,8 @@ import styles from './product-view-page.module.scss';
 import KPIWithTooltip from '../../components/KPIWithTooltip/KPIWithTooltip';
 import { useTranslation } from 'react-i18next';
 import ProductVariations from '../ProductVariationsPage/ProductVariations.tsx';
+import ProductAttributesTable from './ProductAttributesTable.tsx';
+import ProductOptionsTable from './ProductOptionsTable.tsx';
 
 type StatRow = {
   id: string;
@@ -180,6 +182,28 @@ const ProductViewPage: React.FC = () => {
         />
       </Accordion>
     );
+
+    // Options table
+    if (((product as any)?.options || []).length > 0) {
+      items.push(
+        <Accordion key="options" header={t('productView.options', { defaultValue: 'Options' })}>
+          <ProductOptionsTable options={(product as any)?.options || []} />
+        </Accordion>
+      );
+    }
+
+    // Attributes table (if present on payload)
+    const attrSrc = (product as any)?.attributes as any[] | undefined;
+    if (Array.isArray(attrSrc) && attrSrc.length > 0) {
+      items.push(
+        <Accordion
+          key="attributes"
+          header={t('productView.attributes', { defaultValue: 'Attributes' })}
+        >
+          <ProductAttributesTable attributes={attrSrc} />
+        </Accordion>
+      );
+    }
 
     if (vm.shortDescription) {
       items.push(
