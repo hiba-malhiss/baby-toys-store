@@ -1,9 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Flex, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
-import type { AttributeType, AttributeValue } from '../../api/types/attribute';
+import type {
+  AttributeTypeListDto as AttributeType,
+  AttributeValueAdminDto as AttributeValue,
+} from '../../api/types/attribute';
 import { Pencil, Trash2 } from 'lucide-react';
-import { useDeleteAttributeValue } from '../../api/attributeApi';
+import { useAttributeTypeAdmin, useDeleteAttributeValue } from '../../api/attributeApi';
 import { useToast } from '@baby-toys/ui-kit';
 import ValueUpsertDialog from './ValueUpsertDialog';
 
@@ -15,8 +18,8 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
   const { t } = useTranslation();
   const toast = useToast();
   const typeId = activeType.id;
-  const values = (activeType.values || []) as AttributeValue[];
-  const loadingValues = false; // values are embedded in type payload
+  const { data: typeAdmin, isLoading: loadingValues } = useAttributeTypeAdmin(typeId);
+  const values = (typeAdmin?.values || []) as AttributeValue[];
   const deleteValueHook = useDeleteAttributeValue();
   const [showAdd, setShowAdd] = React.useState(false);
   const [editValue, setEditValue] = React.useState<AttributeValue | null>(null);
@@ -118,19 +121,21 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
       />
 
       <ValueUpsertDialog
-        mode="create"
-        visible={showAdd}
-        onClose={closeAdd}
+        mode={editValue ? 'edit' : 'create'}
+        visible={showAdd || !!editValue}
+        onClose={() => {
+          closeAdd();
+          setEditValue(null);
+        }}
         typeId={typeId}
-        onSuccess={() => toast.success(t('common.create', { defaultValue: 'Create' }))}
-      />
-
-      <ValueUpsertDialog
-        mode="edit"
-        visible={!!editValue}
-        onClose={() => setEditValue(null)}
         initial={editValue as any}
-        onSuccess={() => toast.success(t('common.update', { defaultValue: 'Update' }))}
+        onSuccess={() =>
+          toast.success(
+            t(editValue ? 'common.update' : 'common.create', {
+              defaultValue: editValue ? 'Update' : 'Create',
+            })
+          )
+        }
       />
 
       <ConfirmDialog

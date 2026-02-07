@@ -1,27 +1,13 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Flex,
-  Heading,
-  Table,
-  BouncingDotsLoader,
-  Dialog,
-  StringInput,
-  FieldWrapper,
-  ConfirmDialog,
-} from '@baby-toys/ui-kit';
-import {
-  useOptionTypes,
-  useCreateOptionType,
-  useUpdateOptionType,
-  useDeleteOptionType,
-} from '../../api/optionApi';
-import type { OptionType } from '../../api/types/option';
+import { Button, Flex, Heading, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
+import { useOptionTypes, useDeleteOptionType } from '../../api/optionApi';
+import type { OptionTypeDto as OptionType } from '../../api/types/option';
 import OptionsValuesRow from './OptionsValuesRow.tsx';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import { useToast } from '@baby-toys/ui-kit';
+import TypeUpsertDialog from './TypeUpsertDialog';
 
 const OptionsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -29,46 +15,22 @@ const OptionsPage: React.FC = () => {
   const toast = useToast();
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const [formName, setFormName] = React.useState('');
 
   // Edit/Delete state
   const [editRow, setEditRow] = React.useState<OptionType | null>(null);
   const [deleteRow, setDeleteRow] = React.useState<OptionType | null>(null);
 
-  const createType = useCreateOptionType();
   const deleteType = useDeleteOptionType();
-  // Always instantiate the update hook at the top level. Use 0 as a harmless placeholder when no row is selected.
-  const updateType = useUpdateOptionType(editRow?.id ?? 0);
+  // Update hook as defined in optionApi (no id at hook level)
 
   const openAdd = () => {
     setEditRow(null);
-    setFormName('');
     setDialogOpen(true);
   };
 
   const handleOpenEdit = (row: OptionType) => {
     setEditRow(row);
-    setFormName(row.name || '');
     setDialogOpen(true);
-  };
-
-  const handleUpsert = async () => {
-    const name = formName.trim();
-    if (!name) return;
-    try {
-      if (editRow) {
-        await updateType.mutateAsync({ name });
-        toast.success(t('common.update', { defaultValue: 'Update' }));
-      } else {
-        await createType.mutateAsync({ name });
-        toast.success(t('common.create', { defaultValue: 'Create' }));
-      }
-      setDialogOpen(false);
-      setEditRow(null);
-      setFormName('');
-    } catch (e: any) {
-      toast.error(e?.message || t('app.unexpectedError'));
-    }
   };
 
   const handleRowExpand = ({ data }: { data: OptionType }) => {
@@ -103,6 +65,12 @@ const OptionsPage: React.FC = () => {
               {
                 header: t('options.typeName', { defaultValue: 'Name' }),
                 field: 'name',
+                filter: true,
+                sortable: true,
+              },
+              {
+                header: t('options.displayName', { defaultValue: 'Display name' }),
+                field: 'displayName',
                 filter: true,
                 sortable: true,
               },
@@ -158,40 +126,19 @@ const OptionsPage: React.FC = () => {
           />
         )}
 
-        {/* Unified Add/Edit dialog */}
-        <Dialog
-          header={
-            editRow
-              ? t('common.edit', { defaultValue: 'Edit' })
-              : t('options.addType', { defaultValue: 'Add Option Type' })
-          }
+        <TypeUpsertDialog
           visible={dialogOpen}
-          onVisibleChange={setDialogOpen as any}
-          dismissibleMask
-          modal
-        >
-          <Flex direction="vertical" spacing="m">
-            <FieldWrapper label="Option name" required>
-              <StringInput
-                placeholder={t('options.typeName', { defaultValue: 'Name' })}
-                value={formName}
-                onChange={(v) => setFormName(String(v ?? ''))}
-              />
-            </FieldWrapper>
-            <Flex justify="end" spacing="s">
-              <Button appearance="outline" onClick={() => setDialogOpen(false)}>
-                {t('app.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button
-                onClick={handleUpsert}
-                isLoading={editRow ? updateType.isPending : createType.isPending}
-                isDisabled={!formName.trim()}
-              >
-                {t('app.save', { defaultValue: 'Save' })}
-              </Button>
-            </Flex>
-          </Flex>
-        </Dialog>
+          mode={editRow ? 'edit' : 'create'}
+          initial={editRow as any}
+          onClose={() => setDialogOpen(false)}
+          onSuccess={() =>
+            toast.success(
+              t(editRow ? 'common.update' : 'common.create', {
+                defaultValue: editRow ? 'Update' : 'Create',
+              })
+            )
+          }
+        />
 
         {/* Delete confirm */}
         <ConfirmDialog

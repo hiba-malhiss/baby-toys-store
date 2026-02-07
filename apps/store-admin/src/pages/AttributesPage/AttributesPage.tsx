@@ -6,7 +6,7 @@ import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeAp
 import AttributesValuesRow from './AttributesValuesRow';
 import { useToast } from '@baby-toys/ui-kit';
 import TypeUpsertDialog from './TypeUpsertDialog';
-import { AttributeType } from '../../api/types/attribute.ts';
+import type { AttributeTypeListDto as AttributeType } from '../../api/types/attribute';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 
 const AttributesPage: React.FC = () => {
@@ -69,23 +69,9 @@ const AttributesPage: React.FC = () => {
               },
               {
                 header: t('attributes.displayEn', { defaultValue: 'Display (EN)' }),
-                field: 'displayNameEn',
+                field: 'displayName',
                 sortable: false,
-                body: (row: AttributeType) => {
-                  const tr = (row as any).translations || [];
-                  const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
-                  return en?.displayName ?? row.displayName ?? '-';
-                },
-              },
-              {
-                header: t('attributes.displayAr', { defaultValue: 'Display (AR)' }),
-                field: 'displayNameAr',
-                sortable: false,
-                body: (row: AttributeType) => {
-                  const tr = (row as any).translations || [];
-                  const ar = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'ar');
-                  return ar?.displayName ?? '-';
-                },
+                body: (row: AttributeType) => row.displayName ?? '-',
               },
               {
                 header: t('attributes.sortOrder', { defaultValue: 'Sort Order' }),
@@ -161,18 +147,20 @@ const AttributesPage: React.FC = () => {
         )}
 
         <TypeUpsertDialog
-          mode="create"
-          visible={showAddType}
-          onClose={() => setShowAddType(false)}
-          onSuccess={() => toast.success(t('common.create', { defaultValue: 'Create' }))}
-        />
-
-        <TypeUpsertDialog
-          mode="edit"
-          visible={!!editRow}
-          initial={editRow as any}
-          onClose={() => setEditRow(null)}
-          onSuccess={() => toast.success(t('common.update', { defaultValue: 'Update' }))}
+          mode={editRow ? 'edit' : 'create'}
+          visible={showAddType || !!editRow}
+          typeId={editRow?.id}
+          onClose={() => {
+            setShowAddType(false);
+            setEditRow(null);
+          }}
+          onSuccess={() =>
+            toast.success(
+              t(editRow ? 'common.update' : 'common.create', {
+                defaultValue: editRow ? 'Update' : 'Create',
+              })
+            )
+          }
         />
 
         <ConfirmDialog

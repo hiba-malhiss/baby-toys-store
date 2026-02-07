@@ -2,7 +2,7 @@ import React from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { Button, Flex, Select, Option, Card } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
-import { useOptionTypes, useOptionValues } from '../../api/optionApi';
+import { useOptionTypeDetail, useOptionTypes } from '../../api/optionApi';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 
 interface OptionsSectionProps {
@@ -24,8 +24,10 @@ const OptionRow: React.FC<{
     name: `options.${index}.optionTypeId` as const,
   });
   const numericTypeId = Number(currentTypeId) || undefined;
-  const { data: values = [] } = useOptionValues(numericTypeId);
+  const { data: optionType } = useOptionTypeDetail(numericTypeId);
+  const values = optionType?.values || [];
   const { t } = useTranslation();
+
   return (
     <Flex spacing="m" align="start" fullWidth wrap>
       <FormFieldWrapper label={t('productForm.optionType')} fullWidth required>
