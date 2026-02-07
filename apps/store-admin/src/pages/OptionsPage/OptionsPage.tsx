@@ -9,29 +9,63 @@ import {
   BouncingDotsLoader,
   Dialog,
   StringInput,
-  Tooltip,
   FieldWrapper,
+  ConfirmDialog,
 } from '@baby-toys/ui-kit';
-import { useOptionTypes, useCreateOptionType } from '../../api/optionApi';
+import { useOptionTypes, useCreateOptionType, useUpdateOptionType, useDeleteOptionType } from '../../api/optionApi';
 import type { OptionType } from '../../api/types/option';
 import OptionsValuesRow from './OptionsValuesRow.tsx';
+import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { useToast } from '@baby-toys/ui-kit';
 
 const OptionsPage: React.FC = () => {
   const { t } = useTranslation();
   const { data: types = [], isLoading: loadingTypes } = useOptionTypes();
+  const toast = useToast();
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
   const [showAddType, setShowAddType] = React.useState(false);
   const [newTypeName, setNewTypeName] = React.useState('');
 
+  // Edit/Delete state
+  const [editRow, setEditRow] = React.useState<OptionType | null>(null);
+  const [editName, setEditName] = React.useState('');
+  const [deleteRow, setDeleteRow] = React.useState<OptionType | null>(null);
+
   const createType = useCreateOptionType();
+  const deleteType = useDeleteOptionType();
 
   const handleCreateType = async () => {
     const name = newTypeName.trim();
     if (!name) return;
 
-    await createType.mutateAsync({ name });
-    setNewTypeName('');
-    setShowAddType(false);
+    try {
+      await createType.mutateAsync({ name });
+      toast.success(t('common.create', { defaultValue: 'Create' }));
+      setNewTypeName('');
+      setShowAddType(false);
+    } catch (e: any) {
+      toast.error(e?.message || t('app.unexpectedError'));
+    }
+  };
+
+  const handleOpenEdit = (row: OptionType) => {
+    setEditRow(row);
+    setEditName(row.name || '');
+  };
+
+  const handleSaveEdit = async () => {
+    if (!editRow) return;
+    const name = editName.trim();
+    if (!name) return;
+    const updateType = useUpdateOptionType(editRow.id);
+    try {
+      await updateType.mutateAsync({ name });
+      toast.success(t('common.update', { defaultValue: 'Update' }));
+      setEditRow(null);
+      setEditName('');
+    } catch (e: any) {
+      toast.error(e?.message || t('app.unexpectedError'));
+    }
   };
 
   const handleRowExpand = ({ data }: { data: OptionType }) => {
@@ -73,41 +107,38 @@ const OptionsPage: React.FC = () => {
                 header: t('app.actions', { defaultValue: 'Actions' }),
                 field: 'actions',
                 body: (row: OptionType) => (
-                  <Flex spacing="s">
+                  <Flex spacing="m">
                     <Button
                       size="small"
-                      appearance="link"
-                      color="highlighted"
-                      onClick={() => {
+                      appearance="outline"
+                      leftIconComp={Eye}
+                      aria-label={t('options.manage', { defaultValue: 'Manage Values' })}
+                      onClick={(e) => {
+                        e.stopPropagation();
                         const key = String(row.id);
-                        setExpandedRows((prev) => ({
-                          ...prev,
-                          [key]: !prev[key],
-                        }));
+                        setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
                       }}
-                    >
-                      {t('options.manage', { defaultValue: 'Manage' })}
-                    </Button>
-
-                    <Tooltip
-                      content={t('options.editDisabled', {
-                        defaultValue: 'Edit endpoint not wired yet',
-                      })}
-                    >
-                      <Button size="small" appearance="link" color="highlighted" isDisabled>
-                        {t('app.edit', { defaultValue: 'Edit' })}
-                      </Button>
-                    </Tooltip>
-
-                    <Tooltip
-                      content={t('options.deleteDisabled', {
-                        defaultValue: 'Delete endpoint not wired yet',
-                      })}
-                    >
-                      <Button size="small" appearance="link" color="highlighted" isDisabled>
-                        {t('app.delete', { defaultValue: 'Delete' })}
-                      </Button>
-                    </Tooltip>
+                    />
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      leftIconComp={Pencil}
+                      aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEdit(row);
+                      }}
+                    />
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      leftIconComp={Trash2}
+                      aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteRow(row);
+                      }}
+                    />
                   </Flex>
                 ),
               },
@@ -153,6 +184,54 @@ const OptionsPage: React.FC = () => {
             </Flex>
           </Flex>
         </Dialog>
+
+        {/* Edit type dialog */}
+        <Dialog
+          header={t('common.edit', { defaultValue: 'Edit' })}
+          visible={!!editRow}
+          onVisibleChange={(vis: boolean) => !vis && setEditRow(null)}
+          dismissibleMask
+          modal
+        >
+          <Flex direction="vertical" spacing="m">
+            <FieldWrapper label="Option name" required>
+              <StringInput
+                placeholder={t('options.typeName', { defaultValue: 'Name' })}
+                value={editName}
+                onChange={(v) => setEditName(String(v ?? ''))}
+              />
+            </FieldWrapper>
+            <Flex justify="end" spacing="s">
+              <Button appearance="outline" onClick={() => setEditRow(null)}>
+                {t('app.cancel', { defaultValue: 'Cancel' })}
+              </Button>
+              <Button onClick={handleSaveEdit} isDisabled={!editName.trim()}>
+                {t('app.save', { defaultValue: 'Save' })}
+              </Button>
+            </Flex>
+          </Flex>
+        </Dialog>
+
+        {/* Delete confirm */}
+        <ConfirmDialog
+          visible={!!deleteRow}
+          header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
+          message={t('categories.deleteConfirm', {
+            defaultValue: 'Are you sure you want to delete “{{name}}”?',
+            name: deleteRow?.name,
+          })}
+          onConfirm={async () => {
+            if (!deleteRow) return;
+            try {
+              await deleteType.mutateAsync(deleteRow.id);
+              toast.success(t('common.delete', { defaultValue: 'Delete' }));
+              setDeleteRow(null);
+            } catch (e: any) {
+              toast.error(e?.message || t('app.unexpectedError'));
+            }
+          }}
+          onCancel={() => setDeleteRow(null)}
+        />
       </Flex>
     </AdminLayout>
   );

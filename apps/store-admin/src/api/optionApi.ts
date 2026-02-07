@@ -45,6 +45,31 @@ export const useCreateOptionType = () => {
   });
 };
 
+export const useUpdateOptionType = (typeId: number) => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: CreateOptionTypeRequest) => {
+      const { data } = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/options/types/${typeId}`,
+        payload
+      );
+      return data.data.id;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['optionTypes'] }),
+  });
+};
+
+export const useDeleteOptionType = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (typeId: number) => {
+      await api.delete(`/api/admin/options/types/${typeId}`);
+      return typeId;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['optionTypes'] }),
+  });
+};
+
 export const useCreateOptionValue = (typeId: number) => {
   const qc = useQueryClient();
   return useMutation({
@@ -55,6 +80,31 @@ export const useCreateOptionValue = (typeId: number) => {
         body
       );
       return data.data.id;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['optionValues', typeId] }),
+  });
+};
+
+export const useUpdateOptionValue = (typeId: number, valueId: number) => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload: { value?: string; display?: string | null }) => {
+      const { data } = await api.put<ApiEnvelope<{ id: number }>>(
+        `/api/admin/options/values/${valueId}`,
+        payload
+      );
+      return data.data.id;
+    },
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['optionValues', typeId] }),
+  });
+};
+
+export const useDeleteOptionValue = (typeId: number) => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (valueId: number) => {
+      await api.delete(`/api/admin/options/values/${valueId}`);
+      return valueId;
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['optionValues', typeId] }),
   });
