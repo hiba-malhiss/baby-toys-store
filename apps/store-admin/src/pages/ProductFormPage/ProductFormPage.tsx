@@ -90,7 +90,7 @@ const ProductFormPage: React.FC = () => {
             </div>
           </Accordion>
 
-          <Accordion header={t('productForm.tab.options')}>
+          <Accordion header={t('productForm.options')}>
             <Flex direction="vertical" spacing="xxl">
               <FormFieldWrapper
                 name="categoryId"

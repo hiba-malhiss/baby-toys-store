@@ -45,7 +45,11 @@ const ProductVariationsPage: React.FC = () => {
             <Button onClick={openCreate}>Add Variation</Button>
           </Flex>
         </Flex>
-        <ProductVariations productId={productId} openEdit={openEdit} />
+        <ProductVariations
+          productId={productId}
+          variants={product?.variants || []}
+          openEdit={openEdit}
+        />
         <VariationDialog
           productId={productId}
           isOpen={dialogOpen}

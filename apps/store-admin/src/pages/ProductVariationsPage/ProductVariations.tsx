@@ -1,16 +1,8 @@
 import React, { useMemo, useState } from 'react';
-import {
-  Button,
-  Table,
-  Toggle,
-  BouncingDotsLoader,
-  Image,
-  ConfirmDialog,
-  Flex,
-} from '@baby-toys/ui-kit';
+import { Button, Table, Toggle, Image, ConfirmDialog, Flex } from '@baby-toys/ui-kit';
 import { useToast } from '@baby-toys/ui-kit';
 import { Pencil, Trash2 } from 'lucide-react';
-import { useVariants, useDeleteVariant, useUpdateVariant } from '../../api/variantApi';
+import { useDeleteVariant, useUpdateVariant } from '../../api/variantApi';
 
 import type { VariantDto } from '../../api/types/variant';
 
@@ -18,12 +10,16 @@ type Props = {
   productId: number;
   readOnly?: boolean;
   openEdit?: (row: VariantDto) => void;
+  variants: VariantDto[];
 };
 
-const ProductVariations: React.FC<Props> = ({ openEdit, productId, readOnly = false }) => {
+const ProductVariations: React.FC<Props> = ({
+  openEdit,
+  productId,
+  readOnly = false,
+  variants,
+}) => {
   const toast = useToast();
-
-  const { data: variants = [], isLoading } = useVariants(productId);
 
   const deleteVariant = useDeleteVariant(productId);
   const updateVariant = useUpdateVariant(productId);
@@ -124,8 +120,6 @@ const ProductVariations: React.FC<Props> = ({ openEdit, productId, readOnly = fa
 
     return base;
   }, [updateVariant, toast, readOnly]);
-
-  if (isLoading) return <BouncingDotsLoader />;
 
   return (
     <>

@@ -5,7 +5,6 @@ import {
   Button,
   Card,
   Heading,
-  KPI,
   Chip,
   CopyToClipboardButton,
   Accordion,
@@ -51,7 +50,11 @@ const ProductViewPage: React.FC = () => {
     const name = product?.name || t('productView.fallbackName');
 
     const inventoryRows: KeyValueRow[] = [
-      { id: 'stock', label: t('productView.stock'), value: product?.stockQuantity ?? '-' },
+      {
+        id: 'stock',
+        label: t('productView.stock'),
+        value: (product as any)?.activeVariantsTotalStock ?? '-',
+      },
       { id: 'unitsSold', label: t('productView.unitsSold'), value: product?.sales ?? 0 },
       {
         id: 'releaseDate',
@@ -66,13 +69,16 @@ const ProductViewPage: React.FC = () => {
     ];
 
     const pricingRows: KeyValueRow[] = [
-      { id: 'listPrice', label: t('productView.listPrice'), value: formatMoney(product?.price) },
       {
-        id: 'costPrice',
-        label: t('productView.costPrice'),
-        value: formatMoney(product?.costPrice),
+        id: 'fromPrice',
+        label: t('productView.fromPrice', { defaultValue: 'From price' }),
+        value: formatMoney((product as any)?.lowestActivePrice),
       },
-      { id: 'oldPrice', label: t('productView.oldPrice'), value: formatMoney(product?.oldPrice) },
+      {
+        id: 'wasPrice',
+        label: t('productView.wasPrice', { defaultValue: 'Was price' }),
+        value: formatMoney((product as any)?.oldPriceForLowestPrice),
+      },
     ];
 
     const classificationRows: KeyValueRow[] = [
@@ -86,6 +92,7 @@ const ProductViewPage: React.FC = () => {
 
     const options = (product as any)?.options || [];
     const attributes = (product as any)?.attributes;
+    const variants = ((product as any)?.variants || []) as any[];
 
     return {
       id: product?.id,
@@ -95,8 +102,6 @@ const ProductViewPage: React.FC = () => {
       isActive: product?.isActive,
 
       kpis: {
-        price: formatMoney(product?.price),
-        cost: formatMoney(product?.costPrice),
         revenueLifetime: formatMoney(product?.totalRevenue),
         profitLifetime: formatMoney(product?.totalProfit),
         margin: formatPercent(product?.profitMargin),
@@ -109,6 +114,7 @@ const ProductViewPage: React.FC = () => {
 
       options,
       attributes,
+      variants,
 
       images: product?.images ?? [],
       shortDescription: product?.shortDescription,
@@ -117,8 +123,6 @@ const ProductViewPage: React.FC = () => {
   }, [product, t, formatMoney, formatPercent, formatDateTime]);
 
   const hasImages = vm.images.length > 0;
-  const hasOptions = Array.isArray(vm.options) && vm.options.length > 0;
-  const hasAttributes = Array.isArray(vm.attributes) && vm.attributes.length > 0;
   const hasDesc = Boolean(vm.shortDescription || vm.description);
 
   const detailsRows = useMemo<KeyValueRow[]>(
@@ -178,9 +182,6 @@ const ProductViewPage: React.FC = () => {
 
         {/* KPIs */}
         <div className={styles.kpiGrid}>
-          <KPI label={t('productView.price')} value={vm.kpis.price} />
-          <KPI label={t('productView.cost')} value={vm.kpis.cost} />
-
           <KPIWithTooltip
             label={t('productView.revenueLifetime')}
             tooltip={t('tooltips.productKPIs.revenueLifetime')}
@@ -198,7 +199,7 @@ const ProductViewPage: React.FC = () => {
           />
         </div>
 
-        {/* Content / Cards (no accordions) */}
+        {/* Content / Cards */}
         <div className={styles.contentGrid}>
           <Card>
             <div className={styles.cardHeader}>
@@ -264,7 +265,11 @@ const ProductViewPage: React.FC = () => {
             header={t('productView.variations', { defaultValue: 'Variations' })}
             defaultOpen
           >
-            <ProductVariations productId={productId} productOptions={vm.options || []} readOnly />
+            <ProductVariations
+              productId={productId as number}
+              variants={vm.variants as any}
+              readOnly
+            />
           </Accordion>
 
           <Accordion key="options" header={t('productView.options', { defaultValue: 'Options' })}>

@@ -172,6 +172,8 @@
     "mainImage": "Main Image",
     "galleryImages": "Gallery Images",
     "price": "Price",
+    "attributes": "Attributes",
+    "options": "Options",
     "costPrice": "Cost Price",
     "oldPrice": "Old Price (optional)",
     "stockQuantity": "Stock Quantity",
