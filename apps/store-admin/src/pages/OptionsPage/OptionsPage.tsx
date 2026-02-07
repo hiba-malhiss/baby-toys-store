@@ -12,7 +12,12 @@ import {
   FieldWrapper,
   ConfirmDialog,
 } from '@baby-toys/ui-kit';
-import { useOptionTypes, useCreateOptionType, useUpdateOptionType, useDeleteOptionType } from '../../api/optionApi';
+import {
+  useOptionTypes,
+  useCreateOptionType,
+  useUpdateOptionType,
+  useDeleteOptionType,
+} from '../../api/optionApi';
 import type { OptionType } from '../../api/types/option';
 import OptionsValuesRow from './OptionsValuesRow.tsx';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
@@ -23,46 +28,44 @@ const OptionsPage: React.FC = () => {
   const { data: types = [], isLoading: loadingTypes } = useOptionTypes();
   const toast = useToast();
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
-  const [showAddType, setShowAddType] = React.useState(false);
-  const [newTypeName, setNewTypeName] = React.useState('');
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [formName, setFormName] = React.useState('');
 
   // Edit/Delete state
   const [editRow, setEditRow] = React.useState<OptionType | null>(null);
-  const [editName, setEditName] = React.useState('');
   const [deleteRow, setDeleteRow] = React.useState<OptionType | null>(null);
 
   const createType = useCreateOptionType();
   const deleteType = useDeleteOptionType();
+  // Always instantiate the update hook at the top level. Use 0 as a harmless placeholder when no row is selected.
+  const updateType = useUpdateOptionType(editRow?.id ?? 0);
 
-  const handleCreateType = async () => {
-    const name = newTypeName.trim();
-    if (!name) return;
-
-    try {
-      await createType.mutateAsync({ name });
-      toast.success(t('common.create', { defaultValue: 'Create' }));
-      setNewTypeName('');
-      setShowAddType(false);
-    } catch (e: any) {
-      toast.error(e?.message || t('app.unexpectedError'));
-    }
+  const openAdd = () => {
+    setEditRow(null);
+    setFormName('');
+    setDialogOpen(true);
   };
 
   const handleOpenEdit = (row: OptionType) => {
     setEditRow(row);
-    setEditName(row.name || '');
+    setFormName(row.name || '');
+    setDialogOpen(true);
   };
 
-  const handleSaveEdit = async () => {
-    if (!editRow) return;
-    const name = editName.trim();
+  const handleUpsert = async () => {
+    const name = formName.trim();
     if (!name) return;
-    const updateType = useUpdateOptionType(editRow.id);
     try {
-      await updateType.mutateAsync({ name });
-      toast.success(t('common.update', { defaultValue: 'Update' }));
+      if (editRow) {
+        await updateType.mutateAsync({ name });
+        toast.success(t('common.update', { defaultValue: 'Update' }));
+      } else {
+        await createType.mutateAsync({ name });
+        toast.success(t('common.create', { defaultValue: 'Create' }));
+      }
+      setDialogOpen(false);
       setEditRow(null);
-      setEditName('');
+      setFormName('');
     } catch (e: any) {
       toast.error(e?.message || t('app.unexpectedError'));
     }
@@ -85,7 +88,7 @@ const OptionsPage: React.FC = () => {
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>{t('options.types', { defaultValue: 'Option Types' })}</Heading>
-          <Button onClick={() => setShowAddType(true)}>
+          <Button onClick={openAdd}>
             {t('options.addType', { defaultValue: 'Add Option Type' })}
           </Button>
         </Flex>
@@ -155,10 +158,15 @@ const OptionsPage: React.FC = () => {
           />
         )}
 
+        {/* Unified Add/Edit dialog */}
         <Dialog
-          header={t('options.addType', { defaultValue: 'Add Option Type' })}
-          visible={showAddType}
-          onVisibleChange={setShowAddType as any}
+          header={
+            editRow
+              ? t('common.edit', { defaultValue: 'Edit' })
+              : t('options.addType', { defaultValue: 'Add Option Type' })
+          }
+          visible={dialogOpen}
+          onVisibleChange={setDialogOpen as any}
           dismissibleMask
           modal
         >
@@ -166,46 +174,19 @@ const OptionsPage: React.FC = () => {
             <FieldWrapper label="Option name" required>
               <StringInput
                 placeholder={t('options.typeName', { defaultValue: 'Name' })}
-                value={newTypeName}
-                onChange={(v) => setNewTypeName(String(v ?? ''))}
+                value={formName}
+                onChange={(v) => setFormName(String(v ?? ''))}
               />
             </FieldWrapper>
             <Flex justify="end" spacing="s">
-              <Button appearance="outline" onClick={() => setShowAddType(false)}>
+              <Button appearance="outline" onClick={() => setDialogOpen(false)}>
                 {t('app.cancel', { defaultValue: 'Cancel' })}
               </Button>
               <Button
-                onClick={handleCreateType}
-                isLoading={createType.isPending}
-                isDisabled={!newTypeName.trim()}
+                onClick={handleUpsert}
+                isLoading={editRow ? updateType.isPending : createType.isPending}
+                isDisabled={!formName.trim()}
               >
-                {t('app.save', { defaultValue: 'Save' })}
-              </Button>
-            </Flex>
-          </Flex>
-        </Dialog>
-
-        {/* Edit type dialog */}
-        <Dialog
-          header={t('common.edit', { defaultValue: 'Edit' })}
-          visible={!!editRow}
-          onVisibleChange={(vis: boolean) => !vis && setEditRow(null)}
-          dismissibleMask
-          modal
-        >
-          <Flex direction="vertical" spacing="m">
-            <FieldWrapper label="Option name" required>
-              <StringInput
-                placeholder={t('options.typeName', { defaultValue: 'Name' })}
-                value={editName}
-                onChange={(v) => setEditName(String(v ?? ''))}
-              />
-            </FieldWrapper>
-            <Flex justify="end" spacing="s">
-              <Button appearance="outline" onClick={() => setEditRow(null)}>
-                {t('app.cancel', { defaultValue: 'Cancel' })}
-              </Button>
-              <Button onClick={handleSaveEdit} isDisabled={!editName.trim()}>
                 {t('app.save', { defaultValue: 'Save' })}
               </Button>
             </Flex>

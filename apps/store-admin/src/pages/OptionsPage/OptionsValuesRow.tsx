@@ -11,7 +11,12 @@ import {
   ConfirmDialog,
 } from '@baby-toys/ui-kit';
 import type { OptionType, OptionValue } from '../../api/types/option';
-import { useOptionValues, useCreateOptionValue, useUpdateOptionValue, useDeleteOptionValue } from '../../api/optionApi';
+import {
+  useOptionValues,
+  useCreateOptionValue,
+  useUpdateOptionValue,
+  useDeleteOptionValue,
+} from '../../api/optionApi';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useToast } from '@baby-toys/ui-kit';
 
@@ -25,58 +30,51 @@ const OptionsValuesRow: React.FC<Props> = ({ activeType }) => {
   const { data: values = [], isLoading: loadingValues } = useOptionValues(typeId);
   const createValue = useCreateOptionValue(typeId);
   const deleteValue = useDeleteOptionValue(typeId);
-  const [showAdd, setShowAdd] = React.useState(false);
-  const [newValue, setNewValue] = React.useState('');
-  const [newDisplay, setNewDisplay] = React.useState('');
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [formVal, setFormVal] = React.useState('');
+  const [formDisp, setFormDisp] = React.useState('');
   const toast = useToast();
 
   // Edit/Delete state
   const [editRow, setEditRow] = React.useState<OptionValue | null>(null);
-  const [editVal, setEditVal] = React.useState('');
-  const [editDisp, setEditDisp] = React.useState<string>('');
   const [deleteRow, setDeleteRow] = React.useState<OptionValue | null>(null);
+  // Bind update hook to current edit row id (0 when none) so we don't create hooks inside handlers
+  const currentEditId = editRow?.id ?? 0;
+  const updateValue = useUpdateOptionValue(typeId, currentEditId);
 
-  const closeAdd = () => {
-    setShowAdd(false);
-    setNewValue('');
-    setNewDisplay('');
-  };
-
-  const handleCreateValue = async () => {
-    const value = newValue.trim();
-    if (!value) return;
-
-    try {
-      await createValue.mutateAsync({
-        value,
-        display: newDisplay.trim() || undefined,
-      });
-      toast.success(t('common.create', { defaultValue: 'Create' }));
-      closeAdd();
-    } catch (e: any) {
-      toast.error(e?.message || t('app.unexpectedError'));
-    }
+  const openAdd = () => {
+    setEditRow(null);
+    setFormVal('');
+    setFormDisp('');
+    setDialogOpen(true);
   };
 
   const handleOpenEdit = (row: OptionValue) => {
     setEditRow(row);
-    setEditVal(row.value || '');
-    setEditDisp(row.display || '');
+    setFormVal(row.value || '');
+    setFormDisp(row.display || '');
+    setDialogOpen(true);
   };
 
   const handleSaveEdit = async () => {
-    if (!editRow) return;
-    const payload: { value?: string; display?: string | null } = {};
-    const v = editVal.trim();
-    const d = editDisp.trim();
-    if (v !== (editRow.value || '')) payload.value = v;
-    payload.display = d || null;
-
-    const update = useUpdateOptionValue(typeId, editRow.id);
+    const v = formVal.trim();
+    const d = formDisp.trim();
+    if (!v) return;
     try {
-      await update.mutateAsync(payload);
-      toast.success(t('common.update', { defaultValue: 'Update' }));
+      if (editRow) {
+        const payload: { value?: string; display?: string | null } = {};
+        if (v !== (editRow.value || '')) payload.value = v;
+        payload.display = d || null;
+        await updateValue.mutateAsync(payload);
+        toast.success(t('common.update', { defaultValue: 'Update' }));
+      } else {
+        await createValue.mutateAsync({ value: v, display: d || undefined });
+        toast.success(t('common.create', { defaultValue: 'Create' }));
+      }
+      setDialogOpen(false);
       setEditRow(null);
+      setFormVal('');
+      setFormDisp('');
     } catch (e: any) {
       toast.error(e?.message || t('app.unexpectedError'));
     }
@@ -93,7 +91,7 @@ const OptionsValuesRow: React.FC<Props> = ({ activeType }) => {
         rows={values.length || 1}
         title={
           <Flex justify="end" align="center" fullWidth>
-            <Button appearance="outline" size="small" onClick={() => setShowAdd(true)}>
+            <Button appearance="outline" size="small" onClick={openAdd}>
               {t('options.addValue', { defaultValue: 'Add Value' })}
             </Button>
           </Flex>
@@ -142,10 +140,15 @@ const OptionsValuesRow: React.FC<Props> = ({ activeType }) => {
         rowHover
       />
 
+      {/* Unified Add/Edit dialog */}
       <Dialog
-        header={t('options.addValue', { defaultValue: 'Add Value' })}
-        visible={showAdd}
-        onVisibleChange={setShowAdd as any}
+        header={
+          editRow
+            ? t('common.edit', { defaultValue: 'Edit' })
+            : t('options.addValue', { defaultValue: 'Add Value' })
+        }
+        visible={dialogOpen}
+        onVisibleChange={setDialogOpen as any}
         dismissibleMask
         modal
       >
@@ -154,63 +157,27 @@ const OptionsValuesRow: React.FC<Props> = ({ activeType }) => {
             <FieldWrapper label="value" required>
               <StringInput
                 placeholder={t('options.value', { defaultValue: 'Value' })}
-                value={newValue}
-                onChange={(v) => setNewValue(String(v ?? ''))}
+                value={formVal}
+                onChange={(v) => setFormVal(String(v ?? ''))}
               />
             </FieldWrapper>
             <FieldWrapper label="display">
               <StringInput
                 placeholder={t('options.display', { defaultValue: 'Display (optional)' })}
-                value={newDisplay}
-                onChange={(v) => setNewDisplay(String(v ?? ''))}
+                value={formDisp}
+                onChange={(v) => setFormDisp(String(v ?? ''))}
               />
             </FieldWrapper>
           </Flex>
           <Flex justify="end" spacing="s">
-            <Button appearance="outline" onClick={closeAdd}>
+            <Button appearance="outline" onClick={() => setDialogOpen(false)}>
               {t('app.cancel', { defaultValue: 'Cancel' })}
             </Button>
             <Button
-              onClick={handleCreateValue}
-              isLoading={createValue.isPending}
-              isDisabled={!newValue.trim()}
+              onClick={handleSaveEdit}
+              isLoading={editRow ? updateValue.isPending : createValue.isPending}
+              isDisabled={!formVal.trim()}
             >
-              {t('app.save', { defaultValue: 'Save' })}
-            </Button>
-          </Flex>
-        </Flex>
-      </Dialog>
-
-      {/* Edit value dialog */}
-      <Dialog
-        header={t('common.edit', { defaultValue: 'Edit' })}
-        visible={!!editRow}
-        onVisibleChange={(vis: boolean) => !vis && setEditRow(null)}
-        dismissibleMask
-        modal
-      >
-        <Flex direction="vertical" spacing="m">
-          <Flex spacing="m">
-            <FieldWrapper label="value" required>
-              <StringInput
-                placeholder={t('options.value', { defaultValue: 'Value' })}
-                value={editVal}
-                onChange={(v) => setEditVal(String(v ?? ''))}
-              />
-            </FieldWrapper>
-            <FieldWrapper label="display">
-              <StringInput
-                placeholder={t('options.display', { defaultValue: 'Display (optional)' })}
-                value={editDisp}
-                onChange={(v) => setEditDisp(String(v ?? ''))}
-              />
-            </FieldWrapper>
-          </Flex>
-          <Flex justify="end" spacing="s">
-            <Button appearance="outline" onClick={() => setEditRow(null)}>
-              {t('app.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button onClick={handleSaveEdit} isDisabled={!editVal.trim()}>
               {t('app.save', { defaultValue: 'Save' })}
             </Button>
           </Flex>
