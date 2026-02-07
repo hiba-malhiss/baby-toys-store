@@ -1,5 +1,4 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 
 import {
@@ -12,7 +11,7 @@ import {
   ImageUploader,
   Accordion,
   AccordionGroup,
-  Divider
+  Divider,
 } from '@baby-toys/ui-kit';
 
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -20,10 +19,8 @@ import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper
 import LocalizedFields from './LocalizedFields';
 
 import { useProductForm } from './useProductForm';
-import { useProduct } from '../../api/productApi';
 
 import { useAttributeTypes } from '../../api/attributeApi';
-import ProductVariations from '../ProductVariations/ProductVariations';
 
 import styles from './Productsform.module.scss';
 import AttributesSection from './AttributesSection.tsx';
@@ -31,10 +28,6 @@ import OptionsSection from './OptionsSection.tsx';
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
-  const { id } = useParams<{ id?: string }>();
-  const pid = id ? Number(id) : undefined;
-
-  const { data: productForTabs } = useProduct(pid);
   const { data: attributeTypes = [] } = useAttributeTypes();
 
   const {
@@ -125,15 +118,6 @@ const ProductFormPage: React.FC = () => {
               <Heading level="h4">{t('productForm.options')}</Heading>
               <OptionsSection control={control} isDisabled={isDeletingImage} setValue={setValue} />
             </Flex>
-          </Accordion>
-
-          <Accordion header={t('productForm.tab.variations', { defaultValue: 'Variations' })}>
-            <div className={styles.productsFormGeneral}>
-              <ProductVariations
-                productId={pid}
-                productOptions={(productForTabs as any)?.options || []}
-              />
-            </div>
           </Accordion>
         </AccordionGroup>
         <Button onClick={handleSubmit} isDisabled={isSubmitting || isDeletingImage}>

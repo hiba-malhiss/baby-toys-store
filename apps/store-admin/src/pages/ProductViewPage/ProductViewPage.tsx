@@ -12,13 +12,13 @@ import {
   Accordion,
   AccordionGroup,
 } from '@baby-toys/ui-kit';
-import ProductVariations from '../ProductVariations/ProductVariations';
 import { Pencil } from 'lucide-react';
 import { useProduct } from '../../api/productApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './product-view-page.module.scss';
 import KPIWithTooltip from '../../components/KPIWithTooltip/KPIWithTooltip';
 import { useTranslation } from 'react-i18next';
+import ProductVariations from '../ProductVariationsPage/ProductVariations.tsx';
 
 type StatRow = {
   id: string;
@@ -252,7 +252,7 @@ const ProductViewPage: React.FC = () => {
               )}
 
               <div className={styles.heroText}>
-                <Heading level="h1" className={styles.title}>
+                <Heading level="h3" className={styles.title}>
                   {vm.name}
                 </Heading>
 

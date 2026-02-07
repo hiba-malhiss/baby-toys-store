@@ -28,6 +28,7 @@ import MonthDetailPage from './pages/MonthDetailPage/MonthDetailPage';
 import ExpensesPage from './pages/ExpensesPage/ExpensesPage';
 import OptionsPage from './pages/OptionsPage/OptionsPage.tsx';
 import AttributesPage from './pages/AttributesPage/AttributesPage.tsx';
+import ProductVariationsPage from './pages/ProductVariationsPage/ProductVariationsPage';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -88,6 +89,14 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <ProductsPage />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/edit-product/:id/variations"
+          element={
+            <PrivateRoute>
+              <ProductVariationsPage />
             </PrivateRoute>
           }
         />

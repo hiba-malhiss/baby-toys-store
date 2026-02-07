@@ -1,54 +1,34 @@
 import React, { useMemo, useState } from 'react';
 import {
   Button,
-  Flex,
   Table,
   Toggle,
   BouncingDotsLoader,
   Image,
   ConfirmDialog,
+  Flex,
 } from '@baby-toys/ui-kit';
 import { useToast } from '@baby-toys/ui-kit';
 import { Pencil, Trash2 } from 'lucide-react';
-
-import { useProduct } from '../../api/productApi';
 import { useVariants, useDeleteVariant, useUpdateVariant } from '../../api/variantApi';
 
 import type { VariantDto } from '../../api/types/variant';
-import type { ProductOptionDto } from '../../api/types/product';
-
-import VariationDialog from './VariationDialog';
 
 type Props = {
   productId: number;
-  productOptions: ProductOptionDto[];
   readOnly?: boolean;
+  openEdit?: (row: VariantDto) => void;
 };
 
-const ProductVariations: React.FC<Props> = ({ productId, productOptions, readOnly = false }) => {
+const ProductVariations: React.FC<Props> = ({ openEdit, productId, readOnly = false }) => {
   const toast = useToast();
 
   const { data: variants = [], isLoading } = useVariants(productId);
-  const { data: product } = useProduct(productId);
 
   const deleteVariant = useDeleteVariant(productId);
   const updateVariant = useUpdateVariant(productId);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editing, setEditing] = useState<VariantDto | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
-
-  const openCreate = () => {
-    setEditing(null);
-    setDialogOpen(true);
-  };
-
-  const openEdit = (row: VariantDto) => {
-    setEditing(row);
-    setDialogOpen(true);
-  };
-
-  const closeDialog = () => setDialogOpen(false);
 
   const toggleActive = (row: VariantDto, next: boolean) => {
     updateVariant.mutate(
@@ -148,13 +128,7 @@ const ProductVariations: React.FC<Props> = ({ productId, productOptions, readOnl
   if (isLoading) return <BouncingDotsLoader />;
 
   return (
-    <Flex fullWidth direction="vertical" spacing="l">
-      {!readOnly && (
-        <Flex justify="end" align="center" fullWidth>
-          <Button onClick={openCreate}>Add Variation</Button>
-        </Flex>
-      )}
-
+    <>
       <Table
         value={variants}
         columns={columns as any}
@@ -162,30 +136,14 @@ const ProductVariations: React.FC<Props> = ({ productId, productOptions, readOnl
         stripedRows
         emptyMessage="No variations yet."
       />
-
-      {!readOnly && (
-        <VariationDialog
-          productId={productId}
-          isOpen={dialogOpen}
-          onClose={closeDialog}
-          productOptions={productOptions}
-          productMainImage={(product as any)?.mainImage}
-          productImages={(product as any)?.images || []}
-          existingVariants={variants}
-          editing={editing}
-        />
-      )}
-
-      {!readOnly && (
-        <ConfirmDialog
-          visible={!!confirmDeleteId}
-          header="Confirm Delete"
-          message={`Are you sure you want to delete this variant? This action cannot beundone.`}
-          onConfirm={confirmDelete}
-          onCancel={() => setConfirmDeleteId(null)}
-        />
-      )}
-    </Flex>
+      <ConfirmDialog
+        visible={!!confirmDeleteId}
+        header="Confirm Delete"
+        message={`Are you sure you want to delete this variant? This action cannot be undone.`}
+        onConfirm={confirmDelete}
+        onCancel={() => setConfirmDeleteId(null)}
+      />
+    </>
   );
 };
 

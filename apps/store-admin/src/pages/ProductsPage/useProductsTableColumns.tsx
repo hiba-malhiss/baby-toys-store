@@ -1,6 +1,6 @@
 import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
-import { Pencil, Trash2, Star, Check, Eye, X } from 'lucide-react';
+import { Pencil, Trash2, Star, Check, Eye, X, Layers } from 'lucide-react';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
 import { AdminProductBase } from '../../api/types/product.ts';
@@ -125,6 +125,13 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
             appearance="outline"
             leftIconComp={Pencil}
             onClick={() => navigate(`/edit-product/${row.id}`)}
+          />
+          <Button
+            size="small"
+            appearance="outline"
+            leftIconComp={Layers}
+            onClick={() => navigate(`/edit-product/${row.id}/variations`)}
+            aria-label="Manage variations"
           />
           <Button
             size="small"
