@@ -12,6 +12,7 @@ import {
   ImageUploader,
   Accordion,
   AccordionGroup,
+  Divider
 } from '@baby-toys/ui-kit';
 
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -21,12 +22,12 @@ import LocalizedFields from './LocalizedFields';
 import { useProductForm } from './useProductForm';
 import { useProduct } from '../../api/productApi';
 
-import ProductOptions from './ProductOptions.tsx';
 import { useAttributeTypes } from '../../api/attributeApi';
 import ProductVariations from '../ProductVariations/ProductVariations';
 
 import styles from './Productsform.module.scss';
 import AttributesSection from './AttributesSection.tsx';
+import OptionsSection from './OptionsSection.tsx';
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
@@ -81,34 +82,6 @@ const ProductFormPage: React.FC = () => {
                   />
                 </Flex>
               </Card>
-
-              <Card fullWidth>
-                <Flex direction="vertical" spacing="xxl" fullWidth>
-                  <FormFieldWrapper
-                    name="categoryId"
-                    control={control}
-                    label={t('productForm.category')}
-                    fullWidth
-                  >
-                    <Select fullWidth isDisabled={isDeletingImage}>
-                      {categories.map((cat) => (
-                        <Option key={cat.id} value={cat.id}>
-                          {cat.name}
-                        </Option>
-                      ))}
-                    </Select>
-                  </FormFieldWrapper>
-                  <Heading level="h4">
-                    {t('productForm.attributes', { defaultValue: 'Attributes' })}
-                  </Heading>
-                  <AttributesSection
-                    control={control}
-                    attributeTypes={attributeTypes}
-                    isDisabled={isDeletingImage}
-                    setValue={setValue}
-                  />
-                </Flex>
-              </Card>
             </div>
           </Accordion>
 
@@ -124,10 +97,34 @@ const ProductFormPage: React.FC = () => {
             </div>
           </Accordion>
 
-          <Accordion header={t('productForm.tab.options', { defaultValue: 'Product Options' })}>
-            <div className={styles.productsFormGeneral}>
-              {pid != null && <ProductOptions productId={pid as number} />}
-            </div>
+          <Accordion header={t('productForm.tab.options')}>
+            <Flex direction="vertical" spacing="xxl">
+              <FormFieldWrapper
+                name="categoryId"
+                control={control}
+                label={t('productForm.category')}
+                fullWidth
+              >
+                <Select fullWidth isDisabled={isDeletingImage}>
+                  {categories.map((cat) => (
+                    <Option key={cat.id} value={cat.id}>
+                      {cat.name}
+                    </Option>
+                  ))}
+                </Select>
+              </FormFieldWrapper>
+              <Divider />
+              <Heading level="h4">{t('productForm.attributes')}</Heading>
+              <AttributesSection
+                control={control}
+                attributeTypes={attributeTypes}
+                isDisabled={isDeletingImage}
+                setValue={setValue}
+              />
+              <Divider />
+              <Heading level="h4">{t('productForm.options')}</Heading>
+              <OptionsSection control={control} isDisabled={isDeletingImage} setValue={setValue} />
+            </Flex>
           </Accordion>
 
           <Accordion header={t('productForm.tab.variations', { defaultValue: 'Variations' })}>

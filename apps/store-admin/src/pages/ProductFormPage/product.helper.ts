@@ -43,6 +43,15 @@ export const productSchema = z.object({
     )
     .optional()
     .default([]),
+  options: z
+    .array(
+      z.object({
+        optionTypeId: z.coerce.number().min(1, 'Option type is required'),
+        valueIds: z.array(z.coerce.number()).optional().default([]),
+      })
+    )
+    .optional()
+    .default([]),
   // localized
   translations: z.object({
     en: localizedFieldsSchema,
@@ -57,6 +66,7 @@ export const defaultProductValues = {
   images: [] as string[],
   isActive: true,
   categoryId: undefined as unknown as number | undefined,
+  options: [] as Array<{ optionTypeId: number; valueIds: number[] }>,
   attributes: [] as Array<{ attributeTypeId: number; valueIds: number[] }>,
   // localized for en and ar
   translations: {

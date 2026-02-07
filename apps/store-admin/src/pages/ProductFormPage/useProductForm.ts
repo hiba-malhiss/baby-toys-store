@@ -95,8 +95,20 @@ export const useProductForm = () => {
           }))
         : [];
 
+      const optionsArray = Array.isArray((product as any).options)
+        ? (product as any).options
+            .map((o: any) => ({
+              optionTypeId: Number(o?.type?.id),
+              valueIds: Array.isArray(o?.values)
+                ? o.values.map((v: any) => Number(v?.id)).filter(Number.isFinite)
+                : [],
+            }))
+            .filter((x: any) => Number.isFinite(x.optionTypeId))
+        : [];
+
       const defaultValues: ProductFormValues = {
         ...defaultProductValues,
+        options: optionsArray,
         // non-localized
         releaseDate: product.releaseDate || '',
         images: product.images || [],
@@ -174,6 +186,15 @@ export const useProductForm = () => {
       const en = sanitizeLocale('en');
       const ar = sanitizeLocale('ar');
 
+      const options = (data as any).options
+        ? (data as any).options
+            .filter((o: any) => o && o.optionTypeId)
+            .map((o: any) => ({
+              optionTypeId: Number(o.optionTypeId),
+              valueIds: Array.isArray(o.valueIds) ? o.valueIds.map((v: any) => Number(v)) : [],
+            }))
+        : [];
+
       // Coerce attributes into backend shape with numeric IDs
       const attributes = (data as any).attributes
         ? (data as any).attributes
@@ -192,6 +213,7 @@ export const useProductForm = () => {
         isActive: data.isActive,
         categoryId: data.categoryId,
         attributes: attributes.length ? attributes : undefined,
+        options: options.length ? options : undefined,
         // localized
         translations: [
           { locale: 'en', ...en },

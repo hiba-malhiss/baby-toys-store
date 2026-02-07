@@ -6,7 +6,6 @@ import {
   OptionValue,
   CreateOptionTypeRequest,
   CreateOptionValueRequest,
-  AttachProductOptionValueRequest,
 } from './types/option';
 
 // ---- Queries ----
@@ -59,40 +58,4 @@ export const useCreateOptionValue = (typeId: number) => {
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['optionValues', typeId] }),
   });
-};
-
-export const attachTypeToProduct = async (productId: number, typeId: number) => {
-  const { data } = await api.post<ApiEnvelope<{ id: number }>>(
-    `/api/admin/options/products/${productId}/types/${typeId}`
-  );
-  return data.data.id;
-};
-
-export const attachValueToProduct = async (
-  productId: number,
-  payload: AttachProductOptionValueRequest
-) => {
-  const { data } = await api.post<ApiEnvelope<{ id: number }>>(
-    `/api/admin/options/products/${productId}/values`,
-    payload
-  );
-  return data.data.id;
-};
-
-export const detachTypeFromProduct = async (productId: number, typeId: number) => {
-  const { data } = await api.delete<ApiEnvelope<{ id: number }>>(
-    `/api/admin/options/products/${productId}/types/${typeId}`
-  );
-  return data.data.id;
-};
-
-export const detachValueFromProduct = async (
-  productId: number,
-  typeId: number,
-  valueId: number
-) => {
-  const { data } = await api.delete<ApiEnvelope<{ id: number }>>(
-    `/api/admin/options/products/${productId}/types/${typeId}/values/${valueId}`
-  );
-  return data.data.id;
 };

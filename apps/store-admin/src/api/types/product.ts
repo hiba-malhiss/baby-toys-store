@@ -83,6 +83,12 @@ export interface ProductUpsertRequest {
     valueIds: number[];
   }>;
 
+  // Product options (option types and their selected values)
+  options?: Array<{
+    optionTypeId: number;
+    valueIds: number[];
+  }>;
+
   // Localized content per locale (e.g., en, ar)
   translations: Array<{
     locale: 'en' | 'ar' | string;

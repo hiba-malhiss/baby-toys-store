@@ -18,8 +18,3 @@ export interface CreateOptionValueRequest {
   value: string;
   display?: string | null;
 }
-
-export interface AttachProductOptionValueRequest {
-  optionTypeId: number;
-  optionValueId: number;
-}
