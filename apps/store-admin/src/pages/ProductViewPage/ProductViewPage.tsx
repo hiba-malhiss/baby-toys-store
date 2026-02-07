@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useCallback } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -8,7 +8,6 @@ import {
   KPI,
   Chip,
   CopyToClipboardButton,
-  Table,
   Accordion,
   AccordionGroup,
 } from '@baby-toys/ui-kit';
@@ -21,50 +20,7 @@ import { useTranslation } from 'react-i18next';
 import ProductVariations from '../ProductVariationsPage/ProductVariations.tsx';
 import ProductAttributesTable from './ProductAttributesTable.tsx';
 import ProductOptionsTable from './ProductOptionsTable.tsx';
-
-type StatRow = {
-  id: string;
-  label: string;
-  value: React.ReactNode;
-};
-
-const StatsTable: React.FC<{ rows: StatRow[] }> = ({ rows }) => {
-  const { t } = useTranslation();
-
-  const columns = useMemo(
-    () => [
-      {
-        header: t('productView.stat', { defaultValue: 'Stat' }),
-        field: 'label',
-        style: { minWidth: 0 },
-        body: (row: StatRow) => <span className={styles.statLabel}>{row.label}</span>,
-      },
-      {
-        header: '',
-        field: 'value',
-        style: { textAlign: 'right' as const, width: 220 },
-        body: (row: StatRow) => <span className={styles.statValue}>{row.value ?? '-'}</span>,
-      },
-    ],
-    []
-  );
-
-  return (
-    <div className={styles.statsTableWrapper}>
-      <Table
-        value={rows}
-        columns={columns as any}
-        paginator={false}
-        rowHover={false}
-        stripedRows
-        title={undefined}
-        emptyMessage=""
-        useLocalSortAndFilter={false}
-        withoutCard
-      />
-    </div>
-  );
-};
+import KeyValueTable, { type KeyValueRow } from './KeyValueTable';
 
 const ProductViewPage: React.FC = () => {
   const { t } = useTranslation();
@@ -77,16 +33,59 @@ const ProductViewPage: React.FC = () => {
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol || '';
 
-  const formatMoney = (val?: number | null) =>
-    val != null ? `${symbol}${Number(val).toLocaleString()}` : '-';
+  const formatMoney = useCallback(
+    (val?: number | null) => (val != null ? `${symbol}${Number(val).toLocaleString()}` : '-'),
+    [symbol]
+  );
 
-  const formatPercent = (val?: number | null) =>
-    val != null ? `${(Number(val) * 100).toFixed(2)}%` : '-';
+  const formatPercent = useCallback(
+    (val?: number | null) => (val != null ? `${(Number(val) * 100).toFixed(2)}%` : '-'),
+    []
+  );
 
-  const formatDateTime = (val?: string | null) => (val ? new Date(val).toLocaleString() : '-');
+  const formatDateTime = useCallback((val?: string | null) => {
+    return val ? new Date(val).toLocaleString() : '-';
+  }, []);
 
   const vm = useMemo(() => {
     const name = product?.name || t('productView.fallbackName');
+
+    const inventoryRows: KeyValueRow[] = [
+      { id: 'stock', label: t('productView.stock'), value: product?.stockQuantity ?? '-' },
+      { id: 'unitsSold', label: t('productView.unitsSold'), value: product?.sales ?? 0 },
+      {
+        id: 'releaseDate',
+        label: t('productView.releaseDate'),
+        value: formatDateTime(product?.releaseDate),
+      },
+      {
+        id: 'active',
+        label: t('productView.active'),
+        value: product?.isActive ? t('app.yes') : t('app.no'),
+      },
+    ];
+
+    const pricingRows: KeyValueRow[] = [
+      { id: 'listPrice', label: t('productView.listPrice'), value: formatMoney(product?.price) },
+      {
+        id: 'costPrice',
+        label: t('productView.costPrice'),
+        value: formatMoney(product?.costPrice),
+      },
+      { id: 'oldPrice', label: t('productView.oldPrice'), value: formatMoney(product?.oldPrice) },
+    ];
+
+    const classificationRows: KeyValueRow[] = [
+      { id: 'category', label: t('productView.category'), value: product?.categoryName ?? '-' },
+    ];
+
+    const metaRows: KeyValueRow[] = [
+      { id: 'created', label: t('productView.created'), value: formatDateTime(product?.createdAt) },
+      { id: 'updated', label: t('productView.updated'), value: formatDateTime(product?.updatedAt) },
+    ];
+
+    const options = (product as any)?.options || [];
+    const attributes = (product as any)?.attributes;
 
     return {
       id: product?.id,
@@ -103,166 +102,29 @@ const ProductViewPage: React.FC = () => {
         margin: formatPercent(product?.profitMargin),
       },
 
-      inventoryRows: [
-        { id: 'stock', label: t('productView.stock'), value: product?.stockQuantity ?? '-' },
-        { id: 'unitsSold', label: t('productView.unitsSold'), value: product?.sales ?? 0 },
-        {
-          id: 'releaseDate',
-          label: t('productView.releaseDate'),
-          value: formatDateTime(product?.releaseDate),
-        },
-        {
-          id: 'active',
-          label: t('productView.active'),
-          value: product?.isActive ? t('app.yes') : t('app.no'),
-        },
-      ] as StatRow[],
+      inventoryRows,
+      pricingRows,
+      classificationRows,
+      metaRows,
 
-      pricingRows: [
-        { id: 'listPrice', label: t('productView.listPrice'), value: formatMoney(product?.price) },
-        {
-          id: 'costPrice',
-          label: t('productView.costPrice'),
-          value: formatMoney(product?.costPrice),
-        },
-        { id: 'oldPrice', label: t('productView.oldPrice'), value: formatMoney(product?.oldPrice) },
-      ] as StatRow[],
-
-      classificationRows: [
-        { id: 'category', label: t('productView.category'), value: product?.categoryName ?? '-' },
-      ] as StatRow[],
-
-      metaRows: [
-        {
-          id: 'created',
-          label: t('productView.created'),
-          value: formatDateTime(product?.createdAt),
-        },
-        {
-          id: 'updated',
-          label: t('productView.updated'),
-          value: formatDateTime(product?.updatedAt),
-        },
-      ] as StatRow[],
+      options,
+      attributes,
 
       images: product?.images ?? [],
       shortDescription: product?.shortDescription,
       description: product?.description,
     };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [product, symbol, t]);
+  }, [product, t, formatMoney, formatPercent, formatDateTime]);
 
   const hasImages = vm.images.length > 0;
-  const hasContent = Boolean(vm.shortDescription || vm.description);
+  const hasOptions = Array.isArray(vm.options) && vm.options.length > 0;
+  const hasAttributes = Array.isArray(vm.attributes) && vm.attributes.length > 0;
+  const hasDesc = Boolean(vm.shortDescription || vm.description);
 
-  const accordionItems = useMemo(() => {
-    const items: React.ReactElement[] = [];
-
-    items.push(
-      <Accordion key="inventory" header={t('productView.inventory')} defaultOpen>
-        <StatsTable rows={vm.inventoryRows} />
-      </Accordion>
-    );
-
-    items.push(
-      <Accordion key="pricing" header={t('productView.pricing')} defaultOpen>
-        <StatsTable rows={vm.pricingRows} />
-      </Accordion>
-    );
-
-    items.push(
-      <Accordion
-        key="variations"
-        header={t('productView.variations', { defaultValue: 'Variations' })}
-      >
-        <ProductVariations
-          productId={productId}
-          productOptions={(product as any)?.options || []}
-          readOnly
-        />
-      </Accordion>
-    );
-
-    // Options table
-    if (((product as any)?.options || []).length > 0) {
-      items.push(
-        <Accordion key="options" header={t('productView.options', { defaultValue: 'Options' })}>
-          <ProductOptionsTable options={(product as any)?.options || []} />
-        </Accordion>
-      );
-    }
-
-    // Attributes table (if present on payload)
-    const attrSrc = (product as any)?.attributes as any[] | undefined;
-    if (Array.isArray(attrSrc) && attrSrc.length > 0) {
-      items.push(
-        <Accordion
-          key="attributes"
-          header={t('productView.attributes', { defaultValue: 'Attributes' })}
-        >
-          <ProductAttributesTable attributes={attrSrc} />
-        </Accordion>
-      );
-    }
-
-    if (vm.shortDescription) {
-      items.push(
-        <Accordion key="short" header={t('productView.shortDescription')}>
-          <div className={styles.descBox}>{vm.shortDescription}</div>
-        </Accordion>
-      );
-    }
-
-    if (vm.description) {
-      items.push(
-        <Accordion key="desc" header={t('productView.description')}>
-          <div className={styles.descBox}>{vm.description}</div>
-        </Accordion>
-      );
-    }
-
-    items.push(
-      <Accordion key="classification" header={t('productView.classification')}>
-        <StatsTable rows={vm.classificationRows} />
-      </Accordion>
-    );
-
-    items.push(
-      <Accordion key="meta" header={t('productView.meta')}>
-        <StatsTable rows={vm.metaRows} />
-      </Accordion>
-    );
-
-    if (hasImages) {
-      items.push(
-        <Accordion key="images" header={t('productView.images')}>
-          <div className={styles.imagesGrid}>
-            {vm.images.map((src, idx) => (
-              <img
-                key={`${src}-${idx}`}
-                src={src}
-                alt={`${t('productView.images')} ${idx + 1}`}
-                className={styles.thumb}
-              />
-            ))}
-          </div>
-        </Accordion>
-      );
-    }
-
-    return items;
-  }, [
-    hasContent,
-    hasImages,
-    t,
-    vm.classificationRows,
-    vm.description,
-    vm.images,
-    vm.inventoryRows,
-    vm.metaRows,
-    vm.pricingRows,
-    vm.shortDescription,
-  ]);
+  const detailsRows = useMemo<KeyValueRow[]>(
+    () => [...vm.inventoryRows, ...vm.pricingRows, ...vm.classificationRows, ...vm.metaRows],
+    [vm.inventoryRows, vm.pricingRows, vm.classificationRows, vm.metaRows]
+  );
 
   return (
     <AdminLayout isLoading={isLoading || !product}>
@@ -336,9 +198,85 @@ const ProductViewPage: React.FC = () => {
           />
         </div>
 
-        {/* Accordions */}
+        {/* Content / Cards (no accordions) */}
+        <div className={styles.contentGrid}>
+          <Card>
+            <div className={styles.cardHeader}>
+              <Heading level="h4">{t('productView.details', { defaultValue: 'Details' })}</Heading>
+            </div>
+            <div className={styles.cardBody}>
+              <KeyValueTable
+                rows={detailsRows}
+                labelHeader={t('productView.stat', { defaultValue: 'Stat' })}
+              />
+            </div>
+          </Card>
+
+          {hasImages && (
+            <Card>
+              <div className={styles.cardHeader}>
+                <Heading level="h4">{t('productView.images')}</Heading>
+              </div>
+              <div className={styles.cardBody}>
+                <div className={styles.imagesGrid}>
+                  {vm.images.map((src, idx) => (
+                    <img
+                      key={`${src}-${idx}`}
+                      src={src}
+                      alt={`${t('productView.images')} ${idx + 1}`}
+                      className={styles.thumb}
+                    />
+                  ))}
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
+
+        {hasDesc && (
+          <Card>
+            <div className={styles.cardHeader}>
+              <Heading level="h4">{t('productView.description')}</Heading>
+            </div>
+
+            <div className={styles.cardBody}>
+              {vm.shortDescription && (
+                <div className={styles.descBlock}>
+                  <div className={styles.descTitle}>{t('productView.shortDescription')}</div>
+                  <div className={styles.descBox}>{vm.shortDescription}</div>
+                </div>
+              )}
+
+              {vm.description && (
+                <div className={styles.descBlock}>
+                  <div className={styles.descTitle}>{t('productView.description')}</div>
+                  <div className={styles.descBox}>{vm.description}</div>
+                </div>
+              )}
+            </div>
+          </Card>
+        )}
+
+        {/* Heavy sections only */}
         <AccordionGroup allowMultipleOpen fullWidth withDivider>
-          {accordionItems}
+          <Accordion
+            key="variations"
+            header={t('productView.variations', { defaultValue: 'Variations' })}
+            defaultOpen
+          >
+            <ProductVariations productId={productId} productOptions={vm.options || []} readOnly />
+          </Accordion>
+
+          <Accordion key="options" header={t('productView.options', { defaultValue: 'Options' })}>
+            <ProductOptionsTable options={vm.options || []} />
+          </Accordion>
+
+          <Accordion
+            key="attributes"
+            header={t('productView.attributes', { defaultValue: 'Attributes' })}
+          >
+            <ProductAttributesTable attributes={vm.attributes} />
+          </Accordion>
         </AccordionGroup>
       </div>
     </AdminLayout>

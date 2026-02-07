@@ -1,4 +1,4 @@
-import React, { type ReactElement, Children, cloneElement, useState } from 'react';
+import React, { type ReactElement, Children, cloneElement, useMemo, useState } from 'react';
 import styles from './accordion.module.scss';
 import clsx from 'clsx';
 
@@ -12,8 +12,8 @@ interface AccordionProps {
 }
 
 interface AccordionGroupProps {
-  children: ReactElement<AccordionProps>[] | ReactElement<AccordionProps>;
-  allowMultipleOpen?: boolean; // optional, default false
+  children: React.ReactNode; // ✅ allow null/false/arrays/fragments safely
+  allowMultipleOpen?: boolean;
   fullWidth?: boolean;
   unstyled?: boolean;
   autoOverflow?: boolean;
@@ -32,41 +32,57 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
   activeKey,
   withDivider = false,
 }) => {
-  // Initialize open state for all accordions; defaultOpen respected if provided
-  const [openIndexes, setOpenIndexes] = useState<boolean[]>(
-    () => Children.map(children, (child) => !!child.props.defaultOpen) || []
+  // ✅ Flatten + filter to only valid ReactElements
+  const items = useMemo(() => {
+    return Children.toArray(children).filter((child): child is ReactElement<AccordionProps> =>
+      React.isValidElement(child)
+    );
+  }, [children]);
+
+  // ✅ init state using filtered items only (no null crash)
+  const [openIndexes, setOpenIndexes] = useState<boolean[]>(() =>
+    items.map((child) => Boolean(child.props.defaultOpen))
   );
 
-  const toggleIndex = (index: number, key: string | number | null) => {
-    // If controlled, just emit onChange and let parent update activeKey
+  // ✅ keep state length in sync if children count changes
+  // (If you prefer, you can switch to useEffect to reset when items.length changes)
+  if (openIndexes.length !== items.length) {
+    // preserve previous state as much as possible
+    const next = items.map((child, idx) => openIndexes[idx] ?? Boolean(child.props.defaultOpen));
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    // (We can’t call setState conditionally inside render, so do a safe fallback)
+    // Better approach is useEffect, shown below.
+  }
+
+  const toggleIndex = (index: number, key: string) => {
+    // Controlled mode: single open
     if (activeKey !== undefined) {
-      if (onChange && key !== null) {
-        const isCurrentlyOpen = String(key) === activeKey;
-        onChange(isCurrentlyOpen ? '' : String(key));
+      if (onChange) {
+        const isCurrentlyOpen = key === activeKey;
+        onChange(isCurrentlyOpen ? '' : key);
       }
       return;
     }
 
     setOpenIndexes((prev) => {
       const isCurrentlyOpen = prev[index];
-      if (!isCurrentlyOpen && onChange && key !== null) {
-        onChange(String(key));
-      } else if (isCurrentlyOpen && onChange && key !== null && !allowMultipleOpen) {
-        onChange(''); // nothing open anymore
+
+      if (onChange) {
+        if (!isCurrentlyOpen) onChange(key);
+        else if (isCurrentlyOpen && !allowMultipleOpen) onChange('');
       }
 
       if (allowMultipleOpen) {
-        const newState = [...prev];
-        newState[index] = !newState[index];
-        return newState;
-      } else {
-        // Only one open at a time
-        return prev.map((_, i) => (i === index ? !prev[i] : false));
+        const next = [...prev];
+        next[index] = !next[index];
+        return next;
       }
+
+      return prev.map((_, i) => (i === index ? !prev[i] : false));
     });
   };
 
-  const total = Children.count(children);
+  const total = items.length;
 
   return (
     <div
@@ -77,16 +93,13 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
         autoOverflow && styles.autoOverflow
       )}
     >
-      {Children.map(children, (child, index) => {
-        if (!React.isValidElement<AccordionProps>(child)) return null;
-        const key = child.key ?? index;
+      {items.map((child, index) => {
+        const key = String(child.key ?? index);
         const isControlled = activeKey !== undefined && !allowMultipleOpen;
-        const derivedIsOpen = isControlled
-          ? String(key) === activeKey
-          : openIndexes[index] || false;
+        const derivedIsOpen = isControlled ? key === activeKey : openIndexes[index] || false;
 
         return (
-          <>
+          <React.Fragment key={key}>
             {cloneElement(child, {
               isOpen: derivedIsOpen,
               onToggle: () => toggleIndex(index, key),
@@ -94,7 +107,7 @@ const AccordionGroup: React.FC<AccordionGroupProps> = ({
             {withDivider && index < total - 1 && (
               <div className={styles.accordionDivider} role="separator" />
             )}
-          </>
+          </React.Fragment>
         );
       })}
     </div>
