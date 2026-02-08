@@ -23,8 +23,8 @@ import { useProductForm } from './useProductForm';
 import { useAttributeTypes } from '../../api/attributeApi';
 
 import styles from './Productsform.module.scss';
-import AttributesSection from './AttributesSection.tsx';
-import OptionsSection from './OptionsSection.tsx';
+import AttributesSection from './components/AttributesSection.tsx';
+import OptionsSection from './components/OptionsSection.tsx';
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
