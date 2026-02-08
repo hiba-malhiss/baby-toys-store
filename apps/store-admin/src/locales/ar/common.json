@@ -119,6 +119,9 @@
       "code": "الرمز",
       "nameEn": "الاسم (بالإنجليزية)",
       "nameAr": "الاسم (بالعربية)",
+      "translations": "الترجمات",
+      "locale": "اللغة",
+      "displayName": "الاسم المعروض",
       "defaultFee": "رسوم الشحن الافتراضية",
       "feeOverride": "رسوم مخصصة",
       "zone": "المنطقة",
@@ -132,6 +135,7 @@
       "code": "الرمز",
       "nameEn": "الاسم (بالإنجليزية)",
       "nameAr": "الاسم (بالعربية)",
+      "name": "الاسم",
       "defaultFee": "الرسوم الافتراضية",
       "feeOverride": "رسوم مخصصة",
       "zone": "المنطقة",
@@ -145,7 +149,7 @@
       "empty": "لا توجد مناطق",
       "loadError": "فشل تحميل المناطق",
       "deactivateTitle": "تعطيل المنطقة",
-      "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل {{name}} ({{code}})؟"
+      "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل المنطقة {{code}}؟"
     },
     "towns": {
       "title": "مدن/بلدات التوصيل",
@@ -155,7 +159,7 @@
       "empty": "لا توجد مدن/بلدات",
       "loadError": "فشل تحميل المدن/البلدات",
       "deactivateTitle": "تعطيل المدينة/البلدة",
-      "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل {{name}} ({{code}})؟"
+      "deactivateConfirm": "هل أنت متأكد أنك تريد تعطيل {{code}}؟"
     }
   },
   "language": {

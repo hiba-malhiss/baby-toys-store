@@ -119,6 +119,9 @@
       "code": "Code",
       "nameEn": "Name (EN)",
       "nameAr": "Name (AR)",
+      "translations": "Translations",
+      "locale": "Locale",
+      "displayName": "Display name",
       "defaultFee": "Default Fee",
       "feeOverride": "Fee Override",
       "zone": "Zone",
@@ -132,6 +135,7 @@
       "code": "Code",
       "nameEn": "Name (EN)",
       "nameAr": "Name (AR)",
+      "name": "Name",
       "defaultFee": "Default Fee",
       "feeOverride": "Fee Override",
       "zone": "Zone",
@@ -145,7 +149,7 @@
       "empty": "No zones",
       "loadError": "Failed to load zones",
       "deactivateTitle": "Deactivate zone",
-      "deactivateConfirm": "Are you sure you want to deactivate {{name}} ({{code}})?"
+      "deactivateConfirm": "Are you sure you want to deactivate zone {{code}}?"
     },
     "towns": {
       "title": "Delivery Towns",
@@ -155,7 +159,7 @@
       "empty": "No towns",
       "loadError": "Failed to load towns",
       "deactivateTitle": "Deactivate town",
-      "deactivateConfirm": "Are you sure you want to deactivate {{name}} ({{code}})?"
+      "deactivateConfirm": "Are you sure you want to deactivate town {{code}}?"
     }
   },
   "language": {

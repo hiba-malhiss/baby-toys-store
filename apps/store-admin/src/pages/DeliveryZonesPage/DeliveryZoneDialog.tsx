@@ -110,18 +110,13 @@ const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({
         <FieldWrapper label={t('delivery.fields.translations')} fullWidth>
           <Flex direction="vertical" spacing="s">
             {(form.translations || []).map((tr, idx) => (
-              <Flex key={idx} spacing="s" align="end">
-                <FieldWrapper label={t('delivery.fields.locale')} required>
-                  <div>{tr.locale}</div>
-                </FieldWrapper>
-                <FieldWrapper label={t('delivery.fields.displayName')} required fullWidth>
+                <FieldWrapper label={t('delivery.fields.displayName') + ' ' + tr.locale} required fullWidth>
                   <StringInput
                     fullWidth
                     value={tr.displayName}
                     onChange={(val) => updateTranslation(idx, { displayName: String(val ?? '') })}
                   />
                 </FieldWrapper>
-              </Flex>
             ))}
           </Flex>
         </FieldWrapper>
