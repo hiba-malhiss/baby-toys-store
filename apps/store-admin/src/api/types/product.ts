@@ -7,9 +7,7 @@ export interface AdminProductBase {
   lowestActivePrice?: number | null;
   oldPriceForLowestPrice?: number | null;
   activeVariantsTotalStock?: number | null;
-  // Legacy fields (may be undefined now)
-  price?: number | null;
-  stockQuantity?: number | null;
+
   releaseDate?: string;
   mainImage?: string | null;
   images?: string[];
@@ -19,17 +17,13 @@ export interface AdminProductBase {
   createdAt?: string;
   updatedAt?: string;
   categoryId?: number | null;
-
-  // Human-readable relation names from the API
   categoryName?: string | null;
 
   // Optional extra data
-  oldPrice?: number | null; // legacy; prefer oldPriceForLowestPrice
   averageRating?: number | null;
   numberOfRatings?: number | null;
   sales?: number | null;
 
-  costPrice?: number | null;
   totalRevenue?: number | null;
   totalCost?: number | null;
   totalProfit?: number | null;
@@ -60,11 +54,24 @@ export interface ProductOptionDto {
 
 import type { VariantDto } from './variant';
 
-// Admin: product details with all translations
+export interface ProductAttributeDto {
+  typeId: number;
+  typeCode: string;
+  typeDisplayName: string;
+  multiselect: boolean;
+  values: Array<{
+    id: number;
+    code: string;
+    displayValue: string;
+    sortOrder?: number | null;
+  }>;
+}
+
 export interface ProductDetailsAdminDto extends AdminProductBase {
   translations: ProductTranslationDto[];
   variants: VariantDto[];
   options: ProductOptionDto[];
+  attributes?: ProductAttributeDto[];
 }
 
 // Backend upsert payload with translations

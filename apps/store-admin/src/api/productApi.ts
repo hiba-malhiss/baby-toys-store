@@ -103,7 +103,6 @@ export const useUpdateProduct = () => {
       if (variables?.id) {
         qc.invalidateQueries({ queryKey: ['product', variables.id] });
       }
-      toast.success('Product updated successfully');
       navigate('/products');
     },
     onError: (e: any) => {

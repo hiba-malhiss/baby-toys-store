@@ -106,9 +106,22 @@ export const useProductForm = () => {
             .filter((x: any) => Number.isFinite(x.optionTypeId))
         : [];
 
+      // Prefill product-level attributes for edit mode
+      const attributesArray = Array.isArray((product as any).attributes)
+        ? (product as any).attributes
+            .map((a: any) => ({
+              attributeTypeId: Number(a?.typeId),
+              valueIds: Array.isArray(a?.values)
+                ? a.values.map((v: any) => Number(v?.id)).filter(Number.isFinite)
+                : [],
+            }))
+            .filter((x: any) => Number.isFinite(x.attributeTypeId))
+        : [];
+
       const defaultValues: ProductFormValues = {
         ...defaultProductValues,
         options: optionsArray,
+        attributes: attributesArray,
         // non-localized
         releaseDate: product.releaseDate || '',
         images: product.images || [],
@@ -212,8 +225,8 @@ export const useProductForm = () => {
         mainImage: mainImageUrl || '',
         isActive: data.isActive,
         categoryId: data.categoryId,
-        attributes: attributes.length ? attributes : undefined,
-        options: options.length ? options : undefined,
+        attributes: attributes,
+        options: options,
         // localized
         translations: [
           { locale: 'en', ...en },
