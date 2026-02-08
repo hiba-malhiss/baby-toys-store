@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Dialog, Button, Flex, FieldWrapper, StringInput, Checkbox } from '@baby-toys/ui-kit';
-import type { AdminDeliveryZone } from '../../api/deliveryLocationsApi';
+import type { AdminDeliveryZone, Translation } from '../../api/deliveryLocationsApi';
 import { useCreateZone, useUpdateZone } from '../../api/deliveryLocationsApi';
 import { useTranslation } from 'react-i18next';
+import { getSupportedLocales } from '../../i18n/locale';
 
 export interface DeliveryZoneDialogProps {
   visible: boolean;
@@ -13,10 +14,9 @@ export interface DeliveryZoneDialogProps {
 
 const emptyForm: Omit<AdminDeliveryZone, 'id'> = {
   code: '',
-  nameAr: '',
-  nameEn: '',
   defaultFee: 0,
   active: true,
+  translations: [],
 };
 
 const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({
@@ -30,28 +30,45 @@ const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({
   const updateZone = useUpdateZone();
   const { t } = useTranslation();
 
+  const supportedLocales = getSupportedLocales();
+
+  const ensureAllLocales = (list: Translation[] | undefined): Translation[] => {
+    const byLocale = new Map((list || []).map((t) => [String(t.locale || '').toLowerCase(), t]));
+    return supportedLocales.map((loc) => {
+      const found = byLocale.get(loc.toLowerCase());
+      return found
+        ? { locale: loc, displayName: found.displayName || '' }
+        : { locale: loc, displayName: '' };
+    });
+  };
+
   useEffect(() => {
     if (!visible) return;
     if (zone) {
       setForm({
         code: zone.code,
-        nameAr: zone.nameAr,
-        nameEn: zone.nameEn,
         defaultFee: Number(zone.defaultFee),
         active: zone.active,
+        translations: ensureAllLocales(zone.translations),
       });
     } else {
-      setForm(emptyForm);
+      setForm({ ...emptyForm, translations: ensureAllLocales([]) });
     }
   }, [visible, zone]);
 
   const isSaving = createZone.isPending || updateZone.isPending;
 
   const handleSave = async () => {
-    const payload = { ...form, defaultFee: Number(form.defaultFee) } as Omit<
-      AdminDeliveryZone,
-      'id'
-    >;
+    const payload = {
+      ...form,
+      defaultFee: Number(form.defaultFee),
+      translations: (form.translations || []).map((t) => ({
+        locale: String(t.locale || '')
+          .trim()
+          .toLowerCase(),
+        displayName: String(t.displayName || '').trim(),
+      })) as Translation[],
+    } as Omit<AdminDeliveryZone, 'id'>;
     if (zone) {
       await updateZone.mutateAsync({ id: zone.id, ...payload });
     } else {
@@ -59,6 +76,12 @@ const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({
     }
     onSuccess();
   };
+
+  const updateTranslation = (idx: number, patch: Partial<Translation>) =>
+    setForm((f) => ({
+      ...f,
+      translations: (f.translations || []).map((tr, i) => (i === idx ? { ...tr, ...patch } : tr)),
+    }));
 
   return (
     <Dialog
@@ -84,19 +107,23 @@ const DeliveryZoneDialog: React.FC<DeliveryZoneDialogProps> = ({
             onChange={(val) => setForm((f) => ({ ...f, code: String(val ?? '') }))}
           />
         </FieldWrapper>
-        <FieldWrapper label={t('delivery.fields.nameEn')} required fullWidth>
-          <StringInput
-            fullWidth
-            value={form.nameEn}
-            onChange={(val) => setForm((f) => ({ ...f, nameEn: String(val ?? '') }))}
-          />
-        </FieldWrapper>
-        <FieldWrapper label={t('delivery.fields.nameAr')} required fullWidth>
-          <StringInput
-            fullWidth
-            value={form.nameAr}
-            onChange={(val) => setForm((f) => ({ ...f, nameAr: String(val ?? '') }))}
-          />
+        <FieldWrapper label={t('delivery.fields.translations')} fullWidth>
+          <Flex direction="vertical" spacing="s">
+            {(form.translations || []).map((tr, idx) => (
+              <Flex key={idx} spacing="s" align="end">
+                <FieldWrapper label={t('delivery.fields.locale')} required>
+                  <div>{tr.locale}</div>
+                </FieldWrapper>
+                <FieldWrapper label={t('delivery.fields.displayName')} required fullWidth>
+                  <StringInput
+                    fullWidth
+                    value={tr.displayName}
+                    onChange={(val) => updateTranslation(idx, { displayName: String(val ?? '') })}
+                  />
+                </FieldWrapper>
+              </Flex>
+            ))}
+          </Flex>
         </FieldWrapper>
         <FieldWrapper label={t('delivery.fields.defaultFee')} required fullWidth>
           <StringInput

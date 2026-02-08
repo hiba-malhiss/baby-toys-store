@@ -17,6 +17,7 @@ import {
 } from '../../api/deliveryLocationsApi';
 import DeliveryZoneDialog from './DeliveryZoneDialog';
 import { useTranslation } from 'react-i18next';
+import { getSupportedLocales } from '../../i18n/locale';
 
 const DeliveryZonesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -44,11 +45,18 @@ const DeliveryZonesPage: React.FC = () => {
     setConfirmVisible(true);
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const locales = getSupportedLocales();
+    const localeCols = locales.map((loc) => ({
+      header: `${t('delivery.columns.name')} (${loc})`,
+      field: `name_${loc}`,
+      body: (row: AdminDeliveryZone) =>
+        (row.translations || []).find((tr) => (tr.locale || '').toLowerCase() === loc)
+          ?.displayName || '',
+    }));
+    return [
       { header: t('delivery.columns.code'), field: 'code' },
-      { header: t('delivery.columns.nameEn'), field: 'nameEn' },
-      { header: t('delivery.columns.nameAr'), field: 'nameAr' },
+      ...localeCols,
       { header: t('delivery.columns.defaultFee'), field: 'defaultFee' },
       {
         header: t('delivery.columns.active'),
@@ -77,9 +85,8 @@ const DeliveryZonesPage: React.FC = () => {
           </Flex>
         ),
       },
-    ],
-    [t]
-  );
+    ];
+  }, [t]);
 
   const doDeactivate = async () => {
     if (!toDeactivate) return;
@@ -145,12 +152,7 @@ const DeliveryZonesPage: React.FC = () => {
         onConfirm={doDeactivate}
         header={t('delivery.zones.deactivateTitle')}
         message={
-          toDeactivate
-            ? t('delivery.zones.deactivateConfirm', {
-                name: toDeactivate.nameEn,
-                code: toDeactivate.code,
-              })
-            : ''
+          toDeactivate ? t('delivery.zones.deactivateConfirm', { code: toDeactivate.code }) : ''
         }
       />
     </AdminLayout>

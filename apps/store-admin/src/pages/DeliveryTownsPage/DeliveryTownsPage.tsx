@@ -17,6 +17,7 @@ import {
 } from '../../api/deliveryLocationsApi';
 import DeliveryTownDialog from './DeliveryTownDialog';
 import { useTranslation } from 'react-i18next';
+import { getSupportedLocales } from '../../i18n/locale';
 
 const DeliveryTownsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -44,11 +45,18 @@ const DeliveryTownsPage: React.FC = () => {
     setConfirmVisible(true);
   };
 
-  const columns = useMemo(
-    () => [
+  const columns = useMemo(() => {
+    const locales = getSupportedLocales();
+    const localeCols = locales.map((loc) => ({
+      header: `${t('delivery.columns.name')} (${loc})`,
+      field: `name_${loc}`,
+      body: (row: AdminDeliveryTown) =>
+        (row.translations || []).find((tr) => (tr.locale || '').toLowerCase() === loc)
+          ?.displayName || '',
+    }));
+    return [
       { header: t('delivery.columns.code'), field: 'code' },
-      { header: t('delivery.columns.nameEn'), field: 'nameEn' },
-      { header: t('delivery.columns.nameAr'), field: 'nameAr' },
+      ...localeCols,
       { header: t('delivery.columns.zone'), field: 'zoneCode' },
       { header: t('delivery.columns.feeOverride'), field: 'feeOverride' },
       {
@@ -78,9 +86,8 @@ const DeliveryTownsPage: React.FC = () => {
           </Flex>
         ),
       },
-    ],
-    [t]
-  );
+    ];
+  }, [t]);
 
   const doDeactivate = async () => {
     if (!toDeactivate) return;
@@ -146,12 +153,7 @@ const DeliveryTownsPage: React.FC = () => {
         onConfirm={doDeactivate}
         header={t('delivery.towns.deactivateTitle')}
         message={
-          toDeactivate
-            ? t('delivery.towns.deactivateConfirm', {
-                name: toDeactivate.nameEn,
-                code: toDeactivate.code,
-              })
-            : ''
+          toDeactivate ? t('delivery.towns.deactivateConfirm', { code: toDeactivate.code }) : ''
         }
       />
     </AdminLayout>

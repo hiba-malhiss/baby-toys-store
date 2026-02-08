@@ -6,23 +6,23 @@ import { useToast } from '@baby-toys/ui-kit';
 const getErrMsg = (e: any, fallback = 'Operation failed') =>
   e?.response?.data?.message || e?.message || fallback;
 
+export type Translation = { locale: string; displayName: string };
+
 export type AdminDeliveryTown = {
   id: number;
   code: string;
-  nameAr: string;
-  nameEn: string;
   zoneCode: string;
   feeOverride?: number | null;
   active: boolean;
+  translations: Translation[];
 };
 
 export type AdminDeliveryZone = {
   id: number;
   code: string;
-  nameAr: string;
-  nameEn: string;
   defaultFee: number;
   active: boolean;
+  translations: Translation[];
 };
 
 export const DELIVERY_KEYS = {
