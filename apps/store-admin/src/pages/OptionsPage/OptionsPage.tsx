@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
 import { Button, Flex, Heading, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
@@ -13,15 +13,14 @@ const OptionsPage: React.FC = () => {
   const { t } = useTranslation();
   const { data: types = [], isLoading: loadingTypes } = useOptionTypes();
   const toast = useToast();
-  const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
-  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
+  const [dialogOpen, setDialogOpen] = useState(false);
 
   // Edit/Delete state
-  const [editRow, setEditRow] = React.useState<OptionType | null>(null);
-  const [deleteRow, setDeleteRow] = React.useState<OptionType | null>(null);
+  const [editRow, setEditRow] = useState<OptionType | null>(null);
+  const [deleteRow, setDeleteRow] = useState<OptionType | null>(null);
 
   const deleteType = useDeleteOptionType();
-  // Update hook as defined in optionApi (no id at hook level)
 
   const openAdd = () => {
     setEditRow(null);

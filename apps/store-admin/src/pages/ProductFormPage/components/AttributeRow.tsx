@@ -2,7 +2,8 @@ import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { Card, Flex, Select, Option, Button } from '@baby-toys/ui-kit';
-import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
+import FormFieldWrapper from '../../../components/FormFieldWrapper/FormFieldWrapper';
+import { useAttributeTypeAdmin } from '../../../api/attributeApi';
 
 interface AttributeRowProps {
   index: number;
@@ -25,9 +26,13 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
 }) => {
   const { t } = useTranslation();
   const typeId = useWatch({ control, name: `attributes.${index}.attributeTypeId` as const });
+  const numericTypeId = Number(typeId) || undefined;
   const currentType = attributeTypes.find((t) => t.id === Number(typeId));
-  const isMulti = !!currentType?.isMultiselect;
-  const valueOptions = (currentType?.values || []).filter((v: any) => v.isActive);
+  const { data: attributeType } = useAttributeTypeAdmin(numericTypeId);
+  const isMulti = !!(attributeType?.isMultiselect ?? currentType?.isMultiselect);
+  const valueOptions = ((attributeType?.values ?? currentType?.values) || []).filter(
+    (v: any) => v.isActive
+  );
   const availableTypes = attributeTypes.filter(
     (t) => !selectedTypeIds.includes(Number(t.id)) || Number(t.id) === Number(typeId)
   );
