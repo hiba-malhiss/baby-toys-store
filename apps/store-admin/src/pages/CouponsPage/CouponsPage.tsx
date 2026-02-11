@@ -1,6 +1,14 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Flex, Table, Heading, ConfirmDialog, StringInput } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Table,
+  Heading,
+  ConfirmDialog,
+  StringInput,
+  Toggle,
+} from '@baby-toys/ui-kit';
 import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import useCouponsPage from './useCouponsPage';
 import CouponDialog from './CouponDialog';
@@ -30,6 +38,8 @@ const CouponsPage: React.FC = () => {
     handleSearch,
     searchInput,
     setSearchInput,
+    includeDeleted,
+    setIncludeDeleted,
   } = useCouponsPage();
 
   const columns = [
@@ -123,6 +133,10 @@ const CouponsPage: React.FC = () => {
               onIconClick={() => handleSearch(searchInput)}
               fullWidth
             />
+            <Flex align="center" spacing="s">
+              <Toggle checked={includeDeleted} onChange={(v) => setIncludeDeleted(!!v)} />
+              <span>Show deleted</span>
+            </Flex>
             <Button
               onClick={openAddDialog}
               leftIconComp={Plus}

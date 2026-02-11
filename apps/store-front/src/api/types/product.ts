@@ -4,8 +4,8 @@ export interface Product {
   name: string;
   description?: string | null;
   shortDescription?: string | null;
-  price: number;
-  stockQuantity?: number | null;
+  activeVariantsTotalStock?: number | null;
+  defaultVariant?: Variant | null;
   releaseDate?: string | null;
   mainImage?: string | null;
   images?: string[];
@@ -16,15 +16,59 @@ export interface Product {
 
   categoryId?: number | null;
   categoryName?: string | null;
-  brandId?: number | null;
-  brandName?: string | null;
-  colorIds?: number[];
-  colorCodes?: string[];
-  materialIds?: number[];
-  materialNames?: string[];
   averageRating?: number | null;
   numberOfRatings?: number | null;
 
-  oldPrice?: number | null;
   sales?: number | null;
+
+  // Details-only fields
+  variants?: Variant[];
+  options?: ProductOption[];
+  attributes?: ProductAttribute[];
+}
+
+export interface Variant {
+  id: number;
+  sku: string;
+  price: number;
+  oldPrice?: number | null;
+  costPrice?: number | null;
+  stockQuantity?: number | null;
+  isActive?: boolean | null;
+  mainImage?: string | null;
+  options?: string[];
+  optionSelectionIds?: Record<number, number>; // typeId -> valueId
+}
+
+export interface OptionType {
+  id: number;
+  name: string;
+  displayName?: string | null;
+  description?: string | null;
+}
+
+export interface OptionValue {
+  id: number;
+  value: string;
+  display?: string | null;
+}
+
+export interface ProductOption {
+  type: OptionType;
+  values: OptionValue[];
+}
+
+export interface ProductAttributeValueDto {
+  id: number;
+  code: string;
+  displayValue: string;
+  sortOrder: number;
+}
+
+export interface ProductAttribute {
+  typeId: number;
+  typeCode: string;
+  typeDisplayName: string;
+  multiselect: boolean;
+  values: ProductAttributeValueDto[];
 }

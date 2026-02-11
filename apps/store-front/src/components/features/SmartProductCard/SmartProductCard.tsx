@@ -36,12 +36,16 @@ const SmartProductCard: React.FC<{ product: Product }> = ({ ...props }) => {
       isFavorite={isFavorite}
       onToggleFavorite={handleToggleFavorite}
       isLoadingAddToCart={addToCartMutation.isPending}
-      onAddToCart={async (product) => {
-        if ((product as any)?.outOfStock) {
+      onAddToCart={async (product: Product) => {
+        if (product?.outOfStock) {
           toast.error('Out of stock');
           return;
         }
-        await addToCartMutation.mutateAsync({ productId: Number(product.id), quantity: 1 });
+        await addToCartMutation.mutateAsync({
+          productId: Number(props.product.id),
+          variantId: Number(props.product?.defaultVariant?.id),
+          quantity: 1,
+        });
         openShippingCartDrawer();
       }}
       isLoadingFavorite={isLoading}

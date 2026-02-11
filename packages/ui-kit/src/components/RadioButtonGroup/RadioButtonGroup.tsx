@@ -5,6 +5,7 @@ import RadioButton from './RadioButton';
 export type RadioOption = {
   label: React.ReactNode;
   value: string;
+  isDisabled?: boolean;
 };
 
 interface RadioButtonGroupProps {
@@ -18,6 +19,7 @@ interface RadioButtonGroupProps {
   justify?: Justify;
   spacing?: Spacing;
   appearance?: string;
+  size?: string;
   fullWidth?: boolean;
   children?: React.ReactNode;
 }
@@ -34,6 +36,7 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
   justify = 'stretch',
   appearance,
   children,
+  size,
   fullWidth,
 }) => {
   const renderButtons = () => {
@@ -46,6 +49,8 @@ const RadioButtonGroup: React.FC<RadioButtonGroupProps> = ({
           isSelected={selectedValue === option.value}
           onChange={onChange}
           appearance={appearance}
+          size={size}
+          isDisabled={option.isDisabled}
         >
           {option.label}
         </RadioButton>

@@ -3,7 +3,7 @@ import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { ShopFilters } from '../pages/ShopPage/SideFilters/side-filters.utils';
 import type { Product } from './types/product.ts';
-import { normalizeProduct } from './normalizers/productNormalizer';
+import { parseAttributeFilters } from '../utils/filters.utils.ts';
 
 export type ProductsQuery = {
   page: number;
@@ -15,8 +15,10 @@ export type ProductsQuery = {
 function mapSort(sortKey: string | undefined): { sortBy: string; sortDirection: 'ASC' | 'DESC' } {
   switch (sortKey) {
     case 'price_asc':
+      // TODO: backend variant-price sorting not yet supported; fallback to createdAt asc
       return { sortBy: 'price', sortDirection: 'ASC' };
     case 'price_desc':
+      // TODO: backend variant-price sorting not yet supported; fallback to createdAt desc
       return { sortBy: 'price', sortDirection: 'DESC' };
     case 'name':
       return { sortBy: 'name', sortDirection: 'ASC' };
@@ -39,13 +41,11 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
   const { sortBy: sb, sortDirection } = mapSort(sortBy);
 
   const categoryId = filters?.categoryId ? Number(filters.categoryId) : undefined;
-  const brandId = filters?.brandId ? Number(filters.brandId) : undefined;
-  const colorIds = filters?.colorId ? [Number(filters.colorId)] : undefined;
-  const materialIds = filters?.materialId ? [Number(filters.materialId)] : undefined;
   const minPrice = filters?.priceRange?.[0];
   const maxPrice = filters?.priceRange?.[1];
   const query = (filters as any)?.query;
   const onSale = (filters as any)?.discounts === 'discounts' ? true : undefined;
+  const { attrsParam, attrsSignature } = parseAttributeFilters(filters);
 
   const zeroBasedPage = Math.max(0, (page || 1) - 1);
 
@@ -57,13 +57,11 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
       sb,
       sortDirection,
       categoryId,
-      brandId,
-      (colorIds || []).join(','),
-      (materialIds || []).join(','),
       minPrice,
       maxPrice,
       query || '',
       onSale ? 'onSale' : '',
+      attrsSignature,
     ],
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
@@ -73,18 +71,16 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
           sortBy: sb,
           sortDirection,
           categoryId,
-          brandId,
           minPrice,
           maxPrice,
-          colorIds,
-          materialIds,
           query,
           onSale,
+          ...attrsParam,
         },
       });
       const data = res.data.data;
       return {
-        items: (data?.content || []).map((dto: Product) => normalizeProduct(dto)),
+        items: data?.content || [],
         page: (data?.number ?? zeroBasedPage) + 1,
         totalPages: data?.totalPages ?? 0,
         totalItems: data?.totalElements ?? 0,

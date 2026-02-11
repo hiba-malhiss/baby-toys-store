@@ -13,6 +13,7 @@ export const useCouponsPage = () => {
   // searchInput controls the text in the input; searchCode is the query param used for API
   const [searchInput, setSearchInput] = useState<string>('');
   const [searchCode, setSearchCode] = useState<string>('');
+  const [includeDeleted, setIncludeDeleted] = useState<boolean>(false);
 
   const [dialogVisible, setDialogVisible] = useState(false);
   const [editingCoupon, setEditingCoupon] = useState<Coupon | null>(null);
@@ -25,6 +26,7 @@ export const useCouponsPage = () => {
     sortBy: sortField,
     sortDirection,
     code: searchCode || undefined,
+    includeDeleted,
   });
 
   const coupons = data?.content ?? [];
@@ -90,6 +92,7 @@ export const useCouponsPage = () => {
     coupons,
     totalItems,
     isLoading,
+    includeDeleted,
     dialogVisible,
     setDialogVisible,
     editingCoupon,
@@ -105,6 +108,7 @@ export const useCouponsPage = () => {
     searchInput,
     setSearchInput,
     searchCode,
+    setIncludeDeleted,
   };
 };
 

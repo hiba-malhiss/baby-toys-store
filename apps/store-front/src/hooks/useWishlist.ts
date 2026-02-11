@@ -1,11 +1,11 @@
 import { useAuth } from '../context/AuthContext';
 import { useLoginDialogStore } from '../store/useLoginDialogStore';
 import { useAddToWishlist, useRemoveFromWishlist } from '../api/wishlistApi';
-import type { UiProduct } from '../api/normalizers/productNormalizer';
+import type { Product } from '../api/types/product';
 import { useToast } from '@baby-toys/ui-kit';
 import { useWishlistIdsStore } from '../store/useWishlistIdsStore';
 
-export function useWishlist(product: Pick<UiProduct, 'id'>) {
+export function useWishlist(product: Pick<Product, 'id'>) {
   const { isAuthenticated } = useAuth();
   const { open: openLoginDialog } = useLoginDialogStore();
 

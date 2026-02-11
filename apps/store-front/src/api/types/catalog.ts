@@ -1,12 +1,3 @@
-export interface Brand {
-  id: number;
-  name: string;
-  description?: string;
-  logoUrl?: string;
-  createdAt?: string;
-  updatedAt?: string;
-}
-
 export interface Category {
   id?: number;
   name: string;
@@ -17,16 +8,18 @@ export interface Category {
   updatedAt?: string;
 }
 
-export interface Color {
-  id: string;
-  name: string;
+export interface AttributeValuePublicDto {
+  id: number;
   code: string;
-  createdAt?: string;
-  updatedAt?: string;
+  displayValue: string;
+  sortOrder: number;
 }
 
-export interface Material {
+export interface AttributeTypePublicDto {
   id: number;
-  name: string;
-  description?: string | null;
+  code: string;
+  displayName: string;
+  multiselect: boolean;
+  sortOrder: number;
+  values: AttributeValuePublicDto[];
 }

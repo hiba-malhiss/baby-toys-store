@@ -15,6 +15,7 @@
   --color-accent: #{$color-accent};
   --color-accent-hover: #{$color-accent-hover};
   --color-accent-light: #{$color-accent-light};
+  --color-accent-soft: #{$color-accent-soft};
   --color-accent-light-hover: #{$color-accent-light};
   --color-accent-dark: #{$color-accent-dark};
 
@@ -88,7 +89,8 @@
 
   --color-accent: #6c8ef2;
   --color-accent-hover: #5477db;
-  --color-accent-light: #e7edff;
+  --color-accent-light: #aebcf2;
+  --color-accent-soft: #{$color-accent-soft};
   --color-accent-light-hover: #e7edff;
   --color-accent-dark: #3f5fbf;
 

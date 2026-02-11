@@ -3,10 +3,6 @@ export interface AdminProductBase {
   name: string;
   description?: string;
   shortDescription?: string;
-  // Variant-level aggregates from backend
-  lowestActivePrice?: number | null;
-  oldPriceForLowestPrice?: number | null;
-  activeVariantsTotalStock?: number | null;
 
   releaseDate?: string;
   mainImage?: string | null;
@@ -18,6 +14,7 @@ export interface AdminProductBase {
   updatedAt?: string;
   categoryId?: number | null;
   categoryName?: string | null;
+  defaultVariant: VariantDto
 
   // Optional extra data
   averageRating?: number | null;

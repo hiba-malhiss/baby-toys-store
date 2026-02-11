@@ -11,10 +11,12 @@ interface RadioButtonProps {
   value: string;
   isSelected?: boolean;
   onChange?: (value: string) => void;
-  appearance?: 'link' | 'chip' | 'link-underline' | 'field' | 'color-swatch';
+  appearance?: 'link' | 'chip' | 'outlineChip' | 'link-underline' | 'field' | 'color-swatch';
   className?: string;
   swatchColor?: string;
   isRainbow?: boolean;
+  size?: 'small' | string;
+  isDisabled?: boolean;
 }
 
 const RadioButton: React.FC<RadioButtonProps> = ({
@@ -27,6 +29,8 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   appearance = 'field',
   swatchColor,
   isRainbow,
+  size,
+  isDisabled,
 }) => {
   const inputId = `${name}-${value}`;
   const timerRef = useRef<NodeJS.Timeout | null>(null);
@@ -35,6 +39,10 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   // We manually trigger onChange so outer logic can toggle it off.
   const handleMouseDown = useCallback(
     (e: React.MouseEvent) => {
+      if (isDisabled) {
+        e.preventDefault();
+        return;
+      }
       if (timerRef.current) {
         clearTimeout(timerRef.current);
       }
@@ -45,7 +53,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({
         }, 150); // 150ms debounce time
       }
     },
-    [isSelected, onChange, value]
+    [isDisabled, isSelected, onChange, value]
   );
 
   useEffect(() => {
@@ -59,9 +67,16 @@ const RadioButton: React.FC<RadioButtonProps> = ({
   return (
     <label
       htmlFor={inputId}
-      className={clsx(className, styles.radioButton, styles[`radioButton--${appearance}`], {
-        [styles.isSelected]: isSelected,
-      })}
+      className={clsx(
+        className,
+        styles.radioButton,
+        styles[`radioButton--${appearance}`],
+        styles[`radioButton--${size}`],
+        {
+          [styles.isSelected]: isSelected,
+          [styles.isDisabled]: isDisabled,
+        }
+      )}
       onMouseDown={handleMouseDown}
     >
       <input
@@ -71,6 +86,8 @@ const RadioButton: React.FC<RadioButtonProps> = ({
         value={value}
         checked={isSelected}
         onChange={() => onChange?.(value)}
+        disabled={isDisabled}
+        aria-disabled={isDisabled}
       />
 
       {appearance === 'field' && (

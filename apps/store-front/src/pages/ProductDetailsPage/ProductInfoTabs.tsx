@@ -2,11 +2,11 @@ import React from 'react';
 import { TabBar, TabBarItem, Card, ExpandableContent } from '@baby-toys/ui-kit';
 import styles from './product-details-page.module.scss';
 import { ProductReviews } from './ProductReviews.tsx';
-import type { UiProduct } from '../../api/normalizers/productNormalizer';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
+import type { Product } from "../../api/types/product.ts";
 
-export const ProductInfoTabs: React.FC<{ product: UiProduct }> = ({ product }) => {
+export const ProductInfoTabs: React.FC<{ product: Product }> = ({ product }) => {
   const { id, shortDescription, featureBullets, details } = product;
   const { data: settings } = useStoreSettings();
   const { t } = useTranslation('common');

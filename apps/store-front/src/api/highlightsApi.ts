@@ -1,7 +1,6 @@
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { Product } from './types/product';
-import { normalizeProduct } from './normalizers/productNormalizer';
 import { useInfiniteQuery, useQuery, keepPreviousData } from '@tanstack/react-query';
 
 export async function fetchHighlights(page: number, size: number) {
@@ -14,7 +13,7 @@ export async function fetchHighlights(page: number, size: number) {
   });
 
   const data = res.data.data;
-  const items = (data?.content || []).map((dto: Product) => normalizeProduct(dto));
+  const items = (data?.content || []) as Product[];
 
   return {
     items,

@@ -10,29 +10,31 @@ export const useUrlFilters = <T extends Record<string, any>>(
   filterKeys?: (keyof T)[]
 ) => {
   const [searchParams, setSearchParams] = useSearchParams();
+  const lastFiltersRef = useRef<Record<string, any>>({});
 
-  // Keep a ref to last filters to avoid returning new object if unchanged
-  const lastFiltersRef = useRef<Partial<T>>({});
-
-  const urlFilters = useMemo((): Partial<T> => {
+  const urlFilters = useMemo((): Partial<T> & Record<string, any> => {
     const keys = filterKeys ?? (Object.keys(parsers) as (keyof T)[]);
 
-    const result = {} as Partial<T>;
+    const result: Record<string, any> = {};
 
+    // 1) Include ALL current URL params; parse via parser if known, else keep raw string
+    for (const [key, val] of searchParams.entries()) {
+      const parser = parsers[key as keyof T];
+      result[key] = parser ? parser(val) : val;
+    }
+
+    // 2) Ensure known keys not present in URL fall back to defaults
     keys.forEach((key) => {
-      const val = searchParams.get(key as string);
-      if (val !== null) {
-        result[key] = parsers[key](val);
-      } else {
-        result[key] = defaultValues[key];
+      if (!searchParams.has(key as string)) {
+        result[key as string] = defaultValues[key];
       }
     });
 
     if (isEqual(result, lastFiltersRef.current)) {
-      return lastFiltersRef.current;
+      return lastFiltersRef.current as Partial<T> & Record<string, any>;
     } else {
       lastFiltersRef.current = result;
-      return result;
+      return result as Partial<T> & Record<string, any>;
     }
   }, [searchParams, parsers, defaultValues, filterKeys]);
 

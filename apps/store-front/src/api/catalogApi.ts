@@ -1,8 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
-import type { Brand, Category, Color, Material } from './types/catalog.ts';
-import { AxiosError } from 'axios';
+import type { Category, AttributeTypePublicDto } from './types/catalog.ts';
 
 export const useCategories = () =>
   useQuery<Category[]>({
@@ -13,31 +12,14 @@ export const useCategories = () =>
     },
   });
 
-export const useMaterials = () => {
-  return useQuery<Material[]>({
-    queryKey: ['materials'],
+export const useFilterableAttributes = () =>
+  useQuery<AttributeTypePublicDto[]>({
+    queryKey: ['filterableAttributes'],
     queryFn: async () => {
-      const response = await api.get<ApiEnvelope<Material[]>>('/api/materials');
-      return response.data.data;
-    },
-  });
-};
-
-export const useBrands = () => {
-  return useQuery<Brand[], AxiosError>({
-    queryKey: ['brands'],
-    queryFn: async () => {
-      const response = await api.get<ApiEnvelope<Brand[]>>('/api/brands');
-      return response.data.data;
-    },
-  });
-};
-
-export const useColors = () =>
-  useQuery<Color[]>({
-    queryKey: ['colors'],
-    queryFn: async () => {
-      const res = await api.get<ApiEnvelope<Color[]>>('/api/colors');
+      const res = await api.get<ApiEnvelope<AttributeTypePublicDto[]>>(
+        '/api/public/attributes/filterable'
+      );
       return res.data.data;
     },
+    staleTime: 60_000,
   });

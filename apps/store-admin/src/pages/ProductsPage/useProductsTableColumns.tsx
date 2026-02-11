@@ -48,11 +48,11 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       body: (row: AdminProductBase) => row.categoryName || '-',
     },
     {
-      field: 'lowestActivePrice',
+      field: 'defaultVariant.price',
       header: 'Price',
       sortable: true,
       body: (row: AdminProductBase) => {
-        const p = row.lowestActivePrice ?? row.price;
+        const p = row.defaultVariant.price;
         return p != null ? (symbol ? `From ${symbol}${p}` : `From ${String(p)}`) : '-';
       },
     },

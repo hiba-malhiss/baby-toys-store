@@ -72,12 +72,12 @@ const ProductViewPage: React.FC = () => {
       {
         id: 'fromPrice',
         label: t('productView.fromPrice', { defaultValue: 'From price' }),
-        value: formatMoney((product as any)?.lowestActivePrice),
+        value: formatMoney((product as any)?.defaultVariant?.price),
       },
       {
         id: 'wasPrice',
         label: t('productView.wasPrice', { defaultValue: 'Was price' }),
-        value: formatMoney((product as any)?.oldPriceForLowestPrice),
+        value: formatMoney((product as any)?.defaultVariant?.oldPrice),
       },
     ];
 

@@ -49,10 +49,10 @@ export function shareCurrentPage(platform: SharePlatform, isMobile: boolean) {
 export function shareProduct(
   platform: SharePlatform,
   productId: string | number,
-  isMobile: boolean
+  isMobile?: boolean
 ) {
   const url = `${window.location.origin}/product-details/${productId}`;
-  shareTo(platform, url, isMobile);
+  shareTo(platform, url, !!isMobile);
 }
 
 export function handleFooterSocialClick(platform: SharePlatform, isMobile: boolean) {

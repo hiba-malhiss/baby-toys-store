@@ -83,12 +83,17 @@ export function useAddToCart() {
   const { isAuthenticated } = useAuth();
   const qc = useQueryClient();
   const toast = useToast();
-  return useMutation<{ count: number }, any, { productId: number; quantity?: number }>({
+  return useMutation<
+    { count: number },
+    any,
+    { productId: number; variantId: number; quantity?: number }
+  >({
     mutationKey: [CART_KEYS.addToCart],
-    mutationFn: async ({ productId, quantity = 1 }) => {
+    mutationFn: async ({ productId, variantId, quantity = 1 }) => {
       const endpoint = isAuthenticated ? '/api/customer/cart/items' : '/api/guest/cart/items';
       const res = await api.post<{ data: { count: number } }>(endpoint, {
         productId,
+        variantId,
         quantity,
       });
       return res.data.data;

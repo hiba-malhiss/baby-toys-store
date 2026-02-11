@@ -124,7 +124,7 @@ const Header = () => {
           </Button>
           {categories.map(({ name, id }) => (
             <Button
-              key={name}
+              key={id}
               size="xsmall"
               appearance="outline"
               color="secondary-light"

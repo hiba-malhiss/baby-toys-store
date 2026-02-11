@@ -2,7 +2,6 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { Product } from './types/product';
-import { normalizeProduct, type UiProduct } from './normalizers/productNormalizer';
 import { useAuth } from '../context/AuthContext';
 import { useWishlistIdsStore } from '../store/useWishlistIdsStore';
 
@@ -16,7 +15,7 @@ export function useMyWishlist(
 ) {
   const { isAuthenticated } = useAuth();
   const zeroBased = Math.max(0, (page || 1) - 1);
-  return useQuery<{ items: UiProduct[]; page: number; totalPages: number; totalItems: number }>({
+  return useQuery<{ items: Product[]; page: number; totalPages: number; totalItems: number }>({
     queryKey: [
       'myWishlist',
       isAuthenticated,
@@ -40,7 +39,7 @@ export function useMyWishlist(
       });
       const data = res.data.data;
       return {
-        items: (data?.content || []).map((dto) => normalizeProduct(dto)),
+        items: data?.content || [],
         page: (data?.number ?? zeroBased) + 1,
         totalPages: data?.totalPages ?? 0,
         totalItems: data?.totalElements ?? 0,

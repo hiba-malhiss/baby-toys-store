@@ -11,6 +11,7 @@ export const useCoupons = (params: {
   sortBy?: string;
   sortDirection?: 'ASC' | 'DESC';
   code?: string;
+  includeDeleted?: boolean;
 }) =>
   useQuery({
     queryKey: [
@@ -20,6 +21,7 @@ export const useCoupons = (params: {
       params?.sortBy ?? 'createdAt',
       (params?.sortDirection ?? 'DESC').toString().toUpperCase(),
       params?.code ?? '',
+      Boolean(params?.includeDeleted),
     ],
     queryFn: async () => {
       const res = await api.get<

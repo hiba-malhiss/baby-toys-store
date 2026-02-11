@@ -82,6 +82,10 @@ const FinancePage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Heading>{t('finance.title')}</Heading>
+          <span>
+            Calculated from orders at the time of delivery (applied on delivery, reverted on
+            cancellation or return), plus added or removed expenses.
+          </span>
           <Flex spacing="s" align="center">
             <Calendar
               value={currentYearMoment}

@@ -2,10 +2,9 @@ import { useQuery, useInfiniteQuery } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import type { Product } from './types/product';
-import { normalizeProduct, type UiProduct } from './normalizers/productNormalizer';
 
 export const useTopPicks = (sortBy: string, size = 10) => {
-  return useQuery<UiProduct[]>({
+  return useQuery<Product[]>({
     queryKey: ['topPicks', sortBy, size],
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
@@ -17,7 +16,7 @@ export const useTopPicks = (sortBy: string, size = 10) => {
         },
       });
       const data = res.data.data;
-      return (data?.content || []).map((dto) => normalizeProduct(dto));
+      return data?.content || [];
     },
     staleTime: 60_000,
   });
@@ -25,13 +24,13 @@ export const useTopPicks = (sortBy: string, size = 10) => {
 
 // Single product details by ID
 export const useProductById = (id?: number | string) => {
-  return useQuery<UiProduct | undefined>({
+  return useQuery<Product | undefined>({
     queryKey: ['productById', id],
     enabled: Boolean(id),
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<Product>>(`/api/products/${id}`);
       const dto = res.data.data;
-      return dto ? normalizeProduct(dto) : undefined;
+      return dto ?? undefined;
     },
     staleTime: 60_000,
   });
@@ -53,7 +52,7 @@ export const useRelatedProductsInfinite = (productId?: number | string, size: nu
       );
       const data = res.data.data;
       return {
-        items: (data?.content || []).map((dto) => normalizeProduct(dto)),
+        items: data?.content || [],
         page: (data?.number ?? zeroBased) + 1,
         totalPages: data?.totalPages ?? 0,
         totalItems: data?.totalElements ?? 0,
