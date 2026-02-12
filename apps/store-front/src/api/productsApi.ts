@@ -45,7 +45,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
   const maxPrice = filters?.priceRange?.[1];
   const query = (filters as any)?.query;
   const onSale = (filters as any)?.discounts === 'discounts' ? true : undefined;
-  const { attrsParam, attrsSignature } = parseAttributeFilters(filters);
+  const { attrsBody, attrsSignature } = parseAttributeFilters(filters);
 
   const zeroBasedPage = Math.max(0, (page || 1) - 1);
 
@@ -64,19 +64,17 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
       attrsSignature,
     ],
     queryFn: async () => {
-      const res = await api.get<ApiEnvelope<Page<Product>>>('/api/products', {
-        params: {
-          page: zeroBasedPage,
-          size,
-          sortBy: sb,
-          sortDirection,
-          categoryId,
-          minPrice,
-          maxPrice,
-          query,
-          onSale,
-          ...attrsParam,
-        },
+      const res = await api.post<ApiEnvelope<Page<Product>>>('/api/products', {
+        page: zeroBasedPage,
+        size,
+        sortBy: sb,
+        sortDirection,
+        categoryIds: categoryId != null ? [categoryId] : undefined,
+        minPrice,
+        maxPrice,
+        query,
+        onSale,
+        attributeFilters: attrsBody,
       });
       const data = res.data.data;
       return {

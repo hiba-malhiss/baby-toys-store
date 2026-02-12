@@ -83,8 +83,8 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
     [product.id]
   );
 
-  const handleAddToCart = async () => {
-    if (!selectedVariant?.id) {
+  const handleAddToCart = async() => {
+    if(!selectedVariant?.id) {
       toast.error(
         t('product.selectVariantFirst', {
           defaultValue: 'Please select a variant',
@@ -104,9 +104,9 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
 
   return (
     <div className={styles.productOverview}>
-      <ImageGallery images={product.images} productName={product.name} />
+      <ImageGallery images={product.images} productName={product.name}/>
       <Flex direction="vertical">
-        <Heading level="h3">{product.name}</Heading>
+        <Heading level="h3" className="bts-marginBxs">{product.name}</Heading>
         {product.productSku && (
           <Flex className={styles.productOverviewSkuLine}>
             <span>
@@ -122,11 +122,11 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
               />
             </Tooltip>
 
-            <Rating value={product.averageRating} reviewsCount={product.numberOfRatings || 0} />
+            <Rating className="bts-marginLm" value={product.averageRating} reviewsCount={product.numberOfRatings || 0}/>
           </Flex>
         )}
 
-        <Heading level="h2" className={clsx(oldPrice && styles.productOverviewWithDiscount)}>
+        <Heading level="h2" className={clsx('bts-marginBl', oldPrice && styles.productOverviewWithDiscount)}>
           <span className={styles.productOverviewPriceNew}>{formatCurrency(price)}</span>
           {oldPrice && (
             <span className={styles.productOverviewPriceOld}>{formatCurrency(oldPrice)}</span>
@@ -135,11 +135,21 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
 
         {!!product.options?.length && (
           <VariantOptionsSelector
+            className="bts-marginBxxl"
             product={product}
             preselectedVariantId={selectedVariantId}
             onChange={({ variantId }) => setSelectedVariantId(variantId)}
           />
         )}
+
+        <ExpandableContent className="bts-marginBxl bts-marginTs" maxHeight="200px">
+          <ul className={styles.productOverviewFeatureBullets}>
+            {product.featureBullets?.map((item: string, index: number) => (
+              <li key={index}>{item}</li>
+            ))}
+          </ul>
+        </ExpandableContent>
+
         <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
           <span className="bts-marginRs"> {t('common.share')}</span>
           {socialMediaLinks.map(({ icon, platform }) => (
@@ -158,7 +168,8 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             </Tooltip>
           ))}
         </Flex>
-        <Flex direction="horizontal" spacing="s" align="center">
+        <Flex direction="horizontal" spacing="s" align="center"
+              className={clsx('bts-marginBxxxl', styles.productOverviewActions)}>
           <StringInput
             type="number"
             min={1}
@@ -188,7 +199,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             onToggle={toggleFavorite}
           />
 
-          <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl} />
+          <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl}/>
         </Flex>
 
         {!!product.details?.length && (

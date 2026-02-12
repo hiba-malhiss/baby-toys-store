@@ -1,9 +1,9 @@
 export type Filters = Record<string, any>;
 
 export interface ParsedAttributes {
-  attrsParam: Record<string, string>; // for API
   attrsSignature: string; // for cache keys
   selectedAttrs: Record<string, number[]>; // for UI selection
+  attrsBody: Record<string, number[]>; // for POST body (typeId -> valueIds)
 }
 
 /**
@@ -14,11 +14,12 @@ export interface ParsedAttributes {
  */
 export const parseAttributeFilters = (filters?: Filters): ParsedAttributes => {
   const entries = getAttributeEntries(filters);
+  const selected = buildSelectedAttrs(entries);
 
   return {
-    attrsParam: buildAttrsParam(entries),
     attrsSignature: buildAttrsSignature(entries),
-    selectedAttrs: buildSelectedAttrs(entries),
+    selectedAttrs: selected,
+    attrsBody: selected,
   };
 };
 
@@ -26,16 +27,6 @@ const getAttributeEntries = (filters?: Filters): [string, any][] =>
   Object.entries(filters ?? {}).filter(
     ([key, value]) => key.startsWith('attr_') && value != null && String(value).trim() !== ''
   );
-
-const buildAttrsParam = (entries: [string, any][]): Record<string, string> => {
-  const result: Record<string, string> = {};
-  for (const [key, value] of entries) {
-    const typeId = key.replace('attr_', '');
-    const firstValue = extractFirstValue(value);
-    if (typeId && firstValue) result[`attrs[${typeId}]`] = firstValue;
-  }
-  return result;
-};
 
 const buildAttrsSignature = (entries: [string, any][]): string =>
   entries
@@ -58,9 +49,3 @@ const buildSelectedAttrs = (entries: [string, any][]): Record<string, number[]> 
   }
   return result;
 };
-
-const extractFirstValue = (value: any): string | undefined =>
-  String(value)
-    .split(',')
-    .map((v) => v.trim())
-    .filter(Boolean)[0];

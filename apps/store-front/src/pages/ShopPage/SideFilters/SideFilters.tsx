@@ -53,12 +53,12 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
 
   const defaultFilters: ShopFilters = useMemo(
     () => ({
-      priceRange,
+      priceRange: priceRange,
     }),
     [priceRange]
   );
 
-  const { urlFilters, updateUrlFilters } = useUrlFilters<ShopFilters>(
+  const { urlFilters, updateUrlFilters, clearFilters } = useUrlFilters<ShopFilters>(
     urlFilterParsers,
     defaultFilters
   );
@@ -79,10 +79,6 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
     const current = urlFilters[key];
     const next = current === value ? undefined : value;
     updateUrlFilters({ [key]: next });
-  };
-
-  const clearFilters = () => {
-    updateUrlFilters(defaultFilters);
   };
 
   const { selectedAttrs } = useMemo(() => parseAttributeFilters(urlFilters), [urlFilters]);

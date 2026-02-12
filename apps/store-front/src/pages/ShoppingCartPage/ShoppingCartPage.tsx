@@ -111,7 +111,7 @@ const ShoppingCartPage = () => {
           {items.map((item) => (
             <div key={item.id} className={styles.shoppingCartPageTableRow}>
               <div className={styles.shoppingCartPageImage}>
-                <img src={item.productImage || ''} alt={item.productName} />
+                <img src={item.productImage || undefined} alt={item.productName} />
               </div>
               <Button
                 appearance="link"

@@ -9,8 +9,9 @@ type VariantOptionsSelectorChange = {
 
 export const VariantOptionsSelector: React.FC<{
   product: Product;
+  className: string,
   onChange?: (change: VariantOptionsSelectorChange) => void;
-}> = ({ product, onChange }) => {
+}> = ({ product, onChange, className }) => {
   const options = (product as any).options ?? [];
   const availableVariants = (product as any).variants ?? [];
 
@@ -45,7 +46,7 @@ export const VariantOptionsSelector: React.FC<{
   if(!options.length) return null;
 
   return (
-    <Flex direction="vertical" spacing="xs">
+    <Flex direction="vertical" spacing="xs" className={className}>
       {options.map((option: any) => {
         const typeId = option.type.id;
         const title = option.type.displayName || option.type.name;

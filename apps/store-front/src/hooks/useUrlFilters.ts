@@ -68,8 +68,8 @@ export const useUrlFilters = <T extends Record<string, any>>(
   );
 
   const clearFilters = useCallback(() => {
-    setSearchParams({});
-  }, [setSearchParams]);
+    setSearchParams(defaultValues || {});
+  }, [setSearchParams, defaultValues]);
 
   const filtersToSearchParams = useCallback(
     (filters: Partial<T>): URLSearchParams => {
