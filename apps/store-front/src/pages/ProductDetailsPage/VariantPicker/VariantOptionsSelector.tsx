@@ -2,33 +2,92 @@ import React, { useEffect, useState } from 'react';
 import { Flex, Heading, RadioButtonGroup } from '@baby-toys/ui-kit';
 import type { Product } from "../../../api/types/product.ts";
 
-type VariantOptionsSelectorChange = {
+export type VariantOptionsSelectorChange = {
   selection: Record<number, number | undefined>;
   variantId?: number;
 };
 
 export const VariantOptionsSelector: React.FC<{
   product: Product;
-  className: string,
+  className?: string;
   onChange?: (change: VariantOptionsSelectorChange) => void;
 }> = ({ product, onChange, className }) => {
   const options = (product as any).options ?? [];
   const availableVariants = (product as any).variants ?? [];
 
-  const [selection, setSelection] = useState<Record<number, number | undefined>>({});
+  // Initialize selection with defaultVariant
+  const initialSelection: Record<number, number | undefined> = {};
+  if(product.defaultVariant?.optionSelectionIds) {
+    Object.entries(product.defaultVariant.optionSelectionIds).forEach(([typeId, valueId]) => {
+      initialSelection[Number(typeId)] = valueId as number;
+    });
+  }
 
-  // Find the variant that matches the current selection.
+  const [selection, setSelection] = useState<Record<number, number | undefined>>(initialSelection);
+
+  // Find the variant that matches the current selection
   const deriveVariantId = (sel: Record<number, number | undefined>) => {
-    return availableVariants.find((v: any) =>
+    const variant = availableVariants.find((v: any) =>
       Object.entries(sel).every(
         ([tid, vid]) => !vid || Number(v.optionSelectionIds?.[tid]) === Number(vid)
       )
     );
+    return variant?.id;
   };
 
+  // Compute which option values should be disabled
+  const computeDisabledValues = () => {
+    const disabledMap: Record<number, Set<number>> = {};
+
+    options.forEach((option: any, index: number) => {
+      const typeId = option.type.id;
+      disabledMap[typeId] = new Set();
+
+      option.values.forEach((value: any) => {
+        // Always enable first attribute
+        if(index === 0) return;
+
+        const testSelection = { ...selection, [typeId]: value.id };
+
+        const isCompatible = availableVariants.some((v: any) =>
+          Object.entries(testSelection).every(
+            ([tid, vid]) => !vid || Number(v.optionSelectionIds?.[tid]) === Number(vid)
+          )
+        );
+
+        // Disable only if NOT compatible and NOT currently selected
+        if(!isCompatible && selection[typeId] !== value.id) {
+          disabledMap[typeId].add(value.id);
+        }
+      });
+    });
+
+    return disabledMap;
+  };
+
+  // Update selection: auto-adjust incompatible values to first compatible
   const handleSelect = (typeId: number, valueId?: number) => {
-    if(!valueId) return;
-    const next = { ...selection, [typeId]: valueId };
+    let next = { ...selection, [typeId]: valueId };
+
+    options.forEach((option: any, index: number) => {
+      const currentTypeId = option.type.id;
+      if(currentTypeId === typeId) return; // skip current selection
+
+      const selectedValue = next[currentTypeId];
+      const compatibleValues = option.values.filter((value: any) =>
+        availableVariants.some((v: any) =>
+          Object.entries({ ...next, [currentTypeId]: value.id }).every(
+            ([tid, vid]) => !vid || Number(v.optionSelectionIds?.[tid]) === Number(vid)
+          )
+        )
+      );
+
+      if(selectedValue && !compatibleValues.some(v => v.id === selectedValue)) {
+        // If current selection is incompatible, replace with first compatible
+        next[currentTypeId] = compatibleValues.length ? compatibleValues[0].id : undefined;
+      }
+    });
+
     setSelection(next);
     onChange?.({
       selection: next,
@@ -36,7 +95,10 @@ export const VariantOptionsSelector: React.FC<{
     });
   };
 
+  const disabledValues = computeDisabledValues();
+
   useEffect(() => {
+    // Trigger onChange initially with defaultVariant selection
     onChange?.({
       selection,
       variantId: deriveVariantId(selection),
@@ -47,15 +109,15 @@ export const VariantOptionsSelector: React.FC<{
 
   return (
     <Flex direction="vertical" spacing="xs" className={className}>
-      {options.map((option: any) => {
+      {options.map((option: any, index: number) => {
         const typeId = option.type.id;
         const title = option.type.displayName || option.type.name;
-
         const selectedValue = selection[typeId] != null ? String(selection[typeId]) : '';
 
         const radioOptions = option.values.map((value: any) => ({
           label: value.display || value.value,
           value: String(value.id),
+          isDisabled: index !== 0 && disabledValues[typeId]?.has(value.id), // first attribute always enabled
         }));
 
         return (

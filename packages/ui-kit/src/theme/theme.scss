@@ -8,6 +8,7 @@
 :root {
   --color-primary: #{$color-primary};
   --color-primary-dark: #{$color-primary-dark};
+  --color-primary-dark-rgb: #{$color-primary-dark-rgb};
   --color-primary-hover: #{$color-primary-hover};
   --color-primary-light: #{$color-primary-light};
   --color-primary-rgb: #{red($color-primary)}, #{green($color-primary)}, #{blue($color-primary)};
@@ -15,7 +16,6 @@
   --color-accent: #{$color-accent};
   --color-accent-hover: #{$color-accent-hover};
   --color-accent-light: #{$color-accent-light};
-  --color-accent-soft: #{$color-accent-soft};
   --color-accent-light-hover: #{$color-accent-light};
   --color-accent-dark: #{$color-accent-dark};
 
@@ -83,6 +83,7 @@
 .theme-kids {
   --color-primary: #ff7bbf;
   --color-primary-dark: #e062a8;
+  --color-primary-dark-rgb: 224, 98, 168;
   --color-primary-hover: #d24f96;
   --color-primary-light: #fff0f7;
   --color-primary-rgb: 255, 123, 191;
@@ -90,7 +91,6 @@
   --color-accent: #6c8ef2;
   --color-accent-hover: #5477db;
   --color-accent-light: #aebcf2;
-  --color-accent-soft: #{$color-accent-soft};
   --color-accent-light-hover: #e7edff;
   --color-accent-dark: #3f5fbf;
 

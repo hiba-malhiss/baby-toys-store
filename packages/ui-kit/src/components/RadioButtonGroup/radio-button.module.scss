@@ -96,14 +96,9 @@
       border-radius: 12px;
     }
 
-    &.is-selected {
-      border: 1px solid var(--color-accent-soft, $color-accent-soft);
-      background: var(--color-accent-light, $color-accent-light);
-
-      &.isDisabled {
-        border: 1px dotted var(--color-accent-soft, $color-accent-soft);
-        background: var(--color-accent-light, $color-accent-light);
-      }
+    &.is-selected, &.is-selected.isDisabled {
+      border: 1px solid var(--color-primary-dark, $color-primary-dark);
+      background: rgba( var(--color-primary-dark-rgb, $color-primary-dark-rgb), 0.04);
     }
 
     &:not(.isDisabled):not(.is-selected):hover {

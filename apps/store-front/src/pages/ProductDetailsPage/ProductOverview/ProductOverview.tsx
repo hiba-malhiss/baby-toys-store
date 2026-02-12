@@ -12,7 +12,7 @@ import {
   Tooltip,
   HeartButton,
   SocialIconButton,
-  StringInput,
+  StringInput, Divider,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
@@ -132,7 +132,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             <span className={styles.productOverviewPriceOld}>{formatCurrency(oldPrice)}</span>
           )}
         </Heading>
-
+        <Divider className="bts-marginBxl"/>
         {!!product.options?.length && (
           <VariantOptionsSelector
             className="bts-marginBxxl"
