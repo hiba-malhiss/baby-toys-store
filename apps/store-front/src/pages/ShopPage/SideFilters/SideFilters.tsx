@@ -1,8 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import {
   Card,
-  RadioButtonGroup,
-  RadioButton,
+  CheckboxGroup,
   Slider,
   Button,
   Flex,
@@ -76,33 +75,41 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   }, [debouncedFilters, isLoadingFilters, onFiltersChange]);
 
   const handleFilterChange = <K extends keyof ShopFilters>(key: K, value: ShopFilters[K]) => {
-    const current = urlFilters[key];
-    const next = current === value ? undefined : value;
-    updateUrlFilters({ [key]: next });
+    updateUrlFilters({ [key]: value });
   };
 
   const { selectedAttrs } = useMemo(() => parseAttributeFilters(urlFilters), [urlFilters]);
 
-  const updateAttributeSelection = (typeId: number, valueId?: number) => {
+  const updateAttributeSelection = (typeId: number, valueIds?: number[]) => {
     const key = `attr_${typeId}`;
-    const current = selectedAttrs[String(typeId)] ?? [];
 
-    if (!valueId || (current.length === 1 && current[0] === valueId)) {
+    if (!valueIds || valueIds.length === 0) {
       updateUrlFilters({ [key]: undefined });
       return;
     }
 
-    updateUrlFilters({ [key]: String(valueId) });
+    updateUrlFilters({ [key]: valueIds.join(',') });
   };
 
   const removeFilter = (key: string) => {
     if (key.startsWith('attr_')) {
-      updateUrlFilters({ [key]: undefined });
+      const [_, typeId, valueId] = key.split('_');
+      const current = selectedAttrs[typeId] || [];
+      const next = current.filter((v) => String(v) !== valueId);
+      updateAttributeSelection(Number(typeId), next);
+      return;
+    }
+
+    if (key.startsWith('categoryIds')) {
+      const [_, categoryId] = key.split('_');
+      const current = urlFilters.categoryIds || [];
+      const next = current.filter((id) => id !== categoryId);
+      handleFilterChange('categoryIds', next.length > 0 ? next : undefined);
       return;
     }
 
     if (key === 'priceRange') return handleFilterChange('priceRange', priceRange);
-    return handleFilterChange('categoryId', undefined);
+    return handleFilterChange(key as keyof ShopFilters, undefined);
   };
 
   const renderFilterChips = () => (
@@ -123,7 +130,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   );
 
   const renderContent = () => (
-    <Flex direction="vertical" spacing="l" fullWidth>
+    <Flex direction="vertical" spacing="s" fullWidth>
       {renderFilterChips()}
       <Divider className="bts-marginTxl" />
 
@@ -132,23 +139,15 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         withoutPadding
         withoutHeaderPadding
         isOpenByDefault
+        size="medium"
       >
-        <ExpandableContent maxHeight="220px">
-          <RadioButtonGroup
-            name="category"
-            selectedValue={urlFilters.categoryId}
-            onChange={(val) => handleFilterChange('categoryId', val)}
+        <ExpandableContent maxHeight="220px" className="bts-marginBxs">
+          <CheckboxGroup
+            options={categories.map(({ id, name }) => ({ label: name, value: String(id) }))}
+            value={urlFilters.categoryIds || []}
+            onChange={(val) => handleFilterChange('categoryIds', val.length > 0 ? val : undefined)}
             direction="vertical"
-            spacing="s"
-            align="start"
-            className="bts-marginTm"
-          >
-            {categories.map(({ id, name }) => (
-              <RadioButton key={`sf-cat-${id}`} value={String(id)}>
-                <span key={`sf-cat-label-${id}`}>{name}</span>
-              </RadioButton>
-            ))}
-          </RadioButtonGroup>
+          />
         </ExpandableContent>
       </Accordion>
 
@@ -158,23 +157,20 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
           header={<span key={`sf-attr-header-${type.id}`}>{type.displayName}</span>}
           withoutPadding
           withoutHeaderPadding
+          size="medium"
         >
-          <ExpandableContent maxHeight="220px">
-            <RadioButtonGroup
-              name={`attr-${type.id}`}
-              selectedValue={String(selectedAttrs[String(type.id)]?.[0] ?? '')}
-              onChange={(val) => updateAttributeSelection(type.id, val ? Number(val) : undefined)}
+          <ExpandableContent maxHeight="220px" className="bts-marginBxs">
+            <CheckboxGroup
+              options={type.values.map((v) => ({ label: v.displayValue, value: String(v.id) }))}
+              value={selectedAttrs[String(type.id)]?.map(String) || []}
+              onChange={(values) =>
+                updateAttributeSelection(
+                  type.id,
+                  values.length > 0 ? values.map(Number) : undefined
+                )
+              }
               direction="vertical"
-              spacing="s"
-              align="start"
-              className="bts-marginTm"
-            >
-              {type.values.map((v) => (
-                <RadioButton key={`attr-${type.id}-val-${v.id}`} value={String(v.id)}>
-                  <span key={`${type.id}-val-${v.id}`}>{v.displayValue}</span>
-                </RadioButton>
-              ))}
-            </RadioButtonGroup>
+            />
           </ExpandableContent>
         </Accordion>
       ))}
@@ -183,21 +179,19 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         header={<span key="sf-header-deals">{t('filters.dealsAndDiscounts')}</span>}
         withoutPadding
         withoutHeaderPadding
+        size="medium"
       >
-        <ExpandableContent maxHeight="220px">
-          <RadioButtonGroup
-            name="discounts"
-            selectedValue={urlFilters.discounts}
-            onChange={(val) => handleFilterChange('discounts', val)}
+        <ExpandableContent maxHeight="220px" className="bts-marginBxs">
+          <CheckboxGroup
+            options={[
+              { label: t('filters.discounts', { defaultValue: 'Discounts' }), value: 'discounts' },
+            ]}
+            value={urlFilters.discounts ? [urlFilters.discounts] : []}
+            onChange={(val) =>
+              handleFilterChange('discounts', val.length > 0 ? 'discounts' : undefined)
+            }
             direction="vertical"
-            spacing="s"
-            align="start"
-            className="bts-marginTm"
-          >
-            <RadioButton value="discounts">
-              {t('filters.discounts', { defaultValue: 'Discounts' })}
-            </RadioButton>
-          </RadioButtonGroup>
+          />
         </ExpandableContent>
       </Accordion>
 
@@ -205,8 +199,9 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         header={<span key="sf-header-price">{t('filters.price')}</span>}
         withoutPadding
         withoutHeaderPadding
+        size="medium"
       >
-        <ExpandableContent maxHeight="120px">
+        <ExpandableContent maxHeight="120px" className="bts-marginBxs">
           <Slider
             min={priceRange[0]}
             max={priceRange[1]}

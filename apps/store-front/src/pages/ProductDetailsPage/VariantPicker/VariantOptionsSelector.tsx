@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Flex, Heading, RadioButtonGroup } from '@baby-toys/ui-kit';
-import type { Product } from "../../../api/types/product.ts";
+import type { Product } from '../../../api/types/product.ts';
 
 export type VariantOptionsSelectorChange = {
   selection: Record<number, number | undefined>;
@@ -17,7 +17,7 @@ export const VariantOptionsSelector: React.FC<{
 
   // Initialize selection with defaultVariant
   const initialSelection: Record<number, number | undefined> = {};
-  if(product.defaultVariant?.optionSelectionIds) {
+  if (product.defaultVariant?.optionSelectionIds) {
     Object.entries(product.defaultVariant.optionSelectionIds).forEach(([typeId, valueId]) => {
       initialSelection[Number(typeId)] = valueId as number;
     });
@@ -45,7 +45,7 @@ export const VariantOptionsSelector: React.FC<{
 
       option.values.forEach((value: any) => {
         // Always enable first attribute
-        if(index === 0) return;
+        if (index === 0) return;
 
         const testSelection = { ...selection, [typeId]: value.id };
 
@@ -56,7 +56,7 @@ export const VariantOptionsSelector: React.FC<{
         );
 
         // Disable only if NOT compatible and NOT currently selected
-        if(!isCompatible && selection[typeId] !== value.id) {
+        if (!isCompatible && selection[typeId] !== value.id) {
           disabledMap[typeId].add(value.id);
         }
       });
@@ -71,7 +71,7 @@ export const VariantOptionsSelector: React.FC<{
 
     options.forEach((option: any, index: number) => {
       const currentTypeId = option.type.id;
-      if(currentTypeId === typeId) return; // skip current selection
+      if (currentTypeId === typeId) return; // skip current selection
 
       const selectedValue = next[currentTypeId];
       const compatibleValues = option.values.filter((value: any) =>
@@ -82,7 +82,7 @@ export const VariantOptionsSelector: React.FC<{
         )
       );
 
-      if(selectedValue && !compatibleValues.some(v => v.id === selectedValue)) {
+      if (selectedValue && !compatibleValues.some((v) => v.id === selectedValue)) {
         // If current selection is incompatible, replace with first compatible
         next[currentTypeId] = compatibleValues.length ? compatibleValues[0].id : undefined;
       }
@@ -105,7 +105,7 @@ export const VariantOptionsSelector: React.FC<{
     });
   }, []);
 
-  if(!options.length) return null;
+  if (!options.length) return null;
 
   return (
     <Flex direction="vertical" spacing="xs" className={className}>

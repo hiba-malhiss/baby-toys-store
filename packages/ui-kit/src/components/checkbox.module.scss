@@ -6,6 +6,7 @@ $checkmark-border: var(--color-border, $color-border);
   display: inline-flex;
   align-items: center;
   cursor: pointer;
+  gap: 6px;
 
   &--disabled {
     cursor: not-allowed;
@@ -49,5 +50,6 @@ $checkmark-border: var(--color-border, $color-border);
 
   &-label {
     user-select: none;
+    font-size: 14px;
   }
 }

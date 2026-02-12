@@ -20,6 +20,7 @@ interface AccordionProps {
   buttonAppearance?: ButtonAppearance;
   buttonColor?: ButtonColor;
   unstyled?: boolean;
+  size?: string;
 }
 
 const Accordion: React.FC<AccordionProps> = ({
@@ -34,6 +35,7 @@ const Accordion: React.FC<AccordionProps> = ({
   withoutHeaderPadding = false,
   iconPosition = 'right',
   buttonAppearance = 'link',
+  size = 'large',
   buttonColor = 'primary',
   unstyled,
 }) => {
@@ -72,7 +74,7 @@ const Accordion: React.FC<AccordionProps> = ({
         align={iconPosition === 'left' ? 'start' : 'between'}
         appearance={buttonAppearance}
         color={buttonColor}
-        size="large"
+        size={size}
         withoutPadding={withoutHeaderPadding}
       >
         {unstyled ? <span>{header}</span> : <Heading level="h5">{header}</Heading>}

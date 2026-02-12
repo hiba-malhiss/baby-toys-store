@@ -46,14 +46,16 @@ export const useUrlFilters = <T extends Record<string, any>>(
         Object.entries(newFilters).forEach(([key, value]) => {
           const defaultVal = defaultValues[key as keyof T];
 
-          if (value === undefined || value === null || value === '' || value === defaultVal) {
+          if (
+            value === undefined ||
+            value === null ||
+            value === '' ||
+            isEqual(value, defaultVal) ||
+            (Array.isArray(value) && value.filter(Boolean).length === 0)
+          ) {
             params.delete(key);
           } else {
-            if (Array.isArray(value)) {
-              params.set(key, JSON.stringify(value));
-            } else {
-              params.set(key, value.toString());
-            }
+            params.set(key, Array.isArray(value) ? value.join(',') : value.toString());
           }
         });
 
@@ -76,8 +78,8 @@ export const useUrlFilters = <T extends Record<string, any>>(
       const params = new URLSearchParams();
       Object.entries(filters).forEach(([key, value]) => {
         const defaultVal = defaultValues[key as keyof T];
-        if (value !== undefined && value !== null && value !== '' && value !== defaultVal) {
-          params.set(key, value.toString());
+        if (value !== undefined && value !== null && value !== '' && !isEqual(value, defaultVal)) {
+          params.set(key, Array.isArray(value) ? value.join(',') : value.toString());
         }
       });
       return params;

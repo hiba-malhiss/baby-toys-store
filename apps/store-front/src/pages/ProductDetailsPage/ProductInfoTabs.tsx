@@ -4,7 +4,7 @@ import styles from './product-details-page.module.scss';
 import { ProductReviews } from './ProductReviews.tsx';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
-import type { Product } from "../../api/types/product.ts";
+import type { Product } from '../../api/types/product.ts';
 
 export const ProductInfoTabs: React.FC<{ product: Product }> = ({ product }) => {
   const { id, shortDescription, featureBullets, details } = product;

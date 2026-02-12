@@ -1,5 +1,5 @@
 export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> = {
-  categoryId: (v) => v,
+  categoryIds: (v) => v.split(',').filter(Boolean),
   discounts: (v) => (v === 'discounts' ? 'discounts' : undefined),
   priceRange: (v) => {
     try {
@@ -19,7 +19,7 @@ export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> =
 };
 
 export type ShopFilters = {
-  categoryId?: string;
+  categoryIds?: string[];
   priceRange?: [number, number];
   discounts?: 'discounts';
   attributesJson?: string; // JSON string: { [typeId: string]: number[] }

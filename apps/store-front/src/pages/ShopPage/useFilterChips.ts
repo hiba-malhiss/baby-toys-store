@@ -40,9 +40,11 @@ export const useFilterChips = (
       const type = attributeTypes.find((t) => Number(t.id) === Number(typeId));
       if (!type) return;
 
-      const val = type.values.find((v) => Number(v.id) === values[0]);
-      const label = val?.displayValue || type.displayName;
-      chips.push({ key, label });
+      values.forEach((valueId) => {
+        const val = type.values.find((v) => Number(v.id) === valueId);
+        const label = val?.displayValue || type.displayName;
+        chips.push({ key: `${key}_${valueId}`, label });
+      });
       return;
     }
 
@@ -56,9 +58,13 @@ export const useFilterChips = (
         }
         break;
 
-      case 'categoryId': {
-        const name = categories.find((c) => String(c.id) === String(value))?.name || String(value);
-        chips.push({ key: 'categoryId', label: name });
+      case 'categoryIds': {
+        if (Array.isArray(value)) {
+          value.forEach((id) => {
+            const name = categories.find((c) => String(c.id) === id)?.name || id;
+            chips.push({ key: `categoryIds_${id}`, label: name });
+          });
+        }
         break;
       }
 

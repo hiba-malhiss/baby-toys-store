@@ -14,7 +14,7 @@ export interface AdminProductBase {
   updatedAt?: string;
   categoryId?: number | null;
   categoryName?: string | null;
-  defaultVariant: VariantDto
+  defaultVariant: VariantDto;
 
   // Optional extra data
   averageRating?: number | null;

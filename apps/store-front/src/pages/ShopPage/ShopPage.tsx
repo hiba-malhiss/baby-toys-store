@@ -39,9 +39,16 @@ const ShopPage = () => {
   const items = productsData?.items || [];
   const totalSize = productsData?.totalItems || 0;
 
-  const header =
-    categories.find((option) => String(option.id) === String(sideFilters?.categoryId))?.name ||
-    t('shop.allCategories', { defaultValue: 'All Categories' });
+  const header = (() => {
+    if (!sideFilters?.categoryIds || sideFilters.categoryIds.length === 0) {
+      return t('shop.allCategories', { defaultValue: 'All Categories' });
+    }
+    if (sideFilters.categoryIds.length > 1) {
+      return t('shop.multipleCategories', { defaultValue: 'Multiple Categories' });
+    }
+    return categories.find((option) => String(option.id) === String(sideFilters.categoryIds?.[0]))
+      ?.name;
+  })();
 
   // Reset to page 1 on filter/sort change
   useEffect(() => {
@@ -61,7 +68,7 @@ const ShopPage = () => {
         totalSize={totalSize}
         items={items.map((product, index) => (
           <SmartProductCard
-            key={product.id || `product-${product.label}-${index}`}
+            key={product.id || `product-${product.name}-${index}`}
             product={product}
             direction={view === 'grid' ? 'vertical' : 'horizontal'}
           />

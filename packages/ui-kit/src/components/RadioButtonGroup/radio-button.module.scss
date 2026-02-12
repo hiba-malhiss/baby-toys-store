@@ -96,9 +96,10 @@
       border-radius: 12px;
     }
 
-    &.is-selected, &.is-selected.isDisabled {
+    &.is-selected,
+    &.is-selected.isDisabled {
       border: 1px solid var(--color-primary-dark, $color-primary-dark);
-      background: rgba( var(--color-primary-dark-rgb, $color-primary-dark-rgb), 0.04);
+      background: rgba(var(--color-primary-dark-rgb, $color-primary-dark-rgb), 0.04);
     }
 
     &:not(.isDisabled):not(.is-selected):hover {

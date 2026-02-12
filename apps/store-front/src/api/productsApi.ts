@@ -40,7 +40,7 @@ function mapSort(sortKey: string | undefined): { sortBy: string; sortDirection: 
 export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery) {
   const { sortBy: sb, sortDirection } = mapSort(sortBy);
 
-  const categoryId = filters?.categoryId ? Number(filters.categoryId) : undefined;
+  const categoryIds = filters?.categoryIds?.map(Number).filter((v) => !isNaN(v));
   const minPrice = filters?.priceRange?.[0];
   const maxPrice = filters?.priceRange?.[1];
   const query = (filters as any)?.query;
@@ -56,7 +56,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
       size,
       sb,
       sortDirection,
-      categoryId,
+      ...(categoryIds || []),
       minPrice,
       maxPrice,
       query || '',
@@ -69,7 +69,7 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
         size,
         sortBy: sb,
         sortDirection,
-        categoryIds: categoryId != null ? [categoryId] : undefined,
+        categoryIds,
         minPrice,
         maxPrice,
         query,

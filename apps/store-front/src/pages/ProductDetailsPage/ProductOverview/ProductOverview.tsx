@@ -12,7 +12,8 @@ import {
   Tooltip,
   HeartButton,
   SocialIconButton,
-  StringInput, Divider,
+  StringInput,
+  Divider,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
@@ -27,7 +28,7 @@ import { useCartStore } from '../../../store/useCartStore';
 import { shareProduct, type SharePlatform } from '../../../utils/share';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import VariantOptionsSelector from '../VariantPicker/VariantOptionsSelector.tsx';
-import type { Product, Variant } from "../../../api/types/product.ts";
+import type { Product, Variant } from '../../../api/types/product.ts';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -83,8 +84,8 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
     [product.id]
   );
 
-  const handleAddToCart = async() => {
-    if(!selectedVariant?.id) {
+  const handleAddToCart = async () => {
+    if (!selectedVariant?.id) {
       toast.error(
         t('product.selectVariantFirst', {
           defaultValue: 'Please select a variant',
@@ -104,9 +105,11 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
 
   return (
     <div className={styles.productOverview}>
-      <ImageGallery images={product.images} productName={product.name}/>
+      <ImageGallery images={product.images} productName={product.name} />
       <Flex direction="vertical">
-        <Heading level="h3" className="bts-marginBxs">{product.name}</Heading>
+        <Heading level="h3" className="bts-marginBxs">
+          {product.name}
+        </Heading>
         {product.productSku && (
           <Flex className={styles.productOverviewSkuLine}>
             <span>
@@ -122,17 +125,24 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
               />
             </Tooltip>
 
-            <Rating className="bts-marginLm" value={product.averageRating} reviewsCount={product.numberOfRatings || 0}/>
+            <Rating
+              className="bts-marginLm"
+              value={product.averageRating}
+              reviewsCount={product.numberOfRatings || 0}
+            />
           </Flex>
         )}
 
-        <Heading level="h2" className={clsx('bts-marginBl', oldPrice && styles.productOverviewWithDiscount)}>
+        <Heading
+          level="h2"
+          className={clsx('bts-marginBl', oldPrice && styles.productOverviewWithDiscount)}
+        >
           <span className={styles.productOverviewPriceNew}>{formatCurrency(price)}</span>
           {oldPrice && (
             <span className={styles.productOverviewPriceOld}>{formatCurrency(oldPrice)}</span>
           )}
         </Heading>
-        <Divider className="bts-marginBxl"/>
+        <Divider className="bts-marginBxl" />
         {!!product.options?.length && (
           <VariantOptionsSelector
             className="bts-marginBxxl"
@@ -168,8 +178,12 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             </Tooltip>
           ))}
         </Flex>
-        <Flex direction="horizontal" spacing="s" align="center"
-              className={clsx('bts-marginBxxxl', styles.productOverviewActions)}>
+        <Flex
+          direction="horizontal"
+          spacing="s"
+          align="center"
+          className={clsx('bts-marginBxxxl', styles.productOverviewActions)}
+        >
           <StringInput
             type="number"
             min={1}
@@ -199,7 +213,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             onToggle={toggleFavorite}
           />
 
-          <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl}/>
+          <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl} />
         </Flex>
 
         {!!product.details?.length && (

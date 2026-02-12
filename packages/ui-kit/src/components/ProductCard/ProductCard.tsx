@@ -26,7 +26,7 @@ export type ProductCard = {
   defaultVariant: {
     price: number;
     oldPrice?: number;
-  }
+  };
 };
 export type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
