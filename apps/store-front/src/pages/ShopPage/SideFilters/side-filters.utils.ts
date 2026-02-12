@@ -1,26 +1,46 @@
-export const urlFilterParsers: Record<keyof ShopFilters, (val: string) => any> = {
+export const urlFilterParsers: Record<string, (val: string) => any> = {
   categoryIds: (v) => v.split(',').filter(Boolean),
   discounts: (v) => (v === 'discounts' ? 'discounts' : undefined),
   priceRange: (v) => {
-    try {
-      const parsed = JSON.parse(v);
-      if (
-        Array.isArray(parsed) &&
-        parsed.length === 2 &&
-        typeof parsed[0] === 'number' &&
-        typeof parsed[1] === 'number'
-      ) {
-        return parsed;
-      }
-    } catch {}
-    return undefined;
+    const [min, max] = v.split(',').map(Number);
+    return !isNaN(min) && !isNaN(max) ? [min, max] : undefined;
   },
-  attributesJson: (v) => v,
 };
 
 export type ShopFilters = {
   categoryIds?: string[];
   priceRange?: [number, number];
   discounts?: 'discounts';
-  attributesJson?: string; // JSON string: { [typeId: string]: number[] }
+};
+
+export type Filters = Record<string, any>;
+
+export interface ParsedAttributes {
+  attrsSignature: string;
+  selectedAttrs: Record<string, number[]>;
+  attrsBody: Record<string, number[]>;
+}
+
+export const parseAttributeFilters = (filters?: Filters): ParsedAttributes => {
+  const selected: Record<string, number[]> = {};
+
+  Object.entries(filters ?? {}).forEach(([key, value]) => {
+    if (!key.startsWith('attr_') || !Array.isArray(value)) return;
+
+    const typeId = key.replace('attr_', '');
+    if (value.length > 0) {
+      selected[typeId] = value;
+    }
+  });
+
+  const signature = Object.entries(selected)
+    .map(([k, v]) => `attr_${k}=${v.join(',')}`)
+    .sort()
+    .join('|');
+
+  return {
+    attrsSignature: signature,
+    selectedAttrs: selected,
+    attrsBody: selected,
+  };
 };

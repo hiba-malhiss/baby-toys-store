@@ -19,17 +19,16 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { useUrlFilters } from '../../../hooks/useUrlFilters';
-import { type ShopFilters, urlFilterParsers } from './side-filters.utils';
+import { parseAttributeFilters, type ShopFilters, urlFilterParsers } from './side-filters.utils';
 import { useCategories, useFilterableAttributes } from '../../../api/catalogApi';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useFilterChips } from '../useFilterChips';
 
 import styles from './side-filters.module.scss';
-import { parseAttributeFilters } from '../../../utils/filters.utils.ts';
 
 type Props = {
   className?: string;
-  onFiltersChange: (filters: ShopFilters) => void;
+  onFiltersChange: (filters: Record<string, any>) => void;
   isDrawer?: boolean;
 };
 
@@ -52,14 +51,27 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
 
   const defaultFilters: ShopFilters = useMemo(
     () => ({
-      priceRange: priceRange,
+      priceRange,
+      categoryIds: undefined,
+      discounts: undefined,
     }),
     [priceRange]
   );
 
   const { urlFilters, updateUrlFilters, clearFilters } = useUrlFilters<ShopFilters>(
     urlFilterParsers,
-    defaultFilters
+    defaultFilters,
+    undefined,
+    [
+      {
+        prefix: 'attr_',
+        parser: (v: string) =>
+          v
+            .split(',')
+            .map(Number)
+            .filter((n) => !isNaN(n)),
+      },
+    ]
   );
 
   const debouncedFilters = useDebounce(urlFilters, 400);
@@ -69,7 +81,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   const isLoadingFilters = loadingCategories || loadingAttributes;
 
   useEffect(() => {
-    if (!isLoadingFilters) {
+    if(!isLoadingFilters) {
       onFiltersChange(debouncedFilters);
     }
   }, [debouncedFilters, isLoadingFilters, onFiltersChange]);
@@ -83,33 +95,34 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   const updateAttributeSelection = (typeId: number, valueIds?: number[]) => {
     const key = `attr_${typeId}`;
 
-    if (!valueIds || valueIds.length === 0) {
-      updateUrlFilters({ [key]: undefined });
-      return;
-    }
-
-    updateUrlFilters({ [key]: valueIds.join(',') });
+    updateUrlFilters({
+      [key]: valueIds && valueIds.length > 0 ? valueIds : undefined,
+    });
   };
 
   const removeFilter = (key: string) => {
-    if (key.startsWith('attr_')) {
-      const [_, typeId, valueId] = key.split('_');
+    if(key.startsWith('attr_')) {
+      const [, typeId, valueId] = key.split('_');
       const current = selectedAttrs[typeId] || [];
-      const next = current.filter((v) => String(v) !== valueId);
+      const next = current.filter((v) => v !== Number(valueId));
       updateAttributeSelection(Number(typeId), next);
       return;
     }
 
-    if (key.startsWith('categoryIds')) {
-      const [_, categoryId] = key.split('_');
+    if(key.startsWith('categoryIds')) {
+      const [, categoryId] = key.split('_');
       const current = urlFilters.categoryIds || [];
       const next = current.filter((id) => id !== categoryId);
       handleFilterChange('categoryIds', next.length > 0 ? next : undefined);
       return;
     }
 
-    if (key === 'priceRange') return handleFilterChange('priceRange', priceRange);
-    return handleFilterChange(key as keyof ShopFilters, undefined);
+    if(key === 'priceRange') {
+      handleFilterChange('priceRange', priceRange);
+      return;
+    }
+
+    handleFilterChange(key as keyof ShopFilters, undefined);
   };
 
   const renderFilterChips = () => (
@@ -124,7 +137,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
       ))}
 
       {filtersCount === 0 && (
-        <NoDataFound subtext={t('filters.none')} align="start" withoutPadding />
+        <NoDataFound subtext={t('filters.none')} align="start" withoutPadding/>
       )}
     </Flex>
   );
@@ -132,10 +145,11 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   const renderContent = () => (
     <Flex direction="vertical" spacing="s" fullWidth>
       {renderFilterChips()}
-      <Divider className="bts-marginTxl" />
+      <Divider className="bts-marginTxl"/>
 
+      {/* Categories */}
       <Accordion
-        header={<span key="sf-header-category">{t('filters.category')}</span>}
+        header={<span>{t('filters.category')}</span>}
         withoutPadding
         withoutHeaderPadding
         isOpenByDefault
@@ -143,7 +157,10 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
       >
         <ExpandableContent maxHeight="220px" className="bts-marginBxs">
           <CheckboxGroup
-            options={categories.map(({ id, name }) => ({ label: name, value: String(id) }))}
+            options={categories.map(({ id, name }) => ({
+              label: name,
+              value: String(id),
+            }))}
             value={urlFilters.categoryIds || []}
             onChange={(val) => handleFilterChange('categoryIds', val.length > 0 ? val : undefined)}
             direction="vertical"
@@ -151,17 +168,21 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         </ExpandableContent>
       </Accordion>
 
+      {/* Attributes */}
       {attributeTypes.map((type) => (
         <Accordion
           key={`sf-attr-${type.id}`}
-          header={<span key={`sf-attr-header-${type.id}`}>{type.displayName}</span>}
+          header={<span>{type.displayName}</span>}
           withoutPadding
           withoutHeaderPadding
           size="medium"
         >
           <ExpandableContent maxHeight="220px" className="bts-marginBxs">
             <CheckboxGroup
-              options={type.values.map((v) => ({ label: v.displayValue, value: String(v.id) }))}
+              options={type.values.map((v) => ({
+                label: v.displayValue,
+                value: String(v.id),
+              }))}
               value={selectedAttrs[String(type.id)]?.map(String) || []}
               onChange={(values) =>
                 updateAttributeSelection(
@@ -175,8 +196,9 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         </Accordion>
       ))}
 
+      {/* Discounts */}
       <Accordion
-        header={<span key="sf-header-deals">{t('filters.dealsAndDiscounts')}</span>}
+        header={<span>{t('filters.dealsAndDiscounts')}</span>}
         withoutPadding
         withoutHeaderPadding
         size="medium"
@@ -184,9 +206,14 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         <ExpandableContent maxHeight="220px" className="bts-marginBxs">
           <CheckboxGroup
             options={[
-              { label: t('filters.discounts', { defaultValue: 'Discounts' }), value: 'discounts' },
+              {
+                label: t('filters.discounts', {
+                  defaultValue: 'Discounts',
+                }),
+                value: 'discounts',
+              },
             ]}
-            value={urlFilters.discounts ? [urlFilters.discounts] : []}
+            value={urlFilters.discounts ? ['discounts'] : []}
             onChange={(val) =>
               handleFilterChange('discounts', val.length > 0 ? 'discounts' : undefined)
             }
@@ -195,8 +222,9 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         </ExpandableContent>
       </Accordion>
 
+      {/* Price */}
       <Accordion
-        header={<span key="sf-header-price">{t('filters.price')}</span>}
+        header={<span>{t('filters.price')}</span>}
         withoutPadding
         withoutHeaderPadding
         size="medium"
@@ -216,15 +244,15 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
     </Flex>
   );
 
-  if (isLoadingFilters) {
+  if(isLoadingFilters) {
     return (
       <Card className={className} header={t('filters.header')} withoutBorder size="xsmall">
-        <BouncingDotsLoader size="medium" className="bts-marginTl" />
+        <BouncingDotsLoader size="medium" className="bts-marginTl"/>
       </Card>
     );
   }
 
-  if (isDrawer) {
+  if(isDrawer) {
     return (
       <>
         <div className={className}>
@@ -245,7 +273,13 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
           onClose={() => setIsDrawerOpen(false)}
           position="right"
           appendTo={document.body}
-          header={<span>{t('filters.headerWithCount', { count: filtersCount })}</span>}
+          header={
+            <span>
+              {t('filters.headerWithCount', {
+                count: filtersCount,
+              })}
+            </span>
+          }
         >
           {renderContent()}
         </Drawer>
@@ -260,7 +294,9 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         <Flex justify="between" align="center" fullWidth spacing="s">
           <span>
             {filtersCount > 0
-              ? t('filters.headerWithCount', { count: filtersCount })
+              ? t('filters.headerWithCount', {
+                count: filtersCount,
+              })
               : t('filters.header')}
           </span>
 

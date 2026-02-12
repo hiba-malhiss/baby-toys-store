@@ -1,8 +1,7 @@
-import type { ShopFilters } from './SideFilters/side-filters.utils';
+import { parseAttributeFilters, type ShopFilters } from './SideFilters/side-filters.utils';
 import { useCategories, useFilterableAttributes } from '../../api/catalogApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
-import { parseAttributeFilters } from '../../utils/filters.utils.ts';
 
 const isEqual = (value1: any, value2: any): boolean => {
   if (Array.isArray(value1) && Array.isArray(value2)) {
@@ -25,6 +24,7 @@ export const useFilterChips = (
 
   const chips: { key: string; label: string }[] = [];
 
+  // Parse dynamic attribute filters (attr_*)
   const { selectedAttrs } = parseAttributeFilters(filters);
 
   Object.entries(filters).forEach(([key, value]) => {
@@ -35,16 +35,21 @@ export const useFilterChips = (
     if (key.startsWith('attr_')) {
       const typeId = key.replace('attr_', '');
       const values = selectedAttrs[String(typeId)] ?? [];
+
       if (values.length === 0) return;
 
       const type = attributeTypes.find((t) => Number(t.id) === Number(typeId));
       if (!type) return;
 
       values.forEach((valueId) => {
-        const val = type.values.find((v) => Number(v.id) === valueId);
-        const label = val?.displayValue || type.displayName;
-        chips.push({ key: `${key}_${valueId}`, label });
+        const attributeValue = type.values.find((v) => Number(v.id) === valueId);
+
+        chips.push({
+          key: `${key}_${valueId}`, // required for removeFilter logic
+          label: attributeValue?.displayValue || type.displayName,
+        });
       });
+
       return;
     }
 
@@ -58,15 +63,18 @@ export const useFilterChips = (
         }
         break;
 
-      case 'categoryIds': {
+      case 'categoryIds':
         if (Array.isArray(value)) {
           value.forEach((id) => {
-            const name = categories.find((c) => String(c.id) === id)?.name || id;
-            chips.push({ key: `categoryIds_${id}`, label: name });
+            const categoryName = categories.find((c) => String(c.id) === id)?.name || id;
+
+            chips.push({
+              key: `categoryIds_${id}`,
+              label: categoryName,
+            });
           });
         }
         break;
-      }
 
       case 'discounts':
         chips.push({
@@ -76,7 +84,7 @@ export const useFilterChips = (
         break;
 
       default:
-        chips.push({ key: String(key), label: String(value) });
+        break;
     }
   });
 

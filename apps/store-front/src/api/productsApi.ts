@@ -1,9 +1,8 @@
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
-import type { ShopFilters } from '../pages/ShopPage/SideFilters/side-filters.utils';
+import { parseAttributeFilters, type ShopFilters } from '../pages/ShopPage/SideFilters/side-filters.utils';
 import type { Product } from './types/product.ts';
-import { parseAttributeFilters } from '../utils/filters.utils.ts';
 
 export type ProductsQuery = {
   page: number;
