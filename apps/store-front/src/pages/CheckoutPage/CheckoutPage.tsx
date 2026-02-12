@@ -162,7 +162,7 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryList}>
             {view.items.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
-                <img src={item.productImage || ''} alt={item.productName} />
+                <img src={item.variantImage || ''} alt={item.productName} />
                 <div>
                   <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>

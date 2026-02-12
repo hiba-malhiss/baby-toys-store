@@ -131,7 +131,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
             <CartItemCard
               fullWidth
               id={item.id as any}
-              image={item.productImage || ''}
+              image={item.variantImage || ''}
               name={item.productName}
               totalPrice={formatCurrency(item.totalPrice)}
               quantityInStock={item.availableStock}

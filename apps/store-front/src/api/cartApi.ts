@@ -9,7 +9,7 @@ export type CartItemDTO = {
   id: number;
   productId: number;
   productName?: string;
-  productImage?: string;
+  variantImage?: string;
   unitPrice: number;
   originalPrice?: number | null;
   totalPrice: number;

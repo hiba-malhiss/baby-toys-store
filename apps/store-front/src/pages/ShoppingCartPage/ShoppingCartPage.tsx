@@ -13,6 +13,7 @@ import {
   PriceDisplay,
   ConfirmDialog,
   Alert,
+  Image
 } from '@baby-toys/ui-kit';
 
 import styles from './shopping-cart-page.module.scss';
@@ -111,7 +112,7 @@ const ShoppingCartPage = () => {
           {items.map((item) => (
             <div key={item.id} className={styles.shoppingCartPageTableRow}>
               <div className={styles.shoppingCartPageImage}>
-                <img src={item.productImage || undefined} alt={item.productName} />
+                <Image src={item.variantImage || undefined} alt={item.productName} />
               </div>
               <Button
                 appearance="link"
