@@ -33,19 +33,10 @@
 
   &-thumbnail {
     width: 100%;
-    height: auto;
     max-height: 150px;
     object-fit: cover;
     display: block;
     border-radius: 8px;
     transition: opacity 0.2s;
   }
-
-  //&-unselected {
-  //  opacity: 0.8;
-  //
-  //  &:hover {
-  //    opacity: 1;
-  //  }
-  //}
 }

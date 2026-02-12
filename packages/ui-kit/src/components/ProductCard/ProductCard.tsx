@@ -22,7 +22,7 @@ export type ProductCard = {
   label?: string;
   mainImage?: string;
   isFavorite?: boolean;
-  availableInStock?: number;
+  activeVariantsTotalStock?: number;
   defaultVariant: {
     price: number;
     oldPrice?: number;
@@ -65,7 +65,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
   const isSmallSize = size === 'small';
   const toast = useToast();
   const isOutOfStock =
-    (product?.availableInStock ?? 0) === 0 || (product as any)?.outOfStock === true;
+    (product?.activeVariantsTotalStock ?? 0) === 0 || (product as any)?.outOfStock === true;
 
   const handleButtonClick = useCallback(
     (e: React.MouseEvent, handler?: (product: ProductCard) => void) => {

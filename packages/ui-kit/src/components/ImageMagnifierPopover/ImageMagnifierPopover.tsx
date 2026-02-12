@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styles from './image-magnifier-popover.module.scss';
 import Popover from '../Popover/Popover';
-import { resolveImageBaseUrl } from '../Image';
+import Image, { resolveImageBaseUrl } from '../Image';
 import useDeviceInfo from '../../hooks/useDeviceInfo.ts';
 
 type Props = {
@@ -209,18 +209,14 @@ const ImageMagnifierPopover: React.FC<Props> = ({
         onMouseMove={handleMouseMove}
         style={{ cursor: canHover ? 'none' : 'default' }}
       >
-        <img
+        <Image
           src={resolvedSrc}
           alt={alt}
           className={styles.imageMagnifierImage}
-          style={{
-            objectFit: 'contain',
-            width: '100%',
-            height: '100%',
-            display: 'block',
-            pointerEvents: 'auto',
-          }}
-          draggable={false}
+          objectFit="contain"
+          fullWidth
+          fullHeight
+          isDraggable={false}
         />
 
         {showPopover && <div className={styles.imageMagnifierLens} style={lensStyle} />}
