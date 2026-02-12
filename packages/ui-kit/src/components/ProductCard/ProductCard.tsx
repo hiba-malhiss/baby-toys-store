@@ -17,14 +17,16 @@ export type ProductCard = {
   id: string | number;
   name: string;
   shortDescription?: string;
-  price: number;
-  oldPrice?: number;
   rating?: number;
   reviewsCount?: number;
   label?: string;
   mainImage?: string;
   isFavorite?: boolean;
   availableInStock?: number;
+  defaultVariant: {
+    price: number;
+    oldPrice?: number;
+  }
 };
 export type ProductCardProps = {
   direction?: 'horizontal' | 'vertical';
@@ -173,8 +175,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
         )}
         <PriceDisplay
           className={clsx(styles.productCardPrice)}
-          price={product.price}
-          oldPrice={product.oldPrice}
+          price={product?.defaultVariant?.price}
+          oldPrice={product?.defaultVariant?.oldPrice}
           formatCurrency={formatCurrency}
         />
         <Flex justify="between" align="center" className={styles.productCardRating}>
