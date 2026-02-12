@@ -53,11 +53,22 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
   const [selectedVariantId, setSelectedVariantId] = useState<number | undefined>(
     product.defaultVariant?.id
   );
+  const [selectedImage, setSelectedImage] = useState<string | undefined>(
+    product.defaultVariant?.mainImage ?? product.images?.[0]
+  );
 
   const selectedVariant = useMemo(
     () => variants.find((v) => v.id === selectedVariantId),
     [variants, selectedVariantId]
   );
+
+  const handleVariantChange = ({ variantId }: { variantId: number }) => {
+    setSelectedVariantId(variantId);
+    const variant = variants.find((v) => v.id === variantId);
+    if (variant?.mainImage) {
+      setSelectedImage(variant.mainImage);
+    }
+  };
 
   const price = selectedVariant?.price ?? product.defaultVariant?.price;
   const oldPrice = selectedVariant?.oldPrice ?? product.defaultVariant?.oldPrice;
@@ -105,7 +116,12 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
 
   return (
     <div className={styles.productOverview}>
-      <ImageGallery images={product.images} productName={product.name} />
+      <ImageGallery
+        images={product.images}
+        productName={product.name}
+        selectedImage={selectedImage}
+        onSelectImage={setSelectedImage}
+      />
       <Flex direction="vertical">
         <Heading level="h3" className="bts-marginBxs">
           {product.name}
@@ -148,7 +164,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             className="bts-marginBxxl"
             product={product}
             preselectedVariantId={selectedVariantId}
-            onChange={({ variantId }) => setSelectedVariantId(variantId)}
+            onChange={handleVariantChange}
           />
         )}
 

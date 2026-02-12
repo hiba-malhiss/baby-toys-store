@@ -8,11 +8,17 @@ import { Image } from '../Image';
 type ImageGalleryProps = {
   images?: string[];
   productName?: string;
+  selectedImage: string | undefined;
+  onSelectImage: (image: string) => void;
 };
 
-const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], productName }) => {
+const ImageGallery: React.FC<ImageGalleryProps> = ({
+  images = [],
+  productName,
+  selectedImage,
+  onSelectImage,
+}) => {
   const safeImages = Array.isArray(images) ? images.filter(Boolean) : [];
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(safeImages[0]);
 
   if (!selectedImage) {
     return (
@@ -40,7 +46,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({ images = [], productName })
           <div
             key={img}
             className={styles.imageGalleryThumbnailWrapper}
-            onClick={() => setSelectedImage(img)}
+            onClick={() => onSelectImage(img)}
           >
             <Image
               src={img}

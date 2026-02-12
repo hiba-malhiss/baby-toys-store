@@ -207,7 +207,6 @@ const ImageMagnifierPopover: React.FC<Props> = ({
         onMouseEnter={handleMouseEnter}
         onMouseLeave={() => setIsHovering(false)}
         onMouseMove={handleMouseMove}
-        style={{ cursor: canHover ? 'none' : 'default' }}
       >
         <Image
           src={resolvedSrc}
