@@ -81,7 +81,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   const isLoadingFilters = loadingCategories || loadingAttributes;
 
   useEffect(() => {
-    if(!isLoadingFilters) {
+    if (!isLoadingFilters) {
       onFiltersChange(debouncedFilters);
     }
   }, [debouncedFilters, isLoadingFilters, onFiltersChange]);
@@ -101,7 +101,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   };
 
   const removeFilter = (key: string) => {
-    if(key.startsWith('attr_')) {
+    if (key.startsWith('attr_')) {
       const [, typeId, valueId] = key.split('_');
       const current = selectedAttrs[typeId] || [];
       const next = current.filter((v) => v !== Number(valueId));
@@ -109,7 +109,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
       return;
     }
 
-    if(key.startsWith('categoryIds')) {
+    if (key.startsWith('categoryIds')) {
       const [, categoryId] = key.split('_');
       const current = urlFilters.categoryIds || [];
       const next = current.filter((id) => id !== categoryId);
@@ -117,7 +117,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
       return;
     }
 
-    if(key === 'priceRange') {
+    if (key === 'priceRange') {
       handleFilterChange('priceRange', priceRange);
       return;
     }
@@ -137,7 +137,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
       ))}
 
       {filtersCount === 0 && (
-        <NoDataFound subtext={t('filters.none')} align="start" withoutPadding/>
+        <NoDataFound subtext={t('filters.none')} align="start" withoutPadding />
       )}
     </Flex>
   );
@@ -145,7 +145,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   const renderContent = () => (
     <Flex direction="vertical" spacing="s" fullWidth>
       {renderFilterChips()}
-      <Divider className="bts-marginTxl"/>
+      <Divider className="bts-marginTxl" />
 
       {/* Categories */}
       <Accordion
@@ -244,15 +244,15 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
     </Flex>
   );
 
-  if(isLoadingFilters) {
+  if (isLoadingFilters) {
     return (
       <Card className={className} header={t('filters.header')} withoutBorder size="xsmall">
-        <BouncingDotsLoader size="medium" className="bts-marginTl"/>
+        <BouncingDotsLoader size="medium" className="bts-marginTl" />
       </Card>
     );
   }
 
-  if(isDrawer) {
+  if (isDrawer) {
     return (
       <>
         <div className={className}>
@@ -295,8 +295,8 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
           <span>
             {filtersCount > 0
               ? t('filters.headerWithCount', {
-                count: filtersCount,
-              })
+                  count: filtersCount,
+                })
               : t('filters.header')}
           </span>
 

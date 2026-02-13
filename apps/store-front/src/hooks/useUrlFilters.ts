@@ -19,7 +19,7 @@ export const useUrlFilters = <T extends Record<string, any>>(
   const lastFiltersRef = useRef<Record<string, any>>({});
 
   const getParserForKey = (key: string): Parser<any> | undefined => {
-    if(parsers[key]) return parsers[key];
+    if (parsers[key]) return parsers[key];
 
     const prefixMatch = prefixParsers.find((p) => key.startsWith(p.prefix));
     return prefixMatch?.parser;
@@ -30,19 +30,19 @@ export const useUrlFilters = <T extends Record<string, any>>(
     const result: Record<string, any> = {};
 
     // 1️⃣ Parse ALL URL params (including dynamic ones)
-    for(const [key, val] of searchParams.entries()) {
+    for (const [key, val] of searchParams.entries()) {
       const parser = getParserForKey(key);
       result[key] = parser ? parser(val, key) : val;
     }
 
     // 2️⃣ Ensure known keys fallback to defaults
     keys.forEach((key) => {
-      if(!searchParams.has(key as string)) {
+      if (!searchParams.has(key as string)) {
         result[key as string] = defaultValues[key];
       }
     });
 
-    if(isEqual(result, lastFiltersRef.current)) {
+    if (isEqual(result, lastFiltersRef.current)) {
       return lastFiltersRef.current as Partial<T> & Record<string, any>;
     }
 
@@ -58,7 +58,7 @@ export const useUrlFilters = <T extends Record<string, any>>(
         Object.entries(newFilters).forEach(([key, value]) => {
           const defaultVal = defaultValues[key as keyof T];
 
-          if(
+          if (
             value === undefined ||
             value === null ||
             value === '' ||
@@ -73,7 +73,7 @@ export const useUrlFilters = <T extends Record<string, any>>(
           }
         });
 
-        if(!('page' in newFilters)) {
+        if (!('page' in newFilters)) {
           params.delete('page');
         }
 
@@ -85,7 +85,7 @@ export const useUrlFilters = <T extends Record<string, any>>(
 
   const deleteParamsWithPrefix = (prefix: string) => {
     Array.from(searchParams.keys()).forEach((key) => {
-      if(key.startsWith(prefix)) {
+      if (key.startsWith(prefix)) {
         searchParams.delete(key);
       }
     });
@@ -94,14 +94,14 @@ export const useUrlFilters = <T extends Record<string, any>>(
   const clearFilters = useCallback(() => {
     prefixParsers?.map(({ prefix }) => {
       deleteParamsWithPrefix(prefix);
-    })
+    });
     Object.entries(defaultValues).forEach(([key, value]) => {
-      if(value) {
+      if (value) {
         searchParams.set(key, value);
       } else {
         searchParams.delete(key);
       }
-    })
+    });
     setSearchParams(searchParams);
   }, [setSearchParams, searchParams, defaultValues, prefixParsers]);
 

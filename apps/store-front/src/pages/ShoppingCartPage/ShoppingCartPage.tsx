@@ -13,7 +13,7 @@ import {
   PriceDisplay,
   ConfirmDialog,
   Alert,
-  Image
+  Image,
 } from '@baby-toys/ui-kit';
 
 import styles from './shopping-cart-page.module.scss';
