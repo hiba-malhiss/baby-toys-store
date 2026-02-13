@@ -40,6 +40,7 @@
     }
   },
   "product": {
+    "aboutThisItem": "About this item",
     "addToCart": "Add to cart",
     "details": "Item details",
     "recentShoots": "Recent photo Shoots",
@@ -148,7 +149,8 @@
         "secondPhone": "Enter second phone number (optional)",
         "note": "Add a note for your order (optional)",
         "coupon": "Enter coupon code"
-      }
+      },
+      "selectTownForShipping": "Please select a town to calculate shipping"
     }
   },
   "orders": {

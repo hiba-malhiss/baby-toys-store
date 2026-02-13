@@ -12,6 +12,7 @@ import {
   Chip,
   Divider,
   useToast,
+  Text,
 } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
@@ -200,6 +201,11 @@ const CheckoutPage: React.FC = () => {
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>{t('checkout.total')}</span>
             <span>
+              {!!isQuoting && !selectedTown && (
+                <Text size="sm" color="secondary" className="bts-paddingBxs">
+                  {t('checkout.form.selectTownForShipping')}
+                </Text>
+              )}
               {isQuoting ? <BouncingDotsLoader size="small" /> : formatCurrency(view.total)}
             </span>
           </div>

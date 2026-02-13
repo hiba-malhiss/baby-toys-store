@@ -7,7 +7,7 @@ import { useTranslation } from 'react-i18next';
 import type { Product } from '../../api/types/product.ts';
 
 export const ProductInfoTabs: React.FC<{ product: Product }> = ({ product }) => {
-  const { id, shortDescription, featureBullets, details } = product;
+  const { id, description } = product;
   const { data: settings } = useStoreSettings();
   const { t } = useTranslation('common');
 
@@ -24,29 +24,7 @@ export const ProductInfoTabs: React.FC<{ product: Product }> = ({ product }) => 
       >
         <TabBarItem value="description">
           <ExpandableContent className={styles.productDetailsDescription}>
-            {/* Short description */}
-            {shortDescription && <p className="bts-marginBxl">{shortDescription}</p>}
-
-            {/* Feature bullets */}
-            {featureBullets?.length ? (
-              <ul className={styles.productOverviewFeatureBullets}>
-                {featureBullets.map((b, i) => (
-                  <li key={`${b}-${i}`}>{b}</li>
-                ))}
-              </ul>
-            ) : null}
-
-            {/* Details key/value */}
-            {details?.length ? (
-              <div className={styles.productOverviewDetails}>
-                {details.map(({ label, value }, index) => (
-                  <React.Fragment key={`${label}-${index}`}>
-                    <label>{label}</label>
-                    <span>{value}</span>
-                  </React.Fragment>
-                ))}
-              </div>
-            ) : null}
+            {description && <p className="bts-marginBxl">{description}</p>}
           </ExpandableContent>
         </TabBarItem>
 

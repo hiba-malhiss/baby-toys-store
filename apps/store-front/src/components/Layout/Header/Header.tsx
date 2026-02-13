@@ -23,9 +23,9 @@ const Header = () => {
   const handleCategoryClick = (category?: string) => {
     const params = new URLSearchParams(location.search);
     if (category) {
-      params.set('categoryId', String(category));
+      params.set('categoryIds', String(category));
     } else {
-      params.delete('categoryId');
+      params.delete('categoryIds');
     }
 
     navigate({

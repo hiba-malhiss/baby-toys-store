@@ -14,6 +14,7 @@ import {
   SocialIconButton,
   StringInput,
   Divider,
+  Text,
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
@@ -158,17 +159,22 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             <span className={styles.productOverviewPriceOld}>{formatCurrency(oldPrice)}</span>
           )}
         </Heading>
-        <Divider className="bts-marginBxl" />
+        <Divider className="bts-marginBl" />
         {!!product.options?.length && (
-          <VariantOptionsSelector
-            className="bts-marginBxxl"
-            product={product}
-            preselectedVariantId={selectedVariantId}
-            onChange={handleVariantChange}
-          />
+          <>
+            <VariantOptionsSelector
+              className="bts-marginBl"
+              product={product}
+              preselectedVariantId={selectedVariantId}
+              onChange={handleVariantChange}
+            />
+            <Divider className="bts-marginBl" />
+          </>
         )}
-
-        <ExpandableContent className="bts-marginBxl bts-marginTs" maxHeight="200px">
+        <ExpandableContent className="bts-marginBxl" maxHeight="200px">
+          <Text weight="semibold" size="sm" className="bts-marginBs">
+            {t('product.aboutThisItem')}
+          </Text>
           <ul className={styles.productOverviewFeatureBullets}>
             {product.featureBullets?.map((item: string, index: number) => (
               <li key={index}>{item}</li>

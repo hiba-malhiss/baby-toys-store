@@ -4,7 +4,6 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
 import styles from './paginator.module.scss';
 import BouncingDotsLoader from '../BouncingDotsLoader/BouncingDotsLoader.tsx';
-import { useDebounce } from '../../hooks/useDebounce.ts';
 
 export type PaginationMode = 'default' | 'show-more' | 'infinite-scroll';
 
@@ -32,9 +31,7 @@ function Paginator({
   const totalPages = Math.ceil(totalItems / pageSize);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const prevPageRef = useRef(initialPage);
-  const showMoreRef = useRef<HTMLButtonElement | null>(null);
-  const [shouldPaginate, setShouldPaginate] = useState(false);
-  const debouncedShouldPaginate = useDebounce(shouldPaginate, 300);
+  const showMoreRef = useRef<HTMLDivElement | null>(null); // Use div for loader
 
   // Update internal state when initialPage prop changes
   useEffect(() => {
@@ -44,7 +41,7 @@ function Paginator({
     }
   }, [initialPage]);
 
-  // Memoize the pagination state to prevent unnecessary effect triggers
+  // Memoize pagination state
   const paginationState = useMemo(
     () => ({
       currentPage,
@@ -54,7 +51,7 @@ function Paginator({
     [currentPage, pageSize]
   );
 
-  // Call onPageChange when currentPage or pageSize changes
+  // Call onPageChange when currentPage changes
   useEffect(() => {
     if (paginationState.hasChanged) {
       onPageChange?.(paginationState.currentPage, paginationState.pageSize);
@@ -70,7 +67,7 @@ function Paginator({
     [currentPage, totalPages]
   );
 
-  // Reset to first page if totalItems changes and current page is no longer valid
+  // Reset to first page if currentPage exceeds totalPages
   useEffect(() => {
     if (totalPages > 0 && currentPage > totalPages) {
       setCurrentPage(1);
@@ -81,18 +78,21 @@ function Paginator({
     setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
   }, [totalPages]);
 
+  // Infinite Scroll IntersectionObserver
   useEffect(() => {
     if (mode !== 'infinite-scroll' || !showMoreRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        setShouldPaginate(entry.isIntersecting);
+        if (entry.isIntersecting && !isLoading && hasMore) {
+          handleShowMore();
+        }
       },
       {
         root: null,
-        rootMargin: '0px',
-        threshold: 1.0,
+        rootMargin: '150px', // preload before hitting loader
+        threshold: 0.1, // 10% visible triggers it
       }
     );
 
@@ -102,14 +102,7 @@ function Paginator({
     return () => {
       if (node) observer.unobserve(node);
     };
-  }, [mode]);
-
-  // Debounced pagination trigger
-  useEffect(() => {
-    if (debouncedShouldPaginate && !isLoading && hasMore) {
-      handleShowMore();
-    }
-  }, [debouncedShouldPaginate, isLoading, hasMore, handleShowMore]);
+  }, [mode, handleShowMore, isLoading, hasMore]);
 
   // === Infinite Scroll Mode ===
   if (mode === 'infinite-scroll') {
@@ -121,14 +114,14 @@ function Paginator({
       </div>
     );
   }
-  // === Show More / Infinite Scroll Mode ===
+
+  // === Show More Mode ===
   if (mode === 'show-more') {
     if (!hasMore) return null;
 
     return (
       <div className={clsx(className, styles.pagination)}>
         <Button
-          ref={showMoreRef}
           appearance="filled"
           color="secondary"
           className={styles.paginationButton}
