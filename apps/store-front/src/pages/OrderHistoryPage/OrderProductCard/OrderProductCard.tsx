@@ -15,10 +15,9 @@ export const statusColorMap: Record<string, string> = {
   delivered: 'primary',
 };
 
-type ProductLite = { id: string; name: string; price: number; mainImage: string };
 
 interface OrderProductCardProps {
-  onBuyAgain: (product: ProductLite) => void;
+  onBuyAgain: (productId: string, variantId: string) => void;
   onAddReview: (item: OrderItem) => void;
   onCancel?: () => void;
   isCancelling?: boolean;
@@ -37,7 +36,7 @@ const OrderProductCard = ({
   const { t } = useTranslation('common');
 
   const [expanded, setExpanded] = useState(false);
-  const items = order.cartItems || [];
+  const items = order.items || [];
   const visibleItems = expanded ? items : items.slice(0, 2);
 
   return (
@@ -68,8 +67,8 @@ const OrderProductCard = ({
         {visibleItems.map((item) => (
           <div key={item.productId} className={styles.orderCardCartItem}>
             <Image
-              src={item.product.mainImage}
-              alt={item.product.name}
+              src={item.mainImage}
+              alt={item.productName}
               className={styles.orderCardCartItemImage}
             />
             <div className={styles.orderCardCartItemInfo}>
@@ -78,7 +77,7 @@ const OrderProductCard = ({
                 appearance="link"
                 onClick={() => navigate('/product-details/' + item.productId)}
               >
-                <span className={styles.orderCardCartItemName}>{item.product.name}</span>
+                <span className={styles.orderCardCartItemName}>{item.productName}</span>
               </Button>
               <div className={styles.orderCardCartItemQuantity}>X{item.quantity}</div>
             </div>
@@ -86,8 +85,8 @@ const OrderProductCard = ({
             <div className={styles.orderCardCartItemActions}>
               <Button
                 color="secondary-light"
-                onClick={() => onBuyAgain(item.product)}
-                aria-label={t('orders.aria.buyAgain', { name: item.product.name })}
+                onClick={() => onBuyAgain(item.productId, item.variantId)}
+                aria-label={t('orders.aria.buyAgain', { name: item.productName })}
               >
                 {t('orders.buyAgain')}
               </Button>
@@ -96,8 +95,8 @@ const OrderProductCard = ({
                   onClick={() => onAddReview(item)}
                   aria-label={
                     item.canEditReview
-                      ? t('orders.aria.editReview', { name: item.product.name })
-                      : t('orders.aria.addReview', { name: item.product.name })
+                      ? t('orders.aria.editReview', { name: item.productName })
+                      : t('orders.aria.addReview', { name: item.productName })
                   }
                 >
                   {item.hasReview ? t('orders.editReview') : t('orders.addReview')}
