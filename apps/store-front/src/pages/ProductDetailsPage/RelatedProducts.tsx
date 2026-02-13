@@ -5,7 +5,6 @@ import styles from './product-details-page.module.scss';
 import SmartProductCard from '../../components/features/SmartProductCard/SmartProductCard.tsx';
 import { useRelatedProductsInfinite } from '../../api/productApi';
 import { useTranslation } from 'react-i18next';
-import { BREAKPOINTS } from '@baby-toys/ui-kit/constants/breakpoints.ts';
 
 const PAGE_SIZE = 6;
 const RelatedProducts: React.FC<{ productId: string }> = React.memo(({ productId }) => {

@@ -35,11 +35,7 @@ const YouMayAlsoLikeList: React.FC<YouMayAlsoLikeListProps> = ({
   };
 
   return (
-    <Section
-      title={title || t('highlights.youMayAlsoLike')}
-      className={className}
-      isLoading={loading && page === 1}
-    >
+    <Section title={title || t('highlights.youMayAlsoLike')} className={className}>
       <ViewSwitcher
         items={items.map((product) => (
           <SmartProductCard key={product.id} product={product} direction="vertical" />

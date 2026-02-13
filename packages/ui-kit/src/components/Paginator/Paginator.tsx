@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback, useRef, useMemo } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import Button from '../Button/Button.tsx';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import clsx from 'clsx';
@@ -28,94 +28,94 @@ function Paginator({
   mode = 'default',
   hasMore,
 }: PaginatorProps) {
-  const totalPages = Math.ceil(totalItems / pageSize);
   const [currentPage, setCurrentPage] = useState(initialPage);
   const prevPageRef = useRef(initialPage);
-  const showMoreRef = useRef<HTMLDivElement | null>(null); // Use div for loader
+  const observerRef = useRef<HTMLDivElement | null>(null);
 
-  // Update internal state when initialPage prop changes
+  // === DEFAULT MODE LOGIC ONLY ===
+  const totalPages = mode === 'default' ? Math.ceil(totalItems / pageSize) : 0;
+
+  // Sync with parent page changes
   useEffect(() => {
-    if (initialPage !== prevPageRef.current) {
+    if (mode === 'default' && initialPage !== prevPageRef.current) {
       setCurrentPage(initialPage);
       prevPageRef.current = initialPage;
     }
-  }, [initialPage]);
+  }, [initialPage, mode]);
 
-  // Memoize pagination state
-  const paginationState = useMemo(
-    () => ({
-      currentPage,
-      pageSize,
-      hasChanged: currentPage !== prevPageRef.current,
-    }),
-    [currentPage, pageSize]
-  );
-
-  // Call onPageChange when currentPage changes
+  // Notify parent in default mode
   useEffect(() => {
-    if (paginationState.hasChanged) {
-      onPageChange?.(paginationState.currentPage, paginationState.pageSize);
-      prevPageRef.current = paginationState.currentPage;
+    if (mode !== 'default') return;
+
+    if (currentPage !== prevPageRef.current) {
+      onPageChange?.(currentPage, pageSize);
+      prevPageRef.current = currentPage;
     }
-  }, [paginationState, onPageChange]);
+  }, [currentPage, pageSize, onPageChange, mode]);
 
   const gotoPage = useCallback(
     (page: number) => {
+      if (mode !== 'default') return;
       if (page < 1 || page > totalPages || page === currentPage) return;
       setCurrentPage(page);
     },
-    [currentPage, totalPages]
+    [currentPage, totalPages, mode]
   );
 
-  // Reset to first page if currentPage exceeds totalPages
+  // Reset page if total pages shrink
   useEffect(() => {
+    if (mode !== 'default') return;
     if (totalPages > 0 && currentPage > totalPages) {
       setCurrentPage(1);
     }
-  }, [totalPages, currentPage]);
+  }, [totalPages, currentPage, mode]);
 
-  const handleShowMore = useCallback(() => {
-    setCurrentPage((prev) => (prev < totalPages ? prev + 1 : prev));
-  }, [totalPages]);
-
-  // Infinite Scroll IntersectionObserver
+  // ============================
+  // === INFINITE SCROLL MODE ===
+  // ============================
   useEffect(() => {
-    if (mode !== 'infinite-scroll' || !showMoreRef.current) return;
+    if (mode !== 'infinite-scroll') return;
+    if (!observerRef.current) return;
 
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
+
         if (entry.isIntersecting && !isLoading && hasMore) {
-          handleShowMore();
+          onPageChange?.(currentPage + 1, pageSize);
         }
       },
       {
         root: null,
-        rootMargin: '150px', // preload before hitting loader
-        threshold: 0.1, // 10% visible triggers it
+        rootMargin: '150px',
+        threshold: 0.1,
       }
     );
 
-    const node = showMoreRef.current;
+    const node = observerRef.current;
     observer.observe(node);
 
     return () => {
       if (node) observer.unobserve(node);
     };
-  }, [mode, handleShowMore, isLoading, hasMore]);
+  }, [mode, currentPage, pageSize, onPageChange, isLoading, hasMore]);
 
-  // === Infinite Scroll Mode ===
+  // ============================
+  // === RENDERING MODES ===
+  // ============================
+
+  // Infinite Scroll
   if (mode === 'infinite-scroll') {
     if (!hasMore) return null;
 
     return (
-      <div className={clsx(className, styles.pagination)}>
-        <BouncingDotsLoader size="medium" ref={showMoreRef} />
+      <div className={clsx(className, styles.pagination)} ref={observerRef}>
+        {isLoading && <BouncingDotsLoader size="medium" />}
       </div>
     );
   }
 
-  // === Show More Mode ===
+  // Show More
   if (mode === 'show-more') {
     if (!hasMore) return null;
 
@@ -125,7 +125,7 @@ function Paginator({
           appearance="filled"
           color="secondary"
           className={styles.paginationButton}
-          onClick={handleShowMore}
+          onClick={() => onPageChange?.(currentPage + 1, pageSize)}
           isLoading={isLoading}
           isDisabled={isLoading}
         >
@@ -135,7 +135,7 @@ function Paginator({
     );
   }
 
-  // === Default Pagination Mode ===
+  // Default Pagination
   if (totalPages <= 1) return null;
 
   return (
@@ -148,6 +148,7 @@ function Paginator({
         isRounded
         className={clsx(styles.paginationButton, styles.paginationPrev)}
       />
+
       {Array.from({ length: totalPages }, (_, i) => {
         const pageNum = i + 1;
         return (
@@ -157,13 +158,14 @@ function Paginator({
             color="highlighted"
             isRounded
             onClick={() => gotoPage(pageNum)}
-            className={clsx(styles.paginationButton)}
+            className={styles.paginationButton}
             isSelected={currentPage === pageNum}
           >
             {pageNum}
           </Button>
         );
       })}
+
       <Button
         onClick={() => gotoPage(currentPage + 1)}
         isDisabled={currentPage >= totalPages}
