@@ -12,7 +12,7 @@ const OurCollectionSection = () => {
 
   const handleCategoryClick = (category: string) => {
     // Navigate to shop page with category filter
-    navigate(`/shop?categoryId=${encodeURIComponent(category)}`);
+    navigate(`/shop?categoryIds=${encodeURIComponent(category)}`);
   };
 
   return (
