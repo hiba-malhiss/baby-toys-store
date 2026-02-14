@@ -54,8 +54,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       header: t('table.headers.price'),
       sortable: true,
       body: (row: AdminProductBase) => {
-        const p = row.defaultVariant.price;
-        return p != null ? (symbol ? t('products.labels.fromPrice', { price: `${symbol}${p}` }) : t('products.labels.fromPrice', { price: String(p) })) : '-';
+        return row.defaultVariant.price;
       },
     },
     {

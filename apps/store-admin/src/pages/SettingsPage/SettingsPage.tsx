@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Card,
@@ -77,19 +78,25 @@ const policyFields = ['cancelPolicy', 'returnPolicy', 'shippingPolicy'] as const
 
 const SettingsPage: React.FC = () => {
   const toast = useToast();
+  const { t } = useTranslation();
   const { data: settingsMap } = useAdminStoreSettingsMap();
   const upsertMutation = useUpsertStoreSettings();
 
   const locales = useMemo(() => getSupportedLocales(), []);
 
+  const defaultValues = useMemo(
+    () => ({
+      general: { ...emptyGeneral },
+      contact: Object.fromEntries(locales.map((locale) => [locale, { ...emptyContact }])),
+      policies: Object.fromEntries(locales.map((locale) => [locale, { ...emptyPolicies }])),
+      policiesGlobal: { ...emptyPoliciesGlobal },
+    }),
+    [locales]
+  );
+
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema(locales)),
-    defaultValues: {
-      general: emptyGeneral,
-      contact: Object.fromEntries(locales.map((l) => [l, emptyContact])) as any,
-      policies: Object.fromEntries(locales.map((l) => [l, emptyPolicies])) as any,
-      policiesGlobal: emptyPoliciesGlobal,
-    },
+    defaultValues,
   });
 
   const { control, handleSubmit, reset, setValue, clearErrors } = form;
@@ -153,9 +160,9 @@ const SettingsPage: React.FC = () => {
 
     try {
       await upsertMutation.mutateAsync(payload);
-      toast.success('Store settings updated');
+      toast.success(t('settings.actions.success'));
     } catch (e: any) {
-      toast.error(e?.response?.data?.message || 'Failed to update settings');
+      toast.error(e?.response?.data?.message || t('settings.actions.error'));
     }
   };
 
@@ -164,10 +171,10 @@ const SettingsPage: React.FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Card fullWidth>
           <Flex direction="column" spacing="xxl" fullWidth>
-            <Heading>Store Settings</Heading>
+            <Heading>{t('settings.title')}</Heading>
 
             {/* General */}
-            <Accordion header="General" buttonAppearance="outline">
+            <Accordion header={t('settings.sections.general')} buttonAppearance="outline">
               <Flex direction="vertical" spacing="m" fullWidth>
                 {[
                   'currency',
@@ -182,7 +189,7 @@ const SettingsPage: React.FC = () => {
                     key={field}
                     control={control}
                     name={`general.${field}`}
-                    label={field.replace(/([A-Z])/g, ' $1')}
+                    label={t(`settings.fields.${field}`)}
                     required
                     fullWidth
                   >
@@ -200,7 +207,7 @@ const SettingsPage: React.FC = () => {
             </Accordion>
 
             {/* Contact */}
-            <Accordion header="Contact" buttonAppearance="outline">
+            <Accordion header={t('settings.sections.contact')} buttonAppearance="outline">
               <TabBar
                 fullWidth
                 size="small"
@@ -213,10 +220,10 @@ const SettingsPage: React.FC = () => {
                     <Flex direction="vertical" spacing="m" fullWidth>
                       {contactFields.map((key) => (
                         <FormFieldWrapper
-                          key={key}
+                          key={`${l}-${key}`}
                           control={control}
                           name={`contact.${l}.${key}`}
-                          label={`${key} (${l})`}
+                          label={`${t(`settings.fields.${key}`)} (${l.toUpperCase()})`}
                           required
                           fullWidth
                         >
@@ -230,7 +237,7 @@ const SettingsPage: React.FC = () => {
             </Accordion>
 
             {/* Policies */}
-            <Accordion header="Policies" buttonAppearance="outline">
+            <Accordion header={t('settings.sections.policies')} buttonAppearance="outline">
               <TabBar
                 fullWidth
                 size="small"
@@ -243,10 +250,10 @@ const SettingsPage: React.FC = () => {
                     <Flex direction="vertical" spacing="m" fullWidth>
                       {policyFields.map((key) => (
                         <FormFieldWrapper
-                          key={key}
+                          key={`${l}-${key}`}
                           control={control}
                           name={`policies.${l}.${key}`}
-                          label={`${key} (${l})`}
+                          label={`${t(`settings.fields.${key}`)} (${l.toUpperCase()})`}
                           required
                           fullWidth
                         >
@@ -260,23 +267,23 @@ const SettingsPage: React.FC = () => {
             </Accordion>
 
             {/* Free Shipping */}
-            <Accordion header="Free Shipping" buttonAppearance="outline">
+            <Accordion header={t('settings.sections.freeShipping')} buttonAppearance="outline">
               <Flex spacing="m" fullWidth direction="vertical">
                 <Text color="muted" size="sm">
-                  Free shipping applies when subtotal ≥ threshold and within the configured dates.
+                  {t('settings.freeShipping.description')}
                 </Text>
 
                 <Flex align="end" spacing="m" fullWidth>
                   <FormFieldWrapper
                     control={control}
                     name="policiesGlobal.freeShippingMinSubtotal"
-                    label="Minimum Subtotal"
+                    label={t('settings.fields.freeShippingMinSubtotal')}
                     fullWidth
                   >
                     <StringInput placeholder="50.00" type="number" />
                   </FormFieldWrapper>
                   <Button type="button" appearance="outline" onClick={handleResetFreeShipping}>
-                    Clear
+                    {t('settings.freeShipping.clearButton')}
                   </Button>
                 </Flex>
 
@@ -284,7 +291,7 @@ const SettingsPage: React.FC = () => {
                   <FormFieldWrapper
                     control={control}
                     name="policiesGlobal.freeShippingStartAt"
-                    label="Starts At"
+                    label={t('settings.fields.freeShippingStartAt')}
                     fullWidth
                   >
                     <CalendarFieldAdapter />
@@ -293,7 +300,7 @@ const SettingsPage: React.FC = () => {
                   <FormFieldWrapper
                     control={control}
                     name="policiesGlobal.freeShippingEndAt"
-                    label="Ends At"
+                    label={t('settings.fields.freeShippingEndAt')}
                     fullWidth
                   >
                     <CalendarFieldAdapter />
@@ -304,7 +311,7 @@ const SettingsPage: React.FC = () => {
 
             <Flex justify="end">
               <Button type="submit" isLoading={upsertMutation.isPending}>
-                Save Settings
+                {t('settings.actions.saveSettings')}
               </Button>
             </Flex>
           </Flex>

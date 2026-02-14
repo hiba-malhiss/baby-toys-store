@@ -139,7 +139,9 @@ const ProductsPage: React.FC = () => {
           message={
             productToDelete
               ? t('products.actions.confirmDelete.single', { name: productToDelete.name })
-              : t('products.actions.confirmDelete.single', { name: t('products.actions.selectedProduct') })
+              : t('products.actions.confirmDelete.single', {
+                  name: t('products.actions.selectedProduct'),
+                })
           }
           onConfirm={handleConfirmDelete}
           onCancel={() => setConfirmDialogVisible(false)}

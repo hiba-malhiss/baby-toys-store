@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flex, TextArea } from '@baby-toys/ui-kit';
 import { Control } from 'react-hook-form';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const HeroBannersSection: React.FC<Props> = ({ locale, control, heroBanners }) => {
+  const { t } = useTranslation();
   return (
     <Flex direction="vertical" spacing="l">
       {heroBanners.map((banner, idx) => {
@@ -20,7 +22,9 @@ const HeroBannersSection: React.FC<Props> = ({ locale, control, heroBanners }) =
           <FormFieldWrapper
             name={`heroBanners.${idx}.text`}
             control={control}
-            label={`Banner ${position} Text (${locale.toUpperCase()})`}
+            label={t('homepage.heroBanners.bannerText', { position, locale: locale.toUpperCase() })
+              .replace('{position}', position)
+              .replace('{locale}', locale.toUpperCase())}
             fullWidth
             required
           >

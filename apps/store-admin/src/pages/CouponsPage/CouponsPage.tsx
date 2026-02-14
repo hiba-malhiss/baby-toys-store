@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Button,
@@ -42,49 +43,66 @@ const CouponsPage: React.FC = () => {
     setIncludeDeleted,
   } = useCouponsPage();
 
+  const { t } = useTranslation();
+
   const columns = [
-    { header: 'Code', field: 'code', sortable: true },
-    { header: 'Description', field: 'description' },
     {
-      header: 'Discount Amount',
+      header: t('coupons.columns.code'),
+      field: 'code',
+      sortable: true,
+    },
+    {
+      header: t('coupons.columns.description'),
+      field: 'description',
+    },
+    {
+      header: t('coupons.columns.discountAmount'),
       field: 'discountAmount',
       sortable: true,
       body: (row: Coupon) => (row.discountAmount != null ? row.discountAmount.toFixed(2) : '-'),
     },
     {
-      header: 'Discount %',
+      header: t('coupons.columns.discountPercent'),
       field: 'discountPercent',
       sortable: true,
       body: (row: Coupon) => (row.discountPercent != null ? `${row.discountPercent}%` : '-'),
     },
     {
-      header: 'Max Discount',
+      header: t('coupons.columns.maxDiscount'),
       field: 'maxDiscount',
       sortable: true,
       body: (row: Coupon) => (row.maxDiscount != null ? row.maxDiscount.toFixed(2) : '-'),
     },
     {
-      header: 'Min Order',
+      header: t('coupons.columns.minOrderAmount'),
       field: 'minOrderAmount',
       sortable: true,
       body: (row: Coupon) => (row.minOrderAmount != null ? row.minOrderAmount.toFixed(2) : '-'),
     },
     {
-      header: 'Valid From',
+      header: t('coupons.columns.validFrom'),
       field: 'validFrom',
       sortable: true,
       body: (row: Coupon) => (row.validFrom ? new Date(row.validFrom).toLocaleString() : '-'),
     },
     {
-      header: 'Valid Until',
+      header: t('coupons.columns.validUntil'),
       field: 'validUntil',
       sortable: true,
       body: (row: Coupon) => (row.validUntil ? new Date(row.validUntil).toLocaleString() : '-'),
     },
-    { header: 'Max Uses', field: 'maxUses', sortable: true },
-    { header: 'Used', field: 'currentUses', sortable: true },
     {
-      header: 'Actions',
+      header: t('coupons.columns.maxUses'),
+      field: 'maxUses',
+      sortable: true,
+    },
+    {
+      header: t('coupons.columns.currentUses'),
+      field: 'currentUses',
+      sortable: true,
+    },
+    {
+      header: t('coupons.columns.actions'),
       field: 'actions',
       body: (coupon: Coupon) => (
         <Flex spacing="m">
@@ -110,15 +128,14 @@ const CouponsPage: React.FC = () => {
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Flex direction="vertical" spacing="s">
-            <Heading level="h1">Coupons</Heading>
+            <Heading level="h1">{t('coupons.title')}</Heading>
             <Heading level="h4" appearance="light">
-              Single coupon per order. Supports fixed amount or percentage (with optional max
-              discount), minimum order amount, validity dates, and usage limits per code.
+              {t('coupons.subtitle')}
             </Heading>
           </Flex>
           <Flex align="center" spacing="xl">
             <StringInput
-              placeholder="Search by code..."
+              placeholder={t('coupons.searchPlaceholder')}
               value={searchInput}
               className={styles.couponsPageSearch}
               onChange={(val) => {
@@ -135,14 +152,14 @@ const CouponsPage: React.FC = () => {
             />
             <Flex align="center" spacing="s">
               <Toggle checked={includeDeleted} onChange={(v) => setIncludeDeleted(!!v)} />
-              <span>Show deleted</span>
+              <span>{t('coupons.showDeleted')}</span>
             </Flex>
             <Button
               onClick={openAddDialog}
               leftIconComp={Plus}
               className={styles.couponsPageAddBtn}
             >
-              Add Coupon
+              {t('coupons.addButton')}
             </Button>
           </Flex>
         </Flex>
@@ -160,7 +177,7 @@ const CouponsPage: React.FC = () => {
           sortField={sortField}
           sortOrder={sortDirection === 'ASC' ? 1 : -1}
           selectionMode="multiple"
-          emptyMessage="No coupons found"
+          emptyMessage={t('coupons.emptyMessage')}
         />
 
         <CouponDialog
@@ -172,8 +189,8 @@ const CouponsPage: React.FC = () => {
 
         <ConfirmDialog
           visible={confirmDialogVisible}
-          header="Confirm Delete"
-          message={`Are you sure you want to delete "${couponToDelete?.code}"?`}
+          header={t('coupons.deleteConfirm.title')}
+          message={t('coupons.deleteConfirm.message', { code: couponToDelete?.code })}
           onConfirm={handleDelete}
           onCancel={() => setConfirmDialogVisible(false)}
         />

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card, Flex, Select, TextArea, Option, StringInput } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { HomePageFormValues } from './homePage.helper';
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
+  const { t } = useTranslation();
   return (
     <Flex direction="vertical" spacing="l" fullWidth>
       {infoCards.map((card, idx) => {
@@ -21,7 +23,10 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
               <FormFieldWrapper
                 name={`infoCards.${idx}.title`}
                 control={control}
-                label={`Title (${locale.toUpperCase()})`}
+                label={t('homepage.infoCards.title', { locale: locale.toUpperCase() }).replace(
+                  '{locale}',
+                  locale.toUpperCase()
+                )}
                 fullWidth
                 required
               >
@@ -31,7 +36,10 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
               <FormFieldWrapper
                 name={`infoCards.${idx}.subtitle`}
                 control={control}
-                label={`Subtitle (${locale.toUpperCase()})`}
+                label={t('homepage.infoCards.subtitle', { locale: locale.toUpperCase() }).replace(
+                  '{locale}',
+                  locale.toUpperCase()
+                )}
                 fullWidth
                 required
               >
@@ -41,52 +49,44 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
               <FormFieldWrapper
                 name={`infoCards.${idx}.icon`}
                 control={control}
-                label="Icon"
+                label={t('homepage.infoCards.icon')}
                 fullWidth
                 required
               >
                 <Select>
-                  <Option value="truck" key="truck">
-                    Truck
-                  </Option>
-                  <Option value="star" key="star">
-                    Star
-                  </Option>
-                  <Option value="brain" key="brain">
-                    Brain
-                  </Option>
-                  <Option value="puzzle" key="puzzle">
-                    Puzzle
-                  </Option>
-                  <Option value="gift" key="gift">
-                    Gift
-                  </Option>
-                  <Option value="heart" key="heart">
-                    Heart
-                  </Option>
+                  {Object.entries({
+                    truck: t('homepage.infoCards.icons.truck'),
+                    star: t('homepage.infoCards.icons.star'),
+                    brain: t('homepage.infoCards.icons.brain'),
+                    puzzle: t('homepage.infoCards.icons.puzzle'),
+                    gift: t('homepage.infoCards.icons.gift'),
+                    heart: t('homepage.infoCards.icons.heart'),
+                  }).map(([value, label]) => (
+                    <Option value={value} key={value}>
+                      {label}
+                    </Option>
+                  ))}
                 </Select>
               </FormFieldWrapper>
 
               <FormFieldWrapper
                 name={`infoCards.${idx}.appearance`}
                 control={control}
-                label="Appearance"
+                label={t('homepage.infoCards.appearance')}
                 fullWidth
                 required
               >
                 <Select>
-                  <Option value="primary" key="primary">
-                    Primary
-                  </Option>
-                  <Option value="info" key="info">
-                    Info
-                  </Option>
-                  <Option value="success" key="success">
-                    Success
-                  </Option>
-                  <Option value="warning" key="warning">
-                    Warning
-                  </Option>
+                  {Object.entries({
+                    primary: t('homepage.infoCards.appearances.primary'),
+                    info: t('homepage.infoCards.appearances.info'),
+                    success: t('homepage.infoCards.appearances.success'),
+                    warning: t('homepage.infoCards.appearances.warning'),
+                  }).map(([value, label]) => (
+                    <Option value={value} key={value}>
+                      {label}
+                    </Option>
+                  ))}
                 </Select>
               </FormFieldWrapper>
             </Flex>

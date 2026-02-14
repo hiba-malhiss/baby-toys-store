@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   createExpense,
@@ -18,6 +19,7 @@ export type FormValues = {
 };
 
 export function useExpensesPage() {
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [yearMonth, setYearMonth] = useState<string>(() => {
     const d = new Date();
@@ -69,24 +71,24 @@ export function useExpensesPage() {
 
   const columns = useMemo(
     () => [
-      { field: 'date', header: 'Date' },
-      { field: 'category', header: 'Category' },
-      { field: 'amount', header: 'Amount' },
-      { field: 'description', header: 'Description' },
+      { field: 'date', header: t('app.expenses.date') },
+      { field: 'category', header: t('app.expenses.category') },
+      { field: 'amount', header: t('app.expenses.amount') },
+      { field: 'description', header: t('app.expenses.description') },
       {
-        header: 'Actions',
+        header: t('app.actions'),
         body: (row: any) => (
           <Button
             size="small"
             appearance="outline"
             leftIconComp={Trash2}
             onClick={() => deleteMut.mutateAsync(row.id)}
-            aria-label="Delete"
+            aria-label={t('app.common.delete')}
           />
         ),
       },
     ],
-    [deleteMut]
+    [deleteMut, t]
   );
 
   return {

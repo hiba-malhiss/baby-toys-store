@@ -1,5 +1,72 @@
 {
   "app": {
+    "expenses": {
+      "title": "Expenses",
+      "description": "Admin-recorded operating costs. Expenses are aggregated by month and deducted from gross profit (Revenue − COGS) to compute net profit.",
+      "addExpense": "Add Expense",
+      "addSuccess": "Expense added successfully",
+      "addError": "Failed to add expense",
+      "editExpense": "Edit Expense",
+      "deleteConfirm": {
+        "title": "Delete Expense",
+        "message": "Are you sure you want to delete this expense?"
+      },
+      "form": {
+        "date": "Date",
+        "amount": "Amount",
+        "amountPlaceholder": "0.00",
+        "category": "Category",
+        "categoryPlaceholder": "e.g., Delivery cost",
+        "description": "Description",
+        "descriptionPlaceholder": "Optional description"
+      },
+      "date": "Date",
+      "category": "Category",
+      "amount": "Amount",
+      "noExpenses": "No expenses found for this month"
+    },
+    "variation": {
+      "manageVariations": "Manage Variations",
+      "addVariation": "Add Variation",
+      "combination": "Combination",
+      "deleteSuccess": "Variant deleted successfully",
+      "image": "Image",
+      "errors": {
+        "required": "{field} is required",
+        "number": "{field} must be a valid number",
+        "nonNegative": "{field} cannot be negative",
+        "costExceedsPrice": "Cost price cannot be higher than selling price",
+        "oldPriceBelowPrice": "Old price must be higher than current price",
+        "selectOption": "Please select a {option} option"
+      },
+      "noVariations": "No variations yet",
+      "confirmDelete": {
+        "title": "Confirm Delete",
+        "message": "Are you sure you want to delete this variant? This action cannot be undone.",
+        "confirm": "Delete",
+        "cancel": "Cancel"
+      },
+      "createSuccess": "Variant created successfully",
+      "updateSuccess": "Variant updated successfully",
+      "editTitle": "Edit Variation",
+      "addTitle": "Add Variation",
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "price": "Price",
+      "oldPrice": "Old Price",
+      "costPrice": "Cost Price",
+      "stock": "Stock",
+      "active": "Active",
+      "mainImage": "Main Image",
+      "galleryImages": "Gallery Images",
+      "selectImage": "Select image",
+      "selectImages": "Select images",
+      "cancel": "Cancel",
+      "save": "Save",
+      "create": "Create",
+      "selectPlaceholder": "Select {option}",
+      "noImageSelected": "No image selected"
+    },
     "loading": "Loading...",
     "submit": "Submit",
     "logout": "Logout",
@@ -65,42 +132,85 @@
         "subject": "Subject",
         "message": "Message"
       }
-    },
-    "variation": {
-      "createSuccess": "Variant created successfully",
-      "updateSuccess": "Variant updated successfully",
-      "editTitle": "Edit Variation",
-      "addTitle": "Add Variation",
-      "sku": "SKU",
-      "barcode": "Barcode",
-      "price": "Price",
-      "oldPrice": "Old Price",
-      "costPrice": "Cost Price",
-      "stock": "Stock",
-      "active": "Active",
-      "mainImage": "Main Image",
-      "galleryImages": "Gallery Images",
-      "selectImage": "Select image",
-      "selectImages": "Select images",
-      "cancel": "Cancel",
-      "save": "Save",
-      "create": "Create",
-      "errors": {
-        "required": "{field} is required",
-        "number": "{field} must be a number",
-        "nonNegative": "{field} cannot be negative",
-        "costExceedsPrice": "Cost price cannot exceed price",
-        "oldPriceBelowPrice": "Old price must be greater than or equal to price",
-        "selectOption": "Please select a {option}"
-      },
-      "selectPlaceholder": "Select {option}",
-      "noImageSelected": "No image selected"
     }
   },
-  "common": {
+  "customers": {
+    "pageTitle": "Customers",
+    "searchPlaceholder": "Search by name, email, or ID",
+    "columns": {
+      "id": "ID",
+      "email": "Email",
+      "name": "Name",
+      "phone": "Phone",
+      "age": "Age",
+      "country": "Country",
+      "actions": "Actions"
+    },
+    "actions": {
+      "viewOrders": "View Orders",
+      "viewReviews": "View Reviews"
+    },
+    "copy": {
+      "userId": "User ID copied",
+      "email": "Email copied"
+    },
+    "ariaLabels": {
+      "copyUserId": "Copy user ID",
+      "copyEmail": "Copy email"
+    }
+  },
+  "homepage": {
+    "title": "Homepage Content",
+    "sections": {
+      "heroBanners": "Hero Banners",
+      "infoCards": "Info Cards",
+      "gallery": "Gallery Images"
+    },
+    "heroBanners": {
+      "bannerText": "Banner {position} Text ({locale})"
+    },
+    "infoCards": {
+      "title": "Title ({locale})",
+      "subtitle": "Subtitle ({locale})",
+      "icon": "Icon",
+      "appearance": "Appearance",
+      "icons": {
+        "truck": "Truck",
+        "star": "Star",
+        "brain": "Brain",
+        "puzzle": "Puzzle",
+        "gift": "Gift",
+        "heart": "Heart"
+      },
+      "appearances": {
+        "primary": "Primary",
+        "info": "Info",
+        "success": "Success",
+        "warning": "Warning"
+      }
+    },
+    "gallery": {
+      "maxFileSize": "Max file size: 10MB",
+      "acceptedFormats": "Accepted formats: JPG, PNG, WebP"
+    },
+    "actions": {
+      "saveChanges": "Save All Changes",
+      "delete": "Delete",
+      "cancel": "Cancel",
+      "save": "Save",
+      "edit": "Edit",
+      "refresh": "Refresh",
+      "create": "Create",
+      "update": "Update",
+      "deactivate": "Deactivate"
+    },
+    "confirmDeleteTitle": "Confirm Delete"
+  },
+  "checkout": {
     "confirmDeleteTitle": "Confirm Delete",
     "delete": "Delete",
     "cancel": "Cancel",
+    "save": "Save",
     "edit": "Edit",
     "refresh": "Refresh",
     "create": "Create",
@@ -198,8 +308,24 @@
     "finance": "Finance",
     "expenses": "Expenses",
     "analytics": "Analytics",
-    "productAnalytics": "Product Analytics",
-    "townAnalytics": "town Analytics",
+    "productAnalytics": {
+      "title": "Product Analytics",
+      "subtitle": "Monthly counters for views, wishlists, and add-to-cart.",
+      "searchPlaceholder": "Product ID or SKU",
+      "emptyMessage": "No analytics data",
+      "applyButton": "Apply",
+      "columns": {
+        "productId": "Product ID",
+        "year": "Year",
+        "month": "Month",
+        "viewsCount": "Views",
+        "wishlistCount": "Wishlists",
+        "addedToCartCount": "Added To Cart",
+        "trendingScore": "Trending Score"
+      },
+      "trendingScoreTooltip": "Calculated as: 0.3 × Views + 0.4 × Wishlists + 0.8 × Add to Cart."
+    },
+    "townAnalytics": "Town Analytics",
     "orders": "Orders",
     "coupons": "Coupons",
     "customers": "Customers",
@@ -412,7 +538,15 @@
       "orderIntakeNote": "New orders value today",
       "ratingsCount": "{{count}} ratings",
       "thresholdDays": "{{days}}d+",
-      "orders": "orders"
+      "orders": "orders",
+      "calcInfo": {
+        "pendingOrders": "Count of orders with status = PENDING",
+        "averageOrderValue": "Delivered revenue this month / Delivered count this month",
+        "revenueLastMonth": "Sum of totals for orders with status = DELIVERED and deliveredAt in previous month",
+        "salesToday": "Sum of totals for orders with status = DELIVERED and deliveredAt in today window",
+        "orderIntakeValue": "Sum of totals for orders with createdAt in today window (new orders)",
+        "avgRatingToday": "Average rating of all ratings given today"
+      }
     },
     "goals": {
       "title": "Goals",
@@ -547,28 +681,46 @@
     "shortDescription": "Short Description",
     "description": "Description"
   },
-  "options": {
-    "types": "Option Types",
-    "addType": "Add Option Type",
-    "typeName": "Name",
+  "attributes": {
+    "title": "Attributes",
+    "add": "Add Attribute",
+    "edit": "Edit Attribute",
+    "code": "Code",
     "displayName": "Display Name",
-    "description": "Description",
+    "sortOrder": "Sort Order",
+    "filterable": "Filterable",
+    "multi": "Multi-select",
+    "active": "Active",
+    "values": "Values",
     "addValue": "Add Value",
-    "manageValues": "Manage Values",
+    "noValues": "No values",
     "value": "Value",
-    "display": "Display",
-    "save": "Save",
-    "cancel": "Cancel",
-    "deleteConfirm": {
-      "title": "Delete Option Type",
-      "message": "Are you sure you want to delete this option type? This will also remove all associated values and cannot be undone.",
-      "confirm": "Delete",
-      "cancel": "Cancel"
-    },
-    "validation": {
-      "nameRequired": "Name is required",
-      "valueRequired": "Value is required"
-    }
+    "type": "Type",
+    "types": "Attribute Types",
+    "addType": "Add Attribute Type",
+    "manageValues": "Manage Values",
+    "noTypes": "No attribute types found",
+    "deleteConfirm": "Are you sure you want to delete this attribute?",
+    "deleteValueConfirm": "Are you sure you want to delete this value?",
+    "deleteTypeConfirm": "Are you sure you want to delete this attribute type? This will also delete all its values.",
+    "valueRequired": "Value is required",
+    "typeRequired": "Type is required",
+    "codeRequired": "Code is required",
+    "displayNameRequired": "Display name is required",
+    "sortOrderRequired": "Sort order is required",
+    "sortOrderNumber": "Sort order must be a number",
+    "codeExists": "Attribute with this code already exists",
+    "valueExists": "Value already exists for this attribute",
+    "typeExists": "Attribute type with this code already exists",
+    "displayEn": "Display (EN)",
+    "displayAr": "Display (AR)",
+    "displayNameEn": "Display Name (EN)",
+    "displayNameAr": "Display Name (AR)",
+    "name": "Name",
+    "description": "Description",
+    "isFilterable": "Filterable",
+    "isMultiselect": "Multi-select",
+    "isActive": "Active"
   },
   "tooltips": {
     "productKPIs": {
@@ -616,6 +768,7 @@
       "margin": "Margin",
       "stock": "Stock",
       "rating": "Rating",
+      "revenue": "revenue",
       "releaseDate": "Release Date",
       "actions": "Actions"
     },
@@ -629,6 +782,175 @@
     "status": {
       "inStock": "In Stock",
       "outOfStock": "Out of Stock"
+    }
+  },
+  "coupons": {
+    "title": "Coupons",
+    "subtitle": "Single coupon per order. Supports fixed amount or percentage (with optional max discount), minimum order amount, validity dates, and usage limits per code.",
+    "searchPlaceholder": "Search by code...",
+    "showDeleted": "Show deleted",
+    "addButton": "Add Coupon",
+    "emptyMessage": "No coupons found",
+    "deleteConfirm": {
+      "title": "Confirm Delete",
+      "message": "Are you sure you want to delete \"{code}\"?"
+    },
+    "columns": {
+      "code": "Code",
+      "description": "Description",
+      "discountAmount": "Discount Amount",
+      "discountPercent": "Discount %",
+      "maxDiscount": "Max Discount",
+      "minOrderAmount": "Min Order",
+      "validFrom": "Valid From",
+      "validUntil": "Valid Until",
+      "maxUses": "Max Uses",
+      "currentUses": "Used",
+      "actions": "Actions"
+    },
+    "dialog": {
+      "addTitle": "Add New Coupon",
+      "editTitle": "Edit Coupon",
+      "createButton": "Create",
+      "updateButton": "Update",
+      "fields": {
+        "code": {
+          "label": "Coupon Code",
+          "placeholder": "Enter coupon code"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Enter description"
+        },
+        "discountAmount": {
+          "label": "Discount Amount",
+          "placeholder": "e.g., 10.00"
+        },
+        "discountPercent": {
+          "label": "Discount Percent",
+          "placeholder": "e.g., 15"
+        },
+        "maxDiscount": {
+          "label": "Max Discount",
+          "placeholder": "e.g., 50.00"
+        },
+        "minOrderAmount": {
+          "label": "Min Order Amount",
+          "placeholder": "e.g., 20.00"
+        },
+        "validFrom": {
+          "label": "Valid From"
+        },
+        "validUntil": {
+          "label": "Valid Until"
+        },
+        "maxUses": {
+          "label": "Max Uses",
+          "placeholder": "e.g., 100"
+        }
+      },
+      "or": "OR",
+      "success": {
+        "created": "Coupon created successfully",
+        "updated": "Coupon updated successfully",
+        "error": "Failed to {action} coupon"
+      }
+    }
+  },
+  "homepage": {
+    "title": "Home Page Content",
+    "sections": {
+      "heroBanners": "Hero Banners",
+      "infoCards": "Info Cards",
+      "gallery": "Gallery"
+    },
+    "heroBanners": {
+      "bannerText": "Banner text {position} ({locale})"
+    },
+    "infoCards": {
+      "title": "Title ({locale})",
+      "subtitle": "Subtitle ({locale})",
+      "icon": "Icon",
+      "appearance": "Appearance",
+      "icons": {
+        "truck": "Truck",
+        "star": "Star",
+        "brain": "Brain",
+        "puzzle": "Puzzle",
+        "gift": "Gift",
+        "heart": "Heart"
+      },
+      "appearances": {
+        "primary": "Primary",
+        "info": "Info",
+        "success": "Success",
+        "warning": "Warning"
+      }
+    },
+    "gallery": {
+      "maxFileSize": "Maximum file size: 10MB",
+      "acceptedFormats": "Accepted formats: JPG, PNG, WebP"
+    },
+    "actions": {
+      "saveChanges": "Save all changes"
+    }
+  },
+  "settings": {
+    "title": "Store Settings",
+    "sections": {
+      "general": "General",
+      "contact": "Contact",
+      "policies": "Policies",
+      "freeShipping": "Free Shipping"
+    },
+    "fields": {
+      "currency": "Currency",
+      "currencySymbol": "Currency Symbol",
+      "timezone": "Timezone",
+      "priceRangeMin": "Minimum Price",
+      "priceRangeMax": "Maximum Price",
+      "dailyOrdersGoal": "Daily Orders Goal",
+      "monthlyRevenueGoal": "Monthly Revenue Goal",
+      "workDays": "Work Days",
+      "workTimes": "Work Times",
+      "phone": "Phone",
+      "email": "Email",
+      "address": "Address",
+      "cancelPolicy": "Cancellation Policy",
+      "returnPolicy": "Return Policy",
+      "shippingPolicy": "Shipping Policy",
+      "freeShippingMinSubtotal": "Minimum Subtotal",
+      "freeShippingStartAt": "Starts At",
+      "freeShippingEndAt": "Ends At"
+    },
+    "freeShipping": {
+      "description": "Free shipping applies when subtotal ≥ threshold and within the configured dates.",
+      "clearButton": "Clear"
+    },
+    "actions": {
+      "saveSettings": "Save Settings",
+      "success": "Store settings updated",
+      "error": "Failed to update settings"
+    }
+  },
+  "townAnalytics": {
+    "title": "Town Analytics (Last 30 Days)",
+    "columns": {
+      "townCode": "Town",
+      "ordersLast30Days": "Orders (30d)",
+      "revenueLast30Days": "Revenue (30d)",
+      "averageOrderValueLast30Days": "AOV (30d)",
+      "ordersPrevious30Days": "Orders (Prev 30d)",
+      "revenuePrevious30Days": "Revenue (Prev 30d)",
+      "ordersGrowthRate": "Orders Growth",
+      "revenueGrowthRate": "Revenue Growth",
+      "failedDeliveriesLast30Days": "Failed (30d)",
+      "guestOrdersLast30Days": "Guest Orders (30d)",
+      "refreshedAt": "Refreshed At"
+    },
+    "growth": {
+      "new": "NEW",
+      "noData": "—"
     }
   }
 }

@@ -1,5 +1,72 @@
 {
   "app": {
+    "expenses": {
+      "title": "المصروفات",
+      "addSuccess": "تمت إضافة المصروف بنجاح",
+      "addError": "فشل إضافة المصروف",
+      "editExpense": "تعديل المصروف",
+      "deleteConfirm": {
+        "title": "حذف المصروف",
+        "message": "هل أنت متأكد من رغبتك في حذف هذا المصروف؟"
+      },
+      "form": {
+        "date": "التاريخ",
+        "amount": "المبلغ",
+        "amountPlaceholder": "0.00",
+        "category": "الفئة",
+        "categoryPlaceholder": "مثال: تكلفة التوصيل",
+        "description": "الوصف",
+        "descriptionPlaceholder": "وصف اختياري"
+      },
+      "date": "التاريخ",
+      "category": "الفئة",
+      "amount": "المبلغ",
+      "description": "الوصف",
+      "addExpense": "إضافة مصروف",
+      "noExpenses": "لا توجد مصروفات لهذا الشهر"
+    },
+    "variation": {
+      "manageVariations": "إدارة المتغيرات",
+      "addVariation": "إضافة متغير",
+      "combination": "التركيبة",
+      "image": "الصورة",
+      "deleteSuccess": "تم حذف المتغير بنجاح",
+      "errors": {
+        "required": "{field} مطلوب",
+        "number": "يجب أن يكون {field} رقمًا صحيحًا",
+        "nonNegative": "لا يمكن أن يكون {field} قيمته سالبة",
+        "costExceedsPrice": "لا يمكن أن يكون سعر التكلفة أعلى من سعر البيع",
+        "oldPriceBelowPrice": "يجب أن يكون السعر القديم أعلى من السعر الحالي",
+        "selectOption": "الرجاء اختيار خيار {option}"
+      },
+      "noVariations": "لا توجد متغيرات حتى الآن",
+      "confirmDelete": {
+        "title": "تأكيد الحذف",
+        "message": "هل أنت متأكد من رغبتك في حذف هذا المتغير؟ لا يمكن التراجع عن هذا الإجراء.",
+        "confirm": "حذف",
+        "cancel": "إلغاء"
+      },
+      "createSuccess": "تم إنشاء المتغير بنجاح",
+      "updateSuccess": "تم تحديث المتغير بنجاح",
+      "editTitle": "تعديل المتغير",
+      "addTitle": "إضافة متغير جديد",
+      "sku": "الرمز الشريطي",
+      "barcode": "الباركود",
+      "price": "السعر",
+      "oldPrice": "السعر القديم",
+      "costPrice": "سعر التكلفة",
+      "stock": "المخزون",
+      "active": "نشط",
+      "mainImage": "الصورة الرئيسية",
+      "galleryImages": "صور المعرض",
+      "selectImage": "اختر صورة",
+      "selectImages": "اختر الصور",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "create": "إنشاء",
+      "selectPlaceholder": "اختر {option}",
+      "noImageSelected": "لم يتم اختيار صورة"
+    },
     "loading": "جاري التحميل...",
     "submit": "إرسال",
     "logout": "تسجيل الخروج",
@@ -81,42 +148,38 @@
         "subject": "الموضوع",
         "message": "الرسالة"
       }
+    }
+  },
+  "customers": {
+    "pageTitle": "العملاء",
+    "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني، أو المعرف",
+    "columns": {
+      "id": "المعرف",
+      "email": "البريد الإلكتروني",
+      "name": "الاسم",
+      "phone": "الهاتف",
+      "age": "العمر",
+      "country": "البلد",
+      "actions": "الإجراءات"
     },
-    "variation": {
-      "createSuccess": "تم إنشاء المتغير بنجاح",
-      "updateSuccess": "تم تحديث المتغير بنجاح",
-      "editTitle": "تعديل المتغير",
-      "addTitle": "إضافة متغير جديد",
-      "sku": "الرمز الشريطي",
-      "barcode": "الباركود",
-      "price": "السعر",
-      "oldPrice": "السعر القديم",
-      "costPrice": "سعر التكلفة",
-      "stock": "المخزون",
-      "active": "نشط",
-      "mainImage": "الصورة الرئيسية",
-      "galleryImages": "صور المعرض",
-      "selectImage": "اختر صورة",
-      "selectImages": "اختر الصور",
-      "cancel": "إلغاء",
-      "save": "حفظ",
-      "create": "إنشاء",
-      "errors": {
-        "required": "{field} مطلوب",
-        "number": "{field} يجب أن يكون رقماً",
-        "nonNegative": "{field} لا يمكن أن يكون سالباً",
-        "costExceedsPrice": "لا يمكن أن يتجاوز سعر التكلفة السعر",
-        "oldPriceBelowPrice": "يجب أن يكون السعر القديم أكبر من أو يساوي السعر الحالي",
-        "selectOption": "الرجاء اختيار {option}"
-      },
-      "selectPlaceholder": "اختر {option}",
-      "noImageSelected": "لم يتم اختيار صورة"
+    "actions": {
+      "viewOrders": "عرض الطلبات",
+      "viewReviews": "عرض التقييمات"
+    },
+    "copy": {
+      "userId": "تم نسخ معرف المستخدم",
+      "email": "تم نسخ البريد الإلكتروني"
+    },
+    "ariaLabels": {
+      "copyUserId": "نسخ معرف المستخدم",
+      "copyEmail": "نسخ البريد الإلكتروني"
     }
   },
   "common": {
     "confirmDeleteTitle": "تأكيد الحذف",
     "delete": "حذف",
     "cancel": "إلغاء",
+    "save": "حفظ",
     "edit": "تعديل",
     "refresh": "تحديث",
     "create": "إنشاء",
@@ -214,7 +277,23 @@
     "finance": "المالية",
     "expenses": "المصاريف",
     "analytics": "التحليلات",
-    "productAnalytics": "تحليلات المنتجات",
+    "productAnalytics": {
+      "title": "تحليلات المنتجات",
+      "subtitle": "عدادات شهرية للمشاهدات وقوائم الرغبات والإضافة إلى السلة.",
+      "searchPlaceholder": "معرّف المنتج أو الرمز",
+      "emptyMessage": "لا توجد بيانات تحليلية",
+      "applyButton": "تطبيق",
+      "columns": {
+        "productId": "معرّف المنتج",
+        "year": "السنة",
+        "month": "الشهر",
+        "viewsCount": "المشاهدات",
+        "wishlistCount": "قوائم الرغبات",
+        "addedToCartCount": "تمت الإضافة إلى السلة",
+        "trendingScore": "نتيجة الترند"
+      },
+      "trendingScoreTooltip": "تحسب كالتالي: 0.3 × المشاهدات + 0.4 × قوائم الرغبات + 0.8 × الإضافة إلى السلة."
+    },
     "townAnalytics": "تحليلات المدن",
     "orders": "الطلبات",
     "coupons": "الكوبونات",
@@ -228,6 +307,47 @@
     "zones": "مناطق التوصيل",
     "delivery": "إدارة التوصيل",
     "towns": "البلدات"
+  },
+  "attributes": {
+    "title": "السمات",
+    "add": "إضافة سمة",
+    "edit": "تعديل السمة",
+    "code": "الكود",
+    "displayName": "الاسم المعروض",
+    "sortOrder": "ترتيب الفرز",
+    "filterable": "قابل للتصفية",
+    "multi": "متعدد الاختيارات",
+    "active": "نشط",
+    "values": "القيم",
+    "addValue": "إضافة قيمة",
+    "noValues": "لا توجد قيم",
+    "value": "القيمة",
+    "type": "النوع",
+    "types": "أنواع السمات",
+    "addType": "إضافة نوع سمة",
+    "manageValues": "إدارة القيم",
+    "noTypes": "لم يتم العثور على أنواع سمات",
+    "deleteConfirm": "هل أنت متأكد من رغبتك في حذف هذه السمة؟",
+    "deleteValueConfirm": "هل أنت متأكد من رغبتك في حذف هذه القيمة؟",
+    "deleteTypeConfirm": "هل أنت متأكد من رغبتك في حذف نوع السمة هذا؟ سيؤدي هذا أيضًا إلى حذف جميع قيمها.",
+    "valueRequired": "مطلوب إدخال قيمة",
+    "typeRequired": "مطلوب تحديد النوع",
+    "codeRequired": "مطلوب إدخال الكود",
+    "displayNameRequired": "مطلوب إدخال الاسم المعروض",
+    "sortOrderRequired": "مطلوب إدخال ترتيب الفرز",
+    "sortOrderNumber": "يجب أن يكون ترتيب الفرز رقمًا",
+    "codeExists": "يوجد سمة بهذا الكود مسبقًا",
+    "valueExists": "هذه القيمة موجودة مسبقًا لهذه السمة",
+    "typeExists": "يوجد نوع سمة بهذا الكود مسبقًا",
+    "displayEn": "العرض (إنجليزي)",
+    "displayAr": "العرض (عربي)",
+    "displayNameEn": "الاسم المعروض (إنجليزي)",
+    "displayNameAr": "الاسم المعروض (عربي)",
+    "name": "الاسم",
+    "description": "الوصف",
+    "isFilterable": "قابل للتصفية",
+    "isMultiselect": "متعدد الاختيارات",
+    "isActive": "نشط"
   },
   "categories": {
     "title": "التصنيفات",
@@ -347,6 +467,18 @@
   "dashboard": {
     "title": "لوحة التحكم",
     "welcome": "مرحبًا بعودتك، مدير المتجر!",
+    "pendingOrders": "الطلبات المعلقة",
+    "averageOrderValue": "متوسط قيمة الطلب",
+    "revenueLastMonth": "الإيراد (الشهر الماضي)",
+    "salesToday": "المبيعات اليوم",
+    "orderIntakeValue": "قيمة الطلبات الواردة",
+    "avgRatingToday": "متوسط التقييم (اليوم)",
+    "lateStuckOrders": "الطلبات المتأخرة/المعلقة",
+    "peakHour": "ساعة الذروة",
+    "topTown": "المدينة الأولى",
+    "returningCustomersToday": "العملاء العائدين (اليوم)",
+    "ordersYesterday": "الطلبات (أمس)",
+    "deliveredYesterday": "تم التوصيل (أمس)",
     "meta": {
       "timezone": "المنطقة الزمنية",
       "currentDate": "التاريخ"
@@ -362,15 +494,33 @@
       "metric": "المؤشر",
       "value": "القيمة",
       "change": "التغير",
-      "notes": "ملاحظات"
+      "notes": "ملاحظات",
+      "pendingOrders": "الطلبات المعلقة",
+      "averageOrderValue": "متوسط قيمة الطلب",
+      "revenueLastMonth": "الإيراد (الشهر الماضي)",
+      "salesToday": "المبيعات اليوم",
+      "orderIntakeValue": "قيمة الطلبات الواردة",
+      "avgRatingToday": "متوسط التقييم (اليوم)",
+      "lateStuckOrders": "الطلبات المتأخرة/المعلقة",
+      "peakHour": "ساعة الذروة",
+      "topTown": "المدينة الأولى",
+      "returningCustomersToday": "العملاء العائدين (اليوم)",
+      "ordersYesterday": "الطلبات (أمس)",
+      "deliveredYesterday": "تم التوصيل (أمس)",
+      "mtd": "منذ بداية الشهر",
+      "yesterday": "أمس: {{val}}",
+      "orderIntakeNote": "قيمة الطلبات الجديدة اليوم",
+      "ratingsCount": "{{count}} تقييم",
+      "thresholdDays": "{{days}} يوم+",
+      "orders": "طلبات"
     },
     "metricDescriptions": {
       "pendingOrders": "عدد الطلبات ذات الحالة = قيد الانتظار",
       "aovThisMonth": "إيرادات الشهر الحالي / عدد الطلبات الموصلة هذا الشهر",
-      "revenueLastMonth": "إجمالي الطلبات التي تم توصيلها في الشهر الماضي",
-      "salesToday": "إجمالي الطلبات التي تم توصيلها اليوم",
-      "orderIntakeValue": "إجمالي الطلبات الجديدة اليوم",
-      "avgRatingToday": "متوسط تقييمات المنتجات المنشورة اليوم",
+      "revenueLastMonth": "إجمالي مبالغ الطلبات ذات الحالة = تم التوصيل وتاريخ التوصيل في الشهر الماضي",
+      "salesToday": "إجمالي مبالغ الطلبات ذات الحالة = تم التوصيل وتاريخ التوصيل اليوم",
+      "orderIntakeValue": "إجمالي مبالغ الطلبات الجديدة اليوم",
+      "avgRatingToday": "متوسط تقييم جميع التقييمات المقدمة اليوم",
       "lateStuckOrders": "عدد الطلبات المعلقة التي تجاوزت مدة الانتظار",
       "peakHour": "ساعة الذروة للطلبات الموصلة اليوم",
       "topTown": "المدينة الأكثر طلبًا اليوم",
@@ -381,9 +531,12 @@
     "goals": {
       "title": "الأهداف",
       "dailyOrders": "هدف الطلبات اليومي",
-      "monthlyRevenue": "هدف الإيرادات الشهري",
       "noGoal": "لا يوجد هدف مُحدد",
+      "progress": "{{current}} / {{goal}}",
       "goal": "الهدف",
+      "monthlyRevenue": "هدف الإيرادات الشهري",
+      "monthlyNoGoal": "{{sales}}",
+      "monthlyProgress": "{{sales}} / {{goal}}",
       "remainingDays": "الأيام المتبقية:"
     },
     "topProducts": {
@@ -543,18 +696,43 @@
     }
   },
   "tooltips": {
+    "copyProductId": "نسخ معرف المنتج",
+    "viewProduct": "عرض تفاصيل المنتج",
+    "editProduct": "تعديل المنتج",
+    "deleteProduct": "حذف المنتج",
+    "viewVariations": "عرض المتغيرات",
+    "viewReviews": "عرض التقييمات",
+    "dashboard": {
+      "orders": "إجمالي عدد الطلبات.",
+      "ordersToday": "عدد الطلبات الجديدة اليوم.",
+      "deliveredToday": "عدد الطلبات التي تم توصيلها اليوم.",
+      "newCustomersToday": "عدد العملاء الجدد المسجلين اليوم.",
+      "pendingOrders": "عدد الطلبات التي تنتظر المعالجة.",
+      "averageOrderValue": "متوسط قيمة الطلب بناءً على الطلبات المكتملة.",
+      "revenueLastMonth": "إجمالي الإيرادات من الشهر الماضي.",
+      "salesToday": "إجمالي مبيعات اليوم.",
+      "orderIntakeValue": "إجمالي قيمة الطلبات الجديدة اليوم.",
+      "avgRatingToday": "متوسط تقييمات العملاء اليوم.",
+      "lateStuckOrders": "عدد الطلبات المتأخرة أو العالقة.",
+      "peakHour": "ساعة الذروة لعمليات الشراء اليوم.",
+      "topTown": "المدينة الأكثر طلبًا اليوم.",
+      "returningCustomersToday": "عدد العملاء المتكررين اليوم.",
+      "ordersYesterday": "عدد الطلبات أمس.",
+      "deliveredYesterday": "عدد الطلبات التي تم توصيلها أمس.",
+      "mtd": "منذ بداية الشهر حتى الآن.",
+      "orderIntakeNote": "إجمالي قيمة الطلبات الجديدة اليوم.",
+      "ratingsCount": "عدد التقييمات المستلمة.",
+      "revenueThisMonth": "إجمالي الأموال المُحصّلة من الطلبات التي تم توصيلها خلال الشهر المحدد.",
+      "momRevenueChange": "كم زادت أو قلت إيراداتك مقارنة بالشهر الماضي.",
+      "salesOverTime": "الحالي = آخر 30 يومًا (بما فيها اليوم). السابق = الـ30 يومًا التي قبلها مباشرة. القيم هي إيرادات الطلبات المُوصّلة لكل يوم.",
+      "productInterest": "إجمالي: المشاهدات + الإضافة للمفضلة + الإضافة للسلة. يمكنك تبديل المؤشر وعرض جدول المسار."
+    },
     "productKPIs": {
       "revenueLifetime": "مجموع الإيرادات من الطلبات التي تم توصيلها والمرتبطة بهذا المنتج عبر كل الفترة. (إجمالي المبالغ التي تم تحصيلها للمنتج من الطلبات المُوصّلة.)",
       "profitLifetime": "إجمالي الربح = إيرادات المنتج − تكلفة البضاعة (حسب تكلفة الشراء وقت الطلب) للعناصر التي تم توصيلها. (الربح بعد طرح تكلفة البضاعة من الإيرادات للعناصر المُوصّلة.)",
       "margin": "هامش الربح = الربح ÷ الإيرادات (إجمالي).",
       "price": "سعر العرض الحالي للمنتج (قبل الخصومات/الكوبونات).",
       "cost": "سعر التكلفة المستخدم لحساب تكلفة البضاعة، ويتم حفظه وقت الشراء ضمن الطلبات."
-    },
-    "dashboard": {
-      "revenueThisMonth": "إجمالي الأموال المُحصّلة من الطلبات التي تم توصيلها خلال الشهر المحدد.",
-      "momRevenueChange": "كم زادت أو قلت إيراداتك مقارنة بالشهر الماضي.",
-      "salesOverTime": "الحالي = آخر 30 يومًا (بما فيها اليوم). السابق = الـ30 يومًا التي قبلها مباشرة. القيم هي إيرادات الطلبات المُوصّلة لكل يوم.",
-      "productInterest": "إجمالي: المشاهدات + الإضافة للمفضلة + الإضافة للسلة. يمكنك تبديل المؤشر وعرض جدول المسار."
     },
     "financeHeaders": {
       "month": "الشهر الذي يتم تلخيصه (مثال: 2025-03).",
@@ -590,5 +768,207 @@
       "onSale": "العروض فقط"
     },
     "searchPlaceholder": "ابحث عن المنتجات..."
+  },
+  "table": {
+    "product": "المنتج",
+    "soldQty": "الكمية المباعة",
+    "revenue": "الإيرادات",
+    "viewToWishlist": "نسبة المشاهدة إلى قائمة الرغبات",
+    "wishlistToCart": "نسبة قائمة الرغبات إلى السلة",
+    "cartToPurchase": "نسبة السلة إلى الشراء",
+    "headers": {
+      "id": "المعرف",
+      "name": "الاسم",
+      "image": "الصورة",
+      "category": "الفئة",
+      "price": "السعر",
+      "units": "الوحدات",
+      "margin": "الهامش",
+      "stock": "المخزون",
+      "rating": "التقييم",
+      "revenue": "العائد",
+      "releaseDate": "تاريخ الإصدار",
+      "actions": "الإجراءات"
+    },
+    "actions": {
+      "view": "عرض",
+      "edit": "تعديل",
+      "delete": "حذف",
+      "variations": "الأنواع",
+      "reviews": "التقييمات"
+    },
+    "status": {
+      "inStock": "متوفر",
+      "outOfStock": "غير متوفر"
+    }
+  },
+  "coupons": {
+    "title": "كوبونات الخصم",
+    "subtitle": "كوبون واحد لكل طلب. يدعم مبلغًا ثابتًا أو نسبة مئوية (مع حد أقصى اختياري للخصم)، والحد الأدنى لمبلغ الطلب، وتواريخ الصلاحية، وحدود الاستخدام لكل كود.",
+    "searchPlaceholder": "البحث بالكود...",
+    "showDeleted": "عرض المحذوفة",
+    "addButton": "إضافة كوبون",
+    "emptyMessage": "لم يتم العثور على كوبونات",
+    "deleteConfirm": {
+      "title": "تأكيد الحذف",
+      "message": "هل أنت متأكد من رغبتك في حذف \"{code}\"؟"
+    },
+    "columns": {
+      "code": "الكود",
+      "description": "الوصف",
+      "discountAmount": "مبلغ الخصم",
+      "discountPercent": "نسبة الخصم %",
+      "maxDiscount": "الحد الأقصى للخصم",
+      "minOrderAmount": "الحد الأدنى للطلب",
+      "validFrom": "صالح من",
+      "validUntil": "صالح حتى",
+      "maxUses": "الحد الأقصى للاستخدامات",
+      "currentUses": "تم الاستخدام",
+      "actions": "الإجراءات"
+    },
+    "dialog": {
+      "addTitle": "إضافة كوبون جديد",
+      "editTitle": "تعديل الكوبون",
+      "createButton": "إنشاء",
+      "updateButton": "تحديث",
+      "fields": {
+        "code": {
+          "label": "كود الكوبون",
+          "placeholder": "أدخل كود الكوبون"
+        },
+        "description": {
+          "label": "الوصف",
+          "placeholder": "أدخل الوصف"
+        },
+        "discountAmount": {
+          "label": "مبلغ الخصم",
+          "placeholder": "مثال: 10.00"
+        },
+        "discountPercent": {
+          "label": "نسبة الخصم",
+          "placeholder": "مثال: 15"
+        },
+        "maxDiscount": {
+          "label": "الحد الأقصى للخصم",
+          "placeholder": "مثال: 50.00"
+        },
+        "minOrderAmount": {
+          "label": "الحد الأدنى لمبلغ الطلب",
+          "placeholder": "مثال: 20.00"
+        },
+        "validFrom": {
+          "label": "صالح من"
+        },
+        "validUntil": {
+          "label": "صالح حتى"
+        },
+        "maxUses": {
+          "label": "الحد الأقصى للاستخدامات",
+          "placeholder": "مثال: 100"
+        }
+      },
+      "or": "أو",
+      "success": {
+        "created": "تم إنشاء الكوبون بنجاح",
+        "updated": "تم تحديث الكوبون بنجاح",
+        "error": "فشل {action} الكوبون"
+      }
+    }
+  },
+  "homepage": {
+    "title": "محتوى الصفحة الرئيسية",
+    "sections": {
+      "heroBanners": "لافتات البطل",
+      "infoCards": "بطاقات المعلومات",
+      "gallery": "معرض الصور"
+    },
+    "heroBanners": {
+      "bannerText": "نص اللافتة {position} ({locale})"
+    },
+    "infoCards": {
+      "title": "العنوان ({locale})",
+      "subtitle": "العنوان الفرعي ({locale})",
+      "icon": "الأيقونة",
+      "appearance": "المظهر",
+      "icons": {
+        "truck": "شاحنة",
+        "star": "نجمة",
+        "brain": "دماغ",
+        "puzzle": "لغز",
+        "gift": "هدية",
+        "heart": "قلب"
+      },
+      "appearances": {
+        "primary": "أساسي",
+        "info": "معلومات",
+        "success": "نجاح",
+        "warning": "تحذير"
+      }
+    },
+    "gallery": {
+      "maxFileSize": "الحد الأقصى لحجم الملف: 10 ميجابايت",
+      "acceptedFormats": "الصيغ المقبولة: JPG، PNG، WebP"
+    },
+    "actions": {
+      "saveChanges": "حفظ جميع التغييرات"
+    }
+  },
+  "settings": {
+    "title": "إعدادات المتجر",
+    "sections": {
+      "general": "عام",
+      "contact": "اتصل بنا",
+      "policies": "السياسات",
+      "freeShipping": "شحن مجاني"
+    },
+    "fields": {
+      "currency": "العملة",
+      "currencySymbol": "رمز العملة",
+      "timezone": "المنطقة الزمنية",
+      "priceRangeMin": "أدنى سعر",
+      "priceRangeMax": "أعلى سعر",
+      "dailyOrdersGoal": "هدف الطلبات اليومية",
+      "monthlyRevenueGoal": "هدف الإيرادات الشهرية",
+      "workDays": "أيام العمل",
+      "workTimes": "أوقات العمل",
+      "phone": "الهاتف",
+      "email": "البريد الإلكتروني",
+      "address": "العنوان",
+      "cancelPolicy": "سياسة الإلغاء",
+      "returnPolicy": "سياسة الإرجاع",
+      "shippingPolicy": "سياسة الشحن",
+      "freeShippingMinSubtotal": "الحد الأدنى للسعر",
+      "freeShippingStartAt": "يبدأ في",
+      "freeShippingEndAt": "ينتهي في"
+    },
+    "freeShipping": {
+      "description": "ينطبق الشحن المجاني عندما يكون المجموع الفرعي ≥ الحد الأدنى وتاريخ الطلب ضمن الفترة المحددة.",
+      "clearButton": "مسح"
+    },
+    "actions": {
+      "saveSettings": "حفظ الإعدادات",
+      "success": "تم تحديث إعدادات المتجر بنجاح",
+      "error": "فشل تحديث الإعدادات"
+    }
+  },
+  "townAnalytics": {
+    "title": "تحليلات المدن (آخر 30 يومًا)",
+    "columns": {
+      "townCode": "المدينة",
+      "ordersLast30Days": "الطلبات (30 يومًا)",
+      "revenueLast30Days": "الإيرادات (30 يومًا)",
+      "averageOrderValueLast30Days": "متوسط قيمة الطلب (30 يومًا)",
+      "ordersPrevious30Days": "الطلبات (30 يومًا سابقة)",
+      "revenuePrevious30Days": "الإيرادات (30 يومًا سابقة)",
+      "ordersGrowthRate": "نمو الطلبات",
+      "revenueGrowthRate": "نمو الإيرادات",
+      "failedDeliveriesLast30Days": "فشل التوصيل (30 يومًا)",
+      "guestOrdersLast30Days": "طلبات الزوار (30 يومًا)",
+      "refreshedAt": "تاريخ التحديث"
+    },
+    "growth": {
+      "new": "جديد",
+      "noData": "—"
+    }
   }
 }

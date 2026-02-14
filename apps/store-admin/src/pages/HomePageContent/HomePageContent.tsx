@@ -1,4 +1,5 @@
 import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem } from '@baby-toys/ui-kit';
+import { useTranslation } from 'react-i18next';
 import { getSupportedLocales } from '../../i18n/locale.ts';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -7,6 +8,7 @@ import InfoCardsSection from './InfoCardsSection';
 import GallerySection from './GallerySection';
 
 const HomePageContent: React.FC = () => {
+  const { t } = useTranslation();
   const {
     control,
     heroBanners,
@@ -22,11 +24,11 @@ const HomePageContent: React.FC = () => {
 
   return (
     <AdminLayout isLoading={isLoading}>
-      <Card header="Homepage Content" fullWidth>
+      <Card header={t('homepage.title')} fullWidth>
         <Flex direction="vertical" spacing="xxl" fullWidth>
           {/* === Hero Banners Section === */}
           <Accordion
-            header="Hero Banners"
+            header={t('homepage.sections.heroBanners')}
             buttonAppearance="outline"
             buttonColor={errors?.heroBanners && 'error'}
           >
@@ -48,7 +50,7 @@ const HomePageContent: React.FC = () => {
 
           {/* === Info Cards Section === */}
           <Accordion
-            header="Info Cards"
+            header={t('homepage.sections.infoCards')}
             buttonAppearance="outline"
             buttonColor={errors?.infoCards && 'error'}
           >
@@ -69,7 +71,7 @@ const HomePageContent: React.FC = () => {
           </Accordion>
 
           {/* === Gallery Section === */}
-          <Accordion header="Gallery Images" buttonAppearance="outline">
+          <Accordion header={t('homepage.sections.gallery')} buttonAppearance="outline">
             <GallerySection galleryUploaderProps={galleryUploaderProps} />
           </Accordion>
 
@@ -77,7 +79,7 @@ const HomePageContent: React.FC = () => {
 
           <Flex justify="end">
             <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>
-              Save All Changes
+              {t('homepage.actions.saveChanges')}
             </Button>
           </Flex>
         </Flex>

@@ -7,6 +7,7 @@ import { Coupon } from '../../api/types/coupon';
 import { useCreateCoupon, useUpdateCoupon } from '../../api/couponApi';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { CouponFormValues, couponSchema } from './coupons-page.utils.ts';
+import { useTranslation } from 'react-i18next';
 
 // Bridges RHF Date value to UI Kit Calendar (Moment-based) without inline factory
 const CalendarFieldAdapter: React.FC<{
@@ -40,6 +41,7 @@ interface CouponDialogProps {
 }
 
 const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess, coupon }) => {
+  const { t } = useTranslation();
   const toast = useToast();
   const createCoupon = useCreateCoupon();
   const updateCoupon = useUpdateCoupon();
@@ -105,19 +107,20 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
       maxUses: data.maxUses ?? undefined,
     };
 
+    const action = coupon ? 'update' : 'create';
     try {
       if (coupon) {
         await updateCoupon.mutateAsync({ id: coupon.id, data: payload });
-        toast.success('Coupon updated successfully');
+        toast.success(t('coupons.dialog.success.updated'));
       } else {
         await createCoupon.mutateAsync(payload);
-        toast.success('Coupon created successfully');
+        toast.success(t('coupons.dialog.success.created'));
       }
       onSuccess();
       onHide();
       reset();
     } catch (error) {
-      toast.error(error?.message || `Failed to ${coupon ? 'update' : 'create'} coupon `);
+      toast.error(t('coupons.dialog.success.error', { action }));
     }
   };
 
@@ -125,7 +128,7 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
     <Dialog
       visible={visible}
       onHide={onHide}
-      header={coupon ? 'Edit Coupon' : 'Add New Coupon'}
+      header={t(coupon ? 'coupons.dialog.editTitle' : 'coupons.dialog.addTitle')}
       footer={
         <Button
           onClick={handleSubmit(onSubmit)}
@@ -133,77 +136,123 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
           isDisabled={isSubmitting}
           fullWidth
         >
-          {coupon ? 'Update' : 'Create'}
+          {t(coupon ? 'coupons.dialog.updateButton' : 'coupons.dialog.createButton')}
         </Button>
       }
     >
       <Flex direction="vertical" spacing="m" fullWidth>
-        <FormFieldWrapper name="code" control={control} label="Coupon Code" required fullWidth>
-          <StringInput placeholder="Enter coupon code" isDisabled={isSubmitting} />
+        <FormFieldWrapper
+          name="code"
+          control={control}
+          label={t('coupons.dialog.fields.code.label')}
+          required
+          fullWidth
+        >
+          <StringInput
+            placeholder={t('coupons.dialog.fields.code.placeholder')}
+            isDisabled={isSubmitting}
+          />
         </FormFieldWrapper>
 
-        <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-          <StringInput placeholder="Enter description" isDisabled={isSubmitting} />
+        <FormFieldWrapper
+          name="description"
+          control={control}
+          label={t('coupons.dialog.fields.description.label')}
+          fullWidth
+        >
+          <StringInput
+            placeholder={t('coupons.dialog.fields.description.placeholder')}
+            isDisabled={isSubmitting}
+          />
         </FormFieldWrapper>
+
         <Flex spacing="m" fullWidth align="center">
           <FormFieldWrapper
             name="discountAmount"
             control={control}
-            label="Discount Amount"
+            label={t('coupons.dialog.fields.discountAmount.label')}
             fullWidth
           >
             <StringInput
               type="number"
               isDisabled={isSubmitting || !!watchDiscountPercent}
-              placeholder="e.g., 10.00"
+              placeholder={t('coupons.dialog.fields.discountAmount.placeholder')}
               fullWidth
             />
           </FormFieldWrapper>
-          <Chip className="bts-marginTxxl" label="OR" appearance="secondary" />
+          <Chip className="bts-marginTxxl" label={t('coupons.dialog.or')} appearance="secondary" />
           <FormFieldWrapper
             name="discountPercent"
             control={control}
-            label="Discount Percent"
+            label={t('coupons.dialog.fields.discountPercent.label')}
             fullWidth
           >
             <StringInput
               type="number"
               isDisabled={isSubmitting || !!watchDiscountAmount}
-              placeholder="e.g., 15"
+              placeholder={t('coupons.dialog.fields.discountPercent.placeholder')}
               fullWidth
             />
           </FormFieldWrapper>
         </Flex>
+
         <Flex spacing="m" fullWidth>
           <FormFieldWrapper
             name="validFrom"
             control={control}
-            label="Valid From"
+            label={t('coupons.dialog.fields.validFrom.label')}
             required
             fullWidth
           >
             <CalendarFieldAdapter isDisabled={isSubmitting} />
           </FormFieldWrapper>
-          <FormFieldWrapper name="validUntil" control={control} label="Valid Until" fullWidth>
+          <FormFieldWrapper
+            name="validUntil"
+            control={control}
+            label={t('coupons.dialog.fields.validUntil.label')}
+            fullWidth
+          >
             <CalendarFieldAdapter isDisabled={isSubmitting} />
           </FormFieldWrapper>
         </Flex>
 
-        <FormFieldWrapper name="maxDiscount" control={control} label="Max Discount" fullWidth>
-          <StringInput type="number" isDisabled={isSubmitting} placeholder="e.g., 50.00" />
+        <FormFieldWrapper
+          name="maxDiscount"
+          control={control}
+          label={t('coupons.dialog.fields.maxDiscount.label')}
+          fullWidth
+        >
+          <StringInput
+            type="number"
+            isDisabled={isSubmitting}
+            placeholder={t('coupons.dialog.fields.maxDiscount.placeholder')}
+          />
         </FormFieldWrapper>
 
         <FormFieldWrapper
           name="minOrderAmount"
           control={control}
-          label="Min Order Amount"
+          label={t('coupons.dialog.fields.minOrderAmount.label')}
           fullWidth
         >
-          <StringInput type="number" isDisabled={isSubmitting} placeholder="e.g., 20.00" />
+          <StringInput
+            type="number"
+            isDisabled={isSubmitting}
+            placeholder={t('coupons.dialog.fields.minOrderAmount.placeholder')}
+          />
         </FormFieldWrapper>
 
-        <FormFieldWrapper name="maxUses" control={control} label="Max Uses" fullWidth>
-          <StringInput type="number" isDisabled={isSubmitting} placeholder="e.g., 100" />
+        <FormFieldWrapper
+          name="maxUses"
+          control={control}
+          label={t('coupons.dialog.fields.maxUses.label')}
+          fullWidth
+        >
+          <StringInput
+            type="number"
+            isDisabled={isSubmitting}
+            placeholder={t('coupons.dialog.fields.maxUses.placeholder')}
+          />
         </FormFieldWrapper>
       </Flex>
     </Dialog>

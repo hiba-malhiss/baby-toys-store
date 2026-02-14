@@ -1,20 +1,26 @@
 export interface AdminProductBase {
-  id?: number;
+  id: number;
+  productSku?: string | null;
   name: string;
-  description?: string;
-  shortDescription?: string;
-
-  releaseDate?: string;
+  description?: string | null;
+  shortDescription?: string | null;
+  activeVariantsTotalStock?: number | null;
+  defaultVariant?: VariantDto | null;
+  releaseDate?: string | null;
   mainImage?: string | null;
   images?: string[];
   featureBullets?: string[];
   details?: Record<string, string>;
-  isActive?: boolean;
-  createdAt?: string;
-  updatedAt?: string;
+  isActive?: boolean | null;
+  outOfStock?: boolean | null;
+
   categoryId?: number | null;
   categoryName?: string | null;
-  defaultVariant: VariantDto;
+
+  // Details-only fields
+  variants?: VariantDto[];
+  options?: ProductOptionDto[];
+  attributes?: ProductAttributeDto[];
 
   // Optional extra data
   averageRating?: number | null;

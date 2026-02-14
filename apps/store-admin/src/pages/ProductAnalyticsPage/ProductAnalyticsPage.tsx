@@ -1,6 +1,7 @@
 import React from 'react';
 import { Button, StringInput, Flex, Heading, Calendar, Table, Tooltip } from '@baby-toys/ui-kit';
 import { Info } from 'lucide-react';
+import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import moment from 'moment';
 import { type ProductAnalyticsRow } from '../../api/analyticsApi';
@@ -23,27 +24,33 @@ const ProductAnalyticsPage: React.FC = () => {
     isFetching,
     applyFilters,
   } = useProductAnalyticsPage();
+  const { t } = useTranslation();
 
   const columns = [
-    { header: 'Product ID', field: 'productId' },
-    { header: 'Year', field: 'year', sortable: true },
+    { header: t('menu.productAnalytics.columns.productId'), field: 'productId' },
+    { header: t('menu.productAnalytics.columns.year'), field: 'year', sortable: true },
     {
-      header: 'Month',
+      header: t('menu.productAnalytics.columns.month'),
       field: 'month',
       sortable: true,
       body: (r: ProductAnalyticsRow) => String(r.month).padStart(2, '0'),
     },
-    { header: 'Views', field: 'viewsCount', sortable: true },
-    { header: 'Wishlists', field: 'wishlistCount', sortable: true },
-    { header: 'Added To Cart', field: 'addedToCartCount', sortable: true },
+    { header: t('menu.productAnalytics.columns.viewsCount'), field: 'viewsCount', sortable: true },
+    {
+      header: t('menu.productAnalytics.columns.wishlistCount'),
+      field: 'wishlistCount',
+      sortable: true,
+    },
+    {
+      header: t('menu.productAnalytics.columns.addedToCartCount'),
+      field: 'addedToCartCount',
+      sortable: true,
+    },
     {
       header: (
         <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
-          <span>Trending Score</span>
-          <Tooltip
-            content="Calculated as: 0.3 × Views + 0.4 × Wishlists + 0.8 × Add to Cart."
-            position="top"
-          >
+          <span>{t('menu.productAnalytics.columns.trendingScore')}</span>
+          <Tooltip content={t('menu.productAnalytics.trendingScoreTooltip')} position="top">
             <span>
               <Info style={{ opacity: 0.7, cursor: 'help' }} />
             </span>
@@ -60,16 +67,16 @@ const ProductAnalyticsPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Flex direction="vertical" spacing="s">
-            <Heading>Product Analytics</Heading>
+            <Heading>{t('menu.productAnalytics.title')}</Heading>
             <Heading level="h4" appearance="light">
-              Monthly counters for views, wishlists, and add-to-cart.
+              {t('menu.productAnalytics.subtitle')}
             </Heading>
           </Flex>
           <Flex spacing="s" align="center">
             <StringInput
               value={productQuery}
               onChange={(e: any) => setProductQuery(e)}
-              placeholder="Product ID or SKU"
+              placeholder={t('menu.productAnalytics.searchPlaceholder')}
             />
             <Calendar
               value={moment(from + '-01', 'YYYY-MM-DD') as any}
@@ -97,7 +104,7 @@ const ProductAnalyticsPage: React.FC = () => {
               selectionMode="single"
               typeView="month"
             />
-            <Button onClick={applyFilters}>Apply</Button>
+            <Button onClick={applyFilters}>{t('menu.productAnalytics.applyButton')}</Button>
           </Flex>
         </Flex>
 
@@ -105,7 +112,7 @@ const ProductAnalyticsPage: React.FC = () => {
           stripedRows
           columns={columns as any}
           value={rows}
-          emptyMessage="No analytics data"
+          emptyMessage={t('menu.productAnalytics.emptyMessage')}
           bordered
           striped
           onSort={handleSort as any}

@@ -57,7 +57,7 @@ const AdminLayout: React.FC<{
         label: t('menu.analytics'),
         iconComp: LineChart,
         items: [
-          { label: t('menu.productAnalytics'), route: '/analytics/products' },
+          { label: t('menu.productAnalytics.title'), route: '/analytics/products' },
           { label: t('menu.townAnalytics'), route: '/analytics/towns' },
         ],
       },

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Button,
@@ -49,6 +50,7 @@ const ExpensesPage: React.FC = () => {
     reset,
     isSubmitting,
   } = useExpensesPage();
+  const { t } = useTranslation();
   const toast = useToast();
 
   return (
@@ -56,10 +58,9 @@ const ExpensesPage: React.FC = () => {
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
           <Flex direction="vertical" spacing="s">
-            <Heading>Expenses</Heading>
+            <Heading>{t('app.expenses.title')}</Heading>
             <Heading level="h4" appearance="light">
-              Admin-recorded operating costs. Expenses are aggregated by month and deducted from
-              gross profit (Revenue − COGS) to compute net profit.
+              {t('app.expenses.description')}
             </Heading>
           </Flex>
           <Flex spacing="s" align="center">
@@ -76,18 +77,18 @@ const ExpensesPage: React.FC = () => {
               selectionMode="single"
               typeView="month"
             />
-            <Button onClick={() => setIsOpen(true)}>Add Expense</Button>
+            <Button onClick={() => setIsOpen(true)}>{t('app.expenses.addExpense')}</Button>
           </Flex>
         </Flex>
         <Table value={expenses} columns={columns as any} isLoading={isLoading} stripedRows />
         <Dialog
           visible={isOpen}
           onHide={() => setIsOpen(false)}
-          header="Add Expense"
+          header={t('app.expenses.addExpense')}
           footer={
             <Flex justify="end" spacing="s">
               <Button appearance="outline" onClick={() => setIsOpen(false)}>
-                Cancel
+                {t('app.common.cancel')}
               </Button>
               <Button
                 isLoading={isSubmitting}
@@ -103,29 +104,51 @@ const ExpensesPage: React.FC = () => {
                     await handleCreate(payload as any);
                     setIsOpen(false);
                     reset();
-                    toast.success('Expense added');
+                    toast.success(t('app.expenses.addSuccess'));
                   } catch (e: any) {
-                    toast.error(e?.message || 'Failed to add expense');
+                    toast.error(e?.message || t('app.expenses.addError'));
                   }
                 })}
               >
-                Save
+                {t('app.common.save')}
               </Button>
             </Flex>
           }
         >
           <Flex direction="vertical" spacing="m">
-            <FormFieldWrapper name="date" control={control} label="Date" required fullWidth>
+            <FormFieldWrapper
+              name="date"
+              control={control}
+              label={t('app.expenses.form.date')}
+              required
+              fullWidth
+            >
               <CalendarFieldAdapter />
             </FormFieldWrapper>
-            <FormFieldWrapper name="amount" control={control} label="Amount" required fullWidth>
-              <StringInput type="number" placeholder="0.00" />
+            <FormFieldWrapper
+              name="amount"
+              control={control}
+              label={t('app.expenses.form.amount')}
+              required
+              fullWidth
+            >
+              <StringInput type="number" placeholder={t('app.expenses.form.amountPlaceholder')} />
             </FormFieldWrapper>
-            <FormFieldWrapper name="category" control={control} label="Category" fullWidth>
-              <StringInput placeholder="e.g., Delivery cost" />
+            <FormFieldWrapper
+              name="category"
+              control={control}
+              label={t('app.expenses.form.category')}
+              fullWidth
+            >
+              <StringInput placeholder={t('app.expenses.form.categoryPlaceholder')} />
             </FormFieldWrapper>
-            <FormFieldWrapper name="description" control={control} label="Description" fullWidth>
-              <StringInput placeholder="Optional description" />
+            <FormFieldWrapper
+              name="description"
+              control={control}
+              label={t('app.expenses.form.description')}
+              fullWidth
+            >
+              <StringInput placeholder={t('app.expenses.form.descriptionPlaceholder')} />
             </FormFieldWrapper>
           </Flex>
         </Dialog>

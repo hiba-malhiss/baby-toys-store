@@ -5,6 +5,7 @@ import { Pencil, Trash2 } from 'lucide-react';
 import { useDeleteVariant, useUpdateVariant } from '../../api/variantApi';
 
 import type { VariantDto } from '../../api/types/variant';
+import { useTranslation } from 'react-i18next';
 
 type Props = {
   productId: number;
@@ -20,6 +21,7 @@ const ProductVariations: React.FC<Props> = ({
   variants,
 }) => {
   const toast = useToast();
+  const { t } = useTranslation();
 
   const deleteVariant = useDeleteVariant(productId);
   const updateVariant = useUpdateVariant(productId);
@@ -30,8 +32,8 @@ const ProductVariations: React.FC<Props> = ({
     updateVariant.mutate(
       { variantId: row.id, payload: { isActive: next } },
       {
-        onSuccess: () => toast.success('Variant updated'),
-        onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to update variant'),
+        onSuccess: () => toast.success(t('app.variation.updateSuccess')),
+        onError: (e: any) => toast.error(e?.response?.data?.message || t('app.unexpectedError')),
       }
     );
   };
@@ -41,23 +43,23 @@ const ProductVariations: React.FC<Props> = ({
 
     deleteVariant.mutate(confirmDeleteId, {
       onSuccess: () => {
-        toast.success('Variant deleted');
+        toast.success(t('app.variation.deleteSuccess'));
         setConfirmDeleteId(null);
       },
-      onError: (e: any) => toast.error(e?.response?.data?.message || 'Failed to delete variant'),
+      onError: (e: any) => toast.error(e?.response?.data?.message || t('app.unexpectedError')),
     });
   };
 
   const columns = useMemo(() => {
     const base = [
       {
-        header: 'Image',
+        header: t('app.variation.image'),
         field: 'mainImage',
         body: (row: VariantDto) =>
           row.mainImage ? (
             <Image
               src={row.mainImage}
-              alt="variant"
+              alt={t('app.variation.image')}
               style={{
                 width: 40,
                 height: 40,
@@ -71,23 +73,23 @@ const ProductVariations: React.FC<Props> = ({
       },
       { header: 'SKU', field: 'sku' },
       {
-        header: 'Combination',
+        header: t('app.variation.combination'),
         field: 'options',
         body: (row: VariantDto) => row.options?.join(' · ') || '-',
       },
-      { header: 'Price', field: 'price' },
-      { header: 'Old Price', field: 'oldPrice' },
-      { header: 'Cost', field: 'costPrice' },
-      { header: 'Stock', field: 'stockQuantity' },
+      { header: t('app.variation.price'), field: 'price' },
+      { header: t('app.variation.oldPrice'), field: 'oldPrice' },
+      { header: t('app.variation.costPrice'), field: 'costPrice' },
+      { header: t('app.variation.stock'), field: 'stockQuantity' },
       {
-        header: 'Active',
+        header: t('app.variation.active'),
         field: 'isActive',
         body: (row: VariantDto) =>
           readOnly ? (
             row.isActive ? (
-              'Yes'
+              t('app.yes')
             ) : (
-              'No'
+              t('app.no')
             )
           ) : (
             <Toggle value={row.isActive} onChange={(val) => toggleActive(row, !!val)} />
@@ -97,7 +99,7 @@ const ProductVariations: React.FC<Props> = ({
 
     if (!readOnly) {
       base.push({
-        header: 'Actions',
+        header: t('app.actions'),
         field: 'actions',
         body: (row: VariantDto) => (
           <Flex spacing="s">
@@ -106,12 +108,14 @@ const ProductVariations: React.FC<Props> = ({
               appearance="outline"
               leftIconComp={Pencil}
               onClick={() => openEdit(row)}
+              aria-label={t('app.common.edit')}
             />
             <Button
               size="small"
               appearance="outline"
               leftIconComp={Trash2}
               onClick={() => setConfirmDeleteId(row.id)}
+              aria-label={t('app.common.delete')}
             />
           </Flex>
         ),
@@ -128,14 +132,16 @@ const ProductVariations: React.FC<Props> = ({
         columns={columns as any}
         paginator={false}
         stripedRows
-        emptyMessage="No variations yet."
+        emptyMessage={t('app.variation.noVariations')}
       />
       <ConfirmDialog
         visible={!!confirmDeleteId}
-        header="Confirm Delete"
-        message={`Are you sure you want to delete this variant? This action cannot be undone.`}
+        header={t('app.variation.confirmDelete.title')}
+        message={t('app.variation.confirmDelete.message')}
         onConfirm={confirmDelete}
         onCancel={() => setConfirmDeleteId(null)}
+        confirmLabel={t('app.variation.confirmDelete.confirm')}
+        cancelLabel={t('app.variation.confirmDelete.cancel')}
       />
     </>
   );

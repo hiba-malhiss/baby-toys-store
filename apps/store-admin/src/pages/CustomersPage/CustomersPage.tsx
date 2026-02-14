@@ -9,12 +9,14 @@ import {
   CopyToClipboardButton,
 } from '@baby-toys/ui-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAdminUsers } from '../../api/usersApi';
 import type { AdminUser } from '../../api/types/user';
 import styles from './customer-page.module.scss';
 import { Eye, Search } from 'lucide-react';
 
 const CustomersPage: React.FC = () => {
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -68,14 +70,14 @@ const CustomersPage: React.FC = () => {
     () => [
       {
         field: 'id',
-        header: 'ID',
+        header: t('customers.columns.id'),
         body: (row: AdminUser) => (
           <Flex spacing="s" align="center">
             <span>#{row.id}</span>
             <CopyToClipboardButton
               value={row.id}
-              successMessage="User ID copied"
-              ariaLabel="Copy user ID"
+              successMessage={t('customers.copy.userId')}
+              ariaLabel={t('customers.ariaLabels.copyUserId')}
               appearance="link"
             />
           </Flex>
@@ -83,15 +85,15 @@ const CustomersPage: React.FC = () => {
       },
       {
         field: 'email',
-        header: 'Email',
+        header: t('customers.columns.email'),
         sortable: true,
         body: (row: AdminUser) => (
           <Flex spacing="s" align="center">
             <span>{row.email}</span>
             <CopyToClipboardButton
               value={row.email}
-              successMessage="Email copied"
-              ariaLabel="Copy email"
+              successMessage={t('customers.copy.email')}
+              ariaLabel={t('customers.ariaLabels.copyEmail')}
               appearance="link"
             />
           </Flex>
@@ -99,34 +101,34 @@ const CustomersPage: React.FC = () => {
       },
       {
         field: 'name',
-        header: 'Name',
+        header: t('customers.columns.name'),
         body: (row: AdminUser) => `${row.firstName ?? ''} ${row.lastName ?? ''}`.trim() || '-',
       },
       {
         field: 'phoneNumber',
-        header: 'Phone',
+        header: t('customers.columns.phone'),
         body: (row: AdminUser) => row.phoneNumber ?? '-',
       },
       {
         field: 'age',
-        header: 'Age',
+        header: t('customers.columns.age'),
         body: (row: AdminUser) => (row.age ?? '-') as any,
       },
       {
         field: 'country',
-        header: 'Country',
+        header: t('customers.columns.country'),
         body: (row: AdminUser) => row.country ?? '-',
       },
       {
         field: 'actions',
-        header: 'Actions',
+        header: t('customers.columns.actions'),
         body: (row: AdminUser) => (
           <Flex spacing="s">
             <Button appearance="outline" onClick={() => navigate(`/orders?query=${row.id}`)}>
-              View Orders
+              {t('customers.actions.viewOrders')}
             </Button>
             <Button appearance="outline" onClick={() => navigate(`/reviews?userId=${row.id}`)}>
-              View Reviews
+              {t('customers.actions.viewReviews')}
             </Button>
           </Flex>
         ),
@@ -139,10 +141,10 @@ const CustomersPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex align="center" justify="between" fullWidth>
-          <Heading>Customers</Heading>
+          <Heading>{t('customers.pageTitle')}</Heading>
           <StringInput
             className={styles.customersPageSearch}
-            placeholder="Search by name, email, or ID"
+            placeholder={t('customers.searchPlaceholder')}
             leftIconComp={Eye}
             onChange={(v) => setQueryInput(String(v ?? ''))}
             fullWidth
