@@ -83,7 +83,8 @@
       "view": "View",
       "all": "All",
       "search": "Search",
-      "resetAll": "Reset All"
+      "resetAll": "Reset All",
+      "actions": "actions"
     },
     "reviews": {
       "title": "Reviews",
@@ -437,6 +438,13 @@
     "featureBullets": "Feature Bullets",
     "options": "Options",
     "attributes": "Attributes",
+    "optionType": "Option Type",
+    "selectOptionType": "Select option type",
+    "optionValues": "Option Values",
+    "selectValues": "Select values",
+    "attributeType": "Attribute Type",
+    "selectAttributeType": "Select attribute type",
+    "attributeValues": "Attribute Values",
     "tab": {
       "general": "General",
       "media": "Media"
@@ -686,6 +694,7 @@
     "add": "Add Attribute",
     "edit": "Edit Attribute",
     "code": "Code",
+    "display": "Display",
     "displayName": "Display Name",
     "sortOrder": "Sort Order",
     "filterable": "Filterable",

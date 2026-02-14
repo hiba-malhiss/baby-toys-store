@@ -24,9 +24,13 @@ const OptionRow: React.FC<{
 
   return (
     <Flex spacing="m" align="start" fullWidth wrap>
-      <FormFieldWrapper label={t('productForm.optionType')} fullWidth required>
+      <FormFieldWrapper 
+        label={t('productForm.optionType', 'Option Type')} 
+        fullWidth 
+        required
+      >
         <Select
-          placeholder="Option Type"
+          placeholder={t('productForm.selectOptionType', 'Select option type')}
           value={numericTypeId}
           onChange={(v) => {
             const id = Number(v);
@@ -46,10 +50,14 @@ const OptionRow: React.FC<{
             ))}
         </Select>
       </FormFieldWrapper>
-      <FormFieldWrapper label={t('productForm.optionValues')} fullWidth required>
+      <FormFieldWrapper 
+        label={t('productForm.optionValues', 'Option Values')} 
+        fullWidth 
+        required
+      >
         <Select
           multiple
-          placeholder="Values"
+          placeholder={t('productForm.selectValues', 'Select values')}
           value={
             (useWatch({ control, name: `options.${index}.valueIds` as const }) as number[]) || []
           }

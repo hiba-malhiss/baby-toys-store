@@ -45,7 +45,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
           control={control}
           render={({ field }) => (
             <FormFieldWrapper
-              label={t('productForm.attributeType', { defaultValue: 'Attribute Type' })}
+              label={t('productForm.attributeType', 'Attribute Type')}
               fullWidth
               required
             >
@@ -53,9 +53,9 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                 value={field.value != null ? String(field.value) : ''}
                 onChange={(v) => {
                   field.onChange(v);
-                  // reset values when type changes
                   setValue(`attributes.${index}.valueIds` as any, []);
                 }}
+                placeholder={t('productForm.selectAttributeType', 'Select attribute type')}
                 fullWidth
                 isDisabled={isDisabled}
                 clearable
@@ -80,10 +80,12 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
           control={control}
           render={({ field }) => (
             <FormFieldWrapper
-              label={t('productForm.attributeValues', { defaultValue: 'Values' })}
+              label={t('productForm.attributeValues', 'Attribute Values')}
               fullWidth
+              required={!!typeId}
             >
               <Select
+                placeholder={t('productForm.selectValues', 'Select values')}
                 value={
                   isMulti
                     ? Array.isArray(field.value)
@@ -122,7 +124,7 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
         />
 
         <Button appearance="outline" onClick={onRemove}>
-          {t('app.remove', { defaultValue: 'Remove' })}
+          {t('common.remove', 'Remove')}
         </Button>
       </Flex>
     </Card>

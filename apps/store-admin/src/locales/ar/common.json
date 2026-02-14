@@ -84,7 +84,8 @@
       "close": "إغلاق",
       "all": "الكل",
       "search": "بحث",
-      "resetAll": "إعادة تعيين الكل"
+      "resetAll": "إعادة تعيين الكل",
+      "actions": "الإجراءات"
     },
     "reviews": {
       "title": "التقييمات",
@@ -313,6 +314,7 @@
     "add": "إضافة سمة",
     "edit": "تعديل السمة",
     "code": "الكود",
+    "display": "العرض",
     "displayName": "الاسم المعروض",
     "sortOrder": "ترتيب الفرز",
     "filterable": "قابل للتصفية",
@@ -451,6 +453,13 @@
     "description": "الوصف ({{locale}})",
     "productDetails": "تفاصيل المنتج ({{locale}})",
     "featureBullets": "مميزات المنتج ({{locale}})",
+    "optionType": "نوع الخيار",
+    "selectOptionType": "اختر نوع الخيار",
+    "optionValues": "قيم الخيارات",
+    "selectValues": "اختر القيم",
+    "attributeType": "نوع السمة",
+    "selectAttributeType": "اختر نوع السمة",
+    "attributeValues": "قيم السمات",
     "placeholders": {
       "productName": "أدخل اسم المنتج",
       "shortDescription": "أدخل وصفًا مختصرًا",
