@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Flex, StringInput, Button, Select, Option } from '@baby-toys/ui-kit';
 import styles from './reviews-page.module.scss';
 
@@ -15,18 +16,20 @@ interface FiltersProps {
   }) => void;
 }
 
-const ratingOptions = [
-  { label: 'All', value: '' },
-  { label: '5 stars', value: '5' },
-  { label: '4 stars', value: '4' },
-  { label: '3 stars', value: '3' },
-  { label: '2 stars', value: '2' },
-  { label: '1 star', value: '1' },
+const getRatingOptions = (t: any) => [
+  { label: t('app.common.all'), value: '' },
+  { label: t('app.reviews.filters.ratingOptions.fiveStars'), value: '5' },
+  { label: t('app.reviews.filters.ratingOptions.fourStars'), value: '4' },
+  { label: t('app.reviews.filters.ratingOptions.threeStars'), value: '3' },
+  { label: t('app.reviews.filters.ratingOptions.twoStars'), value: '2' },
+  { label: t('app.reviews.filters.ratingOptions.oneStar'), value: '1' },
 ];
 
 export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: FiltersProps) => {
+  const { t } = useTranslation('common');
   const [productInput, setProductInput] = useState(productId);
   const [userInput, setUserInput] = useState(userId);
+  const ratingOptions = useMemo(() => getRatingOptions(t), [t]);
 
   useEffect(() => {
     if (productInput === '' && productId !== '') {
@@ -43,11 +46,15 @@ export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: 
   return (
     <Flex direction="horizontal" spacing="m" wrap>
       <StringInput
-        placeholder="Product ID"
+        placeholder={t('app.reviews.filters.productIdPlaceholder')}
         value={productInput}
         onChange={(v) => setProductInput(v)}
       />
-      <StringInput placeholder="User ID" value={userInput} onChange={(v) => setUserInput(v)} />
+      <StringInput
+        placeholder={t('app.reviews.filters.userIdPlaceholder')}
+        value={userInput}
+        onChange={(v) => setUserInput(v)}
+      />
       <Button
         appearance="filled"
         onClick={() =>
@@ -59,7 +66,7 @@ export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: 
           })
         }
       >
-        Search
+        {t('app.common.search')}
       </Button>
       <Select
         className={styles.reviewPageSelect}
@@ -88,7 +95,7 @@ export const ReviewsFilters = ({ productId, userId, rating, status, onChange }: 
           onChange({ productId: '', userId: '', rating: '', status: '' });
         }}
       >
-        Reset All
+        {t('app.common.resetAll')}
       </Button>
     </Flex>
   );

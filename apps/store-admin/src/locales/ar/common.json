@@ -9,7 +9,82 @@
     "no": "لا",
     "error": "خطأ",
     "unexpectedError": "حدث خطأ غير متوقع.",
+    "errors": {
+      "invalidProductId": "معرّف المنتج غير صالح"
+    },
+    "common": {
+      "view": "عرض",
+      "close": "إغلاق",
+      "all": "الكل",
+      "search": "بحث",
+      "resetAll": "إعادة تعيين الكل"
+    },
+    "reviews": {
+      "title": "التقييمات",
+      "fields": {
+        "id": "المعرف",
+        "product": "المنتج",
+        "image": "الصورة",
+        "user": "المستخدم",
+        "phone": "الهاتف",
+        "rating": "التقييم",
+        "comment": "التعليق",
+        "status": "الحالة"
+      },
+      "status": {
+        "active": "نشط",
+        "hidden": "مخفي",
+        "pending": "قيد الانتظار"
+      },
+      "actions": {
+        "hide": "إخفاء",
+        "unhide": "إظهار"
+      },
+      "messages": {
+        "copiedProductId": "تم نسخ معرف المنتج",
+        "copiedUserId": "تم نسخ معرف المستخدم"
+      },
+      "filters": {
+        "productIdPlaceholder": "معرف المنتج",
+        "userIdPlaceholder": "معرف المستخدم",
+        "ratingOptions": {
+          "fiveStars": "5 نجوم",
+          "fourStars": "4 نجوم",
+          "threeStars": "3 نجوم",
+          "twoStars": "نجمتان",
+          "oneStar": "نجمة واحدة"
+        }
+      }
+    },
+    "contact": {
+      "title": "رسائل التواصل",
+      "filterByStatus": "تصفية حسب الحالة",
+      "status": {
+        "new": "جديد",
+        "read": "مقروء",
+        "replied": "تم الرد"
+      },
+      "fields": {
+        "id": "المعرف",
+        "name": "الاسم",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف",
+        "subject": "الموضوع",
+        "status": "الحالة"
+      },
+      "dialog": {
+        "title": "الرسالة رقم {{id}}",
+        "defaultTitle": "رسالة",
+        "from": "من",
+        "email": "البريد الإلكتروني",
+        "phone": "رقم الهاتف",
+        "subject": "الموضوع",
+        "message": "الرسالة"
+      }
+    },
     "variation": {
+      "createSuccess": "تم إنشاء المتغير بنجاح",
+      "updateSuccess": "تم تحديث المتغير بنجاح",
       "editTitle": "تعديل المتغير",
       "addTitle": "إضافة متغير جديد",
       "sku": "الرمز الشريطي",
@@ -86,6 +161,47 @@
         "note": "أضف ملاحظة للطلب (اختياري)",
         "coupon": "أدخل رمز الكوبون"
       }
+    }
+  },
+  "orders": {
+    "title": "الطلبات",
+    "searchPlaceholder": "ابحث برقم الطلب أو رقم المستخدم...",
+    "orderNumber": "طلب #",
+    "date": "التاريخ",
+    "coupon": "الكوبون",
+    "discount": "الخصم",
+    "total": "الإجمالي",
+    "totalCost": "إجمالي التكلفة",
+    "profit": "الربح",
+    "margin": "الهامش",
+    "status": "الحالة"
+  },
+  "orderStatus": {
+    "pending": "قيد الانتظار",
+    "processing": "قيد المعالجة",
+    "shipped": "تم الشحن",
+    "delivered": "تم التوصيل",
+    "cancelled": "ملغي",
+    "returned": "مرتجع"
+  },
+  "dialogs": {
+    "confirm": {
+      "title": "تأكيد الإجراء",
+      "message": "هل أنت متأكد من رغبتك في تنفيذ هذا الإجراء؟",
+      "yes": "نعم",
+      "no": "لا"
+    },
+    "delete": {
+      "title": "حذف العنصر",
+      "message": "هل أنت متأكد من رغبتك في حذف هذا العنصر؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    },
+    "save": {
+      "title": "حفظ التغييرات",
+      "message": "هل تريد حفظ التغييرات؟",
+      "confirm": "حفظ",
+      "cancel": "إلغاء"
     }
   },
   "menu": {
@@ -231,23 +347,36 @@
   "dashboard": {
     "title": "لوحة التحكم",
     "welcome": "مرحبًا بعودتك، مدير المتجر!",
+    "meta": {
+      "timezone": "المنطقة الزمنية",
+      "currentDate": "التاريخ"
+    },
     "revenueThisMonth": "الإيرادات (هذا الشهر)",
     "momRevenueChange": "تغير الإيرادات مقارنة بالشهر الماضي",
-    "averageOrderValue": "متوسط قيمة الطلب",
-    "pendingOrders": "طلبات قيد الانتظار",
-    "todayOrders": "طلبات اليوم",
-    "deliveredToday": "تم توصيله اليوم",
-    "newCustomersToday": "عملاء جدد اليوم",
+    "todayOrders": "الطلبات (اليوم)",
     "vsYesterday": "مقارنة بالأمس",
-    "topProducts": {
-      "todayTitle": "أفضل المنتجات (اليوم)"
-    },
+    "deliveredToday": "تم التوصيل (اليوم)",
+    "newCustomersToday": "عملاء جدد (اليوم)",
     "metrics": {
       "title": "المؤشرات",
       "metric": "المؤشر",
       "value": "القيمة",
       "change": "التغير",
       "notes": "ملاحظات"
+    },
+    "metricDescriptions": {
+      "pendingOrders": "عدد الطلبات ذات الحالة = قيد الانتظار",
+      "aovThisMonth": "إيرادات الشهر الحالي / عدد الطلبات الموصلة هذا الشهر",
+      "revenueLastMonth": "إجمالي الطلبات التي تم توصيلها في الشهر الماضي",
+      "salesToday": "إجمالي الطلبات التي تم توصيلها اليوم",
+      "orderIntakeValue": "إجمالي الطلبات الجديدة اليوم",
+      "avgRatingToday": "متوسط تقييمات المنتجات المنشورة اليوم",
+      "lateStuckOrders": "عدد الطلبات المعلقة التي تجاوزت مدة الانتظار",
+      "peakHour": "ساعة الذروة للطلبات الموصلة اليوم",
+      "topTown": "المدينة الأكثر طلبًا اليوم",
+      "returningCustomersToday": "عدد العملاء الذين قاموا بالطلب من قبل",
+      "ordersYesterday": "عدد الطلبات أمس",
+      "deliveredYesterday": "عدد الطلبات التي تم توصيلها أمس"
     },
     "goals": {
       "title": "الأهداف",
@@ -257,10 +386,20 @@
       "goal": "الهدف",
       "remainingDays": "الأيام المتبقية:"
     },
+    "topProducts": {
+      "todayTitle": "أفضل المنتجات (اليوم)"
+    },
+    "tooltips": {
+      "revenueThisMonth": "إيرادات الشهر الحالي",
+      "ordersToday": "الطلبات المقدمة اليوم",
+      "deliveredToday": "الطلبات التي تم توصيلها اليوم",
+      "newCustomersToday": "العملاء الجدد المسجلين اليوم"
+    },
     "alerts": {
       "title": "التنبيهات",
       "noUrgentTitle": "كل شيء تمام",
-      "noUrgentMsg": "لا توجد تنبيهات عاجلة حاليًا."
+      "noUrgentMsg": "لا توجد تنبيهات عاجلة حاليًا.",
+      "codeTitle": "تنبيه #{{code}}"
     },
     "productConversionFunnel": "مسار تحويل المنتج",
     "table": {
@@ -269,7 +408,31 @@
       "revenue": "الإيرادات",
       "viewToWishlist": "من مشاهدة إلى مفضلة %",
       "wishlistToCart": "من مفضلة إلى سلة %",
-      "cartToPurchase": "من سلة إلى شراء %"
+      "cartToPurchase": "من سلة إلى شراء %",
+      "headers": {
+        "id": "المعرف",
+        "name": "الاسم",
+        "image": "الصورة",
+        "category": "التصنيف",
+        "price": "السعر",
+        "units": "الوحدات",
+        "margin": "هامش الربح",
+        "stock": "المخزون",
+        "rating": "التقييم",
+        "releaseDate": "تاريخ الإصدار",
+        "actions": "الإجراءات"
+      },
+      "actions": {
+        "view": "عرض",
+        "edit": "تعديل",
+        "delete": "حذف",
+        "variations": "المتغيرات",
+        "reviews": "التقييمات"
+      },
+      "status": {
+        "inStock": "متوفر",
+        "outOfStock": "غير متوفر"
+      }
     }
   },
   "finance": {
@@ -280,19 +443,6 @@
     "expenses": "المصاريف",
     "profit": "الربح",
     "viewProduct": "عرض المنتج"
-  },
-  "orders": {
-    "title": "الطلبات",
-    "searchPlaceholder": "ابحث برقم الطلب أو رقم المستخدم...",
-    "orderNumber": "طلب #",
-    "date": "التاريخ",
-    "coupon": "الكوبون",
-    "discount": "الخصم",
-    "total": "الإجمالي",
-    "totalCost": "إجمالي التكلفة",
-    "profit": "الربح",
-    "margin": "الهامش",
-    "status": "الحالة"
   },
   "orderItems": {
     "title": "عناصر الطلب",
@@ -338,14 +488,6 @@
     "changeStatusTitle": "تغيير حالة الطلب",
     "changeStatusConfirm": "هل أنت متأكد أنك تريد تغيير الحالة إلى \"{{status}}\"؟"
   },
-  "orderStatus": {
-    "pending": "قيد الانتظار",
-    "processing": "قيد المعالجة",
-    "shipped": "تم الشحن",
-    "delivered": "تم التوصيل",
-    "cancelled": "ملغي",
-    "returned": "مرتجع"
-  },
   "productView": {
     "fallbackName": "منتج",
     "idLabel": "رقم #{{id}}",
@@ -377,6 +519,29 @@
     "shortDescription": "وصف مختصر",
     "description": "الوصف"
   },
+  "options": {
+    "types": "أنواع الخيارات",
+    "addType": "إضافة نوع خيار",
+    "typeName": "الاسم",
+    "displayName": "اسم العرض",
+    "description": "الوصف",
+    "addValue": "إضافة قيمة",
+    "manageValues": "إدارة القيم",
+    "value": "القيمة",
+    "display": "العرض",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "deleteConfirm": {
+      "title": "حذف نوع الخيار",
+      "message": "هل أنت متأكد من رغبتك في حذف نوع الخيار هذا؟ سيؤدي هذا أيضًا إلى إزالة جميع القيم المرتبطة به ولا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    },
+    "validation": {
+      "nameRequired": "الاسم مطلوب",
+      "valueRequired": "القيمة مطلوبة"
+    }
+  },
   "tooltips": {
     "productKPIs": {
       "revenueLifetime": "مجموع الإيرادات من الطلبات التي تم توصيلها والمرتبطة بهذا المنتج عبر كل الفترة. (إجمالي المبالغ التي تم تحصيلها للمنتج من الطلبات المُوصّلة.)",
@@ -405,5 +570,25 @@
       "totalCost": "مجموع (تكلفة الشراء وقت الطلب × الكمية) لكل عناصر الطلب (تكلفة البضاعة).",
       "discount": "إجمالي الخصم المطبق على هذا الطلب من الكوبون/الكوبونات."
     }
+  },
+  "products": {
+    "title": "المنتجات",
+    "actions": {
+      "refresh": "تحديث",
+      "addProduct": "إضافة منتج",
+      "deleteSelected": "حذف المحدد ({{count}})",
+      "noProducts": "لا توجد منتجات",
+      "selectedProduct": "المنتج المحدد",
+      "confirmDelete": {
+        "header": "تأكيد الحذف",
+        "single": "هل أنت متأكد من رغبتك في حذف {name}؟",
+        "multiple": "هل أنت متأكد من رغبتك في حذف {count} من المنتجات المحددة؟"
+      }
+    },
+    "filters": {
+      "all": "جميع المنتجات",
+      "onSale": "العروض فقط"
+    },
+    "searchPlaceholder": "ابحث عن المنتجات..."
   }
 }

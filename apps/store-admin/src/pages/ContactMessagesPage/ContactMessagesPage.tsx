@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Button, Chip, Flex, Heading, Select, Table, useToast } from '@baby-toys/ui-kit';
 import {
@@ -9,13 +10,14 @@ import {
 import type { ContactMessage, ContactMessageStatus } from '../../api/types/contact';
 import ContactMessageDialog from './ContactMessageDialog';
 
-const STATUS_OPTIONS = [
-  { label: 'New', value: 'NEW' },
-  { label: 'Read', value: 'READ' },
-  { label: 'Replied', value: 'REPLIED' },
+const STATUS_OPTIONS = (t: any) => [
+  { label: t('app.contact.status.new'), value: 'NEW' },
+  { label: t('app.contact.status.read'), value: 'READ' },
+  { label: t('app.contact.status.replied'), value: 'REPLIED' },
 ];
 
 export default function ContactMessagesPage() {
+  const { t } = useTranslation('common');
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [status, setStatus] = useState<ContactMessageStatus | ''>('');
@@ -23,20 +25,22 @@ export default function ContactMessagesPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const toast = useToast();
 
+  const statusOptions = useMemo(() => STATUS_OPTIONS(t), [t]);
+
   const { data, isLoading } = useAdminContactMessages({ page, size: pageSize, status });
   const { data: selectedMessage, isLoading: isLoadingSelected } = useGetContactMessage(selectedId);
   const { mutate: updateStatus } = useUpdateContactStatus();
 
   const columns = useMemo(
     () => [
-      { field: 'id', header: 'ID' },
-      { field: 'name', header: 'Name' },
-      { field: 'email', header: 'Email' },
-      { field: 'phoneNumber', header: 'Phone' },
-      { field: 'subject', header: 'Subject' },
+      { field: 'id', header: t('app.contact.fields.id') },
+      { field: 'name', header: t('app.contact.fields.name') },
+      { field: 'email', header: t('app.contact.fields.email') },
+      { field: 'phoneNumber', header: t('app.contact.fields.phone') },
+      { field: 'subject', header: t('app.contact.fields.subject') },
       {
         field: 'status',
-        header: 'Status',
+        header: t('app.contact.fields.status'),
         body: (row: ContactMessage) => (
           <Chip
             label={row.status}
@@ -48,7 +52,7 @@ export default function ContactMessagesPage() {
       },
       {
         field: 'actions',
-        header: 'Actions',
+        header: t('app.common.actions'),
         body: (row: ContactMessage) => (
           <Flex spacing="s">
             <Button
@@ -58,10 +62,10 @@ export default function ContactMessagesPage() {
                 setDialogOpen(true);
               }}
             >
-              View
+              {t('app.common.view')}
             </Button>
             <Select
-              options={STATUS_OPTIONS as any}
+              options={statusOptions as any}
               value={row.status}
               onChange={(val) => updateStatus({ id: row.id, status: val as ContactMessageStatus })}
             />
@@ -76,16 +80,16 @@ export default function ContactMessagesPage() {
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>Contact Messages</Heading>
+          <Heading>{t('app.contact.title')}</Heading>
           <Flex spacing="m" align="center">
             <Select
-              options={[{ label: 'All', value: '' }, ...STATUS_OPTIONS] as any}
+              options={[{ label: t('app.common.all'), value: '' }, ...statusOptions] as any}
               value={status}
               onChange={(val) => {
                 setStatus(val as ContactMessageStatus | '');
                 setPage(1);
               }}
-              placeholder="Filter by status"
+              placeholder={t('app.contact.filterByStatus')}
             />
           </Flex>
         </Flex>

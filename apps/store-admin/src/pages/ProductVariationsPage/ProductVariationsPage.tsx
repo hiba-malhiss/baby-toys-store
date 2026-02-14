@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { Heading, Flex, Button } from '@baby-toys/ui-kit';
 import ProductVariations from './ProductVariations';
 import { useProduct } from '../../api/productApi';
 import VariationDialog from './VariationDialog.tsx';
-import { useVariants } from '../../api/variantApi';
 import type { VariantDto } from '../../api/types/variant';
 
 const ProductVariationsPage: React.FC = () => {
@@ -13,7 +13,6 @@ const ProductVariationsPage: React.FC = () => {
   const productId = id ? Number(id) : undefined;
 
   const { data: product } = useProduct(productId);
-  const { data: variants = [] } = useVariants(productId as number);
 
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<VariantDto | null>(null);
@@ -32,17 +31,19 @@ const ProductVariationsPage: React.FC = () => {
 
   const closeDialog = () => setDialogOpen(false);
 
+  const { t } = useTranslation('common');
+
   if (!productId) {
-    return <AdminLayout>Invalid product ID</AdminLayout>;
+    return <AdminLayout>{t('app.errors.invalidProductId')}</AdminLayout>;
   }
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="l" fullWidth>
         <Flex justify="between" align="center" spacing="l" fullWidth>
-          <Heading level="h3">Manage Variations</Heading>
+          <Heading level="h3">{t('app.variation.manageVariations')}</Heading>
           <Flex justify="end" align="center" fullWidth>
-            <Button onClick={openCreate}>Add Variation</Button>
+            <Button onClick={openCreate}>{t('app.variation.addVariation')}</Button>
           </Flex>
         </Flex>
         <ProductVariations

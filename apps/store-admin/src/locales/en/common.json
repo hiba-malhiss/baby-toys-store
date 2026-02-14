@@ -9,7 +9,66 @@
     "no": "No",
     "error": "Error",
     "unexpectedError": "An unexpected error occurred.",
+    "errors": {
+      "invalidProductId": "Invalid product ID"
+    },
+    "common": {
+      "view": "View",
+      "all": "All",
+      "search": "Search",
+      "resetAll": "Reset All"
+    },
+    "reviews": {
+      "title": "Reviews",
+      "actions": {
+        "hide": "Hide",
+        "unhide": "Unhide"
+      },
+      "messages": {
+        "copiedProductId": "Product ID copied to clipboard",
+        "copiedUserId": "User ID copied to clipboard"
+      },
+      "filters": {
+        "productIdPlaceholder": "Product ID",
+        "userIdPlaceholder": "User ID",
+        "ratingOptions": {
+          "fiveStars": "5 stars",
+          "fourStars": "4 stars",
+          "threeStars": "3 stars",
+          "twoStars": "2 stars",
+          "oneStar": "1 star"
+        }
+      }
+    },
+    "contact": {
+      "title": "Contact Messages",
+      "filterByStatus": "Filter by status",
+      "status": {
+        "new": "New",
+        "read": "Read",
+        "replied": "Replied"
+      },
+      "fields": {
+        "id": "ID",
+        "name": "Name",
+        "email": "Email",
+        "phone": "Phone",
+        "subject": "Subject",
+        "status": "Status"
+      },
+      "dialog": {
+        "title": "Message #{{id}}",
+        "defaultTitle": "Message",
+        "from": "From",
+        "email": "Email",
+        "phone": "Phone",
+        "subject": "Subject",
+        "message": "Message"
+      }
+    },
     "variation": {
+      "createSuccess": "Variant created successfully",
+      "updateSuccess": "Variant updated successfully",
       "editTitle": "Edit Variation",
       "addTitle": "Add Variation",
       "sku": "SKU",
@@ -86,6 +145,47 @@
         "note": "Add a note for the order (optional)",
         "coupon": "Enter coupon code"
       }
+    }
+  },
+  "orders": {
+    "title": "Orders",
+    "searchPlaceholder": "Search by order number or user ID...",
+    "orderNumber": "Order #",
+    "date": "Date",
+    "coupon": "Coupon",
+    "discount": "Discount",
+    "total": "Total",
+    "totalCost": "Total Cost",
+    "profit": "Profit",
+    "margin": "Margin",
+    "status": "Status"
+  },
+  "orderStatus": {
+    "pending": "Pending",
+    "processing": "Processing",
+    "shipped": "Shipped",
+    "delivered": "Delivered",
+    "cancelled": "Cancelled",
+    "returned": "Returned"
+  },
+  "dialogs": {
+    "confirm": {
+      "title": "Confirm Action",
+      "message": "Are you sure you want to perform this action?",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "delete": {
+      "title": "Delete Item",
+      "message": "Are you sure you want to delete this item? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "save": {
+      "title": "Save Changes",
+      "message": "Do you want to save your changes?",
+      "confirm": "Save",
+      "cancel": "Cancel"
     }
   },
   "menu": {
@@ -203,6 +303,54 @@
     "editTitle": "Edit Product",
     "mainImage": "Main Image",
     "galleryImages": "Gallery Images",
+    "category": "Category",
+    "productName": "Product Name",
+    "shortDescription": "Short Description",
+    "description": "Description",
+    "productDetails": "Product Details",
+    "featureBullets": "Feature Bullets",
+    "options": "Options",
+    "attributes": "Attributes",
+    "tab": {
+      "general": "General",
+      "media": "Media"
+    },
+    "placeholders": {
+      "productName": "Enter product name",
+      "shortDescription": "Enter a brief description",
+      "description": "Enter detailed description",
+      "detailLabel": "Detail label",
+      "detailValue": "Detail value",
+      "bullet": "Enter a feature"
+    },
+    "buttons": {
+      "addDetail": "Add Detail",
+      "addBullet": "Add Bullet"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "searchPlaceholder": "Search products...",
+    "filters": {
+      "all": "All Products",
+      "onSale": "On Sale Only"
+    },
+    "actions": {
+      "refresh": "Refresh",
+      "addProduct": "Add Product",
+      "deleteSelected": "Delete Selected ({{count}})",
+      "noProducts": "No products found",
+      "selectedProduct": "selected product",
+      "confirmDelete": {
+        "header": "Confirm Deletion",
+        "single": "Are you sure you want to delete {name}?",
+        "multiple": "Are you sure you want to delete {count} selected products?"
+      }
+    },
+    "addTitle": "Add Product",
+    "editTitle": "Edit Product",
+    "mainImage": "Main Image",
+    "galleryImages": "Gallery Images",
     "price": "Price",
     "attributes": "Attributes",
     "options": "Options",
@@ -231,38 +379,55 @@
   "dashboard": {
     "title": "Dashboard",
     "welcome": "Welcome back, Admin!",
+    "meta": {
+      "timezone": "Timezone",
+      "currentDate": "Date"
+    },
     "revenueThisMonth": "Revenue (This Month)",
     "momRevenueChange": "MoM Revenue Change",
-    "averageOrderValue": "Average Order Value",
-    "pendingOrders": "Pending Orders",
     "todayOrders": "Orders (Today)",
+    "vsYesterday": "vs yesterday",
     "deliveredToday": "Delivered (Today)",
     "newCustomersToday": "New customers (Today)",
-    "vsYesterday": "vs yesterday",
-    "topProducts": {
-      "todayTitle": "Top Products (Today)"
-    },
     "metrics": {
       "title": "Metrics",
       "metric": "Metric",
       "value": "Value",
       "change": "Change",
-      "notes": "Notes"
+      "notes": "Notes",
+      "pendingOrders": "Pending Orders",
+      "averageOrderValue": "Average Order Value",
+      "revenueLastMonth": "Revenue (Last Month)",
+      "salesToday": "Sales Today",
+      "orderIntakeValue": "Order Intake Value",
+      "avgRatingToday": "Avg Rating (Today)",
+      "lateStuckOrders": "Late/Stuck Orders",
+      "peakHour": "Peak Hour",
+      "topTown": "Top Town",
+      "returningCustomersToday": "Returning Customers (Today)",
+      "ordersYesterday": "Orders (Yesterday)",
+      "deliveredYesterday": "Delivered (Yesterday)",
+      "mtd": "MTD",
+      "yesterday": "Yesterday: {{val}}",
+      "orderIntakeNote": "New orders value today",
+      "ratingsCount": "{{count}} ratings",
+      "thresholdDays": "{{days}}d+",
+      "orders": "orders"
     },
     "goals": {
       "title": "Goals",
-      "dailyOrders": "Daily Orders Goal",
-      "monthlyRevenue": "Monthly Revenue Goal",
+      "dailyOrders": "Daily Orders",
       "noGoal": "No goal configured",
+      "progress": "{{current}} / {{goal}}",
       "goal": "goal",
+      "monthlyRevenue": "Monthly Revenue Goal",
+      "monthlyNoGoal": "{{sales}}",
+      "monthlyProgress": "{{sales}} / {{goal}}",
       "remainingDays": "Remaining days:"
     },
-    "alerts": {
-      "title": "Alert",
-      "noUrgentTitle": "All good",
-      "noUrgentMsg": "No urgent alerts right now."
+    "topProducts": {
+      "todayTitle": "Top Products (Today)"
     },
-    "productConversionFunnel": "Product Conversion Funnel",
     "table": {
       "product": "Product",
       "soldQty": "Sold Quantity",
@@ -270,7 +435,33 @@
       "viewToWishlist": "View→Wishlist %",
       "wishlistToCart": "Wishlist→Cart %",
       "cartToPurchase": "Cart→Purchase %"
-    }
+    },
+    "alerts": {
+      "title": "Alert",
+      "noUrgentTitle": "All good",
+      "noUrgentMsg": "No urgent alerts right now."
+    },
+    "tooltips": {
+      "revenueThisMonth": "Revenue for current month",
+      "ordersToday": "Orders created today",
+      "deliveredToday": "Orders delivered today",
+      "newCustomersToday": "New customers acquired today"
+    },
+    "metricDescriptions": {
+      "pendingOrders": "Count of orders with status = PENDING",
+      "aovThisMonth": "Delivered revenue this month / Delivered count this month",
+      "revenueLastMonth": "Sum of totals for orders with status = DELIVERED and deliveredAt in previous month",
+      "salesToday": "Sum of totals for orders with status = DELIVERED and deliveredAt in today window",
+      "orderIntakeValue": "Sum of totals for orders with createdAt in today window (new orders)",
+      "avgRatingToday": "Average of PUBLISHED product reviews created in today window",
+      "lateStuckOrders": "Count and sum of orders with status = PENDING and createdAt before (todayStart - thresholdDays)",
+      "peakHour": "Among delivered orders today, bucket totals by deliveredAt hour; pick hour with max revenue",
+      "topTown": "Among delivered orders today, group by shippingAddress.town; pick town with most orders and sum amount",
+      "returningCustomersToday": "Count of customers with an order today who are not first-time (first order exists before today)",
+      "ordersYesterday": "Count of orders with createdAt in yesterday window",
+      "deliveredYesterday": "Count of orders with status = DELIVERED and deliveredAt in yesterday window"
+    },
+    "productConversionFunnel": "Product Conversion Funnel"
   },
   "finance": {
     "title": "Finance - Monthly Profit",
@@ -280,19 +471,6 @@
     "expenses": "Expenses",
     "profit": "Profit",
     "viewProduct": "View product"
-  },
-  "orders": {
-    "title": "Orders",
-    "searchPlaceholder": "Search by order number or user ID...",
-    "orderNumber": "Order #",
-    "date": "Date",
-    "coupon": "Coupon",
-    "discount": "Discount",
-    "total": "Total",
-    "totalCost": "Total Cost",
-    "profit": "Profit",
-    "margin": "Margin",
-    "status": "Status"
   },
   "orderItems": {
     "title": "Order Items",
@@ -338,14 +516,6 @@
     "changeStatusTitle": "Change Order Status",
     "changeStatusConfirm": "Are you sure you want to change the status to \"{{status}}\"?"
   },
-  "orderStatus": {
-    "pending": "Pending",
-    "processing": "Processing",
-    "shipped": "Shipped",
-    "delivered": "Delivered",
-    "cancelled": "Cancelled",
-    "returned": "Returned"
-  },
   "productView": {
     "fallbackName": "Product",
     "idLabel": "ID #{{id}}",
@@ -377,6 +547,29 @@
     "shortDescription": "Short Description",
     "description": "Description"
   },
+  "options": {
+    "types": "Option Types",
+    "addType": "Add Option Type",
+    "typeName": "Name",
+    "displayName": "Display Name",
+    "description": "Description",
+    "addValue": "Add Value",
+    "manageValues": "Manage Values",
+    "value": "Value",
+    "display": "Display",
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleteConfirm": {
+      "title": "Delete Option Type",
+      "message": "Are you sure you want to delete this option type? This will also remove all associated values and cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "valueRequired": "Value is required"
+    }
+  },
   "tooltips": {
     "productKPIs": {
       "revenueLifetime": "Sum of delivered revenue attributed to this product over its lifetime. (Total money collected from delivered orders for this product.)",
@@ -404,6 +597,38 @@
       "total": "Order total = Subtotal − Discount + Shipping.",
       "totalCost": "Sum of item cost-at-purchase × quantity for this order (COGS).",
       "discount": "Total discount applied to this order from coupon(s)."
+    }
+  },
+  "table": {
+    "product": "Product",
+    "soldQty": "Sold Quantity",
+    "revenue": "Revenue",
+    "viewToWishlist": "View to Wishlist %",
+    "wishlistToCart": "Wishlist to Cart %",
+    "cartToPurchase": "Cart to Purchase %",
+    "headers": {
+      "id": "ID",
+      "name": "Name",
+      "image": "Image",
+      "category": "Category",
+      "price": "Price",
+      "units": "Units",
+      "margin": "Margin",
+      "stock": "Stock",
+      "rating": "Rating",
+      "releaseDate": "Release Date",
+      "actions": "Actions"
+    },
+    "actions": {
+      "view": "View",
+      "edit": "Edit",
+      "delete": "Delete",
+      "variations": "Variations",
+      "reviews": "Reviews"
+    },
+    "status": {
+      "inStock": "In Stock",
+      "outOfStock": "Out of Stock"
     }
   }
 }

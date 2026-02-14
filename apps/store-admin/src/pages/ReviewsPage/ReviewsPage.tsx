@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Heading,
   Table,
@@ -17,6 +18,7 @@ import { EyeOff, Eye } from 'lucide-react';
 import styles from './reviews-page.module.scss';
 
 export default function ReviewsPage() {
+  const { t } = useTranslation('common');
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
@@ -64,10 +66,10 @@ export default function ReviewsPage() {
 
   const columns = useMemo(
     () => [
-      { field: 'id', header: 'ID' },
+      { field: 'id', header: t('app.reviews.fields.id') },
       {
         field: 'productId',
-        header: 'Product',
+        header: t('app.reviews.fields.product'),
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
             <Button
@@ -85,33 +87,39 @@ export default function ReviewsPage() {
                 `#${row.productId}`
               )}
             </Button>
-            <CopyToClipboardButton value={row.productId} successMessage="Product ID copied" />
+            <CopyToClipboardButton
+              value={row.productId}
+              successMessage={t('app.reviews.messages.copiedProductId')}
+            />
           </Flex>
         ),
       },
       {
         field: 'productImage',
-        header: 'Image',
+        header: t('app.reviews.fields.image'),
         type: 'image',
       },
       {
         field: 'userId',
-        header: 'User',
+        header: t('app.reviews.fields.user'),
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
             <span>{row.userEmail ?? `#${row.userId}`}</span>
-            <CopyToClipboardButton value={row.userId} successMessage="User ID copied" />
+            <CopyToClipboardButton
+              value={row.userId}
+              successMessage={t('app.reviews.messages.copiedUserId')}
+            />
           </Flex>
         ),
       },
       {
         field: 'userPhone',
-        header: 'Phone',
+        header: t('app.reviews.fields.phone'),
         body: (row: ReviewDto) => row.userPhone || '-',
       },
       {
         field: 'rating',
-        header: 'Rating',
+        header: t('app.reviews.fields.rating'),
         body: (row: ReviewDto) => (
           <Flex spacing="s" align="center">
             <Rating value={row.rating} />
@@ -121,7 +129,7 @@ export default function ReviewsPage() {
       },
       {
         field: 'comment',
-        header: 'Comment',
+        header: t('app.reviews.fields.comment'),
         body: (row: ReviewDto) => (
           <span className={styles.reviewsPageTruncate} title={row.comment || ''}>
             {row.comment || '-'}
@@ -130,14 +138,17 @@ export default function ReviewsPage() {
       },
       {
         field: 'status',
-        header: 'Status',
+        header: t('app.reviews.fields.status'),
         body: (row: ReviewDto) => (
-          <Chip label={row.status} appearance={row.status === 'HIDDEN' ? 'warning' : 'success'} />
+          <Chip
+            label={t(`app.reviews.status.${row.status.toLowerCase()}`)}
+            appearance={row.status === 'HIDDEN' ? 'warning' : 'success'}
+          />
         ),
       },
       {
         field: 'actions',
-        header: 'Actions',
+        header: t('app.common.actions'),
         body: (row: ReviewDto) => {
           const hidden = row.status === 'HIDDEN';
           return (
@@ -148,20 +159,20 @@ export default function ReviewsPage() {
               isLoading={isHiding || isUnhiding}
               onClick={() => (hidden ? unhideReview(row.id) : hideReview(row.id))}
             >
-              {hidden ? 'Unhide' : 'Hide'}
+              {hidden ? t('app.reviews.actions.unhide') : t('app.reviews.actions.hide')}
             </Button>
           );
         },
       },
     ],
-    [hideReview, unhideReview, isHiding, isUnhiding]
+    [hideReview, unhideReview, isHiding, isUnhiding, t, navigate]
   );
 
   return (
     <AdminLayout>
       <Flex direction="vertical" spacing="m" fullWidth>
         <Flex justify="between" fullWidth>
-          <Heading>Reviews</Heading>
+          <Heading>{t('app.reviews.title')}</Heading>
           <ReviewsFilters {...filters} onChange={applyFilters} />
         </Flex>
         <Table

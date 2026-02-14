@@ -1,11 +1,13 @@
 import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { Pencil, Trash2, Star, Check, Eye, X, Layers } from 'lucide-react';
 import { useStoreSettings } from '../../api/settingsApi';
 import styles from './ProductsPage.module.scss';
 import { AdminProductBase } from '../../api/types/product.ts';
 
 export const useProductsTableColumns = (handleDelete: (product: AdminProductBase) => void) => {
+  const { t } = useTranslation('common');
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol;
@@ -13,14 +15,14 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
   return [
     {
       field: 'id',
-      header: 'ID',
+      header: t('table.headers.id'),
       body: (row: AdminProductBase) => (
         <Flex spacing="s" align="center">
           <span>#{row.id}</span>
           <CopyToClipboardButton
             value={row.id}
-            successMessage="Product ID copied"
-            ariaLabel="Copy product ID"
+            successMessage={t('products.messages.copiedProductId')}
+            ariaLabel={t('products.actions.copyProductId')}
             appearance="link"
           />
         </Flex>
@@ -28,12 +30,12 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
     },
     {
       field: 'mainImage',
-      header: 'Image',
+      header: t('table.headers.image'),
       type: 'image',
     },
     {
       field: 'name',
-      header: 'Name',
+      header: t('table.headers.name'),
       sortable: false,
       body: (row: AdminProductBase) => (
         <span className={styles.productsPageTruncate} title={row.name || ''}>
@@ -43,28 +45,28 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
     },
     {
       field: 'categoryName',
-      header: 'Category',
+      header: t('table.headers.category'),
       sortable: false,
       body: (row: AdminProductBase) => row.categoryName || '-',
     },
     {
       field: 'defaultVariant.price',
-      header: 'Price',
+      header: t('table.headers.price'),
       sortable: true,
       body: (row: AdminProductBase) => {
         const p = row.defaultVariant.price;
-        return p != null ? (symbol ? `From ${symbol}${p}` : `From ${String(p)}`) : '-';
+        return p != null ? (symbol ? t('products.labels.fromPrice', { price: `${symbol}${p}` }) : t('products.labels.fromPrice', { price: String(p) })) : '-';
       },
     },
     {
       field: 'sales',
-      header: 'Units',
+      header: t('table.headers.units'),
       sortable: true,
       body: (row: AdminProductBase) => (row.sales != null ? String(row.sales) : '-'),
     },
     {
       field: 'totalRevenue',
-      header: 'Revenue',
+      header: t('table.headers.revenue'),
       sortable: true,
       body: (row: AdminProductBase) =>
         row.totalRevenue != null
@@ -75,14 +77,14 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
     },
     {
       field: 'profitMargin',
-      header: 'Margin',
+      header: t('table.headers.margin'),
       sortable: true,
       body: (row: AdminProductBase) =>
         row.profitMargin != null ? `${(Number(row.profitMargin) * 100).toFixed(1)}%` : '-',
     },
     {
       field: 'activeVariantsTotalStock',
-      header: 'Stock',
+      header: t('table.headers.stock'),
       sortable: true,
       body: (row: AdminProductBase) => {
         const stock = row.activeVariantsTotalStock ?? row.stockQuantity ?? 0;
@@ -91,12 +93,12 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
     },
     {
       field: 'averageRating',
-      header: 'Rating',
+      header: t('table.headers.rating'),
       body: (row: AdminProductBase) =>
         row.averageRating ? (
           <Flex spacing="xs">
             <Rating value={row.averageRating} />
-            <span>({row.numberOfRatings || 0})</span>
+            <span>{t('products.labels.ratingCount', { count: row.numberOfRatings || 0 })}</span>
           </Flex>
         ) : (
           <span>-</span>
@@ -104,13 +106,13 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
     },
     {
       field: 'releaseDate',
-      header: 'Release Date',
+      header: t('table.headers.releaseDate'),
       sortable: false,
       body: (row: AdminProductBase) => row.releaseDate || '-',
     },
     {
       field: 'actions',
-      header: 'Actions',
+      header: t('table.headers.actions'),
       body: (row: AdminProductBase) => (
         <Flex spacing="m">
           <Button
@@ -118,20 +120,24 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
             appearance="outline"
             leftIconComp={Eye}
             onClick={() => navigate(`/product/${row.id}`)}
-            aria-label="View product"
+            aria-label={t('table.actions.view')}
+            title={t('table.actions.view')}
           />
           <Button
             size="small"
             appearance="outline"
             leftIconComp={Pencil}
             onClick={() => navigate(`/edit-product/${row.id}`)}
+            aria-label={t('table.actions.edit')}
+            title={t('table.actions.edit')}
           />
           <Button
             size="small"
             appearance="outline"
             leftIconComp={Layers}
             onClick={() => navigate(`/edit-product/${row.id}/variations`)}
-            aria-label="Manage variations"
+            aria-label={t('table.actions.variations')}
+            title={t('table.actions.variations')}
           />
           <Button
             size="small"
@@ -141,6 +147,8 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
               e.stopPropagation();
               navigate(`/reviews?productId=${row.id}`);
             }}
+            aria-label={t('table.actions.reviews')}
+            title={t('table.actions.reviews')}
           />
           <Button
             size="small"
@@ -150,6 +158,8 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
               e.stopPropagation();
               handleDelete(row);
             }}
+            aria-label={t('table.actions.delete')}
+            title={t('table.actions.delete')}
           />
         </Flex>
       ),

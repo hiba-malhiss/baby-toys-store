@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import {
   Button,
@@ -17,6 +18,7 @@ import { useProductsPage } from './useProductsPage';
 import styles from './ProductsPage.module.scss';
 
 const ProductsPage: React.FC = () => {
+  const { t } = useTranslation('common');
   const qc = useQueryClient();
   const [searchValue, setSearchValue] = React.useState('');
   const {
@@ -53,13 +55,13 @@ const ProductsPage: React.FC = () => {
       <Flex direction="vertical" spacing="xl" fullWidth>
         {/* Header */}
         <Flex justify="between" align="center" fullWidth>
-          <Heading level="h1">Products</Heading>
+          <Heading level="h1">{t('products.title')}</Heading>
           <Flex align="center" spacing="xl">
             <Button
               onClick={() => qc.invalidateQueries({ queryKey: ['products'] })}
               color="secondary"
             >
-              Refresh
+              {t('products.actions.refresh')}
             </Button>
             <Select
               value={onSaleOnly ? 'on' : 'all'}
@@ -69,11 +71,11 @@ const ProductsPage: React.FC = () => {
                 setPage(1);
               }}
             >
-              <Option value="all">All</Option>
-              <Option value="on">On sale</Option>
+              <Option value="all">{t('products.filters.all')}</Option>
+              <Option value="on">{t('products.filters.onSale')}</Option>
             </Select>
             <StringInput
-              placeholder="Search products by name or id"
+              placeholder={t('products.searchPlaceholder')}
               value={searchValue}
               className={styles.productsPageSearch}
               fullWidth
@@ -92,7 +94,7 @@ const ProductsPage: React.FC = () => {
               color="primary"
               className={styles.productsPageAddButton}
             >
-              Add Product
+              {t('products.actions.addProduct')}
             </Button>
             <Button
               onClick={handleBulkDelete}
@@ -101,7 +103,7 @@ const ProductsPage: React.FC = () => {
               className={styles.productsPageAddButton}
               isDisabled={!selectedProducts?.length}
             >
-              Delete ({selectedProducts?.length})
+              {t('products.actions.deleteSelected', { count: selectedProducts?.length })}
             </Button>
           </Flex>
         </Flex>
@@ -118,7 +120,7 @@ const ProductsPage: React.FC = () => {
           selection={selectedProducts}
           onSelectionChange={setSelectedProducts}
           selectionMode="multiple"
-          emptyMessage="No products found"
+          emptyMessage={t('products.actions.noProducts')}
           bordered
           striped
           paginator
@@ -133,11 +135,11 @@ const ProductsPage: React.FC = () => {
         {/* Delete confirmation */}
         <ConfirmDialog
           visible={confirmDialogVisible}
-          header="Confirm Delete"
+          header={t('products.actions.confirmDelete.header')}
           message={
             productToDelete
-              ? `Are you sure you want to delete "${productToDelete.name}"?`
-              : `Are you sure you want to delete the selected product?`
+              ? t('products.actions.confirmDelete.single', { name: productToDelete.name })
+              : t('products.actions.confirmDelete.single', { name: t('products.actions.selectedProduct') })
           }
           onConfirm={handleConfirmDelete}
           onCancel={() => setConfirmDialogVisible(false)}
@@ -145,8 +147,8 @@ const ProductsPage: React.FC = () => {
 
         <ConfirmDialog
           visible={showBulkDeleteConfirm}
-          header="Confirm Delete"
-          message={`Are you sure you want to delete ${selectedProducts.length} selected products?`}
+          header={t('products.actions.confirmDelete.header')}
+          message={t('products.actions.confirmDelete.multiple', { count: selectedProducts.length })}
           onConfirm={confirmBulkDelete}
           onCancel={() => setShowBulkDeleteConfirm(false)}
         />
