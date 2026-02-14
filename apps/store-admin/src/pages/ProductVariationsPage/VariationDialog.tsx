@@ -7,7 +7,6 @@ import {
   Toggle,
   Select,
   Option,
-  Text,
   FieldWrapper,
   useToast,
   Image,
@@ -28,7 +27,6 @@ type Props = {
   isOpen: boolean;
   onClose: () => void;
   productOptions: ProductOptionDto[];
-  existingVariants: VariantDto[];
   editing?: VariantDto | null;
   productMainImage?: string | null;
   productImages?: string[];
@@ -52,6 +50,7 @@ type FormErrors = {
   price?: string;
   costPrice?: string;
   oldPrice?: string;
+  options?: Record<number, string>;
 };
 
 const DEFAULT_FORM: FormState = {
@@ -74,7 +73,6 @@ const VariationDialog: React.FC<Props> = ({
   isOpen,
   onClose,
   productOptions,
-  existingVariants,
   editing,
   productMainImage,
   productImages,
@@ -108,99 +106,63 @@ const VariationDialog: React.FC<Props> = ({
     } else {
       setForm(DEFAULT_FORM);
     }
-
     setErrors({});
   }, [editing, isOpen]);
 
   const mustSelectAll = productOptions.length > 0;
-  const hasAllSelections =
-    !mustSelectAll || productOptions.every((t) => form.selections[t.type.id]);
 
   const allProductImages = useMemo(() => {
     return uniq([...(productMainImage ? [productMainImage] : []), ...(productImages || [])]);
   }, [productMainImage, productImages]);
 
-  const keyOfSelections = (sel: Record<number, number>) =>
-    Object.entries(sel)
-      .sort((a, b) => Number(a[0]) - Number(b[0]))
-      .map(([t, v]) => `${t}:${v}`)
-      .join('|');
-
-  const existingKeys = useMemo(() => {
-    const set = new Set<string>();
-    for (const v of existingVariants) {
-      const sel = Object.fromEntries(
-        Object.entries(v.optionSelectionIds || {}).map(([k, val]) => [Number(k), Number(val)])
-      );
-      set.add(keyOfSelections(sel));
-    }
-    return set;
-  }, [existingVariants]);
-
-  const currentKey = keyOfSelections(form.selections);
-
-  const isDuplicate = useMemo(() => {
-    if (!hasAllSelections) return false;
-
-    if (editing) {
-      const originalKey = keyOfSelections(
-        Object.fromEntries(
-          Object.entries(editing.optionSelectionIds || {}).map(([k, v]) => [Number(k), Number(v)])
-        )
-      );
-      if (originalKey === currentKey) return false;
-    }
-
-    return existingKeys.has(currentKey);
-  }, [editing, existingKeys, currentKey, hasAllSelections]);
-
   const setField = <K extends keyof FormState>(key: K, value: FormState[K]) => {
     setForm((prev) => ({ ...prev, [key]: value }));
   };
 
-  const validate = () => {
+  const validate = (): boolean => {
+    const next: FormErrors = {};
+    console.log(form);
     const priceNum = Number(form.price);
     const costNum = form.costPrice ? Number(form.costPrice) : undefined;
     const oldPriceNum = form.oldPrice ? Number(form.oldPrice) : undefined;
 
-    const next: FormErrors = {};
-
     if (!form.sku.trim()) next.sku = 'SKU is required';
-
-    if (form.price === '') next.price = 'Price is required';
+    if (!form.price) next.price = 'Price is required';
     else if (!Number.isFinite(priceNum)) next.price = 'Price must be a number';
     else if (priceNum < 0) next.price = 'Price cannot be negative';
 
     if (typeof costNum === 'number') {
       if (!Number.isFinite(costNum)) next.costPrice = 'Cost price must be a number';
       else if (costNum < 0) next.costPrice = 'Cost price cannot be negative';
-      else if (Number.isFinite(priceNum) && costNum > priceNum)
-        next.costPrice = 'Cost price cannot exceed price';
+      else if (costNum > priceNum) next.costPrice = 'Cost price cannot exceed price';
     }
 
     if (typeof oldPriceNum === 'number') {
       if (!Number.isFinite(oldPriceNum)) next.oldPrice = 'Old price must be a number';
       else if (oldPriceNum < 0) next.oldPrice = 'Old price cannot be negative';
-      else if (Number.isFinite(priceNum) && oldPriceNum < priceNum)
+      else if (oldPriceNum < priceNum)
         next.oldPrice = 'Old price must be greater than or equal to price';
     }
 
-    if (mustSelectAll && !hasAllSelections) {
-      toast.error('Please select one value for each option type.');
-    }
-
-    if (isDuplicate) {
-      toast.error('A variation with the same option combination already exists.');
+    if (mustSelectAll) {
+      const optionErrors: Record<number, string> = {};
+      productOptions.forEach((option) => {
+        const val = form.selections[option.type.id];
+        if (val === undefined || val === null) {
+          optionErrors[option.type.id] = `Please select ${option.type.name}`;
+        }
+      });
+      if (Object.keys(optionErrors).length) next.options = optionErrors;
     }
 
     setErrors(next);
 
-    const hasErrors = Object.keys(next).length > 0;
-    if (hasErrors) return false;
-    if (mustSelectAll && !hasAllSelections) return false;
-    if (isDuplicate) return false;
+    if (Object.keys(next).length > 0) return false;
 
-    return true;
+    return productOptions.every(
+      (option) =>
+        form.selections[option.type.id] !== undefined && form.selections[option.type.id] !== null
+    );
   };
 
   const buildPayload = (): CreateVariantRequest | UpdateVariantRequest => {
@@ -228,7 +190,6 @@ const VariationDialog: React.FC<Props> = ({
 
     try {
       const payload = buildPayload();
-
       if (editing) {
         await updateVariant.mutateAsync({ variantId: editing.id, payload });
         toast.success('Variation updated');
@@ -236,7 +197,6 @@ const VariationDialog: React.FC<Props> = ({
         await createVariant.mutateAsync(payload as CreateVariantRequest);
         toast.success('Variation created');
       }
-
       onClose();
     } catch (e: any) {
       toast.error(e?.response?.data?.message || 'Something went wrong');
@@ -248,7 +208,7 @@ const VariationDialog: React.FC<Props> = ({
       header={editing ? 'Edit Variation' : 'Add Variation'}
       visible={isOpen}
       width="60%"
-      onVisibleChange={(v: boolean) => {
+      onVisibleChange={(v) => {
         if (!v) onClose();
       }}
     >
@@ -330,7 +290,9 @@ const VariationDialog: React.FC<Props> = ({
           <Toggle value={form.active} onChange={(val) => setField('active', !!val)} />
         </FieldWrapper>
       </Flex>
-      <Divider className="bts-marginVm"></Divider>
+
+      <Divider className="bts-marginVm" />
+
       <Flex direction="vertical" spacing="s" fullWidth>
         <FieldWrapper label="Main Image" fullWidth>
           <Select
@@ -344,12 +306,7 @@ const VariationDialog: React.FC<Props> = ({
                   <Image
                     src={img}
                     alt="img"
-                    style={{
-                      width: 40,
-                      height: 40,
-                      objectFit: 'cover',
-                      borderRadius: 4,
-                    }}
+                    style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4 }}
                   />
                   <span>{img}</span>
                 </Flex>
@@ -373,12 +330,7 @@ const VariationDialog: React.FC<Props> = ({
                   <Image
                     src={img}
                     alt="img"
-                    style={{
-                      width: 40,
-                      height: 40,
-                      objectFit: 'cover',
-                      borderRadius: 4,
-                    }}
+                    style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4 }}
                   />
                   <span>{img}</span>
                 </Flex>
@@ -387,39 +339,54 @@ const VariationDialog: React.FC<Props> = ({
           </Select>
         </FieldWrapper>
       </Flex>
-      <Divider className="bts-marginVm"></Divider>
+
+      <Divider className="bts-marginVm" />
+
       {productOptions.length > 0 && (
         <Flex direction="vertical" spacing="s" fullWidth>
-          {productOptions.map((opt) => (
-            <FieldWrapper key={opt.type.id} label={opt.type.name} fullWidth>
-              <Select
-                placeholder={`Select ${opt.type.name}`}
-                value={form.selections[opt.type.id]}
-                onChange={(v) =>
-                  setField('selections', {
-                    ...form.selections,
-                    [opt.type.id]: Number(v),
-                  })
-                }
+          {productOptions.map((opt) => {
+            const optionError = errors.options?.[opt.type.id];
+            return (
+              <FieldWrapper
+                required
+                key={opt.type.id}
+                label={opt.type.name}
+                error={optionError}
+                fullWidth
               >
-                {opt.values.map((val) => (
-                  <Option key={val.id} value={val.id}>
-                    {val.display || val.value}
+                <Select
+                  placeholder={`Select ${opt.type.name}`}
+                  value={form.selections[opt.type.id]}
+                  onChange={(v) => {
+                    setForm((prev) => ({
+                      ...prev,
+                      selections: { ...prev.selections, [opt.type.id]: Number(v) },
+                    }));
+                    if (errors.options?.[opt.type.id]) {
+                      setErrors((prev) => ({
+                        ...prev,
+                        options: { ...prev.options, [opt.type.id]: undefined },
+                      }));
+                    }
+                  }}
+                  fullWidth
+                  status={optionError ? 'error' : 'default'}
+                >
+                  <Option value={undefined} disabled>
+                    Select {opt.type.name}
                   </Option>
-                ))}
-              </Select>
-            </FieldWrapper>
-          ))}
-
-          {!hasAllSelections && (
-            <Text color="warning">Please select one value for each option type.</Text>
-          )}
-
-          {isDuplicate && (
-            <Text color="error">A variation with the same option combination already exists.</Text>
-          )}
+                  {opt.values.map((val) => (
+                    <Option key={val.id} value={val.id}>
+                      {val.value}
+                    </Option>
+                  ))}
+                </Select>
+              </FieldWrapper>
+            );
+          })}
         </Flex>
       )}
+
       <Flex justify="end" spacing="m" className="bts-marginTm">
         <Button appearance="outline" onClick={onClose}>
           Cancel

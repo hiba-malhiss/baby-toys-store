@@ -21,7 +21,7 @@ import {
   useMyOrdersNormalized,
   useCancelMyOrder,
   type OrderItem,
-  type Order
+  type Order,
 } from '../../api/ordersApi';
 import { useTranslation } from 'react-i18next';
 
@@ -36,7 +36,7 @@ const OrderHistoryPage: React.FC = () => {
   const [reviewDialog, setReviewDialog] = useState<{ open: boolean; item: OrderItem } | null>(null);
 
   useEffect(() => {
-    if(!isAuthenticated || !user) {
+    if (!isAuthenticated || !user) {
       navigate('/');
     }
   }, [isAuthenticated, user, navigate]);
@@ -58,7 +58,7 @@ const OrderHistoryPage: React.FC = () => {
 
   // When refetch completes after a cancel, clear loading state
   useEffect(() => {
-    if(!isOrdersRefetching && awaitingRefetchForId && cancelingId === awaitingRefetchForId) {
+    if (!isOrdersRefetching && awaitingRefetchForId && cancelingId === awaitingRefetchForId) {
       setCancelingId(null);
       setAwaitingRefetchForId(null);
     }
@@ -67,11 +67,11 @@ const OrderHistoryPage: React.FC = () => {
   const items: Order[] = useMemo(() => data?.content ?? [], [data]);
   const totalSize = data?.totalElements ?? 0;
 
-  const handleBuyAgain = async(productId: string, variantId: string) => {
+  const handleBuyAgain = async (productId: string, variantId: string) => {
     await addToCartMutation.mutateAsync({
       productId: Number(productId),
       quantity: 1,
-      variantId
+      variantId,
     });
     openShippingCartDrawer();
   };
@@ -93,7 +93,7 @@ const OrderHistoryPage: React.FC = () => {
             getLabel={() => (month ? selectedMoment.format('MMM YYYY') : '')}
             onChange={(val) => {
               const v = Array.isArray(val) ? val[0] : val;
-              if(v && v.isValid && v.isValid()) {
+              if (v && v.isValid && v.isValid()) {
                 setMonth(v.format('YYYY-MM'));
                 setPage(1);
               }
@@ -129,9 +129,9 @@ const OrderHistoryPage: React.FC = () => {
               onCancel={
                 order.status === 'pending'
                   ? () => {
-                    if(cancelingId) return; // prevent concurrent
-                    setConfirmOrderId(order.id);
-                  }
+                      if (cancelingId) return; // prevent concurrent
+                      setConfirmOrderId(order.id);
+                    }
                   : undefined
               }
               isCancelling={cancelingId === order.id}
@@ -163,13 +163,13 @@ const OrderHistoryPage: React.FC = () => {
         confirmLabel={t('orders.confirmYes', { defaultValue: 'Yes' })}
         cancelLabel={t('orders.confirmNo', { defaultValue: 'No' })}
         onCancel={() => setConfirmOrderId(null)}
-        onConfirm={async() => {
+        onConfirm={async () => {
           const id = confirmOrderId;
-          if(!id) return;
+          if (!id) return;
           setConfirmOrderId(null);
           // Defensive: ensure we only cancel pending
           const target = items.find((o) => o.id === id);
-          if(!target || target.status !== 'pending') return;
+          if (!target || target.status !== 'pending') return;
           setCancelingId(id);
           try {
             await cancelMutation.mutateAsync(Number(id));

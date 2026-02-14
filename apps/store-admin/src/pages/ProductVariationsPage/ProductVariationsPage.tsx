@@ -57,7 +57,6 @@ const ProductVariationsPage: React.FC = () => {
           productOptions={productOptions}
           productMainImage={(product as any)?.mainImage}
           productImages={(product as any)?.images || []}
-          existingVariants={variants}
           editing={editing}
         />
       </Flex>

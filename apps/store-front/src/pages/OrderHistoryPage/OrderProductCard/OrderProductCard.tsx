@@ -15,7 +15,6 @@ export const statusColorMap: Record<string, string> = {
   delivered: 'primary',
 };
 
-
 interface OrderProductCardProps {
   onBuyAgain: (productId: string, variantId: string) => void;
   onAddReview: (item: OrderItem) => void;
