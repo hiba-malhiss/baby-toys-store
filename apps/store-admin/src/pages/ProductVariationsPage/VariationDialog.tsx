@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Dialog,
@@ -77,6 +78,7 @@ const VariationDialog: React.FC<Props> = ({
   productMainImage,
   productImages,
 }) => {
+  const { t } = useTranslation('common');
   const toast = useToast();
 
   const createVariant = useCreateVariant(productId);
@@ -121,27 +123,37 @@ const VariationDialog: React.FC<Props> = ({
 
   const validate = (): boolean => {
     const next: FormErrors = {};
-    console.log(form);
     const priceNum = Number(form.price);
     const costNum = form.costPrice ? Number(form.costPrice) : undefined;
     const oldPriceNum = form.oldPrice ? Number(form.oldPrice) : undefined;
 
-    if (!form.sku.trim()) next.sku = 'SKU is required';
-    if (!form.price) next.price = 'Price is required';
-    else if (!Number.isFinite(priceNum)) next.price = 'Price must be a number';
-    else if (priceNum < 0) next.price = 'Price cannot be negative';
+    if (!form.sku.trim())
+      next.sku = t('app.variation.errors.required', { field: t('app.variation.sku') });
+    if (!form.price)
+      next.price = t('app.variation.errors.required', { field: t('app.variation.price') });
+    else if (!Number.isFinite(priceNum))
+      next.price = t('app.variation.errors.number', { field: t('app.variation.price') });
+    else if (priceNum < 0)
+      next.price = t('app.variation.errors.nonNegative', { field: t('app.variation.price') });
 
     if (typeof costNum === 'number') {
-      if (!Number.isFinite(costNum)) next.costPrice = 'Cost price must be a number';
-      else if (costNum < 0) next.costPrice = 'Cost price cannot be negative';
-      else if (costNum > priceNum) next.costPrice = 'Cost price cannot exceed price';
+      if (!Number.isFinite(costNum))
+        next.costPrice = t('app.variation.errors.number', { field: t('app.variation.costPrice') });
+      else if (costNum < 0)
+        next.costPrice = t('app.variation.errors.nonNegative', {
+          field: t('app.variation.costPrice'),
+        });
+      else if (costNum > priceNum) next.costPrice = t('app.variation.errors.costExceedsPrice');
     }
 
     if (typeof oldPriceNum === 'number') {
-      if (!Number.isFinite(oldPriceNum)) next.oldPrice = 'Old price must be a number';
-      else if (oldPriceNum < 0) next.oldPrice = 'Old price cannot be negative';
-      else if (oldPriceNum < priceNum)
-        next.oldPrice = 'Old price must be greater than or equal to price';
+      if (!Number.isFinite(oldPriceNum))
+        next.oldPrice = t('app.variation.errors.number', { field: t('app.variation.oldPrice') });
+      else if (oldPriceNum < 0)
+        next.oldPrice = t('app.variation.errors.nonNegative', {
+          field: t('app.variation.oldPrice'),
+        });
+      else if (oldPriceNum < priceNum) next.oldPrice = t('app.variation.errors.oldPriceBelowPrice');
     }
 
     if (mustSelectAll) {
@@ -149,20 +161,16 @@ const VariationDialog: React.FC<Props> = ({
       productOptions.forEach((option) => {
         const val = form.selections[option.type.id];
         if (val === undefined || val === null) {
-          optionErrors[option.type.id] = `Please select ${option.type.name}`;
+          optionErrors[option.type.id] = t('app.variation.errors.selectOption', {
+            option: option.type.name.toLowerCase(),
+          });
         }
       });
       if (Object.keys(optionErrors).length) next.options = optionErrors;
     }
 
     setErrors(next);
-
-    if (Object.keys(next).length > 0) return false;
-
-    return productOptions.every(
-      (option) =>
-        form.selections[option.type.id] !== undefined && form.selections[option.type.id] !== null
-    );
+    return Object.keys(next).length === 0;
   };
 
   const buildPayload = (): CreateVariantRequest | UpdateVariantRequest => {
@@ -192,20 +200,20 @@ const VariationDialog: React.FC<Props> = ({
       const payload = buildPayload();
       if (editing) {
         await updateVariant.mutateAsync({ variantId: editing.id, payload });
-        toast.success('Variation updated');
+        toast.success(t('app.variation.updateSuccess'));
       } else {
         await createVariant.mutateAsync(payload as CreateVariantRequest);
-        toast.success('Variation created');
+        toast.success(t('app.variation.createSuccess'));
       }
       onClose();
     } catch (e: any) {
-      toast.error(e?.response?.data?.message || 'Something went wrong');
+      toast.error(e?.response?.data?.message || t('app.unexpectedError'));
     }
   };
 
   return (
     <Dialog
-      header={editing ? 'Edit Variation' : 'Add Variation'}
+      header={editing ? t('app.variation.editTitle') : t('app.variation.addTitle')}
       visible={isOpen}
       width="60%"
       onVisibleChange={(v) => {
@@ -213,9 +221,9 @@ const VariationDialog: React.FC<Props> = ({
       }}
     >
       <Flex spacing="m" wrap>
-        <FieldWrapper label="SKU" error={errors.sku} required>
+        <FieldWrapper label={t('app.variation.sku')} error={errors.sku} required>
           <StringInput
-            placeholder="SKU"
+            placeholder={t('app.variation.sku')}
             value={form.sku}
             onChange={(v) => {
               const val = String(v ?? '');
@@ -225,17 +233,17 @@ const VariationDialog: React.FC<Props> = ({
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Barcode">
+        <FieldWrapper label={t('app.variation.barcode')}>
           <StringInput
-            placeholder="Barcode"
+            placeholder={t('app.variation.barcode')}
             value={form.barcode}
             onChange={(v) => setField('barcode', String(v ?? ''))}
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Price" error={errors.price} required>
+        <FieldWrapper label={t('app.variation.price')} error={errors.price} required>
           <StringInput
-            placeholder="Price"
+            placeholder={t('app.variation.price')}
             type="number"
             value={form.price}
             onChange={(v) => {
@@ -251,9 +259,9 @@ const VariationDialog: React.FC<Props> = ({
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Old Price" error={errors.oldPrice}>
+        <FieldWrapper label={t('app.variation.oldPrice')} error={errors.oldPrice}>
           <StringInput
-            placeholder="Old Price"
+            placeholder={t('app.variation.oldPrice')}
             type="number"
             value={form.oldPrice}
             onChange={(v) => {
@@ -264,9 +272,9 @@ const VariationDialog: React.FC<Props> = ({
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Cost Price" error={errors.costPrice}>
+        <FieldWrapper label={t('app.variation.costPrice')} error={errors.costPrice}>
           <StringInput
-            placeholder="Cost Price"
+            placeholder={t('app.variation.costPrice')}
             type="number"
             value={form.costPrice}
             onChange={(v) => {
@@ -277,26 +285,26 @@ const VariationDialog: React.FC<Props> = ({
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Stock">
+        <FieldWrapper label={t('app.variation.stock')}>
           <StringInput
-            placeholder="Stock"
+            placeholder={t('app.variation.stock')}
             type="number"
             value={form.stock}
             onChange={(v) => setField('stock', String(v ?? ''))}
           />
         </FieldWrapper>
 
-        <FieldWrapper label="Active">
-          <Toggle value={form.active} onChange={(val) => setField('active', !!val)} />
+        <FieldWrapper label={t('app.variation.active')}>
+          <Toggle checked={form.active} onChange={(checked) => setField('active', checked)} />
         </FieldWrapper>
       </Flex>
 
       <Divider className="bts-marginVm" />
 
       <Flex direction="vertical" spacing="s" fullWidth>
-        <FieldWrapper label="Main Image" fullWidth>
+        <FieldWrapper label={t('app.variation.mainImage')} fullWidth>
           <Select
-            placeholder="Select main image"
+            placeholder={t('app.variation.selectImage')}
             value={form.mainImage}
             onChange={(v) => setField('mainImage', (v as string) || undefined)}
           >
@@ -315,10 +323,10 @@ const VariationDialog: React.FC<Props> = ({
           </Select>
         </FieldWrapper>
 
-        <FieldWrapper label="Gallery Images" fullWidth>
+        <FieldWrapper label={t('app.variation.galleryImages')} fullWidth>
           <Select
             multiple
-            placeholder="Select images"
+            placeholder={t('app.variation.selectImages')}
             value={form.images}
             onChange={(vals) =>
               setField('images', (Array.isArray(vals) ? vals : [vals]).filter(Boolean) as string[])
@@ -340,59 +348,60 @@ const VariationDialog: React.FC<Props> = ({
         </FieldWrapper>
       </Flex>
 
-      <Divider className="bts-marginVm" />
-
       {productOptions.length > 0 && (
-        <Flex direction="vertical" spacing="s" fullWidth>
-          {productOptions.map((opt) => {
-            const optionError = errors.options?.[opt.type.id];
-            return (
-              <FieldWrapper
-                required
-                key={opt.type.id}
-                label={opt.type.name}
-                error={optionError}
-                fullWidth
-              >
-                <Select
-                  placeholder={`Select ${opt.type.name}`}
-                  value={form.selections[opt.type.id]}
-                  onChange={(v) => {
-                    setForm((prev) => ({
-                      ...prev,
-                      selections: { ...prev.selections, [opt.type.id]: Number(v) },
-                    }));
-                    if (errors.options?.[opt.type.id]) {
-                      setErrors((prev) => ({
-                        ...prev,
-                        options: { ...prev.options, [opt.type.id]: undefined },
-                      }));
-                    }
-                  }}
+        <>
+          <Divider className="bts-marginVm" />
+          <Flex direction="vertical" spacing="s" fullWidth>
+            {productOptions.map((opt) => {
+              const optionError = errors.options?.[opt.type.id];
+              return (
+                <FieldWrapper
+                  required
+                  key={opt.type.id}
+                  label={opt.type.name}
+                  error={optionError}
                   fullWidth
-                  status={optionError ? 'error' : 'default'}
                 >
-                  <Option value={undefined} disabled>
-                    Select {opt.type.name}
-                  </Option>
-                  {opt.values.map((val) => (
-                    <Option key={val.id} value={val.id}>
-                      {val.value}
+                  <Select
+                    placeholder={t('app.variation.selectPlaceholder', { option: opt.type.name })}
+                    value={form.selections[opt.type.id]}
+                    onChange={(v) => {
+                      setForm((prev) => ({
+                        ...prev,
+                        selections: { ...prev.selections, [opt.type.id]: Number(v) },
+                      }));
+                      if (errors.options?.[opt.type.id]) {
+                        setErrors((prev) => ({
+                          ...prev,
+                          options: { ...prev.options, [opt.type.id]: undefined },
+                        }));
+                      }
+                    }}
+                    fullWidth
+                    status={optionError ? 'error' : 'default'}
+                  >
+                    <Option value={undefined} disabled>
+                      {t('app.variation.selectPlaceholder', { option: opt.type.name })}
                     </Option>
-                  ))}
-                </Select>
-              </FieldWrapper>
-            );
-          })}
-        </Flex>
+                    {opt.values.map((val) => (
+                      <Option key={val.id} value={val.id}>
+                        {val.value}
+                      </Option>
+                    ))}
+                  </Select>
+                </FieldWrapper>
+              );
+            })}
+          </Flex>
+        </>
       )}
 
       <Flex justify="end" spacing="m" className="bts-marginTm">
         <Button appearance="outline" onClick={onClose}>
-          Cancel
+          {t('app.variation.cancel')}
         </Button>
         <Button onClick={onSubmit} isLoading={createVariant.isPending || updateVariant.isPending}>
-          {editing ? 'Save' : 'Create'}
+          {editing ? t('app.variation.save') : t('app.variation.create')}
         </Button>
       </Flex>
     </Dialog>

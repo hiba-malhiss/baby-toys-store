@@ -8,7 +8,35 @@
     "yes": "Yes",
     "no": "No",
     "error": "Error",
-    "unexpectedError": "An unexpected error occurred."
+    "unexpectedError": "An unexpected error occurred.",
+    "variation": {
+      "editTitle": "Edit Variation",
+      "addTitle": "Add Variation",
+      "sku": "SKU",
+      "barcode": "Barcode",
+      "price": "Price",
+      "oldPrice": "Old Price",
+      "costPrice": "Cost Price",
+      "stock": "Stock",
+      "active": "Active",
+      "mainImage": "Main Image",
+      "galleryImages": "Gallery Images",
+      "selectImage": "Select image",
+      "selectImages": "Select images",
+      "cancel": "Cancel",
+      "save": "Save",
+      "create": "Create",
+      "errors": {
+        "required": "{field} is required",
+        "number": "{field} must be a number",
+        "nonNegative": "{field} cannot be negative",
+        "costExceedsPrice": "Cost price cannot exceed price",
+        "oldPriceBelowPrice": "Old price must be greater than or equal to price",
+        "selectOption": "Please select a {option}"
+      },
+      "selectPlaceholder": "Select {option}",
+      "noImageSelected": "No image selected"
+    }
   },
   "common": {
     "confirmDeleteTitle": "Confirm Delete",

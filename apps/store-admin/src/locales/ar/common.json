@@ -8,7 +8,35 @@
     "yes": "نعم",
     "no": "لا",
     "error": "خطأ",
-    "unexpectedError": "حدث خطأ غير متوقع."
+    "unexpectedError": "حدث خطأ غير متوقع.",
+    "variation": {
+      "editTitle": "تعديل المتغير",
+      "addTitle": "إضافة متغير جديد",
+      "sku": "الرمز الشريطي",
+      "barcode": "الباركود",
+      "price": "السعر",
+      "oldPrice": "السعر القديم",
+      "costPrice": "سعر التكلفة",
+      "stock": "المخزون",
+      "active": "نشط",
+      "mainImage": "الصورة الرئيسية",
+      "galleryImages": "صور المعرض",
+      "selectImage": "اختر صورة",
+      "selectImages": "اختر الصور",
+      "cancel": "إلغاء",
+      "save": "حفظ",
+      "create": "إنشاء",
+      "errors": {
+        "required": "{field} مطلوب",
+        "number": "{field} يجب أن يكون رقماً",
+        "nonNegative": "{field} لا يمكن أن يكون سالباً",
+        "costExceedsPrice": "لا يمكن أن يتجاوز سعر التكلفة السعر",
+        "oldPriceBelowPrice": "يجب أن يكون السعر القديم أكبر من أو يساوي السعر الحالي",
+        "selectOption": "الرجاء اختيار {option}"
+      },
+      "selectPlaceholder": "اختر {option}",
+      "noImageSelected": "لم يتم اختيار صورة"
+    }
   },
   "common": {
     "confirmDeleteTitle": "تأكيد الحذف",
