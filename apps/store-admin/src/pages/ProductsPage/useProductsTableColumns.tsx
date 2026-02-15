@@ -50,7 +50,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       body: (row: AdminProductBase) => row.categoryName || '-',
     },
     {
-      field: 'defaultVariant.price',
+      field: 'price',
       header: t('table.headers.price'),
       sortable: true,
       body: (row: AdminProductBase) => {

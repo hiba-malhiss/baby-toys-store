@@ -16,12 +16,10 @@ export type ProductsQuery = {
 
 function mapSort(sortKey: string | undefined): { sortBy: string; sortDirection: 'ASC' | 'DESC' } {
   switch (sortKey) {
-    // case 'price_asc':
-    //   // TODO: backend variant-price sorting not yet supported; fallback to createdAt asc
-    //   return { sortBy: 'price', sortDirection: 'ASC' };
-    // case 'price_desc':
-    //   // TODO: backend variant-price sorting not yet supported; fallback to createdAt desc
-    //   return { sortBy: 'price', sortDirection: 'DESC' };
+    case 'price_asc':
+      return { sortBy: 'price', sortDirection: 'ASC' };
+    case 'price_desc':
+      return { sortBy: 'price', sortDirection: 'DESC' };
     case 'name':
       return { sortBy: 'name', sortDirection: 'ASC' };
     case 'rating':
