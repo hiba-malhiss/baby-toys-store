@@ -82,7 +82,7 @@ export const CouponAndSummary: React.FC<{
         <Flex spacing="s" justify="between" className={styles.orderDetailsTotalSummary}>
           <strong>{t('couponSummary.total')}:</strong>
           <span>
-            {order?.total + (order?.shippingCost || 0)} {currency?.symbol}
+            {order?.totalWithShipping} {currency?.symbol}
           </span>
         </Flex>
         <Divider />

@@ -39,7 +39,7 @@ export type OrderDTO = {
   status: OrderStatus;
   subtotal: number;
   discountAmount?: number | null;
-  total: number;
+  totalWithShipping: number;
   couponCode?: string | null;
   items: OrderItemDTO[];
   shippingCost: number;

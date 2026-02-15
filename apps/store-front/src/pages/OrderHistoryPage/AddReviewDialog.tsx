@@ -9,7 +9,6 @@ import {
   TextArea,
   Image,
 } from '@baby-toys/ui-kit';
-import type { OrderItem } from '../../api/ordersApi';
 import { useCreateReview, useUpdateMyReview, useGetMyReview } from '../../api/reviewsApi';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -17,11 +16,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import type { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
+import type { OrderItemDTO } from "../../api/ordersApi.ts";
 
 interface AddReviewDialogProps {
   open: boolean;
   onClose: () => void;
-  item?: OrderItem | null;
+  item?: OrderItemDTO | null;
   onSubmitSuccess?: (reviewData: { rating: number; comment: string }) => void;
 }
 
@@ -74,8 +74,8 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
         });
       } else {
         await createMutation.mutateAsync({
-          orderItemId: Number(item.orderItemId),
-          productId: Number(item.product.id),
+          orderItemId: Number(item.id),
+          productId: Number(item.productId),
           rating: values.rating,
           comment: values.comment,
         });
@@ -95,7 +95,6 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
   };
 
   if (!item) return null;
-  const { product } = item;
 
   return (
     <Dialog
@@ -107,9 +106,9 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
     >
       <Flex direction="vertical" spacing="xxl" fullWidth>
         <Flex>
-          <Image src={product.mainImage} alt={product.name} width={120} height={120} />
+          <Image src={item.mainImage} alt={item.productName} width={120} height={120} />
           <Heading level="h4" className="bts-marginVxl">
-            {product.name}
+            {item.productName}
           </Heading>
         </Flex>
 

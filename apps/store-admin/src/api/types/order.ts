@@ -44,7 +44,7 @@ export interface Order {
   subtotal: string;
   shippingCost?: string;
   discountAmount: string;
-  total: string;
+  totalWithShipping: string;
   couponCode?: string | null;
   items: OrderItem[];
   totalCost?: string;
