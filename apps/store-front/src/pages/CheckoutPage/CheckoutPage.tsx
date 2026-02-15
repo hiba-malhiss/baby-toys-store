@@ -13,7 +13,7 @@ import {
   Divider,
   useToast,
   Text,
-  Image,
+  Image, Flex,
 } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
@@ -166,7 +166,14 @@ const CheckoutPage: React.FC = () => {
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
                 <Image src={item.variantImage || ''} alt={item.productName} />
                 <div>
-                  <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
+                  <Flex direction="vertical">
+                    {item.productName}
+                    {!!item?.variantOptions?.length && (
+                      <Text size="xs" color="secondary">
+                        {item.variantOptions?.join(', ')}
+                      </Text>
+                    )}
+                  </Flex>
                   <div className="bts-paddingTs">x{item.quantity}</div>
                 </div>
                 <div>{formatCurrency(item.totalPrice)}</div>

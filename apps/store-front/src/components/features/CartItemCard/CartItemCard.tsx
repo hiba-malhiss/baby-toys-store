@@ -37,7 +37,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       <Flex direction="vertical">
         <span className={styles.cartItemCardName}>{name}</span>
         {!!variantOptions?.length && (
-          <Text size="sm" color="secondary">
+          <Text size="xs" color="secondary">
             {variantOptions?.join(', ')}
           </Text>
         )}
