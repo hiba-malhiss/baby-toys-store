@@ -24,11 +24,7 @@ const OptionRow: React.FC<{
 
   return (
     <Flex spacing="m" align="start" fullWidth wrap>
-      <FormFieldWrapper 
-        label={t('productForm.optionType', 'Option Type')} 
-        fullWidth 
-        required
-      >
+      <FormFieldWrapper label={t('productForm.optionType', 'Option Type')} fullWidth required>
         <Select
           placeholder={t('productForm.selectOptionType', 'Select option type')}
           value={numericTypeId}
@@ -50,11 +46,7 @@ const OptionRow: React.FC<{
             ))}
         </Select>
       </FormFieldWrapper>
-      <FormFieldWrapper 
-        label={t('productForm.optionValues', 'Option Values')} 
-        fullWidth 
-        required
-      >
+      <FormFieldWrapper label={t('productForm.optionValues', 'Option Values')} fullWidth required>
         <Select
           multiple
           placeholder={t('productForm.selectValues', 'Select values')}

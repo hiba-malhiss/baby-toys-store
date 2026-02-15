@@ -35,8 +35,8 @@ export const VariantOptionsSelector: React.FC<{
     return variant?.id;
   };
 
-  // Compute which option values should be disabled
-  const computeDisabledValues = () => {
+  // Compute which option values should be disabled (out-of-stock or incompatible)
+  const computeDisabledValues = (currentSelection: Record<number, number | undefined>) => {
     const disabledMap: Record<number, Set<number>> = {};
 
     options.forEach((option: any, index: number) => {
@@ -44,19 +44,19 @@ export const VariantOptionsSelector: React.FC<{
       disabledMap[typeId] = new Set();
 
       option.values.forEach((value: any) => {
-        // Always enable first attribute
-        if (index === 0) return;
+        if (index === 0) return; // always enable first attribute
 
-        const testSelection = { ...selection, [typeId]: value.id };
+        const testSelection = { ...currentSelection, [typeId]: value.id };
 
-        const isCompatible = availableVariants.some((v: any) =>
-          Object.entries(testSelection).every(
+        const isCompatible = availableVariants.some((v: any) => {
+          const matches = Object.entries(testSelection).every(
             ([tid, vid]) => !vid || Number(v.optionSelectionIds?.[tid]) === Number(vid)
-          )
-        );
+          );
+          const inStock = (v.stockQuantity ?? 0) > 0 && (v.isActive ?? true);
+          return matches && inStock;
+        });
 
-        // Disable only if NOT compatible and NOT currently selected
-        if (!isCompatible && selection[typeId] !== value.id) {
+        if (!isCompatible && currentSelection[typeId] !== value.id) {
           disabledMap[typeId].add(value.id);
         }
       });
@@ -65,25 +65,28 @@ export const VariantOptionsSelector: React.FC<{
     return disabledMap;
   };
 
-  // Update selection: auto-adjust incompatible values to first compatible
+  // Update selection: auto-adjust incompatible or disabled values
   const handleSelect = (typeId: number, valueId?: number) => {
     let next = { ...selection, [typeId]: valueId };
 
-    options.forEach((option: any, index: number) => {
+    options.forEach((option: any) => {
       const currentTypeId = option.type.id;
-      if (currentTypeId === typeId) return; // skip current selection
+      if (currentTypeId === typeId) return;
 
       const selectedValue = next[currentTypeId];
+
       const compatibleValues = option.values.filter((value: any) =>
-        availableVariants.some((v: any) =>
-          Object.entries({ ...next, [currentTypeId]: value.id }).every(
+        availableVariants.some((v: any) => {
+          const matches = Object.entries({ ...next, [currentTypeId]: value.id }).every(
             ([tid, vid]) => !vid || Number(v.optionSelectionIds?.[tid]) === Number(vid)
-          )
-        )
+          );
+          const inStock = (v.stockQuantity ?? 0) > 0 && (v.isActive ?? true);
+          return matches && inStock;
+        })
       );
 
-      if (selectedValue && !compatibleValues.some((v) => v.id === selectedValue)) {
-        // If current selection is incompatible, replace with first compatible
+      // If current selection is disabled, select first compatible value
+      if (!selectedValue || !compatibleValues.some((v) => v.id === selectedValue)) {
         next[currentTypeId] = compatibleValues.length ? compatibleValues[0].id : undefined;
       }
     });
@@ -95,7 +98,7 @@ export const VariantOptionsSelector: React.FC<{
     });
   };
 
-  const disabledValues = computeDisabledValues();
+  const disabledValues = computeDisabledValues(selection);
 
   useEffect(() => {
     // Trigger onChange initially with defaultVariant selection
