@@ -13,7 +13,8 @@ import {
   Divider,
   useToast,
   Text,
-  Image, Flex,
+  Image,
+  Flex,
 } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
@@ -27,6 +28,7 @@ import { useMyAddresses, usePlaceOrder } from '../../api/orderApi';
 import { useCheckoutQuote } from '../../api/checkoutApi';
 import { useCartQuery } from '../../api/cartApi';
 import type { DeliveryTown } from '../../api/locationsApi';
+import CartItemCard from '../../components/features/CartItemCard/CartItemCard.tsx';
 
 const CheckoutPage: React.FC = () => {
   const navigate = useNavigate();
@@ -163,22 +165,19 @@ const CheckoutPage: React.FC = () => {
         <Card className={styles.checkoutPageSummary} fullWidth header={t('checkout.cartSummary')}>
           <div className={styles.checkoutPageSummaryList}>
             {view.items.map((item) => (
-              <div className={styles.checkoutPageSummaryItem} key={item.id}>
-                <Image src={item.variantImage || ''} alt={item.productName} />
-                <div>
-                  <Flex direction="vertical">
-                    {item.productName}
-                    {!!item?.variantOptions?.length && (
-                      <Text size="xs" color="secondary">
-                        {item.variantOptions?.join(', ')}
-                      </Text>
-                    )}
-                  </Flex>
-                  <div className="bts-paddingTs">x{item.quantity}</div>
-                </div>
-                <div>{formatCurrency(item.totalPrice)}</div>
+              <React.Fragment key={item.id}>
+                <CartItemCard
+                  id={item.id.toString()}
+                  image={item.variantImage || ''}
+                  name={item.productName}
+                  totalPrice={formatCurrency(item.totalPrice)}
+                  quantity={item.quantity}
+                  quantityInStock={item.availableStock || 0}
+                  variantOptions={item.variantOptions || []}
+                  appearance="compact"
+                />
                 <Divider className="bts-marginBl" fullWidth />
-              </div>
+              </React.Fragment>
             ))}
           </div>
 

@@ -7,6 +7,8 @@ import CartQuantityInput from '../../shared/CartQuantityInput';
 import { useRemoveFromCart } from '../../../api/cartApi.ts';
 import { useTranslation } from 'react-i18next';
 
+export type CartItemAppearance = 'default' | 'compact';
+
 interface CartItemCardProps {
   image: string;
   name: string;
@@ -16,6 +18,7 @@ interface CartItemCardProps {
   quantity: number;
   variantOptions: string[];
   fullWidth?: boolean;
+  appearance?: CartItemAppearance;
 }
 
 const CartItemCard: React.FC<CartItemCardProps> = ({
@@ -27,54 +30,64 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   quantityInStock,
   id,
   variantOptions,
+  appearance = 'default',
 }) => {
   const removeMutation = useRemoveFromCart();
   const { t } = useTranslation('common');
 
+  const isOutOfStock = quantityInStock <= 0;
+
   return (
-    <div className={clsx(fullWidth && styles.fullWidth, styles.cartItemCard)}>
-      <Image src={image} alt={name} className={styles.cartItemCardImage} />
+    <div
+      className={clsx(
+        styles.cartItemCard,
+        appearance === 'compact' ? styles.cartItemCardCompact : styles.cartItemCardDefault,
+        fullWidth && styles.fullWidth
+      )}
+    >
+      <Image src={image} alt={name} className={styles['cartItemCard-image']} />
+
       <Flex direction="vertical">
-        <span className={styles.cartItemCardName}>{name}</span>
-        {!!variantOptions?.length && (
-          <Text size="xs" color="secondary">
-            {variantOptions?.join(', ')}
+        <span className={styles['cartItemCard-name']}>{name}</span>
+        {variantOptions?.length > 0 && (
+          <Text size={appearance === 'compact' ? 'xs' : 'xs'} color="secondary">
+            {variantOptions.join(', ')}
           </Text>
         )}
-        {(!quantityInStock || quantityInStock <= 0) && (
-          <Text size="xs" color="error">
-            {t('cart.outOfStock')}
-          </Text>
-        )}
-        {quantityInStock > 0 && (quantity ?? 0) > quantityInStock && (
+        {appearance === 'compact' && <div className="bts-paddingTs">x{quantity}</div>}
+        {!isOutOfStock && quantity > quantityInStock && appearance !== 'compact' && (
           <Text size="sm" color="warning">
             {t('cart.reduceToStock', { count: quantityInStock })}
           </Text>
         )}
-      </Flex>
-      <Flex spacing="xs" align="center" className={styles.cartItemCardAmount}>
-        <CartQuantityInput
-          itemId={Number(id)}
-          availableInStock={quantityInStock}
-          quantity={quantity}
-          fullWidth
-          isDisabled={!quantityInStock || quantityInStock <= 0}
-          size="small"
-        />
-        <Button
-          leftIconComp={Trash2}
-          appearance="link"
-          color="secondary"
-          onClick={() => removeMutation.mutate({ itemId: Number(id) })}
-          isLoading={removeMutation.isPending}
-        ></Button>
-      </Flex>
-      <span
-        className={clsx(
-          styles.cartItemCardPrice,
-          (!quantityInStock || quantityInStock <= 0) && styles.oosPrice
+        {isOutOfStock && appearance !== 'compact' && (
+          <Text size="xs" color="error">
+            {t('cart.outOfStock')}
+          </Text>
         )}
-      >
+      </Flex>
+
+      {appearance !== 'compact' && (
+        <Flex spacing="xs" align="center" className={styles['cartItemCard-amount']}>
+          <CartQuantityInput
+            itemId={Number(id)}
+            availableInStock={quantityInStock}
+            quantity={quantity}
+            fullWidth
+            isDisabled={isOutOfStock}
+            size="small"
+          />
+          <Button
+            leftIconComp={Trash2}
+            appearance="link"
+            color="secondary"
+            onClick={() => removeMutation.mutate({ itemId: Number(id) })}
+            isLoading={removeMutation.isPending}
+          />
+        </Flex>
+      )}
+
+      <span className={clsx(styles['cartItemCard-price'], isOutOfStock && styles.oosPrice)}>
         {totalPrice}
       </span>
     </div>

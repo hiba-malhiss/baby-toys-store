@@ -1,53 +1,86 @@
 .cartItemCard {
-  padding: 4px;
   display: grid;
-  gap: 20px;
-  grid-template-columns: max-content 1fr max-content;
-  grid-template-areas:
-    'image name price'
-    'image amount amount';
+  gap: 12px;
+  width: 100%;
+
+  // Default appearance
+  &-default {
+    padding: 4px;
+    grid-template-columns: max-content 1fr max-content;
+    grid-template-areas:
+      'image name price'
+      'image amount amount';
+    gap: 20px;
+
+    .cartItemCard-image {
+      min-height: 90px;
+      max-height: 120px;
+      width: 90px;
+      height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      background-color: #f6f6f6;
+      grid-area: image;
+    }
+
+    .cartItemCard-name {
+      @include line-clamp(2);
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 20px;
+      margin-top: 16px;
+      white-space: normal;
+      grid-area: name;
+    }
+
+    .cartItemCard-price {
+      font-weight: 500;
+      font-size: 16px;
+      margin-top: 16px;
+      grid-area: price;
+      grid-row: 1/-1;
+    }
+
+    .cartItemCard-amount {
+      grid-area: amount;
+      width: 165px !important;
+      margin-bottom: 20px;
+    }
+  }
+
+  // Compact appearance (CheckoutPage)
+  &-compact {
+    grid-template-columns: 56px 1fr auto;
+    align-items: center;
+
+    .cartItemCard-image {
+      width: 56px;
+      height: 56px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .cartItemCard-name {
+      @include line-clamp(1);
+      font-weight: 500;
+      line-height: 1.4;
+      margin: 0;
+    }
+
+    .cartItemCard-price {
+      font-weight: 500;
+      text-align: right;
+      margin: 0;
+    }
+  }
 
   &.fullWidth {
     width: 100%;
   }
 
-  &-image {
-    min-height: 90px;
-    max-height: 120px;
-    width: 90px;
-    object-fit: contain;
-    border-radius: 8px;
-    grid-area: image;
-    height: 100%;
-    background-color: #f6f6f6;
-  }
-
-  &-name {
-    @include line-clamp(2);
-    font-weight: 500;
-    line-height: 20px;
-    font-size: 16px;
-    grid-area: name;
-    margin-top: 16px;
-    white-space: normal;
-  }
-
-  &-price {
-    font-weight: 500;
-    font-size: 16px;
-    grid-row: 1/-1;
-    grid-area: price;
-    margin-top: 16px;
-  }
-
+  // Shared styles
   .oosPrice {
     opacity: 0.6;
     text-decoration: line-through;
-  }
-
-  &-amount {
-    grid-area: amount;
-    width: 165px !important;
-    margin-bottom: 20px;
   }
 }
