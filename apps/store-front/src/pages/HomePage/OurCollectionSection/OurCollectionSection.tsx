@@ -34,7 +34,7 @@ const OurCollectionSection = () => {
           .map((cat: any) => (
             <Button
               withoutPadding
-              key={cat.name}
+              key={cat.id}
               withAutoHeight
               appearance="link"
               size="large"
