@@ -12,6 +12,7 @@ export type DeliveryTown = {
   id: number;
   code: string;
   displayName?: string;
+  zoneDisplayName?: string;
   translations: DeliveryTownTranslationDTO[];
   zoneCode?: string;
   feeOverride?: number;

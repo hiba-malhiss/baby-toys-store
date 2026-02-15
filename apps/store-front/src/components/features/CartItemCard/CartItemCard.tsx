@@ -34,20 +34,20 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   return (
     <div className={clsx(fullWidth && styles.fullWidth, styles.cartItemCard)}>
       <Image src={image} alt={name} className={styles.cartItemCardImage} />
-      <Flex direction="vertical" spacing="s" className={styles.cartItemCardName}>
-        {name}
+      <Flex direction="vertical">
+        <span className={styles.cartItemCardName}>{name}</span>
         {!!variantOptions?.length && (
           <Text size="sm" color="secondary">
             {variantOptions?.join(', ')}
           </Text>
         )}
         {(!quantityInStock || quantityInStock <= 0) && (
-          <Text size="xs" color="error" className="bts-marginTs">
+          <Text size="xs" color="error">
             {t('cart.outOfStock')}
           </Text>
         )}
         {quantityInStock > 0 && (quantity ?? 0) > quantityInStock && (
-          <Text size="sm" color="warning" className="bts-marginTs">
+          <Text size="sm" color="warning">
             {t('cart.reduceToStock', { count: quantityInStock })}
           </Text>
         )}

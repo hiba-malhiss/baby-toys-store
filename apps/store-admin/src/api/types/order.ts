@@ -11,14 +11,18 @@ export interface OrderItem {
   id: number;
   productId: number;
   productName: string;
+  mainImage: string;
+  variantId: number;
+  variantSku: string;
+  variantOptions: string[];
   quantity: number;
-  pricePerUnit: string;
-  originalPrice: string;
-  totalPrice: string;
-  mainImage?: string;
-  costPrice?: string;
-  itemCostTotal?: string;
-  itemProfit?: string;
+  originalPrice: number | null;
+  pricePerUnit: number;
+  totalPrice: number;
+  hasReview?: boolean;
+  canReview?: boolean;
+  canEditReview?: boolean;
+  reviewId?: number | null;
 }
 
 export interface ShippingAddress {
@@ -48,4 +52,6 @@ export interface Order {
   profitMargin?: string;
   shippingAddress?: ShippingAddress;
   note?: string | null;
+  isFreeShipping: boolean;
+  deliveredAt?: string | null;
 }

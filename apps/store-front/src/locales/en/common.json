@@ -37,7 +37,11 @@
       "quantity": "Quantity",
       "subtotal": "Subtotal",
       "action": "Action"
-    }
+    },
+    "outOfStock": "Out of Stock",
+    "removeOOSNotice": "This product is out of stock. Please remove it to proceed.",
+    "removeOOSGlobal": "Some products are out of stock. Remove them to proceed to checkout.",
+    "removeToProceed": "Remove out-of-stock products to proceed"
   },
   "product": {
     "aboutThisItem": "About this item",

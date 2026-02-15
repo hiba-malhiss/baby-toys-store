@@ -1,14 +1,15 @@
 import React from 'react';
 import styles from './order-details-page.module.scss';
 import { Check, Trash2 } from 'lucide-react';
-import { Button, Card, Divider, Flex, Heading, StringInput } from '@baby-toys/ui-kit';
+import { Button, Card, Divider, Flex, StringInput } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
+import { Order } from '../../api/types/order.ts';
 
 export const CouponAndSummary: React.FC<{
   isEdit: boolean;
   couponInput: string;
   setCouponInput: (v: string) => void;
-  order: any;
+  order: Order;
   currency: any;
   handleApplyCoupon: () => void;
   handleRemoveCoupon: () => void;
@@ -81,7 +82,7 @@ export const CouponAndSummary: React.FC<{
         <Flex spacing="s" justify="between" className={styles.orderDetailsTotalSummary}>
           <strong>{t('couponSummary.total')}:</strong>
           <span>
-            {order?.total} {currency?.symbol}
+            {order?.total + (order?.shippingCost || 0)} {currency?.symbol}
           </span>
         </Flex>
         <Divider />

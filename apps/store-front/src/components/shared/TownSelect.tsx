@@ -29,8 +29,8 @@ const TownSelect: React.FC<TownSelectProps> = ({
 
   const computedOptions = useMemo(
     () =>
-      towns.map((o) => ({
-        label: `${!isRtl ? o.nameEn : o.nameAr} (${o.zoneCode?.toLowerCase()})`,
+      towns?.map((o: DeliveryTown) => ({
+        label: `${o.displayName} (${o.zoneDisplayName?.toLowerCase()})`,
         value: o.code,
       })),
     [towns, isRtl]

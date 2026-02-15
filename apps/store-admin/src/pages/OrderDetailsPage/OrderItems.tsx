@@ -7,6 +7,7 @@ import {
   StringInput,
   PriceDisplay,
   Table,
+  Text,
 } from '@baby-toys/ui-kit';
 import { Pencil, Trash2 } from 'lucide-react';
 import styles from './order-details-page.module.scss';
@@ -88,7 +89,14 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
               appearance="link"
               onClick={() => navigate('/edit-product/' + item.productId)}
             >
-              <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
+              <Flex direction="vertical">
+                <span className={styles.orderDetailsCartItemCardName}>{item.productName}</span>
+                {!!item?.variantOptions?.length && (
+                  <Text size="xs" color="secondary">
+                    {item.variantOptions.join(', ')}
+                  </Text>
+                )}
+              </Flex>
             </Button>
           </Flex>
         ),
