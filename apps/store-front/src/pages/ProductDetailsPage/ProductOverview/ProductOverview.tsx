@@ -71,9 +71,9 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
     }
   };
 
-  const price = selectedVariant?.price ?? product.defaultVariant?.price;
-  const oldPrice = selectedVariant?.oldPrice ?? product.defaultVariant?.oldPrice;
-  const maxStock = selectedVariant?.stockQuantity ?? product.activeVariantsTotalStock;
+  const price = selectedVariant?.price;
+  const oldPrice = selectedVariant?.oldPrice;
+  const maxStock = selectedVariant?.stockQuantity;
 
   const handleCopyUrl = useCallback(
     (e: React.MouseEvent) => {
@@ -118,7 +118,7 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
   return (
     <div className={styles.productOverview}>
       <ImageGallery
-        images={product.images}
+        images={[...(product.images || []), product.mainImage!]}
         productName={product.name}
         selectedImage={selectedImage}
         onSelectImage={setSelectedImage}

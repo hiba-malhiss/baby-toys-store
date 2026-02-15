@@ -20,7 +20,7 @@ export type QuoteResponse = {
   discountAmount: number;
   shippingCost: number;
   totalWithDelivery: number;
-  isFreeShipping: boolean;
+  freeShipping: boolean;
 
   coupon?: CouponInfo;
   townCode?: string;

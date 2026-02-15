@@ -39,7 +39,7 @@ const Carousel: React.FC<CarouselProps> = ({
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const totalItems = items.length;
-  const totalPages = Math.ceil(totalItems / visible);
+  const totalPages = Math.max(totalItems - visible + 1, 1);
 
   // Determine if this carousel element is rendered in RTL context
   const isRtl = (() => {

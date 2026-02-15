@@ -21,9 +21,9 @@ const SmartProductCard: React.FC<{ product: Product }> = ({ ...props }) => {
     await toggleFavorite();
   };
 
-  const getProductLabel = (p: any): string => {
+  const getProductLabel = (p: Product): string => {
     if (p?.outOfStock) return 'Out of stock';
-    if (p?.oldPrice > p?.price) return 'SALE';
+    if ((p?.defaultVariant?.oldPrice || 0) > (p?.defaultVariant?.price || 0)) return 'SALE';
     return '';
   };
 

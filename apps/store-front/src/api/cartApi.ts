@@ -27,7 +27,7 @@ export type CartDTO = {
   subtotal: number;
   shipping: number;
   items: CartItemDTO[];
-  isFreeShippingApplied: boolean;
+  freeShippingApplied: boolean;
   freeShippingRemaining: number;
 };
 

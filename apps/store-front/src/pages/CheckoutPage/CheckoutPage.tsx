@@ -13,6 +13,7 @@ import {
   Divider,
   useToast,
   Text,
+  Image,
 } from '@baby-toys/ui-kit';
 
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
@@ -163,7 +164,7 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryList}>
             {view.items.map((item) => (
               <div className={styles.checkoutPageSummaryItem} key={item.id}>
-                <img src={item.variantImage || ''} alt={item.productName} />
+                <Image src={item.variantImage || ''} alt={item.productName} />
                 <div>
                   <div className={styles.checkoutPageSummaryItemName}>{item.productName}</div>
                   <div className="bts-paddingTs">x{item.quantity}</div>
@@ -189,7 +190,7 @@ const CheckoutPage: React.FC = () => {
           <div className={styles.checkoutPageSummaryRow}>
             <span>
               {t('checkout.shipping')}{' '}
-              {quote?.isFreeShipping && (
+              {quote?.freeShipping && (
                 <Chip label={t('checkout.freeShippingApplied')} appearance="success" size="small" />
               )}
             </span>

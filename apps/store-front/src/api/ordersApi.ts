@@ -43,7 +43,7 @@ export type OrderDTO = {
   couponCode?: string | null;
   items: OrderItemDTO[];
   shippingCost: number;
-  isFreeShipping: boolean;
+  freeShipping: boolean;
   shippingAddress: AddressDTO;
   note: string;
 };

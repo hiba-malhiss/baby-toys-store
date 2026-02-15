@@ -933,7 +933,7 @@
       "freeShippingEndAt": "Ends At"
     },
     "freeShipping": {
-      "description": "Free shipping applies when subtotal ≥ threshold and within the configured dates.",
+      "description": "Free shipping applies when subtotal ≥ threshold after the coupon is applied and within the configured dates.",
       "clearButton": "Clear"
     },
     "actions": {

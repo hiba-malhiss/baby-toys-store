@@ -52,6 +52,6 @@ export interface Order {
   profitMargin?: string;
   shippingAddress?: ShippingAddress;
   note?: string | null;
-  isFreeShipping: boolean;
+  freeShipping: boolean;
   deliveredAt?: string | null;
 }

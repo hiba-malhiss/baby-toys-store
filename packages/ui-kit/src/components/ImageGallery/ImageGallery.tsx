@@ -31,6 +31,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
       </div>
     );
   }
+  console.log(safeImages);
   return (
     <div className={styles.imageGallery}>
       <div className={styles.imageGalleryMainImage}>
