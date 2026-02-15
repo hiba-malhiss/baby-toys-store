@@ -14,7 +14,7 @@ import {
 import styles from './shopping-cart-drawer.module.scss';
 import CartItemCard from '../CartItemCard/CartItemCard.tsx';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter.ts';
-import { useCartQuery, CART_KEYS } from '../../../api/cartApi';
+import { useCartQuery, CART_KEYS, type CartItemDTO } from '../../../api/cartApi';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useIsFetching, useIsMutating } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -126,7 +126,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
             })}
           </Alert>
         )}
-        {(cart?.items || []).map((item, index) => (
+        {(cart?.items || []).map((item: CartItemDTO, index) => (
           <React.Fragment key={item.productId}>
             <CartItemCard
               fullWidth
@@ -136,6 +136,7 @@ const ShoppingCartDrawer = ({ isOpen, setIsOpen }: ShoppingCartDrawerProps) => {
               totalPrice={formatCurrency(item.totalPrice)}
               quantityInStock={item.availableStock}
               quantity={item.quantity}
+              variantOptions={item.variantOptions}
             />
             {index < (cart?.items?.length || 0) - 1 && <Divider />}
           </React.Fragment>

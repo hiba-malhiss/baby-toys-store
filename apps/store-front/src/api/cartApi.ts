@@ -8,14 +8,17 @@ import { hasGuestCartToken } from '../utils/guestCart.ts';
 export type CartItemDTO = {
   id: number;
   productId: number;
-  productName?: string;
-  variantImage?: string;
-  unitPrice: number;
-  originalPrice?: number | null;
-  totalPrice: number;
+  productName: string;
+  variantImage: string;
+  variantId: number;
+  variantSku: string;
+  variantOptions: string[];
   quantity: number;
-  availableStock?: number;
-  outOfStock?: boolean;
+  unitPrice: number;
+  originalPrice: number;
+  totalPrice: number;
+  availableStock: number;
+  outOfStock: boolean;
 };
 
 export type CartDTO = {
@@ -23,10 +26,9 @@ export type CartDTO = {
   itemCount: number;
   subtotal: number;
   shipping: number;
-  totalAmount: number;
-  freeShippingRemaining: number;
-  freeShippingApplied: boolean;
   items: CartItemDTO[];
+  isFreeShippingApplied: boolean;
+  freeShippingRemaining: number;
 };
 
 export const CART_KEYS = {

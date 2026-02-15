@@ -2,6 +2,7 @@ import { useQuery, keepPreviousData, useMutation, useQueryClient } from '@tansta
 import { useToast } from '@baby-toys/ui-kit';
 import api from './axiosConfig';
 import type { Page } from './types/common.ts';
+import type { AddressDTO } from './orderApi.ts';
 
 export type OrderItemDTO = {
   id: number;
@@ -41,6 +42,10 @@ export type OrderDTO = {
   total: number;
   couponCode?: string | null;
   items: OrderItemDTO[];
+  shippingCost: number;
+  isFreeShipping: boolean;
+  shippingAddress: AddressDTO;
+  note: string;
 };
 
 export function useCancelMyOrder() {

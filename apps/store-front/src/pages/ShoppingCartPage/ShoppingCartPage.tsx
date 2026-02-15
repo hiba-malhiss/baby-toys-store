@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { Trans, useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import clsx from 'clsx';
@@ -119,7 +119,14 @@ const ShoppingCartPage = () => {
                 className={styles.shoppingCartPageProductName}
                 onClick={() => navigate('/product-details/' + item.productId)}
               >
-                <span className={styles.shoppingCartPageName}>{item.productName}</span>
+                <Flex direction="vertical">
+                  <span className={styles.shoppingCartPageName}>{item.productName}</span>
+                  {!!item?.variantOptions?.length && (
+                    <Text size="sm" color="secondary">
+                      {item.variantOptions?.join(', ')}
+                    </Text>
+                  )}
+                </Flex>
               </Button>
               <PriceDisplay
                 price={item.unitPrice}

@@ -57,7 +57,7 @@ const CheckoutPage: React.FC = () => {
     const subtotal = quote?.subtotal ?? cart?.subtotal ?? 0;
     const discountAmount = quote?.discountAmount ?? 0;
     const shippingCost = quote?.shippingCost ?? null;
-    const total = quote?.total ?? null;
+    const total = quote?.totalWithDelivery ?? null;
 
     const couponApplied = !!(quote?.coupon?.valid && quote?.coupon?.code);
 

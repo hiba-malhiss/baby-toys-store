@@ -20,7 +20,7 @@ const FreeShippingBanner = () => {
   const isCartOrCheckout = pathname.includes('cart') || pathname.includes('checkout');
 
   if (isCartOrCheckout) {
-    if (cart?.freeShippingApplied) {
+    if (cart?.isFreeShippingApplied) {
       return (
         <Alert key={pathname} appearance="success" size="small" justify="center">
           {t('freeShipping.unlocked')}

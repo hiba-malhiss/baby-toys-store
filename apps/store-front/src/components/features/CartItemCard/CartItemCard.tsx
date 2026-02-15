@@ -14,6 +14,7 @@ interface CartItemCardProps {
   totalPrice: string | number;
   quantityInStock: number;
   quantity: number;
+  variantOptions: string[];
   fullWidth?: boolean;
 }
 
@@ -25,6 +26,7 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
   fullWidth,
   quantityInStock,
   id,
+  variantOptions,
 }) => {
   const removeMutation = useRemoveFromCart();
   const { t } = useTranslation('common');
@@ -34,8 +36,13 @@ const CartItemCard: React.FC<CartItemCardProps> = ({
       <Image src={image} alt={name} className={styles.cartItemCardImage} />
       <Flex direction="vertical" spacing="s" className={styles.cartItemCardName}>
         {name}
+        {!!variantOptions?.length && (
+          <Text size="sm" color="secondary">
+            {variantOptions?.join(', ')}
+          </Text>
+        )}
         {(!quantityInStock || quantityInStock <= 0) && (
-          <Text size="sm" color="error" className="bts-marginTs">
+          <Text size="xs" color="error" className="bts-marginTs">
             {t('cart.outOfStock')}
           </Text>
         )}

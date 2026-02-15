@@ -3,13 +3,18 @@ import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
 import { useToast } from '@baby-toys/ui-kit';
 
+export type DeliveryTownTranslationDTO = {
+  locale: string;
+  displayName: string;
+};
+
 export type DeliveryTown = {
   id: number;
   code: string;
-  nameAr: string;
-  nameEn: string;
-  zoneCode: string;
-  feeOverride?: number | null;
+  displayName?: string;
+  translations: DeliveryTownTranslationDTO[];
+  zoneCode?: string;
+  feeOverride?: number;
   active: boolean;
 };
 

@@ -9,19 +9,22 @@ export type QuoteRequest = {
   couponCode?: string;
 };
 
+export type CouponInfo = {
+  code: string;
+  valid: boolean;
+  message: string;
+};
+
 export type QuoteResponse = {
   subtotal: number;
   discountAmount: number;
   shippingCost: number;
-  total: number;
+  totalWithDelivery: number;
   isFreeShipping: boolean;
-  coupon?: {
-    code: string;
-    valid: boolean;
-    message?: string;
-  } | null;
-  townCode?: string | null;
-  zoneCode?: string | null;
+
+  coupon?: CouponInfo;
+  townCode?: string;
+  zoneCode?: string;
 };
 
 export function useCheckoutQuote(townCode?: string, couponCode?: string) {

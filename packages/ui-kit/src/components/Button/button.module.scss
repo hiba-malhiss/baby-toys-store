@@ -60,6 +60,10 @@
   gap: 0.5rem;
   border-radius: 16px;
 
+  svg {
+    vertical-align: middle;
+  }
+
   &.fullWidth {
     width: 100% !important;
   }
