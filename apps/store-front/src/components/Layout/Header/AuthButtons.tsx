@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { Button } from '@baby-toys/ui-kit';
+import { Button, Flex } from '@baby-toys/ui-kit';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 import RegisterDialog from '../../RegisterDialog/RegisterDialog.tsx';
@@ -7,9 +7,15 @@ import LoginDialog from '../../LoginDialog/LoginDialog.tsx';
 import { useLogout } from '../../../api/authApi.ts';
 import { useTranslation } from 'react-i18next';
 
-const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: () => void }> = ({
+const AuthButtonsWithDialogs: React.FC<{
+  isDarkMode?: boolean;
+  isLink?: boolean;
+  onAfterClick?: () => void;
+}> = ({
   isDarkMode,
   onAfterClick,
+
+  isLink = true,
 }) => {
   const { isOpen, open, close } = useLoginDialogStore();
   const [isRegisterOpen, setRegisterOpen] = React.useState(false);
@@ -28,12 +34,13 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
   }, [logoutApi]);
 
   return (
-    <>
+    <Flex spacing={!isLink && 's'} align="center">
       {!isAuthenticated ? (
         <>
           <Button
             withoutPadding
-            appearance="link"
+            fullWidth={!isLink}
+            appearance={isLink ? 'link' : 'outline'}
             color={isDarkMode ? 'light' : 'primary'}
             onClick={() => {
               open();
@@ -45,7 +52,8 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
           {isDarkMode && <div>|</div>}
           <Button
             withoutPadding
-            appearance="link"
+            fullWidth={!isLink}
+            appearance={isLink ? 'link' : 'filled'}
             color={isDarkMode ? 'light' : 'primary'}
             onClick={() => {
               setRegisterOpen(true);
@@ -58,7 +66,8 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
       ) : (
         <Button
           withoutPadding
-          appearance="link"
+          fullWidth={!isLink}
+          appearance={isLink ? 'link' : 'outline'}
           color={isDarkMode ? 'light' : 'primary'}
           onClick={() => {
             logout();
@@ -70,7 +79,7 @@ const AuthButtonsWithDialogs: React.FC<{ isDarkMode?: boolean; onAfterClick?: ()
       )}
       <LoginDialog open={isOpen} onClose={close} />
       <RegisterDialog open={isRegisterOpen} onClose={() => setRegisterOpen(false)} />
-    </>
+    </Flex>
   );
 };
 

@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import type { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
-import type { OrderItemDTO } from "../../api/ordersApi.ts";
+import type { OrderItemDTO } from '../../api/ordersApi.ts';
 
 interface AddReviewDialogProps {
   open: boolean;

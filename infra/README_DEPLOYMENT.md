@@ -56,6 +56,7 @@ Inside `/opt/toystore-docker`:
 
 after updating any of the nginx conf file
 reload `docker exec -it nginx-docker nginx -s reload`
+=> docker compose logs -f nginx
 
 Host paths used by nginx container (mounted read-only):
 
@@ -493,7 +494,7 @@ git pull
 cd /opt/toystore-docker
 docker compose build store
 docker compose up -d store
-docker compose logs -f --tail 80 store-docker
+docker compose logs -f --tail 80 store
 ```
 
 ---
@@ -507,7 +508,7 @@ git pull
 cd /opt/toystore-docker
 docker compose build admin
 docker compose up -d admin
-docker compose logs -f --tail 80 admin-docker
+docker compose logs -f --tail 80 admin
 ```
 
 ---

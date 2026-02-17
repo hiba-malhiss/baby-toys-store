@@ -43,6 +43,9 @@
     "removeOOSGlobal": "Some products are out of stock. Remove them to proceed to checkout.",
     "removeToProceed": "Remove out-of-stock products to proceed"
   },
+  "language": {
+    "label": "Language"
+  },
   "product": {
     "aboutThisItem": "About this item",
     "addToCart": "Add to cart",

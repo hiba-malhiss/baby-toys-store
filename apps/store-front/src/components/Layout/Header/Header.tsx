@@ -37,25 +37,6 @@ const Header = () => {
   const { data: wishlistCount } = useWishlistCount();
   const { t } = useTranslation('common');
 
-  const authButtons = (isDarkMode = true, onAfterClick?: () => void) => (
-    <>
-      {isAuthenticated && (
-        <Button
-          fullWidth
-          appearance="link"
-          color={isDarkMode ? 'light' : 'primary'}
-          onClick={() => {
-            navigate('/orders-history');
-            onAfterClick?.();
-          }}
-        >
-          {t('nav.orders')}
-        </Button>
-      )}
-      <AuthButtonsWithDialogs isDarkMode={isDarkMode} onAfterClick={onAfterClick} />
-    </>
-  );
-
   return (
     <header className={styles.header}>
       <Flex className={styles.headerAnnouncement} align="center" justify="between" spacing="xxl">
@@ -64,10 +45,21 @@ const Header = () => {
           <span>{t('nav.welcome')}</span>
         </Flex>
         <Flex align="center" spacing="s" className="bts-hideOnMobile">
-          {authButtons(true)}
+          {isAuthenticated && (
+            <Button
+              fullWidth
+              appearance="link"
+              color="light"
+              onClick={() => {
+                navigate('/orders-history');
+              }}
+            >
+              {t('nav.orders')}
+            </Button>
+          )}
+          <AuthButtonsWithDialogs isDarkMode />
           <LanguageSwitcher />
         </Flex>
-        <BurgerMenu authButtons={(onClose) => authButtons(false, onClose)} />
       </Flex>
 
       <Flex className={styles.headerMain} justify="stretch" align="center" fullWidth spacing="xl">
@@ -103,7 +95,9 @@ const Header = () => {
             color="secondary"
             iconBadge={wishlistCount ?? 0}
             onClick={() => navigate('/wish-list')}
+            className="bts-hideOnMobile"
           />
+          <BurgerMenu />
         </Flex>
       </Flex>
       <div className={clsx('bts-paddingLxl bts-paddingRxl', styles.headerCategoriesContainer)}>

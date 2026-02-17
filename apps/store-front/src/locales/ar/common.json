@@ -43,6 +43,9 @@
     "removeOOSGlobal": "بعض المنتجات غير متوفرة. أزلها للمتابعة إلى الدفع.",
     "removeToProceed": "أزل المنتجات غير المتوفرة للمتابعة"
   },
+  "language": {
+    "label": "اللغه"
+  },
   "product": {
     "aboutThisItem": "حول هذا المنتج",
     "addToCart": "أضف إلى السلة",

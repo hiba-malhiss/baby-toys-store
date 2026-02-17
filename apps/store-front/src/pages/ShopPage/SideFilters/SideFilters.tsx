@@ -176,6 +176,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
           withoutPadding
           withoutHeaderPadding
           size="medium"
+          isOpenByDefault
         >
           <ExpandableContent maxHeight="220px" className="bts-marginBxs">
             <CheckboxGroup
@@ -202,6 +203,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         withoutPadding
         withoutHeaderPadding
         size="medium"
+        isOpenByDefault
       >
         <ExpandableContent maxHeight="220px" className="bts-marginBxs">
           <CheckboxGroup
@@ -228,6 +230,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         withoutPadding
         withoutHeaderPadding
         size="medium"
+        isOpenByDefault
       >
         <ExpandableContent maxHeight="120px" className="bts-marginBxs">
           <Slider
