@@ -179,7 +179,13 @@ const ProductCard: React.FC<ProductCardProps> = ({
           oldPrice={product?.defaultVariant?.oldPrice}
           formatCurrency={formatCurrency}
         />
-        <Flex justify="between" align="center" className={styles.productCardRating}>
+        <Flex
+          direction="vertical"
+          justify="between"
+          spacing="s"
+          align="center"
+          className={styles.productCardRating}
+        >
           <Flex align="center" spacing="xs">
             <Rating
               value={(product as any)?.rating ?? (product as any)?.averageRating ?? 0}
@@ -193,7 +199,8 @@ const ProductCard: React.FC<ProductCardProps> = ({
               leftIconComp={ShoppingCart}
               onClick={(e) => handleButtonClick(e, onAddToCart)}
               appearance="outline"
-              size="medium"
+              size="small"
+              fullWidth
               className={styles.productCardMobileCart}
             />
           )}
