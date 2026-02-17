@@ -3,6 +3,12 @@
     margin-top: 60px;
   }
 
+  &-card {
+    overflow: hidden;
+    width: 100%;
+    padding: 8px;
+  }
+
   &-description {
     white-space: pre-line;
     line-height: 20px;

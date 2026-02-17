@@ -1,5 +1,6 @@
 import React from 'react';
-import { TabBar, TabBarItem, Card, ExpandableContent } from '@baby-toys/ui-kit';
+import { ExpandableContent, AccordionGroup, Accordion, Flex, Card, Heading } from '@baby-toys/ui-kit';
+import { Star, XCircle, RefreshCcw } from 'lucide-react';
 import styles from './product-details-page.module.scss';
 import { ProductReviews } from './ProductReviews.tsx';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -11,39 +12,47 @@ export const ProductInfoTabs: React.FC<{ product: Product }> = ({ product }) => 
   const { data: settings } = useStoreSettings();
   const { t } = useTranslation('common');
 
+  const renderHeader = (IconComponent: React.FC<any>, label: string) => (
+    <Flex align="center" spacing="s">
+      <IconComponent size={18} />
+      {label}
+    </Flex>
+  );
+
   return (
-    <Card fullWidth size="large">
-      <TabBar
-        tabs={[
-          { header: t('product.tabs.description'), value: 'description' },
-          { header: t('product.tabs.reviews'), value: 'reviews' },
-          { header: t('product.tabs.cancelPolicy'), value: 'order-cancellation' },
-          { header: t('product.tabs.returnPolicy'), value: 'return-policy' },
-        ]}
-        defaultSelected="description"
-      >
-        <TabBarItem value="description">
+    <>
+      <div className={styles.productDetailsCard}>
+        <Flex direction="vertical" spacing="m">
+          <Heading level="h5">{ t('product.tabs.description')}</Heading>
           <ExpandableContent className={styles.productDetailsDescription}>
             {description && <p className="bts-marginBxl">{description}</p>}
           </ExpandableContent>
-        </TabBarItem>
+        </Flex>
+      </div>
 
-        <TabBarItem value="reviews">
+      <AccordionGroup allowMultipleOpen>
+        <Accordion
+          header={renderHeader(Star, t('product.tabs.reviews'))}
+        >
           <ProductReviews productId={String(id)} />
-        </TabBarItem>
+        </Accordion>
 
-        <TabBarItem value="order-cancellation">
+        <Accordion
+          header={renderHeader(XCircle, t('product.tabs.cancelPolicy'))}
+        >
           <ExpandableContent className={styles.productDetailsDescription}>
             {settings?.policies?.cancelPolicy || t('product.policies.noCancel')}
           </ExpandableContent>
-        </TabBarItem>
+        </Accordion>
 
-        <TabBarItem value="return-policy">
+        <Accordion
+          header={renderHeader(RefreshCcw, t('product.tabs.returnPolicy'))}
+        >
           <ExpandableContent className={styles.productDetailsDescription}>
             {settings?.policies?.returnPolicy || t('product.policies.noReturn')}
           </ExpandableContent>
-        </TabBarItem>
-      </TabBar>
-    </Card>
+        </Accordion>
+      </AccordionGroup>
+    </>
   );
 };
