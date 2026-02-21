@@ -338,6 +338,13 @@
           "messagePrefix": "We’ve emailed a password-reset link to ",
           "hint": "Didn’t get the email? Check your spam or try again."
         }
+      },
+      "verifyResend": {
+        "header": "Email verification required",
+        "body": "Your email is not verified. The verification link may have expired.",
+        "resend": "Resend verification email",
+        "success": "We sent you a new verification link.",
+        "failure": "Failed to resend verification email."
       }
     },
     "reset": {

@@ -4,6 +4,7 @@ import { useAuth } from '../../../context/AuthContext.tsx';
 import { useLoginDialogStore } from '../../../store/useLoginDialogStore.ts';
 import RegisterDialog from '../../RegisterDialog/RegisterDialog.tsx';
 import LoginDialog from '../../LoginDialog/LoginDialog.tsx';
+import VerificationResendDialog from '../../VerificationResendDialog.tsx';
 import { useLogout } from '../../../api/authApi.ts';
 import { useTranslation } from 'react-i18next';
 
@@ -79,6 +80,7 @@ const AuthButtonsWithDialogs: React.FC<{
       )}
       <LoginDialog open={isOpen} onClose={close} />
       <RegisterDialog open={isRegisterOpen} onClose={() => setRegisterOpen(false)} />
+      <VerificationResendDialog />
     </Flex>
   );
 };

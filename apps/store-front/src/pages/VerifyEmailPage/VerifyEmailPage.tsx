@@ -12,7 +12,7 @@ export const VerifyEmailPage: React.FC = () => {
   const token = searchParams.get('token');
   const { t } = useTranslation('common');
 
-  const { isPending, isError, error, isSuccess, data } = useVerifyEmail(token);
+  const { isPending, isError, isSuccess, data } = useVerifyEmail(token);
 
   // Handle successful verification
   useEffect(() => {
@@ -26,6 +26,19 @@ export const VerifyEmailPage: React.FC = () => {
       });
     }
   }, [isSuccess, data, navigate]);
+
+  // If token is invalid/expired, redirect to home and show the resend dialog
+  useEffect(() => {
+    if (isError && token) {
+      navigate('/', {
+        replace: true,
+        state: {
+          showVerifyDialog: true,
+          verifyToken: token,
+        },
+      });
+    }
+  }, [isError, token, navigate]);
 
   if (!token) {
     return (
@@ -42,16 +55,6 @@ export const VerifyEmailPage: React.FC = () => {
         <>
           <BouncingDotsLoader />
           <div className={styles.verifyEmailPageLoading}>{t('auth.verifyEmail.verifying')}</div>
-        </>
-      )}
-
-      {isError && (
-        <>
-          <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.failed')}</div>
-          <div className={styles.verifyEmailPageErrorMessage}>
-            {(error as any)?.response?.message || t('auth.verifyEmail.failedDetail')}
-          </div>
-          <Button onClick={() => navigate('/')}>{t('auth.verifyEmail.goHome')}</Button>
         </>
       )}
     </div>

@@ -73,6 +73,12 @@ export const useLogin = () => {
       qc.setQueryData(AUTH_TOKEN_KEY, data.accessToken);
       qc.invalidateQueries({ queryKey: [ROOT_KEYS.profile] });
     },
+    onError: (error, variables) => {
+      if (error.response?.data?.code === 'EMAIL_NOT_VERIFIED') {
+        const email = encodeURIComponent(variables?.email || '');
+        window.location.href = `/?showVerifyDialog=1&email=${email}`;
+      }
+    },
   });
 };
 
@@ -83,7 +89,6 @@ export const useLogout = () =>
       await api.post('/api/auth/logout');
       queryClient.removeQueries({ queryKey: AUTH_TOKEN_KEY });
       queryClient.clear();
-      window.location.href = '/login';
     },
   });
 
@@ -160,4 +165,34 @@ export const useValidateResetToken = (token: string) =>
     },
     enabled: !!token,
     retry: 0,
+  });
+
+export interface ResendVerificationResponse {
+  message: string;
+}
+
+export const useResendVerification = () =>
+  useMutation<ResendVerificationResponse, AxiosError<{ message?: string }>, { token: string }>({
+    mutationKey: ['resendVerification'],
+    mutationFn: async ({ token }) => {
+      const res = await api.post<ResendVerificationResponse>(
+        '/api/auth/verify-email/resend',
+        null,
+        { params: { token } }
+      );
+      return res.data;
+    },
+  });
+
+export const useResendVerificationByEmail = () =>
+  useMutation<ResendVerificationResponse, AxiosError<{ message?: string }>, { email: string }>({
+    mutationKey: ['resendVerificationByEmail'],
+    mutationFn: async ({ email }) => {
+      const res = await api.post<ResendVerificationResponse>(
+        '/api/auth/verify-email/resend-by-email',
+        null,
+        { params: { email } }
+      );
+      return res.data;
+    },
   });
