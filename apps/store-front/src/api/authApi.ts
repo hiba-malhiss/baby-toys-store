@@ -41,6 +41,11 @@ export interface RegisterRequest {
   townCode?: string;
 }
 
+export interface ApiErrorData {
+  code?: string;
+  message?: string;
+}
+
 export const AUTH_TOKEN_KEY = ['authToken'];
 
 export const useAuthToken = () =>
@@ -52,7 +57,7 @@ export const useAuthToken = () =>
   });
 
 export const useRegister = () =>
-  useMutation<{ accessToken: string }, AxiosError<{ message?: string }>, RegisterRequest>({
+  useMutation<{ accessToken: string }, AxiosError<ApiErrorData>, RegisterRequest>({
     mutationKey: ['register'],
     mutationFn: async (data: RegisterRequest) => {
       const response = await api.post<{ accessToken: string }>('/api/auth/register', data);
@@ -62,7 +67,7 @@ export const useRegister = () =>
 
 export const useLogin = () => {
   const qc = useQueryClient();
-  return useMutation<LoginResponse, AxiosError<{ message: string }>, LoginRequest>({
+  return useMutation<LoginResponse, AxiosError<ApiErrorData>, LoginRequest>({
     mutationKey: ['login'],
     mutationFn: async (credentials) => {
       const response = await api.post<LoginResponse>('/api/auth/login', credentials);
@@ -95,7 +100,7 @@ export const useLogout = () =>
 export const useFetchProfile = () => {
   const { data: token } = useAuthToken();
 
-  return useQuery<User, AxiosError>({
+  return useQuery<User, AxiosError<ApiErrorData>>({
     queryKey: [ROOT_KEYS.profile],
     enabled: !!token,
     queryFn: async () => {
@@ -111,7 +116,7 @@ export interface VerifyEmailResponse {
 }
 
 export const useVerifyEmail = (token: string) =>
-  useQuery<VerifyEmailResponse, AxiosError<{ message: string }>>({
+  useQuery<VerifyEmailResponse, AxiosError<ApiErrorData>>({
     queryKey: ['verifyEmail', token],
     queryFn: async () => {
       const response = await api.get<VerifyEmailResponse>('/api/auth/verify-email', {
@@ -132,7 +137,7 @@ export interface ForgotPasswordResponse {
 }
 
 export const useForgotPassword = () =>
-  useMutation<ForgotPasswordResponse, AxiosError<{ message?: string }>, ForgotPasswordRequest>({
+  useMutation<ForgotPasswordResponse, AxiosError<ApiErrorData>, ForgotPasswordRequest>({
     mutationKey: ['forgotPassword'],
     mutationFn: async (payload) => {
       const res = await api.post<ForgotPasswordResponse>('/api/auth/password/forgot', payload);
@@ -146,7 +151,7 @@ export interface ResetPasswordRequest {
 }
 
 export const useResetPassword = () =>
-  useMutation<{ message: string }, AxiosError<{ message?: string }>, ResetPasswordRequest>({
+  useMutation<{ message: string }, AxiosError<ApiErrorData>, ResetPasswordRequest>({
     mutationKey: ['resetPassword'],
     mutationFn: async (data) => {
       const res = await api.post('/api/auth/password/reset', data);
@@ -155,7 +160,7 @@ export const useResetPassword = () =>
   });
 
 export const useValidateResetToken = (token: string) =>
-  useQuery<{ message: string }, AxiosError<{ message?: string }>>({
+  useQuery<{ message: string }, AxiosError<ApiErrorData>>({
     queryKey: ['validateResetToken', token],
     queryFn: async () => {
       const res = await api.get('/api/auth/password/validate-token', {
@@ -172,7 +177,7 @@ export interface ResendVerificationResponse {
 }
 
 export const useResendVerification = () =>
-  useMutation<ResendVerificationResponse, AxiosError<{ message?: string }>, { token: string }>({
+  useMutation<ResendVerificationResponse, AxiosError<ApiErrorData>, { token: string }>({
     mutationKey: ['resendVerification'],
     mutationFn: async ({ token }) => {
       const res = await api.post<ResendVerificationResponse>(
@@ -185,7 +190,7 @@ export const useResendVerification = () =>
   });
 
 export const useResendVerificationByEmail = () =>
-  useMutation<ResendVerificationResponse, AxiosError<{ message?: string }>, { email: string }>({
+  useMutation<ResendVerificationResponse, AxiosError<ApiErrorData>, { email: string }>({
     mutationKey: ['resendVerificationByEmail'],
     mutationFn: async ({ email }) => {
       const res = await api.post<ResendVerificationResponse>(

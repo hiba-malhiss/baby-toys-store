@@ -12,7 +12,7 @@ export const VerifyEmailPage: React.FC = () => {
   const token = searchParams.get('token');
   const { t } = useTranslation('common');
 
-  const { isPending, isError, isSuccess, data } = useVerifyEmail(token);
+  const { isPending, isError, isSuccess, data, error } = useVerifyEmail(token);
 
   // Handle successful verification
   useEffect(() => {
@@ -27,9 +27,10 @@ export const VerifyEmailPage: React.FC = () => {
     }
   }, [isSuccess, data, navigate]);
 
-  // If token is invalid/expired, redirect to home and show the resend dialog
+  // If token is expired, redirect to home and show the resend dialog (use backend error code)
   useEffect(() => {
-    if (isError && token) {
+    const errCode = error?.response?.data?.code;
+    if (isError && token && errCode === 'TOKEN_EXPIRED') {
       navigate('/', {
         replace: true,
         state: {
@@ -38,7 +39,7 @@ export const VerifyEmailPage: React.FC = () => {
         },
       });
     }
-  }, [isError, token, navigate]);
+  }, [isError, error, token, navigate]);
 
   if (!token) {
     return (

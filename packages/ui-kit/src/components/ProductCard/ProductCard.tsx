@@ -183,17 +183,14 @@ const ProductCard: React.FC<ProductCardProps> = ({
           direction="vertical"
           justify="between"
           spacing="s"
-          align="center"
           className={styles.productCardRating}
         >
-          <Flex align="center" spacing="xs">
-            <Rating
-              value={(product as any)?.rating ?? (product as any)?.averageRating ?? 0}
-              reviewsCount={
-                ((product as any)?.reviewsCount ?? (product as any)?.numberOfRatings ?? 0) as number
-              }
-            />
-          </Flex>
+          <Rating
+            value={(product as any)?.rating ?? (product as any)?.averageRating ?? 0}
+            reviewsCount={
+              ((product as any)?.reviewsCount ?? (product as any)?.numberOfRatings ?? 0) as number
+            }
+          />
           {!hideMobileCart && (
             <Button
               leftIconComp={ShoppingCart}

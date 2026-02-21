@@ -2,7 +2,8 @@ import React, { useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, StringInput, Button, Flex, useToast } from '@baby-toys/ui-kit';
-import { type LoginRequest, useLogin } from '../../api/authApi';
+import { type LoginRequest, useLogin, type ApiErrorData } from '../../api/authApi';
+import { isAxiosError } from 'axios';
 import { loginFields, loginSchema } from './loginDialog.helpers';
 import ForgotPasswordDialog from '../ResetPassword/ForgotPasswordDialog.tsx';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
@@ -45,8 +46,9 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
       toast.success(response.message || t('auth.dialogs.login.success'));
       handleClose();
       onSuccess?.();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || t('auth.dialogs.login.failure'));
+    } catch (error: unknown) {
+      const msg = isAxiosError<ApiErrorData>(error) ? error.response?.data?.message : undefined;
+      toast.error(msg || t('auth.dialogs.login.failure'));
     }
   };
 
