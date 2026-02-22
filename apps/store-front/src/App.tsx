@@ -1,7 +1,7 @@
 import React from 'react';
 import './styles/App.scss';
 import './styles/main.scss';
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage.tsx';
 import Layout from './components/Layout/Layout.tsx';
 import { BouncingDotsLoader, ScrollToTop } from '@baby-toys/ui-kit';
@@ -22,6 +22,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from './components/LocationAwareToast.tsx';
 import { ThemeProvider } from '@baby-toys/ui-kit/theme/ThemeProvider';
+import VerificationResendDialog from './components/VerificationResendDialog';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,11 +36,15 @@ export const queryClient = new QueryClient({
 
 const AppContent: React.FC = () => {
   const { isInitializing } = useAuth();
-
   // Show loader while initializing authentication
   if (isInitializing) {
     return <BouncingDotsLoader />;
   }
+
+  const RootRedirectPreserveSearch: React.FC = () => {
+    const loc = useLocation();
+    return <Navigate to={`/home${loc.search}`} replace />;
+  };
 
   return (
     <BreadcrumbProvider>
@@ -48,7 +53,7 @@ const AppContent: React.FC = () => {
           <ScrollToTop />
           <Layout>
             <Routes>
-              <Route path="/" element={<Navigate to="/home" replace />} />
+              <Route path="/" element={<RootRedirectPreserveSearch />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/shop" element={<ShopPage />} />
               <Route path="/product-details/:id" element={<ProductDetailsPage />} />
@@ -61,7 +66,7 @@ const AppContent: React.FC = () => {
               <Route path="/policies" element={<PoliciesPage />} />
               <Route path="/verify-email" element={<VerifyEmailPage />} />
               <Route path="/reset-password" element={<ResetPasswordPage />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
+              <Route path="*" element={<Navigate to="/home" replace />} />
             </Routes>
           </Layout>
         </LocationAwareToast>

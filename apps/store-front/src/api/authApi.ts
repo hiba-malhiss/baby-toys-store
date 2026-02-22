@@ -4,6 +4,7 @@ import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
 import { queryClient } from '../App.tsx';
 import { ROOT_KEYS } from './queryKeys.ts';
+import { useNavigate } from 'react-router-dom';
 
 export enum USER_ROLE {
   CUSTOMER = 'ROLE_CUSTOMER',
@@ -67,6 +68,7 @@ export const useRegister = () =>
 
 export const useLogin = () => {
   const qc = useQueryClient();
+  const navigate = useNavigate();
   return useMutation<LoginResponse, AxiosError<ApiErrorData>, LoginRequest>({
     mutationKey: ['login'],
     mutationFn: async (credentials) => {
@@ -81,7 +83,7 @@ export const useLogin = () => {
     onError: (error, variables) => {
       if (error.response?.data?.code === 'EMAIL_NOT_VERIFIED') {
         const email = encodeURIComponent(variables?.email || '');
-        window.location.href = `/?showVerifyDialog=1&email=${email}`;
+        navigate(`/home?showVerifyDialog=1&email=${email}`, { replace: true });
       }
     },
   });
