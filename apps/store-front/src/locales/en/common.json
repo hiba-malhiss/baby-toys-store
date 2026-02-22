@@ -109,6 +109,8 @@
     "price": "Price",
     "dealsAndDiscounts": "Deals & Discounts",
     "discounts": "Discounts",
+    "availability": "Availability",
+    "inStock": "In stock",
     "onSale": "On sale"
   },
   "policies": {

@@ -23,3 +23,17 @@ export interface AttributeTypePublicDto {
   sortOrder: number;
   values: AttributeValuePublicDto[];
 }
+
+// ---- Options (variant filters) ----
+export interface OptionValuePublicDto {
+  id: number;
+  value: string;
+  display: string;
+}
+
+export interface OptionTypePublicDto {
+  id: number;
+  name: string;
+  displayName: string;
+  values: OptionValuePublicDto[];
+}

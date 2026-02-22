@@ -1,5 +1,5 @@
-import { parseAttributeFilters, type ShopFilters } from './SideFilters/side-filters.utils';
-import { useCategories, useFilterableAttributes } from '../../api/catalogApi';
+import { parseAttributeFilters, parseOptionFilters, type ShopFilters } from './SideFilters/side-filters.utils';
+import { useCategories, useFilterableAttributes, useFilterableOptions } from '../../api/catalogApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';
 
@@ -19,13 +19,15 @@ export const useFilterChips = (
   const { data: settings } = useStoreSettings();
   const { data: categories = [] } = useCategories();
   const { data: attributeTypes = [] } = useFilterableAttributes();
+  const { data: optionTypes = [] } = useFilterableOptions();
 
   const currencySymbol = settings?.general?.currencySymbol || '';
 
   const chips: { key: string; label: string }[] = [];
 
-  // Parse dynamic attribute filters (attr_*)
+  // Parse dynamic attribute filters (attr_*) and options (opt_*)
   const { selectedAttrs } = parseAttributeFilters(filters);
+  const { selectedOpts } = parseOptionFilters(filters);
 
   Object.entries(filters).forEach(([key, value]) => {
     const defaultValue = defaultFilters[key as keyof ShopFilters];
@@ -47,6 +49,27 @@ export const useFilterChips = (
         chips.push({
           key: `${key}_${valueId}`, // required for removeFilter logic
           label: attributeValue?.displayValue || type.displayName,
+        });
+      });
+
+      return;
+    }
+
+    if (key.startsWith('opt_')) {
+      const typeId = key.replace('opt_', '');
+      const values = selectedOpts[String(typeId)] ?? [];
+
+      if (values.length === 0) return;
+
+      const type = optionTypes.find((t) => Number(t.id) === Number(typeId));
+      if (!type) return;
+
+      values.forEach((valueId) => {
+        const v = type.values.find((vv) => Number(vv.id) === valueId);
+
+        chips.push({
+          key: `${key}_${valueId}`, // required for removeFilter logic in SideFilters
+          label: v?.display || v?.value || type.displayName || type.name,
         });
       });
 
@@ -80,6 +103,13 @@ export const useFilterChips = (
         chips.push({
           key: 'discounts',
           label: t('filters.discounts', { defaultValue: 'Discounts' }),
+        });
+        break;
+
+      case 'inStock':
+        chips.push({
+          key: 'inStock',
+          label: t('filters.inStock', { defaultValue: 'In stock' }),
         });
         break;
 

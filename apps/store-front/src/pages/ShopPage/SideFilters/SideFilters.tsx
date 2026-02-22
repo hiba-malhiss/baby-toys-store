@@ -19,8 +19,8 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { useUrlFilters } from '../../../hooks/useUrlFilters';
-import { parseAttributeFilters, type ShopFilters, urlFilterParsers } from './side-filters.utils';
-import { useCategories, useFilterableAttributes } from '../../../api/catalogApi';
+import { parseAttributeFilters, parseOptionFilters, type ShopFilters, urlFilterParsers } from './side-filters.utils';
+import { useCategories, useFilterableAttributes, useFilterableOptions } from '../../../api/catalogApi';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useFilterChips } from '../useFilterChips';
 
@@ -37,6 +37,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
 
   const { data: categories = [], isLoading: loadingCategories } = useCategories();
   const { data: attributeTypes = [], isLoading: loadingAttributes } = useFilterableAttributes();
+  const { data: optionTypes = [], isLoading: loadingOptions } = useFilterableOptions();
   const { data: settings } = useStoreSettings();
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -71,6 +72,14 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
             .map(Number)
             .filter((n) => !isNaN(n)),
       },
+      {
+        prefix: 'opt_',
+        parser: (v: string) =>
+          v
+            .split(',')
+            .map(Number)
+            .filter((n) => !isNaN(n)),
+      },
     ]
   );
 
@@ -78,7 +87,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   const filterChips = useFilterChips(urlFilters, defaultFilters);
   const filtersCount = filterChips.length;
 
-  const isLoadingFilters = loadingCategories || loadingAttributes;
+  const isLoadingFilters = loadingCategories || loadingAttributes || loadingOptions;
 
   useEffect(() => {
     if (!isLoadingFilters) {
@@ -91,9 +100,18 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   };
 
   const { selectedAttrs } = useMemo(() => parseAttributeFilters(urlFilters), [urlFilters]);
+  const { selectedOpts } = useMemo(() => parseOptionFilters(urlFilters), [urlFilters]);
 
   const updateAttributeSelection = (typeId: number, valueIds?: number[]) => {
     const key = `attr_${typeId}`;
+
+    updateUrlFilters({
+      [key]: valueIds && valueIds.length > 0 ? valueIds : undefined,
+    });
+  };
+
+  const updateOptionSelection = (typeId: number, valueIds?: number[]) => {
+    const key = `opt_${typeId}`;
 
     updateUrlFilters({
       [key]: valueIds && valueIds.length > 0 ? valueIds : undefined,
@@ -106,6 +124,14 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
       const current = selectedAttrs[typeId] || [];
       const next = current.filter((v) => v !== Number(valueId));
       updateAttributeSelection(Number(typeId), next);
+      return;
+    }
+
+    if (key.startsWith('opt_')) {
+      const [, typeId, valueId] = key.split('_');
+      const current = selectedOpts[typeId] || [];
+      const next = current.filter((v) => v !== Number(valueId));
+      updateOptionSelection(Number(typeId), next);
       return;
     }
 
@@ -197,6 +223,35 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
         </Accordion>
       ))}
 
+      {/* Options (variant filters) */}
+      {optionTypes.map((type) => (
+        <Accordion
+          key={`sf-opt-${type.id}`}
+          header={<span>{type.displayName || type.name}</span>}
+          withoutPadding
+          withoutHeaderPadding
+          size="medium"
+          isOpenByDefault
+        >
+          <ExpandableContent maxHeight="220px" className="bts-marginBxs">
+            <CheckboxGroup
+              options={type.values.map((v) => ({
+                label: v.display || v.value,
+                value: String(v.id),
+              }))}
+              value={selectedOpts[String(type.id)]?.map(String) || []}
+              onChange={(values) =>
+                updateOptionSelection(
+                  type.id,
+                  values.length > 0 ? values.map(Number) : undefined
+                )
+              }
+              direction="vertical"
+            />
+          </ExpandableContent>
+        </Accordion>
+      ))}
+
       {/* Discounts */}
       <Accordion
         header={<span>{t('filters.dealsAndDiscounts')}</span>}
@@ -218,6 +273,31 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
             value={urlFilters.discounts ? ['discounts'] : []}
             onChange={(val) =>
               handleFilterChange('discounts', val.length > 0 ? 'discounts' : undefined)
+            }
+            direction="vertical"
+          />
+        </ExpandableContent>
+      </Accordion>
+
+      {/* Availability (In Stock) */}
+      <Accordion
+        header={<span>{t('filters.availability', { defaultValue: 'Availability' })}</span>}
+        withoutPadding
+        withoutHeaderPadding
+        size="medium"
+        isOpenByDefault
+      >
+        <ExpandableContent maxHeight="220px" className="bts-marginBxs">
+          <CheckboxGroup
+            options={[
+              {
+                label: t('filters.inStock', { defaultValue: 'In stock' }),
+                value: 'inStock',
+              },
+            ]}
+            value={urlFilters.inStock ? ['inStock'] : []}
+            onChange={(val) =>
+              handleFilterChange('inStock', val.length > 0 ? 'inStock' : undefined)
             }
             direction="vertical"
           />

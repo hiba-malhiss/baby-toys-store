@@ -3,6 +3,7 @@ import api from './axiosConfig';
 import type { ApiEnvelope, Page } from './types/common';
 import {
   parseAttributeFilters,
+  parseOptionFilters,
   type ShopFilters,
 } from '../pages/ShopPage/SideFilters/side-filters.utils';
 import type { Product } from './types/product.ts';
@@ -46,6 +47,8 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
   const query = (filters as any)?.query;
   const onSale = (filters as any)?.discounts === 'discounts' ? true : undefined;
   const { attrsBody, attrsSignature } = parseAttributeFilters(filters);
+  const inStock = (filters as any)?.inStock === 'inStock' ? true : undefined;
+  const { optsBody, optsSignature } = parseOptionFilters(filters);
 
   const zeroBasedPage = Math.max(0, (page || 1) - 1);
 
@@ -62,6 +65,8 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
       query || '',
       onSale ? 'onSale' : '',
       attrsSignature,
+      optsSignature,
+      inStock ? 'inStock' : '',
     ],
     queryFn: async () => {
       const res = await api.post<ApiEnvelope<Page<Product>>>('/api/products', {
@@ -74,7 +79,9 @@ export function useProductsQuery({ page, size, sortBy, filters }: ProductsQuery)
         maxPrice,
         query,
         onSale,
+        inStock,
         attributeFilters: attrsBody,
+        optionFilters: optsBody,
       });
       const data = res.data.data;
       return {

@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import api from './axiosConfig';
 import type { ApiEnvelope } from './types/common';
-import type { Category, AttributeTypePublicDto } from './types/catalog.ts';
+import type { Category, AttributeTypePublicDto, OptionTypePublicDto } from './types/catalog.ts';
 
 export const useCategories = () =>
   useQuery<Category[]>({
@@ -18,6 +18,18 @@ export const useFilterableAttributes = () =>
     queryFn: async () => {
       const res = await api.get<ApiEnvelope<AttributeTypePublicDto[]>>(
         '/api/public/attributes/filterable'
+      );
+      return res.data.data;
+    },
+    staleTime: 60_000,
+  });
+
+export const useFilterableOptions = () =>
+  useQuery<OptionTypePublicDto[]>({
+    queryKey: ['filterableOptions'],
+    queryFn: async () => {
+      const res = await api.get<ApiEnvelope<OptionTypePublicDto[]>>(
+        '/api/public/options/filterable'
       );
       return res.data.data;
     },
