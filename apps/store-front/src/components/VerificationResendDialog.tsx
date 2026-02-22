@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
 import { Button, Flex, Dialog, isValidEmail } from '@baby-toys/ui-kit';
 import { useToast } from '@baby-toys/ui-kit';
@@ -41,9 +41,18 @@ const VerificationResendDialog: React.FC<Props> = ({ onVisibilityChange }) => {
   }, [stateOpen, stateToken, qsOpen, qsToken, qsEmail]);
 
   // Notify parent when visibility changes (e.g., to close login dialog)
+  const wasOpenRef = useRef<boolean>(false);
   useEffect(() => {
-    onVisibilityChange?.(open);
-  }, [open, onVisibilityChange]);
+    const wasOpen = wasOpenRef.current;
+    if (open && !wasOpen) {
+      onVisibilityChange?.(true);
+    } else if (!open && wasOpen) {
+      onVisibilityChange?.(false);
+    }
+    wasOpenRef.current = open;
+    // Intentionally ignore callback identity to avoid re-running on every parent re-render
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open]);
 
   // If the user is authenticated, ensure the dialog is not shown and clear params/state
   useEffect(() => {
