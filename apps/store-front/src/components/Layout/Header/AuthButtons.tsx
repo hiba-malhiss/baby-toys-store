@@ -80,7 +80,7 @@ const AuthButtonsWithDialogs: React.FC<{
       )}
       <LoginDialog open={isOpen} onClose={close} />
       <RegisterDialog open={isRegisterOpen} onClose={() => setRegisterOpen(false)} />
-      <VerificationResendDialog />
+      <VerificationResendDialog onVisibilityChange={(open) => open && close()} />
     </Flex>
   );
 };

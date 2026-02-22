@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useSearchParams } from 'react-router-dom';
-import { Button, Flex, Dialog } from '@baby-toys/ui-kit';
+import { Button, Flex, Dialog, isValidEmail } from '@baby-toys/ui-kit';
 import { useToast } from '@baby-toys/ui-kit';
 import { useResendVerification, useResendVerificationByEmail } from '../api/authApi';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useTranslation } from 'react-i18next';
 
-const VerificationResendDialog: React.FC = () => {
+type Props = {
+  onVisibilityChange?: (open: boolean) => void;
+};
+
+const VerificationResendDialog: React.FC<Props> = ({ onVisibilityChange }) => {
   const location = useLocation();
   const toast = useToast();
   const { mutate: resend, isPending } = useResendVerification();
@@ -24,17 +28,22 @@ const VerificationResendDialog: React.FC = () => {
   const qsEmail = searchParams.get('email');
 
   const token = stateToken || qsToken || null;
-  const email = qsEmail || null;
+  const email = isValidEmail(qsEmail) ? qsEmail : null;
 
   const [open, setOpen] = useState<boolean>(false);
 
   useEffect(() => {
     // Open when:
     // - state says open and we have a token from state, OR
-    // - query says open and we have either token or email
-    const shouldOpen = (stateOpen && stateToken) || (qsOpen && (qsToken || qsEmail));
+    // - query says open and we have either token or a VALID email
+    const shouldOpen = (stateOpen && stateToken) || (qsOpen && (qsToken || isValidEmail(qsEmail)));
     setOpen(!!shouldOpen);
   }, [stateOpen, stateToken, qsOpen, qsToken, qsEmail]);
+
+  // Notify parent when visibility changes (e.g., to close login dialog)
+  useEffect(() => {
+    onVisibilityChange?.(open);
+  }, [open, onVisibilityChange]);
 
   // If the user is authenticated, ensure the dialog is not shown and clear params/state
   useEffect(() => {
