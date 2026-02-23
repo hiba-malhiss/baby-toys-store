@@ -367,11 +367,19 @@
     "logout": "Logout"
   },
   "rateLimit": {
-    "verifyResend": {
-      "cooldown": "Too many attempts. Please try again in {{mins}} minute(s)."
-    },
     "passwordReset": {
-      "cooldown": "Too many attempts. Please try again in {{mins}} minute(s)."
+      "cooldown": {
+        "tomorrow": "Too many attempts. Please try again tomorrow.",
+        "hours": "Too many attempts. Please try again in {{hours}} hour(s).",
+        "minutes": "Too many attempts. Please try again in {{mins}} minute(s)."
+      }
+    },
+    "verifyResend": {
+      "cooldown": {
+        "tomorrow": "Too many attempts. Please try again tomorrow.",
+        "hours": "Too many attempts. Please try again in {{hours}} hour(s).",
+        "minutes": "Too many attempts. Please try again in {{mins}} minute(s)."
+      }
     }
   },
   "freeShipping": {

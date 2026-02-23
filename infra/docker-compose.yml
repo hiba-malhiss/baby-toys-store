@@ -17,6 +17,18 @@ services:
       - admin
       - backend
 
+  redis:
+    image: redis:7
+    container_name: redis
+    networks:
+      - toystore-net
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
   toystore-mysql:
     image: mysql:8.0
     container_name: toystore-mysql
@@ -41,7 +53,10 @@ services:
       - toystore-net
     restart: always
     depends_on:
-      - toystore-mysql
+      redis:
+        condition: service_healthy
+      toystore-mysql:
+        condition: service_started
 
   store:
     container_name: store-docker
