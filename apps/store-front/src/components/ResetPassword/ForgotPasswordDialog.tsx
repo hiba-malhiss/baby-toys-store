@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Dialog, StringInput, Button, Flex, useToast, Text } from '@baby-toys/ui-kit';
 import { useForgotPassword } from '../../api/authApi';
+import { handleRateLimit } from '../../api/rateLimit';
 import VerificationDialog from '../RegisterDialog/VerificationDialog';
 import FormFieldWrapper from '../FormFieldWrapper/FormFieldWrapper.tsx';
 import { schema, type FormData } from './forget-password-dialog.utils.ts';
@@ -42,6 +43,9 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
       setSentEmail(data.email);
       setVerifyVisible(true);
     } catch (e: any) {
+      if (handleRateLimit(e, toast, t, 'rateLimit.passwordReset.cooldown')) {
+        return;
+      }
       toast.error(e?.response?.data?.message || t('auth.dialogs.forgot.failure'));
     }
   };

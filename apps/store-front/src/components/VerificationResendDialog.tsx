@@ -3,6 +3,7 @@ import { useLocation, useSearchParams } from 'react-router-dom';
 import { Button, Flex, Dialog, isValidEmail } from '@baby-toys/ui-kit';
 import { useToast } from '@baby-toys/ui-kit';
 import { useResendVerification, useResendVerificationByEmail } from '../api/authApi';
+import { handleRateLimit } from '../api/rateLimit';
 import { useAuth } from '../context/AuthContext.tsx';
 import { useTranslation } from 'react-i18next';
 
@@ -105,6 +106,9 @@ const VerificationResendDialog: React.FC<Props> = ({ onVisibilityChange }) => {
             handleClose();
           },
           onError: (err: any) => {
+            if (handleRateLimit(err, toast, t, 'rateLimit.verifyResend.cooldown')) {
+              return;
+            }
             const msg =
               err?.response?.data?.message ||
               t('auth.dialogs.verifyResend.failure', {
@@ -128,6 +132,9 @@ const VerificationResendDialog: React.FC<Props> = ({ onVisibilityChange }) => {
             handleClose();
           },
           onError: (err: any) => {
+            if (handleRateLimit(err, toast, t, 'rateLimit.verifyResend.cooldown')) {
+              return;
+            }
             const msg =
               err?.response?.data?.message ||
               t('auth.dialogs.verifyResend.failure', {

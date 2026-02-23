@@ -376,5 +376,13 @@
     "sort": {
       "recentlyAdded": "أضيفت مؤخرًا"
     }
+  },
+  "rateLimit": {
+    "verifyResend": {
+      "cooldown": "محاولات كثيرة. يرجى المحاولة بعد {{mins}} دقيقة/دقائق."
+    },
+    "passwordReset": {
+      "cooldown": "محاولات كثيرة. يرجى المحاولة بعد {{mins}} دقيقة/دقائق."
+    }
   }
 }

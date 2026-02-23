@@ -9,6 +9,7 @@ import type { QueryKey } from '@tanstack/react-query';
 import { getGuestCartToken } from '../utils/guestCart';
 import { getAppLocale } from '../components/i18n/locale';
 import { AUTH_TOKEN_KEY } from './authApi';
+import { RateLimitError } from './rateLimit';
 
 type RequestQueueItem = {
   resolve: (value: any) => void;
@@ -150,6 +151,17 @@ api.interceptors.response.use(
       } finally {
         isRefreshing = false;
       }
+    }
+
+    // Normalize rate limiting (429) to a typed error with Retry-After
+    if (status === 429) {
+      const headers: any = error.response.headers || {};
+      const retryHeader = headers['retry-after'] ?? headers['Retry-After'];
+      const retryAfter = retryHeader ? parseInt(String(retryHeader), 10) : undefined;
+      const data: any = error.response.data;
+      const message = (data?.message as string) || 'Too many requests. Please try again later.';
+      const reason = (data?.reason as string) || (data?.code as string) || undefined;
+      return Promise.reject(new RateLimitError(message, retryAfter, reason));
     }
 
     // Other errors: attach backend message if available

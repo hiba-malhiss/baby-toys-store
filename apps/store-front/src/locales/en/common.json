@@ -366,6 +366,14 @@
     "register": "Register",
     "logout": "Logout"
   },
+  "rateLimit": {
+    "verifyResend": {
+      "cooldown": "Too many attempts. Please try again in {{mins}} minute(s)."
+    },
+    "passwordReset": {
+      "cooldown": "Too many attempts. Please try again in {{mins}} minute(s)."
+    }
+  },
   "freeShipping": {
     "unlocked": "🎉 You’ve unlocked free shipping!",
     "addMore": "Add {{amount}} more to unlock free shipping 🚚",
