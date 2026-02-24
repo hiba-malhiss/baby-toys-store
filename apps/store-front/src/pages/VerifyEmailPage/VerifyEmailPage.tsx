@@ -17,7 +17,8 @@ export const VerifyEmailPage: React.FC = () => {
   // Handle successful verification
   useEffect(() => {
     if (isSuccess && data) {
-      navigate('/', {
+      navigate('/home', {
+        replace: true,
         state: {
           showToast: true,
           toastMessage: data.message || t('auth.verifyEmail.success'),
@@ -31,7 +32,7 @@ export const VerifyEmailPage: React.FC = () => {
   useEffect(() => {
     const errCode = error?.response?.data?.code;
     if (isError && token && errCode === 'TOKEN_EXPIRED') {
-      navigate('/', {
+      navigate('/home', {
         replace: true,
         state: {
           showVerifyDialog: true,
@@ -45,7 +46,7 @@ export const VerifyEmailPage: React.FC = () => {
     return (
       <div className={styles.verifyEmailPage}>
         <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.invalidLink')}</div>
-        <Button onClick={() => navigate('/')}>{t('auth.verifyEmail.goHome')}</Button>
+        <Button onClick={() => navigate('/home', { replace: true })}>{t('auth.verifyEmail.goHome')}</Button>
       </div>
     );
   }
