@@ -1,8 +1,11 @@
 import { z } from 'zod';
+import { BannerTextAlignment, BannerTextPosition } from "../../api/types/homePage.ts";
 
-export const heroBannerSchema = z.object({
+export const bannerSchema = z.object({
   text: z.string().min(1, 'Banner text is required'),
   imageUrl: z.string().optional(),
+  alignment: z.enum(BannerTextAlignment).optional(),
+  position: z.enum(BannerTextPosition).optional(),
   locale: z.enum(['en', 'ar']),
 });
 
@@ -18,10 +21,20 @@ export const galleryImageSchema = z.object({
   imageUrl: z.string(),
 });
 
+export const mainBannerSchema = z.object({
+  imageUrl: z.string().optional(),
+  title: z.string().optional(),
+  subtitle: z.string().optional(),
+  ctaText: z.string().optional(),
+  alignment: z.enum(BannerTextAlignment).optional(),
+  locale: z.enum(['en', 'ar']),
+});
+
 export const homePageSchema = z.object({
-  heroBanners: z.array(heroBannerSchema),
+  banners: z.array(bannerSchema),
   infoCards: z.array(infoCardSchema),
   galleryImages: z.array(galleryImageSchema),
+  mainBanners: z.array(mainBannerSchema),
 });
 
 export type HomePageFormValues = z.infer<typeof homePageSchema>;

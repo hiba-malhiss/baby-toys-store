@@ -163,12 +163,24 @@
   "homepage": {
     "title": "Homepage Content",
     "sections": {
-      "heroBanners": "Hero Banners",
       "infoCards": "Info Cards",
-      "gallery": "Gallery Images"
+      "gallery": "Gallery Images",
+      "banners": "Banners",
+      "mainBanner": "Main Banner"
     },
-    "heroBanners": {
-      "bannerText": "Banner {position} Text ({locale})"
+    "banners": {
+      "bannerText": "Banner {position} Text ({locale})",
+      "imageUrl": "Image URL",
+      "alignment": "Alignment",
+      "position": "Position"
+    },
+    "mainBanner": {
+      "title": "Title",
+      "subtitle": "Subtitle",
+      "ctaText": "CTA Text",
+      "imageUrl": "Image URL",
+      "alignment": "Alignment",
+      "locale": "Locale"
     },
     "infoCards": {
       "title": "Title ({locale})",
@@ -866,44 +878,7 @@
       }
     }
   },
-  "homepage": {
-    "title": "Home Page Content",
-    "sections": {
-      "heroBanners": "Hero Banners",
-      "infoCards": "Info Cards",
-      "gallery": "Gallery"
-    },
-    "heroBanners": {
-      "bannerText": "Banner text {position} ({locale})"
-    },
-    "infoCards": {
-      "title": "Title ({locale})",
-      "subtitle": "Subtitle ({locale})",
-      "icon": "Icon",
-      "appearance": "Appearance",
-      "icons": {
-        "truck": "Truck",
-        "star": "Star",
-        "brain": "Brain",
-        "puzzle": "Puzzle",
-        "gift": "Gift",
-        "heart": "Heart"
-      },
-      "appearances": {
-        "primary": "Primary",
-        "info": "Info",
-        "success": "Success",
-        "warning": "Warning"
-      }
-    },
-    "gallery": {
-      "maxFileSize": "Maximum file size: 10MB",
-      "acceptedFormats": "Accepted formats: JPG, PNG, WebP"
-    },
-    "actions": {
-      "saveChanges": "Save all changes"
-    }
-  },
+  
   "settings": {
     "title": "Store Settings",
     "sections": {

@@ -1,9 +1,10 @@
-import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem } from '@baby-toys/ui-kit';
+import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem, ImageUploader } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
-import { getSupportedLocales } from '../../i18n/locale.ts';
+import { getSupportedLocales } from '../../i18n/locale';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import HeroBannersSection from './HeroBannersSection';
+import BannersSection from './BannersSection';
+import MainBannerSection from './MainBannerSection';
 import InfoCardsSection from './InfoCardsSection';
 import GallerySection from './GallerySection';
 
@@ -11,9 +12,13 @@ const HomePageContent: React.FC = () => {
   const { t } = useTranslation();
   const {
     control,
-    heroBanners,
+    banners,
     infoCards,
+    mainBanners,
     galleryUploaderProps,
+    banner1UploaderProps,
+    banner2UploaderProps,
+    mainBannerUploaderProps,
     handleSubmit,
     isLoading,
     isSubmitting,
@@ -26,26 +31,102 @@ const HomePageContent: React.FC = () => {
     <AdminLayout isLoading={isLoading}>
       <Card header={t('homepage.title')} fullWidth>
         <Flex direction="vertical" spacing="xxl" fullWidth>
-          {/* === Hero Banners Section === */}
+          {/* === Banners Section === */}
           <Accordion
-            header={t('homepage.sections.heroBanners')}
+            header={t('homepage.sections.banners')}
             buttonAppearance="outline"
-            buttonColor={errors?.heroBanners && 'error'}
+            buttonColor={errors?.banners && 'error'}
           >
-            <TabBar
-              fullWidth
-              size="small"
-              tabs={locales.map((l) => ({
-                header: `${l.toUpperCase()} (${l})`,
-                value: `${l}-banner`,
-              }))}
-            >
-              {locales.map((l) => (
-                <TabBarItem key={l} value={`${l}-banner`}>
-                  <HeroBannersSection locale={l} control={control} heroBanners={heroBanners} />
-                </TabBarItem>
-              ))}
-            </TabBar>
+            <Flex direction="vertical" spacing="xl" fullWidth>
+              {/* Banner 1 */}
+              <Flex direction="vertical" spacing="l" fullWidth>
+                <TabBar
+                  fullWidth
+                  size="small"
+                  tabs={locales.map((l) => ({
+                    header: `${l.toUpperCase()} (${l})`,
+                    value: `${l}-banner1`,
+                  }))}
+                >
+                  {locales.map((l) => (
+                    <TabBarItem key={l} value={`${l}-banner1`}>
+                      <BannersSection locale={l} control={control} banners={banners} slotIndex={0} />
+                    </TabBarItem>
+                  ))}
+                </TabBar>
+                <Divider />
+                <ImageUploader
+                  {...banner1UploaderProps}
+                  maxFileSizeMB={10}
+                  accept="image/jpeg,image/png,image/webp"
+                  showPreview
+                  maxFileSizeText={t('homepage.gallery.maxFileSize')}
+                  acceptedFormatsText={t('homepage.gallery.acceptedFormats')}
+                />
+              </Flex>
+
+              <Divider />
+
+              {/* Banner 2 */}
+              <Flex direction="vertical" spacing="l" fullWidth>
+                <TabBar
+                  fullWidth
+                  size="small"
+                  tabs={locales.map((l) => ({
+                    header: `${l.toUpperCase()} (${l})`,
+                    value: `${l}-banner2`,
+                  }))}
+                >
+                  {locales.map((l) => (
+                    <TabBarItem key={l} value={`${l}-banner2`}>
+                      <BannersSection locale={l} control={control} banners={banners} slotIndex={1} />
+                    </TabBarItem>
+                  ))}
+                </TabBar>
+                <Divider />
+                <ImageUploader
+                  {...banner2UploaderProps}
+                  maxFileSizeMB={10}
+                  accept="image/jpeg,image/png,image/webp"
+                  showPreview
+                  maxFileSizeText={t('homepage.gallery.maxFileSize')}
+                  acceptedFormatsText={t('homepage.gallery.acceptedFormats')}
+                />
+              </Flex>
+            </Flex>
+          </Accordion>
+
+          {/* === Main Banner Section === */}
+          <Accordion header={t('homepage.sections.mainBanner')} buttonAppearance="outline">
+            <Flex direction="vertical" spacing="l" fullWidth>
+              <TabBar
+                fullWidth
+                size="small"
+                tabs={locales.map((l) => ({
+                  header: `${l.toUpperCase()} (${l})`,
+                  value: `${l}-mainBanner`,
+                }))}
+              >
+                {locales.map((l) => {
+                  const idx = mainBanners.findIndex((mb: any) => (mb as any)?.locale === l);
+                  const baseName = idx >= 0 ? `mainBanners.${idx}` : `mainBanners.0`;
+                  return (
+                    <TabBarItem key={l} value={`${l}-mainBanner`}>
+                      <MainBannerSection control={control} baseName={baseName} />
+                    </TabBarItem>
+                  );
+                })}
+              </TabBar>
+              <Divider />
+              <ImageUploader
+                {...mainBannerUploaderProps}
+                maxFileSizeMB={10}
+                accept="image/jpeg,image/png,image/webp"
+                showPreview
+                maxFileSizeText={t('homepage.gallery.maxFileSize')}
+                acceptedFormatsText={t('homepage.gallery.acceptedFormats')}
+              />
+            </Flex>
           </Accordion>
 
           {/* === Info Cards Section === */}
@@ -64,7 +145,7 @@ const HomePageContent: React.FC = () => {
             >
               {locales.map((l) => (
                 <TabBarItem key={l} value={`${l}-info`}>
-                  <InfoCardsSection locale={l} control={control} infoCards={infoCards} />
+                  <InfoCardsSection locale={l} control={control} infoCards={infoCards}/>
                 </TabBarItem>
               ))}
             </TabBar>
@@ -72,10 +153,10 @@ const HomePageContent: React.FC = () => {
 
           {/* === Gallery Section === */}
           <Accordion header={t('homepage.sections.gallery')} buttonAppearance="outline">
-            <GallerySection galleryUploaderProps={galleryUploaderProps} />
+            <GallerySection galleryUploaderProps={galleryUploaderProps}/>
           </Accordion>
 
-          <Divider thickness="2px" />
+          <Divider thickness="2px"/>
 
           <Flex justify="end">
             <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>

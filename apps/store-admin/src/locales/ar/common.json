@@ -889,7 +889,23 @@
     "sections": {
       "heroBanners": "لافتات البطل",
       "infoCards": "بطاقات المعلومات",
-      "gallery": "معرض الصور"
+      "gallery": "معرض الصور",
+      "banners": "اللافتات",
+      "mainBanner": "اللافتة الأساسية"
+    },
+    "banners": {
+      "bannerText": "نص اللافتة {position} ({locale})",
+      "imageUrl": "رابط الصورة",
+      "alignment": "المحاذاة",
+      "position": "الموضع"
+    },
+    "mainBanner": {
+      "title": "العنوان",
+      "subtitle": "العنوان الفرعي",
+      "ctaText": "نص زر الدعوة",
+      "imageUrl": "رابط الصورة",
+      "alignment": "المحاذاة",
+      "locale": "اللغة"
     },
     "heroBanners": {
       "bannerText": "نص اللافتة {position} ({locale})"

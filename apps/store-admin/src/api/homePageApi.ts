@@ -47,10 +47,7 @@ export const useUploadGalleryImage = () => {
       );
 
       return data.data.url;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [HOME_PAGE_QUERY_KEY] });
-    },
+    }
   });
 };
 

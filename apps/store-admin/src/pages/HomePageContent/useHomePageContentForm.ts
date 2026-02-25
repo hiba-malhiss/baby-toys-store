@@ -1,190 +1,199 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@baby-toys/ui-kit';
+
 import {
   useHomePageContent,
   useUpdateHomePageContent,
-  useUploadGalleryImage,
-  useDeleteGalleryImage,
 } from '../../api/homePageApi';
-import type { UpdateHomePageContentRequest } from '../../api/types/homePage';
+
+import {
+  BannerTextAlignment,
+  BannerTextPosition,
+  UpdateHomePageContentRequest,
+} from '../../api/types/homePage';
+
 import { HomePageFormValues, homePageSchema } from './homePage.helper';
-import { getSupportedLocales } from '../../i18n/locale.ts';
+import { getSupportedLocales } from '../../i18n/locale';
+import { useImageManager } from './useImageManager';
 
 const locales = getSupportedLocales();
 
-const DEFAULT_HERO_BANNERS = locales.flatMap((locale) => [
-  { text: '', imageUrl: '', locale },
-  { text: '', imageUrl: '', locale },
-]);
+const buildDefaultBanners = () =>
+  locales.flatMap((locale) =>
+    Array.from({ length: 2 }, () => ({
+      text: '',
+      imageUrl: '',
+      alignment: BannerTextAlignment.CENTER,
+      position: BannerTextPosition.CENTER,
+      locale,
+    }))
+  );
 
-const DEFAULT_INFO_CARDS = locales.flatMap((locale) =>
-  Array.from({ length: 3 }, () => ({
+const buildDefaultInfoCards = () =>
+  locales.flatMap((locale) =>
+    Array.from({ length: 3 }, () => ({
+      title: '',
+      subtitle: '',
+      icon: '',
+      appearance: 'primary',
+      locale,
+    }))
+  );
+
+const buildDefaultMainBanners = () =>
+  locales.map((locale) => ({
+    imageUrl: '',
     title: '',
     subtitle: '',
-    icon: '',
-    appearance: 'primary',
+    ctaText: '',
+    alignment: BannerTextAlignment.RIGHT,
     locale,
-  }))
-);
+  }));
+
+const ensurePerLocale = <T extends { locale: string }>(
+  items: T[] = [],
+  defaults: T[]
+) =>
+  locales.flatMap((locale) => {
+    const lc = locale.toLowerCase();
+    const existing = items.filter((i) => i.locale.toLowerCase() === lc);
+    const required = defaults.filter((d) => d.locale.toLowerCase() === lc);
+    return existing.length >= required.length
+      ? existing
+      : [...existing, ...required.slice(existing.length)];
+  });
 
 export const useHomePageContentForm = () => {
   const toast = useToast();
-  const [existingImages, setExistingImages] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<File[]>([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const [isDeletingImage, setIsDeletingImage] = useState(false);
-
   const { data, isLoading } = useHomePageContent();
   const updateContent = useUpdateHomePageContent();
-  const uploadImage = useUploadGalleryImage();
-  const deleteImageMutation = useDeleteGalleryImage();
+
+  const gallery = useImageManager();
+  const banner1 = useImageManager(undefined, { multiple: false });
+  const banner2 = useImageManager(undefined, { multiple: false });
+  const mainBanner = useImageManager(undefined, { multiple: false });
 
   const form = useForm<HomePageFormValues>({
     resolver: zodResolver(homePageSchema),
-    mode: 'onChange',
     defaultValues: {
-      heroBanners: DEFAULT_HERO_BANNERS,
-      infoCards: DEFAULT_INFO_CARDS,
+      banners: buildDefaultBanners(),
+      infoCards: buildDefaultInfoCards(),
       galleryImages: [],
+      mainBanners: buildDefaultMainBanners(),
     },
   });
 
   const { control, handleSubmit, reset, formState } = form;
   const { errors, isSubmitting } = formState;
 
-  const heroBanners = useFieldArray({ control, name: 'heroBanners' }).fields;
+  const banners = useFieldArray({ control, name: 'banners' }).fields;
   const infoCards = useFieldArray({ control, name: 'infoCards' }).fields;
-  const galleryImageFields = useFieldArray({ control, name: 'galleryImages' }).fields;
+  const galleryImages = useFieldArray({ control, name: 'galleryImages' }).fields;
+  const mainBanners = useFieldArray({ control, name: 'mainBanners' }).fields;
 
   useEffect(() => {
-    if (!data) return;
+    if(!data) return;
 
-    const ensurePerLocale = <T extends { locale: string }>(items: T[], defaults: T[]): T[] => {
-      const supported = locales.map((l) => l.toLowerCase());
-      const byLocale: Record<string, T[]> = Object.fromEntries(
-        supported.map((l) => [l, [] as T[]])
-      ) as Record<string, T[]>;
+    const normalizedBanners = ensurePerLocale(
+      data.banners,
+      buildDefaultBanners()
+    );
 
-      (items || []).forEach((i) => {
-        if (!i || !i.locale) return;
-        const code = String(i.locale).toLowerCase();
-        if (!byLocale[code]) byLocale[code] = [] as T[];
-        byLocale[code].push(i);
-      });
-
-      const fillFor = (code: string, count: number) => {
-        const current = byLocale[code] || (byLocale[code] = [] as T[]);
-        if (current.length >= count) return;
-        const needed = count - current.length;
-        const templates = defaults
-          .filter((d) => String(d.locale).toLowerCase() === code)
-          .slice(0, needed);
-        byLocale[code].push(...templates);
-      };
-
-      supported.forEach((code) => {
-        const countDefault = defaults.filter((d) => String(d.locale).toLowerCase() === code).length;
-        fillFor(code, countDefault);
-      });
-
-      return supported.flatMap((code) => byLocale[code] || []);
-    };
-
-    const hero = ensurePerLocale(
-      (data.heroBanners || []) as any,
-      DEFAULT_HERO_BANNERS as any
-    ) as any;
-    const cards = ensurePerLocale((data.infoCards || []) as any, DEFAULT_INFO_CARDS as any) as any;
-
-    reset({
-      heroBanners: hero,
-      infoCards: cards,
-      galleryImages: data.galleryImages || [],
+    const slotUrls: Record<number, string | undefined> = {};
+    locales.forEach((loc) => {
+      normalizedBanners
+        .filter((b) => b.locale === loc)
+        .forEach((b, i) => {
+          if(!slotUrls[i] && b.imageUrl) slotUrls[i] = b.imageUrl;
+        });
     });
 
-    setExistingImages(data.galleryImages?.map((img) => img.imageUrl) || []);
-    setNewImages([]);
+    banner1.seed(slotUrls[0] ? [slotUrls[0]] : []);
+    banner2.seed(slotUrls[1] ? [slotUrls[1]] : []);
+    mainBanner.seed(data.mainBanners?.map((b) => b.imageUrl).filter(Boolean));
+    gallery.seed(data.galleryImages?.map((g) => g.imageUrl).filter(Boolean));
+
+    reset({
+      banners: normalizedBanners,
+      infoCards: ensurePerLocale(data.infoCards, buildDefaultInfoCards()),
+      galleryImages: data.galleryImages ?? [],
+      mainBanners: ensurePerLocale(
+        data.mainBanners,
+        buildDefaultMainBanners()
+      ),
+    });
   }, [data, reset]);
 
-  const onSubmit = async (values: HomePageFormValues) => {
-    if (isProcessing) return;
-    setIsProcessing(true);
-
+  const onSubmit = async(values: HomePageFormValues) => {
     try {
-      const uploadResults = await Promise.allSettled(
-        newImages.map((file) => uploadImage.mutateAsync(file))
-      );
-      const uploadedUrls: string[] = uploadResults
-        .filter((r): r is PromiseFulfilledResult<string> => r.status === 'fulfilled')
-        .map((r) => r.value);
-      const failedCount = uploadResults.filter((r) => r.status === 'rejected').length;
-      if (failedCount > 0) {
-        toast.error(`${failedCount} image${failedCount > 1 ? 's' : ''} failed to upload`);
-      }
+      // 1️⃣ Commit all image changes (upload + delete happens here)
+      const galleryUrls = await gallery.commit();
+      const banner1Urls = await banner1.commit();
+      const banner2Urls = await banner2.commit();
+      const mainBannerUrls = await mainBanner.commit();
 
-      const finalGallery = [...existingImages, ...uploadedUrls].map((url) => ({ imageUrl: url }));
+      const latestB1 = banner1Urls[banner1Urls.length - 1];
+      const latestB2 = banner2Urls[banner2Urls.length - 1];
+      const latestMain = mainBannerUrls[mainBannerUrls.length - 1];
+      const noB1 = banner1Urls.length === 0;
+      const noB2 = banner2Urls.length === 0;
+      const noMain = mainBannerUrls.length === 0;
 
+      // 2️⃣ Apply new image URLs
+      const finalBanners = values.banners.map((b, i) => {
+        const slot = i % 2;
+        if (slot === 0) {
+          if (latestB1) return { ...b, imageUrl: latestB1 };
+          if (noB1) return { ...b, imageUrl: '' };
+        }
+        if (slot === 1) {
+          if (latestB2) return { ...b, imageUrl: latestB2 };
+          if (noB2) return { ...b, imageUrl: '' };
+        }
+        return b;
+      });
+
+      const finalMainBanners = values.mainBanners.map((b) => ({
+        ...b,
+        imageUrl: latestMain ?? (noMain ? '' : b.imageUrl),
+      }));
+
+      // 3️⃣ Send payload
       const payload: UpdateHomePageContentRequest = {
-        heroBanners: values.heroBanners,
+        banners: finalBanners,
         infoCards: values.infoCards,
-        galleryImages: finalGallery,
+        mainBanners: finalMainBanners,
+        galleryImages: galleryUrls.map((url) => ({ imageUrl: url })),
       };
 
       await updateContent.mutateAsync(payload);
-      toast.success('Homepage content updated successfully');
-    } catch (error) {
-      toast.error('Failed to update homepage content');
-    } finally {
-      setIsProcessing(false);
+
+      toast.success('Homepage updated successfully');
+    } catch {
+      toast.error('Failed to update homepage');
     }
   };
-
-  const handleBackendDelete = async (url: string) => {
-    setIsDeletingImage(true);
-    try {
-      await deleteImageMutation.mutateAsync(url);
-      setExistingImages((imgs) => imgs.filter((img) => img !== url));
-    } catch (error) {
-      toast.error('Failed to delete image');
-    } finally {
-      setIsDeletingImage(false);
-    }
-  };
-
-  const handleImagesChange = (files: (File | string)[]) => {
-    const newFiles: File[] = [];
-    const urls: string[] = [];
-
-    files.forEach((item) => {
-      if (item instanceof File) newFiles.push(item);
-      else urls.push(item);
-    });
-
-    setNewImages(newFiles);
-    setExistingImages(urls);
-  };
-
-  const galleryUploaderProps = useMemo(
-    () => ({
-      images: [...existingImages, ...newImages],
-      multiple: true,
-      onBackendDelete: handleBackendDelete,
-      onImagesChange: handleImagesChange,
-    }),
-    [existingImages, newImages]
-  );
 
   return {
     control,
     handleSubmit: handleSubmit(onSubmit),
-    heroBanners,
+    banners,
     infoCards,
-    galleryImages: galleryImageFields,
-    galleryUploaderProps,
+    galleryImages,
+    mainBanners,
+    galleryUploaderProps: gallery.uploaderProps,
+    banner1UploaderProps: { ...banner1.uploaderProps, multiple: false },
+    banner2UploaderProps: { ...banner2.uploaderProps, multiple: false },
+    mainBannerUploaderProps: { ...mainBanner.uploaderProps, multiple: false },
     isLoading,
     errors,
-    isSubmitting: isSubmitting || isProcessing || isDeletingImage,
+    isSubmitting:
+      isSubmitting ||
+      gallery.isProcessing ||
+      banner1.isProcessing ||
+      banner2.isProcessing ||
+      mainBanner.isProcessing,
   };
 };
