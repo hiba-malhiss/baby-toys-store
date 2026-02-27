@@ -1,8 +1,3 @@
-export interface HeroBannerDto {
-  id?: number;
-  text: string;
-}
-
 export interface InfoCardDto {
   id?: number;
   title: string;
@@ -17,8 +12,30 @@ export interface GalleryImageDto {
   caption?: string;
 }
 
+export type BannerTextAlignment = 'LEFT' | 'CENTER' | 'RIGHT';
+export type BannerTextPosition = 'CENTER' | 'TOP_RIGHT';
+
+export interface BannerDto {
+  id?: number;
+  text: string;
+  locale?: string;
+  imageUrl?: string;
+  alignment?: BannerTextAlignment;
+  position?: BannerTextPosition;
+}
+
+export interface MainBannerDto {
+  imageUrl?: string;
+  title?: string;
+  subtitle?: string;
+  ctaText?: string;
+  alignment?: BannerTextAlignment;
+  locale?: string;
+}
+
 export interface HomePageContentDto {
-  heroBanners: HeroBannerDto[];
   infoCards: InfoCardDto[];
   galleryImages: GalleryImageDto[];
+  banners?: BannerDto[];
+  mainBanners?: MainBannerDto[];
 }

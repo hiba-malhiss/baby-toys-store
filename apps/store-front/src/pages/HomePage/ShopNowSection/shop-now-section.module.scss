@@ -1,18 +1,16 @@
 .shopNowSection {
-  &-content {
-    padding-bottom: 9%;
-    max-width: 50%;
-  }
-
   &-imageContainer {
+    display: flex;
+    flex-direction: column;
     width: 100%;
     min-height: 500px;
     max-height: 800px;
     height: 75vh;
+    background-color: var(--color-secondary);
 
     padding: 10%;
 
-    background-image: url('/assets/images/home-main.png');
+    background-image: var(--bg-image);
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;
@@ -33,12 +31,5 @@
     padding-bottom: 68px;
     max-width: 545px;
     line-height: 20px;
-  }
-}
-
-@media (max-width: $breakpoint-large) {
-  .shopNowSection-content {
-    align-items: center !important;
-    max-width: 100%;
   }
 }

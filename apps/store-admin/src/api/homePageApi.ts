@@ -47,7 +47,7 @@ export const useUploadGalleryImage = () => {
       );
 
       return data.data.url;
-    }
+    },
   });
 };
 

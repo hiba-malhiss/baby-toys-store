@@ -3,10 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@baby-toys/ui-kit';
 
-import {
-  useHomePageContent,
-  useUpdateHomePageContent,
-} from '../../api/homePageApi';
+import { useHomePageContent, useUpdateHomePageContent } from '../../api/homePageApi';
 
 import {
   BannerTextAlignment,
@@ -52,10 +49,7 @@ const buildDefaultMainBanners = () =>
     locale,
   }));
 
-const ensurePerLocale = <T extends { locale: string }>(
-  items: T[] = [],
-  defaults: T[]
-) =>
+const ensurePerLocale = <T extends { locale: string }>(items: T[] = [], defaults: T[]) =>
   locales.flatMap((locale) => {
     const lc = locale.toLowerCase();
     const existing = items.filter((i) => i.locale.toLowerCase() === lc);
@@ -94,19 +88,16 @@ export const useHomePageContentForm = () => {
   const mainBanners = useFieldArray({ control, name: 'mainBanners' }).fields;
 
   useEffect(() => {
-    if(!data) return;
+    if (!data) return;
 
-    const normalizedBanners = ensurePerLocale(
-      data.banners,
-      buildDefaultBanners()
-    );
+    const normalizedBanners = ensurePerLocale(data.banners, buildDefaultBanners());
 
     const slotUrls: Record<number, string | undefined> = {};
     locales.forEach((loc) => {
       normalizedBanners
         .filter((b) => b.locale === loc)
         .forEach((b, i) => {
-          if(!slotUrls[i] && b.imageUrl) slotUrls[i] = b.imageUrl;
+          if (!slotUrls[i] && b.imageUrl) slotUrls[i] = b.imageUrl;
         });
     });
 
@@ -119,14 +110,11 @@ export const useHomePageContentForm = () => {
       banners: normalizedBanners,
       infoCards: ensurePerLocale(data.infoCards, buildDefaultInfoCards()),
       galleryImages: data.galleryImages ?? [],
-      mainBanners: ensurePerLocale(
-        data.mainBanners,
-        buildDefaultMainBanners()
-      ),
+      mainBanners: ensurePerLocale(data.mainBanners, buildDefaultMainBanners()),
     });
   }, [data, reset]);
 
-  const onSubmit = async(values: HomePageFormValues) => {
+  const onSubmit = async (values: HomePageFormValues) => {
     try {
       // 1️⃣ Commit all image changes (upload + delete happens here)
       const galleryUrls = await gallery.commit();

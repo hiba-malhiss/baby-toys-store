@@ -1,4 +1,13 @@
-import { Card, Flex, Accordion, Button, Divider, TabBar, TabBarItem, ImageUploader } from '@baby-toys/ui-kit';
+import {
+  Card,
+  Flex,
+  Accordion,
+  Button,
+  Divider,
+  TabBar,
+  TabBarItem,
+  ImageUploader,
+} from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 import { getSupportedLocales } from '../../i18n/locale';
 import { useHomePageContentForm } from './useHomePageContentForm';
@@ -50,7 +59,12 @@ const HomePageContent: React.FC = () => {
                 >
                   {locales.map((l) => (
                     <TabBarItem key={l} value={`${l}-banner1`}>
-                      <BannersSection locale={l} control={control} banners={banners} slotIndex={0} />
+                      <BannersSection
+                        locale={l}
+                        control={control}
+                        banners={banners}
+                        slotIndex={0}
+                      />
                     </TabBarItem>
                   ))}
                 </TabBar>
@@ -79,7 +93,12 @@ const HomePageContent: React.FC = () => {
                 >
                   {locales.map((l) => (
                     <TabBarItem key={l} value={`${l}-banner2`}>
-                      <BannersSection locale={l} control={control} banners={banners} slotIndex={1} />
+                      <BannersSection
+                        locale={l}
+                        control={control}
+                        banners={banners}
+                        slotIndex={1}
+                      />
                     </TabBarItem>
                   ))}
                 </TabBar>
@@ -145,7 +164,7 @@ const HomePageContent: React.FC = () => {
             >
               {locales.map((l) => (
                 <TabBarItem key={l} value={`${l}-info`}>
-                  <InfoCardsSection locale={l} control={control} infoCards={infoCards}/>
+                  <InfoCardsSection locale={l} control={control} infoCards={infoCards} />
                 </TabBarItem>
               ))}
             </TabBar>
@@ -153,10 +172,10 @@ const HomePageContent: React.FC = () => {
 
           {/* === Gallery Section === */}
           <Accordion header={t('homepage.sections.gallery')} buttonAppearance="outline">
-            <GallerySection galleryUploaderProps={galleryUploaderProps}/>
+            <GallerySection galleryUploaderProps={galleryUploaderProps} />
           </Accordion>
 
-          <Divider thickness="2px"/>
+          <Divider thickness="2px" />
 
           <Flex justify="end">
             <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>

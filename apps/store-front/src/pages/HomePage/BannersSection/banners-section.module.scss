@@ -1,42 +1,70 @@
 .banner {
   padding: 0 4%;
+  display: flex;
+  width: 100%;
+  gap: 24px;
+}
 
-  &-Wrapper {
-    position: relative;
-    width: 48%;
-    min-width: 340px;
-    max-width: 610px;
-    height: 338px;
-    background-size: cover;
-    background-position: center;
-    border-radius: 8px;
-    padding: 18px;
+.bannerWrapper {
+  position: relative;
+  width: 48%;
+  min-width: 340px;
+  max-width: 610px;
+  height: 338px;
+  border-radius: 8px;
+  padding: 18px;
+  background-size: cover;
+  background-image: var(--bg-image);
+  background-color: var(--color-secondary);
+  display: flex;
 
-    p {
-      width: 60%;
-      text-align: center;
-      text-shadow: 3px 0 var(--color-white);
-      font-size: 2rem;
-      color: var(--color-primary);
-    }
-
-    &-center {
-      background-image: url('/assets/images/banners/banner1.png');
-
-      p {
-        text-align: center;
-      }
-    }
-
-    &-topRight {
-      background-position: bottom;
-      background-image: url('/assets/images/banners/banner2.png');
-    }
+  p {
+    width: 60%;
+    text-shadow: 3px 0 var(--color-white);
+    font-size: 2rem;
+    color: var(--color-primary);
   }
 }
 
+/* ---------------- POSITION SUPPORT ---------------- */
+/* add any future position like bottom_left, top_left, etc */
+
+.position-center {
+  background-position: center;
+}
+
+.position-top_right {
+  background-position: top right;
+}
+
+.position-top_left {
+  background-position: top left;
+}
+
+.position-bottom_right {
+  background-position: bottom right;
+}
+
+.position-bottom_left {
+  background-position: bottom left;
+}
+
+/* ---------------- ALIGNMENT SUPPORT ---------------- */
+
+.align-left p {
+  text-align: left;
+}
+
+.align-center p {
+  text-align: center;
+}
+
+.align-right p {
+  text-align: right;
+}
+
 @media (max-width: $breakpoint-large) {
-  .banner-Wrapper {
+  .bannerWrapper {
     width: 100%;
   }
 }

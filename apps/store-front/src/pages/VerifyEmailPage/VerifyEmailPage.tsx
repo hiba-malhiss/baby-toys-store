@@ -46,7 +46,9 @@ export const VerifyEmailPage: React.FC = () => {
     return (
       <div className={styles.verifyEmailPage}>
         <div className={styles.verifyEmailPageError}>{t('auth.verifyEmail.invalidLink')}</div>
-        <Button onClick={() => navigate('/home', { replace: true })}>{t('auth.verifyEmail.goHome')}</Button>
+        <Button onClick={() => navigate('/home', { replace: true })}>
+          {t('auth.verifyEmail.goHome')}
+        </Button>
       </div>
     );
   }

@@ -1,34 +1,41 @@
-import { Flex } from '@baby-toys/ui-kit';
 import styles from './banners-section.module.scss';
 import clsx from 'clsx';
 import { useHomePageContent } from '../../../api/homepageApi';
-import type { HeroBannerDto } from '../../../api/types/homepage';
-import { useIsRtl } from '../../../utils/i18n.ts';
+import type { BannerDto } from '../../../api/types/homepage';
+import { useIsRtl } from '../../../utils/i18n';
+import { getFlexAlignment, getFlexJustify } from '../homePage.helpers.ts';
+import { getAppLocale } from '../../../components/i18n/locale.ts';
 
 const BannersSection = () => {
   const { data, isLoading } = useHomePageContent();
-  const heroBanners = (data?.heroBanners || []) as HeroBannerDto[];
+  const banners = (data?.banners || []) as BannerDto[];
   const isRtl = useIsRtl();
 
-  if (isLoading || heroBanners.length === 0) return null;
+  if (isLoading || banners.length === 0) return null;
+
+  const currentLocale = getAppLocale();
+  const localized = banners.filter((b) => b.locale === currentLocale);
 
   return (
-    <Flex spacing="xxl" fullWidth className={styles.banner} wrap justify="center">
-      <Flex
-        align="center"
-        justify="center"
-        className={clsx(styles.bannerWrapper, styles.bannerWrapperCenter)}
-      >
-        <p>{heroBanners[0]?.text || ''}</p>
-      </Flex>
-      <Flex
-        align="center"
-        justify={isRtl ? 'start' : 'end'}
-        className={clsx(styles.bannerWrapper, styles.bannerWrapperTopRight)}
-      >
-        <p>{heroBanners[1]?.text || ''}</p>
-      </Flex>
-    </Flex>
+    <div className={styles.banner}>
+      {localized.map((banner, index) => (
+        <div
+          key={index}
+          className={clsx(
+            styles.bannerWrapper,
+            banner.position && styles[`position-${banner.position.toLowerCase()}`],
+            banner.alignment && styles[`align-${banner.alignment.toLowerCase()}`]
+          )}
+          style={{
+            ['--bg-image' as any]: `url(${banner.imageUrl})`,
+            alignItems: getFlexAlignment(banner.alignment, isRtl),
+            justifyContent: getFlexJustify(banner.alignment, banner.position, isRtl),
+          }}
+        >
+          <p>{banner.text}</p>
+        </div>
+      ))}
+    </div>
   );
 };
 

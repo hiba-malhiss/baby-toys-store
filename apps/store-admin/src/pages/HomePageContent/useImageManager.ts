@@ -82,10 +82,7 @@ export function useImageManager(initialUrls?: string[], opts?: { multiple?: bool
     }
   };
 
-  const deleteIfReplaced = async (
-    oldUrl: string | undefined,
-    newUrl: string | undefined
-  ) => {
+  const deleteIfReplaced = async (oldUrl: string | undefined, newUrl: string | undefined) => {
     if (!oldUrl || !newUrl) return;
     if (oldUrl !== newUrl) {
       try {
@@ -98,7 +95,7 @@ export function useImageManager(initialUrls?: string[], opts?: { multiple?: bool
 
   const seed = (urls?: string[]) => {
     const arr = urls || [];
-    setExistingUrls(multiple ? arr : (arr.length ? [arr[arr.length - 1]] : []));
+    setExistingUrls(multiple ? arr : arr.length ? [arr[arr.length - 1]] : []);
     setNewFiles([]);
     setRemovedUrls([]);
     setLatest(urls?.[urls.length - 1]);
@@ -107,10 +104,11 @@ export function useImageManager(initialUrls?: string[], opts?: { multiple?: bool
   const uploaderProps = {
     images: multiple
       ? [...(existingUrls || []), ...newFiles]
-      : (newFiles.length
-          ? [newFiles[newFiles.length - 1]]
-          : ((existingUrls && existingUrls.length) ? [existingUrls[existingUrls.length - 1]] : [])
-        ),
+      : newFiles.length
+        ? [newFiles[newFiles.length - 1]]
+        : existingUrls && existingUrls.length
+          ? [existingUrls[existingUrls.length - 1]]
+          : [],
     multiple,
     onImagesChange: handleChange,
     onBackendDelete: handleRemove,

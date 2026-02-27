@@ -24,28 +24,21 @@ const positionOptions = [
   { label: 'Top Right', value: BannerTextPosition.TOP_RIGHT },
 ];
 
-const BannersSection: React.FC<Props> = ({
-                                           locale,
-                                           control,
-                                           banners,
-                                           slotIndex,
-                                         }) => {
+const BannersSection: React.FC<Props> = ({ locale, control, banners, slotIndex }) => {
   const { t } = useTranslation();
 
   // Get banners for this locale
   const localeBanners = useMemo(
-    () => banners.filter(b => b.locale === locale),
+    () => banners.filter((b) => b.locale === locale),
     [banners, locale]
   );
 
   const selectedBanner = localeBanners[slotIndex];
 
-  if(!selectedBanner) return null;
+  if (!selectedBanner) return null;
 
   // Find actual index in original array (needed for react-hook-form path)
-  const realIndex = banners.findIndex(
-    b => b.locale === locale && b === selectedBanner
-  );
+  const realIndex = banners.findIndex((b) => b.locale === locale && b === selectedBanner);
 
   const label = t('homepage.banners.bannerText', {
     position: slotIndex + 1,
@@ -61,7 +54,7 @@ const BannersSection: React.FC<Props> = ({
         fullWidth
         required
       >
-        <StringInput/>
+        <StringInput />
       </FormFieldWrapper>
 
       <Flex fullWidth spacing="l">
@@ -71,7 +64,7 @@ const BannersSection: React.FC<Props> = ({
           fullWidth
           label={t('homepage.banners.alignment')}
         >
-          <Select options={alignmentOptions}/>
+          <Select options={alignmentOptions} />
         </FormFieldWrapper>
 
         <FormFieldWrapper
@@ -80,7 +73,7 @@ const BannersSection: React.FC<Props> = ({
           fullWidth
           label={t('homepage.banners.position')}
         >
-          <Select options={positionOptions}/>
+          <Select options={positionOptions} />
         </FormFieldWrapper>
       </Flex>
     </Flex>

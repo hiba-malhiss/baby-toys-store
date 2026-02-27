@@ -19,8 +19,17 @@ import clsx from 'clsx';
 import { useTranslation } from 'react-i18next';
 
 import { useUrlFilters } from '../../../hooks/useUrlFilters';
-import { parseAttributeFilters, parseOptionFilters, type ShopFilters, urlFilterParsers } from './side-filters.utils';
-import { useCategories, useFilterableAttributes, useFilterableOptions } from '../../../api/catalogApi';
+import {
+  parseAttributeFilters,
+  parseOptionFilters,
+  type ShopFilters,
+  urlFilterParsers,
+} from './side-filters.utils';
+import {
+  useCategories,
+  useFilterableAttributes,
+  useFilterableOptions,
+} from '../../../api/catalogApi';
 import { useStoreSettings } from '../../../api/settingsApi';
 import { useFilterChips } from '../useFilterChips';
 
@@ -241,10 +250,7 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
               }))}
               value={selectedOpts[String(type.id)]?.map(String) || []}
               onChange={(values) =>
-                updateOptionSelection(
-                  type.id,
-                  values.length > 0 ? values.map(Number) : undefined
-                )
+                updateOptionSelection(type.id, values.length > 0 ? values.map(Number) : undefined)
               }
               direction="vertical"
             />

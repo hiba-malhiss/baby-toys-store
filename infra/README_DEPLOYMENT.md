@@ -537,21 +537,25 @@ nano Dockerfile
 ```
 
 run nginx
+
 ```bash
 docker exec -it nginx-docker nginx -s reload
 ```
 
 clean radius:
+
 ```bash
 docker exec -it redis redis-cli FLUSHALL
 ```
 
 check redis record
+
 ```bash
 docker exec -it redis redis-cli KEYS 'rl:password-reset:*'
 ```
 
 after update .env
+
 ```bash
 docker compose down
 docker compose up -d --build

@@ -1,33 +1,45 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './shop-now-section.module.scss';
-import { Flex, Button } from '@baby-toys/ui-kit';
-import { useTranslation } from 'react-i18next';
+import { Button } from '@baby-toys/ui-kit';
 import { useIsRtl } from '../../../utils/i18n';
+import { useHomePageContent } from '../../../api/homepageApi';
+import { getFlexAlignment, getFlexJustify } from '../homePage.helpers.ts';
+import { getAppLocale } from '../../../components/i18n/locale.ts';
 
 const ShopNowSection = () => {
   const navigate = useNavigate();
-  const { t } = useTranslation('common');
   const isRtl = useIsRtl();
+  const { data, isLoading } = useHomePageContent();
+
+  if (isLoading || !data?.mainBanners?.length) return null;
+
+  const currentLocale = getAppLocale();
+  const banner = data.mainBanners.find((b) => b.locale === currentLocale);
+  if (!banner) return null;
 
   const handleShopNow = () => {
     navigate('/shop');
   };
 
   return (
-    <Flex
+    <div
       className={styles.shopNowSectionImageContainer}
-      direction="vertical"
-      justify="center"
-      align={isRtl ? 'start' : 'end'}
+      style={{
+        ['--bg-image' as any]: `url(${banner.imageUrl})`,
+        alignItems: getFlexAlignment(banner.alignment, isRtl),
+        justifyContent: getFlexJustify(banner.alignment, 'CENTER', isRtl),
+      }}
     >
-      <Flex direction="vertical" className={styles.shopNowSectionContent}>
-        <span className={styles.shopNowSectionTitle}>{t('home.shopNow.title')}</span>
-        <span className={styles.shopNowSectionSubTitle}>{t('home.shopNow.subtitle')}</span>
+      {banner.title && <span className={styles.shopNowSectionTitle}>{banner.title}</span>}
+
+      {banner.subtitle && <span className={styles.shopNowSectionSubTitle}>{banner.subtitle}</span>}
+
+      {banner.ctaText && (
         <Button size="xxlarge" appearance="filled" color="accent" onClick={handleShopNow}>
-          {t('home.shopNow.cta')}
+          {banner.ctaText}
         </Button>
-      </Flex>
-    </Flex>
+      )}
+    </div>
   );
 };
 

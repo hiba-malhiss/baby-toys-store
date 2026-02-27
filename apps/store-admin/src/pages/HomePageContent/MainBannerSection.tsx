@@ -4,7 +4,7 @@ import { Flex, StringInput, Select } from '@baby-toys/ui-kit';
 import { Control } from 'react-hook-form';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { HomePageFormValues } from './homePage.helper';
-import { BannerTextAlignment } from "../../api/types/homePage.ts";
+import { BannerTextAlignment } from '../../api/types/homePage.ts';
 
 interface Props {
   control: Control<HomePageFormValues>;
@@ -28,7 +28,7 @@ const MainBannerSection: React.FC<Props> = ({ control, baseName }) => {
         label={t('homepage.mainBanner.title')}
         fullWidth
       >
-        <StringInput/>
+        <StringInput />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -37,7 +37,7 @@ const MainBannerSection: React.FC<Props> = ({ control, baseName }) => {
         label={t('homepage.mainBanner.subtitle')}
         fullWidth
       >
-        <StringInput/>
+        <StringInput />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -46,7 +46,7 @@ const MainBannerSection: React.FC<Props> = ({ control, baseName }) => {
         label={t('homepage.mainBanner.ctaText')}
         fullWidth
       >
-        <StringInput/>
+        <StringInput />
       </FormFieldWrapper>
 
       <FormFieldWrapper
@@ -55,7 +55,7 @@ const MainBannerSection: React.FC<Props> = ({ control, baseName }) => {
         fullWidth
         label={t('homepage.mainBanner.alignment')}
       >
-        <Select options={alignmentOptions}/>
+        <Select options={alignmentOptions} />
       </FormFieldWrapper>
     </Flex>
   );

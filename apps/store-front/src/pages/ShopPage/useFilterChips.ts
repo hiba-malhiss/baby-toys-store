@@ -1,4 +1,8 @@
-import { parseAttributeFilters, parseOptionFilters, type ShopFilters } from './SideFilters/side-filters.utils';
+import {
+  parseAttributeFilters,
+  parseOptionFilters,
+  type ShopFilters,
+} from './SideFilters/side-filters.utils';
 import { useCategories, useFilterableAttributes, useFilterableOptions } from '../../api/catalogApi';
 import { useStoreSettings } from '../../api/settingsApi';
 import { useTranslation } from 'react-i18next';

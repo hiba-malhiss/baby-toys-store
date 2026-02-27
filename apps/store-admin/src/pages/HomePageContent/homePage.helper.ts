@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { BannerTextAlignment, BannerTextPosition } from "../../api/types/homePage.ts";
+import { BannerTextAlignment, BannerTextPosition } from '../../api/types/homePage.ts';
 
 export const bannerSchema = z.object({
   text: z.string().min(1, 'Banner text is required'),
