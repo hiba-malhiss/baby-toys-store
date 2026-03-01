@@ -49,7 +49,7 @@ const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json',
+    // Do NOT set a global Content-Type so FormData can set its own boundary automatically
     Accept: 'application/json',
   },
   xsrfCookieName: 'XSRF-TOKEN',
@@ -84,6 +84,16 @@ api.interceptors.request.use((config: InternalAxiosRequestConfig) => {
   }
   // Always attach preferred locale (align default with store-front)
   (config.headers as any)['Accept-Language'] = getAppLocale() || 'ar';
+
+  // Ensure correct Content-Type per payload
+  const data: any = (config as any).data;
+  if (typeof FormData !== 'undefined' && data instanceof FormData) {
+    // Let the browser set multipart boundary
+    delete (config.headers as any)['Content-Type'];
+  } else if (!('Content-Type' in (config.headers as any))) {
+    // Default to JSON only when not multipart
+    (config.headers as any)['Content-Type'] = 'application/json';
+  }
   return config;
 });
 
