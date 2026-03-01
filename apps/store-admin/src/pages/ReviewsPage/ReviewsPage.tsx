@@ -77,7 +77,7 @@ export default function ReviewsPage() {
               appearance="link"
               color="highlighted"
               withoutPadding
-              onClick={() => navigate(`/edit-product/${row.productId}`)}
+              onClick={() => navigate(`/product/${row.productId}`)}
             >
               {row.productName ? (
                 <span className={styles.reviewsPageTruncate} title={row.productName}>

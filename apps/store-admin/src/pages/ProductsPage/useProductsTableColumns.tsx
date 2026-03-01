@@ -97,7 +97,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
         row.averageRating ? (
           <Flex spacing="xs">
             <Rating value={row.averageRating} />
-            <span>{t('products.labels.ratingCount', { count: row.numberOfRatings || 0 })}</span>
+            <span>({row.numberOfRatings || 0})</span>
           </Flex>
         ) : (
           <span>-</span>

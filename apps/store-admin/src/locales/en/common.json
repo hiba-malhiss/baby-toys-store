@@ -96,6 +96,20 @@
         "copiedProductId": "Product ID copied to clipboard",
         "copiedUserId": "User ID copied to clipboard"
       },
+      "fields": {
+        "id": "ID",
+        "product": "Product",
+        "image": "Image",
+        "user": "User",
+        "phone": "Phone",
+        "rating": "Rating",
+        "comment": "Comment",
+        "status": "Status"
+      },
+      "status": {
+        "published": "Published",
+        "hidden": "Hidden"
+      },
       "filters": {
         "productIdPlaceholder": "Product ID",
         "userIdPlaceholder": "User ID",
@@ -489,8 +503,8 @@
       "selectedProduct": "selected product",
       "confirmDelete": {
         "header": "Confirm Deletion",
-        "single": "Are you sure you want to delete {name}?",
-        "multiple": "Are you sure you want to delete {count} selected products?"
+        "single": "Are you sure you want to delete {{name}}?",
+        "multiple": "Are you sure you want to delete {{count}} selected products?"
       }
     },
     "addTitle": "Add Product",
