@@ -8,7 +8,6 @@ export interface VariantDto {
   stockQuantity: number;
   isActive: boolean;
   mainImage?: string | null;
-  images?: string[];
   options?: string[];
   // Map of optionTypeId -> optionValueId for this variant (backend populated)
   optionSelectionIds?: Record<number, number>;
@@ -23,7 +22,6 @@ export interface CreateVariantRequest {
   stockQuantity: number;
   isActive?: boolean;
   mainImage?: string | null;
-  images?: string[];
   optionSelections?: Record<number, number>; // typeId -> valueId
 }
 
@@ -36,6 +34,5 @@ export interface UpdateVariantRequest {
   stockQuantity?: number;
   isActive?: boolean;
   mainImage?: string | null;
-  images?: string[];
   optionSelections?: Record<number, number>;
 }

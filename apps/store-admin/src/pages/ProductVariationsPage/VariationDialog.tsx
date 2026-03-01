@@ -42,7 +42,6 @@ type FormState = {
   stock: string;
   active: boolean;
   mainImage?: string;
-  images: string[];
   selections: Record<number, number>;
 };
 
@@ -63,7 +62,6 @@ const DEFAULT_FORM: FormState = {
   stock: '0',
   active: true,
   mainImage: undefined,
-  images: [],
   selections: {},
 };
 
@@ -100,7 +98,6 @@ const VariationDialog: React.FC<Props> = ({
         stock: String(editing.stockQuantity ?? '0'),
         active: !!editing.isActive,
         mainImage: editing.mainImage ?? undefined,
-        images: editing.images || [],
         selections: Object.fromEntries(
           Object.entries(editing.optionSelectionIds || {}).map(([k, v]) => [Number(k), Number(v)])
         ),
@@ -188,7 +185,6 @@ const VariationDialog: React.FC<Props> = ({
       stockQuantity: Number.isNaN(stockNum) ? 0 : stockNum,
       isActive: form.active,
       mainImage: form.mainImage ?? null,
-      images: form.images,
       optionSelections: mustSelectAll ? form.selections : {},
     };
   };
@@ -307,30 +303,6 @@ const VariationDialog: React.FC<Props> = ({
             placeholder={t('app.variation.selectImage')}
             value={form.mainImage}
             onChange={(v) => setField('mainImage', (v as string) || undefined)}
-          >
-            {allProductImages.map((img) => (
-              <Option key={img} value={img}>
-                <Flex align="center" spacing="m">
-                  <Image
-                    src={img}
-                    alt="img"
-                    style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4 }}
-                  />
-                  <span>{img}</span>
-                </Flex>
-              </Option>
-            ))}
-          </Select>
-        </FieldWrapper>
-
-        <FieldWrapper label={t('app.variation.galleryImages')} fullWidth>
-          <Select
-            multiple
-            placeholder={t('app.variation.selectImages')}
-            value={form.images}
-            onChange={(vals) =>
-              setField('images', (Array.isArray(vals) ? vals : [vals]).filter(Boolean) as string[])
-            }
           >
             {allProductImages.map((img) => (
               <Option key={img} value={img}>
