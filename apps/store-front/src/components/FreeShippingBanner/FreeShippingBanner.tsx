@@ -10,7 +10,7 @@ const FreeShippingBanner = () => {
   const { pathname } = useLocation();
   const { t } = useTranslation('common');
   const minSubtotal = settings?.policies?.freeShippingMinSubtotal || 0;
-  if (!settings || !cart || Number.isNaN(minSubtotal) || minSubtotal <= 0) return null;
+  if (!settings || !cart || Number.isNaN(minSubtotal) || minSubtotal <= 0 || !settings?.freeShippingValid) return null;
 
   const fmt = new Intl.NumberFormat(undefined, {
     style: 'currency',

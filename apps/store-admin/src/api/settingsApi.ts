@@ -5,6 +5,7 @@ import { getAppLocale } from './../i18n/locale.ts';
 import { useMemo } from 'react';
 
 export type StoreSettingsGrouped = {
+  freeShippingValid: boolean;
   general: {
     currency: string;
     currencySymbol: string;

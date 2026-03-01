@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import api from './axiosConfig';
 
 export type StoreSettings = {
+  freeShippingValid: boolean;
   general: {
     currency: string;
     currencySymbol: string;

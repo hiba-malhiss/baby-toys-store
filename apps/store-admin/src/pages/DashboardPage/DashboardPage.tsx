@@ -14,7 +14,7 @@ import {
 } from '@baby-toys/ui-kit';
 import { useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { AlertTriangle, Info, CheckCircle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, Info, RefreshCw } from 'lucide-react';
 
 import { useAdminDashboard, DASHBOARD_QUERY_KEY } from '../../api/dashboardApi';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -257,6 +257,15 @@ export default function DashboardPage() {
                   message={a.message}
                 />
               ))}
+              {settings?.freeShippingValid && (
+                <Alert
+                  appearance="info"
+                  size="medium"
+                  icon={Info}
+                  title={t('dashboard.freeShipping.title', { defaultValue: 'Free shipping is active' })}
+                  message={t('dashboard.freeShipping.message', { defaultValue: 'Orders placed now will benefit from free shipping.' })}
+                />
+              )}
             </div>
 
             <div className={styles.gridTwoCol}>
