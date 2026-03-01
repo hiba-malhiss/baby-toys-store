@@ -4,7 +4,7 @@ import { Flex, StringInput, Select } from '@baby-toys/ui-kit';
 import { Control } from 'react-hook-form';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { HomePageFormValues } from './homePage.helper';
-import { BannerTextAlignment, BannerTextPosition } from '../../api/types/homePage';
+import { BannerTextAlignment, VerticalAlignment } from '../../api/types/homePage';
 
 interface Props {
   locale: string;
@@ -19,9 +19,10 @@ const alignmentOptions = [
   { label: 'Right', value: BannerTextAlignment.RIGHT },
 ];
 
-const positionOptions = [
-  { label: 'Center', value: BannerTextPosition.CENTER },
-  { label: 'Top Right', value: BannerTextPosition.TOP_RIGHT },
+const verticalAlignmentOptions = [
+  { label: 'Top', value: VerticalAlignment.TOP },
+  { label: 'Center', value: VerticalAlignment.CENTER },
+  { label: 'Bottom', value: VerticalAlignment.BOTTOM },
 ];
 
 const BannersSection: React.FC<Props> = ({ locale, control, banners, slotIndex }) => {
@@ -68,12 +69,12 @@ const BannersSection: React.FC<Props> = ({ locale, control, banners, slotIndex }
         </FormFieldWrapper>
 
         <FormFieldWrapper
-          name={`banners.${realIndex}.position`}
+          name={`banners.${realIndex}.verticalAlignment`}
           control={control}
           fullWidth
-          label={t('homepage.banners.position')}
+          label={t('homepage.banners.verticalAlignment')}
         >
-          <Select options={positionOptions} />
+          <Select options={verticalAlignmentOptions} />
         </FormFieldWrapper>
       </Flex>
     </Flex>

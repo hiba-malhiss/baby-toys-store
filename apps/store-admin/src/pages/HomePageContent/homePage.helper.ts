@@ -1,11 +1,11 @@
 import { z } from 'zod';
-import { BannerTextAlignment, BannerTextPosition } from '../../api/types/homePage.ts';
+import { BannerTextAlignment, VerticalAlignment } from '../../api/types/homePage.ts';
 
 export const bannerSchema = z.object({
   text: z.string().min(1, 'Banner text is required'),
   imageUrl: z.string().optional(),
   alignment: z.enum(BannerTextAlignment).optional(),
-  position: z.enum(BannerTextPosition).optional(),
+  verticalAlignment: z.enum(VerticalAlignment).optional(),
   locale: z.enum(['en', 'ar']),
 });
 
@@ -27,6 +27,7 @@ export const mainBannerSchema = z.object({
   subtitle: z.string().optional(),
   ctaText: z.string().optional(),
   alignment: z.enum(BannerTextAlignment).optional(),
+  verticalAlignment: z.enum(VerticalAlignment).optional(),
   locale: z.enum(['en', 'ar']),
 });
 

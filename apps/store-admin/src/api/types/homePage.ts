@@ -4,9 +4,10 @@ export enum BannerTextAlignment {
   RIGHT = 'RIGHT',
 }
 
-export enum BannerTextPosition {
+export enum VerticalAlignment {
+  TOP = 'TOP',
   CENTER = 'CENTER',
-  TOP_RIGHT = 'TOP_RIGHT',
+  BOTTOM = 'BOTTOM',
 }
 
 export interface BannerDto {
@@ -15,7 +16,7 @@ export interface BannerDto {
   locale: string;
   imageUrl?: string;
   alignment?: BannerTextAlignment;
-  position?: BannerTextPosition;
+  verticalAlignment?: VerticalAlignment;
 }
 
 export interface MainBannerDto {
@@ -24,6 +25,7 @@ export interface MainBannerDto {
   subtitle?: string;
   ctaText?: string;
   alignment?: BannerTextAlignment;
+  verticalAlignment?: VerticalAlignment;
   locale?: string;
 }
 

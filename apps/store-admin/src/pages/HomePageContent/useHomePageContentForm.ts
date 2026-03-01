@@ -7,7 +7,7 @@ import { useHomePageContent, useUpdateHomePageContent } from '../../api/homePage
 
 import {
   BannerTextAlignment,
-  BannerTextPosition,
+  VerticalAlignment,
   UpdateHomePageContentRequest,
 } from '../../api/types/homePage';
 
@@ -23,7 +23,7 @@ const buildDefaultBanners = () =>
       text: '',
       imageUrl: '',
       alignment: BannerTextAlignment.CENTER,
-      position: BannerTextPosition.CENTER,
+      verticalAlignment: VerticalAlignment.CENTER,
       locale,
     }))
   );
@@ -46,6 +46,7 @@ const buildDefaultMainBanners = () =>
     subtitle: '',
     ctaText: '',
     alignment: BannerTextAlignment.RIGHT,
+    verticalAlignment: VerticalAlignment.CENTER,
     locale,
   }));
 

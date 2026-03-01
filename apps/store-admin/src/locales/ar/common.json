@@ -898,14 +898,15 @@
       "bannerText": "نص اللافتة {position} ({locale})",
       "imageUrl": "رابط الصورة",
       "alignment": "المحاذاة",
-      "position": "الموضع"
+      "verticalAlignment": "المحاذاة العمودية"
     },
     "mainBanner": {
       "title": "العنوان",
       "subtitle": "العنوان الفرعي",
       "ctaText": "نص زر الدعوة",
       "imageUrl": "رابط الصورة",
-      "alignment": "المحاذاة",
+      "alignment": "المحاذاة الأفقية",
+      "verticalAlignment": "المحاذاة العمودية",
       "locale": "اللغة"
     },
     "heroBanners": {

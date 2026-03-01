@@ -13,7 +13,7 @@ export interface GalleryImageDto {
 }
 
 export type BannerTextAlignment = 'LEFT' | 'CENTER' | 'RIGHT';
-export type BannerTextPosition = 'CENTER' | 'TOP_RIGHT';
+export type VerticalAlignment = 'TOP' | 'CENTER' | 'BOTTOM';
 
 export interface BannerDto {
   id?: number;
@@ -21,7 +21,7 @@ export interface BannerDto {
   locale?: string;
   imageUrl?: string;
   alignment?: BannerTextAlignment;
-  position?: BannerTextPosition;
+  verticalAlignment?: VerticalAlignment;
 }
 
 export interface MainBannerDto {
@@ -30,6 +30,7 @@ export interface MainBannerDto {
   subtitle?: string;
   ctaText?: string;
   alignment?: BannerTextAlignment;
+  verticalAlignment?: VerticalAlignment;
   locale?: string;
 }
 

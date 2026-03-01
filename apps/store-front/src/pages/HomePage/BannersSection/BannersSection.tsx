@@ -3,7 +3,7 @@ import clsx from 'clsx';
 import { useHomePageContent } from '../../../api/homepageApi';
 import type { BannerDto } from '../../../api/types/homepage';
 import { useIsRtl } from '../../../utils/i18n';
-import { getFlexAlignment, getFlexJustify } from '../homePage.helpers.ts';
+import { getFlexJustify, getFlexVertical } from '../homePage.helpers.ts';
 import { getAppLocale } from '../../../components/i18n/locale.ts';
 
 const BannersSection = () => {
@@ -23,13 +23,12 @@ const BannersSection = () => {
           key={index}
           className={clsx(
             styles.bannerWrapper,
-            banner.position && styles[`position-${banner.position.toLowerCase()}`],
             banner.alignment && styles[`align-${banner.alignment.toLowerCase()}`]
           )}
           style={{
             ['--bg-image' as any]: `url(${banner.imageUrl})`,
-            alignItems: getFlexAlignment(banner.alignment, isRtl),
-            justifyContent: getFlexJustify(banner.alignment, banner.position, isRtl),
+            alignItems: getFlexVertical(banner.verticalAlignment),
+            justifyContent: getFlexJustify(banner.alignment, isRtl),
           }}
         >
           <p>{banner.text}</p>

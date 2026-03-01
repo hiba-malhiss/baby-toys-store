@@ -186,7 +186,7 @@
       "bannerText": "Banner {position} Text ({locale})",
       "imageUrl": "Image URL",
       "alignment": "Alignment",
-      "position": "Position"
+      "verticalAlignment": "Vertical Alignment"
     },
     "mainBanner": {
       "title": "Title",
@@ -194,6 +194,7 @@
       "ctaText": "CTA Text",
       "imageUrl": "Image URL",
       "alignment": "Alignment",
+      "verticalAlignment": "Vertical Alignment",
       "locale": "Locale"
     },
     "infoCards": {
