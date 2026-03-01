@@ -29,8 +29,6 @@ export const useUpdateHomePageContent = () => {
 };
 
 export const useUploadGalleryImage = () => {
-  const queryClient = useQueryClient();
-
   return useMutation({
     mutationFn: async (file: File) => {
       const formData = new FormData();
@@ -38,12 +36,7 @@ export const useUploadGalleryImage = () => {
 
       const { data } = await api.post<{ data: { url: string } }>(
         '/api/admin/homepage/gallery-image',
-        formData,
-        {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+        formData
       );
 
       return data.data.url;
