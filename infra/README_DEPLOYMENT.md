@@ -561,4 +561,6 @@ docker compose down
 docker compose up -d --build
 docker compose ps
 docker exec -it nginx-docker nginx -s reload
+cd /opt/toystore-docker
+docker compose restart nginx
 ```

@@ -49,7 +49,7 @@ const api: AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
   withCredentials: true,
   headers: {
-    // Do NOT set a global Content-Type so FormData can set its own boundary automatically
+    'Content-Type': 'application/json',
     Accept: 'application/json',
   },
   xsrfCookieName: 'XSRF-TOKEN',

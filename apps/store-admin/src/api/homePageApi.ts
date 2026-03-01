@@ -36,7 +36,12 @@ export const useUploadGalleryImage = () => {
 
       const { data } = await api.post<{ data: { url: string } }>(
         '/api/admin/homepage/gallery-image',
-        formData
+        formData,
+        {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
       );
 
       return data.data.url;
