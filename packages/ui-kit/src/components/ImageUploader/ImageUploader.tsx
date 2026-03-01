@@ -13,6 +13,8 @@ interface ImageUploaderProps {
   isDisabled?: boolean;
   isLoading?: boolean;
   fullHeight?: boolean;
+  maxImages?: number;
+  maxImageSizeMB?: number;
 }
 
 export interface PreviewImage {
@@ -23,9 +25,6 @@ export interface PreviewImage {
   progress?: number;
 }
 
-const MAX_IMAGES = 10;
-const MAX_FILE_SIZE_MB = 5;
-
 const ImageUploader: React.FC<ImageUploaderProps> = ({
   images = [],
   onImagesChange,
@@ -34,6 +33,8 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
   isDisabled = false,
   isLoading = false,
   fullHeight = false,
+  maxImages = 10,
+  maxImageSizeMB= 5
 }) => {
   const toast = useToast();
   const baseUrl = resolveImageBaseUrl();
@@ -90,19 +91,19 @@ const ImageUploader: React.FC<ImageUploaderProps> = ({
 
     const validFiles = files.filter((f) => f.type.startsWith('image/'));
     validFiles.forEach((f) => {
-      if (f.size / 1024 / 1024 > MAX_FILE_SIZE_MB) {
-        toast.error(`${f.name} exceeds ${MAX_FILE_SIZE_MB}MB`);
+      if (f.size / 1024 / 1024 > maxImageSizeMB) {
+        toast.error(`${f.name} exceeds ${maxImageSizeMB}MB`);
       }
     });
 
-    const remainingSlots = MAX_IMAGES - previewImages.length;
+    const remainingSlots = maxImages - previewImages.length;
     if (validFiles.length > remainingSlots) {
-      toast.error(`You can only upload up to ${MAX_IMAGES} images`);
+      toast.error(`You can only upload up to ${maxImages} images`);
     }
 
     const toAdd = validFiles
       .slice(0, remainingSlots)
-      .filter((f) => f.size / 1024 / 1024 <= MAX_FILE_SIZE_MB);
+      .filter((f) => f.size / 1024 / 1024 <= maxImageSizeMB);
 
     const newPreviews = toAdd.map((file) => ({
       file,

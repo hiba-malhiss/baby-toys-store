@@ -71,11 +71,6 @@ const HomePageContent: React.FC = () => {
                 <Divider />
                 <ImageUploader
                   {...banner1UploaderProps}
-                  maxFileSizeMB={10}
-                  accept="image/jpeg,image/png,image/webp"
-                  showPreview
-                  maxFileSizeText={t('homepage.gallery.maxFileSize')}
-                  acceptedFormatsText={t('homepage.gallery.acceptedFormats')}
                 />
               </Flex>
 
@@ -105,11 +100,6 @@ const HomePageContent: React.FC = () => {
                 <Divider />
                 <ImageUploader
                   {...banner2UploaderProps}
-                  maxFileSizeMB={10}
-                  accept="image/jpeg,image/png,image/webp"
-                  showPreview
-                  maxFileSizeText={t('homepage.gallery.maxFileSize')}
-                  acceptedFormatsText={t('homepage.gallery.acceptedFormats')}
                 />
               </Flex>
             </Flex>
@@ -139,11 +129,7 @@ const HomePageContent: React.FC = () => {
               <Divider />
               <ImageUploader
                 {...mainBannerUploaderProps}
-                maxFileSizeMB={10}
-                accept="image/jpeg,image/png,image/webp"
-                showPreview
-                maxFileSizeText={t('homepage.gallery.maxFileSize')}
-                acceptedFormatsText={t('homepage.gallery.acceptedFormats')}
+                maxImages={5}
               />
             </Flex>
           </Accordion>

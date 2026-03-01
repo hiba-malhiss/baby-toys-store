@@ -232,7 +232,6 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         <FormFieldWrapper name="imageUrl" label={t('categories.fields.image')} fullWidth>
           <ImageUploader
             images={imageFile ? [imageFile] : imagePreview ? [imagePreview] : []}
-            multiple={false}
             onImagesChange={(files: (File | string)[]) => {
               const file = files?.[0];
               if (file instanceof File) {

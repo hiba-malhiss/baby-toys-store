@@ -19,7 +19,7 @@ export interface BannerDto {
 }
 
 export interface MainBannerDto {
-  imageUrl?: string;
+  imagesUrl?: string[];
   title?: string;
   subtitle?: string;
   ctaText?: string;

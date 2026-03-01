@@ -41,7 +41,7 @@ const buildDefaultInfoCards = () =>
 
 const buildDefaultMainBanners = () =>
   locales.map((locale) => ({
-    imageUrl: '',
+    imagesUrl: [],
     title: '',
     subtitle: '',
     ctaText: '',
@@ -65,9 +65,9 @@ export const useHomePageContentForm = () => {
   const updateContent = useUpdateHomePageContent();
 
   const gallery = useImageManager();
-  const banner1 = useImageManager(undefined, { multiple: false });
-  const banner2 = useImageManager(undefined, { multiple: false });
-  const mainBanner = useImageManager(undefined, { multiple: false });
+  const banner1 = useImageManager();
+  const banner2 = useImageManager();
+  const mainBanner = useImageManager(undefined, { multiple: true });
 
   const form = useForm<HomePageFormValues>({
     resolver: zodResolver(homePageSchema),
@@ -103,7 +103,7 @@ export const useHomePageContentForm = () => {
 
     banner1.seed(slotUrls[0] ? [slotUrls[0]] : []);
     banner2.seed(slotUrls[1] ? [slotUrls[1]] : []);
-    mainBanner.seed(data.mainBanners?.map((b) => b.imageUrl).filter(Boolean));
+    mainBanner.seed(data?.mainBanners?.[0]?.imagesUrl || data?.mainBanners?.[1]?.imagesUrl || []);
     gallery.seed(data.galleryImages?.map((g) => g.imageUrl).filter(Boolean));
 
     reset({
@@ -124,10 +124,10 @@ export const useHomePageContentForm = () => {
 
       const latestB1 = banner1Urls[banner1Urls.length - 1];
       const latestB2 = banner2Urls[banner2Urls.length - 1];
-      const latestMain = mainBannerUrls[mainBannerUrls.length - 1];
+      const limitedMain = (mainBannerUrls || []).slice(0, 5);
       const noB1 = banner1Urls.length === 0;
       const noB2 = banner2Urls.length === 0;
-      const noMain = mainBannerUrls.length === 0;
+      const noMain = limitedMain.length === 0;
 
       // 2️⃣ Apply new image URLs
       const finalBanners = values.banners.map((b, i) => {
@@ -145,7 +145,7 @@ export const useHomePageContentForm = () => {
 
       const finalMainBanners = values.mainBanners.map((b) => ({
         ...b,
-        imageUrl: latestMain ?? (noMain ? '' : b.imageUrl),
+        imagesUrl: noMain ? [] : (limitedMain.length ? limitedMain : (b as any).imagesUrl || []),
       }));
 
       // 3️⃣ Send payload
@@ -174,7 +174,7 @@ export const useHomePageContentForm = () => {
     galleryUploaderProps: gallery.uploaderProps,
     banner1UploaderProps: { ...banner1.uploaderProps, multiple: false },
     banner2UploaderProps: { ...banner2.uploaderProps, multiple: false },
-    mainBannerUploaderProps: { ...mainBanner.uploaderProps, multiple: false },
+    mainBannerUploaderProps: { ...mainBanner.uploaderProps, multiple: true },
     isLoading,
     errors,
     isSubmitting:

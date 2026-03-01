@@ -22,7 +22,7 @@ export const galleryImageSchema = z.object({
 });
 
 export const mainBannerSchema = z.object({
-  imageUrl: z.string().optional(),
+  imagesUrl: z.array(z.string()).max(5, 'Main banner can have up to 5 images').optional(),
   title: z.string().optional(),
   subtitle: z.string().optional(),
   ctaText: z.string().optional(),
