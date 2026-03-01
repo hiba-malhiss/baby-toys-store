@@ -16,6 +16,14 @@
     background-position: center;
   }
 
+  &-carousel {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+
   &-title {
     color: var(--color-primary);
     font-size: 67px;

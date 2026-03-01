@@ -81,7 +81,7 @@ const ProductFormPage: React.FC = () => {
           <Accordion header={t('productForm.tab.media', { defaultValue: 'Media' })}>
             <div className={styles.productsFormGeneral}>
               <FormFieldWrapper label={t('productForm.mainImage')} fullWidth required>
-                <ImageUploader {...mainImageUploaderProps} fullHeight maxImages={1}/>
+                <ImageUploader {...mainImageUploaderProps} fullHeight maxImages={1} />
               </FormFieldWrapper>
 
               <FormFieldWrapper label={t('productForm.galleryImages')} fullWidth>

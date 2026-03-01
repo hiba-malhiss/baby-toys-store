@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Carousel from '../Carousel/Carousel';
 import ImageMagnifierPopover from '../ImageMagnifierPopover/ImageMagnifierPopover';
 import styles from './image-gallery.module.scss';
@@ -31,7 +31,7 @@ const ImageGallery: React.FC<ImageGalleryProps> = ({
       </div>
     );
   }
-  console.log(safeImages);
+
   return (
     <div className={styles.imageGallery}>
       <div className={styles.imageGalleryMainImage}>

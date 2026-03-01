@@ -262,8 +262,12 @@ export default function DashboardPage() {
                   appearance="info"
                   size="medium"
                   icon={Info}
-                  title={t('dashboard.freeShipping.title', { defaultValue: 'Free shipping is active' })}
-                  message={t('dashboard.freeShipping.message', { defaultValue: 'Orders placed now will benefit from free shipping.' })}
+                  title={t('dashboard.freeShipping.title', {
+                    defaultValue: 'Free shipping is active',
+                  })}
+                  message={t('dashboard.freeShipping.message', {
+                    defaultValue: 'Orders placed now will benefit from free shipping.',
+                  })}
                 />
               )}
             </div>

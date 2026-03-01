@@ -145,7 +145,7 @@ export const useHomePageContentForm = () => {
 
       const finalMainBanners = values.mainBanners.map((b) => ({
         ...b,
-        imagesUrl: noMain ? [] : (limitedMain.length ? limitedMain : (b as any).imagesUrl || []),
+        imagesUrl: noMain ? [] : limitedMain.length ? limitedMain : (b as any).imagesUrl || [],
       }));
 
       // 3️⃣ Send payload

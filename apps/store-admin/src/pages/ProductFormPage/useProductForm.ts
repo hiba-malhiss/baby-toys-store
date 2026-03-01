@@ -179,15 +179,23 @@ export const useProductForm = () => {
         const shortDescription = (t.shortDescription || '').trim().slice(0, MAX.shortDescription);
         const description = (t.description || '').trim().slice(0, MAX.description);
         const featureBullets = (Array.isArray(t.featureBullets) ? t.featureBullets : [])
-          .map((f: unknown) => String(f || '').trim().slice(0, MAX.featureBullet))
+          .map((f: unknown) =>
+            String(f || '')
+              .trim()
+              .slice(0, MAX.featureBullet)
+          )
           .filter(Boolean)
           .slice(0, MAX.featureBulletsCount);
         const detailsList: Array<{ label?: unknown; value?: unknown }> = Array.isArray(t.details)
           ? (t.details as Array<{ label?: unknown; value?: unknown }>)
           : [];
         const detailsObj = detailsList.reduce<Record<string, string>>((acc, item) => {
-          const key = String(item?.label || '').trim().slice(0, MAX.detailsLabel);
-          const val = String(item?.value || '').trim().slice(0, MAX.detailsValue);
+          const key = String(item?.label || '')
+            .trim()
+            .slice(0, MAX.detailsLabel);
+          const val = String(item?.value || '')
+            .trim()
+            .slice(0, MAX.detailsValue);
           if (key) acc[key] = val;
           return acc;
         }, {});

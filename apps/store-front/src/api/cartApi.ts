@@ -1,4 +1,4 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type UseQueryResult } from '@tanstack/react-query';
 import api from './axiosConfig';
 import { useAuth } from '../context/AuthContext';
 import type { ApiEnvelope } from './types/common';
@@ -38,7 +38,7 @@ export const CART_KEYS = {
   updateCartItem: 'updateCartItem',
 } as const;
 
-export function useCartQuery() {
+export function useCartQuery(): UseQueryResult<CartDTO, unknown> {
   const { isAuthenticated } = useAuth();
   const toast = useToast();
   return useQuery<CartDTO>({

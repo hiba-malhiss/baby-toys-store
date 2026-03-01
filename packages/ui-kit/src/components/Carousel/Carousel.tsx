@@ -17,6 +17,7 @@ interface CarouselProps {
   responsiveOptions?: { breakpoint: string; numVisible: number }[];
   navigationStyle?: 'overlay' | 'side';
   size?: 'small' | 'medium' | 'large';
+  appearance?: 'default' | 'auto-play';
 }
 
 const Carousel: React.FC<CarouselProps> = ({
@@ -24,7 +25,7 @@ const Carousel: React.FC<CarouselProps> = ({
   numVisible = 1,
   orientation = 'horizontal',
   verticalViewPortHeight = '300px',
-  circular = false,
+  circular = true,
   autoplayInterval = 0,
   itemTemplate,
   className = '',
@@ -32,16 +33,19 @@ const Carousel: React.FC<CarouselProps> = ({
   navigationStyle = 'overlay',
   responsiveOptions = [],
   size = 'medium',
+  appearance = 'default',
 }) => {
+  const isAutoPlay = appearance === 'auto-play';
+
   const [currentPage, setCurrentPage] = useState(0);
   const [visible, setVisible] = useState(numVisible);
   const intervalRef = useRef<any>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
   const totalItems = items.length;
-  const totalPages = Math.max(totalItems - visible + 1, 1);
+  const visibleSlides = isAutoPlay ? 1 : visible;
+  const totalPages = isAutoPlay ? totalItems : Math.max(totalItems - visibleSlides + 1, 1);
 
-  // Determine if this carousel element is rendered in RTL context
   const isRtl = (() => {
     if (!carouselRef.current) return false;
     try {
@@ -52,7 +56,8 @@ const Carousel: React.FC<CarouselProps> = ({
   })();
 
   useEffect(() => {
-    if (!responsiveOptions?.length) return;
+    if (!responsiveOptions?.length || isAutoPlay) return;
+
     const handleResize = () => {
       const width = window.innerWidth;
       const sorted = [...responsiveOptions].sort(
@@ -65,7 +70,7 @@ const Carousel: React.FC<CarouselProps> = ({
     handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [responsiveOptions, numVisible]);
+  }, [responsiveOptions, numVisible, isAutoPlay]);
 
   const goToIndex = (newIndex: number) => {
     if (circular) {
@@ -78,84 +83,37 @@ const Carousel: React.FC<CarouselProps> = ({
   const nextSlide = () => goToIndex(currentPage + 1);
   const prevSlide = () => goToIndex(currentPage - 1);
 
-  // In horizontal RTL, the visual next/prev are flipped
   const isHorizontal = orientation === 'horizontal';
   const directionalNext = isHorizontal && isRtl ? prevSlide : nextSlide;
   const directionalPrev = isHorizontal && isRtl ? nextSlide : prevSlide;
 
-  // Autoplay functionality
+  // Autoplay (auto-play = 3s)
   useEffect(() => {
-    if (autoplayInterval > 0) {
-      intervalRef.current = setInterval(directionalNext, autoplayInterval);
-      return () => {
-        if (intervalRef.current) clearInterval(intervalRef.current);
-      };
+    const intervalTime = isAutoPlay ? 3000 : autoplayInterval;
+
+    if (intervalTime > 0) {
+      intervalRef.current = setInterval(() => {
+        goToIndex(currentPage + 1);
+      }, intervalTime);
+
+      return () => clearInterval(intervalRef.current);
     }
-  }, [autoplayInterval, currentPage, directionalNext]);
-
-  // Pause autoplay on hover
-  const handleMouseEnter = () => {
-    if (intervalRef.current) clearInterval(intervalRef.current);
-  };
-
-  // Proceed autoplay
-  const handleMouseLeave = () => {
-    if (autoplayInterval > 0) {
-      intervalRef.current = setInterval(directionalNext, autoplayInterval);
-    }
-  };
-
-  // Touch/swipe support
-  const [touchStart, setTouchStart] = useState(0);
-  const [touchEnd, setTouchEnd] = useState(0);
-
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(orientation === 'horizontal' ? e.touches[0].clientX : e.touches[0].clientY);
-  };
-
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    setTouchEnd(
-      orientation === 'horizontal' ? e.changedTouches[0].clientX : e.changedTouches[0].clientY
-    );
-    handleSwipe();
-  };
-
-  const handleSwipe = () => {
-    const threshold = 50;
-    const difference = touchStart - touchEnd;
-
-    if (isHorizontal && isRtl) {
-      // In RTL, swipe left should go to previous visually
-      if (difference > threshold) {
-        directionalPrev();
-      } else if (difference < -threshold) {
-        directionalNext();
-      }
-    } else {
-      if (difference > threshold) {
-        directionalNext();
-      } else if (difference < -threshold) {
-        directionalPrev();
-      }
-    }
-  };
+  }, [currentPage, autoplayInterval, isAutoPlay]);
 
   const getTransform = () => {
-    const percentage = (currentPage * 100) / visible;
+    if (isAutoPlay) return undefined;
+
+    const percentage = (currentPage * 100) / visibleSlides;
     return orientation === 'horizontal'
       ? `translateX(${isRtl ? '' : '-'}${percentage}%)`
       : `translateY(-${percentage}%)`;
-  };
-
-  // Calculate item width or height
-  const getItemSize = () => {
-    return `${100 / visible}%`;
   };
 
   return (
     <div
       className={clsx(
         styles.carousel,
+        isAutoPlay && styles.carouselHero,
         orientation === 'vertical' && styles.carouselVertical,
         navigationStyle === 'side' && styles.carouselSideNav,
         size === 'small' && styles.carouselSmall,
@@ -163,23 +121,15 @@ const Carousel: React.FC<CarouselProps> = ({
       )}
       style={{ height: orientation === 'vertical' ? verticalViewPortHeight : 'auto' }}
       ref={carouselRef}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      onTouchStart={handleTouchStart}
-      onTouchEnd={handleTouchEnd}
     >
-      {showNavigation && (
+      {!isAutoPlay && showNavigation && (
         <Button
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonPrev)}
           onClick={directionalPrev}
-          appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
+          appearance={navigationStyle === 'overlay' ? 'outline' : 'link'}
           size="large"
           isRounded
           leftIconComp={ChevronIcons[orientation].prev}
-          isDisabled={
-            !circular &&
-            (isHorizontal && isRtl ? currentPage === totalPages - 1 : currentPage === 0)
-          }
         />
       )}
 
@@ -187,38 +137,63 @@ const Carousel: React.FC<CarouselProps> = ({
         <div
           className={styles.carouselTrack}
           style={{
-            transform: getTransform(),
+            transform: isAutoPlay ? undefined : getTransform(),
             flexDirection: orientation === 'vertical' ? 'column' : 'row',
           }}
         >
-          {items?.map((item, index) => (
-            <div
-              key={index}
-              className={styles.carouselItem}
-              style={{
-                [orientation === 'horizontal' ? 'width' : 'height']: getItemSize(),
-                flexShrink: 0,
-              }}
-            >
-              {itemTemplate(item)}
-            </div>
-          ))}
+          {items.map((item, index) => {
+            const isActive = index === currentPage;
+
+            return (
+              <div
+                key={index}
+                className={clsx(
+                  styles.carouselItem,
+                  isAutoPlay && styles.carouselHeroItem,
+                  isAutoPlay && isActive && styles.carouselHeroItemActive
+                )}
+                style={
+                  isAutoPlay
+                    ? {}
+                    : {
+                        [orientation === 'horizontal' ? 'width' : 'height']:
+                          `${100 / visibleSlides}%`,
+                        flexShrink: 0,
+                      }
+                }
+              >
+                {itemTemplate(item)}
+              </div>
+            );
+          })}
         </div>
       </div>
 
-      {showNavigation && (
+      {!isAutoPlay && showNavigation && (
         <Button
           className={clsx(styles.carouselNavButton, styles.carouselNavButtonNext)}
           onClick={directionalNext}
-          appearance={navigationStyle == 'overlay' ? 'outline' : 'link'}
-          isRounded
+          appearance={navigationStyle === 'overlay' ? 'outline' : 'link'}
           size="large"
+          isRounded
           leftIconComp={ChevronIcons[orientation].next}
-          isDisabled={
-            !circular &&
-            (isHorizontal && isRtl ? currentPage === 0 : currentPage === totalPages - 1)
-          }
         />
+      )}
+
+      {/* ✅ AUTO-PLAY DOTS */}
+      {isAutoPlay && items?.length > 1 && (
+        <div className={styles.carouselDots}>
+          {items.map((_, index) => (
+            <button
+              key={index}
+              className={clsx(
+                styles.carouselDot,
+                index === currentPage && styles.carouselDotActive
+              )}
+              onClick={() => goToIndex(index)}
+            />
+          ))}
+        </div>
       )}
     </div>
   );

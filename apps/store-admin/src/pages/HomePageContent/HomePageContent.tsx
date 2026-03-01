@@ -69,9 +69,7 @@ const HomePageContent: React.FC = () => {
                   ))}
                 </TabBar>
                 <Divider />
-                <ImageUploader
-                  {...banner1UploaderProps}
-                />
+                <ImageUploader {...banner1UploaderProps} />
               </Flex>
 
               <Divider />
@@ -98,9 +96,7 @@ const HomePageContent: React.FC = () => {
                   ))}
                 </TabBar>
                 <Divider />
-                <ImageUploader
-                  {...banner2UploaderProps}
-                />
+                <ImageUploader {...banner2UploaderProps} />
               </Flex>
             </Flex>
           </Accordion>
@@ -127,10 +123,7 @@ const HomePageContent: React.FC = () => {
                 })}
               </TabBar>
               <Divider />
-              <ImageUploader
-                {...mainBannerUploaderProps}
-                maxImages={5}
-              />
+              <ImageUploader {...mainBannerUploaderProps} maxImages={5} />
             </Flex>
           </Accordion>
 

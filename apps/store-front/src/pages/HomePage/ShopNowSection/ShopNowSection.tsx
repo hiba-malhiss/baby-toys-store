@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import styles from './shop-now-section.module.scss';
-import { Button } from '@baby-toys/ui-kit';
+import { Button, Carousel } from '@baby-toys/ui-kit';
 import { useIsRtl } from '../../../utils/i18n';
 import { useHomePageContent } from '../../../api/homepageApi';
 import { getFlexAlignment, getFlexJustify } from '../homePage.helpers.ts';
@@ -16,29 +16,50 @@ const ShopNowSection = () => {
   const currentLocale = getAppLocale();
   const banner = data.mainBanners.find((b) => b.locale === currentLocale);
   if (!banner) return null;
+  const images: string[] = banner.imagesUrl || [];
+  if (!images.length) return null;
 
   const handleShopNow = () => {
     navigate('/shop');
   };
 
   return (
-    <div
-      className={styles.shopNowSectionImageContainer}
-      style={{
-        ['--bg-image' as any]: `url(${banner.imageUrl})`,
-        alignItems: getFlexAlignment(banner.alignment, isRtl),
-        justifyContent: getFlexJustify(banner.alignment, 'CENTER', isRtl),
-      }}
-    >
-      {banner.title && <span className={styles.shopNowSectionTitle}>{banner.title}</span>}
+    <div className={styles.shopNowSectionImageContainer} style={{ position: 'relative' }}>
+      <Carousel
+        items={images}
+        className={styles.shopNowSectionCarousel}
+        appearance="auto-play"
+        itemTemplate={(url: string) => (
+          <img
+            src={url}
+            alt="main banner"
+            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+          />
+        )}
+      />
 
-      {banner.subtitle && <span className={styles.shopNowSectionSubTitle}>{banner.subtitle}</span>}
-
-      {banner.ctaText && (
-        <Button size="xxlarge" appearance="filled" color="accent" onClick={handleShopNow}>
-          {banner.ctaText}
-        </Button>
-      )}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 12,
+          alignItems: getFlexAlignment(banner.alignment, isRtl) as any,
+          justifyContent: getFlexJustify(banner.alignment, 'CENTER', isRtl) as any,
+          padding: '40px',
+        }}
+      >
+        {banner.title && <span className={styles.shopNowSectionTitle}>{banner.title}</span>}
+        {banner.subtitle && (
+          <span className={styles.shopNowSectionSubTitle}>{banner.subtitle}</span>
+        )}
+        {banner.ctaText && (
+          <Button size="xxlarge" appearance="filled" color="accent" onClick={handleShopNow}>
+            {banner.ctaText}
+          </Button>
+        )}
+      </div>
     </div>
   );
 };
