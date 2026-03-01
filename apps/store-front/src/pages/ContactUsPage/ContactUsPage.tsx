@@ -24,26 +24,26 @@ const ContactUsPage: React.FC = () => {
   const navigate = useNavigate();
   const { t } = useTranslation('common');
   const contactInfo = useMemo(() => {
-    const contact = settings?.contact || {};
+    const contact = settings?.contact;
     const raw = [
       {
         id: 'phone',
         title: t('contact.phone'),
-        content: contact.phone,
+        content: contact?.phone,
         icon: Phone,
         appearance: 'primary',
       },
       {
         id: 'email',
         title: t('contact.email'),
-        content: contact.email,
+        content: contact?.email,
         icon: Mail,
         appearance: 'primary',
       },
       {
         id: 'address',
         title: t('contact.address'),
-        content: contact.address,
+        content: contact?.address,
         icon: MapPin,
         appearance: 'primary',
       },

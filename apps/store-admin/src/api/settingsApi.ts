@@ -44,16 +44,17 @@ export const useAdminStoreSettingsMap = () =>
       const { data } = await api.get<ApiEnvelope<Record<string, StoreSettingsGrouped>>>(
         '/api/admin/store-settings'
       );
-      return data.data || {};
+      return data.data;
     },
     staleTime: 60_000,
   });
 
 export const useStoreSettings = () => {
   const { data } = useAdminStoreSettingsMap();
-  const dataLocal = useMemo(() => {
-    return data?.[getAppLocale() || 'en'] || {};
-  }, [data]);
+  const locale = getAppLocale() || 'en';
+  const dataLocal = useMemo<StoreSettingsGrouped | undefined>(() => {
+    return data?.[locale];
+  }, [data, locale]);
   return { data: dataLocal };
 };
 
