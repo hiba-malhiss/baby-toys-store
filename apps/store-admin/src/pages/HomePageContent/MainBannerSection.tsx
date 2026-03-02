@@ -55,23 +55,25 @@ const MainBannerSection: React.FC<Props> = ({ control, baseName }) => {
         <StringInput />
       </FormFieldWrapper>
 
-      <FormFieldWrapper
-        name={`${baseName}.alignment`}
-        control={control}
-        fullWidth
-        label={t('homepage.mainBanner.alignment')}
-      >
-        <Select options={alignmentOptions} />
-      </FormFieldWrapper>
+      <Flex fullWidth spacing="l">
+        <FormFieldWrapper
+          name={`${baseName}.alignment`}
+          control={control}
+          fullWidth
+          label={t('homepage.mainBanner.alignment')}
+        >
+          <Select options={alignmentOptions} />
+        </FormFieldWrapper>
 
-      <FormFieldWrapper
-        name={`${baseName}.verticalAlignment`}
-        control={control}
-        fullWidth
-        label={t('homepage.mainBanner.verticalAlignment')}
-      >
-        <Select options={verticalAlignmentOptions} />
-      </FormFieldWrapper>
+        <FormFieldWrapper
+          name={`${baseName}.verticalAlignment`}
+          control={control}
+          fullWidth
+          label={t('homepage.mainBanner.verticalAlignment')}
+        >
+          <Select options={verticalAlignmentOptions} />
+        </FormFieldWrapper>
+      </Flex>
     </Flex>
   );
 };
