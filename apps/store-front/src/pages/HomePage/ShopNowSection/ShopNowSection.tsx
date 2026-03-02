@@ -3,7 +3,7 @@ import styles from './shop-now-section.module.scss';
 import { Button, Carousel } from '@baby-toys/ui-kit';
 import { useIsRtl } from '../../../utils/i18n';
 import { useHomePageContent } from '../../../api/homepageApi';
-import { getFlexAlignment, getFlexJustify } from '../homePage.helpers.ts';
+import { getFlexJustify, getFlexVertical } from '../homePage.helpers.ts';
 import { getAppLocale } from '../../../components/i18n/locale.ts';
 
 const ShopNowSection = () => {
@@ -37,7 +37,6 @@ const ShopNowSection = () => {
           />
         )}
       />
-
       <div
         style={{
           position: 'absolute',
@@ -45,8 +44,8 @@ const ShopNowSection = () => {
           display: 'flex',
           flexDirection: 'column',
           gap: 12,
-          alignItems: getFlexAlignment(banner.alignment, isRtl) as any,
-          justifyContent: getFlexJustify(banner.alignment, 'CENTER', isRtl) as any,
+          alignItems: getFlexJustify(banner.alignment, isRtl),
+          justifyContent: getFlexVertical(banner.verticalAlignment),
           padding: '40px',
         }}
       >
