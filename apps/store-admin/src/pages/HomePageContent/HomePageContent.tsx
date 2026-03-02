@@ -21,7 +21,6 @@ const HomePageContent: React.FC = () => {
   const { t } = useTranslation();
   const {
     control,
-    banners,
     infoCards,
     mainBanners,
     galleryUploaderProps,
@@ -46,59 +45,11 @@ const HomePageContent: React.FC = () => {
             buttonAppearance="outline"
             buttonColor={errors?.banners && 'error'}
           >
-            <Flex direction="vertical" spacing="xl" fullWidth>
-              {/* Banner 1 */}
-              <Flex direction="vertical" spacing="l" fullWidth>
-                <TabBar
-                  fullWidth
-                  size="small"
-                  tabs={locales.map((l) => ({
-                    header: `${l.toUpperCase()} (${l})`,
-                    value: `${l}-banner1`,
-                  }))}
-                >
-                  {locales.map((l) => (
-                    <TabBarItem key={l} value={`${l}-banner1`}>
-                      <BannersSection
-                        locale={l}
-                        control={control}
-                        banners={banners}
-                        slotIndex={0}
-                      />
-                    </TabBarItem>
-                  ))}
-                </TabBar>
-                <Divider />
-                <ImageUploader {...banner1UploaderProps} />
-              </Flex>
-
-              <Divider />
-
-              {/* Banner 2 */}
-              <Flex direction="vertical" spacing="l" fullWidth>
-                <TabBar
-                  fullWidth
-                  size="small"
-                  tabs={locales.map((l) => ({
-                    header: `${l.toUpperCase()} (${l})`,
-                    value: `${l}-banner2`,
-                  }))}
-                >
-                  {locales.map((l) => (
-                    <TabBarItem key={l} value={`${l}-banner2`}>
-                      <BannersSection
-                        locale={l}
-                        control={control}
-                        banners={banners}
-                        slotIndex={1}
-                      />
-                    </TabBarItem>
-                  ))}
-                </TabBar>
-                <Divider />
-                <ImageUploader {...banner2UploaderProps} />
-              </Flex>
-            </Flex>
+            <BannersSection
+              control={control}
+              banner1UploaderProps={banner1UploaderProps}
+              banner2UploaderProps={banner2UploaderProps}
+            />
           </Accordion>
 
           {/* === Main Banner Section === */}

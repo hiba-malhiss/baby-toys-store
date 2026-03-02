@@ -83,7 +83,6 @@ export const useHomePageContentForm = () => {
   const { control, handleSubmit, reset, formState } = form;
   const { errors, isSubmitting } = formState;
 
-  const banners = useFieldArray({ control, name: 'banners' }).fields;
   const infoCards = useFieldArray({ control, name: 'infoCards' }).fields;
   const galleryImages = useFieldArray({ control, name: 'galleryImages' }).fields;
   const mainBanners = useFieldArray({ control, name: 'mainBanners' }).fields;
@@ -168,7 +167,6 @@ export const useHomePageContentForm = () => {
   return {
     control,
     handleSubmit: handleSubmit(onSubmit),
-    banners,
     infoCards,
     galleryImages,
     mainBanners,

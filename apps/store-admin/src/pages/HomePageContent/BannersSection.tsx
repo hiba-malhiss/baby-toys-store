@@ -1,16 +1,25 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Flex, StringInput, Select } from '@baby-toys/ui-kit';
+import {
+  Card,
+  Flex,
+  TabBar,
+  TabBarItem,
+  Divider,
+  StringInput,
+  Select,
+  ImageUploader,
+} from '@baby-toys/ui-kit';
 import { Control } from 'react-hook-form';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
+import { getSupportedLocales } from '../../i18n/locale';
 import { HomePageFormValues } from './homePage.helper';
 import { BannerTextAlignment, VerticalAlignment } from '../../api/types/homePage';
 
 interface Props {
-  locale: string;
   control: Control<HomePageFormValues>;
-  banners: HomePageFormValues['banners'];
-  slotIndex: number; // 0 or 1
+  banner1UploaderProps: any;
+  banner2UploaderProps: any;
 }
 
 const alignmentOptions = [
@@ -25,58 +34,82 @@ const verticalAlignmentOptions = [
   { label: 'Bottom', value: VerticalAlignment.BOTTOM },
 ];
 
-const BannersSection: React.FC<Props> = ({ locale, control, banners, slotIndex }) => {
+const BannersSection: React.FC<Props> = ({
+  control,
+  banner1UploaderProps,
+  banner2UploaderProps,
+}) => {
   const { t } = useTranslation();
+  const locales = getSupportedLocales();
 
-  // Get banners for this locale
-  const localeBanners = useMemo(
-    () => banners.filter((b) => b.locale === locale),
-    [banners, locale]
+  const renderSlot = (slotIndex: 0 | 1) => (
+    <Card fullWidth>
+      <Flex direction="vertical" spacing="l" fullWidth>
+        <TabBar
+          fullWidth
+          size="small"
+          tabs={locales.map((l) => ({
+            header: `${l.toUpperCase()} (${l})`,
+            value: `${l}-banner-${slotIndex}`,
+          }))}
+        >
+          {locales.map((locale, localeIndex) => {
+            const realIndex = localeIndex * 2 + slotIndex;
+
+            const label = t('homepage.banners.bannerText', {
+              position: slotIndex + 1,
+              locale: locale.toUpperCase(),
+            });
+
+            return (
+              <TabBarItem key={locale} value={`${locale}-banner-${slotIndex}`}>
+                <Flex direction="vertical" fullWidth spacing="l">
+                  <FormFieldWrapper
+                    name={`banners.${realIndex}.text`}
+                    control={control}
+                    label={label}
+                    fullWidth
+                    required
+                  >
+                    <StringInput />
+                  </FormFieldWrapper>
+
+                  <Flex fullWidth spacing="l">
+                    <FormFieldWrapper
+                      name={`banners.${realIndex}.alignment`}
+                      control={control}
+                      fullWidth
+                      label={t('homepage.banners.alignment')}
+                    >
+                      <Select options={alignmentOptions} />
+                    </FormFieldWrapper>
+
+                    <FormFieldWrapper
+                      name={`banners.${realIndex}.verticalAlignment`}
+                      control={control}
+                      fullWidth
+                      label={t('homepage.banners.verticalAlignment')}
+                    >
+                      <Select options={verticalAlignmentOptions} />
+                    </FormFieldWrapper>
+                  </Flex>
+                </Flex>
+              </TabBarItem>
+            );
+          })}
+        </TabBar>
+
+        <Divider />
+
+        <ImageUploader {...(slotIndex === 0 ? banner1UploaderProps : banner2UploaderProps)} />
+      </Flex>
+    </Card>
   );
 
-  const selectedBanner = localeBanners[slotIndex];
-
-  if (!selectedBanner) return null;
-
-  // Find actual index in original array (needed for react-hook-form path)
-  const realIndex = banners.findIndex((b) => b.locale === locale && b === selectedBanner);
-
-  const label = t('homepage.banners.bannerText', {
-    position: slotIndex + 1,
-    locale: locale.toUpperCase(),
-  });
-
   return (
-    <Flex direction="vertical" fullWidth spacing="l">
-      <FormFieldWrapper
-        name={`banners.${realIndex}.text`}
-        control={control}
-        label={label}
-        fullWidth
-        required
-      >
-        <StringInput />
-      </FormFieldWrapper>
-
-      <Flex fullWidth spacing="l">
-        <FormFieldWrapper
-          name={`banners.${realIndex}.alignment`}
-          control={control}
-          fullWidth
-          label={t('homepage.banners.alignment')}
-        >
-          <Select options={alignmentOptions} />
-        </FormFieldWrapper>
-
-        <FormFieldWrapper
-          name={`banners.${realIndex}.verticalAlignment`}
-          control={control}
-          fullWidth
-          label={t('homepage.banners.verticalAlignment')}
-        >
-          <Select options={verticalAlignmentOptions} />
-        </FormFieldWrapper>
-      </Flex>
+    <Flex direction="vertical" spacing="xl" fullWidth>
+      {renderSlot(0)}
+      {renderSlot(1)}
     </Flex>
   );
 };
