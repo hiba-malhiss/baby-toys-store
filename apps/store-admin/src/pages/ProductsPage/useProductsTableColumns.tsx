@@ -54,7 +54,7 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       header: t('table.headers.price'),
       sortable: true,
       body: (row: AdminProductBase) => {
-        return row.defaultVariant.price;
+        return row.defaultVariant?.price;
       },
     },
     {
