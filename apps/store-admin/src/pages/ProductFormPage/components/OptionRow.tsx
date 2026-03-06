@@ -41,7 +41,7 @@ const OptionRow: React.FC<{
             )
             .map((t: any) => (
               <Option key={t.id} value={t.id}>
-                {t.name}
+                {t.displayName}
               </Option>
             ))}
         </Select>

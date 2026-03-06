@@ -46,12 +46,12 @@ export interface ProductTranslationDto {
 export interface ProductOptionDto {
   type: {
     id: number;
-    name: string;
+    translations: {locale: string, displayName: string}[]
   };
   values: Array<{
     id: number;
     value: string;
-    display?: string | null;
+    translations: {locale: string, display: string}[]
   }>;
 }
 

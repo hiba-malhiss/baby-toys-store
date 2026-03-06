@@ -293,17 +293,17 @@ const VariationDialog: React.FC<Props> = ({
                 key={opt.type.id}
                 name={`selections.${opt.type.id}`}
                 control={control}
-                label={opt.type.name || ''}
+                label={opt.type.translations?.[0]?.displayName || ''}
                 required
                 fullWidth
               >
                 <Select>
                   <Option value={undefined} disabled>
-                    {t('app.variation.selectPlaceholder', { option: opt.type.name })}
+                    {t('app.variation.selectPlaceholder', { option: opt.type.translations?.[0]?.displayName })}
                   </Option>
                   {opt.values.map((val) => (
                     <Option key={val.id} value={val.id}>
-                      {val.value}
+                      {val.translations?.[0]?.display}
                     </Option>
                   ))}
                 </Select>
