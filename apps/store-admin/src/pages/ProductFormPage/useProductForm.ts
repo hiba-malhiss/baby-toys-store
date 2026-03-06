@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { useToast } from '@baby-toys/ui-kit';
 import { defaultProductValues, productSchema } from './product.helper';
 import { useWatch } from 'react-hook-form';
+import { useTranslation } from 'react-i18next';
 import {
   useCreateProduct,
   useUpdateProduct,
@@ -20,6 +21,7 @@ type ProductFormValues = z.infer<typeof productSchema>;
 
 export const useProductForm = () => {
   const toast = useToast();
+  const { t } = useTranslation();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const { id: productId } = useParams<{ id?: string }>();
@@ -37,13 +39,15 @@ export const useProductForm = () => {
 
   const {
     control,
-    handleSubmit,
+    handleSubmit: rhfHandleSubmit,
     formState: { isSubmitting },
     reset,
     setValue,
   } = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: defaultProductValues,
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   // Max constraints for counters
@@ -317,9 +321,13 @@ export const useProductForm = () => {
     },
   };
 
+  const onInvalid = () => {
+    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
+  };
+
   return {
     control,
-    handleSubmit: handleSubmit(submitForm),
+    handleSubmit: rhfHandleSubmit(submitForm, onInvalid),
     isSubmitting,
     isLoadingProduct,
     setValue,

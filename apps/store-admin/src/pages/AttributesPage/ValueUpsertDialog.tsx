@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { Dialog, Flex, Button, StringInput, Toggle } from '@baby-toys/ui-kit';
+import { Dialog, Flex, Button, StringInput, Toggle, useToast } from '@baby-toys/ui-kit';
 
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { getSupportedLocales } from '../../i18n/locale';
@@ -12,11 +12,10 @@ import { AttributeValueAdminDto } from '../../api/types/attribute.ts';
 
 const schema = z.object({
   code: z.string().optional().default(''),
-  // ✅ enforce non-empty record keys
   translations: z.record(
     z.string().min(1),
     z.object({
-      display: z.string().optional().default(''),
+      display: z.string().min(1, 'Required'),
     })
   ),
   sortOrder: z.coerce.number().int().nonnegative().optional().default(0),
@@ -44,6 +43,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const isEdit = mode === 'edit';
+  const toast = useToast();
 
   // ✅ ensure locales are valid record keys (non-empty strings)
   const locales = useMemo(() => {
@@ -57,6 +57,8 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
   const rhf = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { code: '', translations: {} },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   useEffect(() => {
@@ -120,6 +122,10 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     }
   };
 
+  const onInvalid = (_errors: any) => {
+    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
+  };
+
   const ToggleFieldAdapter: React.FC<{
     value?: boolean;
     onChange?: (v: boolean) => void;
@@ -134,7 +140,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
 
   return (
     <Dialog header={headerText} visible={visible} onHide={onClose} dismissibleMask modal>
-      <form onSubmit={rhf.handleSubmit(onSubmit)}>
+      <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
         <Flex direction="vertical" spacing="m">
           {locales.map((loc) => (
             <FormFieldWrapper
@@ -142,6 +148,8 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
               name={`translations.${loc}.display`}
               control={rhf.control}
               label={`${t('attributes.display', { defaultValue: 'Display' })} (${loc.toUpperCase()})`}
+              required
+              rules={{ required: t('common.required', { defaultValue: 'Required' }) }}
             >
               <StringInput isDisabled={rhf.formState.isSubmitting} />
             </FormFieldWrapper>
@@ -178,7 +186,11 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
               {t('app.cancel', { defaultValue: 'Cancel' })}
             </Button>
 
-            <Button type="submit" isLoading={isEdit ? updateHook.isPending : createHook.isPending}>
+            <Button
+              type="submit"
+              isLoading={isEdit ? updateHook.isPending : createHook.isPending}
+              isDisabled={isEdit ? updateHook.isPending : createHook.isPending}
+            >
               {!isEdit
                 ? t('app.save', { defaultValue: 'Save' })
                 : t('common.update', { defaultValue: 'Update' })}

@@ -149,6 +149,12 @@
       }
     }
   },
+  "validation": {
+    "required": "{{field}} is required",
+    "number": "{{field}} must be a number",
+    "nonNegative": "{{field}} must be non‑negative",
+    "mustBeGreaterThanZero": "{{field}} must be greater than zero"
+  },
   "customers": {
     "pageTitle": "Customers",
     "searchPlaceholder": "Search by name, email, or ID",

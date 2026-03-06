@@ -65,6 +65,8 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   } = useForm<CategoryFormValues>({
     resolver: zodResolver(categorySchema),
     defaultValues: defaultCategoryValues,
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   useEffect(() => {
@@ -154,9 +156,11 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   const footer = (
     <Button
       isLoading={isSubmitting}
-      isDisabled={!isValid}
+      isDisabled={isSubmitting}
       fullWidth
-      onClick={handleSubmit(submitForm)}
+      onClick={handleSubmit(submitForm, () =>
+        toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }))
+      )}
     >
       {category ? t('categories.update') : t('categories.create')}
     </Button>

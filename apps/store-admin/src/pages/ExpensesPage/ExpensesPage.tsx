@@ -93,22 +93,28 @@ const ExpensesPage: React.FC = () => {
               <Button
                 isLoading={isSubmitting}
                 isDisabled={isSubmitting}
-                onClick={handleSubmit(async (data) => {
-                  try {
-                    const payload = {
-                      date: data.date ? moment(data.date).format('YYYY-MM-DD') : '',
-                      amount: Number(data.amount || 0),
-                      category: data.category || '',
-                      description: data.description || '',
-                    };
-                    await handleCreate(payload as any);
-                    setIsOpen(false);
-                    reset();
-                    toast.success(t('app.expenses.addSuccess'));
-                  } catch (e: any) {
-                    toast.error(e?.message || t('app.expenses.addError'));
-                  }
-                })}
+                onClick={handleSubmit(
+                  async (data) => {
+                    try {
+                      const payload = {
+                        date: data.date ? moment(data.date).format('YYYY-MM-DD') : '',
+                        amount: Number(data.amount || 0),
+                        category: data.category || '',
+                        description: data.description || '',
+                      };
+                      await handleCreate(payload as any);
+                      setIsOpen(false);
+                      reset();
+                      toast.success(t('app.expenses.addSuccess'));
+                    } catch (e: any) {
+                      toast.error(e?.message || t('app.expenses.addError'));
+                    }
+                  },
+                  () =>
+                    toast.error(
+                      t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' })
+                    )
+                )}
               >
                 {t('app.common.save')}
               </Button>

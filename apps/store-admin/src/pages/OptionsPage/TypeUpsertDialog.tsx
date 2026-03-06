@@ -8,6 +8,8 @@ import { getSupportedLocales } from '../../i18n/locale';
 import { useCreateOptionType, useUpdateOptionType, useOptionTypeDetail } from '../../api/optionApi';
 import type { OptionTypeDto } from '../../api/types/option';
 import { useToast } from '@baby-toys/ui-kit';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 export type TypeUpsertDialogProps = {
   visible: boolean;
@@ -17,16 +19,18 @@ export type TypeUpsertDialogProps = {
   onSuccess?: () => void;
 };
 
-type FormValues = {
-  code: string;
-  translations: Record<
-    string,
-    {
-      displayName?: string;
-      description?: string;
-    }
-  >;
-};
+const schema = z.object({
+  code: z.string().optional().default(''),
+  translations: z.record(
+    z.string().min(1),
+    z.object({
+      displayName: z.string().min(1, 'Required'),
+      description: z.string().optional().default(''),
+    })
+  ),
+});
+
+type FormValues = z.infer<typeof schema>;
 
 const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   visible,
@@ -45,15 +49,20 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   const { data: detail } = useOptionTypeDetail(typeId);
 
   const rhf = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: { code: '', translations: {} },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
+
+  const onInvalid = async () => {
+    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
+  };
 
   useEffect(() => {
     if (!visible) return;
 
-    // Prefer detailed payload when available (has full translations)
     const src: any = (detail as any)?.type || initial || {};
-
     const defaults: FormValues = {
       code: src?.code || '',
       translations: {},
@@ -93,7 +102,10 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
 
     try {
       if (mode === 'edit' && initial?.id) {
-        await updateType.mutateAsync({ id: initial.id, payload: { code: code || undefined, translations } as any });
+        await updateType.mutateAsync({
+          id: initial.id,
+          payload: { code: code || undefined, translations } as any,
+        });
       } else {
         await createType.mutateAsync({ code: code || undefined, translations } as any);
       }
@@ -118,7 +130,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       dismissibleMask
       modal
     >
-      <form onSubmit={rhf.handleSubmit(onSubmit)}>
+      <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
         <Flex direction="vertical" spacing="m">
           {locales.map((loc) => (
             <React.Fragment key={loc}>
@@ -126,6 +138,12 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
                 name={`translations.${loc}.displayName`}
                 label={`${t('options.displayName', { defaultValue: 'Display Name' })} (${String(loc).toUpperCase()})`}
                 control={rhf.control}
+                required={String(loc).toLowerCase() === 'en'}
+                rules={
+                  String(loc).toLowerCase() === 'en'
+                    ? { required: t('common.required', { defaultValue: 'Required' }) }
+                    : undefined
+                }
               >
                 <StringInput
                   placeholder={t('options.displayName', { defaultValue: 'Display Name' })}
@@ -159,6 +177,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
             <Button
               type="submit"
               isLoading={mode === 'edit' ? updateType.isPending : createType.isPending}
+              isDisabled={mode === 'edit' ? updateType.isPending : createType.isPending}
             >
               {t('app.save', { defaultValue: 'Save' })}
             </Button>

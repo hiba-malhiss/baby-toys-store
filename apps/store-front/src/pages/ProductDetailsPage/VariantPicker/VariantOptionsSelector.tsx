@@ -18,9 +18,11 @@ export const VariantOptionsSelector: React.FC<{
   // Initialize selection with defaultVariant
   const initialSelection: Record<number, number | undefined> = {};
   if (product.defaultVariant?.optionSelectionIds) {
-    Object.entries(product.defaultVariant?.optionSelectionIds || {}).forEach(([typeId, valueId]) => {
-      initialSelection[Number(typeId)] = valueId as number;
-    });
+    Object.entries(product.defaultVariant?.optionSelectionIds || {}).forEach(
+      ([typeId, valueId]) => {
+        initialSelection[Number(typeId)] = valueId as number;
+      }
+    );
   }
 
   const [selection, setSelection] = useState<Record<number, number | undefined>>(initialSelection);

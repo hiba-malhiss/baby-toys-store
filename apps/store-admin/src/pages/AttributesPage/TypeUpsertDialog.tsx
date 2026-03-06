@@ -67,8 +67,8 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
         translations: z.record(
           z.string().min(1), // <--- key must be non-empty
           z.object({
-            displayName: z.string().optional().default(''),
-            description: z.string().optional().default(''),
+            displayName: z.string().min(1, 'Required'),
+            description: z.string().default(''),
           })
         ),
       }),
@@ -78,6 +78,8 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   const rhf = useForm<FormValues>({
     resolver: zodResolver(schema),
     defaultValues: { code: '', translations: {} },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   useEffect(() => {
@@ -159,8 +161,8 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     }
   };
 
-  const onInvalid = (errors: any) => {
-    console.log('FORM INVALID', errors);
+  const onInvalid = (_errors: any) => {
+    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
   };
 
   const ToggleFieldAdapter: React.FC<{
@@ -185,6 +187,8 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
                 name={`translations.${loc}.displayName`}
                 control={rhf.control}
                 label={`${t('attributes.name', { defaultValue: 'Name' })} (${loc.toUpperCase()})`}
+                required
+                rules={{ required: t('common.required', { defaultValue: 'Required' }) }}
               >
                 <StringInput isDisabled={rhf.formState.isSubmitting} />
               </FormFieldWrapper>
@@ -252,6 +256,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
             <Button
               type="submit"
               isLoading={isEdit ? updateMutation.isPending : createMutation.isPending}
+              isDisabled={isEdit ? updateMutation.isPending : createMutation.isPending}
             >
               {isEdit
                 ? t('common.update', { defaultValue: 'Update' })

@@ -65,6 +65,8 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
       validUntil: null,
       maxUses: null,
     },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   // trigger re-render on value change
@@ -131,7 +133,11 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
       header={t(coupon ? 'coupons.dialog.editTitle' : 'coupons.dialog.addTitle')}
       footer={
         <Button
-          onClick={handleSubmit(onSubmit)}
+          onClick={handleSubmit(onSubmit, () =>
+            toast.error(
+              t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' })
+            )
+          )}
           isLoading={isSubmitting}
           isDisabled={isSubmitting}
           fullWidth

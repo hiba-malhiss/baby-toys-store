@@ -3,6 +3,8 @@ import { Dialog, Button, Flex, StringInput } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useToast } from '@baby-toys/ui-kit';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import { getSupportedLocales } from '../../i18n/locale';
@@ -18,10 +20,17 @@ export type ValueUpsertDialogProps = {
   onSuccess?: () => void;
 };
 
-type FormValues = {
-  code: string;
-  translations: Record<string, { display?: string }>;
-};
+const schema = z.object({
+  code: z.string().optional().default(''),
+  translations: z.record(
+    z.string().min(1),
+    z.object({
+      display: z.string().min(1, 'Required'),
+    })
+  ),
+});
+
+type FormValues = z.infer<typeof schema>;
 
 const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
   visible,
@@ -38,7 +47,10 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
   const updateValue = useUpdateOptionValue(typeId);
 
   const rhf = useForm<FormValues>({
+    resolver: zodResolver(schema),
     defaultValues: { code: '', translations: {} },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   useEffect(() => {
@@ -89,6 +101,11 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     }
   };
 
+  const onInvalid = async () => {
+    // RHF will set field errors; our FieldWrapper shows red border via hasError
+    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
+  };
+
   const headerText =
     mode === 'edit'
       ? t('common.edit', { defaultValue: 'Edit' })
@@ -102,7 +119,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
       dismissibleMask
       modal
     >
-      <form onSubmit={rhf.handleSubmit(onSubmit)}>
+      <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
         <Flex direction="vertical" spacing="m">
           <FormFieldWrapper
             name="code"
@@ -118,6 +135,8 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
               name={`translations.${loc}.display`}
               label={`${t('options.displayName', { defaultValue: 'Display Name' })} (${String(loc).toUpperCase()})`}
               control={rhf.control}
+              required
+              rules={{ required: t('common.required', { defaultValue: 'Required' }) }}
             >
               <StringInput
                 placeholder={t('options.displayName', { defaultValue: 'Display Name' })}
@@ -133,6 +152,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
             <Button
               type="submit"
               isLoading={mode === 'edit' ? updateValue.isPending : createValue.isPending}
+              isDisabled={mode === 'edit' ? updateValue.isPending : createValue.isPending}
             >
               {t('app.save', { defaultValue: 'Save' })}
             </Button>

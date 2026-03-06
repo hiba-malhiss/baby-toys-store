@@ -78,6 +78,8 @@ export const useHomePageContentForm = () => {
       galleryImages: [],
       mainBanners: buildDefaultMainBanners(),
     },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   const { control, handleSubmit, reset, formState } = form;
@@ -166,7 +168,7 @@ export const useHomePageContentForm = () => {
 
   return {
     control,
-    handleSubmit: handleSubmit(onSubmit),
+    handleSubmit: handleSubmit(onSubmit, () => toast.error('Please fix the highlighted fields.')),
     infoCards,
     galleryImages,
     mainBanners,

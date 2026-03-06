@@ -97,6 +97,8 @@ const SettingsPage: React.FC = () => {
   const form = useForm<SettingsFormValues>({
     resolver: zodResolver(settingsSchema(locales)),
     defaultValues,
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   const { control, handleSubmit, reset, setValue, clearErrors } = form;
@@ -168,7 +170,11 @@ const SettingsPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form
+        onSubmit={handleSubmit(onSubmit, () =>
+          toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }))
+        )}
+      >
         <Card fullWidth>
           <Flex direction="column" spacing="xxl" fullWidth>
             <Heading>{t('settings.title')}</Heading>

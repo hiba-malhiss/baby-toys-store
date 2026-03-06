@@ -26,7 +26,8 @@ const LoginPage: React.FC = () => {
   const { user, isInitializing } = useAuth();
 
   const { control, handleSubmit, formState } = useForm<LoginFormData>({
-    mode: 'onBlur',
+    mode: 'onChange',
+    criteriaMode: 'all',
     resolver: zodResolver(loginSchema),
     defaultValues: { email: '', password: '' },
   });
@@ -70,7 +71,12 @@ const LoginPage: React.FC = () => {
             Admin Login
           </Heading>
 
-          <form onSubmit={handleSubmit(onSubmit)} className={styles.loginPageLoginForm}>
+          <form
+            onSubmit={handleSubmit(onSubmit, () =>
+              toast.error('Please fix the highlighted fields.')
+            )}
+            className={styles.loginPageLoginForm}
+          >
             <Flex direction="vertical" spacing="m">
               <FormFieldWrapper name="email" control={control} label="Email" fullWidth>
                 <StringInput

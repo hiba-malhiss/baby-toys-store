@@ -152,6 +152,12 @@
       }
     }
   },
+  "validation": {
+    "required": "{{field}} حقل مطلوب",
+    "number": "{{field}} يجب أن يكون رقمًا",
+    "nonNegative": "{{field}} يجب ألا يكون سالبًا",
+    "mustBeGreaterThanZero": "{{field}} يجب أن يكون أكبر من صفر"
+  },
   "customers": {
     "pageTitle": "العملاء",
     "searchPlaceholder": "البحث بالاسم، البريد الإلكتروني، أو المعرف",

@@ -49,81 +49,101 @@ const ProductFormPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m">
-        <Heading>{isEditMode ? t('productForm.editTitle') : t('productForm.addTitle')}</Heading>
-        <AccordionGroup fullWidth withDivider>
-          <Accordion header={t('productForm.tab.general', { defaultValue: 'General' })} defaultOpen>
-            <div className={styles.productsFormGeneral}>
-              <Card fullWidth>
-                <Flex direction="vertical" spacing="m" fullWidth>
-                  <Heading level="h4">AR</Heading>
-                  <LocalizedFields
-                    control={control}
-                    locale={'ar' as any}
-                    isDisabled={isDeletingImage}
-                  />
-                </Flex>
-              </Card>
+      <form onSubmit={handleSubmit}>
+        <Flex direction="vertical" spacing="m">
+          <Heading>{isEditMode ? t('productForm.editTitle') : t('productForm.addTitle')}</Heading>
+          <AccordionGroup fullWidth withDivider>
+            <Accordion
+              header={t('productForm.tab.general', { defaultValue: 'General' })}
+              defaultOpen
+            >
+              <div className={styles.productsFormGeneral}>
+                <Card fullWidth>
+                  <Flex direction="vertical" spacing="m" fullWidth>
+                    <Heading level="h4">AR</Heading>
+                    <LocalizedFields
+                      control={control}
+                      locale={'ar' as any}
+                      isDisabled={isDeletingImage}
+                    />
+                  </Flex>
+                </Card>
 
-              <Card fullWidth>
-                <Flex direction="vertical" spacing="m" fullWidth>
-                  <Heading level="h4">EN</Heading>
-                  <LocalizedFields
-                    control={control}
-                    locale={'en' as any}
-                    isDisabled={isDeletingImage}
-                  />
-                </Flex>
-              </Card>
-            </div>
-          </Accordion>
+                <Card fullWidth>
+                  <Flex direction="vertical" spacing="m" fullWidth>
+                    <Heading level="h4">EN</Heading>
+                    <LocalizedFields
+                      control={control}
+                      locale={'en' as any}
+                      isDisabled={isDeletingImage}
+                    />
+                  </Flex>
+                </Card>
+              </div>
+            </Accordion>
 
-          <Accordion header={t('productForm.tab.media', { defaultValue: 'Media' })}>
-            <div className={styles.productsFormGeneral}>
-              <FormFieldWrapper label={t('productForm.mainImage')} fullWidth required>
-                <ImageUploader {...mainImageUploaderProps} fullHeight maxImages={1} />
-              </FormFieldWrapper>
+            <Accordion header={t('productForm.tab.media', { defaultValue: 'Media' })}>
+              <div className={styles.productsFormGeneral}>
+                <FormFieldWrapper
+                  name="mainImagePresent"
+                  control={control as any}
+                  label={t('productForm.mainImage')}
+                  fullWidth
+                  required
+                  rules={{
+                    validate: () =>
+                      (mainImageUploaderProps.images && mainImageUploaderProps.images.length > 0) ||
+                      'Required',
+                  }}
+                >
+                  <ImageUploader {...mainImageUploaderProps} fullHeight maxImages={1} />
+                </FormFieldWrapper>
 
-              <FormFieldWrapper label={t('productForm.galleryImages')} fullWidth>
-                <ImageUploader {...imageUploaderProps} fullHeight maxImages={10} />
-              </FormFieldWrapper>
-            </div>
-          </Accordion>
+                <FormFieldWrapper label={t('productForm.galleryImages')} fullWidth>
+                  <ImageUploader {...imageUploaderProps} fullHeight maxImages={10} />
+                </FormFieldWrapper>
+              </div>
+            </Accordion>
 
-          <Accordion header={t('productForm.options')}>
-            <Flex direction="vertical" spacing="xxl">
-              <FormFieldWrapper
-                name="categoryId"
-                control={control}
-                label={t('productForm.category')}
-                fullWidth
-              >
-                <Select fullWidth isDisabled={isDeletingImage}>
-                  {categories.map((cat) => (
-                    <Option key={cat.id} value={cat.id}>
-                      {cat.name}
-                    </Option>
-                  ))}
-                </Select>
-              </FormFieldWrapper>
-              <Divider />
-              <Heading level="h4">{t('productForm.attributes')}</Heading>
-              <AttributesSection
-                control={control}
-                attributeTypes={attributeTypes}
-                isDisabled={isDeletingImage}
-                setValue={setValue}
-              />
-              <Divider />
-              <Heading level="h4">{t('productForm.options')}</Heading>
-              <OptionsSection control={control} isDisabled={isDeletingImage} setValue={setValue} />
-            </Flex>
-          </Accordion>
-        </AccordionGroup>
-        <Button onClick={handleSubmit} isDisabled={isSubmitting || isDeletingImage}>
-          {t('app.submit')}
-        </Button>
-      </Flex>
+            <Accordion header={t('productForm.options')}>
+              <Flex direction="vertical" spacing="xxl">
+                <FormFieldWrapper
+                  name="categoryId"
+                  control={control}
+                  label={t('productForm.category')}
+                  fullWidth
+                >
+                  <Select fullWidth isDisabled={isDeletingImage}>
+                    {categories.map((cat) => (
+                      <Option key={cat.id} value={cat.id}>
+                        {cat.name}
+                      </Option>
+                    ))}
+                  </Select>
+                </FormFieldWrapper>
+                <Divider />
+                <Heading level="h4">{t('productForm.attributes')}</Heading>
+                <AttributesSection
+                  control={control}
+                  attributeTypes={attributeTypes}
+                  isDisabled={isDeletingImage}
+                  setValue={setValue}
+                />
+                <Divider />
+                <Heading level="h4">{t('productForm.options')}</Heading>
+                <OptionsSection
+                  control={control}
+                  isDisabled={isDeletingImage}
+                  setValue={setValue}
+                />
+              </Flex>
+            </Accordion>
+          </AccordionGroup>
+          <Button type="submit" isDisabled={isSubmitting || isDeletingImage} isLoading={isSubmitting || isDeletingImage}>
+            {t('app.submit')}
+          </Button>
+        </Flex>
+      </form>
     </AdminLayout>
   );
 };

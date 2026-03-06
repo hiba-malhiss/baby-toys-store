@@ -42,6 +42,8 @@ export function useExpensesPage() {
       category: '',
       description: '',
     },
+    mode: 'onChange',
+    criteriaMode: 'all',
   });
 
   const { data, isLoading, refetch } = useQuery<Expense[]>({

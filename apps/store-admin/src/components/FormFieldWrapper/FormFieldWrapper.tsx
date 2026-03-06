@@ -10,6 +10,8 @@ interface FormFieldWrapperProps<T extends FieldValues> {
   className?: string;
   fullWidth?: boolean;
   required?: boolean;
+  rules?: any;
+  error?: string;
 }
 
 function FormFieldWrapper<T extends FieldValues>({
@@ -20,6 +22,8 @@ function FormFieldWrapper<T extends FieldValues>({
   className,
   fullWidth,
   required,
+  rules,
+  error,
 }: FormFieldWrapperProps<T>) {
   if (control) {
     // Use Controller only if control is provided
@@ -27,6 +31,7 @@ function FormFieldWrapper<T extends FieldValues>({
       <Controller
         name={name}
         control={control}
+        rules={rules}
         render={({ field, fieldState }) => (
           <FieldWrapper
             label={label}
@@ -49,7 +54,13 @@ function FormFieldWrapper<T extends FieldValues>({
 
   // If no control, render children directly
   return (
-    <FieldWrapper label={label} className={className} fullWidth={fullWidth} required={required}>
+    <FieldWrapper
+      label={label}
+      className={className}
+      fullWidth={fullWidth}
+      required={required}
+      error={error}
+    >
       {React.cloneElement(children, { fullWidth })}
     </FieldWrapper>
   );
