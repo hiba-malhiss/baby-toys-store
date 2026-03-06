@@ -32,22 +32,53 @@ function FormFieldWrapper<T extends FieldValues>({
         name={name}
         control={control}
         rules={rules}
-        render={({ field, fieldState }) => (
-          <FieldWrapper
-            label={label}
-            error={fieldState.error?.message}
-            className={className}
-            fullWidth={fullWidth}
-            required={required}
-          >
-            {React.cloneElement(children, {
-              ...field,
-              fullWidth: fullWidth,
-              hasError: fieldState.error?.message,
-              id: name,
-            })}
-          </FieldWrapper>
-        )}
+        render={({ field, fieldState, formState }) => {
+          // Try to detect descendant errors for array/object fields
+          const allErrors = (formState as any)?.errors;
+          const segments = (name || '').split('.').filter(Boolean);
+
+          const getAtPath = (obj: any, segs: string[]) =>
+            segs.reduce((acc: any, key: string) => (acc && acc[key] != null ? acc[key] : undefined), obj);
+
+          const findFirstMessage = (node: any): string | undefined => {
+            if (!node) return undefined;
+            if (typeof node?.message === 'string') return node.message;
+            if (typeof node === 'string') return node;
+            if (Array.isArray(node)) {
+              for (const child of node) {
+                const m = findFirstMessage(child);
+                if (m) return m;
+              }
+            } else if (typeof node === 'object') {
+              for (const k of Object.keys(node)) {
+                const m = findFirstMessage(node[k]);
+                if (m) return m;
+              }
+            }
+            return undefined;
+          };
+
+          const descendantNode = getAtPath(allErrors, segments);
+          const descendantMessage = fieldState.error?.message || findFirstMessage(descendantNode);
+          const hasAnyError = !!(fieldState.error || descendantMessage);
+
+          return (
+            <FieldWrapper
+              label={label}
+              error={descendantMessage}
+              className={className}
+              fullWidth={fullWidth}
+              required={required}
+            >
+              {React.cloneElement(children, {
+                ...field,
+                fullWidth: fullWidth,
+                hasError: hasAnyError,
+                id: name,
+              })}
+            </FieldWrapper>
+          );
+        }}
       />
     );
   }

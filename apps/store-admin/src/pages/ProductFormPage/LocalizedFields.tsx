@@ -87,6 +87,7 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
           addButtonText={t('productForm.buttons.addBullet')}
           min={1}
           max={10}
+          rows={3}
           fullWidth
           isDisabled={!!isDisabled}
           textarea

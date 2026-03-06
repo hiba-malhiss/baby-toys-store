@@ -9,9 +9,11 @@ interface StringArrayInputProps {
   addButtonText?: string;
   min?: number;
   fullwidth?: boolean;
+  fullWidth?: boolean; // alias for consistency
   max?: number;
   rows?: number;
   textarea?: boolean;
+  hasError?: boolean | string;
 }
 
 const StringArrayInput: React.FC<StringArrayInputProps> = ({
@@ -21,10 +23,14 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
   min = 0,
   addButtonText = 0,
   fullwidth,
+  fullWidth,
   max,
   textarea = false,
   rows = 1,
+  hasError,
 }) => {
+  const inputHasError = !!hasError;
+  const computedFullWidth = typeof fullWidth === 'boolean' ? fullWidth : fullwidth;
   const handleAdd = () => {
     if (typeof max === 'number' && value.length >= max) return;
     onChange([...value, '']);
@@ -47,21 +53,23 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
   return (
     <div>
       {value.map((item, index) => (
-        <Flex key={index} spacing="s" align="center" fullwidth={fullwidth} className="bts-marginBs">
+        <Flex key={index} spacing="s" align="center" fullwidth={computedFullWidth} className="bts-marginBs">
           {textarea ? (
             <TextArea
-              fullwidth={fullwidth as any}
+              fullwidth={computedFullWidth as any}
               value={item}
               onChange={(v) => handleChange(index, v)}
               placeholder={placeholder}
               rows={rows}
+              hasError={inputHasError}
             />
           ) : (
             <StringInput
-              fullwidth={fullwidth}
+              fullwidth={computedFullWidth}
               value={item}
               onChange={(v) => handleChange(index, v)}
               placeholder={placeholder}
+              hasError={inputHasError}
             />
           )}
           {index >= min && (

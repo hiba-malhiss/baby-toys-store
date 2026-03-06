@@ -12,7 +12,7 @@ const localizedFieldsSchema = z.object({
     .min(1, 'Description is required')
     .max(2000, 'Description must be at most 2000 characters'),
   featureBullets: z
-    .array(z.string().max(500, 'Each feature bullet must be at most 255 characters'))
+    .array(z.string().max(500, 'Each feature bullet must be at most 500 characters'))
     .max(10, 'You can have at most 10 feature bullets')
     .optional()
     .default(['']),

@@ -16,6 +16,7 @@ interface KeyValueArrayInputProps {
   minItems?: number;
   fullWidth?: boolean;
   isDisabled?: boolean;
+  hasError?: boolean | string;
 }
 
 const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
@@ -27,9 +28,11 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
   minItems = 0,
   fullWidth = true,
   isDisabled = false,
+  hasError,
 }) => {
   // Ensure value is always an array
   const items = Array.isArray(value) ? value : [];
+  const inputHasError = !!hasError;
 
   const handleAdd = () => {
     onChange([...items, { label: '', value: '' }]);
@@ -58,6 +61,7 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
               placeholder={keyPlaceholder}
               fullWidth={fullWidth}
               isDisabled={isDisabled}
+              hasError={inputHasError}
             />
           </Flex>
           <div style={{ flex: 1 }}>
@@ -67,6 +71,7 @@ const KeyValueArrayInput: React.FC<KeyValueArrayInputProps> = ({
               placeholder={valuePlaceholder}
               fullWidth={fullWidth}
               isDisabled={isDisabled}
+              hasError={inputHasError}
             />
           </div>
           {index >= minItems && (
