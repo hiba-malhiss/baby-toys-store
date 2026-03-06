@@ -274,8 +274,11 @@ export const useProductForm = () => {
       try {
         await deleteImageMutation.mutateAsync(url);
         setMainImageUrl(null);
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error deleting main image:', error);
+        const backendMsg =
+          error?.response?.data?.message || error?.message || 'Failed to delete image';
+        toast.error(backendMsg);
         throw error;
       } finally {
         setIsDeletingImage(false);
@@ -302,8 +305,11 @@ export const useProductForm = () => {
       try {
         await deleteImageMutation.mutateAsync(url);
         setExistingImages((imgs) => imgs.filter((img) => img !== url));
-      } catch (error) {
+      } catch (error: any) {
         console.error('Error deleting image:', error);
+        const backendMsg =
+          error?.response?.data?.message || error?.message || 'Failed to delete image';
+        toast.error(backendMsg);
         throw error;
       } finally {
         setIsDeletingImage(false);

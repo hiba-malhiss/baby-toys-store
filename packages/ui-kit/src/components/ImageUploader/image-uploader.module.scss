@@ -93,6 +93,8 @@
   &-remove {
     right: 4px;
     color: var(--color-error, $color-error);
+    background: white;
+    border-radius: 50%;
 
     &:hover {
       color: var(--color-error-hover, $color-error-hover);
