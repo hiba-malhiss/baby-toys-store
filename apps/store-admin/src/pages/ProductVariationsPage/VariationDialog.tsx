@@ -60,7 +60,7 @@ const DEFAULT_FORM: FormState = {
 
 const uniq = (arr: string[]) => Array.from(new Set(arr.filter(Boolean)));
 
-const buildVariationSchema = (productOptions: { type: { id: number; name?: string } }[], t: any) =>
+const buildVariationSchema = (productOptions: { type: { id: number; name?: string; translations?: { displayName?: string }[] } }[], t: any) =>
   z
     .object({
       sku: z.string().optional().or(z.literal('')),
@@ -110,7 +110,7 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
 
       active: z.boolean(),
       mainImage: z.string().min(1, t('validation.required', { field: t('app.variation.mainImage') })),
-      selections: z.record(z.number()).optional().default({}),
+      selections: z.record(z.union([z.coerce.number(), z.undefined()])).optional().default({}),
     })
     .superRefine((data, ctx) => {
       const priceNum = data.price as unknown as number;
@@ -139,7 +139,9 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
             path: ['selections', String(opt.type.id)],
             code: z.ZodIssueCode.custom,
             message: t('app.variation.errors.selectOption', {
-              option: String(opt.type.name || '').toLowerCase(),
+              option: String(
+                (opt.type.translations && opt.type.translations[0]?.displayName) || opt.type.name || ''
+              ).toLowerCase(),
             }),
           });
         }
