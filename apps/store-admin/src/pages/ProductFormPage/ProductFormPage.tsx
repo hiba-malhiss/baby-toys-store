@@ -139,7 +139,11 @@ const ProductFormPage: React.FC = () => {
               </Flex>
             </Accordion>
           </AccordionGroup>
-          <Button type="submit" isDisabled={isSubmitting || isDeletingImage} isLoading={isSubmitting || isDeletingImage}>
+          <Button
+            type="submit"
+            isDisabled={isSubmitting || isDeletingImage}
+            isLoading={isSubmitting || isDeletingImage}
+          >
             {t('app.submit')}
           </Button>
         </Flex>

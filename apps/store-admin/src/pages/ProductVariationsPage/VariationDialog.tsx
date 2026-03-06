@@ -60,7 +60,7 @@ const DEFAULT_FORM: FormState = {
 
 const uniq = (arr: string[]) => Array.from(new Set(arr.filter(Boolean)));
 
-const buildVariationSchema = (productOptions: { type: { id: number; name?: string; translations?: { displayName?: string }[] } }[], t: any) =>
+const buildVariationSchema = (optionTypeIds: number[], t: any) =>
   z
     .object({
       sku: z.string().optional().or(z.literal('')),
@@ -73,15 +73,24 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
         },
         z
           .number({ message: t('validation.required', { field: t('app.variation.price') }) })
-          .nonnegative({ message: t('validation.nonNegative', { field: t('app.variation.price') }) })
+          .nonnegative({
+            message: t('validation.nonNegative', { field: t('app.variation.price') }),
+          })
       ),
-      oldPrice: z
-        .preprocess((v) => {
+      oldPrice: z.preprocess(
+        (v) => {
           const s = typeof v === 'string' ? v.trim() : v;
           if (s === '' || s === undefined || s === null) return undefined;
           const n = Number(s as any);
           return Number.isFinite(n) ? n : NaN;
-        }, z.number().nonnegative({ message: t('validation.nonNegative', { field: t('app.variation.oldPrice') }) }).optional()),
+        },
+        z
+          .number()
+          .nonnegative({
+            message: t('validation.nonNegative', { field: t('app.variation.oldPrice') }),
+          })
+          .optional()
+      ),
 
       // costPrice: required number, non-negative
       costPrice: z.preprocess(
@@ -93,7 +102,9 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
         },
         z
           .number({ message: t('validation.required', { field: t('app.variation.costPrice') }) })
-          .nonnegative({ message: t('validation.nonNegative', { field: t('app.variation.costPrice') }) })
+          .nonnegative({
+            message: t('validation.nonNegative', { field: t('app.variation.costPrice') }),
+          })
       ),
       stock: z.preprocess(
         (v) => {
@@ -105,12 +116,17 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
         z
           .number({ message: t('validation.required', { field: t('app.variation.stock') }) })
           .int({ message: t('validation.number', { field: t('app.variation.stock') }) })
-          .gt(0, { message: t('validation.mustBeGreaterThanZero', { field: t('app.variation.stock') }) })
+          .gt(0, {
+            message: t('validation.mustBeGreaterThanZero', { field: t('app.variation.stock') }),
+          })
       ),
 
       active: z.boolean(),
-      mainImage: z.string().min(1, t('validation.required', { field: t('app.variation.mainImage') })),
-      selections: z.record(z.union([z.coerce.number(), z.undefined()])).optional().default({}),
+      mainImage: z
+        .string()
+        .min(1, t('validation.required', { field: t('app.variation.mainImage') })),
+      // record of optionTypeId -> optionValueId, coerce from string to number
+      selections: z.record(z.coerce.number()).optional().default({}),
     })
     .superRefine((data, ctx) => {
       const priceNum = data.price as unknown as number;
@@ -125,7 +141,12 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
         });
       }
 
-      if (data.oldPrice !== undefined && Number.isFinite(oldPriceNum) && Number.isFinite(priceNum) && oldPriceNum < priceNum) {
+      if (
+        data.oldPrice !== undefined &&
+        Number.isFinite(oldPriceNum) &&
+        Number.isFinite(priceNum) &&
+        oldPriceNum < priceNum
+      ) {
         ctx.addIssue({
           path: ['oldPrice'],
           code: z.ZodIssueCode.custom,
@@ -133,19 +154,23 @@ const buildVariationSchema = (productOptions: { type: { id: number; name?: strin
         });
       }
 
-      productOptions.forEach((opt) => {
-        if ((data.selections || {})[opt.type.id] === undefined) {
-          ctx.addIssue({
-            path: ['selections', String(opt.type.id)],
-            code: z.ZodIssueCode.custom,
-            message: t('app.variation.errors.selectOption', {
-              option: String(
-                (opt.type.translations && opt.type.translations[0]?.displayName) || opt.type.name || ''
-              ).toLowerCase(),
-            }),
-          });
-        }
-      });
+      // If product has options, require selection for each option type
+      if (optionTypeIds && optionTypeIds.length > 0) {
+        const sel = (data.selections || {}) as Record<string | number, unknown>;
+        optionTypeIds.forEach((id) => {
+          const v = sel[id] ?? sel[String(id)];
+          const missing = v === undefined || v === null || v === '';
+          if (missing) {
+            ctx.addIssue({
+              path: ['selections', String(id)],
+              code: z.ZodIssueCode.custom,
+              message: t('app.variation.errors.selectOption', {
+                defaultValue: 'Please select an option value.',
+              }),
+            });
+          }
+        });
+      }
     });
 
 const VariationDialog: React.FC<Props> = ({
@@ -163,7 +188,10 @@ const VariationDialog: React.FC<Props> = ({
   const createVariant = useCreateVariant(productId);
   const updateVariant = useUpdateVariant(productId);
 
-  const schema = buildVariationSchema(productOptions, t);
+  const schema = buildVariationSchema(
+    productOptions.map((o) => o.type.id),
+    t
+  );
   const { control, handleSubmit, reset, watch } = useForm<FormState>({
     defaultValues: DEFAULT_FORM,
     resolver: zodResolver(schema),
@@ -301,7 +329,9 @@ const VariationDialog: React.FC<Props> = ({
               >
                 <Select>
                   <Option value={undefined} disabled>
-                    {t('app.variation.selectPlaceholder', { option: opt.type.translations?.[0]?.displayName })}
+                    {t('app.variation.selectPlaceholder', {
+                      option: opt.type.translations?.[0]?.displayName,
+                    })}
                   </Option>
                   {opt.values.map((val) => (
                     <Option key={val.id} value={val.id}>
