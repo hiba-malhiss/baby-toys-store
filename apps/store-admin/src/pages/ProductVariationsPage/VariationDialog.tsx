@@ -44,7 +44,7 @@ type FormState = {
   stock: string;
   active: boolean;
   mainImage?: string;
-  selections: Record<number, number>;
+  selections: Record<string, string>;
 };
 
 const DEFAULT_FORM: FormState = {
@@ -125,8 +125,7 @@ const buildVariationSchema = (optionTypeIds: number[], t: any) =>
       mainImage: z
         .string()
         .min(1, t('validation.required', { field: t('app.variation.mainImage') })),
-      // record of optionTypeId -> optionValueId, coerce from string to number
-      selections: z.record(z.coerce.number()).optional().default({}),
+      selections: z.record(z.string(), z.string()).optional().default({}),
     })
     .superRefine((data, ctx) => {
       const priceNum = data.price as unknown as number;
@@ -214,7 +213,7 @@ const VariationDialog: React.FC<Props> = ({
         active: !!editing.isActive,
         mainImage: editing.mainImage ?? undefined,
         selections: Object.fromEntries(
-          Object.entries(editing.optionSelectionIds || {}).map(([k, v]) => [Number(k), Number(v)])
+          Object.entries(editing.optionSelectionIds || {}).map(([k, v]) => [String(k), String(v)])
         ),
       });
     } else reset(DEFAULT_FORM);
@@ -230,7 +229,11 @@ const VariationDialog: React.FC<Props> = ({
       stockQuantity: Number(data.stock) || 0,
       isActive: data.active,
       mainImage: data.mainImage ?? null,
-      optionSelections: productOptions.length ? data.selections : {},
+      optionSelections: productOptions.length
+        ? Object.fromEntries(
+            Object.entries(data.selections || {}).map(([k, v]) => [Number(k), Number(v)])
+          )
+        : {},
     };
 
     try {
@@ -328,13 +331,13 @@ const VariationDialog: React.FC<Props> = ({
                 fullWidth
               >
                 <Select>
-                  <Option value={undefined} disabled>
+                  <Option value="" disabled>
                     {t('app.variation.selectPlaceholder', {
                       option: opt.type.translations?.[0]?.displayName,
                     })}
                   </Option>
                   {opt.values.map((val) => (
-                    <Option key={val.id} value={val.id}>
+                    <Option key={val.id} value={String(val.id)}>
                       {val.translations?.[0]?.display}
                     </Option>
                   ))}
