@@ -4,15 +4,15 @@ const localizedFieldsSchema = z.object({
   name: z.string().min(1, 'Name is required').max(255, 'Name must be at most 255 characters'),
   shortDescription: z
     .string()
-    .min(1, 'Short description is required')
-    .max(500, 'Short description must be at most 500 characters'),
-  description: z
-    .string()
-    .max(2000, 'Description must be at most 2000 characters')
+    .max(500, 'Short description must be at most 500 characters')
     .optional()
     .or(z.literal('')),
+  description: z
+    .string()
+    .min(1, 'Description is required')
+    .max(2000, 'Description must be at most 2000 characters'),
   featureBullets: z
-    .array(z.string().max(255, 'Each feature bullet must be at most 255 characters'))
+    .array(z.string().max(500, 'Each feature bullet must be at most 255 characters'))
     .max(10, 'You can have at most 10 feature bullets')
     .optional()
     .default(['']),

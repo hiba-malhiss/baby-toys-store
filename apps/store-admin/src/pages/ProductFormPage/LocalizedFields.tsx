@@ -37,26 +37,26 @@ const LocalizedFields: React.FC<LocalizedFieldsProps> = ({ control, locale, isDi
       </FormFieldWrapper>
 
       <FormFieldWrapper
-        name={`${base}.shortDescription`}
-        control={control}
-        label={t('productForm.shortDescription', { locale: labelSuffix })}
-        fullWidth
-        required
-      >
-        <TextArea
-          placeholder={t('productForm.placeholders.shortDescription')}
-          isDisabled={!!isDisabled}
-        />
-      </FormFieldWrapper>
-
-      <FormFieldWrapper
         name={`${base}.description`}
         control={control}
+        required
         label={t('productForm.description', { locale: labelSuffix })}
         fullWidth
       >
         <TextArea
           placeholder={t('productForm.placeholders.description')}
+          isDisabled={!!isDisabled}
+        />
+      </FormFieldWrapper>
+
+      <FormFieldWrapper
+        name={`${base}.shortDescription`}
+        control={control}
+        label={t('productForm.shortDescription', { locale: labelSuffix })}
+        fullWidth
+      >
+        <TextArea
+          placeholder={t('productForm.placeholders.shortDescription')}
           isDisabled={!!isDisabled}
         />
       </FormFieldWrapper>
