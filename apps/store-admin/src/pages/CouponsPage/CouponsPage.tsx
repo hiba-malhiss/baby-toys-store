@@ -9,6 +9,7 @@ import {
   ConfirmDialog,
   StringInput,
   Toggle,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { Plus, Pencil, Trash2, Search } from 'lucide-react';
 import useCouponsPage from './useCouponsPage';
@@ -106,18 +107,22 @@ const CouponsPage: React.FC = () => {
       field: 'actions',
       body: (coupon: Coupon) => (
         <Flex spacing="m">
-          <Button
-            size="small"
-            leftIconComp={Pencil}
-            appearance="outline"
-            onClick={() => openEditDialog(coupon)}
-          />
-          <Button
-            size="small"
-            leftIconComp={Trash2}
-            appearance="outline"
-            onClick={() => openDeleteDialog(coupon)}
-          />
+          <Tooltip position="top" content={t('common.edit')}>
+            <Button
+              size="small"
+              leftIconComp={Pencil}
+              appearance="outline"
+              onClick={() => openEditDialog(coupon)}
+            />
+          </Tooltip>
+          <Tooltip position="top" content={t('common.delete')}>
+            <Button
+              size="small"
+              leftIconComp={Trash2}
+              appearance="outline"
+              onClick={() => openDeleteDialog(coupon)}
+            />
+          </Tooltip>
         </Flex>
       ),
     },

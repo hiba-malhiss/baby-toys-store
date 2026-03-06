@@ -10,6 +10,7 @@ import {
   StringInput,
   Select,
   Option,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { Plus, Search, Trash2 } from 'lucide-react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -57,12 +58,15 @@ const ProductsPage: React.FC = () => {
         <Flex justify="between" align="center" fullWidth>
           <Heading level="h1">{t('products.title')}</Heading>
           <Flex align="center" spacing="xl">
-            <Button
-              onClick={() => qc.invalidateQueries({ queryKey: ['products'] })}
-              color="secondary"
-            >
-              {t('products.actions.refresh')}
-            </Button>
+            <Tooltip position="top" content={t('products.actions.refresh')}>
+              <Button
+                onClick={() => qc.invalidateQueries({ queryKey: ['products'] })}
+                color="secondary"
+                aria-label={t('products.actions.refresh')}
+              >
+                {t('products.actions.refresh')}
+              </Button>
+            </Tooltip>
             <Select
               value={onSaleOnly ? 'on' : 'all'}
               onChange={(v) => {
@@ -88,23 +92,36 @@ const ProductsPage: React.FC = () => {
               withIconBackground
               onIconClick={() => handleSearch(searchValue)}
             />
-            <Button
-              onClick={navigateToCreate}
-              leftIconComp={Plus}
-              color="primary"
-              className={styles.productsPageAddButton}
+            <Tooltip position="top" content={t('products.actions.addProduct')}>
+              <Button
+                onClick={navigateToCreate}
+                leftIconComp={Plus}
+                color="primary"
+                className={styles.productsPageAddButton}
+                aria-label={t('products.actions.addProduct')}
+              >
+                {t('products.actions.addProduct')}
+              </Button>
+            </Tooltip>
+            <Tooltip
+              position="top"
+              content={t('products.actions.deleteSelected', {
+                count: selectedProducts?.length || 0,
+              })}
             >
-              {t('products.actions.addProduct')}
-            </Button>
-            <Button
-              onClick={handleBulkDelete}
-              leftIconComp={Trash2}
-              color="secondary"
-              className={styles.productsPageAddButton}
-              isDisabled={!selectedProducts?.length}
-            >
-              {t('products.actions.deleteSelected', { count: selectedProducts?.length })}
-            </Button>
+              <Button
+                onClick={handleBulkDelete}
+                leftIconComp={Trash2}
+                color="secondary"
+                className={styles.productsPageAddButton}
+                isDisabled={!selectedProducts?.length}
+                aria-label={t('products.actions.deleteSelected', {
+                  count: selectedProducts?.length || 0,
+                })}
+              >
+                {t('products.actions.deleteSelected', { count: selectedProducts?.length })}
+              </Button>
+            </Tooltip>
           </Flex>
         </Flex>
 

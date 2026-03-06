@@ -8,6 +8,7 @@ import {
   Button,
   Rating,
   CopyToClipboardButton,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -152,15 +153,20 @@ export default function ReviewsPage() {
         body: (row: ReviewDto) => {
           const hidden = row.status === 'HIDDEN';
           return (
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={hidden ? Eye : EyeOff}
-              isLoading={isHiding || isUnhiding}
-              onClick={() => (hidden ? unhideReview(row.id) : hideReview(row.id))}
+            <Tooltip
+              position="top"
+              content={hidden ? t('app.reviews.actions.unhide') : t('app.reviews.actions.hide')}
             >
-              {hidden ? t('app.reviews.actions.unhide') : t('app.reviews.actions.hide')}
-            </Button>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={hidden ? Eye : EyeOff}
+                isLoading={isHiding || isUnhiding}
+                onClick={() => (hidden ? unhideReview(row.id) : hideReview(row.id))}
+              >
+                {hidden ? t('app.reviews.actions.unhide') : t('app.reviews.actions.hide')}
+              </Button>
+            </Tooltip>
           );
         },
       },

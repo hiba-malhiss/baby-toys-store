@@ -7,6 +7,7 @@ import {
   StringInput,
   Flex,
   CopyToClipboardButton,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
@@ -124,12 +125,16 @@ const CustomersPage: React.FC = () => {
         header: t('customers.columns.actions'),
         body: (row: AdminUser) => (
           <Flex spacing="s">
-            <Button appearance="outline" onClick={() => navigate(`/orders?query=${row.id}`)}>
-              {t('customers.actions.viewOrders')}
-            </Button>
-            <Button appearance="outline" onClick={() => navigate(`/reviews?userId=${row.id}`)}>
-              {t('customers.actions.viewReviews')}
-            </Button>
+            <Tooltip position="top" content={t('customers.actions.viewOrders')}>
+              <Button appearance="outline" onClick={() => navigate(`/orders?query=${row.id}`)}>
+                {t('customers.actions.viewOrders')}
+              </Button>
+            </Tooltip>
+            <Tooltip position="top" content={t('customers.actions.viewReviews')}>
+              <Button appearance="outline" onClick={() => navigate(`/reviews?userId=${row.id}`)}>
+                {t('customers.actions.viewReviews')}
+              </Button>
+            </Tooltip>
           </Flex>
         ),
       },

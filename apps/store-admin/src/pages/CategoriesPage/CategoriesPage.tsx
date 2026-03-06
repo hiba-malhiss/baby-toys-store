@@ -8,6 +8,7 @@ import {
   ConfirmDialog,
   Alert,
   BouncingDotsLoader,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { Pencil, Trash2 } from 'lucide-react';
 import { Category } from '../../api/types/category';
@@ -76,18 +77,22 @@ const CategoriesPage: React.FC = () => {
               field: 'actions',
               body: (category: Category) => (
                 <Flex spacing="m">
-                  <Button
-                    size="small"
-                    leftIconComp={Pencil}
-                    appearance="outline"
-                    onClick={() => openEditDialog(category)}
-                  />
-                  <Button
-                    size="small"
-                    appearance="outline"
-                    leftIconComp={Trash2}
-                    onClick={() => openDeleteDialog(category)}
-                  />
+                  <Tooltip position="top" content={t('common.edit')}>
+                    <Button
+                      size="small"
+                      leftIconComp={Pencil}
+                      appearance="outline"
+                      onClick={() => openEditDialog(category)}
+                    />
+                  </Tooltip>
+                  <Tooltip position="top" content={t('common.delete')}>
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      leftIconComp={Trash2}
+                      onClick={() => openDeleteDialog(category)}
+                    />
+                  </Tooltip>
                 </Flex>
               ),
             },

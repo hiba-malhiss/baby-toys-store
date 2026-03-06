@@ -53,7 +53,13 @@ const StringArrayInput: React.FC<StringArrayInputProps> = ({
   return (
     <div>
       {value.map((item, index) => (
-        <Flex key={index} spacing="s" align="center" fullwidth={computedFullWidth} className="bts-marginBs">
+        <Flex
+          key={index}
+          spacing="s"
+          align="center"
+          fullwidth={computedFullWidth}
+          className="bts-marginBs"
+        >
           {textarea ? (
             <TextArea
               fullwidth={computedFullWidth as any}

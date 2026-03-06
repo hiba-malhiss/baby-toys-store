@@ -1,7 +1,15 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import { Button, Flex, Heading, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Heading,
+  Table,
+  BouncingDotsLoader,
+  ConfirmDialog,
+  Tooltip,
+} from '@baby-toys/ui-kit';
 import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeApi';
 import AttributesValuesRow from './AttributesValuesRow';
 import { useToast } from '@baby-toys/ui-kit';
@@ -99,37 +107,49 @@ const AttributesPage: React.FC = () => {
                 field: 'actions',
                 body: (row: AttributeType) => (
                   <Flex spacing="m">
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Eye}
-                      aria-label={t('attributes.manage', { defaultValue: 'Manage Values' })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const key = String(row.id);
-                        setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
-                      }}
-                    />
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Pencil}
-                      aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setEditRow({ ...row });
-                      }}
-                    />
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Trash2}
-                      aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDeleteRow(row);
-                      }}
-                    />
+                    <Tooltip
+                      position="top"
+                      content={t('options.manage', { defaultValue: 'Manage Values' })}
+                    >
+                      <Button
+                        size="small"
+                        appearance="outline"
+                        leftIconComp={Eye}
+                        aria-label={t('options.manage', { defaultValue: 'Manage Values' })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const key = String(row.id);
+                          setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
+                        }}
+                      />
+                    </Tooltip>
+                    <Tooltip position="top" content={t('common.edit', { defaultValue: 'Edit' })}>
+                      <Button
+                        size="small"
+                        appearance="outline"
+                        leftIconComp={Pencil}
+                        aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setEditRow({ ...row });
+                        }}
+                      />
+                    </Tooltip>
+                    <Tooltip
+                      position="top"
+                      content={t('common.delete', { defaultValue: 'Delete' })}
+                    >
+                      <Button
+                        size="small"
+                        appearance="outline"
+                        leftIconComp={Trash2}
+                        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleteRow(row);
+                        }}
+                      />
+                    </Tooltip>
                   </Flex>
                 ),
               },

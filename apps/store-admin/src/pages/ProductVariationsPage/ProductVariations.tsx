@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Table, Toggle, Image, ConfirmDialog, Flex } from '@baby-toys/ui-kit';
+import { Button, Table, Toggle, Image, ConfirmDialog, Flex, Tooltip } from '@baby-toys/ui-kit';
 import { useToast } from '@baby-toys/ui-kit';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useDeleteVariant, useUpdateVariant } from '../../api/variantApi';
@@ -103,20 +103,24 @@ const ProductVariations: React.FC<Props> = ({
         field: 'actions',
         body: (row: VariantDto) => (
           <Flex spacing="s">
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={Pencil}
-              onClick={() => openEdit(row)}
-              aria-label={t('app.common.edit')}
-            />
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={Trash2}
-              onClick={() => setConfirmDeleteId(row.id)}
-              aria-label={t('app.common.delete')}
-            />
+            <Tooltip position="top" content={t('common.edit')}>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Pencil}
+                onClick={() => openEdit(row)}
+                aria-label={t('app.common.edit')}
+              />
+            </Tooltip>
+            <Tooltip position="top" content={t('common.delete')}>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Trash2}
+                onClick={() => setConfirmDeleteId(row.id)}
+                aria-label={t('app.common.delete')}
+              />
+            </Tooltip>
           </Flex>
         ),
       });

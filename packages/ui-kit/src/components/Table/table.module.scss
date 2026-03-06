@@ -140,7 +140,8 @@
 }
 
 html[dir='rtl'] {
-  .tableWrapper  th, .tableWrapper td {
+  .tableWrapper th,
+  .tableWrapper td {
     text-align: right;
   }
 }

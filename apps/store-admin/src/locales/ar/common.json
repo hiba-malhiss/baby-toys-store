@@ -693,6 +693,7 @@
     "description": "الوصف"
   },
   "options": {
+    "manage": "إدارة القيم",
     "types": "أنواع الخيارات",
     "addType": "إضافة نوع خيار",
     "typeName": "الاسم",

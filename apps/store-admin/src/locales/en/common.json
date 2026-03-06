@@ -253,9 +253,7 @@
     "refresh": "Refresh",
     "create": "Create",
     "update": "Update",
-    "deactivate": "Deactivate"
-  },
-  "checkout": {
+    "deactivate": "Deactivate",
     "shippingInfo": "Shipping information",
     "cartSummary": "Cart summary",
     "total": "Total",
@@ -726,6 +724,30 @@
     "shortDescription": "Short Description",
     "description": "Description"
   },
+  "options": {
+    "manage": "Manage Values",
+    "types": "Option Types",
+    "addType": "Add Option Type",
+    "typeName": "Name",
+    "displayName": "Display Name",
+    "description": "Description",
+    "addValue": "Add Value",
+    "manageValues": "Manage Values",
+    "value": "Value",
+    "display": "Display",
+    "save": "Save",
+    "cancel": "Cancel",
+    "deleteConfirm": {
+      "title": "Delete Option Type",
+      "message": "Are you sure you want to delete this option type? This will also remove all associated values and cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    },
+    "validation": {
+      "nameRequired": "Name is required",
+      "valueRequired": "Value is required"
+    }
+  },
   "attributes": {
     "title": "Attributes",
     "add": "Add Attribute",
@@ -745,6 +767,7 @@
     "types": "Attribute Types",
     "addType": "Add Attribute Type",
     "manageValues": "Manage Values",
+    "manage": "Manage Values",
     "noTypes": "No attribute types found",
     "deleteConfirm": "Are you sure you want to delete this attribute?",
     "deleteValueConfirm": "Are you sure you want to delete this value?",

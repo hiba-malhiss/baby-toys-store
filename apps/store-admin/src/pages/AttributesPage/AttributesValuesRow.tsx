@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Flex, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
+import { Button, Flex, Table, BouncingDotsLoader, ConfirmDialog, Tooltip } from '@baby-toys/ui-kit';
 import type {
   AttributeTypeListDto as AttributeType,
   AttributeValueAdminDto as AttributeValue,
@@ -89,26 +89,30 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
             field: 'actions',
             body: (row: AttributeValue) => (
               <Flex spacing="m">
-                <Button
-                  size="small"
-                  appearance="outline"
-                  leftIconComp={Pencil}
-                  aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setEditValue({ ...row });
-                  }}
-                />
-                <Button
-                  size="small"
-                  appearance="outline"
-                  leftIconComp={Trash2}
-                  aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setDeleteValue(row);
-                  }}
-                />
+                <Tooltip position="top" content={t('common.edit', { defaultValue: 'Edit' })}>
+                  <Button
+                    size="small"
+                    appearance="outline"
+                    leftIconComp={Pencil}
+                    aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditValue({ ...row });
+                    }}
+                  />
+                </Tooltip>
+                <Tooltip position="top" content={t('common.delete', { defaultValue: 'Delete' })}>
+                  <Button
+                    size="small"
+                    appearance="outline"
+                    leftIconComp={Trash2}
+                    aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteValue(row);
+                    }}
+                  />
+                </Tooltip>
               </Flex>
             ),
           },

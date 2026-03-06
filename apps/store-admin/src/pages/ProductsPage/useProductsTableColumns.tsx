@@ -1,4 +1,4 @@
-import { Button, Flex, Rating, Icon, CopyToClipboardButton } from '@baby-toys/ui-kit';
+import { Button, Flex, Rating, Icon, CopyToClipboardButton, Tooltip } from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { Pencil, Trash2, Star, Check, Eye, X, Layers } from 'lucide-react';
@@ -114,52 +114,57 @@ export const useProductsTableColumns = (handleDelete: (product: AdminProductBase
       header: t('table.headers.actions'),
       body: (row: AdminProductBase) => (
         <Flex spacing="m">
-          <Button
-            size="small"
-            appearance="outline"
-            leftIconComp={Eye}
-            onClick={() => navigate(`/product/${row.id}`)}
-            aria-label={t('table.actions.view')}
-            title={t('table.actions.view')}
-          />
-          <Button
-            size="small"
-            appearance="outline"
-            leftIconComp={Pencil}
-            onClick={() => navigate(`/edit-product/${row.id}`)}
-            aria-label={t('table.actions.edit')}
-            title={t('table.actions.edit')}
-          />
-          <Button
-            size="small"
-            appearance="outline"
-            leftIconComp={Layers}
-            onClick={() => navigate(`/edit-product/${row.id}/variations`)}
-            aria-label={t('table.actions.variations')}
-            title={t('table.actions.variations')}
-          />
-          <Button
-            size="small"
-            appearance="outline"
-            leftIconComp={Star}
-            onClick={(e) => {
-              e.stopPropagation();
-              navigate(`/reviews?productId=${row.id}`);
-            }}
-            aria-label={t('table.actions.reviews')}
-            title={t('table.actions.reviews')}
-          />
-          <Button
-            size="small"
-            appearance="outline"
-            leftIconComp={Trash2}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete(row);
-            }}
-            aria-label={t('table.actions.delete')}
-            title={t('table.actions.delete')}
-          />
+          <Tooltip position="top" content={t('table.actions.view')}>
+            <Button
+              size="small"
+              appearance="outline"
+              leftIconComp={Eye}
+              onClick={() => navigate(`/product/${row.id}`)}
+              aria-label={t('table.actions.view')}
+            />
+          </Tooltip>
+          <Tooltip position="top" content={t('table.actions.edit')}>
+            <Button
+              size="small"
+              appearance="outline"
+              leftIconComp={Pencil}
+              onClick={() => navigate(`/edit-product/${row.id}`)}
+              aria-label={t('table.actions.edit')}
+            />
+          </Tooltip>
+          <Tooltip position="top" content={t('table.actions.variations')}>
+            <Button
+              size="small"
+              appearance="outline"
+              leftIconComp={Layers}
+              onClick={() => navigate(`/edit-product/${row.id}/variations`)}
+              aria-label={t('table.actions.variations')}
+            />
+          </Tooltip>
+          <Tooltip position="top" content={t('table.actions.reviews')}>
+            <Button
+              size="small"
+              appearance="outline"
+              leftIconComp={Star}
+              onClick={(e) => {
+                e.stopPropagation();
+                navigate(`/reviews?productId=${row.id}`);
+              }}
+              aria-label={t('table.actions.reviews')}
+            />
+          </Tooltip>
+          <Tooltip position="top" content={t('table.actions.delete')}>
+            <Button
+              size="small"
+              appearance="outline"
+              leftIconComp={Trash2}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete(row);
+              }}
+              aria-label={t('table.actions.delete')}
+            />
+          </Tooltip>
         </Flex>
       ),
     },

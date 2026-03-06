@@ -38,7 +38,10 @@ function FormFieldWrapper<T extends FieldValues>({
           const segments = (name || '').split('.').filter(Boolean);
 
           const getAtPath = (obj: any, segs: string[]) =>
-            segs.reduce((acc: any, key: string) => (acc && acc[key] != null ? acc[key] : undefined), obj);
+            segs.reduce(
+              (acc: any, key: string) => (acc && acc[key] != null ? acc[key] : undefined),
+              obj
+            );
 
           const findFirstMessage = (node: any): string | undefined => {
             if (!node) return undefined;

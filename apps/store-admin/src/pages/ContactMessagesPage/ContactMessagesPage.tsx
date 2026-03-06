@@ -1,7 +1,7 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Chip, Flex, Heading, Select, Table, useToast } from '@baby-toys/ui-kit';
+import { Button, Chip, Flex, Heading, Select, Table, useToast, Tooltip } from '@baby-toys/ui-kit';
 import {
   useAdminContactMessages,
   useGetContactMessage,
@@ -55,15 +55,17 @@ export default function ContactMessagesPage() {
         header: t('app.common.actions'),
         body: (row: ContactMessage) => (
           <Flex spacing="s">
-            <Button
-              appearance="outline"
-              onClick={() => {
-                setSelectedId(row.id);
-                setDialogOpen(true);
-              }}
-            >
-              {t('app.common.view')}
-            </Button>
+            <Tooltip position="top" content={t('app.common.view')}>
+              <Button
+                appearance="outline"
+                onClick={() => {
+                  setSelectedId(row.id);
+                  setDialogOpen(true);
+                }}
+              >
+                {t('app.common.view')}
+              </Button>
+            </Tooltip>
             <Select
               options={statusOptions as any}
               value={row.status}

@@ -33,11 +33,9 @@ export function useExpensesPage() {
 
   // Validation schema
   const schema = z.object({
-    date: z
-      .any()
-      .refine((v) => v instanceof Date, {
-        message: t('validation.required', { field: t('app.expenses.form.date') }),
-      }),
+    date: z.any().refine((v) => v instanceof Date, {
+      message: t('validation.required', { field: t('app.expenses.form.date') }),
+    }),
     amount: z.preprocess(
       (v) => {
         const s = typeof v === 'string' ? v.trim() : v;
@@ -47,7 +45,9 @@ export function useExpensesPage() {
       },
       z
         .number({ message: t('validation.required', { field: t('app.expenses.form.amount') }) })
-        .gt(0, { message: t('validation.mustBeGreaterThanZero', { field: t('app.expenses.form.amount') }) })
+        .gt(0, {
+          message: t('validation.mustBeGreaterThanZero', { field: t('app.expenses.form.amount') }),
+        })
     ),
     category: z.string().optional().or(z.literal('')),
     description: z.string().optional().or(z.literal('')),

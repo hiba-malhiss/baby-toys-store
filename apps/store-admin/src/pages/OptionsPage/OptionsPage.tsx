@@ -1,7 +1,15 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import { Button, Flex, Heading, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Heading,
+  Table,
+  BouncingDotsLoader,
+  ConfirmDialog,
+  Tooltip,
+} from '@baby-toys/ui-kit';
 import { useOptionTypes, useDeleteOptionType } from '../../api/optionApi';
 import type { OptionTypeDto as OptionType } from '../../api/types/option';
 import OptionsValuesRow from './OptionsValuesRow.tsx';
@@ -78,37 +86,49 @@ const OptionsPage: React.FC = () => {
                 field: 'actions',
                 body: (row: OptionType) => (
                   <Flex spacing="m">
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Eye}
-                      aria-label={t('options.manage', { defaultValue: 'Manage Values' })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        const key = String(row.id);
-                        setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
-                      }}
-                    />
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Pencil}
-                      aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleOpenEdit(row);
-                      }}
-                    />
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Trash2}
-                      aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setDeleteRow(row);
-                      }}
-                    />
+                    <Tooltip
+                      position="top"
+                      content={t('options.manage', { defaultValue: 'Manage Values' })}
+                    >
+                      <Button
+                        size="small"
+                        appearance="outline"
+                        leftIconComp={Eye}
+                        aria-label={t('options.manage', { defaultValue: 'Manage Values' })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          const key = String(row.id);
+                          setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
+                        }}
+                      />
+                    </Tooltip>
+                    <Tooltip position="top" content={t('common.edit', { defaultValue: 'Edit' })}>
+                      <Button
+                        size="small"
+                        appearance="outline"
+                        leftIconComp={Pencil}
+                        aria-label={t('common.edit', { defaultValue: 'Edit' })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleOpenEdit(row);
+                        }}
+                      />
+                    </Tooltip>
+                    <Tooltip
+                      position="top"
+                      content={t('common.delete', { defaultValue: 'Delete' })}
+                    >
+                      <Button
+                        size="small"
+                        appearance="outline"
+                        leftIconComp={Trash2}
+                        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setDeleteRow(row);
+                        }}
+                      />
+                    </Tooltip>
                   </Flex>
                 ),
               },

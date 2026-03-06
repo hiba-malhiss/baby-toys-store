@@ -126,18 +126,22 @@ export const useOrdersPage = () => {
         header: t('app.actions'),
         body: (row: Order) => (
           <Flex spacing="m">
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={Eye}
-              onClick={() => navigate(`/order-details/${row.id}`)}
-            />
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={Pencil}
-              onClick={() => navigate(`/order-edit/${row.id}`)}
-            />
+            <Tooltip position="top" content={t('table.actions.view')}>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Eye}
+                onClick={() => navigate(`/order-details/${row.id}`)}
+              />
+            </Tooltip>
+            <Tooltip position="top" content={t('table.actions.edit')}>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Pencil}
+                onClick={() => navigate(`/order-edit/${row.id}`)}
+              />
+            </Tooltip>
           </Flex>
         ),
       },
