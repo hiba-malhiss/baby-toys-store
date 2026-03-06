@@ -83,12 +83,14 @@ export const useDeleteOptionType = () => {
 
 export const useCreateOptionValue = (typeId: number) => {
   const qc = useQueryClient();
-  return useMutation<number, unknown, { code: string; displayByLocale?: Record<string, string> }>({
+  return useMutation<number, unknown, { code?: string; displayByLocale?: Record<string, string> }>({
     mutationFn: async ({ code, displayByLocale }) => {
+      const params: Record<string, any> = {};
+      if (code && code.trim()) params.code = code.trim();
       const { data } = await api.post<ApiEnvelope<{ id: number }>>(
         `/api/admin/options/types/${typeId}/values`,
         displayByLocale ?? {},
-        { params: { code } }
+        { params }
       );
       return data.data.id;
     },

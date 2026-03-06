@@ -9,7 +9,7 @@ export interface OptionTypeTranslationDto {
 
 export interface OptionTypeDto {
   id: number;
-  name: string;
+  code: string;
   displayName?: string;
   description?: string;
   translations: OptionTypeTranslationDto[];
@@ -22,7 +22,7 @@ export interface OptionValueTranslationDto {
 
 export interface OptionValueDto {
   id: number;
-  value: string;
+  code?: string;
   display?: string;
   translations: OptionValueTranslationDto[];
 }
@@ -33,7 +33,7 @@ export interface OptionTypeDetailDto {
 }
 
 export interface OptionTypeUpsertRequest {
-  name: string;
+  code?: string;
   translations?: Array<{
     locale: string;
     displayName?: string;

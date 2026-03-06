@@ -41,7 +41,7 @@ export interface AttributeTypeListDto {
 }
 
 export interface AttributeTypeUpsertRequest {
-  code: string;
+  code?: string;
   isFilterable?: boolean;
   isMultiselect?: boolean;
   isActive?: boolean;

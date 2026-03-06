@@ -45,7 +45,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     if (!visible) return;
 
     const defaults: FormValues = {
-      code: initial?.value || '',
+      code: initial?.code || '',
       translations: {},
     };
 
@@ -61,8 +61,8 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
   }, [visible, initial, locales, rhf]);
 
   const onSubmit = async (values: FormValues) => {
-    const code = String(values.code ?? '').trim();
-    if (!code) return;
+    const codeRaw = String(values.code ?? '').trim();
+    const hasCode = !!codeRaw;
 
     const translations: Record<string, string> = {};
     Object.entries(values.translations || {}).forEach(([loc, tr]) => {
@@ -72,13 +72,14 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
 
     try {
       if (mode === 'edit' && initial?.id) {
-        const payload: { value: string; translations?: Record<string, string> } = { value: code };
+        const payload: { value?: string; translations?: Record<string, string> } = {};
+        if (hasCode) payload.value = codeRaw; // only send if user supplied a code
         if (Object.keys(translations).length) payload.translations = translations;
 
         await updateValue.mutateAsync({ valueId: initial.id, payload });
       } else {
         const displayByLocale = Object.keys(translations).length ? translations : undefined;
-        await createValue.mutateAsync({ code, displayByLocale });
+        await createValue.mutateAsync({ code: hasCode ? codeRaw : undefined, displayByLocale });
       }
 
       onSuccess?.();
@@ -106,7 +107,6 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
           <FormFieldWrapper
             name="code"
             label={t('options.value', { defaultValue: 'Value' })}
-            required
             control={rhf.control}
           >
             <StringInput placeholder={t('options.value', { defaultValue: 'Value' })} />

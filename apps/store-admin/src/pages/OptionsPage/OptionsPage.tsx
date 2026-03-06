@@ -62,8 +62,8 @@ const OptionsPage: React.FC = () => {
             rows={types.length || 1}
             columns={[
               {
-                header: t('options.typeName', { defaultValue: 'Name' }),
-                field: 'name',
+                header: t('options.typeCode', { defaultValue: 'Code' }),
+                field: 'code',
                 filter: true,
                 sortable: true,
               },
@@ -145,7 +145,7 @@ const OptionsPage: React.FC = () => {
           header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
           message={t('categories.deleteConfirm', {
             defaultValue: 'Are you sure you want to delete “{{name}}”?',
-            name: deleteRow?.name,
+            name: deleteRow?.code,
           })}
           onConfirm={async () => {
             if (!deleteRow) return;

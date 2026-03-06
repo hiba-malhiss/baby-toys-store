@@ -11,7 +11,7 @@ import { useCreateAttributeValue, useUpdateAttributeValue } from '../../api/attr
 import { AttributeValueAdminDto } from '../../api/types/attribute.ts';
 
 const schema = z.object({
-  code: z.string().min(1),
+  code: z.string().optional().default(''),
   // ✅ enforce non-empty record keys
   translations: z.record(
     z.string().min(1),
@@ -96,12 +96,14 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
 
     try {
       if (!isEdit) {
-        await createHook.mutateAsync({
-          code: values.code.trim(),
+        const code = String(values.code ?? '').trim();
+        const payload: any = {
           sortOrder: values.sortOrder ?? 0,
           isActive: values.isActive ?? true,
           displayByLocale: Object.keys(displayByLocale).length ? displayByLocale : undefined,
-        });
+        };
+        if (code) payload.code = code; // include code only if provided
+        await createHook.mutateAsync(payload);
       } else if (initial?.id) {
         await updateHook.mutateAsync({
           valueId: initial.id,
@@ -134,16 +136,6 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     <Dialog header={headerText} visible={visible} onHide={onClose} dismissibleMask modal>
       <form onSubmit={rhf.handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m">
-          <FormFieldWrapper
-            name="code"
-            control={rhf.control}
-            label={t('attributes.code', { defaultValue: 'Code' })}
-            required
-            fullWidth
-          >
-            <StringInput isDisabled={rhf.formState.isSubmitting || isEdit} />
-          </FormFieldWrapper>
-
           {locales.map((loc) => (
             <FormFieldWrapper
               key={loc}
@@ -172,6 +164,14 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
               <ToggleFieldAdapter isDisabled={rhf.formState.isSubmitting} />
             </FormFieldWrapper>
           </Flex>
+          <FormFieldWrapper
+            name="code"
+            control={rhf.control}
+            label={t('attributes.code', { defaultValue: 'Code' })}
+            fullWidth
+          >
+            <StringInput isDisabled={rhf.formState.isSubmitting || isEdit} />
+          </FormFieldWrapper>
 
           <Flex justify="end" spacing="s">
             <Button appearance="outline" type="button" onClick={onClose}>

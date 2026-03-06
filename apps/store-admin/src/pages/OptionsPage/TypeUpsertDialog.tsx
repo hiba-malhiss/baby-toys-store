@@ -18,7 +18,7 @@ export type TypeUpsertDialogProps = {
 };
 
 type FormValues = {
-  name: string;
+  code: string;
   translations: Record<
     string,
     {
@@ -45,7 +45,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   const { data: detail } = useOptionTypeDetail(typeId);
 
   const rhf = useForm<FormValues>({
-    defaultValues: { name: '', translations: {} },
+    defaultValues: { code: '', translations: {} },
   });
 
   useEffect(() => {
@@ -55,7 +55,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     const src: any = (detail as any)?.type || initial || {};
 
     const defaults: FormValues = {
-      name: src?.name || '',
+      code: src?.code || '',
       translations: {},
     };
 
@@ -75,8 +75,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   }, [visible, initial, detail, locales, rhf]);
 
   const onSubmit = async (values: FormValues) => {
-    const name = String(values.name ?? '').trim();
-    if (!name) return;
+    const code = String(values.code ?? '').trim();
 
     const translations = Object.entries(values.translations || {})
       .map(([locale, tr]) => {
@@ -94,9 +93,9 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
 
     try {
       if (mode === 'edit' && initial?.id) {
-        await updateType.mutateAsync({ id: initial.id, payload: { name, translations } });
+        await updateType.mutateAsync({ id: initial.id, payload: { code: code || undefined, translations } as any });
       } else {
-        await createType.mutateAsync({ name, translations });
+        await createType.mutateAsync({ code: code || undefined, translations } as any);
       }
 
       onSuccess?.();
@@ -121,15 +120,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     >
       <form onSubmit={rhf.handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m">
-          <FormFieldWrapper
-            name="name"
-            label={t('options.typeName', { defaultValue: 'Name' })}
-            required
-            control={rhf.control}
-          >
-            <StringInput placeholder={t('options.typeName', { defaultValue: 'Name' })} />
-          </FormFieldWrapper>
-
           {locales.map((loc) => (
             <React.Fragment key={loc}>
               <FormFieldWrapper
@@ -153,6 +143,13 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
               </FormFieldWrapper>
             </React.Fragment>
           ))}
+          <FormFieldWrapper
+            name="code"
+            label={t('options.typeCode', { defaultValue: 'Code' })}
+            control={rhf.control}
+          >
+            <StringInput placeholder={t('options.typeCode', { defaultValue: 'Code' })} />
+          </FormFieldWrapper>
 
           <Flex justify="end" spacing="s">
             <Button appearance="outline" type="button" onClick={onClose}>

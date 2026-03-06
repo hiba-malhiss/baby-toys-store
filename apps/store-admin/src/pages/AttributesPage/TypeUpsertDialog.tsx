@@ -59,7 +59,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   const schema = useMemo(
     () =>
       z.object({
-        code: z.string().min(1),
+        code: z.string().optional().default(''),
         isFilterable: z.boolean().optional().default(false),
         isMultiselect: z.boolean().optional().default(false),
         isActive: z.boolean().optional().default(true),
@@ -116,7 +116,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
 
   const onSubmit = async (values: FormValues) => {
     const code = String(values.code ?? '').trim();
-    if (!code) return;
 
     const translations = Object.entries(values.translations || {})
       .map(([locale, tr]) => {
@@ -136,13 +135,13 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       .filter(Boolean) as Array<{ locale: string; displayName?: string; description?: string }>;
 
     const payload: any = {
-      code,
       isFilterable: !!values.isFilterable,
       isMultiselect: !!values.isMultiselect,
       isActive: !!values.isActive,
       sortOrder: values.sortOrder ?? 0,
       translations: translations.length ? translations : undefined,
     };
+    if (code) payload.code = code;
 
     try {
       if (!isEdit) {
@@ -180,19 +179,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     <Dialog header={headerText} visible={visible} onHide={onClose} dismissibleMask modal>
       <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
         <Flex direction="vertical" spacing="m">
-          <FormFieldWrapper
-            name="code"
-            control={rhf.control}
-            label={t('attributes.code', { defaultValue: 'Code' })}
-            required
-            fullWidth
-          >
-            <StringInput
-              placeholder={t('attributes.code', { defaultValue: 'Code' })}
-              isDisabled={rhf.formState.isSubmitting}
-            />
-          </FormFieldWrapper>
-
           {locales.map((loc) => (
             <Flex key={loc} spacing="l" wrap>
               <FormFieldWrapper
@@ -246,6 +232,17 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
               <StringInput type="number" isDisabled={rhf.formState.isSubmitting} />
             </FormFieldWrapper>
           </Flex>
+          <FormFieldWrapper
+            name="code"
+            control={rhf.control}
+            label={t('attributes.code', { defaultValue: 'Code' })}
+            fullWidth
+          >
+            <StringInput
+              placeholder={t('attributes.code', { defaultValue: 'Code' })}
+              isDisabled={rhf.formState.isSubmitting}
+            />
+          </FormFieldWrapper>
 
           <Flex justify="end" spacing="s">
             <Button appearance="outline" type="button" onClick={onClose}>

@@ -81,7 +81,7 @@ export const useDeleteAttributeType = () => {
 // -------- Values --------
 
 type CreateAttributeValueArgs = {
-  code: string;
+  code?: string;
   sortOrder?: number;
   isActive?: boolean;
   displayByLocale?: Record<string, string>;
