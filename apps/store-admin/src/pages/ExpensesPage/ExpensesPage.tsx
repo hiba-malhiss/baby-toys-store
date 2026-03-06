@@ -17,8 +17,9 @@ import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper
 
 const CalendarFieldAdapter: React.FC<{
   value?: Date | null;
+  hasError?: boolean;
   onChange?: (d: Date | null) => void;
-}> = ({ value, onChange }) => (
+}> = ({ hasError, value, onChange }) => (
   <Calendar
     value={value ? (moment(value) as any) : (undefined as any)}
     onChange={(m) => {
@@ -29,6 +30,7 @@ const CalendarFieldAdapter: React.FC<{
         : ((m as any)?.toDate?.() ?? null);
       onChange?.(next);
     }}
+    hasError={hasError}
     selectionMode="single"
     typeView="date"
     fullWidth

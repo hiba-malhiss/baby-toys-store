@@ -4,10 +4,10 @@ export const generalSchema = z.object({
   currency: z.string().min(1).max(10),
   currencySymbol: z.string().min(1).max(5),
   timezone: z.string().min(1).max(100),
-  priceRangeMin: z.coerce.string().optional(),
-  priceRangeMax: z.coerce.string().optional(),
-  dailyOrdersGoal: z.coerce.string().optional(),
-  monthlyRevenueGoal: z.coerce.string().optional(),
+  priceRangeMin: z.coerce.number().int().min(1),
+  priceRangeMax: z.coerce.number().int().min(1),
+  dailyOrdersGoal: z.coerce.number().int().min(1),
+  monthlyRevenueGoal: z.coerce.number().int().min(1),
 });
 
 export const contactSchema = z.object({

@@ -13,8 +13,9 @@ import { useTranslation } from 'react-i18next';
 const CalendarFieldAdapter: React.FC<{
   value?: Date | null;
   onChange?: (d: Date | null) => void;
+  hasError?: boolean;
   isDisabled?: boolean;
-}> = ({ value, onChange, isDisabled }) => (
+}> = ({ hasError, value, onChange, isDisabled }) => (
   <Calendar
     value={value ? moment(value) : (undefined as any)}
     onChange={(m) => {
@@ -29,6 +30,7 @@ const CalendarFieldAdapter: React.FC<{
     disableFutureDates={false}
     selectionMode="single"
     typeView="date"
+    hasError={hasError}
     fullWidth
   />
 );

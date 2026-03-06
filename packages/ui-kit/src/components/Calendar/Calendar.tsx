@@ -18,9 +18,9 @@ interface CalendarProps {
   selectionMode?: SelectionMode;
   disableFutureDates?: boolean;
   isDisabled?: boolean;
-  isCalculated?: boolean;
   withClearFooter?: boolean;
   fullWidth?: boolean;
+  hasError?: boolean;
   typeView?: CalendarTypeView;
   value: Moment | Moment[];
   minDate?: Moment;
@@ -45,8 +45,8 @@ const Calendar = ({
   selectionMode,
   withClearFooter,
   isDisabled,
-  isCalculated,
   getLabel,
+  hasError,
   fullWidth,
 }: CalendarProps) => {
   const anchorRef = useRef<HTMLDivElement | null>(null);
@@ -103,8 +103,8 @@ const Calendar = ({
           placeholder="Select Date"
           iconRight={CalendarIcon}
           readOnly
+          hasError={hasError}
           isDisabled={isDisabled}
-          isCalculated={isCalculated}
         />
       </div>
       <Popover

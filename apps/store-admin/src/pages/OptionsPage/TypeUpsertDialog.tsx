@@ -138,7 +138,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
                 name={`translations.${loc}.displayName`}
                 label={`${t('options.displayName', { defaultValue: 'Display Name' })} (${String(loc).toUpperCase()})`}
                 control={rhf.control}
-                required={String(loc).toLowerCase() === 'en'}
+                required
                 rules={
                   String(loc).toLowerCase() === 'en'
                     ? { required: t('common.required', { defaultValue: 'Required' }) }

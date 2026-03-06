@@ -8,6 +8,8 @@ import {
   type Expense,
 } from '../../api/expensesApi';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@baby-toys/ui-kit';
 import { Trash2 } from 'lucide-react';
 
@@ -29,6 +31,28 @@ export function useExpensesPage() {
   // Dialog open state
   const [isOpen, setIsOpen] = useState(false);
 
+  // Validation schema
+  const schema = z.object({
+    date: z
+      .any()
+      .refine((v) => v instanceof Date, {
+        message: t('validation.required', { field: t('app.expenses.form.date') }),
+      }),
+    amount: z.preprocess(
+      (v) => {
+        const s = typeof v === 'string' ? v.trim() : v;
+        if (s === '' || s === undefined || s === null) return undefined;
+        const n = Number(s as any);
+        return Number.isFinite(n) ? n : NaN;
+      },
+      z
+        .number({ message: t('validation.required', { field: t('app.expenses.form.amount') }) })
+        .gt(0, { message: t('validation.mustBeGreaterThanZero', { field: t('app.expenses.form.amount') }) })
+    ),
+    category: z.string().optional().or(z.literal('')),
+    description: z.string().optional().or(z.literal('')),
+  });
+
   // Form state (moved from page)
   const {
     control,
@@ -44,6 +68,7 @@ export function useExpensesPage() {
     },
     mode: 'onChange',
     criteriaMode: 'all',
+    resolver: zodResolver(schema),
   });
 
   const { data, isLoading, refetch } = useQuery<Expense[]>({
