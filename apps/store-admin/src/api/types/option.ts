@@ -10,6 +10,7 @@ export interface OptionTypeTranslationDto {
 export interface OptionTypeDto {
   id: number;
   code: string;
+  isFilterable?: boolean;
   displayName?: string;
   description?: string;
   translations: OptionTypeTranslationDto[];
@@ -34,6 +35,7 @@ export interface OptionTypeDetailDto {
 
 export interface OptionTypeUpsertRequest {
   code?: string;
+  isFilterable?: boolean;
   translations?: Array<{
     locale: string;
     displayName?: string;

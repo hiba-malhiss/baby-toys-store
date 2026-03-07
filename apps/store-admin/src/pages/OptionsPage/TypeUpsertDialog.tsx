@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
-import { Dialog, Button, Flex, StringInput } from '@baby-toys/ui-kit';
+import { Dialog, Button, Flex, StringInput, Toggle } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
@@ -21,6 +21,7 @@ export type TypeUpsertDialogProps = {
 
 const schema = z.object({
   code: z.string().optional().default(''),
+  isFilterable: z.boolean().optional().default(false),
   translations: z.record(
     z.string().min(1),
     z.object({
@@ -50,7 +51,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
 
   const rhf = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: { code: '', translations: {} },
+    defaultValues: { code: '', isFilterable: false, translations: {} },
     mode: 'onChange',
     criteriaMode: 'all',
   });
@@ -65,6 +66,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     const src: any = (detail as any)?.type || initial || {};
     const defaults: FormValues = {
       code: src?.code || '',
+      isFilterable: Boolean(src?.isFilterable) || false,
       translations: {},
     };
 
@@ -85,6 +87,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
 
   const onSubmit = async (values: FormValues) => {
     const code = String(values.code ?? '').trim();
+    const isFilterable = Boolean(values.isFilterable);
 
     const translations = Object.entries(values.translations || {})
       .map(([locale, tr]) => {
@@ -104,10 +107,10 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       if (mode === 'edit' && initial?.id) {
         await updateType.mutateAsync({
           id: initial.id,
-          payload: { code: code || undefined, translations } as any,
+          payload: { code: code || undefined, isFilterable, translations } as any,
         });
       } else {
-        await createType.mutateAsync({ code: code || undefined, translations } as any);
+        await createType.mutateAsync({ code: code || undefined, isFilterable, translations } as any);
       }
 
       onSuccess?.();
@@ -132,6 +135,14 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     >
       <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
         <Flex direction="vertical" spacing="m">
+          <FormFieldWrapper
+            name="isFilterable"
+            label={t('options.isFilterable', { defaultValue: 'Filterable (usable in product filters)' })}
+            control={rhf.control}
+          >
+            <Toggle />
+          </FormFieldWrapper>
+
           {locales.map((loc) => (
             <React.Fragment key={loc}>
               <FormFieldWrapper
