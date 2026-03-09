@@ -1,5 +1,5 @@
 import { InfoCard } from '@baby-toys/ui-kit';
-import { Truck, Star, Brain, Puzzle, Gift, Heart } from 'lucide-react';
+import { Truck, Star, Brain, Puzzle, Gift, Heart, CheckCircle } from 'lucide-react';
 import { useHomePageContent } from '../../../api/homepageApi';
 import type { InfoCardDto } from '../../../api/types/homepage';
 import styles from './policy-cards-section.module.scss';
@@ -11,6 +11,7 @@ const iconMap: Record<string, any> = {
   puzzle: Puzzle,
   gift: Gift,
   heart: Heart,
+  checkCircle: CheckCircle,
 };
 
 const PolicyCardsSection = () => {

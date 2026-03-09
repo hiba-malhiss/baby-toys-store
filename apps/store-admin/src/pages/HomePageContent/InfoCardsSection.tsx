@@ -61,6 +61,7 @@ const InfoCardsSection: React.FC<Props> = ({ locale, control, infoCards }) => {
                     puzzle: t('homepage.infoCards.icons.puzzle'),
                     gift: t('homepage.infoCards.icons.gift'),
                     heart: t('homepage.infoCards.icons.heart'),
+                    checkCircle: t('homepage.infoCards.icons.checkCircle'),
                   }).map(([value, label]) => (
                     <Option value={value} key={value}>
                       {label}
