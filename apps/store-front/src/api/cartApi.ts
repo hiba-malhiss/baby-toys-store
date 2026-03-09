@@ -60,19 +60,31 @@ export function useCartQuery(): UseQueryResult<CartDTO, unknown> {
 export function useCartCount() {
   const { isAuthenticated } = useAuth();
   const toast = useToast();
-  return useQuery<number>({
-    queryKey: [CART_KEYS.cartCount],
-    queryFn: async () => {
-      if (isAuthenticated) {
+  if (isAuthenticated) {
+    return useQuery<number>({
+      queryKey: [CART_KEYS.cartCount],
+      queryFn: async () => {
         const res = await api.get<{ data: { count: number } }>('/api/customer/cart/count');
         return res.data.data.count;
-      } else if (hasGuestCartToken()) {
-        // Guest: backend has no /count endpoint, so fetch full cart
-        const res = await api.get<ApiEnvelope<CartDTO>>('/api/guest/cart');
-        return res.data.data.itemCount;
-      }
+      },
+      enabled: true,
+      staleTime: 10_000,
+      onError: (err: any) => {
+        const msg = err?.message ?? 'Failed to load cart count';
+        toast.error(msg);
+      },
+    });
+  }
+
+  // Guest: Reuse the same queryKey/fetcher as useCartQuery to avoid double-calling /api/guest/cart
+  return useQuery<CartDTO, unknown, number>({
+    queryKey: [CART_KEYS.cart],
+    queryFn: async () => {
+      const res = await api.get<ApiEnvelope<CartDTO>>('/api/guest/cart');
+      return res.data.data;
     },
-    enabled: isAuthenticated || hasGuestCartToken(),
+    select: (cart) => cart.itemCount,
+    enabled: hasGuestCartToken(),
     staleTime: 10_000,
     onError: (err: any) => {
       const msg = err?.message ?? 'Failed to load cart count';

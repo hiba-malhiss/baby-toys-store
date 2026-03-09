@@ -163,9 +163,7 @@ api.interceptors.response.use(
 
       try {
         const response = await api.post('/api/cart/token');
-        const token =
-          (response as any)?.data?.data?.token ||
-          (response as any)?.data?.token;
+        const token = (response as any)?.data?.data?.token || (response as any)?.data?.token;
 
         if (token) {
           setGuestCartToken(token);
@@ -184,7 +182,7 @@ api.interceptors.response.use(
     }
 
     // Normalize rate limiting (429) to a typed error with Retry-After
-    if(status === 429) {
+    if (status === 429) {
       const headers: any = error.response.headers || {};
       const retryHeader = headers['retry-after'] ?? headers['Retry-After'];
       const retryAfter = retryHeader ? parseInt(String(retryHeader), 10) : undefined;

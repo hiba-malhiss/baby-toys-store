@@ -110,7 +110,11 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
           payload: { code: code || undefined, isFilterable, translations } as any,
         });
       } else {
-        await createType.mutateAsync({ code: code || undefined, isFilterable, translations } as any);
+        await createType.mutateAsync({
+          code: code || undefined,
+          isFilterable,
+          translations,
+        } as any);
       }
 
       onSuccess?.();
@@ -137,7 +141,9 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
         <Flex direction="vertical" spacing="m">
           <FormFieldWrapper
             name="isFilterable"
-            label={t('options.isFilterable', { defaultValue: 'Filterable (usable in product filters)' })}
+            label={t('options.isFilterable', {
+              defaultValue: 'Filterable (usable in product filters)',
+            })}
             control={rhf.control}
           >
             <Toggle />
