@@ -16,12 +16,10 @@
   padding: 18px;
   background-size: cover;
   background-image: var(--bg-image);
-  background-color: var(--color-secondary);
   display: flex;
 
   p {
     width: 60%;
-    text-shadow: 3px 0 var(--color-white);
     font-size: 2rem;
     color: var(--color-primary);
   }
