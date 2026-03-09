@@ -6,7 +6,7 @@ import axios, {
 } from 'axios';
 import { queryClient } from '../App';
 import type { QueryKey } from '@tanstack/react-query';
-import { getGuestCartToken } from '../utils/guestCart';
+import { getGuestCartToken, setGuestCartToken } from '../utils/guestCart';
 import { getAppLocale } from '../components/i18n/locale';
 import { AUTH_TOKEN_KEY } from './authApi';
 import { RateLimitError } from './rateLimit';
@@ -68,7 +68,7 @@ api.interceptors.request.use(
       // Add X-Cart-Token header for guest users
       // Token is already initialized by useAuthInit (React Query)
       const url = config.url || '';
-      if (!url.includes('/api/auth/')) {
+      if (!url.includes('/api/auth/') && !url.includes('/api/cart/token')) {
         const guestToken = getGuestCartToken();
         if (guestToken) {
           config.headers['X-Cart-Token'] = guestToken;
@@ -77,7 +77,7 @@ api.interceptors.request.use(
     }
 
     // Attach preferred locale
-    (config.headers as any)['Accept-Language'] = getAppLocale() || 'ar';
+    config.headers['Accept-Language'] = getAppLocale() || 'ar';
     return config;
   },
   (error) => Promise.reject(error)
@@ -87,7 +87,10 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error: AxiosError) => {
-    const originalRequest = error.config as InternalAxiosRequestConfig & { _retry?: boolean };
+    const originalRequest = error.config as InternalAxiosRequestConfig & {
+      _retry?: boolean;
+      _retryCart?: boolean;
+    };
 
     if (!error.response || !originalRequest) {
       error.message = 'Network error. Please check your connection.';
@@ -95,6 +98,7 @@ api.interceptors.response.use(
     }
 
     const status = error.response.status;
+    const data = error.response.data;
     const isRefreshCall = (originalRequest.url || '').includes('/api/auth/refresh');
 
     // Only attempt refresh if user has a token and it's not the refresh call itself
@@ -153,19 +157,43 @@ api.interceptors.response.use(
       }
     }
 
+    // HANDLE MISSING CART TOKEN
+    if (data?.code === 'MISSING_CART_TOKEN' && !originalRequest._retryCart) {
+      originalRequest._retryCart = true;
+
+      try {
+        const response = await api.post('/api/cart/token');
+        const token =
+          (response as any)?.data?.data?.token ||
+          (response as any)?.data?.token;
+
+        if (token) {
+          setGuestCartToken(token);
+
+          if (originalRequest.headers) {
+            originalRequest.headers['X-Cart-Token'] = token;
+          }
+
+          return api(originalRequest);
+        }
+
+        return Promise.reject(error);
+      } catch (tokenError) {
+        return Promise.reject(tokenError);
+      }
+    }
+
     // Normalize rate limiting (429) to a typed error with Retry-After
-    if (status === 429) {
+    if(status === 429) {
       const headers: any = error.response.headers || {};
       const retryHeader = headers['retry-after'] ?? headers['Retry-After'];
       const retryAfter = retryHeader ? parseInt(String(retryHeader), 10) : undefined;
-      const data: any = error.response.data;
       const message = (data?.message as string) || 'Too many requests. Please try again later.';
       const reason = (data?.reason as string) || (data?.code as string) || undefined;
       return Promise.reject(new RateLimitError(message, retryAfter, reason));
     }
 
     // Other errors: attach backend message if available
-    const data: any = error.response.data;
     if (data?.message && typeof data.message === 'string') {
       error.message = data.message;
     }
