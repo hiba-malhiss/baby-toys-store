@@ -22,7 +22,7 @@ const RecentPhotoShoots = () => {
       <Flex wrap justify="center">
         {gallery.map((img, index) => (
           <div key={img.imageUrl ?? index} className={styles.recentPhotoShootsImageWrapper}>
-            <Image src={img.imageUrl} alt={img.caption} className={styles.recentPhotoShootsImage} />
+            <Image src={img.imageUrl} alt={img.caption} className={styles.recentPhotoShootsImage} objectFit="cover" />
           </div>
         ))}
       </Flex>
