@@ -14,6 +14,7 @@ import {
   Text,
   TabBar,
   TabBarItem,
+  Select,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import {
@@ -57,6 +58,16 @@ const emptyPoliciesGlobal = {
   freeShippingStartAt: null,
   freeShippingEndAt: null,
 };
+
+// Timezone options for dropdown
+const TIMEZONE_OPTIONS = [
+  { label: 'Asia/Jerusalem (UTC+02:00/UTC+03:00)', value: 'Asia/Jerusalem' },
+  { label: 'UTC', value: 'UTC' },
+  { label: 'Europe/London (UTC±00:00/UTC+01:00)', value: 'Europe/London' },
+  { label: 'Europe/Berlin (UTC+01:00/UTC+02:00)', value: 'Europe/Berlin' },
+  { label: 'America/New_York (UTC-05:00/UTC-04:00)', value: 'America/New_York' },
+  { label: 'Asia/Dubai (UTC+04:00)', value: 'Asia/Dubai' },
+];
 
 const CalendarFieldAdapter = ({ value, onChange, isDisabled }: any) => (
   <Calendar
@@ -199,14 +210,23 @@ const SettingsPage: React.FC = () => {
                     required
                     fullWidth
                   >
-                    <StringInput
-                      placeholder={field}
-                      type={
-                        field.includes('price') || field.toLowerCase().includes('goal')
-                          ? 'number'
-                          : 'text'
-                      }
-                    />
+                    {field === 'timezone' ? (
+                      <Select
+                        options={TIMEZONE_OPTIONS}
+                        placeholder={t('settings.timezone.placeholder', {
+                          defaultValue: 'Select timezone',
+                        })}
+                      />
+                    ) : (
+                      <StringInput
+                        placeholder={field}
+                        type={
+                          field.includes('price') || field.toLowerCase().includes('goal')
+                            ? 'number'
+                            : 'text'
+                        }
+                      />
+                    )}
                   </FormFieldWrapper>
                 ))}
               </Flex>

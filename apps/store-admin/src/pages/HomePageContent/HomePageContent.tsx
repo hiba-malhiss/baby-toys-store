@@ -108,7 +108,7 @@ const HomePageContent: React.FC = () => {
           <Divider thickness="2px" />
 
           <Flex justify="end">
-            <Button type="submit" color="primary" loading={isSubmitting} onClick={handleSubmit}>
+            <Button type="submit" color="primary" isLoading={isSubmitting} onClick={handleSubmit}>
               {t('homepage.actions.saveChanges')}
             </Button>
           </Flex>
