@@ -527,7 +527,7 @@
       "returningCustomersToday": "العملاء العائدين (اليوم)",
       "ordersYesterday": "الطلبات (أمس)",
       "deliveredYesterday": "تم التوصيل (أمس)",
-      "mtd": "منذ بداية الشهر",
+      "mtd": "منذ بداية الشهر حتى الآن.",
       "yesterday": "أمس: {{val}}",
       "orderIntakeNote": "قيمة الطلبات الجديدة اليوم",
       "ratingsCount": "{{count}} تقييم",

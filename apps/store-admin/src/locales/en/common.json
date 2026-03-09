@@ -577,7 +577,7 @@
       "returningCustomersToday": "Returning Customers (Today)",
       "ordersYesterday": "Orders (Yesterday)",
       "deliveredYesterday": "Delivered (Yesterday)",
-      "mtd": "MTD",
+      "mtd": "from the start of the month until today",
       "yesterday": "Yesterday: {{val}}",
       "orderIntakeNote": "New orders value today",
       "ratingsCount": "{{count}} ratings",
