@@ -1,4 +1,9 @@
-import type { BoardCellSolution, BoardColorDefinition, BoardConfig, BoardPlayerCell } from './board.types';
+import type {
+  BoardCellSolution,
+  BoardColorDefinition,
+  BoardConfig,
+  BoardPlayerCell,
+} from './board.types';
 
 const DEFAULT_COLORS: BoardColorDefinition[] = [
   { id: 'red', hex: '#ef4444', equation: '2 + 2' },
@@ -35,12 +40,12 @@ export const createDefaultBoard = (): BoardConfig => {
 };
 
 export const resizeSolution = ({
-                                 previousSolution,
-                                 previousWidth,
-                                 previousHeight,
-                                 nextWidth,
-                                 nextHeight,
-                               }: {
+  previousSolution,
+  previousWidth,
+  previousHeight,
+  nextWidth,
+  nextHeight,
+}: {
   previousSolution: BoardCellSolution[];
   previousWidth: number;
   previousHeight: number;
@@ -49,8 +54,8 @@ export const resizeSolution = ({
 }) => {
   const nextSolution = createEmptySolution(nextWidth, nextHeight);
 
-  for(let rowIndex = 0; rowIndex < Math.min(previousHeight, nextHeight); rowIndex++) {
-    for(let columnIndex = 0; columnIndex < Math.min(previousWidth, nextWidth); columnIndex++) {
+  for (let rowIndex = 0; rowIndex < Math.min(previousHeight, nextHeight); rowIndex++) {
+    for (let columnIndex = 0; columnIndex < Math.min(previousWidth, nextWidth); columnIndex++) {
       const previousIndex = rowIndex * previousWidth + columnIndex;
       const nextIndex = rowIndex * nextWidth + columnIndex;
       nextSolution[nextIndex] = previousSolution[previousIndex] || {
@@ -79,7 +84,7 @@ export const createEmptyPlayerState = (board: BoardConfig): BoardPlayerCell[] =>
   }));
 
 const normalizeSplitMode = (splitMode: unknown, top: string, bottom: string) => {
-  if(splitMode === 'left' || splitMode === 'right' || splitMode === 'none') {
+  if (splitMode === 'left' || splitMode === 'right' || splitMode === 'none') {
     return splitMode;
   }
 
@@ -91,17 +96,17 @@ export const sanitizeBoard = (board: BoardConfig): BoardConfig => {
   const solution =
     board.solution.length === expectedSize
       ? board.solution.map((cell) => ({
-        top: board.colors.some((color) => color.id === cell.top) ? cell.top : null,
-        bottom: board.colors.some((color) => color.id === cell.bottom) ? cell.bottom : null,
-        splitMode: normalizeSplitMode(cell.splitMode, cell.top, cell.bottom),
-      }))
+          top: board.colors.some((color) => color.id === cell.top) ? cell.top : null,
+          bottom: board.colors.some((color) => color.id === cell.bottom) ? cell.bottom : null,
+          splitMode: normalizeSplitMode(cell.splitMode, cell.top, cell.bottom),
+        }))
       : resizeSolution({
-        previousSolution: board.solution,
-        previousWidth: board.width,
-        previousHeight: Math.ceil(board.solution.length / Math.max(board.width, 1)),
-        nextWidth: board.width,
-        nextHeight: board.height,
-      });
+          previousSolution: board.solution,
+          previousWidth: board.width,
+          previousHeight: Math.ceil(board.solution.length / Math.max(board.width, 1)),
+          nextWidth: board.width,
+          nextHeight: board.height,
+        });
 
   return {
     ...board,
@@ -112,16 +117,16 @@ export const sanitizeBoard = (board: BoardConfig): BoardConfig => {
 
 export const evaluateEquation = (equation: string): string => {
   try {
-    if(!equation.trim()) return '';
+    if (!equation.trim()) return '';
 
     // basic safety: allow only numbers + operators
-    if(!/^[0-9+\-*/().\s]+$/.test(equation)) {
+    if (!/^[0-9+\-*/().\s]+$/.test(equation)) {
       return equation;
     }
 
     const result = Function(`"use strict"; return (${equation})`)();
 
-    if(typeof result !== 'number' || Number.isNaN(result)) {
+    if (typeof result !== 'number' || Number.isNaN(result)) {
       return equation;
     }
 

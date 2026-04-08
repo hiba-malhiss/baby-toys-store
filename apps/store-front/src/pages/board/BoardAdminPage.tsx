@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 import BoardGrid from './BoardGrid';
 import BoardPaletteEditor from './BoardPaletteEditor';
@@ -6,23 +6,12 @@ import BoardSplitCell from './BoardSplitCell';
 import useBoardAdminPage from './useBoardAdminPage';
 import { evaluateEquation } from './board.utils';
 import './styles.scss';
-import {
-  StepList,
-  StepItem,
-  Step,
-  StepPanels,
-  StepPanel,
-  StepperSeparator,
-  Stepper
-} from "@baby-toys/ui-kit";
+import { StepList, StepItem, Step, StepPanel, Stepper, Icon } from '@baby-toys/ui-kit';
+import { CheckCircleIcon } from 'lucide-react';
 
 type AdminView = 'create' | 'manage';
 
-const STEPPER_STEPS = [
-  { label: 'Board Info' },
-  { label: 'Paint Grid' },
-  { label: 'Save' },
-];
+const STEPPER_STEPS = [{ label: 'Board Info' }, { label: 'Paint Grid' }, { label: 'Save' }];
 
 const BoardAdminPage = () => {
   const [view, setView] = useState<AdminView>('create');
@@ -76,56 +65,54 @@ const BoardAdminPage = () => {
       </div>
 
       {savedBoards.length === 0 ? (
-        <p className="board-empty-state">
-          No boards saved yet. Create your first board!
-        </p>
+        <p className="board-empty-state">No boards saved yet. Create your first board!</p>
       ) : (
         <table className="board-manage-table">
           <thead>
-          <tr>
-            <th>Name</th>
-            <th>Size</th>
-            <th>Colors</th>
-            <th>Updated</th>
-            <th style={{ textAlign: 'right' }}>Actions</th>
-          </tr>
+            <tr>
+              <th>Name</th>
+              <th>Size</th>
+              <th>Colors</th>
+              <th>Updated</th>
+              <th style={{ textAlign: 'right' }}>Actions</th>
+            </tr>
           </thead>
 
           <tbody>
-          {savedBoards.map((board) => (
-            <tr key={board.id}>
-              <td>
-                <strong>{board.name}</strong>
-              </td>
-              <td>
+            {savedBoards.map((board) => (
+              <tr key={board.id}>
+                <td>
+                  <strong>{board.name}</strong>
+                </td>
+                <td>
                   <span className="board-badge board-badge--brand">
                     {board.width} × {board.height}
                   </span>
-              </td>
-              <td>{board.colors.length} colors</td>
-              <td style={{ color: 'var(--text-3)', fontSize: 13 }}>
-                {new Date(board.updatedAt).toLocaleDateString()}
-              </td>
-              <td>
-                <div className="board-manage-table__actions">
-                  <button
-                    type="button"
-                    className="board-button board-button--secondary"
-                    onClick={() => goToEdit(board.id)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    type="button"
-                    className="board-button board-button--ghost"
-                    onClick={() => handleDeleteBoard(board.id)}
-                  >
-                    Delete
-                  </button>
-                </div>
-              </td>
-            </tr>
-          ))}
+                </td>
+                <td>{board.colors.length} colors</td>
+                <td style={{ color: 'var(--text-3)', fontSize: 13 }}>
+                  {new Date(board.updatedAt).toLocaleDateString()}
+                </td>
+                <td>
+                  <div className="board-manage-table__actions">
+                    <button
+                      type="button"
+                      className="board-button board-button--secondary"
+                      onClick={() => goToEdit(board.id)}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      type="button"
+                      className="board-button board-button--ghost"
+                      onClick={() => handleDeleteBoard(board.id)}
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
           </tbody>
         </table>
       )}
@@ -155,9 +142,7 @@ const BoardAdminPage = () => {
             min="1"
             max="20"
             value={activeBoard.width}
-            onChange={(e) =>
-              handleDimensionChange('width', e.target.value)
-            }
+            onChange={(e) => handleDimensionChange('width', e.target.value)}
           />
         </label>
 
@@ -169,16 +154,14 @@ const BoardAdminPage = () => {
             min="1"
             max="20"
             value={activeBoard.height}
-            onChange={(e) =>
-              handleDimensionChange('height', e.target.value)
-            }
+            onChange={(e) => handleDimensionChange('height', e.target.value)}
           />
         </label>
       </div>
 
       <p className="board-helper-text">
-        Grid: {activeBoard.width} × {activeBoard.height} ={' '}
-        {activeBoard.width * activeBoard.height} cells.
+        Grid: {activeBoard.width} × {activeBoard.height} = {activeBoard.width * activeBoard.height}{' '}
+        cells.
       </p>
     </div>
   );
@@ -197,12 +180,8 @@ const BoardAdminPage = () => {
         height={activeBoard.height}
         renderCell={(index) => {
           const cell = activeBoard.solution[index];
-          const topColor = activeBoard.colors.find(
-            (c) => c.id === cell?.top
-          );
-          const bottomColor = activeBoard.colors.find(
-            (c) => c.id === cell?.bottom
-          );
+          const topColor = activeBoard.colors.find((c) => c.id === cell?.top);
+          const bottomColor = activeBoard.colors.find((c) => c.id === cell?.bottom);
 
           return (
             <BoardSplitCell
@@ -214,16 +193,12 @@ const BoardAdminPage = () => {
               onSetSplitMode={handleSetCellSplitMode}
               top={{
                 colorHex: topColor?.hex,
-                label: topColor?.equation
-                  ? evaluateEquation(topColor.equation)
-                  : 'No eq',
+                label: topColor?.equation ? evaluateEquation(topColor.equation) : 'No eq',
                 isSelected: selectedColorId === topColor?.id,
               }}
               bottom={{
                 colorHex: bottomColor?.hex,
-                label: bottomColor?.equation
-                  ? evaluateEquation(bottomColor.equation)
-                  : 'No eq',
+                label: bottomColor?.equation ? evaluateEquation(bottomColor.equation) : 'No eq',
                 isSelected: selectedColorId === bottomColor?.id,
               }}
             />
@@ -246,10 +221,10 @@ const BoardAdminPage = () => {
     <div style={{ textAlign: 'center', padding: '16px 0' }}>
       {hasSavedBoard ? (
         <>
-          <div style={{ fontSize: 40, marginBottom: 12 }}>✅</div>
-          <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>
-            Board saved!
-          </h3>
+          <div style={{ fontSize: 40, marginBottom: 12 }}>
+            <Icon icon={CheckCircleIcon} size="xlarge" color="success" />
+          </div>
+          <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>Board saved!</h3>
           <p className="board-helper-text" style={{ marginBottom: 18 }}>
             "{activeBoard.name}" is ready for players.
           </p>
@@ -278,11 +253,7 @@ const BoardAdminPage = () => {
               Manage Boards
             </button>
 
-            <button
-              type="button"
-              className="board-button"
-              onClick={() => setStepIndex(0)}
-            >
+            <button type="button" className="board-button" onClick={() => setStepIndex(0)}>
               Edit This Board
             </button>
           </div>
@@ -290,19 +261,13 @@ const BoardAdminPage = () => {
       ) : (
         <>
           <div style={{ fontSize: 40, marginBottom: 12 }}>💾</div>
-          <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>
-            Ready to save?
-          </h3>
+          <h3 style={{ margin: '0 0 8px', fontSize: 18 }}>Ready to save?</h3>
           <p className="board-helper-text" style={{ marginBottom: 18 }}>
-            "{activeBoard.name}" — {activeBoard.width} ×{' '}
-            {activeBoard.height}, {activeBoard.colors.length} colors.
+            "{activeBoard.name}" — {activeBoard.width} × {activeBoard.height},{' '}
+            {activeBoard.colors.length} colors.
           </p>
 
-          <button
-            type="button"
-            className="board-button"
-            onClick={handleSaveAndAdvance}
-          >
+          <button type="button" className="board-button" onClick={handleSaveAndAdvance}>
             Save Board
           </button>
         </>
@@ -367,40 +332,19 @@ const BoardAdminPage = () => {
               {/* Header */}
               <StepList>
                 {STEPPER_STEPS.map((step, i) => (
-                  <div
-                    key={step.label}
-                    style={{ display: 'flex', alignItems: 'center' }}
-                  >
-                    <StepItem value={i}>
-                      <Step>{step.label}</Step>
-                    </StepItem>
-
-                    {i < STEPPER_STEPS.length - 1 && (
-                      <StepperSeparator/>
-                    )}
-                  </div>
+                  <StepItem value={i}>
+                    <Step>{step.label}</Step>
+                  </StepItem>
                 ))}
               </StepList>
 
-              {statusMessage && (
-                <span
-                  style={{
-                    fontSize: 13,
-                    color: 'var(--text-2)',
-                  }}
-                >
-                      {statusMessage}
-                    </span>
-              )}
-
               {/* Panels */}
-              <StepPanels>
-                {stepsContent.map((content, i) => (
-                  <StepPanel key={i} value={i}>
-                    {content}
-                  </StepPanel>
-                ))}
-              </StepPanels>
+              {statusMessage && <span>{statusMessage}</span>}
+              {stepsContent.map((content, i) => (
+                <StepPanel key={i} value={i}>
+                  {content}
+                </StepPanel>
+              ))}
 
               {/* Actions */}
               <div className="board-stepper__actions">
@@ -408,9 +352,7 @@ const BoardAdminPage = () => {
                   <button
                     type="button"
                     className="board-button board-button--secondary"
-                    onClick={() =>
-                      setStepIndex((i) => i - 1)
-                    }
+                    onClick={() => setStepIndex((i) => i - 1)}
                   >
                     ← Back
                   </button>
@@ -420,22 +362,18 @@ const BoardAdminPage = () => {
                   <button
                     type="button"
                     className="board-button"
-                    onClick={() =>
-                      setStepIndex((i) => i + 1)
-                    }
+                    onClick={() => setStepIndex((i) => i + 1)}
                   >
                     Next →
                   </button>
                 ) : (
-                  (
-                    <button
-                      type="button"
-                      className="board-button board-button--success"
-                      onClick={handleSaveAndAdvance}
-                    >
-                      Save Board
-                    </button>
-                  )
+                  <button
+                    type="button"
+                    className="board-button board-button--success"
+                    onClick={handleSaveAndAdvance}
+                  >
+                    Save Board
+                  </button>
                 )}
               </div>
             </Stepper>

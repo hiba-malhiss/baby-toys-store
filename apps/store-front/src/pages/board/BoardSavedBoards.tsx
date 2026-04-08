@@ -7,7 +7,12 @@ type BoardSavedBoardsProps = {
   onSelectBoard: (boardId: string) => void;
 };
 
-const BoardSavedBoards = ({ boards, selectedBoardId, title, onSelectBoard }: BoardSavedBoardsProps) => {
+const BoardSavedBoards = ({
+  boards,
+  selectedBoardId,
+  title,
+  onSelectBoard,
+}: BoardSavedBoardsProps) => {
   return (
     <div className="board-panel">
       <div className="board-panel__header">

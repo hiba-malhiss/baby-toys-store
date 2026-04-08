@@ -1,7 +1,12 @@
 import { type ChangeEvent, useEffect, useMemo, useState } from 'react';
 
 import { loadBoards, saveBoards } from './board.storage';
-import type { BoardCellSplitMode, BoardColorDefinition, BoardConfig, BoardTriangleKey } from './board.types';
+import type {
+  BoardCellSplitMode,
+  BoardColorDefinition,
+  BoardConfig,
+  BoardTriangleKey,
+} from './board.types';
 import { createDefaultBoard, resizeSolution, sanitizeBoard } from './board.utils';
 
 const getInitialBoard = () => {
@@ -17,8 +22,12 @@ const useBoardAdminPage = () => {
   const [{ boards: initialBoards, activeBoard: initialBoard }] = useState(getInitialBoard);
   const [savedBoards, setSavedBoards] = useState<BoardConfig[]>(initialBoards);
   const [activeBoard, setActiveBoard] = useState<BoardConfig>(initialBoard);
-  const [selectedColorId, setSelectedColorId] = useState<string | null>(initialBoard.colors[0]?.id || null);
-  const [statusMessage, setStatusMessage] = useState('Left click paints a cell or half. Right click sets split mode.');
+  const [selectedColorId, setSelectedColorId] = useState<string | null>(
+    initialBoard.colors[0]?.id || null
+  );
+  const [statusMessage, setStatusMessage] = useState(
+    'Left click paints a cell or half. Right click sets split mode.'
+  );
 
   useEffect(() => {
     if (!selectedColorId || !activeBoard.colors.some((c) => c.id === selectedColorId)) {
@@ -28,7 +37,7 @@ const useBoardAdminPage = () => {
 
   const hasSavedBoard = useMemo(
     () => savedBoards.some((b) => b.id === activeBoard.id),
-    [activeBoard.id, savedBoards],
+    [activeBoard.id, savedBoards]
   );
 
   const handleSelectBoard = (boardId: string) => {
@@ -54,7 +63,7 @@ const useBoardAdminPage = () => {
   const handleDimensionChange = (field: 'width' | 'height', rawValue: string) => {
     const nextValue = Math.max(1, Math.min(20, Number(rawValue) || 1));
     setActiveBoard((cur) => {
-      const fallbackColorId = cur.colors[0]?.id || 'color-1';
+      const fallbackColorId = cur.colors[0]?.id;
       const nextWidth = field === 'width' ? nextValue : cur.width;
       const nextHeight = field === 'height' ? nextValue : cur.height;
       return {

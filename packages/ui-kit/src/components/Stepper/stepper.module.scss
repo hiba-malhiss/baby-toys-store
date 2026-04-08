@@ -5,47 +5,49 @@
   font-family: inherit;
 }
 
-/* ── Step Header List ─────────────────────────────────── */
+/* ── Step List ───────────────────────────── */
 .stepList {
   display: flex;
   align-items: center;
   width: 100%;
+  overflow-x: auto;
 }
 
 html[dir='rtl'] .stepList {
   flex-direction: row-reverse;
 }
 
-/* ── Step + Separator Wrapper ───────────────────────── */
-.stepWrapper {
-  display: flex;
-  align-items: center;
-  flex: 1 1 0; /* take equal space */
-}
-
-/* ── Each Step Item ──────────────────────────────────── */
+/* ── Step Item (wrapper) ─────────────────── */
 .stepItem {
-  display: flex;
-  flex-direction: column;
+  display: grid;
   align-items: center;
-  justify-content: center;
   flex: 1 1 0;
-  min-width: 0;
+  grid-template-columns: max-content 1fr;
 }
 
-/* ── Step Header Button ─────────────────────────────── */
-.stepHeader {
+/* last step should not stretch separator */
+.stepItem:last-of-type {
+  flex: initial;
+}
+
+/* ── Step ───────────────────────────────── */
+.step {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
+  flex: 1 1 auto;
+  gap: 8px;
+}
+
+/* ── Step Header ────────────────────────── */
+.stepHeader {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   background: none;
   border: none;
-  padding: 8px 0;
   cursor: pointer;
-  width: 100%; /* full width of its flex container */
-  font-family: inherit;
+  padding: 6px 8px;
+  border-radius: 6px;
   transition: all 0.2s;
 }
 
@@ -54,26 +56,21 @@ html[dir='rtl'] .stepList {
   opacity: 0.4;
 }
 
-.stepHeader:not(:disabled):hover .stepNumber {
-  border-color: var(--stepper-active-color, #534ab7);
-  color: var(--stepper-active-color, #534ab7);
-}
-
-/* ── Step Number Circle ────────────────────────────── */
+/* ── Step Number ───────────────────────── */
 .stepNumber {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  border-radius: 50%;
   font-size: 13px;
   font-weight: 700;
   border: 2px solid var(--border-strong, #d1d5db);
   background: var(--surface, #fff);
   color: var(--text-3, #6b7280);
-  flex-shrink: 0;
-  transition: all 0.2s;
+  position: relative;
+  z-index: 1;
 }
 
 .stepNumberActive {
@@ -88,37 +85,30 @@ html[dir='rtl'] .stepList {
   color: #fff;
 }
 
-/* ── Step Title ────────────────────────────────────── */
+/* ── Title ─────────────────────────────── */
 .stepTitle {
-  font-size: 11px;
+  white-space: nowrap;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text-3, #6b7280);
-  white-space: nowrap;
-  transition: color 0.2s;
 }
 
 .stepTitleActive {
   color: var(--text, #111827);
 }
 
-/* ── Separator ─────────────────────────────────────── */
+/* ── Separator (KEY PART) ─────────────── */
 .separator {
-  flex: 1; /* stretch to fill space between steps */
+  flex: 1 1 0;
   height: 2px;
   background: var(--border, #e5e7eb);
-  border-radius: 2px;
-  transition: background 0.3s;
-  margin: 0 10px 10px 10px;
+  transition: background 0.2s;
 }
 
+/* active/completed separator */
+.stepItem[data-p-active='true'] ~ .stepItem .separator,
 .separator.isCompleted {
   background: var(--success, #1d9e75);
-}
-
-/* ── Panels ───────────────────────────────────────── */
-.stepPanels {
-  width: 100%;
-  overflow: hidden;
 }
 
 .stepPanel {
@@ -138,7 +128,7 @@ html[dir='rtl'] .stepList {
   width: 100%;
 }
 
-/* ── Animations ────────────────────────────────────── */
+/* ── Animation ───────────────────────── */
 @keyframes panelIn {
   from {
     opacity: 0;

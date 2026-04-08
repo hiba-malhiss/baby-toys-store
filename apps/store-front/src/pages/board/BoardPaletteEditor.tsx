@@ -27,7 +27,10 @@ const BoardPaletteEditor = ({
       </div>
       <div className="board-palette-editor">
         {colors.map((color) => (
-          <div key={color.id} className={`board-palette-editor__row ${selectedColorId === color.id ? 'is-selected' : ''}`}>
+          <div
+            key={color.id}
+            className={`board-palette-editor__row ${selectedColorId === color.id ? 'is-selected' : ''}`}
+          >
             <button
               type="button"
               className="board-color-swatch"
