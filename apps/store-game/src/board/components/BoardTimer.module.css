@@ -1,0 +1,42 @@
+.timer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+}
+.label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-3);
+}
+.display {
+  font-size: 28px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.05em;
+  color: var(--text);
+  min-width: 90px;
+  font-family: var(--font-mono);
+  transition: color 0.3s;
+}
+.display.running {
+  color: var(--brand);
+  text-shadow: 0 0 12px rgba(16, 150, 181, 0.4);
+  animation: timerTick 1s steps(1) infinite;
+}
+.display.finished {
+  color: var(--success);
+  text-shadow: 0 0 12px rgba(37, 191, 12, 0.4);
+}
+.controls { display: flex; gap: 6px; margin-left: auto; }
+
+@keyframes timerTick {
+  0% { opacity: 1; }
+  50% { opacity: 0.65; }
+}

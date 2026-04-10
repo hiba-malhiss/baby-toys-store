@@ -32,7 +32,7 @@ export default defineConfig({
     },
     preprocessorOptions: {
       scss: {
-        additionalData: `@use '@/styles/constants.scss' as *;`,
+        additionalData: `@use './styles/constants.scss' as *;`,
       },
     },
   },

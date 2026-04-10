@@ -15,6 +15,7 @@
     "type-check": "tsc --noEmit",
     "start": "pnpm --filter store-front dev",
     "start:admin": "pnpm --filter store-admin dev",
+    "start:game": "pnpm --filter store-game dev",
     "build": "pnpm exec vite build"
   },
   "dependencies": {

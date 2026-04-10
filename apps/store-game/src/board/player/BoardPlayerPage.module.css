@@ -1,0 +1,90 @@
+.page {
+  min-height: 100vh;
+  background: var(--surface-2);
+  padding: 28px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.inner { width: 100%; max-width: 1280px; }
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+.headerLeft { display: flex; flex-direction: column; gap: 4px; }
+.eyebrow {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--brand);
+  margin: 0;
+}
+.title { margin: 0; font-size: 24px; font-weight: 900; letter-spacing: -0.02em; }
+.headerRight { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.statusCard {
+  padding: 10px 16px;
+  border-radius: var(--radius);
+  background: var(--brand-light);
+  border: 1px solid rgba(16, 150, 181, 0.3);
+  box-shadow: 0 2px 8px rgba(16, 150, 181, 0.12);
+}
+.statusCard span {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--brand);
+  font-weight: 800;
+}
+.statusCard strong {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.shell {
+  display: grid;
+  grid-template-columns: minmax(260px, 300px) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+.workspace { display: flex; flex-direction: column; gap: 14px; }
+.gameFrame {
+  position: relative;
+  border-radius: var(--radius);
+  overflow: hidden;
+  min-height: 200px;
+}
+
+.progressRow {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+.progressLabel { font-size: 12px; font-weight: 800; color: var(--text-2); white-space: nowrap; }
+.progressCount {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+  white-space: nowrap;
+  min-width: 48px;
+  text-align: right;
+  font-family: var(--font-mono);
+}
+.progressStars { margin-left: auto; font-size: 16px; letter-spacing: 2px; }
+
+@media (max-width: 1100px) { .shell { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .page { padding: 14px 10px; } }

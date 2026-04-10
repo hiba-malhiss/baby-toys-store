@@ -24,10 +24,14 @@
   "settings": {
     "react": { "version": "detect" },
     "import/resolver": {
-      "typescript": {}
+      "typescript": {
+        "project": ["./tsconfig.json", "apps/*/tsconfig.json", "packages/*/tsconfig.json"],
+        "alwaysTryTypes": true
+      }
     }
   },
   "rules": {
+    "react/react-in-jsx-scope": "off",
     "prettier/prettier": ["error"],
     "space-in-parens": "off",
     "object-curly-newline": [
