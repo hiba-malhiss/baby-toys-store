@@ -22,7 +22,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from './components/LocationAwareToast.tsx';
 import { ThemeProvider } from '@baby-toys/ui-kit/theme/ThemeProvider';
-import { BoardAdminPage, BoardPlayerPage } from "./pages/board";
+import VerificationResendDialog from './components/VerificationResendDialog';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -54,8 +54,6 @@ const AppContent: React.FC = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<RootRedirectPreserveSearch />} />
-              <Route path="/game" element={<BoardPlayerPage />} />
-              <Route path="/game-admin" element={<BoardAdminPage />} />
               <Route path="/home" element={<HomePage />} />
               <Route path="/shop" element={<ShopPage />} />
               <Route path="/product-details/:id" element={<ProductDetailsPage />} />

@@ -70,4 +70,3 @@ export { default as CopyToClipboardButton } from './CopyToClipboardButton/CopyTo
 export { default as HeartButton } from './HeartButton/HeartButton';
 export { default as SocialIconButton } from './SocialIconButton/SocialIconButton';
 export { default as Aside } from './Aside/Aside';
-export * from './Stepper';
