@@ -1,10 +1,4 @@
-import {
-  type CSSProperties,
-  type MouseEvent as ReactMouseEvent,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import { type CSSProperties, type MouseEvent as ReactMouseEvent, useEffect, useRef, useState } from 'react';
 
 import type { BoardCellFeedback, BoardCellSplitMode, BoardTriangleKey } from '../board.types';
 
@@ -27,25 +21,25 @@ type BoardSplitCellProps = {
 };
 
 const BoardSplitCell = ({
-  mode,
-  cellIndex,
-  splitMode,
-  top,
-  bottom,
-  onCellClick,
-  onSetSplitMode,
-}: BoardSplitCellProps) => {
+                          mode,
+                          cellIndex,
+                          splitMode,
+                          top,
+                          bottom,
+                          onCellClick,
+                          onSetSplitMode,
+                        }: BoardSplitCellProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 4, y: 4 });
   const menuRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (!isMenuOpen) {
+    if(!isMenuOpen) {
       return undefined;
     }
 
     const handleDocumentClick = (event: MouseEvent) => {
-      if (!menuRef.current?.contains(event.target as Node)) {
+      if(!menuRef.current?.contains(event.target as Node)) {
         setIsMenuOpen(false);
       }
     };
@@ -79,9 +73,7 @@ const BoardSplitCell = ({
     ].join(' ');
 
   const buildTriangleStyle = (triangle: TriangleDisplay): CSSProperties => ({
-    backgroundColor: triangle.isSolved
-      ? triangle.colorHex || '#ffffff'
-      : triangle.colorHex || '#ffffff',
+    backgroundColor: triangle.isSolved ? triangle.colorHex || '#ffffff' : triangle.colorHex || '#ffffff',
   });
 
   const isSplit = splitMode !== 'none';
@@ -99,7 +91,7 @@ const BoardSplitCell = ({
     .join(' ');
 
   const handleContextMenu = (event: ReactMouseEvent<HTMLDivElement>) => {
-    if (mode !== 'admin' || !onSetSplitMode) {
+    if(mode !== 'admin' || !onSetSplitMode) {
       return;
     }
 
@@ -118,11 +110,7 @@ const BoardSplitCell = ({
   };
 
   return (
-    <div
-      ref={menuRef}
-      className={`board-split-cell board-split-cell--${mode}`}
-      onContextMenu={handleContextMenu}
-    >
+    <div ref={menuRef} className={`board-split-cell board-split-cell--${mode}`} onContextMenu={handleContextMenu}>
       {isSplit ? (
         <>
           <button
@@ -132,9 +120,7 @@ const BoardSplitCell = ({
             onClick={() => onCellClick(cellIndex, 'top')}
             aria-label={`Select top triangle of cell ${cellIndex + 1}`}
           >
-            {!top.isSolved ? (
-              <span className={buildTriangleLabelClassName('top')}>{top.label}</span>
-            ) : null}
+            {!top.isSolved ? <span className={buildTriangleLabelClassName('top')}>{top.label}</span> : null}
           </button>
           <button
             type="button"
@@ -143,16 +129,10 @@ const BoardSplitCell = ({
             onClick={() => onCellClick(cellIndex, 'bottom')}
             aria-label={`Select bottom triangle of cell ${cellIndex + 1}`}
           >
-            {!bottom.isSolved ? (
-              <span className={buildTriangleLabelClassName('bottom')}>{bottom.label}</span>
-            ) : null}
+            {!bottom.isSolved ? <span className={buildTriangleLabelClassName('bottom')}>{bottom.label}</span> : null}
           </button>
-          <svg
-            className={`board-split-divider board-split-divider--${splitMode}`}
-            viewBox="0 0 100 100"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
+          <svg className={`board-split-divider board-split-divider--${splitMode}`} viewBox="0 0 100 100"
+               preserveAspectRatio="none" aria-hidden="true">
             <line
               x1={splitMode === 'left' ? 0 : 100}
               y1="0"
@@ -174,25 +154,13 @@ const BoardSplitCell = ({
       )}
       {mode === 'admin' && isMenuOpen ? (
         <div className="board-cell-menu" style={{ left: menuPosition.x, top: menuPosition.y }}>
-          <button
-            type="button"
-            className="board-cell-menu__item"
-            onClick={() => handleSplitModeSelect('left')}
-          >
+          <button type="button" className="board-cell-menu__item" onClick={() => handleSplitModeSelect('left')}>
             Split left
           </button>
-          <button
-            type="button"
-            className="board-cell-menu__item"
-            onClick={() => handleSplitModeSelect('right')}
-          >
+          <button type="button" className="board-cell-menu__item" onClick={() => handleSplitModeSelect('right')}>
             Split right
           </button>
-          <button
-            type="button"
-            className="board-cell-menu__item"
-            onClick={() => handleSplitModeSelect('none')}
-          >
+          <button type="button" className="board-cell-menu__item" onClick={() => handleSplitModeSelect('none')}>
             Not splitted
           </button>
         </div>

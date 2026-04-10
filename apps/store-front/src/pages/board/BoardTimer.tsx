@@ -25,18 +25,11 @@ export function useTimer(): UseTimerResult {
     }
   };
 
-  const start = useCallback(() => {
-    setElapsed(0);
-    setState('running');
-  }, []);
+  const start = useCallback(() => { setElapsed(0); setState('running'); }, []);
   const pause = useCallback(() => setState('paused'), []);
   const resume = useCallback(() => setState('running'), []);
   const finish = useCallback(() => setState('finished'), []);
-  const reset = useCallback(() => {
-    clear();
-    setElapsed(0);
-    setState('idle');
-  }, []);
+  const reset = useCallback(() => { clear(); setElapsed(0); setState('idle'); }, []);
 
   useEffect(() => {
     if (state === 'running') {
@@ -67,22 +60,8 @@ interface BoardTimerProps {
   onReset: () => void;
 }
 
-const BoardTimer = ({
-  elapsed,
-  state,
-  onStart,
-  onPause,
-  onResume,
-  onFinish,
-  onReset,
-}: BoardTimerProps) => {
-  const cls = [
-    'board-timer__display',
-    state === 'running' ? 'is-running' : '',
-    state === 'finished' ? 'is-finished' : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
+const BoardTimer = ({ elapsed, state, onStart, onPause, onResume, onFinish, onReset }: BoardTimerProps) => {
+  const cls = ['board-timer__display', state === 'running' ? 'is-running' : '', state === 'finished' ? 'is-finished' : ''].filter(Boolean).join(' ');
 
   return (
     <div className="board-timer">
@@ -90,34 +69,22 @@ const BoardTimer = ({
       <span className={cls}>{formatTime(elapsed)}</span>
       <div className="board-timer__controls">
         {state === 'idle' && (
-          <button type="button" className="board-button board-button--success" onClick={onStart}>
-            ▶ Start
-          </button>
+          <button type="button" className="board-button board-button--success" onClick={onStart}>▶ Start</button>
         )}
         {state === 'running' && (
           <>
-            <button type="button" className="board-button board-button--warn" onClick={onPause}>
-              ⏸ Pause
-            </button>
-            <button type="button" className="board-button" onClick={onFinish}>
-              ⏹ Finish
-            </button>
+            <button type="button" className="board-button board-button--warn" onClick={onPause}>⏸ Pause</button>
+            <button type="button" className="board-button" onClick={onFinish}>⏹ Finish</button>
           </>
         )}
         {state === 'paused' && (
           <>
-            <button type="button" className="board-button board-button--success" onClick={onResume}>
-              ▶ Resume
-            </button>
-            <button type="button" className="board-button" onClick={onFinish}>
-              ⏹ Finish
-            </button>
+            <button type="button" className="board-button board-button--success" onClick={onResume}>▶ Resume</button>
+            <button type="button" className="board-button" onClick={onFinish}>⏹ Finish</button>
           </>
         )}
         {state === 'finished' && (
-          <button type="button" className="board-button board-button--secondary" onClick={onReset}>
-            ↺ Reset
-          </button>
+          <button type="button" className="board-button board-button--secondary" onClick={onReset}>↺ Reset</button>
         )}
       </div>
     </div>

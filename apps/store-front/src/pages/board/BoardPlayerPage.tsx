@@ -24,8 +24,7 @@ const BoardPlayerPage = () => {
   } = useBoardPlayerPage();
 
   const timer = useTimer();
-  const isComplete =
-    activeBoard !== null && solvedCellsCount === totalTargetCount && totalTargetCount > 0;
+  const isComplete = activeBoard !== null && solvedCellsCount === totalTargetCount && totalTargetCount > 0;
 
   /* Auto-finish timer when board is solved */
   useEffect(() => {
@@ -72,9 +71,7 @@ const BoardPlayerPage = () => {
           <div className="board-player-meta">
             <div className="board-status-card">
               <span>Solved</span>
-              <strong>
-                {solvedCellsCount} / {totalTargetCount}
-              </strong>
+              <strong>{solvedCellsCount} / {totalTargetCount}</strong>
             </div>
           </div>
         </div>
@@ -99,12 +96,9 @@ const BoardPlayerPage = () => {
             <p>
               You solved all {totalTargetCount} targets in{' '}
               <strong>
-                {Math.floor(timer.elapsed / 60)
-                  .toString()
-                  .padStart(2, '0')}
-                :{(timer.elapsed % 60).toString().padStart(2, '0')}
-              </strong>
-              !
+                {Math.floor(timer.elapsed / 60).toString().padStart(2, '0')}:
+                {(timer.elapsed % 60).toString().padStart(2, '0')}
+              </strong>!
             </p>
             <button
               type="button"
@@ -149,9 +143,7 @@ const BoardPlayerPage = () => {
                   const cellSolution = activeBoard.solution[index];
                   const cellState = cellsState[index];
                   const topAnswerColor = activeBoard.colors.find((c) => c.id === cellSolution?.top);
-                  const bottomAnswerColor = activeBoard.colors.find(
-                    (c) => c.id === cellSolution?.bottom
-                  );
+                  const bottomAnswerColor = activeBoard.colors.find((c) => c.id === cellSolution?.bottom);
 
                   return (
                     <BoardSplitCell

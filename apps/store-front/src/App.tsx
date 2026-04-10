@@ -22,7 +22,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from './components/LocationAwareToast.tsx';
 import { ThemeProvider } from '@baby-toys/ui-kit/theme/ThemeProvider';
-import { BoardAdminPage, BoardPlayerPage } from './pages/board';
+import { BoardAdminPage, BoardPlayerPage } from "./pages/board";
 
 export const queryClient = new QueryClient({
   defaultOptions: {

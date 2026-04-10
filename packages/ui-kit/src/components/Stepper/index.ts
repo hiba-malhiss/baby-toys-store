@@ -1,4 +1,4 @@
-export { Stepper, StepList, StepItem, Step, StepperSeparator, StepPanel } from './stepper';
+export { Stepper, StepList, StepItem, Step, StepperSeparator, StepPanels, StepPanel } from './stepper';
 export { useStepperContext } from './stepper.context';
 export type {
   StepperProps,

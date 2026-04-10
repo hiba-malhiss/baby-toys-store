@@ -51,7 +51,9 @@ export interface StepPanelsProps {
 
 export interface StepPanelProps {
   value: number;
-  children: React.ReactNode | ((ctx: StepPanelContentContext) => React.ReactNode);
+  children:
+    | React.ReactNode
+    | ((ctx: StepPanelContentContext) => React.ReactNode);
   className?: string;
 }
 

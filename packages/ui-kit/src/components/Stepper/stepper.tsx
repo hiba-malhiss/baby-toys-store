@@ -11,8 +11,6 @@ import {
   StepProps,
 } from './stepper.types';
 import styles from './stepper.module.scss';
-import { Icon } from '../index.ts';
-import { Check } from 'lucide-react';
 
 export function Stepper({
   value: controlledValue,
@@ -24,7 +22,8 @@ export function Stepper({
 }: StepperProps) {
   const [internalValue, setInternalValue] = useState<number>(defaultValue);
 
-  const activeStep = controlledValue !== undefined ? controlledValue : internalValue;
+  const activeStep =
+    controlledValue !== undefined ? controlledValue : internalValue;
 
   const updateValue = useCallback(
     (next: number) => {
@@ -36,9 +35,15 @@ export function Stepper({
     [controlledValue, onValueChange]
   );
 
-  const isStepActive = useCallback((value: number) => activeStep === value, [activeStep]);
+  const isStepActive = useCallback(
+    (value: number) => activeStep === value,
+    [activeStep]
+  );
 
-  const isStepCompleted = useCallback((value: number) => activeStep > value, [activeStep]);
+  const isStepCompleted = useCallback(
+    (value: number) => activeStep > value,
+    [activeStep]
+  );
 
   // Collect step metadata from children for context (used by separator visibility)
   const steps = useMemo(() => {
@@ -46,14 +51,17 @@ export function Stepper({
     React.Children.forEach(children, (child) => {
       if (!React.isValidElement(child)) return;
       // StepList → Step children
-      React.Children.forEach((child.props as any).children, (inner: React.ReactNode) => {
-        if (React.isValidElement(inner)) {
-          const props = inner.props as any;
-          if (typeof props.value === 'number') {
-            collected.push({ label: '', value: props.value });
+      React.Children.forEach(
+        (child.props as any).children,
+        (inner: React.ReactNode) => {
+          if (React.isValidElement(inner)) {
+            const props = inner.props as any;
+            if (typeof props.value === 'number') {
+              collected.push({ label: '', value: props.value });
+            }
           }
         }
-      });
+      );
     });
     return collected;
   }, [children]);
@@ -65,7 +73,10 @@ export function Stepper({
 
   return (
     <StepperContext.Provider value={contextValue}>
-      <div role="tablist" className={`${styles.root} ${className}`}>
+      <div
+        role="tablist"
+        className={`${styles.root} ${className}`}
+      >
         {children}
       </div>
     </StepperContext.Provider>
@@ -77,20 +88,9 @@ export function StepperSeparator({ className = '' }: StepperSeparatorProps) {
 }
 
 export function StepList({ children, className = '' }: StepListProps) {
-  const items = React.Children.toArray(children);
-
   return (
     <div className={`${styles.stepList} ${className}`}>
-      {items.map((child, index) => {
-        const isLast = index === items.length - 1;
-
-        return (
-          <div key={index} className={styles.stepItem}>
-            {child}
-            {!isLast && <StepperSeparator />}
-          </div>
-        );
-      })}
+      {children}
     </div>
   );
 }
@@ -106,14 +106,18 @@ export function StepItem({ value, children, className = '' }: StepItemProps) {
   });
 
   return (
-    <div className={`${styles.stepItem} ${className}`} data-p-active={active}>
+    <div
+      className={`${styles.stepItem} ${className}`}
+      data-p-active={active}
+    >
       {injected}
     </div>
   );
 }
 
 export function Step({ value, disabled = false, children, className = '' }: StepProps) {
-  const { isStepActive, isStepCompleted, linear, updateValue, activeStep } = useStepperContext();
+  const { isStepActive, isStepCompleted, linear, updateValue, activeStep } =
+    useStepperContext();
 
   const active = isStepActive(value);
   const completed = isStepCompleted(value);
@@ -141,15 +145,25 @@ export function Step({ value, disabled = false, children, className = '' }: Step
         disabled={isDisabled}
         onClick={handleClick}
       >
-        <span
-          className={`${styles.stepNumber} ${active ? styles.stepNumberActive : ''} ${completed ? styles.stepNumberCompleted : ''}`}
-        >
-          {completed ? <Icon icon={Check} /> : value + 1}
+        <span className={`${styles.stepNumber} ${active ? styles.stepNumberActive : ''} ${completed ? styles.stepNumberCompleted : ''}`}>
+          {completed ? (
+            <CheckIcon />
+          ) : (
+            value + 1
+          )}
         </span>
         <span className={`${styles.stepTitle} ${active ? styles.stepTitleActive : ''}`}>
           {children}
         </span>
       </button>
+    </div>
+  );
+}
+
+export function StepPanels({ children, className = '' }: StepPanelsProps) {
+  return (
+    <div className={`${styles.stepPanels} ${className}`}>
+      {children}
     </div>
   );
 }
@@ -178,5 +192,24 @@ export function StepPanel({ value, children, className = '' }: StepPanelProps) {
         </div>
       </div>
     </div>
+  );
+}
+
+function CheckIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
   );
 }

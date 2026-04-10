@@ -19,7 +19,7 @@ const useBoardPlayerPage = () => {
 
   const activeBoard = useMemo(
     () => boards.find((board) => board.id === selectedBoardId) || null,
-    [boards, selectedBoardId]
+    [boards, selectedBoardId],
   );
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const useBoardPlayerPage = () => {
     () => () => {
       timeoutsRef.current.forEach((timeoutId) => window.clearTimeout(timeoutId));
     },
-    []
+    [],
   );
 
   const handleSelectBoard = (boardId: string) => {
@@ -49,66 +49,56 @@ const useBoardPlayerPage = () => {
 
   const handleCellClick = useCallback(
     (cellIndex: number, triangleKey?: BoardTriangleKey) => {
-      if (!activeBoard || !selectedColorId) return;
+      if (!activeBoard || !selectedColorId) {
+        return;
+      }
 
-      setCellsState((state) => {
-        const cell = state[cellIndex];
-        const solution = activeBoard.solution[cellIndex];
+      setCellsState((currentState) => {
+        const currentCell = currentState[cellIndex];
+        const solutionCell = activeBoard.solution[cellIndex];
+        const isSplitCell = solutionCell?.splitMode !== 'none';
+        const targetTriangleKeys = (isSplitCell ? [triangleKey] : ['top', 'bottom']).filter(Boolean) as BoardTriangleKey[];
 
-        if (!cell || !solution) return state;
-
-        const isSplit = solution.splitMode !== 'none';
-        const keys = (isSplit ? [triangleKey] : ['top', 'bottom']).filter(
-          Boolean
-        ) as BoardTriangleKey[];
-
-        if (!keys.length || keys.every((k) => cell[k].isSolved)) {
-          return state;
+        if (!currentCell || !targetTriangleKeys.length || targetTriangleKeys.every((key) => currentCell[key].isSolved)) {
+          return currentState;
         }
 
-        const isCorrect = keys.every((k) => solution[k] === selectedColorId);
+        const nextState = [...currentState];
+        const nextCell = { ...currentCell };
+        const isCorrect = targetTriangleKeys.every((key) => solutionCell?.[key] === selectedColorId);
 
-        const updatedCell = {
-          ...cell,
-          ...Object.fromEntries(
-            keys.map((k) => [
-              k,
-              {
-                filledColorId: selectedColorId,
-                feedback: isCorrect ? 'correct' : 'incorrect',
-                isSolved: false,
-              },
-            ])
-          ),
-        };
+        targetTriangleKeys.forEach((key) => {
+          nextCell[key] = {
+            filledColorId: selectedColorId,
+            feedback: isCorrect ? 'correct' : 'incorrect',
+            isSolved: false,
+          };
+        });
+        nextState[cellIndex] = nextCell;
 
-        const nextState = [...state];
-        nextState[cellIndex] = updatedCell;
-
-        // feedback: 'correct' → 'idle' after 450ms for animation
         if (isCorrect) {
           const timeoutId = window.setTimeout(() => {
-            setCellsState((latest) => {
-              const latestCell = latest[cellIndex];
-              if (!latestCell) return latest;
+            setCellsState((latestState) => {
+              const latestCell = latestState[cellIndex];
+              if (!latestCell) {
+                return latestState;
+              }
 
-              const solvedCell = {
-                ...latestCell,
-                ...Object.fromEntries(
-                  keys.map((k) => [
-                    k,
-                    {
-                      filledColorId: selectedColorId,
-                      feedback: 'idle',
-                      isSolved: true,
-                    },
-                  ])
-                ),
+              const updatedState = [...latestState];
+              const updatedCell = { ...latestCell };
+
+              targetTriangleKeys.forEach((key) => {
+                updatedCell[key] = {
+                  filledColorId: selectedColorId,
+                  feedback: 'idle',
+                  isSolved: true,
+                };
+              });
+
+              updatedState[cellIndex] = {
+                ...updatedCell,
               };
-
-              const updated = [...latest];
-              updated[cellIndex] = solvedCell;
-              return updated;
+              return updatedState;
             });
           }, 450);
 
@@ -118,34 +108,34 @@ const useBoardPlayerPage = () => {
         return nextState;
       });
     },
-    [activeBoard, selectedColorId]
+    [activeBoard, selectedColorId],
   );
 
-  const solvedCellsCount = useMemo(() => {
-    if (!activeBoard) {
-      return 0;
-    }
-
-    return cellsState.reduce((total, cell, index) => {
-      const splitMode = activeBoard.solution[index]?.splitMode || 'none';
-
-      if (splitMode === 'none') {
-        return total + Number(cell.top.isSolved && cell.bottom.isSolved);
+  const solvedCellsCount = useMemo(
+    () => {
+      if (!activeBoard) {
+        return 0;
       }
 
-      return total + Number(cell.top.isSolved) + Number(cell.bottom.isSolved);
-    }, 0);
-  }, [activeBoard, cellsState]);
+      return cellsState.reduce((total, cell, index) => {
+        const splitMode = activeBoard.solution[index]?.splitMode || 'none';
+
+        if (splitMode === 'none') {
+          return total + Number(cell.top.isSolved && cell.bottom.isSolved);
+        }
+
+        return total + Number(cell.top.isSolved) + Number(cell.bottom.isSolved);
+      }, 0);
+    },
+    [activeBoard, cellsState],
+  );
 
   const totalTargetCount = useMemo(
     () =>
       activeBoard
-        ? activeBoard.solution.reduce(
-            (total, cell) => total + (cell.splitMode === 'none' ? 1 : 2),
-            0
-          )
+        ? activeBoard.solution.reduce((total, cell) => total + (cell.splitMode === 'none' ? 1 : 2), 0)
         : 0,
-    [activeBoard]
+    [activeBoard],
   );
 
   return {
