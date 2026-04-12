@@ -1,0 +1,77 @@
+name: Build & Push Frontend
+
+on:
+  workflow_dispatch:
+    inputs:
+      customer_name:
+        description: 'Customer identifier (used as image tag, e.g. alkatatib)'
+        required: true
+        type: string
+
+env:
+  REGISTRY: ghcr.io
+  OWNER: ${{ github.repository_owner }}
+
+# GHCR auth: GITHUB_TOKEN is injected automatically by GitHub Actions.
+# The `packages: write` permission below is all that's needed to push images.
+# No secrets setup required for publishing.
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    # Build all 3 frontend apps in parallel
+    strategy:
+      matrix:
+        app:
+          - name: store-front
+            image: toy-store-store
+          - name: store-admin
+            image: toy-store-admin
+          - name: store-game
+            image: toy-store-game
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   # built-in, no setup needed
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push ${{ matrix.app.name }}
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          build-args: |
+            APP=${{ matrix.app.name }}
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.app.image }}:${{ inputs.customer_name }}
+            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.app.image }}:${{ inputs.customer_name }}-${{ github.sha }}
+          cache-from: type=gha,scope=${{ matrix.app.name }}
+          cache-to: type=gha,scope=${{ matrix.app.name }},mode=max
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ${{ secrets.VPS_USER }}
+          password: ${{ secrets.VPS_PASSWORD }}
+          script: |
+            cd /opt/toy-store-infra
+            ./scripts/update.sh ${{ inputs.customer_name }}
