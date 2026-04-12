@@ -15,10 +15,6 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'src/assets/*',
-          dest: 'assets',
-        },
-        {
           src: '../../packages/ui-kit/src/assets/*',
           dest: 'assets',
         },
