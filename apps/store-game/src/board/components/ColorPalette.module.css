@@ -1,4 +1,8 @@
-.palette { display: flex; flex-direction: column; gap: 8px; }
+.palette {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 .item {
   display: flex;
   align-items: center;
@@ -10,7 +14,11 @@
   background: var(--surface);
   text-align: left;
   cursor: pointer;
-  transition: border-color 0.15s, background 0.15s, transform 0.15s, box-shadow 0.15s;
+  transition:
+    border-color 0.15s,
+    background 0.15s,
+    transform 0.15s,
+    box-shadow 0.15s;
   font-family: var(--font-body);
 }
 .item:hover {
@@ -31,8 +39,15 @@
   flex-shrink: 0;
   transition: transform 0.2s;
 }
-.item.selected .swatch { transform: scale(1.15) rotate(-6deg); }
-.equation { font-weight: 800; font-size: 15px; color: var(--text); font-family: var(--font-mono); }
+.item.selected .swatch {
+  transform: scale(1.15) rotate(-6deg);
+}
+.equation {
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--text);
+  font-family: var(--font-mono);
+}
 .result {
   margin-left: auto;
   font-size: 12px;

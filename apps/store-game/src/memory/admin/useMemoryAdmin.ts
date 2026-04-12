@@ -50,9 +50,7 @@ export function useMemoryEditor(editId?: string) {
   if (!initialised && (!editId || existing)) {
     setName(existing?.name ?? '');
     setPairs(
-      existing?.pairs.length
-        ? existing.pairs
-        : DEFAULT_PAIRS.slice(0, 4).map((p) => ({ ...p }))
+      existing?.pairs.length ? existing.pairs : DEFAULT_PAIRS.slice(0, 4).map((p) => ({ ...p }))
     );
     setInitialised(true);
   }
@@ -74,8 +72,14 @@ export function useMemoryEditor(editId?: string) {
   }, []);
 
   const save = useCallback(async () => {
-    if (!name.trim()) { setError('Deck name is required.'); return; }
-    if (pairs.length < 2) { setError('At least 2 pairs required.'); return; }
+    if (!name.trim()) {
+      setError('Deck name is required.');
+      return;
+    }
+    if (pairs.length < 2) {
+      setError('At least 2 pairs required.');
+      return;
+    }
     if (pairs.some((p) => !p.equation.trim() || !p.answer.trim())) {
       setError('All pairs need an equation and answer.');
       return;
@@ -87,7 +91,10 @@ export function useMemoryEditor(editId?: string) {
 
     try {
       if (editId) {
-        await updateMutation.mutateAsync({ id: editId, payload: { name: name.trim(), pairs: pairsPayload } });
+        await updateMutation.mutateAsync({
+          id: editId,
+          payload: { name: name.trim(), pairs: pairsPayload },
+        });
       } else {
         await createMutation.mutateAsync({ name: name.trim(), pairs: pairsPayload });
       }
@@ -98,10 +105,17 @@ export function useMemoryEditor(editId?: string) {
   }, [name, pairs, editId, createMutation, updateMutation]);
 
   return {
-    name, setName,
-    pairs, addPair, updatePair, removePair,
-    save, saved, error,
-    isLoading, isSaving,
+    name,
+    setName,
+    pairs,
+    addPair,
+    updatePair,
+    removePair,
+    save,
+    saved,
+    error,
+    isLoading,
+    isSaving,
     detailQuery,
   };
 }

@@ -34,9 +34,17 @@
   color: var(--success);
   text-shadow: 0 0 12px rgba(37, 191, 12, 0.4);
 }
-.controls { display: flex; gap: 6px; margin-left: auto; }
+.controls {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
 
 @keyframes timerTick {
-  0% { opacity: 1; }
-  50% { opacity: 0.65; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.65;
+  }
 }

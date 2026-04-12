@@ -16,11 +16,18 @@ export function useTimer() {
     }
   };
 
-  const start = useCallback(() => { setElapsed(0); setState('running'); }, []);
+  const start = useCallback(() => {
+    setElapsed(0);
+    setState('running');
+  }, []);
   const pause = useCallback(() => setState('paused'), []);
   const resume = useCallback(() => setState('running'), []);
   const finish = useCallback(() => setState('finished'), []);
-  const reset = useCallback(() => { clear(); setElapsed(0); setState('idle'); }, []);
+  const reset = useCallback(() => {
+    clear();
+    setElapsed(0);
+    setState('idle');
+  }, []);
 
   useEffect(() => {
     if (state === 'running') ref.current = window.setInterval(() => setElapsed((n) => n + 1), 1000);
@@ -45,11 +52,24 @@ type Props = {
   onReset: () => void;
 };
 
-export default function BoardTimer({ elapsed, state, onStart, onPause, onResume, onFinish, onReset }: Props) {
+export default function BoardTimer({
+  elapsed,
+  state,
+  onStart,
+  onPause,
+  onResume,
+  onFinish,
+  onReset,
+}: Props) {
   return (
     <div className={s.timer}>
-      <span className={s.label}><Timer size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />Timer</span>
-      <span className={`${s.display} ${state === 'running' ? s.running : ''} ${state === 'finished' ? s.finished : ''}`}>
+      <span className={s.label}>
+        <Timer size={13} style={{ verticalAlign: 'middle', marginRight: 4 }} />
+        Timer
+      </span>
+      <span
+        className={`${s.display} ${state === 'running' ? s.running : ''} ${state === 'finished' ? s.finished : ''}`}
+      >
         {formatTime(elapsed)}
       </span>
       <div className={s.controls}>

@@ -18,17 +18,27 @@ export default function ProtectedAdminRoute({ children }: Props) {
 
   if (isInitializing) {
     return (
-      <div style={{
-        minHeight: '60vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontFamily: 'var(--font-body)',
-        color: 'var(--text-3)',
-        fontSize: '15px',
-        gap: '10px',
-      }}>
-        <span style={{ fontSize: '24px', animation: 'spin 1s linear infinite', display: 'inline-block' }}>🎮</span>
+      <div
+        style={{
+          minHeight: '60vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontFamily: 'var(--font-body)',
+          color: 'var(--text-3)',
+          fontSize: '15px',
+          gap: '10px',
+        }}
+      >
+        <span
+          style={{
+            fontSize: '24px',
+            animation: 'spin 1s linear infinite',
+            display: 'inline-block',
+          }}
+        >
+          🎮
+        </span>
         Loading…
       </div>
     );

@@ -13,7 +13,15 @@ export default function MemoryEditor() {
     return (
       <div className={s.page}>
         <div className={s.inner}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '40px 0', color: 'var(--text-2)' }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 10,
+              padding: '40px 0',
+              color: 'var(--text-2)',
+            }}
+          >
             <Loader2 size={18} style={{ animation: 'spin 1s linear infinite' }} />
             Loading deck…
           </div>
@@ -112,9 +120,13 @@ export default function MemoryEditor() {
             </button>
             <button className="btn btn-success" onClick={editor.save} disabled={editor.isSaving}>
               {editor.isSaving ? (
-                <><Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving…</>
+                <>
+                  <Loader2 size={13} style={{ animation: 'spin 1s linear infinite' }} /> Saving…
+                </>
               ) : (
-                <><Save size={13} /> Save Deck</>
+                <>
+                  <Save size={13} /> Save Deck
+                </>
               )}
             </button>
           </div>

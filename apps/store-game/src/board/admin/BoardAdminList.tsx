@@ -8,14 +8,7 @@ import s from './BoardAdminList.module.css';
 // Isolated so each row has its own hook instance and IntersectionObserver
 function BoardThumbnail({ boardId }: { boardId: number }) {
   const canvasRef = useBoardThumbnail(boardId, 56);
-  return (
-    <canvas
-      ref={canvasRef}
-      width={56}
-      height={56}
-      className={s.thumbnail}
-    />
-  );
+  return <canvas ref={canvasRef} width={56} height={56} className={s.thumbnail} />;
 }
 
 export default function BoardAdminList() {
@@ -54,7 +47,9 @@ export default function BoardAdminList() {
 
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           {query.isLoading && (
-            <p className="helper-text" style={{ padding: '20px' }}>Loading…</p>
+            <p className="helper-text" style={{ padding: '20px' }}>
+              Loading…
+            </p>
           )}
 
           {!query.isLoading && boards.length === 0 && (
@@ -66,7 +61,12 @@ export default function BoardAdminList() {
           {!query.isLoading && boards.length > 0 && (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>
-                <tr style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
+                <tr
+                  style={{
+                    background: 'var(--surface-2)',
+                    borderBottom: '1px solid var(--border)',
+                  }}
+                >
                   {['Preview', 'Name', 'Size', 'Status', ''].map((h) => (
                     <th
                       key={h}
@@ -89,7 +89,9 @@ export default function BoardAdminList() {
                 {boards.map((b, i) => (
                   <tr
                     key={b.id}
-                    style={{ borderBottom: i < boards.length - 1 ? '1px solid var(--border)' : 'none' }}
+                    style={{
+                      borderBottom: i < boards.length - 1 ? '1px solid var(--border)' : 'none',
+                    }}
                     onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-2)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = '')}
                   >
@@ -141,7 +143,9 @@ export default function BoardAdminList() {
                 color: 'var(--text-2)',
               }}
             >
-              <span>Page {page + 1} of {pages}</span>
+              <span>
+                Page {page + 1} of {pages}
+              </span>
               <div style={{ display: 'flex', gap: 8 }}>
                 <button
                   className="btn btn-secondary"

@@ -1,0 +1,267 @@
+.wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 0.75rem 0;
+}
+
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 480px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hudLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.scoreLbl {
+  font-size: 12px;
+  color: var(--color-text-3);
+}
+.scoreVal {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.hearts {
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.hudRight {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+.row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.label {
+  font-size: 12px;
+  color: var(--color-text-3);
+}
+
+.select {
+  font-size: 12px;
+  border: 0.5px solid var(--color-border);
+  border-radius: 6px;
+  padding: 3px 7px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  max-width: 160px;
+}
+
+.toggle {
+  display: flex;
+  border: 0.5px solid var(--color-border);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.toggleBtn {
+  padding: 4px 12px;
+  border: none;
+  background: transparent;
+  font-size: 12px;
+  color: var(--color-text-2);
+}
+.toggleActive {
+  padding: 4px 12px;
+  border: none;
+  background: var(--color-text);
+  color: var(--color-bg);
+  font-size: 12px;
+}
+
+.musicBtn {
+  padding: 4px 10px;
+  border: 0.5px solid var(--color-border);
+  border-radius: 999px;
+  background: transparent;
+  font-size: 11px;
+  color: var(--color-text-2);
+}
+.musicBtn:hover {
+  background: var(--color-surface);
+}
+
+/* Canvas */
+.canvasWrap {
+  position: relative;
+  width: 480px;
+  height: 480px;
+  border: 0.5px solid var(--color-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.flash {
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease-out;
+}
+
+@keyframes shake {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  15% {
+    transform: translate(-6px, 4px) rotate(-2deg);
+  }
+  30% {
+    transform: translate(6px, -4px) rotate(2deg);
+  }
+  45% {
+    transform: translate(-5px, 3px) rotate(-1.5deg);
+  }
+  60% {
+    transform: translate(5px, -2px) rotate(1deg);
+  }
+  75% {
+    transform: translate(-3px, 2px) rotate(-0.5deg);
+  }
+  90% {
+    transform: translate(2px, -1px) rotate(0.3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+.shaking {
+  animation: shake 0.45s ease-out;
+}
+
+/* Floating messages */
+.floatMsg {
+  position: absolute;
+  font-size: 20px;
+  pointer-events: none;
+  z-index: 10;
+  animation: floatUp 0.9s ease-out forwards;
+}
+.floatHeart {
+  color: #ef4444;
+}
+.floatCheck {
+  color: #2563eb;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1.1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-70px) scale(0.8);
+  }
+}
+
+/* Overlay */
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.62);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  border-radius: 12px;
+}
+.overlayTitle {
+  color: #fff;
+  font-size: 20px;
+  font-weight: 500;
+}
+.overlayText {
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 13px;
+  text-align: center;
+  max-width: 300px;
+  line-height: 1.7;
+}
+.overlayText strong {
+  color: #fff;
+}
+
+.legend {
+  display: flex;
+  gap: 16px;
+}
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.8);
+}
+.dotOk {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: #2563eb;
+  flex-shrink: 0;
+}
+.dotBad {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: #dc2626;
+  flex-shrink: 0;
+}
+
+.startBtn {
+  padding: 10px 30px;
+  border: none;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  font-size: 13px;
+  font-weight: 500;
+}
+.startBtn:hover {
+  opacity: 0.88;
+}
+
+/* D-Pad */
+.dpad {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 4px;
+}
+.dpad button {
+  border: 0.5px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.dpad button:active {
+  background: var(--color-bg);
+}
+.dpad span {
+  display: block;
+}

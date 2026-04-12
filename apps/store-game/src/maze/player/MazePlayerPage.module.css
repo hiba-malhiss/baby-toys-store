@@ -1,0 +1,258 @@
+.page {
+  min-height: 100vh;
+  background: var(--surface-2);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.loadingPage {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--text-2);
+  font-size: 15px;
+}
+
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+/* ── Top bar ─────────────────────────────────────────────────────── */
+.topBar {
+  width: 100%;
+  max-width: 860px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  gap: 12px;
+}
+
+.backBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1.5px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  color: var(--text-2);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s;
+  font-family: var(--font-body);
+  white-space: nowrap;
+}
+.backBtn:hover {
+  background: var(--brand-light);
+  color: var(--brand-dark);
+  border-color: var(--brand);
+}
+
+.topCenter {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.deckName {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text);
+}
+.targetBadge {
+  background: var(--brand);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.04em;
+}
+
+.topRight {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.iconBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border: 1.5px solid var(--border);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--text-2);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    border-color 0.15s;
+}
+.iconBtn:hover {
+  background: var(--brand-light);
+  color: var(--brand);
+  border-color: var(--brand);
+}
+
+/* ── Maze grid ───────────────────────────────────────────────────── */
+.mazeWrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 20px 16px;
+  width: 100%;
+}
+
+.mazeGrid {
+  display: grid;
+  gap: 2px;
+  background: var(--border);
+  border: 3px solid var(--brand);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+  /* responsive: fill viewport but cap at 720px */
+  width: min(720px, calc(100vw - 40px));
+  height: min(720px, calc(100vw - 40px));
+}
+
+/* ── Cells ───────────────────────────────────────────────────────── */
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition:
+    background 0.12s,
+    box-shadow 0.12s;
+  cursor: default;
+}
+
+.cellWall {
+  background: var(--text);
+  opacity: 0.9;
+}
+
+.cellPath {
+  background: var(--surface);
+}
+
+.cellVisited {
+  background: var(--brand-light);
+}
+
+.cellSolved {
+  background: #d1fae5; /* soft green */
+}
+
+.cellStart {
+  background: #bbf7d0 !important; /* green */
+  cursor: default;
+}
+
+.cellEnd {
+  background: #fee2e2 !important; /* red */
+  cursor: default;
+}
+
+.cellPlayer {
+  background: var(--brand-light) !important;
+  box-shadow: 0 0 0 2px var(--brand) inset;
+  z-index: 2;
+}
+
+.cellReachable {
+  cursor: pointer;
+}
+.cellReachable:hover {
+  box-shadow: 0 0 0 2px var(--brand) inset;
+  background: #e0f2fe;
+}
+
+.cellWrong {
+  background: #fee2e2 !important;
+  animation: wrongShake 0.4s ease;
+}
+
+@keyframes wrongShake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  20% {
+    transform: translateX(-3px);
+  }
+  60% {
+    transform: translateX(3px);
+  }
+}
+
+/* ── Cell content ────────────────────────────────────────────────── */
+.playerIcon {
+  font-size: clamp(10px, 2.5vw, 22px);
+  line-height: 1;
+  z-index: 3;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.2));
+}
+
+.endIcon {
+  font-size: clamp(10px, 2.5vw, 20px);
+  line-height: 1;
+}
+
+.equation {
+  font-size: clamp(7px, 1.2vw, 11px);
+  font-weight: 700;
+  font-family: var(--font-mono);
+  color: var(--text-2);
+  text-align: center;
+  line-height: 1.2;
+  padding: 2px;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 95%;
+}
+
+/* ── Stats bar ───────────────────────────────────────────────────── */
+.statsBar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  padding: 10px 24px;
+  background: var(--surface);
+  border-top: 1.5px solid var(--border);
+  width: 100%;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-2);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 600px) {
+  .topBar {
+    padding: 10px 12px;
+  }
+  .deckName {
+    font-size: 13px;
+  }
+  .statsBar {
+    gap: 12px;
+    font-size: 12px;
+  }
+}

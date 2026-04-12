@@ -97,7 +97,10 @@ export function useUpdateMemoryDeck() {
   return useMutation({
     mutationFn: ({ id, payload }: { id: string; payload: MemoryDeckUpdateDto }) =>
       api
-        .put<{ success: boolean; data: MemoryDeckDetailDto }>(`/api/admin/memory-decks/${id}`, payload)
+        .put<{
+          success: boolean;
+          data: MemoryDeckDetailDto;
+        }>(`/api/admin/memory-decks/${id}`, payload)
         .then((r) => r.data.data),
     onSuccess: (_data, { id }) => {
       qc.invalidateQueries({ queryKey: memoryKeys.all });

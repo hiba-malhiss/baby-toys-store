@@ -12,10 +12,7 @@ import s from './MemoryPlayerPage.module.css';
 
 // ─── Build shuffled card deck from pairs ──────────────────────────────
 
-
-function buildCards(
-  pairs: { id: string; equation: string; answer: string }[]
-): MemoryCard[] {
+function buildCards(pairs: { id: string; equation: string; answer: string }[]): MemoryCard[] {
   const cards: MemoryCard[] = [];
   pairs.forEach((p, i) => {
     const pairId = `pair-${i}`;
@@ -41,7 +38,7 @@ export default function MemoryPlayerPage() {
 
   // 'default' → skip API, use built-in pairs
   const isDefault = !id || id === 'default';
-  const deckQuery = useMemoryDeckDetailQuery(isDefault ? null : id ?? null);
+  const deckQuery = useMemoryDeckDetailQuery(isDefault ? null : (id ?? null));
 
   const rawPairs = useMemo(() => {
     if (isDefault) return DEFAULT_PAIRS;
@@ -53,7 +50,7 @@ export default function MemoryPlayerPage() {
     return deckQuery.data?.name ?? 'Memory Match';
   }, [isDefault, deckQuery.data]);
 
-    const [deck, setDeck] = useState<MemoryCard[]>([]);
+  const [deck, setDeck] = useState<MemoryCard[]>([]);
   const [phase, setPhase] = useState<Phase>('intro');
   const [musicOn, setMusicOn] = useState(true);
 
@@ -62,7 +59,7 @@ export default function MemoryPlayerPage() {
     if (rawPairs.length > 0) {
       setDeck(buildCards(rawPairs));
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rawPairs]);
 
   const { states, matchedCount, totalPairs, moves, isComplete, flipCard, resetGame } =
@@ -71,7 +68,6 @@ export default function MemoryPlayerPage() {
   const audio = useGameAudio(musicOn);
   const confetti = useConfetti();
 
-  
   const prevMatched = useRef(0);
   useEffect(() => {
     if (matchedCount > prevMatched.current) audio.playMatch();
@@ -86,7 +82,7 @@ export default function MemoryPlayerPage() {
       audio.playComplete();
       setTimeout(confetti.launch, 200);
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isComplete, phase]);
 
   const handleStart = () => {
@@ -127,9 +123,7 @@ export default function MemoryPlayerPage() {
       <div className={s.page}>
         <div className={s.inner}>
           <div className={s.error}>
-            <p className={s.errorText}>
-              Failed to load deck: {deckQuery.error?.message}
-            </p>
+            <p className={s.errorText}>Failed to load deck: {deckQuery.error?.message}</p>
             <button className="btn btn-secondary" onClick={() => nav('/play')}>
               <ArrowLeft size={15} /> Back to Games
             </button>
@@ -152,16 +146,27 @@ export default function MemoryPlayerPage() {
           </button>
         </div>
 
-        
         {/* Timer */}
         <BoardTimer
           elapsed={timer.elapsed}
           state={timer.state}
           onStart={handleStart}
-          onPause={() => { timer.pause(); audio.stopBgMusic(); }}
-          onResume={() => { timer.resume(); audio.startBgMusic(); }}
-          onFinish={() => { timer.finish(); audio.stopBgMusic(); }}
-          onReset={() => { timer.reset(); handlePlayAgain(); }}
+          onPause={() => {
+            timer.pause();
+            audio.stopBgMusic();
+          }}
+          onResume={() => {
+            timer.resume();
+            audio.startBgMusic();
+          }}
+          onFinish={() => {
+            timer.finish();
+            audio.stopBgMusic();
+          }}
+          onReset={() => {
+            timer.reset();
+            handlePlayAgain();
+          }}
         />
 
         {/* Stats */}
@@ -173,11 +178,16 @@ export default function MemoryPlayerPage() {
             </div>
             <div className={s.statItem}>
               <span>Matched</span>
-              <strong>{matchedCount}/{totalPairs}</strong>
+              <strong>
+                {matchedCount}/{totalPairs}
+              </strong>
             </div>
             <div className={`${s.statItem} ${s.statBar}`}>
               <div className={s.progressBar}>
-                <div className={s.progressBarFill} style={{ '--progress-width': `${pct}%` } as React.CSSProperties} />
+                <div
+                  className={s.progressBarFill}
+                  style={{ '--progress-width': `${pct}%` } as React.CSSProperties}
+                />
               </div>
             </div>
           </div>
@@ -192,9 +202,7 @@ export default function MemoryPlayerPage() {
               <div className="overlay-card">
                 <div className="overlay-icon">🃏</div>
                 <h2 className="overlay-title">Equation Match</h2>
-                <p className="overlay-sub">
-                  {totalPairs} pairs
-                </p>
+                <p className="overlay-sub">{totalPairs} pairs</p>
                 <div className="overlay-tips">
                   {TIPS.map((t) => (
                     <div key={t.key} className="overlay-tip">

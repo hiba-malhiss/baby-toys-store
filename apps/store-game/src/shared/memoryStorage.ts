@@ -7,15 +7,25 @@
 export type { MemoryDeck, MemoryPair } from './types';
 
 /** @deprecated Use useMemoryDecksQuery from api/memoryApi instead */
-export function getMemoryDecks() { return []; }
+export function getMemoryDecks() {
+  return [];
+}
 /** @deprecated Use useMemoryDeckDetailQuery from api/memoryApi instead */
-export function getMemoryDeck(_id: string) { return undefined; }
+export function getMemoryDeck(_id: string) {
+  return undefined;
+}
 /** @deprecated Use useCreateMemoryDeck from api/memoryApi instead */
-export function createMemoryDeck() { throw new Error('Use API instead'); }
+export function createMemoryDeck() {
+  throw new Error('Use API instead');
+}
 /** @deprecated Use useUpdateMemoryDeck from api/memoryApi instead */
-export function updateMemoryDeck() { throw new Error('Use API instead'); }
+export function updateMemoryDeck() {
+  throw new Error('Use API instead');
+}
 /** @deprecated Use useDeleteMemoryDeck from api/memoryApi instead */
-export function deleteMemoryDeck() { throw new Error('Use API instead'); }
+export function deleteMemoryDeck() {
+  throw new Error('Use API instead');
+}
 
 /** Built-in default pairs (still used as fallback for the default deck) */
 export function getDefaultPairs() {

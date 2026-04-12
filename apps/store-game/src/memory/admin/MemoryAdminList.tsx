@@ -29,7 +29,9 @@ export default function MemoryAdminList() {
 
         <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
           {query.isLoading && (
-            <p className="empty-text" style={{ padding: '24px' }}>Loading decks…</p>
+            <p className="empty-text" style={{ padding: '24px' }}>
+              Loading decks…
+            </p>
           )}
           {query.isError && (
             <p className="error-text" style={{ padding: '24px' }}>
@@ -44,7 +46,12 @@ export default function MemoryAdminList() {
           {!query.isLoading && decks.length > 0 && (
             <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 14 }}>
               <thead>
-                <tr style={{ background: 'var(--surface-2)', borderBottom: '1px solid var(--border)' }}>
+                <tr
+                  style={{
+                    background: 'var(--surface-2)',
+                    borderBottom: '1px solid var(--border)',
+                  }}
+                >
                   {['Name', 'Pairs', 'Created', ''].map((h) => (
                     <th
                       key={h}
@@ -67,7 +74,9 @@ export default function MemoryAdminList() {
                 {decks.map((deck, i) => (
                   <tr
                     key={deck.id}
-                    style={{ borderBottom: i < decks.length - 1 ? '1px solid var(--border)' : 'none' }}
+                    style={{
+                      borderBottom: i < decks.length - 1 ? '1px solid var(--border)' : 'none',
+                    }}
                     onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-2)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = '')}
                   >

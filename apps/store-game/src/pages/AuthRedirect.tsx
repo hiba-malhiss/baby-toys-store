@@ -28,38 +28,46 @@ export default function AuthRedirect() {
 
   // Show loading while redirecting
   return (
-    <div style={{ 
-      display: 'flex', 
-      justifyContent: 'center', 
-      alignItems: 'center', 
-      height: '100vh',
-      fontSize: '18px',
-      backgroundColor: '#f8fafc',
-      fontFamily: 'system-ui, -apple-system, sans-serif'
-    }}>
-      <div style={{
-        backgroundColor: 'white',
-        borderRadius: '16px',
-        padding: '48px',
-        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
-        textAlign: 'center',
-        maxWidth: '400px',
-        width: '100%'
-      }}>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '18px',
+        backgroundColor: '#f8fafc',
+        fontFamily: 'system-ui, -apple-system, sans-serif',
+      }}
+    >
+      <div
+        style={{
+          backgroundColor: 'white',
+          borderRadius: '16px',
+          padding: '48px',
+          boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+          textAlign: 'center',
+          maxWidth: '400px',
+          width: '100%',
+        }}
+      >
         <div style={{ fontSize: '48px', marginBottom: '24px' }}>🎮</div>
-        <h1 style={{ 
-          fontSize: '24px', 
-          fontWeight: 'bold', 
-          marginBottom: '8px',
-          color: '#1f2937'
-        }}>
+        <h1
+          style={{
+            fontSize: '24px',
+            fontWeight: 'bold',
+            marginBottom: '8px',
+            color: '#1f2937',
+          }}
+        >
           Games App
         </h1>
-        <p style={{ 
-          color: '#6b7280', 
-          marginBottom: '32px',
-          fontSize: '16px'
-        }}>
+        <p
+          style={{
+            color: '#6b7280',
+            marginBottom: '32px',
+            fontSize: '16px',
+          }}
+        >
           Loading games...
         </p>
       </div>

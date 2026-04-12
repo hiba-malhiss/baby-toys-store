@@ -62,7 +62,9 @@
   padding: 36px 24px 0;
 }
 
-.section { margin-bottom: 48px; }
+.section {
+  margin-bottom: 48px;
+}
 .sectionTitle {
   font-size: 20px;
   font-weight: 900;
@@ -94,13 +96,18 @@
   border-radius: var(--radius);
   overflow: hidden;
   cursor: pointer;
-  transition: transform 0.18s, box-shadow 0.18s, border-color 0.18s;
+  transition:
+    transform 0.18s,
+    box-shadow 0.18s,
+    border-color 0.18s;
   box-shadow: var(--shadow-sm);
   font-family: var(--font-body);
 }
 .gameCard:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow), 0 0 0 3px rgba(16, 150, 181, 0.12);
+  box-shadow:
+    var(--shadow),
+    0 0 0 3px rgba(16, 150, 181, 0.12);
   border-color: var(--brand);
 }
 
@@ -125,7 +132,10 @@
   image-rendering: crisp-edges;
 }
 
-.cardEmoji { font-size: 52px; line-height: 1; }
+.cardEmoji {
+  font-size: 52px;
+  line-height: 1;
+}
 .cardBadge {
   position: absolute;
   top: 8px;
@@ -143,9 +153,21 @@
   backdrop-filter: blur(2px);
 }
 
-.cardBody { padding: 14px 16px 8px; flex: 1; }
-.cardTitle { margin: 0 0 4px; font-size: 14px; font-weight: 800; color: var(--text); }
-.cardMeta { margin: 0; font-size: 12px; color: var(--text-3); }
+.cardBody {
+  padding: 14px 16px 8px;
+  flex: 1;
+}
+.cardTitle {
+  margin: 0 0 4px;
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text);
+}
+.cardMeta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--text-3);
+}
 
 .cardPlay {
   margin: 8px 16px 16px;
@@ -157,7 +179,10 @@
   font-weight: 800;
   font-size: 13px;
   cursor: pointer;
-  transition: background 0.15s, box-shadow 0.15s, transform 0.1s;
+  transition:
+    background 0.15s,
+    box-shadow 0.15s,
+    transform 0.1s;
   font-family: var(--font-body);
   text-align: center;
   box-shadow: 0 3px 12px rgba(16, 150, 181, 0.32);
@@ -175,21 +200,39 @@
 .skeleton {
   height: 220px;
   border-radius: var(--radius);
-  background: linear-gradient(90deg, var(--surface-2) 25%, var(--surface-3) 50%, var(--surface-2) 75%);
+  background: linear-gradient(
+    90deg,
+    var(--surface-2) 25%,
+    var(--surface-3) 50%,
+    var(--surface-2) 75%
+  );
   background-size: 200% 100%;
   animation: skelPulse 1.4s ease-in-out infinite;
 }
 
 @keyframes skelPulse {
-  0% { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 @media (max-width: 640px) {
-  .page { padding-bottom: 40px; }
-  .heroTitle { font-size: 24px; }
-  .inner { padding: 24px 14px 0; }
-  .grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 14px; }
+  .page {
+    padding-bottom: 40px;
+  }
+  .heroTitle {
+    font-size: 24px;
+  }
+  .inner {
+    padding: 24px 14px 0;
+  }
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 14px;
+  }
 }
 
 /* ── View more footer ────────────────────────────────────────────────── */
@@ -223,7 +266,11 @@
   font-weight: 800;
   font-family: var(--font-body);
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, transform 0.1s, box-shadow 0.15s;
+  transition:
+    background 0.15s,
+    color 0.15s,
+    transform 0.1s,
+    box-shadow 0.15s;
 }
 .viewMoreBtn:hover:not(:disabled) {
   background: var(--brand);
@@ -238,4 +285,22 @@
 
 .spin {
   animation: spin 0.8s linear infinite;
+}
+
+/* ── Maze card variants ───────────────────────────────────────────── */
+.cardImageMaze {
+  background: linear-gradient(135deg, #e0f2fe, #bae6fd) !important;
+}
+
+.mazeSizeTag {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(255, 255, 255, 0.85);
+  color: var(--brand-dark);
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--brand-light);
 }

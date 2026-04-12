@@ -22,8 +22,12 @@
   gap: 6px;
 }
 
-.card:not(.flipped):not(.matched):hover { transform: scale(1.04); }
-.card:disabled { cursor: default; }
+.card:not(.flipped):not(.matched):hover {
+  transform: scale(1.04);
+}
+.card:disabled {
+  cursor: default;
+}
 
 .back {
   background: linear-gradient(135deg, #1096b5 0%, #0f83b2 50%, #12aee0 100%);
@@ -31,7 +35,9 @@
   font-size: 28px;
   font-weight: 900;
   transform: rotateY(0deg);
-  box-shadow: var(--shadow), 0 0 16px rgba(16, 150, 181, 0.3);
+  box-shadow:
+    var(--shadow),
+    0 0 16px rgba(16, 150, 181, 0.3);
   border: 2px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius);
 }
@@ -45,9 +51,13 @@
 }
 
 .card.flipped .back,
-.card.matched .back { transform: rotateY(-180deg); }
+.card.matched .back {
+  transform: rotateY(-180deg);
+}
 .card.flipped .front,
-.card.matched .front { transform: rotateY(0deg); }
+.card.matched .front {
+  transform: rotateY(0deg);
+}
 
 .card.equation .front {
   background: var(--brand-light);
@@ -92,7 +102,13 @@
 }
 
 @keyframes matchedPop {
-  0% { transform: rotateY(0deg) scale(0.88); }
-  60% { transform: rotateY(0deg) scale(1.08); }
-  100% { transform: rotateY(0deg) scale(1); }
+  0% {
+    transform: rotateY(0deg) scale(0.88);
+  }
+  60% {
+    transform: rotateY(0deg) scale(1.08);
+  }
+  100% {
+    transform: rotateY(0deg) scale(1);
+  }
 }

@@ -13,12 +13,16 @@ export default function RoleSwitcher() {
         <p className={s.subtitle}>Who are you today?</p>
         <div className={s.roles}>
           <button className={s.roleBtn} onClick={() => nav('/admin')}>
-            <span className={s.roleEmoji}><Wrench size={32} strokeWidth={2.5} /></span>
+            <span className={s.roleEmoji}>
+              <Wrench size={32} strokeWidth={2.5} />
+            </span>
             <span className={s.roleLabel}>Admin</span>
             <span className={s.roleDesc}>Create &amp; manage games</span>
           </button>
           <button className={s.roleBtn} onClick={() => nav('/play')}>
-            <span className={s.roleEmoji}><Gamepad2 size={32} strokeWidth={2.5} /></span>
+            <span className={s.roleEmoji}>
+              <Gamepad2 size={32} strokeWidth={2.5} />
+            </span>
             <span className={s.roleLabel}>Player</span>
             <span className={s.roleDesc}>Pick a game and play</span>
           </button>
