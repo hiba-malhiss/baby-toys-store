@@ -12,9 +12,6 @@ env:
   REGISTRY: ghcr.io
   OWNER: ${{ github.repository_owner }}
 
-# GHCR auth: GITHUB_TOKEN is injected automatically by GitHub Actions.
-# The `packages: write` permission below is all that's needed to push images.
-# No secrets setup required for publishing.
 permissions:
   contents: read
   packages: write
@@ -23,7 +20,6 @@ jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
-    # Build all 3 frontend apps in parallel
     strategy:
       matrix:
         app:
@@ -43,7 +39,16 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}   # built-in, no setup needed
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.app.image }}
+          tags: |
+            type=raw,value=${{ inputs.customer_name }}
+            type=raw,value=${{ inputs.customer_name }}-${{ github.sha }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
@@ -55,11 +60,19 @@ jobs:
           push: true
           build-args: |
             APP=${{ matrix.app.name }}
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.app.image }}:${{ inputs.customer_name }}
-            ${{ env.REGISTRY }}/${{ env.OWNER }}/${{ matrix.app.image }}:${{ inputs.customer_name }}-${{ github.sha }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.app.name }}
           cache-to: type=gha,scope=${{ matrix.app.name }},mode=max
+
+      - name: Make package public
+        run: |
+          gh api --method PATCH \
+            -H "Accept: application/vnd.github+json" \
+            /orgs/${{ env.OWNER }}/packages/container/${{ matrix.app.image }} \
+            -f visibility=public
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   deploy:
     needs: build-and-push
