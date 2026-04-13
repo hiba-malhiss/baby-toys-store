@@ -46,7 +46,7 @@ function safeRedirectToLogin() {
 
 // Axios instances
 const api: AxiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080',
   withCredentials: true,
   headers: {
     'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ const api: AxiosInstance = axios.create({
 });
 
 const refreshApi = axios.create({
-  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080',
+  baseURL: import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8080',
   withCredentials: true,
 });
 
