@@ -65,15 +65,6 @@ jobs:
           cache-from: type=gha,scope=${{ matrix.app.name }}
           cache-to: type=gha,scope=${{ matrix.app.name }},mode=max
 
-      - name: Make package public
-        run: |
-          gh api --method PATCH \
-            -H "Accept: application/vnd.github+json" \
-            /orgs/${{ env.OWNER }}/packages/container/${{ matrix.app.image }} \
-            -f visibility=public
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   deploy:
     needs: build-and-push
     runs-on: ubuntu-latest
