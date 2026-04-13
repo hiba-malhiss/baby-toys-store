@@ -78,4 +78,4 @@ jobs:
           password: ${{ secrets.VPS_PASSWORD }}
           script: |
             cd /opt/toy-store-infra
-            ./scripts/update.sh ${{ inputs.customer_name }}
+            ./scripts/update.sh ${{ inputs.customer_name }} store admin game
