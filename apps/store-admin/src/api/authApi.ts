@@ -62,7 +62,7 @@ export const useFetchProfile = (enabled: boolean = true) =>
     queryKey: ['profile'],
     enabled,
     queryFn: async () => {
-      const response = await api.get<ApiEnvelope<User>>('/users/profile');
+      const response = await api.get<ApiEnvelope<User>>('/api/users/profile');
       return response.data.data;
     },
     // Avoid noisy retries that trigger UI flicker during login/init
