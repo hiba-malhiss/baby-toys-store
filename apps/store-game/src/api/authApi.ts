@@ -85,7 +85,7 @@ export const useFetchAdminProfile = () => {
     queryKey: [ROOT_KEYS.adminProfile],
     enabled: !!token,
     queryFn: async () => {
-      const res = await api.get<ApiEnvelope<AdminUser>>('/users/profile');
+      const res = await api.get<ApiEnvelope<AdminUser>>('/api/users/profile');
       return res.data.data;
     },
     retry: 1,

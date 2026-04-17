@@ -106,7 +106,7 @@ export const useFetchProfile = () => {
     queryKey: [ROOT_KEYS.profile],
     enabled: !!token,
     queryFn: async () => {
-      const res = await api.get<ApiEnvelope<User>>('/users/profile');
+      const res = await api.get<ApiEnvelope<User>>('/api/users/profile');
       return res.data.data;
     },
     retry: 1,
