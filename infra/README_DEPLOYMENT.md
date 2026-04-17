@@ -564,3 +564,6 @@ docker exec -it nginx-docker nginx -s reload
 cd /opt/toystore-docker
 docker compose restart nginx
 ```
+
+ cd /opt/toy-store-infra
+ git pull

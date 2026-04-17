@@ -11,6 +11,7 @@ on:
 env:
   REGISTRY: ghcr.io
   OWNER: ${{ github.repository_owner }}
+  BASE_DOMAIN: alkatatib.cloud
 
 permissions:
   contents: read
@@ -60,6 +61,8 @@ jobs:
           push: true
           build-args: |
             APP=${{ matrix.app.name }}
+            VITE_API_BASE_URL=https://${{ inputs.customer_name }}.${{ env.BASE_DOMAIN }}
+            VITE_APP_URL=https://admin-${{ inputs.customer_name }}.${{ env.BASE_DOMAIN }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha,scope=${{ matrix.app.name }}

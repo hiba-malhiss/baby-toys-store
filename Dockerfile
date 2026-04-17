@@ -18,6 +18,13 @@ RUN pnpm install --frozen-lockfile
 # ===== Build =====
 FROM deps AS builder
 ARG APP
+# Vite bakes these into the bundle at build time.
+# Pass them via --build-arg in docker build / GitHub Actions.
+ARG VITE_API_BASE_URL
+ARG VITE_APP_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
+ENV VITE_APP_URL=$VITE_APP_URL
+
 WORKDIR /app
 
 COPY . .
