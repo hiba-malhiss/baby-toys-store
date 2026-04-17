@@ -16,6 +16,7 @@ import BannersSection from './BannersSection';
 import MainBannerSection from './MainBannerSection';
 import InfoCardsSection from './InfoCardsSection';
 import GallerySection from './GallerySection';
+import FooterSection from './FooterSection';
 
 const HomePageContent: React.FC = () => {
   const { t } = useTranslation();
@@ -27,6 +28,7 @@ const HomePageContent: React.FC = () => {
     banner1UploaderProps,
     banner2UploaderProps,
     mainBannerUploaderProps,
+    footerUploaderProps,
     handleSubmit,
     isLoading,
     isSubmitting,
@@ -103,6 +105,14 @@ const HomePageContent: React.FC = () => {
           {/* === Gallery Section === */}
           <Accordion header={t('homepage.sections.gallery')} buttonAppearance="outline">
             <GallerySection galleryUploaderProps={galleryUploaderProps} />
+          </Accordion>
+
+          {/* === Footer Image Section === */}
+          <Accordion
+            header={t('homepage.sections.footer', { defaultValue: 'Footer Image' })}
+            buttonAppearance="outline"
+          >
+            <FooterSection footerUploaderProps={footerUploaderProps} />
           </Accordion>
 
           <Divider thickness="2px" />

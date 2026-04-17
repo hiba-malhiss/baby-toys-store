@@ -58,3 +58,28 @@ export const useDeleteGalleryImage = () => {
     },
   });
 };
+
+export const useUploadFooterImage = () => {
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await api.post<{ data: { url: string } }>(
+        '/api/admin/homepage/footer-image',
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      return data.data.url;
+    },
+  });
+};
+
+export const useDeleteFooterImage = () => {
+  return useMutation({
+    mutationFn: async (imageUrl: string) => {
+      await api.delete('/api/admin/homepage/footer-image', {
+        params: { fileUrl: imageUrl },
+      });
+    },
+  });
+};

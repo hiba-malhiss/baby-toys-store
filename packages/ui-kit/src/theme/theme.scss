@@ -6,6 +6,8 @@
   - Alternate theme overrides a subset of variables
 */
 :root {
+  --font-primary: 'Comfortaa', sans-serif;
+
   --color-primary: #{$color-primary};
   --color-primary-dark: #{$color-primary-dark};
   --color-primary-dark-rgb: #{$color-primary-dark-rgb};

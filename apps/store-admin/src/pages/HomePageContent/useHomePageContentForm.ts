@@ -3,7 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@baby-toys/ui-kit';
 
-import { useHomePageContent, useUpdateHomePageContent } from '../../api/homePageApi';
+import { useHomePageContent, useUpdateHomePageContent, useUploadFooterImage, useDeleteFooterImage } from '../../api/homePageApi';
 
 import {
   BannerTextAlignment,
@@ -69,6 +69,7 @@ export const useHomePageContentForm = () => {
   const banner1 = useImageManager();
   const banner2 = useImageManager();
   const mainBanner = useImageManager(undefined, { multiple: true });
+  const footer = useImageManager(undefined, { multiple: false });
 
   const form = useForm<HomePageFormValues>({
     resolver: zodResolver(homePageSchema),
@@ -107,6 +108,7 @@ export const useHomePageContentForm = () => {
     banner2.seed(slotUrls[1] ? [slotUrls[1]] : []);
     mainBanner.seed(data?.mainBanners?.[0]?.imagesUrl || data?.mainBanners?.[1]?.imagesUrl || []);
     gallery.seed(data.galleryImages?.map((g) => g.imageUrl).filter(Boolean));
+    footer.seed(data.footerImageUrl ? [data.footerImageUrl] : []);
 
     reset({
       banners: normalizedBanners,
@@ -123,6 +125,7 @@ export const useHomePageContentForm = () => {
       const banner1Urls = await banner1.commit();
       const banner2Urls = await banner2.commit();
       const mainBannerUrls = await mainBanner.commit();
+      const footerUrls = await footer.commit();
 
       const latestB1 = banner1Urls[banner1Urls.length - 1];
       const latestB2 = banner2Urls[banner2Urls.length - 1];
@@ -156,6 +159,7 @@ export const useHomePageContentForm = () => {
         infoCards: values.infoCards,
         mainBanners: finalMainBanners,
         galleryImages: galleryUrls.map((url) => ({ imageUrl: url })),
+        footerImageUrl: footerUrls[0] ?? '',
       };
 
       await updateContent.mutateAsync(payload);
@@ -176,6 +180,7 @@ export const useHomePageContentForm = () => {
     banner1UploaderProps: { ...banner1.uploaderProps, multiple: false },
     banner2UploaderProps: { ...banner2.uploaderProps, multiple: false },
     mainBannerUploaderProps: { ...mainBanner.uploaderProps, multiple: true },
+    footerUploaderProps: { ...footer.uploaderProps, multiple: false },
     isLoading,
     errors,
     isSubmitting:
@@ -183,6 +188,7 @@ export const useHomePageContentForm = () => {
       gallery.isProcessing ||
       banner1.isProcessing ||
       banner2.isProcessing ||
-      mainBanner.isProcessing,
+      mainBanner.isProcessing ||
+      footer.isProcessing,
   };
 };

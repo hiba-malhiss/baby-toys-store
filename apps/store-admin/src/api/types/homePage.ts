@@ -49,6 +49,7 @@ export interface HomePageContentDto {
   galleryImages: GalleryImageDto[];
   banners?: BannerDto[];
   mainBanners?: MainBannerDto[];
+  footerImageUrl?: string;
 }
 
 export interface UpdateHomePageContentRequest {
@@ -56,4 +57,5 @@ export interface UpdateHomePageContentRequest {
   galleryImages?: { imageUrl: string }[];
   banners?: BannerDto[];
   mainBanners?: MainBannerDto[];
+  footerImageUrl?: string;
 }

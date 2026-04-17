@@ -25,6 +25,8 @@ import { useAttributeTypes } from '../../api/attributeApi';
 import styles from './Productsform.module.scss';
 import AttributesSection from './components/AttributesSection.tsx';
 import OptionsSection from './components/OptionsSection.tsx';
+import HelpTooltip from '../../components/HelpTooltip';
+import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
@@ -105,7 +107,14 @@ const ProductFormPage: React.FC = () => {
               </div>
             </Accordion>
 
-            <Accordion header={t('productForm.options')}>
+            <Accordion
+              header={
+                <Flex align="center" spacing="m">
+                  <span>{t('productForm.options')}</span>
+                  <ProductRelationshipDiagram />
+                </Flex>
+              }
+            >
               <Flex direction="vertical" spacing="xxl">
                 <FormFieldWrapper
                   name="categoryId"
@@ -122,7 +131,17 @@ const ProductFormPage: React.FC = () => {
                   </Select>
                 </FormFieldWrapper>
                 <Divider />
-                <Heading level="h4">{t('productForm.attributes')}</Heading>
+                <Flex align="center">
+                  <Heading level="h4">{t('productForm.attributes')}</Heading>
+                  <HelpTooltip
+                    title={t('productForm.attributesHelp', { defaultValue: 'What are Attributes?' })}
+                    description={t('productForm.attributesHelp', {
+                      defaultValue:
+                        'Attributes describe fixed specs (Material, Brand). They appear on the product page and can be used for filtering. Set up Attribute Types first in the Attributes menu.',
+                    })}
+                    position="top"
+                  />
+                </Flex>
                 <AttributesSection
                   control={control}
                   attributeTypes={attributeTypes}
@@ -130,7 +149,17 @@ const ProductFormPage: React.FC = () => {
                   setValue={setValue}
                 />
                 <Divider />
-                <Heading level="h4">{t('productForm.options')}</Heading>
+                <Flex align="center">
+                  <Heading level="h4">{t('productForm.options')}</Heading>
+                  <HelpTooltip
+                    title={t('productForm.optionsHelp', { defaultValue: 'What are Options?' })}
+                    description={t('productForm.optionsHelp', {
+                      defaultValue:
+                        'Options create purchasable variants (Size, Color). Set up Option Types first in the Options menu, then assign values here to generate variants.',
+                    })}
+                    position="top"
+                  />
+                </Flex>
                 <OptionsSection
                   control={control}
                   isDisabled={isDeletingImage}

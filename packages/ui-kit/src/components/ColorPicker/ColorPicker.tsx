@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import styles from './color-picker.module.scss';
+import { Popover } from '../index.ts';
 
 type HSV = { h: number; s: number; v: number };
 
@@ -73,6 +74,7 @@ export default function ColorPicker({ value, onChange, inline = false, readOnly 
   const [showPanel, setShowPanel] = useState(false);
   const selectorRef = useRef<HTMLDivElement>(null);
   const hueRef = useRef<HTMLDivElement>(null);
+  const previewRef = useRef<HTMLDivElement>(null);
 
   const updateColor = (newHSV: HSV) => {
     setHSV(newHSV);
@@ -107,12 +109,53 @@ export default function ColorPicker({ value, onChange, inline = false, readOnly 
     <div className={styles.colorPicker}>
       {!inline && (
         <div
+          ref={previewRef}
           className={styles.colorPickerPreview}
           style={{ backgroundColor: value, cursor: readOnly ? 'not-allowed' : 'pointer' }}
           onClick={() => !readOnly && setShowPanel(!showPanel)}
         />
       )}
-      {(inline || showPanel) && (
+      {!inline && (
+        <Popover
+          targetRef={previewRef}
+          open={showPanel}
+          onClose={() => setShowPanel(false)}
+          position="bottom"
+          dismissible={true}
+          size="medium"
+          gap={8}
+        >
+          <div
+            ref={selectorRef}
+            className={styles.colorPickerSelector}
+            onClick={handleColorSelect}
+            style={{
+              backgroundColor: `hsl(${hsv.h}, 100%, 50%)`,
+              cursor: readOnly ? 'not-allowed' : 'crosshair',
+            }}
+          >
+            <div
+              className={styles.colorPickerHandle}
+              style={{
+                left: `${hsv.s * 100}%`,
+                top: `${(1 - hsv.v) * 100}%`,
+              }}
+            />
+          </div>
+          <div
+            ref={hueRef}
+            className={styles.colorPickerHueSlider}
+            onClick={handleHueSelect}
+            style={{ cursor: readOnly ? 'not-allowed' : 'pointer' }}
+          >
+            <div
+              className={styles.colorPickerHueHandle}
+              style={{ left: `${(hsv.h / 360) * 100}%` }}
+            />
+          </div>
+        </Popover>
+      )}
+      {inline && (
         <div className={styles.colorPickerPanel}>
           <div
             ref={selectorRef}

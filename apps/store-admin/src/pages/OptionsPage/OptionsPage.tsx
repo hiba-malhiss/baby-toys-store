@@ -1,21 +1,22 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
+import {Button,
   Flex,
   Heading,
   Table,
   BouncingDotsLoader,
   ConfirmDialog,
   Tooltip,
+  useToast,
 } from '@baby-toys/ui-kit';
 import { useOptionTypes, useDeleteOptionType } from '../../api/optionApi';
 import type { OptionTypeDto as OptionType } from '../../api/types/option';
 import OptionsValuesRow from './OptionsValuesRow.tsx';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
-import { useToast } from '@baby-toys/ui-kit';
 import TypeUpsertDialog from './TypeUpsertDialog';
+import HelpTooltip from '../../components/HelpTooltip';
+import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
 
 const OptionsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -56,10 +57,22 @@ const OptionsPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('options.types', { defaultValue: 'Option Types' })}</Heading>
-          <Button onClick={openAdd}>
-            {t('options.addType', { defaultValue: 'Add Option Type' })}
-          </Button>
+          <Flex align="center">
+            <Heading>{t('options.types', { defaultValue: 'Option Types' })}</Heading>
+            <HelpTooltip
+              title={t('options.helpTitle', { defaultValue: 'What are Options?' })}
+              description={t('options.helpText', {
+                defaultValue:
+                  'Options create purchasable variants like Size or Color. Each type has values (S, M, L), and combinations generate unique variants with their own price and stock.',
+              })}
+            />
+          </Flex>
+          <Flex spacing="m" align="center">
+            <ProductRelationshipDiagram />
+            <Button onClick={openAdd}>
+              {t('options.addType', { defaultValue: 'Add Option Type' })}
+            </Button>
+          </Flex>
         </Flex>
 
         {loadingTypes ? (

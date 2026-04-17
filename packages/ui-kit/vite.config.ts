@@ -22,7 +22,7 @@ export default defineConfig({
       fileName: (format) => `ui-kit.${format}.js`,
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: ['react', 'react-dom', /\.scss$/],
       output: {
         globals: {
           react: 'React',

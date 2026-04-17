@@ -1,21 +1,22 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
+import {Button,
   Flex,
   Heading,
   Table,
   BouncingDotsLoader,
   ConfirmDialog,
   Tooltip,
+  useToast,
 } from '@baby-toys/ui-kit';
 import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeApi';
 import AttributesValuesRow from './AttributesValuesRow';
-import { useToast } from '@baby-toys/ui-kit';
 import TypeUpsertDialog from './TypeUpsertDialog';
 import type { AttributeTypeListDto as AttributeType } from '../../api/types/attribute';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
+import HelpTooltip from '../../components/HelpTooltip';
+import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
 
 const AttributesPage: React.FC = () => {
   const { t } = useTranslation();
@@ -56,10 +57,22 @@ const AttributesPage: React.FC = () => {
     <AdminLayout>
       <Flex direction="vertical" spacing="xl" fullWidth>
         <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('attributes.types', { defaultValue: 'Attributes' })}</Heading>
-          <Button onClick={() => setShowAddType(true)}>
-            {t('attributes.addType', { defaultValue: 'Add Attribute' })}
-          </Button>
+          <Flex align="center">
+            <Heading>{t('attributes.types', { defaultValue: 'Attributes' })}</Heading>
+            <HelpTooltip
+              title={t('attributes.helpTitle', { defaultValue: 'What are Attributes?' })}
+              description={t('attributes.helpText', {
+                defaultValue:
+                  'Attributes describe fixed product properties like Material or Brand. Customers can filter by them. Unlike Options, they do not create variants.',
+              })}
+            />
+          </Flex>
+          <Flex spacing="m" align="center">
+            <ProductRelationshipDiagram />
+            <Button onClick={() => setShowAddType(true)}>
+              {t('attributes.addType', { defaultValue: 'Add Attribute' })}
+            </Button>
+          </Flex>
         </Flex>
 
         {loadingTypes ? (

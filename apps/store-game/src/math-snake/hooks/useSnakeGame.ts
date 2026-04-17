@@ -1,6 +1,7 @@
 import { useRef, useState, useCallback, useEffect } from 'react';
 import type { Point, EquationItem, Deck } from '../types';
-import { rnd, shuffle, genSnakeValue, makeAutoExpr } from '../utils/math';
+import { genSnakeValue, makeAutoExpr } from '../utils/math';
+import { buildEqs, freeCell, makeInitialState } from '../utils/snake.utils';
 import { useAudio } from '../audio/useAudio';
 
 export const COLS = 16;
@@ -25,67 +26,9 @@ export interface GameState {
   score: number;
 }
 
-function occupiedSet(snake: Point[], eqs: EquationItem[]): Set<string> {
-  const s = new Set(snake.map((p) => `${p.x},${p.y}`));
-  eqs.forEach((e) => s.add(`${e.x},${e.y}`));
-  return s;
-}
-
-function freeCell(snake: Point[], eqs: EquationItem[]): Point {
-  const occ = occupiedSet(snake, eqs);
-  let x = 0,
-    y = 0,
-    tries = 0;
-  do {
-    x = rnd(0, COLS - 1);
-    y = rnd(0, ROWS - 1);
-    tries++;
-  } while (occ.has(`${x},${y}`) && tries < 300);
-  return { x, y };
-}
-
-function buildEqs(snakeVal: number, snake: Point[], deck: Deck | null): EquationItem[] {
-  const eqs: EquationItem[] = [];
-  if (deck) {
-    const correct = shuffle(deck.equations.filter((e) => e.correct && e.answer === snakeVal));
-    const wrong = shuffle(deck.equations.filter((e) => !e.correct));
-    const nc = Math.min(correct.length, rnd(2, 3));
-    const nw = Math.min(wrong.length, rnd(4, 6));
-    for (let i = 0; i < nc; i++)
-      eqs.push({ ...freeCell(snake, eqs), expr: correct[i].expr, correct: true });
-    for (let i = 0; i < nw; i++)
-      eqs.push({ ...freeCell(snake, eqs), expr: wrong[i].expr, correct: false });
-    if (nc === 0)
-      for (let i = 0; i < 2; i++)
-        eqs.push({ ...freeCell(snake, eqs), expr: makeAutoExpr(snakeVal, true), correct: true });
-    if (nw === 0)
-      for (let i = 0; i < 4; i++)
-        eqs.push({ ...freeCell(snake, eqs), expr: makeAutoExpr(snakeVal, false), correct: false });
-  } else {
-    const nc = rnd(2, 3),
-      nw = rnd(4, 6);
-    for (let i = 0; i < nc + nw; i++) {
-      const c = i < nc;
-      eqs.push({ ...freeCell(snake, eqs), expr: makeAutoExpr(snakeVal, c), correct: c });
-    }
-  }
-  return eqs;
-}
-
-function makeInitialState(): GameState {
-  const snake: Point[] = [
-    { x: 8, y: 8 },
-    { x: 7, y: 8 },
-    { x: 6, y: 8 },
-    { x: 5, y: 8 },
-  ];
-  const snakeVal = genSnakeValue();
-  return { snake, snakeVal, eqs: [], hearts: 3, score: 0 };
-}
-
 export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEnabled: boolean) {
   // All mutable game state in refs — tick() always reads fresh values, no stale closures
-  const stateRef = useRef<GameState>(makeInitialState());
+  const stateRef = useRef<GameState>(makeInitialState(COLS, ROWS));
   const dirRef = useRef<Point>({ x: 1, y: 0 });
   const nextDirRef = useRef<Point>({ x: 1, y: 0 });
   const loopRef = useRef<ReturnType<typeof setInterval> | null>(null);
@@ -95,17 +38,23 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
   const aliveRef = useRef<boolean>(false);
 
   // Keep refs in sync with props
-  useEffect(() => {
-    deckRef.current = deck;
-  }, [deck]);
+  useEffect(() => { deckRef.current = deck; }, [deck]);
+
   useEffect(() => {
     speedRef.current = speed;
+    // Restart loop with new speed if currently running
+    if (aliveRef.current && loopRef.current) {
+      clearInterval(loopRef.current);
+      loopRef.current = setInterval(() => {
+        tick();
+        triggerRender();
+      }, SPEED_MS[speed]);
+    }
   }, [speed]);
-  useEffect(() => {
-    musicRef.current = musicEnabled;
-  }, [musicEnabled]);
 
-  // React state only to trigger re-renders
+  useEffect(() => { musicRef.current = musicEnabled; }, [musicEnabled]);
+
+  // React state — only used to trigger re-renders and expose to UI
   const [renderTick, setRenderTick] = useState(0);
   const [floatingMsgs, setFloatingMsgs] = useState<FloatingMsg[]>([]);
   const [gameOver, setGameOver] = useState(false);
@@ -140,9 +89,7 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
     if (!el) return;
     el.style.background = color;
     el.style.opacity = '0.45';
-    setTimeout(() => {
-      if (el) el.style.opacity = '0';
-    }, 200);
+    setTimeout(() => { if (el) el.style.opacity = '0'; }, 200);
   }, []);
 
   const loseHeart = useCallback(
@@ -152,7 +99,6 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
       doShake();
       doFlash('rgba(220,38,38,0.45)');
       addFloat('💔', px, py, 'heart');
-      // triggerRender(); // Removed to fix flickering
       if (s.hearts <= 0) {
         aliveRef.current = false;
         loopRef.current && clearInterval(loopRef.current);
@@ -162,7 +108,7 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
         setGameOver(true);
       }
     },
-    [addFloat, triggerRender, doShake, doFlash, soundOver, stopMusic]
+    [addFloat, doShake, doFlash, soundOver, stopMusic]
   );
 
   // tick reads only refs — zero stale closure risk
@@ -200,13 +146,13 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
         doFlash('rgba(37,99,235,0.30)');
         addFloat('✓', eq.x * CELL + CELL / 2 - 9, eq.y * CELL, 'check');
         s.snakeVal = genSnakeValue();
-        s.eqs = buildEqs(s.snakeVal, s.snake, deckRef.current);
+        s.eqs = buildEqs(s.snakeVal, s.snake, deckRef.current, COLS, ROWS);
         soundLevel();
       } else {
         soundWrong();
         loseHeart(eq.x * CELL + CELL / 2 - 12, eq.y * CELL);
         if (aliveRef.current) {
-          const pos = freeCell(s.snake, s.eqs);
+          const pos = freeCell(s.snake, s.eqs, COLS, ROWS);
           s.eqs.push({ ...pos, expr: makeAutoExpr(s.snakeVal, false), correct: false });
         }
         return;
@@ -215,17 +161,7 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
 
     s.snake.unshift(head);
     if (!grow) s.snake.pop();
-    // triggerRender(); // Removed to fix flickering
-  }, [
-    addFloat,
-    triggerRender,
-    doFlash,
-    soundCorrect,
-    soundWrong,
-    soundWall,
-    soundLevel,
-    loseHeart,
-  ]);
+  }, [addFloat, doFlash, soundCorrect, soundWrong, soundWall, soundLevel, loseHeart]);
 
   // Keyboard — empty deps array: refs never go stale, no re-subscription needed
   useEffect(() => {
@@ -234,28 +170,16 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
       const cur = dirRef.current;
       switch (e.key) {
         case 'ArrowUp':
-          if (cur.y !== 1) {
-            nextDirRef.current = { x: 0, y: -1 };
-            e.preventDefault();
-          }
+          if (cur.y !== 1) { nextDirRef.current = { x: 0, y: -1 }; e.preventDefault(); }
           break;
         case 'ArrowDown':
-          if (cur.y !== -1) {
-            nextDirRef.current = { x: 0, y: 1 };
-            e.preventDefault();
-          }
+          if (cur.y !== -1) { nextDirRef.current = { x: 0, y: 1 }; e.preventDefault(); }
           break;
         case 'ArrowLeft':
-          if (cur.x !== 1) {
-            nextDirRef.current = { x: -1, y: 0 };
-            e.preventDefault();
-          }
+          if (cur.x !== 1) { nextDirRef.current = { x: -1, y: 0 }; e.preventDefault(); }
           break;
         case 'ArrowRight':
-          if (cur.x !== -1) {
-            nextDirRef.current = { x: 1, y: 0 };
-            e.preventDefault();
-          }
+          if (cur.x !== -1) { nextDirRef.current = { x: 1, y: 0 }; e.preventDefault(); }
           break;
       }
     };
@@ -273,19 +197,30 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
 
   const startGame = useCallback(() => {
     loopRef.current && clearInterval(loopRef.current);
-    const s = makeInitialState();
-    s.eqs = buildEqs(s.snakeVal, s.snake, deckRef.current);
+    const s = makeInitialState(COLS, ROWS);
+    s.eqs = buildEqs(s.snakeVal, s.snake, deckRef.current, COLS, ROWS);
     stateRef.current = s;
     dirRef.current = { x: 1, y: 0 };
     nextDirRef.current = { x: 1, y: 0 };
     aliveRef.current = true;
     setGameOver(false);
     setStarted(true);
-    // triggerRender(); // Removed to fix flickering
-      stopMusic();
-    },
-    [stopMusic]
-  );
+    triggerRender();
+    loopRef.current = setInterval(() => {
+      tick();
+      triggerRender();
+    }, SPEED_MS[speedRef.current]);
+    stopMusic();
+    if (musicRef.current) startMusic();
+  }, [tick, triggerRender, stopMusic, startMusic]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      loopRef.current && clearInterval(loopRef.current);
+      loopRef.current = null;
+    };
+  }, []);
 
   return {
     state: stateRef.current,

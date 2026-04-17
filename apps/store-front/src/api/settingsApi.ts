@@ -27,12 +27,29 @@ export type StoreSettings = {
   };
 };
 
+export type ThemeSettings = {
+  primaryColor?: string;
+  accentColor?: string;
+  secondaryColor?: string;
+  fontFamily?: string;
+};
+
 export const useStoreSettings = () =>
   useQuery<StoreSettings>({
     queryKey: ['storeFront', 'storeSettings'],
     queryFn: async () => {
       const { data } = await api.get<{ data: StoreSettings }>(`/api/store-settings`);
       return data.data as StoreSettings;
+    },
+    staleTime: 60_000,
+  });
+
+export const useStoreFrontThemeSettings = () =>
+  useQuery<ThemeSettings>({
+    queryKey: ['storeFront', 'themeSettings'],
+    queryFn: async () => {
+      const { data } = await api.get<{ data: ThemeSettings }>(`/api/store-settings/theme`);
+      return data.data ?? {};
     },
     staleTime: 60_000,
   });

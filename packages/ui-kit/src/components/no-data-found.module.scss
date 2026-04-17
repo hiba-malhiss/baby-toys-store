@@ -1,15 +1,15 @@
 .noDataFound {
   width: 100%;
-  color: var(--color-text-muted, $color-text-muted);
+  color: var(--color-text-muted, #666);
   background: none;
-  padding: $spacing-2xl 0 $spacing-xl 0;
+  padding: 2rem 0 1.5rem 0;
 
   &.withoutPadding {
     padding: 0;
   }
 
   &-icon {
-    margin-bottom: $spacing-xs;
+    margin-bottom: 0.5rem;
 
     svg {
       font-size: 72px;
@@ -19,8 +19,8 @@
   &_text {
     font-size: 1.3rem;
     font-weight: 500;
-    margin-bottom: $spacing-xs;
-    color: var(--color-text-grey-dark, $color-text-grey-dark);
+    margin-bottom: 0.5rem;
+    color: var(--color-text-grey-dark, #333);
     background: none;
   }
 

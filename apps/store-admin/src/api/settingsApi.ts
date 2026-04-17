@@ -31,10 +31,17 @@ export type StoreSettingsGrouped = {
 };
 
 export type StoreSettingUpdateItem = {
-  section: 'GENERAL' | 'CONTACT' | 'POLICIES';
+  section: 'GENERAL' | 'CONTACT' | 'POLICIES' | 'THEME';
   key: string;
   value: string;
   locale?: string;
+};
+
+export type ThemeSettings = {
+  primaryColor?: string;
+  accentColor?: string;
+  secondaryColor?: string;
+  fontFamily?: string;
 };
 
 export const useAdminStoreSettingsMap = () =>
@@ -74,3 +81,15 @@ export const useUpsertStoreSettings = () => {
     },
   });
 };
+
+export const useThemeSettings = () =>
+  useQuery<ThemeSettings>({
+    queryKey: ['storeSettings', 'theme'],
+    queryFn: async () => {
+      const { data } = await api.get<ApiEnvelope<ThemeSettings>>(
+        '/api/admin/store-settings/theme'
+      );
+      return data.data ?? {};
+    },
+    staleTime: 60_000,
+  });

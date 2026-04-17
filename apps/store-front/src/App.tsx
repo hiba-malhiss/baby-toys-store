@@ -4,12 +4,11 @@ import './styles/main.scss';
 import { Routes, Route, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import HomePage from './pages/HomePage/HomePage.tsx';
 import Layout from './components/Layout/Layout.tsx';
-import { BouncingDotsLoader, ScrollToTop } from '@baby-toys/ui-kit';
+import { BouncingDotsLoader, ScrollToTop, ToastProvider } from '@baby-toys/ui-kit';
 import { BreadcrumbProvider } from '@baby-toys/ui-kit/hooks';
 import ShopPage from './pages/ShopPage/ShopPage.tsx';
 import ProductDetailsPage from './pages/ProductDetailsPage/ProductDetailsPage.tsx';
 import ShoppingCartPage from './pages/ShoppingCartPage/ShoppingCartPage.tsx';
-import { ToastProvider } from '@baby-toys/ui-kit';
 import WishListPage from './pages/WishListPage/WishListPage.tsx';
 import AdminRedirect from './components/features/AdminRedirect/AdminRedirect.tsx';
 import CheckoutPage from './pages/CheckoutPage/CheckoutPage.tsx';
@@ -22,7 +21,7 @@ import VerifyEmailPage from './pages/VerifyEmailPage/VerifyEmailPage.tsx';
 import ResetPasswordPage from './pages/ResetPasswordPage/ResetPasswordPage';
 import LocationAwareToast from './components/LocationAwareToast.tsx';
 import { ThemeProvider } from '@baby-toys/ui-kit/theme/ThemeProvider';
-import VerificationResendDialog from './components/VerificationResendDialog';
+import ThemeInitializer from './components/ThemeInitializer/ThemeInitializer';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -49,6 +48,7 @@ const AppContent: React.FC = () => {
   return (
     <BreadcrumbProvider>
       <BrowserRouter>
+        <ThemeInitializer />
         <LocationAwareToast>
           <ScrollToTop />
           <Layout>

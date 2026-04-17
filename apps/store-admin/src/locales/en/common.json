@@ -190,7 +190,8 @@
       "infoCards": "Info Cards",
       "gallery": "Gallery Images",
       "banners": "Banners",
-      "mainBanner": "Main Banner"
+      "mainBanner": "Main Banner",
+      "footer": "Footer Image"
     },
     "banners": {
       "bannerText": "Banner {position} Text ({locale})",
@@ -243,7 +244,10 @@
       "update": "Update",
       "deactivate": "Deactivate"
     },
-    "confirmDeleteTitle": "Confirm Delete"
+    "confirmDeleteTitle": "Confirm Delete",
+    "footer": {
+      "description": "Upload an image shown in the storefront footer — e.g. payment methods strip, partner logos, or decorative banner."
+    }
   },
   "checkout": {
     "confirmDeleteTitle": "Confirm Delete",
@@ -496,7 +500,9 @@
     "buttons": {
       "addDetail": "Add Detail",
       "addBullet": "Add Bullet"
-    }
+    },
+    "attributesHelp": "Attributes describe fixed specs (Material, Brand). They appear on the product page and can be used for filtering.",
+    "optionsHelp": "Options generate purchasable variants (Size, Color). Set up option types first, then assign values here."
   },
   "products": {
     "title": "Products",
@@ -515,7 +521,10 @@
         "header": "Confirm Deletion",
         "single": "Are you sure you want to delete {{name}}?",
         "multiple": "Are you sure you want to delete {{count}} selected products?"
-      }
+      },
+      "emptyTitle": "No Products Yet",
+      "emptySubtext": "Add your first product to start selling. You can set pricing, images, categories, attributes, and variants.",
+      "emptyButton": "Add First Product"
     },
     "addTitle": "Add Product",
     "editTitle": "Edit Product",
@@ -747,7 +756,12 @@
     "validation": {
       "nameRequired": "Name is required",
       "valueRequired": "Value is required"
-    }
+    },
+    "helpTitle": "What are Options?",
+    "helpText": "Options are selectable choices that generate product variants (e.g. Size, Color). Each option type has values (e.g. S, M, L), and combinations create unique variants with their own price and stock.",
+    "emptyTitle": "No Option Types Yet",
+    "emptySubtext": "Options create product variants like Size or Color. Add an option type, then assign it to a product to generate variants.",
+    "emptyButton": "Add Option Type"
   },
   "attributes": {
     "title": "Attributes",
@@ -790,7 +804,12 @@
     "description": "Description",
     "isFilterable": "Filterable",
     "isMultiselect": "Multi-select",
-    "isActive": "Active"
+    "isActive": "Active",
+    "helpTitle": "What are Attributes?",
+    "helpText": "Attributes describe fixed product properties like Material, Brand, or Age Range. Customers can filter products by these. Unlike Options, attributes do not generate variants or affect pricing.",
+    "emptyTitle": "No Attributes Yet",
+    "emptySubtext": "Attributes describe product properties like Material or Brand. Add your first attribute type to get started.",
+    "emptyButton": "Add Attribute Type"
   },
   "tooltips": {
     "productKPIs": {
@@ -933,7 +952,8 @@
       "general": "General",
       "contact": "Contact",
       "policies": "Policies",
-      "freeShipping": "Free Shipping"
+      "freeShipping": "Free Shipping",
+      "theme": "Theme & Branding"
     },
     "fields": {
       "currency": "Currency",
@@ -963,6 +983,20 @@
       "saveSettings": "Save Settings",
       "success": "Store settings updated",
       "error": "Failed to update settings"
+    },
+    "theme": {
+      "description": "Customize your store colors and typography. Changes apply immediately.",
+      "primaryColor": "Primary Color",
+      "primaryColorHint": "Buttons, links, highlights",
+      "accentColor": "Accent Color",
+      "accentColorHint": "Sale badges, alerts, CTA elements",
+      "secondaryColor": "Secondary Color",
+      "secondaryColorHint": "Borders, muted text, backgrounds",
+      "fontFamily": "Font Family",
+      "fontFamilyHint": "Applied to all text across the storefront",
+      "fontPreview": "The quick brown fox jumps over the lazy dog — 0123456789",
+      "translationEnabled": "Enable Multi-language (AR + EN)",
+      "translationEnabledHint": "When off, only Arabic content fields are shown in the admin. When on, both Arabic and English tabs appear."
     }
   },
   "townAnalytics": {

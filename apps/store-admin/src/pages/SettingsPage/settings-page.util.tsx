@@ -1,5 +1,17 @@
 import { z } from 'zod';
 
+const HEX_COLOR_REGEX = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+
+export const themeSchema = z.object({
+  primaryColor: z.string().regex(HEX_COLOR_REGEX, 'Invalid hex color').optional(),
+  accentColor: z.string().regex(HEX_COLOR_REGEX, 'Invalid hex color').optional(),
+  secondaryColor: z.string().regex(HEX_COLOR_REGEX, 'Invalid hex color').optional(),
+  fontFamily: z.string().optional(),
+  translationEnabled: z.boolean().optional(),
+});
+
+export type ThemeFormValues = z.infer<typeof themeSchema>;
+
 export const generalSchema = z.object({
   currency: z.string().min(1).max(10),
   currencySymbol: z.string().min(1).max(5),
@@ -36,6 +48,7 @@ export const settingsSchema = (locales: string[]) =>
     contact: z.record(z.enum(locales as [string, ...string[]]), contactSchema),
     policies: z.record(z.enum(locales as [string, ...string[]]), policiesLocaleSchema),
     policiesGlobal: policiesGlobalSchema,
+    theme: themeSchema,
   });
 
 export type SettingsFormValues = z.infer<ReturnType<typeof settingsSchema>>;

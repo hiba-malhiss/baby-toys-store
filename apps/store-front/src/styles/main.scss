@@ -3,7 +3,7 @@
 @forward '@baby-toys/ui-kit/theme/theme';
 
 body {
-  font-family: 'Comfortaa', sans-serif !important;
+  font-family: var(--font-primary, 'Comfortaa', sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: var(--color-text-primary);

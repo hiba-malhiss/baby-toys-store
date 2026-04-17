@@ -2,7 +2,7 @@
   "name": "@baby-toys/ui-kit",
   "version": "1.0.0",
   "private": true,
-  "main": "build/index.js",
+  "main": "build/ui-kit.cjs.js",
   "types": "build/index.d.ts",
   "files": [
     "build"
@@ -10,12 +10,12 @@
   "exports": {
     ".": {
       "types": "./build/index.d.ts",
-      "import": "./build/index.js",
-      "default": "./build/index.js"
+      "import": "./build/ui-kit.es.js",
+      "default": "./build/ui-kit.es.js"
     }
   },
   "scripts": {
-    "build": "tsc --project tsconfig.json"
+    "build": "vite build"
   },
   "peerDependencies": {
     "react": "^19.1.0",
@@ -24,5 +24,10 @@
   "dependencies": {
     "moment": "^2.30.1",
     "lucide-react": "^0.460.0"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.1.0",
+    "typescript": "^5.3.0"
   }
 }

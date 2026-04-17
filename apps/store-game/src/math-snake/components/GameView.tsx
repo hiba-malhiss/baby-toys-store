@@ -89,8 +89,8 @@ export function GameView({ decks }: Props) {
 
       {/* Canvas wrapper — ref passed to hook for direct DOM shake/flash */}
       <div className={styles.canvasWrap} ref={canvasWrapRef}>
-        {/* renderTick in key forces GameCanvas to re-render every tick */}
-        <GameCanvas key={renderTick} state={state} />
+        {/* renderTick prop triggers GameCanvas to redraw via useEffect without remounting */}
+        <GameCanvas state={state} renderTick={renderTick} />
 
         {/* Flash overlay — manipulated directly via flashElRef */}
         <div className={styles.flash} ref={flashElRef} />

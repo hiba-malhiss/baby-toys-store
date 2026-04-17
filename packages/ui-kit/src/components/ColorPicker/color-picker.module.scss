@@ -10,20 +10,6 @@
     cursor: pointer;
   }
 
-  &-panel {
-    position: absolute;
-    top: 40px;
-    left: 0;
-    padding: $spacing-sm;
-    background: var(--color-bg-primary, $color-bg-primary);
-    box-shadow: $shadow-md;
-    border-radius: $radius-md;
-    z-index: $z-popover;
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-sm;
-  }
-
   &-selector {
     width: 200px;
     height: 150px;

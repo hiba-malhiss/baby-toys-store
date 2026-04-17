@@ -15,11 +15,14 @@ import {
   TabBar,
   TabBarItem,
   Select,
+  Toggle,
+  Divider,
 } from '@baby-toys/ui-kit';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import {
   useAdminStoreSettingsMap,
   useUpsertStoreSettings,
+  useThemeSettings,
   type StoreSettingUpdateItem,
 } from '../../api/settingsApi';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -28,6 +31,8 @@ import { settingsSchema, SettingsFormValues } from './settings-page.util';
 import { getSupportedLocales } from '../../i18n/locale.ts';
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
+import ThemeSection from './ThemeSection';
+import { applyThemeSettings } from '../../utils/theme.utils';
 
 const emptyGeneral = {
   currency: '',
@@ -59,7 +64,14 @@ const emptyPoliciesGlobal = {
   freeShippingEndAt: null,
 };
 
-// Timezone options for dropdown
+const emptyTheme = {
+  primaryColor: '#1096b5',
+  accentColor: '#f26c62',
+  secondaryColor: '#7f7f7f',
+  fontFamily: "'Comfortaa', sans-serif",
+  translationEnabled: true,
+};
+
 const TIMEZONE_OPTIONS = [
   { label: 'Asia/Jerusalem (UTC+02:00/UTC+03:00)', value: 'Asia/Jerusalem' },
   { label: 'UTC', value: 'UTC' },
@@ -91,6 +103,7 @@ const SettingsPage: React.FC = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const { data: settingsMap } = useAdminStoreSettingsMap();
+  const { data: themeData } = useThemeSettings();
   const upsertMutation = useUpsertStoreSettings();
 
   const locales = useMemo(() => getSupportedLocales(), []);
@@ -101,6 +114,7 @@ const SettingsPage: React.FC = () => {
       contact: Object.fromEntries(locales.map((locale) => [locale, { ...emptyContact }])),
       policies: Object.fromEntries(locales.map((locale) => [locale, { ...emptyPolicies }])),
       policiesGlobal: { ...emptyPoliciesGlobal },
+      theme: { ...emptyTheme },
     }),
     [locales]
   );
@@ -112,24 +126,56 @@ const SettingsPage: React.FC = () => {
     criteriaMode: 'all',
   });
 
-  const { control, handleSubmit, reset, setValue, clearErrors } = form;
+  const {
+ control, handleSubmit, reset, setValue, clearErrors, watch 
+} = form;
   const [activeContactTab, setActiveContactTab] = useState(locales[0]);
   const [activePoliciesTab, setActivePoliciesTab] = useState(locales[0]);
 
+  // Load general + contact + policies settings
   useEffect(() => {
     if (!settingsMap) return;
     const localeKeys = Object.keys(settingsMap);
     const base = localeKeys.length > 0 ? settingsMap[localeKeys[0]] : undefined;
 
-    reset({
+    reset((prev) => ({
+      ...prev,
       general: base?.general ?? emptyGeneral,
       contact: Object.fromEntries(locales.map((l) => [l, settingsMap[l]?.contact ?? emptyContact])),
       policies: Object.fromEntries(
         locales.map((l) => [l, settingsMap[l]?.policies ?? emptyPolicies])
       ),
       policiesGlobal: base?.policies ?? emptyPoliciesGlobal,
-    });
+    }));
   }, [settingsMap, reset, locales]);
+
+  // Load theme settings separately
+  useEffect(() => {
+    if (!themeData) return;
+    reset((prev) => ({
+      ...prev,
+      theme: {
+        primaryColor: themeData.primaryColor ?? emptyTheme.primaryColor,
+        accentColor: themeData.accentColor ?? emptyTheme.accentColor,
+        secondaryColor: themeData.secondaryColor ?? emptyTheme.secondaryColor,
+        fontFamily: themeData.fontFamily ?? emptyTheme.fontFamily,
+        translationEnabled: themeData.translationEnabled ?? emptyTheme.translationEnabled,
+      },
+    }));
+  }, [themeData, reset]);
+
+  // Live preview: apply theme immediately as admin changes colors/font
+  const watchedTheme = watch('theme');
+  useEffect(() => {
+    if (watchedTheme) {
+      applyThemeSettings({
+        primaryColor: watchedTheme.primaryColor,
+        accentColor: watchedTheme.accentColor,
+        secondaryColor: watchedTheme.secondaryColor,
+        fontFamily: watchedTheme.fontFamily,
+      });
+    }
+  }, [watchedTheme]);
 
   const handleResetFreeShipping = () => {
     setValue('policiesGlobal.freeShippingMinSubtotal', null, { shouldDirty: true });
@@ -140,35 +186,53 @@ const SettingsPage: React.FC = () => {
 
   const onSubmit = async (values: SettingsFormValues) => {
     const payload: StoreSettingUpdateItem[] = [
+      // General
       ...Object.entries(values.general).map(([key, value]) => ({
-        section: 'GENERAL',
+        section: 'GENERAL' as const,
         key,
-        value,
+        value: String(value ?? ''),
       })),
+      // Contact (per locale)
       ...locales.flatMap((locale) =>
         Object.entries(values.contact[locale]).map(([key, value]) => ({
-          section: 'CONTACT',
+          section: 'CONTACT' as const,
           key,
-          value,
+          value: String(value ?? ''),
           locale,
         }))
       ),
+      // Policies (per locale)
       ...locales.flatMap((locale) =>
         Object.entries(values.policies[locale]).map(([key, value]) => ({
-          section: 'POLICIES',
+          section: 'POLICIES' as const,
           key,
-          value,
+          value: String(value ?? ''),
           locale,
         }))
       ),
+      // Policies global (free shipping)
       ...Object.entries(values.policiesGlobal).map(([key, value]) => ({
-        section: 'POLICIES',
+        section: 'POLICIES' as const,
         key,
         value:
           value instanceof Date
             ? moment(value).format(ADMIN_LOCAL_DATETIME_FORMAT)
-            : (value ?? null),
+            : String(value ?? ''),
       })),
+      // Theme (global, no locale)
+      { section: 'THEME' as const, key: 'primaryColor', value: values.theme.primaryColor ?? '' },
+      { section: 'THEME' as const, key: 'accentColor', value: values.theme.accentColor ?? '' },
+      {
+        section: 'THEME' as const,
+        key: 'secondaryColor',
+        value: values.theme.secondaryColor ?? '',
+      },
+      { section: 'THEME' as const, key: 'fontFamily', value: values.theme.fontFamily ?? '' },
+      {
+        section: 'THEME' as const,
+        key: 'translationEnabled',
+        value: String(values.theme.translationEnabled ?? true),
+      },
     ];
 
     try {
@@ -298,7 +362,6 @@ const SettingsPage: React.FC = () => {
                 <Text color="muted" size="sm">
                   {t('settings.freeShipping.description')}
                 </Text>
-
                 <Flex align="end" spacing="m" fullWidth>
                   <FormFieldWrapper
                     control={control}
@@ -312,7 +375,6 @@ const SettingsPage: React.FC = () => {
                     {t('settings.freeShipping.clearButton')}
                   </Button>
                 </Flex>
-
                 <Flex fullWidth spacing="m">
                   <FormFieldWrapper
                     control={control}
@@ -322,7 +384,6 @@ const SettingsPage: React.FC = () => {
                   >
                     <CalendarFieldAdapter />
                   </FormFieldWrapper>
-
                   <FormFieldWrapper
                     control={control}
                     name="policiesGlobal.freeShippingEndAt"
@@ -331,6 +392,38 @@ const SettingsPage: React.FC = () => {
                   >
                     <CalendarFieldAdapter />
                   </FormFieldWrapper>
+                </Flex>
+              </Flex>
+            </Accordion>
+
+            {/* Theme & Branding */}
+            <Accordion
+              header={t('settings.sections.theme', { defaultValue: 'Theme & Branding' })}
+              buttonAppearance="outline"
+            >
+              <Flex direction="vertical" spacing="xl" fullWidth>
+                <ThemeSection control={control} />
+                <Divider thickness="2px" />
+                {/* Translation toggle */}
+                <Flex direction="vertical" spacing="s">
+                  <Text size="sm" weight="medium">
+                    {t('settings.theme.translationEnabled', {
+                      defaultValue: 'Enable Multi-language (AR + EN)',
+                    })}
+                  </Text>
+                  <Text size="xs" color="muted">
+                    {t('settings.theme.translationEnabledHint', {
+                      defaultValue:
+                        'When off, only Arabic content fields are shown in the admin. When on, both Arabic and English tabs appear.',
+                    })}
+                  </Text>
+                  <Controller
+                    name="theme.translationEnabled"
+                    control={control}
+                    render={({ field }) => (
+                      <Toggle value={!!field.value} onChange={field.onChange} />
+                    )}
+                  />
                 </Flex>
               </Flex>
             </Accordion>

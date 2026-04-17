@@ -5,6 +5,7 @@ import { lerpColor } from '../utils/math';
 
 interface Props {
   state: GameState;
+  renderTick: number;
 }
 
 function isDark() {
@@ -32,7 +33,7 @@ function rRect(
   ctx.closePath();
 }
 
-export function GameCanvas({ state }: Props) {
+export function GameCanvas({ state, renderTick }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   // Draw on every render (parent passes key=renderTick to force re-render each tick)
@@ -127,7 +128,7 @@ export function GameCanvas({ state }: Props) {
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
     ctx.fillText(String(state.snakeVal), h.x * CELL + CELL / 2, h.y * CELL + CELL / 2);
-  }, [state]); // re-render when state changes
+  }, [state, renderTick]); // re-render when tick fires
 
   return (
     <canvas ref={canvasRef} width={COLS * CELL} height={ROWS * CELL} style={{ display: 'block' }} />
