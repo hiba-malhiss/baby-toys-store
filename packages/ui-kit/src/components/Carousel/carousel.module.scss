@@ -25,6 +25,10 @@
 
   &-item {
     padding: 0 8px;
+
+    &--noPadding {
+      padding: 0;
+    }
   }
 
   /* ========================= */
@@ -66,6 +70,10 @@
     opacity: 0;
     transition: opacity 0.6s ease;
     pointer-events: none;
+
+    &.carousel-item--noPadding {
+      inset: 0;
+    }
   }
 
   &-heroItemActive {

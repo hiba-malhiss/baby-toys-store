@@ -150,7 +150,8 @@ const Carousel: React.FC<CarouselProps> = ({
                 className={clsx(
                   styles.carouselItem,
                   isAutoPlay && styles.carouselHeroItem,
-                  isAutoPlay && isActive && styles.carouselHeroItemActive
+                  isAutoPlay && isActive && styles.carouselHeroItemActive,
+                  ((isAutoPlay && items.length === 1) || (!isAutoPlay && visibleSlides === 1)) && styles.carouselItemNoPadding
                 )}
                 style={
                   isAutoPlay
