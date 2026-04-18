@@ -7,7 +7,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
-import { getSupportedLocales } from '../../i18n/locale';
+import { useLocales } from '../../hooks/useLocales';
 import { useCreateOptionValue, useUpdateOptionValue } from '../../api/optionApi';
 import type { OptionValueDto } from '../../api/types/option';
 
@@ -42,7 +42,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
 }) => {
   const { t } = useTranslation();
   const toast = useToast();
-  const locales = useMemo(() => getSupportedLocales(), []);
+  const locales = useLocales();
   const createValue = useCreateOptionValue(typeId);
   const updateValue = useUpdateOptionValue(typeId);
 

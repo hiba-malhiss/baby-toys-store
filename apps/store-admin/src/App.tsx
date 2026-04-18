@@ -15,6 +15,7 @@ import AdminAuditLogsPage from './pages/AdminAuditLogsPage/AdminAuditLogsPage';
 import HomePageContent from './pages/HomePageContent/HomePageContent';
 import ProductAnalyticsPage from './pages/ProductAnalyticsPage/ProductAnalyticsPage';
 import TownAnalyticsPage from './pages/TownAnalyticsPage/TownAnalyticsPage';
+import { useTranslationSetting } from './hooks/useTranslationSetting';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SettingsPage from './pages/SettingsPage/SettingsPage';
 import DeliveryTownsPage from './pages/DeliveryTownsPage/DeliveryTownsPage';
@@ -42,6 +43,8 @@ export const queryClient = new QueryClient({
 
 const AppContent: React.FC = () => {
   const { isInitializing } = useAuth();
+  // Sync translationEnabled flag from backend to localStorage on app load
+  useTranslationSetting();
 
   if (isInitializing) {
     return <BouncingDotsLoader />;

@@ -127,7 +127,6 @@ api.interceptors.response.use(
       if (!inMemoryAccessToken) {
         clearAccessToken();
         processQueue(error);
-        safeRedirectToLogin();
         return Promise.reject(error);
       }
 
@@ -166,7 +165,7 @@ api.interceptors.response.use(
         failedQueries.clear();
 
         // Redirect safely
-        setTimeout(() => safeRedirectToLogin(), 0);
+        if (refreshError) setTimeout(() => safeRedirectToLogin(), 0);
         return Promise.reject(refreshError);
       } finally {
         isRefreshing = false;

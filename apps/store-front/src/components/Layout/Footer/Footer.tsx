@@ -12,11 +12,13 @@ import {
 import { useStoreSettings } from '../../../api/settingsApi';
 import { handleFooterSocialClick } from '../../../utils/share.ts';
 import { useTranslation } from 'react-i18next';
+import { useLogo } from "../../../hooks/useLogo.ts";
 
 const Footer = () => {
   const navigate = useNavigate();
   const { data: settings } = useStoreSettings();
   const { isMobileLike } = useDeviceInfo();
+  const logoUrl = useLogo();
   const { t } = useTranslation('common');
   const tooltipKeyByPlatform: Record<string, string> = {
     whatsapp: 'product.tooltips.shareWhatsapp',
@@ -30,7 +32,7 @@ const Footer = () => {
   return (
     <footer className={styles.footer}>
       <Flex direction="vertical" className={styles.footerLogo}>
-        <img src="/assets/kit-images/logo.png" alt="logo" />
+        <img src={logoUrl} alt="logo" />
         <p className={styles.footerDescription}>{t('footer.description')}</p>
         <Flex spacing="m" className={styles.footerSocialButtons}>
           {socialMediaLinks.map(({ icon, platform }) => (

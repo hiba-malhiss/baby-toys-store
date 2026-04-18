@@ -8,12 +8,14 @@ import { useWishlistCount } from '../../../api/wishlistApi.ts';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
+import { useLogo } from "../../../hooks/useLogo.ts";
 
 const BurgerMenu = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const { data: wishlistCount } = useWishlistCount();
   const { t } = useTranslation('common');
+  const logoUrl = useLogo();
   const { isAuthenticated } = useAuth();
 
   const toggleMenu = () => {
@@ -42,7 +44,7 @@ const BurgerMenu = () => {
         appendTo={document.body}
         header={
           <img
-            src="/assets/kit-images/logo.png"
+            src={logoUrl}
             alt="logo"
             className={styles.headerLogo}
             style={{ cursor: 'pointer' }}

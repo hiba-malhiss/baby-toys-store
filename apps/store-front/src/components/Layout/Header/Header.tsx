@@ -12,10 +12,12 @@ import BurgerMenu from './BurgerMenu.tsx';
 import { useWishlistCount } from '../../../api/wishlistApi';
 import { useTranslation } from 'react-i18next';
 import LanguageSwitcher from '../../i18n/LanguageSwitcher';
+import { useLogo } from '../../../hooks/useLogo';
 
 const Header = () => {
   const { data: cartCount } = useCartCount();
   const { data: categories = [] } = useCategories();
+  const logoUrl = useLogo();
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuth();
@@ -65,7 +67,7 @@ const Header = () => {
       <Flex className={styles.headerMain} justify="stretch" align="center" fullWidth spacing="xl">
         <div className="bts-hideOnMobile">
           <img
-            src="/assets/kit-images/logo.png"
+            src={logoUrl}
             alt="logo"
             className={styles.headerLogo}
             style={{ cursor: 'pointer' }}

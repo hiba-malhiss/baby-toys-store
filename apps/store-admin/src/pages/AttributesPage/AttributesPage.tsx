@@ -1,21 +1,23 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import {Button,
+import {
+  Button,
   Flex,
   Heading,
   Table,
   BouncingDotsLoader,
   ConfirmDialog,
   Tooltip,
-  useToast,
 } from '@baby-toys/ui-kit';
 import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeApi';
 import AttributesValuesRow from './AttributesValuesRow';
+import { useToast } from '@baby-toys/ui-kit';
 import TypeUpsertDialog from './TypeUpsertDialog';
 import type { AttributeTypeListDto as AttributeType } from '../../api/types/attribute';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
 import HelpTooltip from '../../components/HelpTooltip';
+import { NoDataFound } from '@baby-toys/ui-kit';
 import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
 
 const AttributesPage: React.FC = () => {
@@ -77,6 +79,16 @@ const AttributesPage: React.FC = () => {
 
         {loadingTypes ? (
           <BouncingDotsLoader />
+        ) : types.length === 0 ? (
+          <NoDataFound
+            message={t('attributes.emptyTitle', { defaultValue: 'No Attributes Yet' })}
+            subtext={t('attributes.emptySubtext', {
+              defaultValue:
+                'Attributes describe product properties like Material or Brand. Add your first attribute type to get started.',
+            })}
+            buttonText={t('attributes.emptyButton', { defaultValue: 'Add Attribute Type' })}
+            onButtonClick={() => setShowAddType(true)}
+          />
         ) : (
           <Table
             value={types}

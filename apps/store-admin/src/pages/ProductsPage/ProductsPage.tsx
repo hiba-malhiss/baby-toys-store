@@ -126,29 +126,41 @@ const ProductsPage: React.FC = () => {
           </Flex>
         </Flex>
 
-        {/* Table */}
-        <Table
-          stripedRows
-          columns={columns}
-          value={products}
-          isLoading={isLoading}
-          onSort={handleSort}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          selection={selectedProducts}
-          onSelectionChange={setSelectedProducts}
-          selectionMode="multiple"
-          emptyMessage={t('products.actions.noProducts')}
-          bordered
-          striped
-          paginator
-          rows={rowsPerPage}
-          totalRecords={totalItems}
-          onPageChange={(newPage: number, newSize: number) => {
-            setPage(newPage);
-            if (newSize !== rowsPerPage) setRowsPerPage(newSize);
-          }}
-        />
+        {/* Table or empty state */}
+        {!isLoading && products.length === 0 && !searchValue ? (
+          <NoDataFound
+            message={t('products.actions.emptyTitle', { defaultValue: 'No Products Yet' })}
+            subtext={t('products.actions.emptySubtext', {
+              defaultValue:
+                'Add your first product to start selling. You can set pricing, images, categories, attributes, and variants.',
+            })}
+            buttonText={t('products.actions.emptyButton', { defaultValue: 'Add First Product' })}
+            onButtonClick={navigateToCreate}
+          />
+        ) : (
+          <Table
+            stripedRows
+            columns={columns}
+            value={products}
+            isLoading={isLoading}
+            onSort={handleSort}
+            sortField={sortField}
+            sortOrder={sortOrder}
+            selection={selectedProducts}
+            onSelectionChange={setSelectedProducts}
+            selectionMode="multiple"
+            emptyMessage={t('products.actions.noProducts')}
+            bordered
+            striped
+            paginator
+            rows={rowsPerPage}
+            totalRecords={totalItems}
+            onPageChange={(newPage: number, newSize: number) => {
+              setPage(newPage);
+              if (newSize !== rowsPerPage) setRowsPerPage(newSize);
+            }}
+          />
+        )}
 
         {/* Delete confirmation */}
         <ConfirmDialog

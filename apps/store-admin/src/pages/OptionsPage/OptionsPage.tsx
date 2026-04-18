@@ -1,19 +1,21 @@
 import React, { useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
-import {Button,
+import {
+  Button,
   Flex,
   Heading,
   Table,
   BouncingDotsLoader,
   ConfirmDialog,
   Tooltip,
-  useToast,
+  NoDataFound,
 } from '@baby-toys/ui-kit';
 import { useOptionTypes, useDeleteOptionType } from '../../api/optionApi';
 import type { OptionTypeDto as OptionType } from '../../api/types/option';
 import OptionsValuesRow from './OptionsValuesRow.tsx';
 import { Eye, Pencil, Trash2 } from 'lucide-react';
+import { useToast } from '@baby-toys/ui-kit';
 import TypeUpsertDialog from './TypeUpsertDialog';
 import HelpTooltip from '../../components/HelpTooltip';
 import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
@@ -77,6 +79,16 @@ const OptionsPage: React.FC = () => {
 
         {loadingTypes ? (
           <BouncingDotsLoader />
+        ) : types.length === 0 ? (
+          <NoDataFound
+            message={t('options.emptyTitle', { defaultValue: 'No Option Types Yet' })}
+            subtext={t('options.emptySubtext', {
+              defaultValue:
+                'Options create product variants like Size or Color. Add an option type, then assign values to a product to generate variants.',
+            })}
+            buttonText={t('options.emptyButton', { defaultValue: 'Add Option Type' })}
+            onButtonClick={openAdd}
+          />
         ) : (
           <Table
             value={types}

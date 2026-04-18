@@ -22,6 +22,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import LanguageSwitcher from '../../../i18n/LanguageSwitcher.tsx';
+import { useLogo } from "../../../hooks/useLogo.ts";
 
 const AdminLayout: React.FC<{
   children: React.ReactNode;
@@ -31,6 +32,7 @@ const AdminLayout: React.FC<{
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { mutateAsync: logoutApi } = useLogout();
+  const logoUrl = useLogo();
 
   const menuItems = useMemo(
     () => [
@@ -100,7 +102,7 @@ const AdminLayout: React.FC<{
           header={
             <Flex justify="between" align="center" wrap fullWidth>
               <img
-                src="/assets/kit-images/logo.png"
+                src={logoUrl}
                 alt="logo"
                 className={styles.adminLayoutLogo}
               />

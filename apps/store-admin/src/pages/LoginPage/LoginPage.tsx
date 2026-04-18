@@ -9,6 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import styles from './login-page.module.scss';
 import { setAccessToken } from '../../api/axiosConfig.ts';
+import { useLogo } from "../../hooks/useLogo.ts";
 
 // Zod schema for validation
 const loginSchema = z.object({
@@ -23,6 +24,7 @@ const LoginPage: React.FC = () => {
   const toast = useToast();
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
+  const logoUrl = useLogo();
   const { user, isInitializing } = useAuth();
 
   const { control, handleSubmit, formState } = useForm<LoginFormData>({
@@ -66,7 +68,7 @@ const LoginPage: React.FC = () => {
     <div className={styles.loginPage}>
       <Card className={styles.loginPageCard}>
         <Flex direction="vertical" spacing="m" className={styles.loginPageContainer}>
-          <img src="/assets/kit-images/logo.png" alt="logo" className={styles.loginPageLogo} />
+          <img src={logoUrl} alt="logo" className={styles.loginPageLogo} />
           <Heading tag="h1" align="center">
             Admin Login
           </Heading>

@@ -4,22 +4,23 @@ import clsx from 'clsx';
 import styles from './language-switcher.module.scss';
 import { queryClient } from './../App';
 import { setAppLocale } from './locale.ts';
+import { useTranslationSetting } from '../hooks/useTranslationSetting';
 
 const LanguageSwitcher: React.FC = () => {
   const { i18n } = useTranslation();
+  const translationEnabled = useTranslationSetting();
   const current = (i18n.language || 'en').toLowerCase();
   const isAr = current.startsWith('ar');
 
+  // Hide the switcher when only one language is active
+  if (!translationEnabled) return null;
+
   const handleToggle = () => {
     const next = isAr ? 'en' : 'ar';
-
     i18n.changeLanguage(next);
     setAppLocale(next);
-
     document.documentElement.setAttribute('dir', next === 'ar' ? 'rtl' : 'ltr');
     document.documentElement.setAttribute('lang', next);
-
-    // Invalidate cached data to reload translated content
     queryClient.invalidateQueries();
   };
 

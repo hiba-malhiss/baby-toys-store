@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
-import { getSupportedLocales } from '../../i18n/locale';
+import { useLocales } from '../../hooks/useLocales';
 import { useCreateOptionType, useUpdateOptionType, useOptionTypeDetail } from '../../api/optionApi';
 import type { OptionTypeDto } from '../../api/types/option';
 import { useToast } from '@baby-toys/ui-kit';
@@ -41,7 +41,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   onSuccess,
 }) => {
   const { t } = useTranslation();
-  const locales = useMemo(() => getSupportedLocales(), []);
+  const locales = useLocales();
   const createType = useCreateOptionType();
   const updateType = useUpdateOptionType();
   const toast = useToast();

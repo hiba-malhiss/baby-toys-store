@@ -3,7 +3,7 @@ import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useToast } from '@baby-toys/ui-kit';
 
-import { useHomePageContent, useUpdateHomePageContent, useUploadFooterImage, useDeleteFooterImage } from '../../api/homePageApi';
+import { useHomePageContent, useUpdateHomePageContent } from '../../api/homePageApi';
 
 import {
   BannerTextAlignment,
@@ -11,13 +11,11 @@ import {
   UpdateHomePageContentRequest,
 } from '../../api/types/homePage';
 
-import { HomePageFormValues, homePageSchema } from './homePage.helper';
-import { getSupportedLocales } from '../../i18n/locale';
+import { buildHomePageSchema, type HomePageFormValues } from './homePage.helper';
+import { useLocales } from '../../hooks/useLocales';
 import { useImageManager } from './useImageManager';
 
-const locales = getSupportedLocales();
-
-const buildDefaultBanners = () =>
+const buildDefaultBanners = (locales: string[]) =>
   locales.flatMap((locale) =>
     Array.from({ length: 2 }, () => ({
       text: '',
@@ -28,7 +26,7 @@ const buildDefaultBanners = () =>
     }))
   );
 
-const buildDefaultInfoCards = () =>
+const buildDefaultInfoCards = (locales: string[]) =>
   locales.flatMap((locale) =>
     Array.from({ length: 3 }, () => ({
       title: '',
@@ -39,7 +37,7 @@ const buildDefaultInfoCards = () =>
     }))
   );
 
-const buildDefaultMainBanners = () =>
+const buildDefaultMainBanners = (locales: string[]) =>
   locales.map((locale) => ({
     imagesUrl: [],
     title: '',
@@ -50,7 +48,11 @@ const buildDefaultMainBanners = () =>
     locale,
   }));
 
-const ensurePerLocale = <T extends { locale: string }>(items: T[] = [], defaults: T[]) =>
+const ensurePerLocale = <T extends { locale: string }>(
+  items: T[] = [],
+  defaults: T[],
+  locales: string[]
+) =>
   locales.flatMap((locale) => {
     const lc = locale.toLowerCase();
     const existing = items.filter((i) => i.locale.toLowerCase() === lc);
@@ -62,6 +64,7 @@ const ensurePerLocale = <T extends { locale: string }>(items: T[] = [], defaults
 
 export const useHomePageContentForm = () => {
   const toast = useToast();
+  const locales = useLocales();
   const { data, isLoading } = useHomePageContent();
   const updateContent = useUpdateHomePageContent();
 
@@ -72,12 +75,12 @@ export const useHomePageContentForm = () => {
   const footer = useImageManager(undefined, { multiple: false });
 
   const form = useForm<HomePageFormValues>({
-    resolver: zodResolver(homePageSchema),
+    resolver: zodResolver(buildHomePageSchema(locales)),
     defaultValues: {
-      banners: buildDefaultBanners(),
-      infoCards: buildDefaultInfoCards(),
+      banners: buildDefaultBanners(locales),
+      infoCards: buildDefaultInfoCards(locales),
       galleryImages: [],
-      mainBanners: buildDefaultMainBanners(),
+      mainBanners: buildDefaultMainBanners(locales),
     },
     mode: 'onChange',
     criteriaMode: 'all',
@@ -93,7 +96,7 @@ export const useHomePageContentForm = () => {
   useEffect(() => {
     if (!data) return;
 
-    const normalizedBanners = ensurePerLocale(data.banners, buildDefaultBanners());
+    const normalizedBanners = ensurePerLocale(data.banners, buildDefaultBanners(locales), locales);
 
     const slotUrls: Record<number, string | undefined> = {};
     locales.forEach((loc) => {
@@ -112,9 +115,9 @@ export const useHomePageContentForm = () => {
 
     reset({
       banners: normalizedBanners,
-      infoCards: ensurePerLocale(data.infoCards, buildDefaultInfoCards()),
+      infoCards: ensurePerLocale(data.infoCards, buildDefaultInfoCards(locales), locales),
       galleryImages: data.galleryImages ?? [],
-      mainBanners: ensurePerLocale(data.mainBanners, buildDefaultMainBanners()),
+      mainBanners: ensurePerLocale(data.mainBanners, buildDefaultMainBanners(locales), locales),
     });
   }, [data, reset]);
 

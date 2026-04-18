@@ -12,7 +12,7 @@ import {
 } from '@baby-toys/ui-kit';
 import { Control } from 'react-hook-form';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
-import { getSupportedLocales } from '../../i18n/locale';
+import { useLocales } from '../../hooks/useLocales';
 import { HomePageFormValues } from './homePage.helper';
 import { BannerTextAlignment, VerticalAlignment } from '../../api/types/homePage';
 
@@ -40,7 +40,7 @@ const BannersSection: React.FC<Props> = ({
   banner2UploaderProps,
 }) => {
   const { t } = useTranslation();
-  const locales = getSupportedLocales();
+  const locales = useLocales();
 
   const renderSlot = (slotIndex: 0 | 1) => (
     <Card fullWidth>

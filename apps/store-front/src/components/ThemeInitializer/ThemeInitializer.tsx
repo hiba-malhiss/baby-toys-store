@@ -3,7 +3,7 @@ import { useStoreFrontThemeSettings } from '../../api/settingsApi';
 import { applyThemeSettings } from '../../utils/theme.utils';
 
 /**
- * Fetches theme settings from the backend and applies them as CSS variables on the document root.
+ * Fetches theme settings from the backend and applies CSS variable overrides.
  * Renders nothing — purely a side-effect component mounted once near the app root.
  */
 const ThemeInitializer: React.FC = () => {

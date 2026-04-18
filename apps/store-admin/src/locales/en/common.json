@@ -1018,5 +1018,34 @@
       "new": "NEW",
       "noData": "—"
     }
+  },
+  "diagram": {
+    "button": "How it works",
+    "title": "Product Data Model",
+    "description": "This diagram shows how Categories, Products, Attributes, Options, and Variants relate to each other.",
+    "category": "Category",
+    "categoryHint": "e.g. Toys, Clothing",
+    "product": "Product",
+    "productHint": "name, price, images",
+    "attributes": "Attributes",
+    "attributesHint": "Material, Brand…",
+    "attributesNote": "for filtering & display",
+    "options": "Options",
+    "optionsHint": "Size (S, M, L)",
+    "optionsHint2": "Color (Red, Blue)",
+    "variants": "Variants",
+    "variantsHint": "S/Red: £12, 5 in stock",
+    "variantsNote": "own price, stock, image",
+    "arrowHas": "has",
+    "arrowGenerate": "generate",
+    "step1": "Step 1",
+    "step1Label": "Create categories",
+    "step2": "Step 2",
+    "step2Label": "Add products & assign category",
+    "step3": "Step 3",
+    "step3Label": "Add attributes & options to product",
+    "tipTitle": "💡 Quick tip",
+    "tipLine1": "Set up Attribute Types and Option Types first",
+    "tipLine2": "(in the sidebar menus) before creating products."
   }
 }

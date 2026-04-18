@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Dialog,
   StringInput,
@@ -17,7 +17,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import type { Category } from '../../api/types/category';
 import {
-  categorySchema,
+  buildCategorySchema,
   defaultCategoryValues,
   type CategoryFormValues,
 } from './categories.helper.ts';
@@ -29,7 +29,7 @@ import {
   useCategoryAdmin,
 } from '../../api/categoryApi';
 import { Flex } from '@baby-toys/ui-kit';
-import { getSupportedLocales } from '../../i18n/locale.ts';
+import { useLocales } from '../../hooks/useLocales';
 import { useTranslation } from 'react-i18next';
 
 interface CategoryDialogProps {
@@ -54,6 +54,9 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
   const [imagePreview, setImagePreview] = useState<string | null>(category?.imageUrl || null);
   const { data: adminCategory } = useCategoryAdmin(category?.id);
 
+  const locales = useLocales();
+  const schema = useMemo(() => buildCategorySchema(), [locales]);
+
   const {
     control,
     handleSubmit,
@@ -63,8 +66,8 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     setValue,
     watch,
   } = useForm<CategoryFormValues>({
-    resolver: zodResolver(categorySchema),
-    defaultValues: defaultCategoryValues,
+    resolver: zodResolver(schema),
+    defaultValues: defaultCategoryValues(),
     mode: 'onChange',
     criteriaMode: 'all',
   });
@@ -82,20 +85,20 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       adminCategory.translations?.forEach(
         (t) => t?.locale && trMap.set(String(t.locale).toLowerCase(), t)
       );
-      const en = trMap.get('en') || {};
-      const ar = trMap.get('ar') || {};
       reset({
         imageUrl: adminCategory.imageUrl || '',
         isMain: adminCategory.isMain ?? false,
         isActive: adminCategory.isActive ?? true,
-        translations: {
-          en: { name: en.name || '', description: en.description || '' },
-          ar: { name: ar.name || '', description: ar.description || '' },
-        },
+        translations: Object.fromEntries(
+          locales.map((l) => {
+            const tr = trMap.get(l.toLowerCase()) || {};
+            return [l, { name: tr.name || '', description: tr.description || '' }];
+          })
+        ),
       });
       setImagePreview(adminCategory.imageUrl || null);
     } else if (!category?.id) {
-      reset(defaultCategoryValues);
+      reset(defaultCategoryValues());
       setImagePreview(null);
     }
     setImageFile(null);
@@ -103,6 +106,9 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
 
   const submitForm = async (data: CategoryFormValues) => {
     try {
+      // Ensure translations object exists
+      const translations = data.translations || {};
+      
       const payload = {
         imageUrl: data.imageUrl || undefined,
         isMain: data.isMain ?? false,
@@ -110,13 +116,13 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
         translations: [
           {
             locale: 'en',
-            name: data.translations.en.name,
-            description: data.translations.en.description || '',
+            name: translations.en?.name || '',
+            description: translations.en?.description || '',
           },
           {
             locale: 'ar',
-            name: data.translations.ar.name,
-            description: data.translations.ar.description || '',
+            name: translations.ar?.name || '',
+            description: translations.ar?.description || '',
           },
         ],
       };
@@ -179,14 +185,14 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
       <Flex direction="vertical" spacing="m" fullWidth>
         <TabBar
           size="small"
-          tabs={getSupportedLocales().map((l) => ({
+          tabs={locales.map((l) => ({
             header: `${l.toUpperCase()} (${l})`,
             value: l,
           }))}
-          defaultSelected={getSupportedLocales()[0]}
+          defaultSelected={locales[0]}
           fullWidth
         >
-          {getSupportedLocales().map((l) => (
+          {locales.map((l) => (
             <TabBarItem key={l} value={l}>
               <FormFieldWrapper
                 name={`translations.${l}.name`}

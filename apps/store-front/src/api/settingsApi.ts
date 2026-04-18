@@ -32,6 +32,9 @@ export type ThemeSettings = {
   accentColor?: string;
   secondaryColor?: string;
   fontFamily?: string;
+  footerImageUrl?: string;
+  logoUrl?: string;
+  translationEnabled?: boolean;
 };
 
 export const useStoreSettings = () =>

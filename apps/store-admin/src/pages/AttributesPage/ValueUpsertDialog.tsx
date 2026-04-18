@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { Dialog, Flex, Button, StringInput, Toggle, useToast } from '@baby-toys/ui-kit';
 
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
-import { getSupportedLocales } from '../../i18n/locale';
+import { useLocales } from '../../hooks/useLocales';
 import { useCreateAttributeValue, useUpdateAttributeValue } from '../../api/attributeApi';
 import { AttributeValueAdminDto } from '../../api/types/attribute.ts';
 
@@ -45,11 +45,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
   const isEdit = mode === 'edit';
   const toast = useToast();
 
-  // ✅ ensure locales are valid record keys (non-empty strings)
-  const locales = useMemo(() => {
-    const raw = getSupportedLocales();
-    return (raw || []).map((x: any) => String(x ?? '').trim()).filter((x: string) => x.length > 0);
-  }, []);
+  const locales = useLocales();
 
   const createHook = useCreateAttributeValue(typeId || 0);
   const updateHook = useUpdateAttributeValue(typeId); // cache invalidation

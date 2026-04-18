@@ -7,7 +7,7 @@ import { Dialog, Flex, Button, StringInput, Toggle } from '@baby-toys/ui-kit';
 
 import { useToast } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
-import { getSupportedLocales } from '../../i18n/locale';
+import { useLocales } from '../../hooks/useLocales';
 import {
   useAttributeTypeAdmin,
   useCreateAttributeType,
@@ -47,11 +47,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   const toast = useToast();
   const isEdit = mode === 'edit';
 
-  // ✅ ensure locales are valid record keys (non-empty strings)
-  const locales = useMemo(() => {
-    const raw = getSupportedLocales();
-    return (raw || []).map((x: any) => String(x ?? '').trim()).filter((x: string) => x.length > 0);
-  }, []);
+  const locales = useLocales();
 
   const { data: typeAdmin } = useAttributeTypeAdmin(isEdit ? typeId : undefined);
 

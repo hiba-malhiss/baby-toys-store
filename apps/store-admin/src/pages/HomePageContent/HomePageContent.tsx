@@ -9,7 +9,7 @@ import {
   ImageUploader,
 } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
-import { getSupportedLocales } from '../../i18n/locale';
+import { useLocales } from '../../hooks/useLocales';
 import { useHomePageContentForm } from './useHomePageContentForm';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import BannersSection from './BannersSection';
@@ -35,7 +35,7 @@ const HomePageContent: React.FC = () => {
     errors,
   } = useHomePageContentForm();
 
-  const locales = getSupportedLocales();
+  const locales = useLocales();
 
   return (
     <AdminLayout isLoading={isLoading}>

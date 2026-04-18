@@ -28,7 +28,7 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { settingsSchema, SettingsFormValues } from './settings-page.util';
-import { getSupportedLocales } from '../../i18n/locale.ts';
+import { useLocales } from '../../hooks/useLocales';
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
 import ThemeSection from './ThemeSection';
@@ -106,7 +106,7 @@ const SettingsPage: React.FC = () => {
   const { data: themeData } = useThemeSettings();
   const upsertMutation = useUpsertStoreSettings();
 
-  const locales = useMemo(() => getSupportedLocales(), []);
+  const locales = useLocales();
 
   const defaultValues = useMemo(
     () => ({
@@ -132,37 +132,29 @@ const SettingsPage: React.FC = () => {
   const [activeContactTab, setActiveContactTab] = useState(locales[0]);
   const [activePoliciesTab, setActivePoliciesTab] = useState(locales[0]);
 
-  // Load general + contact + policies settings
   useEffect(() => {
-    if (!settingsMap) return;
-    const localeKeys = Object.keys(settingsMap);
+    if (!settingsMap && !themeData) return;
+    const localeKeys = settingsMap ? Object.keys(settingsMap) : [];
     const base = localeKeys.length > 0 ? settingsMap[localeKeys[0]] : undefined;
 
-    reset((prev) => ({
-      ...prev,
+    reset({
       general: base?.general ?? emptyGeneral,
-      contact: Object.fromEntries(locales.map((l) => [l, settingsMap[l]?.contact ?? emptyContact])),
+      contact: Object.fromEntries(
+        locales.map((l) => [l, settingsMap?.[l]?.contact ?? emptyContact])
+      ),
       policies: Object.fromEntries(
-        locales.map((l) => [l, settingsMap[l]?.policies ?? emptyPolicies])
+        locales.map((l) => [l, settingsMap?.[l]?.policies ?? emptyPolicies])
       ),
       policiesGlobal: base?.policies ?? emptyPoliciesGlobal,
-    }));
-  }, [settingsMap, reset, locales]);
-
-  // Load theme settings separately
-  useEffect(() => {
-    if (!themeData) return;
-    reset((prev) => ({
-      ...prev,
       theme: {
-        primaryColor: themeData.primaryColor ?? emptyTheme.primaryColor,
-        accentColor: themeData.accentColor ?? emptyTheme.accentColor,
-        secondaryColor: themeData.secondaryColor ?? emptyTheme.secondaryColor,
-        fontFamily: themeData.fontFamily ?? emptyTheme.fontFamily,
-        translationEnabled: themeData.translationEnabled ?? emptyTheme.translationEnabled,
+        primaryColor: themeData?.primaryColor ?? emptyTheme.primaryColor,
+        accentColor: themeData?.accentColor ?? emptyTheme.accentColor,
+        secondaryColor: themeData?.secondaryColor ?? emptyTheme.secondaryColor,
+        fontFamily: themeData?.fontFamily ?? emptyTheme.fontFamily,
+        translationEnabled: themeData?.translationEnabled ?? emptyTheme.translationEnabled,
       },
-    }));
-  }, [themeData, reset]);
+    });
+  }, [settingsMap, themeData]);
 
   // Live preview: apply theme immediately as admin changes colors/font
   const watchedTheme = watch('theme');

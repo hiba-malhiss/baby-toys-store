@@ -42,6 +42,39 @@ export type ThemeSettings = {
   accentColor?: string;
   secondaryColor?: string;
   fontFamily?: string;
+  footerImageUrl?: string;
+  logoUrl?: string;
+};
+
+export const useUploadLogo = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (file: File) => {
+      const formData = new FormData();
+      formData.append('file', file);
+      const { data } = await api.post<ApiEnvelope<{ url: string }>>(
+        '/api/admin/store-settings/logo',
+        formData,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
+      );
+      return data.data.url;
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['storeSettings', 'theme'] });
+    },
+  });
+};
+
+export const useDeleteLogo = () => {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: async (fileUrl: string) => {
+      await api.delete('/api/admin/store-settings/logo', { params: { fileUrl } });
+    },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['storeSettings', 'theme'] });
+    },
+  });
 };
 
 export const useAdminStoreSettingsMap = () =>
