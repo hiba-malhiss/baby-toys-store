@@ -165,6 +165,7 @@ const SettingsPage: React.FC = () => {
         accentColor: watchedTheme.accentColor,
         secondaryColor: watchedTheme.secondaryColor,
         fontFamily: watchedTheme.fontFamily,
+        themeName: watchedTheme.themeName,
       });
     }
   }, [watchedTheme]);

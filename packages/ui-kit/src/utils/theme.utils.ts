@@ -112,46 +112,41 @@ function lightenHex(hex: string, factor: number): string {
 export function applyThemeSettings(settings: ThemeSettings): void {
   const root = document.documentElement;
 
-  // If themeName is selected, use preset settings and ignore individual settings
-  let themeToApply: Omit<ThemeSettings, 'themeName'> = {};
+  // Remove any existing theme classes
+  root.classList.remove('theme-kids', 'theme-elegant', 'theme-luxury');
 
+  // Apply theme class if themeName is selected
+  if (settings.themeName) {
+    root.classList.add(settings.themeName);
+  }
+
+  // Apply individual settings only if no theme is selected
   if (!settings.themeName) {
-    // Use individual settings
-    themeToApply = {
-      primaryColor: settings.primaryColor,
-      accentColor: settings.accentColor,
-      secondaryColor: settings.secondaryColor,
-      fontFamily: settings.fontFamily,
-    };
-  }
+    if (settings.primaryColor) {
+      root.style.setProperty('--color-primary', settings.primaryColor);
+      root.style.setProperty('--color-primary-dark', darkenHex(settings.primaryColor, 0.1));
+      root.style.setProperty('--color-primary-hover', darkenHex(settings.primaryColor, 0.2));
+      root.style.setProperty('--color-primary-light', lightenHex(settings.primaryColor, 0.88));
+    }
 
-  if (themeToApply.primaryColor) {
-    root.style.setProperty('--color-primary', themeToApply.primaryColor);
-    root.style.setProperty('--color-primary-dark', darkenHex(themeToApply.primaryColor, 0.1));
-    root.style.setProperty('--color-primary-hover', darkenHex(themeToApply.primaryColor, 0.2));
-    root.style.setProperty('--color-primary-light', lightenHex(themeToApply.primaryColor, 0.88));
-  }
+    if (settings.accentColor) {
+      root.style.setProperty('--color-accent', settings.accentColor);
+      root.style.setProperty('--color-accent-hover', darkenHex(settings.accentColor, 0.1));
+      root.style.setProperty('--color-accent-light', lightenHex(settings.accentColor, 0.88));
+      root.style.setProperty('--color-accent-dark', darkenHex(settings.accentColor, 0.2));
+    }
 
-  if (themeToApply.accentColor) {
-    root.style.setProperty('--color-accent', themeToApply.accentColor);
-    root.style.setProperty('--color-accent-hover', darkenHex(themeToApply.accentColor, 0.1));
-    root.style.setProperty('--color-accent-light', lightenHex(themeToApply.accentColor, 0.88));
-    root.style.setProperty('--color-accent-dark', darkenHex(themeToApply.accentColor, 0.2));
-  }
+    if (settings.secondaryColor) {
+      root.style.setProperty('--color-secondary', settings.secondaryColor);
+      root.style.setProperty('--color-secondary-hover', darkenHex(settings.secondaryColor, 0.1));
+      root.style.setProperty('--color-secondary-dark', darkenHex(settings.secondaryColor, 0.2));
+      root.style.setProperty('--color-secondary-light', lightenHex(settings.secondaryColor, 0.85));
+    }
 
-  if (themeToApply.secondaryColor) {
-    root.style.setProperty('--color-secondary', themeToApply.secondaryColor);
-    root.style.setProperty('--color-secondary-hover', darkenHex(themeToApply.secondaryColor, 0.1));
-    root.style.setProperty('--color-secondary-dark', darkenHex(themeToApply.secondaryColor, 0.2));
-    root.style.setProperty(
-      '--color-secondary-light',
-      lightenHex(themeToApply.secondaryColor, 0.85)
-    );
-  }
-
-  if (themeToApply.fontFamily) {
-    root.style.setProperty('--font-primary', themeToApply.fontFamily);
-    loadGoogleFont(themeToApply.fontFamily);
+    if (settings.fontFamily) {
+      root.style.setProperty('--font-primary', settings.fontFamily);
+      loadGoogleFont(settings.fontFamily);
+    }
   }
 
   // Add wave.svg background only for kids theme
