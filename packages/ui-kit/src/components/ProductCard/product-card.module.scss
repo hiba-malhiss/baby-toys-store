@@ -5,10 +5,14 @@
   gap: 18px;
   width: 100%;
   transition:
-    $transition-transform,
-    box-shadow $transition-normal;
+    transform 0.22s cubic-bezier(0, 0, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0, 0, 0.3, 1);
 
   @include animate-fade-in-up();
+
+  &:active {
+    transform: translateY(-2px);
+  }
 
   &.fullWidth {
     max-width: 100%;
@@ -154,14 +158,18 @@
     margin-bottom: 12px;
   }
 
-  // Remove hover effect from the whole card
+  // Image box - clip the scale-up inside rounded corners
+  &-box {
+    border-radius: $radius-md;
+    overflow: hidden;
+  }
 
-  &-box:hover {
-    box-shadow: $shadow-hover;
+  &-imageWrapper {
+    overflow: hidden;
 
     img {
-      transform: scale(1.05);
-      transition: $transition-transform;
+      transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
+      will-change: transform;
     }
   }
 
@@ -172,8 +180,10 @@
 
   &--vertical .productCard-buttons {
     opacity: 0;
-    transform: translateY(-10px);
-    transition: $transition-all;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
   }
 
   &--vertical:hover .productCard-buttons {
@@ -189,8 +199,10 @@
 
   &-buttons {
     opacity: 0;
-    transform: translateY(-10px);
-    transition: $transition-all;
+    transform: translateY(-8px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
   }
 
   // 📱 GROUPED RESPONSIVE STYLES

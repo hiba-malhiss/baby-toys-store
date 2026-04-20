@@ -334,6 +334,9 @@ export const SideFilters: React.FC<Props> = ({ className, onFiltersChange, isDra
   );
 
   if (isLoadingFilters) {
+    if (isDrawer) {
+      return <BouncingDotsLoader size="small" />;
+    }
     return (
       <Card className={className} header={t('filters.header')} withoutBorder size="xsmall">
         <BouncingDotsLoader size="medium" className="bts-marginTl" />

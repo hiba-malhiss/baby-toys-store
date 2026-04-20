@@ -70,6 +70,7 @@ const emptyTheme = {
   secondaryColor: '#7f7f7f',
   fontFamily: "'Comfortaa', sans-serif",
   translationEnabled: true,
+  themeName: '',
 };
 
 const TIMEZONE_OPTIONS = [
@@ -126,9 +127,7 @@ const SettingsPage: React.FC = () => {
     criteriaMode: 'all',
   });
 
-  const {
- control, handleSubmit, reset, setValue, clearErrors, watch 
-} = form;
+  const { control, handleSubmit, reset, setValue, clearErrors, watch } = form;
   const [activeContactTab, setActiveContactTab] = useState(locales[0]);
   const [activePoliciesTab, setActivePoliciesTab] = useState(locales[0]);
 
@@ -152,6 +151,7 @@ const SettingsPage: React.FC = () => {
         secondaryColor: themeData?.secondaryColor ?? emptyTheme.secondaryColor,
         fontFamily: themeData?.fontFamily ?? emptyTheme.fontFamily,
         translationEnabled: themeData?.translationEnabled ?? emptyTheme.translationEnabled,
+        themeName: themeData?.themeName ?? '',
       },
     });
   }, [settingsMap, themeData]);
@@ -212,14 +212,31 @@ const SettingsPage: React.FC = () => {
             : String(value ?? ''),
       })),
       // Theme (global, no locale)
-      { section: 'THEME' as const, key: 'primaryColor', value: values.theme.primaryColor ?? '' },
-      { section: 'THEME' as const, key: 'accentColor', value: values.theme.accentColor ?? '' },
-      {
-        section: 'THEME' as const,
-        key: 'secondaryColor',
-        value: values.theme.secondaryColor ?? '',
-      },
-      { section: 'THEME' as const, key: 'fontFamily', value: values.theme.fontFamily ?? '' },
+      ...(values.theme.themeName
+        ? [
+            // Only send themeName when preset is selected
+            { section: 'THEME' as const, key: 'themeName', value: values.theme.themeName },
+          ]
+        : [
+            // Send individual theme settings only when no preset is selected
+            {
+              section: 'THEME' as const,
+              key: 'primaryColor',
+              value: values.theme.primaryColor ?? '',
+            },
+            {
+              section: 'THEME' as const,
+              key: 'accentColor',
+              value: values.theme.accentColor ?? '',
+            },
+            {
+              section: 'THEME' as const,
+              key: 'secondaryColor',
+              value: values.theme.secondaryColor ?? '',
+            },
+            { section: 'THEME' as const, key: 'fontFamily', value: values.theme.fontFamily ?? '' },
+          ]),
+      // Always send translationEnabled
       {
         section: 'THEME' as const,
         key: 'translationEnabled',

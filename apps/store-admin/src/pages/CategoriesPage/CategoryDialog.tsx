@@ -108,7 +108,7 @@ const CategoryDialog: React.FC<CategoryDialogProps> = ({
     try {
       // Ensure translations object exists
       const translations = data.translations || {};
-      
+
       const payload = {
         imageUrl: data.imageUrl || undefined,
         isMain: data.isMain ?? false,

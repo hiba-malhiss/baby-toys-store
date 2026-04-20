@@ -42,6 +42,10 @@ const Carousel: React.FC<CarouselProps> = ({
   const intervalRef = useRef<any>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
 
+  // Touch/swipe state
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+
   const totalItems = items.length;
   const visibleSlides = isAutoPlay ? 1 : visible;
   const totalPages = isAutoPlay ? totalItems : Math.max(totalItems - visibleSlides + 1, 1);
@@ -55,6 +59,7 @@ const Carousel: React.FC<CarouselProps> = ({
     }
   })();
 
+  // Responsive: update visible count on resize
   useEffect(() => {
     if (!responsiveOptions?.length || isAutoPlay) return;
 
@@ -87,7 +92,7 @@ const Carousel: React.FC<CarouselProps> = ({
   const directionalNext = isHorizontal && isRtl ? prevSlide : nextSlide;
   const directionalPrev = isHorizontal && isRtl ? nextSlide : prevSlide;
 
-  // Autoplay (auto-play = 3s)
+  // Autoplay (auto-play appearance = 3s)
   useEffect(() => {
     const intervalTime = isAutoPlay ? 3000 : autoplayInterval;
 
@@ -109,6 +114,34 @@ const Carousel: React.FC<CarouselProps> = ({
       : `translateY(-${percentage}%)`;
   };
 
+  // ── Touch / swipe handlers ──────────────────────────────────────────────────
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartX.current === null || touchStartY.current === null) return;
+
+    const deltaX = e.changedTouches[0].clientX - touchStartX.current;
+    const deltaY = e.changedTouches[0].clientY - touchStartY.current;
+    const SWIPE_THRESHOLD = 40;
+
+    if (isHorizontal) {
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > SWIPE_THRESHOLD) {
+        deltaX < 0 ? directionalNext() : directionalPrev();
+      }
+    } else {
+      if (Math.abs(deltaY) > Math.abs(deltaX) && Math.abs(deltaY) > SWIPE_THRESHOLD) {
+        deltaY < 0 ? nextSlide() : prevSlide();
+      }
+    }
+
+    touchStartX.current = null;
+    touchStartY.current = null;
+  };
+  // ───────────────────────────────────────────────────────────────────────────
+
   return (
     <div
       className={clsx(
@@ -121,6 +154,8 @@ const Carousel: React.FC<CarouselProps> = ({
       )}
       style={{ height: orientation === 'vertical' ? verticalViewPortHeight : 'auto' }}
       ref={carouselRef}
+      onTouchStart={handleTouchStart}
+      onTouchEnd={handleTouchEnd}
     >
       {!isAutoPlay && showNavigation && (
         <Button
@@ -151,7 +186,8 @@ const Carousel: React.FC<CarouselProps> = ({
                   styles.carouselItem,
                   isAutoPlay && styles.carouselHeroItem,
                   isAutoPlay && isActive && styles.carouselHeroItemActive,
-                  ((isAutoPlay && items.length === 1) || (!isAutoPlay && visibleSlides === 1)) && styles.carouselItemNoPadding
+                  ((isAutoPlay && items.length === 1) || (!isAutoPlay && visibleSlides === 1)) &&
+                    styles.carouselItemNoPadding
                 )}
                 style={
                   isAutoPlay
@@ -181,7 +217,7 @@ const Carousel: React.FC<CarouselProps> = ({
         />
       )}
 
-      {/* ✅ AUTO-PLAY DOTS */}
+      {/* AUTO-PLAY DOTS */}
       {isAutoPlay && items?.length > 1 && (
         <div className={styles.carouselDots}>
           {items.map((_, index) => (
@@ -192,6 +228,7 @@ const Carousel: React.FC<CarouselProps> = ({
                 index === currentPage && styles.carouselDotActive
               )}
               onClick={() => goToIndex(index)}
+              aria-label={`Go to slide ${index + 1}`}
             />
           ))}
         </div>

@@ -565,5 +565,5 @@ cd /opt/toystore-docker
 docker compose restart nginx
 ```
 
- cd /opt/toy-store-infra
- git pull
+cd /opt/toy-store-infra
+git pull

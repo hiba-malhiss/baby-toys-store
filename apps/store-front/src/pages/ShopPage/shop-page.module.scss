@@ -1,47 +1,105 @@
-$gap: 40px;
+$sidebar-width: 280px;
+$gap: 32px;
 
 .shopPage {
-  column-gap: $gap !important;
   display: grid;
-  grid-template-columns: 300px calc(100% - 300px - $gap);
+  grid-template-columns: $sidebar-width 1fr;
+  column-gap: $gap;
   width: 100%;
+  align-items: start;
 
   &-rightSide {
-    max-height: 100%;
+    position: sticky;
+    top: 16px;
+    max-height: calc(100vh - 32px);
     overflow-y: auto;
-    width: 300px;
-    align-self: stretch;
+    width: $sidebar-width;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-border, $color-border) transparent;
+    padding-bottom: 16px;
+    animation: fadeInLeft 0.3s cubic-bezier(0, 0, 0.3, 1);
+
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: var(--color-border, $color-border);
+      border-radius: 4px;
+    }
   }
 
   &-collection {
     flex: 1;
-    padding-bottom: 40px;
+    padding-bottom: 48px;
+    animation: fadeIn 0.3s ease;
   }
 
   &-youMayAlsoLike {
-    grid-column: 1/-1;
+    grid-column: 1 / -1;
   }
 
   &-select {
-    min-width: 200px;
+    min-width: 180px;
     width: auto;
   }
 
   &-filterIcon {
     display: none;
   }
+
+  &-filterDrawerBtn {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border: 1px solid var(--color-border, $color-border);
+    border-radius: $radius-sm;
+    background: var(--color-white, white);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background 0.15s ease,
+      border-color 0.15s ease;
+
+    &:hover {
+      background: var(--color-bg-secondary, $color-bg-secondary);
+      border-color: var(--color-primary, $color-primary);
+    }
+  }
 }
 
 @media (max-width: $breakpoint-large) {
   .shopPage {
-    grid-template-columns: 100%;
+    grid-template-columns: 1fr;
+    column-gap: 0;
   }
 
   .shopPage-rightSide {
     display: none;
   }
 
-  .shopPage-filterIcon {
-    display: block;
+  .shopPage-filterIcon,
+  .shopPage-filterDrawerBtn {
+    display: flex;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes fadeInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

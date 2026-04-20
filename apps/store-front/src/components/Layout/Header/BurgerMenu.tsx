@@ -8,7 +8,7 @@ import { useWishlistCount } from '../../../api/wishlistApi.ts';
 import { useTranslation } from 'react-i18next';
 import { useAuth } from '../../../context/AuthContext.tsx';
 import AuthButtonsWithDialogs from './AuthButtons.tsx';
-import { useLogo } from "../../../hooks/useLogo.ts";
+import { useLogo } from '../../../hooks/useLogo.ts';
 
 const BurgerMenu = () => {
   const navigate = useNavigate();

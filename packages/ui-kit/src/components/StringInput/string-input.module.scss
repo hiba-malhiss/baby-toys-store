@@ -1,3 +1,9 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
 .fullWidth {
   width: 100% !important;
 }
@@ -6,19 +12,30 @@
   display: grid;
   align-items: center;
   justify-items: center;
-  width: max-content;
+  width: 100%; // responsive by default — no more max-content
   position: relative;
 
   &--rightIcon {
     direction: rtl;
   }
 
+  // Icon column is a fixed "slot"; input takes the rest
   &--mediumSize {
     grid-template-columns: 44px 1fr;
   }
 
   &--smallSize {
     grid-template-columns: 27px 1fr;
+  }
+
+  &--largeSize {
+    grid-template-columns: 52px 1fr;
+  }
+
+  // When there is no icon, collapse the icon column so the input fills everything
+  &--leftIcon:not(:has(.icon)),
+  &--rightIcon:not(:has(.icon)) {
+    grid-template-columns: 1fr;
   }
 
   &--fullWidth {
@@ -65,6 +82,9 @@
     border-radius: 14px;
     margin-left: 1px;
     margin-right: 1px;
+    // Prevent icon from shrinking or overflowing
+    flex-shrink: 0;
+    min-width: 0;
   }
 
   .iconButton {
@@ -88,6 +108,10 @@
     &--smallSize {
       width: 27px;
     }
+
+    &--largeSize {
+      width: 52px;
+    }
   }
 
   &.isRounded {
@@ -100,13 +124,17 @@
     }
   }
 
-  // Input styles
+  // ─── Input ──────────────────────────────────────────────────────────────────
   .input {
     color: var(--color-text-primary, $color-text-primary);
     direction: ltr;
-    grid-column: 1/-1;
+    grid-column: 1/-1; // span full grid width — icon overlays via absolute/grid stacking
     grid-row: 1/2;
+
+    // KEY FIX: always fill the container; never use a hard pixel width
     width: 100%;
+    min-width: 0; // allow shrinking below implicit content size in flex/grid parents
+
     @include form-input-base();
 
     &.inputTruncate {
@@ -127,41 +155,51 @@
       @include form-input-small();
     }
 
-    &.has-error {
+    &.hasError {
       border: 1.5px solid var(--color-error, $color-error) !important;
     }
 
-    &[type='date'] {
-      padding: 8px 12px 7px 12px;
-      line-height: 21px;
-      width: 200px;
-    }
-
+    // date / time: fluid widths instead of fixed px
+    &[type='date'],
     &[type='time'] {
       padding: 8px 12px 7px 12px;
       line-height: 21px;
-      width: 144px;
+      width: 100%; // was 200px / 144px — now responsive
+      min-width: 0;
     }
 
+    // All other types: full width, no fixed 188px
     &:not([type='date']):not([type='time']) {
-      width: 188px;
+      width: 100%;
+      min-width: 0;
     }
 
     &::placeholder {
       color: var(--color-text-muted, $color-text-muted);
     }
 
-    &:not(:focus):not(:hover).has-error {
+    &:not(:focus):not(:hover).hasError {
       border-color: var(--color-error, $color-error);
     }
 
-    &.has-icon {
+    &.isDisabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      pointer-events: none;
+    }
+
+    // Icon padding — uses em-based approach so it scales with font-size
+    &.hasIcon {
       &.mediumSize-leftIcon {
         padding-left: 48px;
       }
 
       &.smallSize-leftIcon {
         padding-left: 28px;
+      }
+
+      &.largeSize-leftIcon {
+        padding-left: 56px;
       }
 
       &.mediumSize-rightIcon {
@@ -171,22 +209,51 @@
       &.smallSize-rightIcon {
         padding-right: 28px;
       }
+
+      &.largeSize-rightIcon {
+        padding-right: 56px;
+      }
     }
   }
 
+  // Hide native number spinners
   input[type='number']::-webkit-inner-spin-button,
   input[type='number']::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
+
+  input[type='number'] {
+    -moz-appearance: textfield;
+  }
 }
 
-// Autocomplete suggestions popover
+// Wrapper that makes the whole component full-width inside its parent
+.stringInputFullWidth {
+  width: 100%;
+
+  .stringInput {
+    width: 100%;
+  }
+}
+
+// Number input with +/- controls
+.stringInputWithControls {
+  .input {
+    padding-left: 44px !important;
+    padding-right: 44px !important;
+    text-align: center;
+  }
+}
+
+// ─── Autocomplete suggestions popover ────────────────────────────────────────
 .suggestions {
   display: block;
-  min-width: 200px;
+  // Width tracks the anchor (handled by Popover), so no min-width needed
+  width: 100%;
+  min-width: 160px;
+  max-width: min(420px, 90vw); // never overflows narrow viewports
   max-height: 280px;
-  max-width: 75vw;
   overflow-y: auto;
   padding: 4px 0;
   z-index: $z-popover;
@@ -198,11 +265,17 @@
     text-align: left;
     background: transparent;
     border: none;
-    padding: 12px;
+    padding: 10px 14px;
     cursor: pointer;
     color: var(--color-text-primary, $color-text-primary);
     font-size: 14px;
-    transition: background-color 0.2s ease;
+    line-height: 1.4;
+    transition: background-color 0.15s ease;
+
+    // Prevent long labels from breaking layout
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 
     &:hover,
     &.suggestionItemActive {
@@ -211,20 +284,23 @@
 
     strong {
       color: var(--color-primary, $color-primary);
-      font-weight: bold;
+      font-weight: 600;
     }
   }
 }
 
-// Input counter
+// ─── Character counter ────────────────────────────────────────────────────────
 .stringInputCounter {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--color-text-muted, $color-text-muted);
   margin-top: 4px;
   text-align: right;
+  // Ensure it never forces a wider width than its parent
+  width: 100%;
+  min-width: 0;
 }
 
-// Hide scrollbars (for suggestions)
+// ─── Hide scrollbars ──────────────────────────────────────────────────────────
 .bts-hideScrollbar {
   overflow: auto;
   scrollbar-width: none;

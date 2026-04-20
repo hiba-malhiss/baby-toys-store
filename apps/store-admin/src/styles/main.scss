@@ -1,9 +1,11 @@
 @forward '@baby-toys/ui-kit/styles/spacing';
 @forward '@baby-toys/ui-kit/styles/css-reset';
+@forward '@baby-toys/ui-kit/theme/theme';
 
 body {
-  font-family: 'Comfortaa', sans-serif !important;
+  font-family: var(--font-primary, 'Comfortaa', sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: $color-text-primary;
+  color: var(--color-text-primary, $color-text-primary);
+  background-color: var(--color-bg-secondary, $color-bg-secondary);
 }

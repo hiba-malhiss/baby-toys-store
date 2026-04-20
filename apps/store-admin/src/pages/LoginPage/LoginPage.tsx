@@ -9,7 +9,7 @@ import { useAuth } from '../../context/AuthContext';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import styles from './login-page.module.scss';
 import { setAccessToken } from '../../api/axiosConfig.ts';
-import { useLogo } from "../../hooks/useLogo.ts";
+import { useLogo } from '../../hooks/useLogo.ts';
 
 // Zod schema for validation
 const loginSchema = z.object({

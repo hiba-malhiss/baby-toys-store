@@ -12,7 +12,7 @@ import {
 import { useStoreSettings } from '../../../api/settingsApi';
 import { handleFooterSocialClick } from '../../../utils/share.ts';
 import { useTranslation } from 'react-i18next';
-import { useLogo } from "../../../hooks/useLogo.ts";
+import { useLogo } from '../../../hooks/useLogo.ts';
 
 const Footer = () => {
   const navigate = useNavigate();

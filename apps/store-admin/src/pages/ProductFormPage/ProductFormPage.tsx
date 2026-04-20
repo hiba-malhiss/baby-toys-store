@@ -134,7 +134,9 @@ const ProductFormPage: React.FC = () => {
                 <Flex align="center">
                   <Heading level="h4">{t('productForm.attributes')}</Heading>
                   <HelpTooltip
-                    title={t('productForm.attributesHelp', { defaultValue: 'What are Attributes?' })}
+                    title={t('productForm.attributesHelp', {
+                      defaultValue: 'What are Attributes?',
+                    })}
                     description={t('productForm.attributesHelp', {
                       defaultValue:
                         'Attributes describe fixed specs (Material, Brand). They appear on the product page and can be used for filtering. Set up Attribute Types first in the Attributes menu.',

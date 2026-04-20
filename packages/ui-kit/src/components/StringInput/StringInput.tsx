@@ -209,11 +209,14 @@ const StringInput: React.FC<StringInputProps> = ({
     isRounded && styles.isRounded,
     {
       [styles.stringWithControls]: withControls,
-      [styles.stringInputFullWidth]: fullWidth,
+      // Always stretch to fill the wrapper — fullWidth prop keeps back-compat
+      [styles.stringInputFullWidth]: true,
       [styles.stringInputWithControls]: type === 'number' && withControls,
     }
   );
+
   const resolvedDisabled = !!isDisabled;
+
   const inputClass = clsx(
     styles.input,
     styles[`input--${size}Size`],
@@ -224,20 +227,27 @@ const StringInput: React.FC<StringInputProps> = ({
       [styles.hasError]: !!hasError,
     }
   );
+
   const currentStr = isControlled ? String(value ?? '') : internalValue;
   const currentLen = currentStr?.length ?? 0;
 
   const highlightMatch = useCallback((label: string, query: string) => {
-    const regex = new RegExp(`(${query})`, 'gi');
+    const escaped = query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const regex = new RegExp(`(${escaped})`, 'gi');
     return label
       .split(regex)
       .map((part, i) => (regex.test(part) ? <strong key={i}>{part}</strong> : part));
   }, []);
 
   return (
+    // Outer wrapper fills its container; extra className hooks in from the caller
     <div
       ref={anchorRef}
-      className={clsx(className, fullWidth && styles.fullWidth)}
+      className={clsx(
+        styles.fullWidth, // always stretch to parent width
+        fullWidth && styles.fullWidth,
+        className
+      )}
       onClick={onClick}
     >
       <div className={containerClass}>
@@ -341,7 +351,7 @@ const StringInput: React.FC<StringInputProps> = ({
           size="small"
         >
           <div className={styles.suggestions} role="listbox" aria-label="Suggestions">
-            {loading && <div className={styles.suggestionItem}>Loading...</div>}
+            {loading && <div className={styles.suggestionItem}>Loading…</div>}
             {!loading && suggestions.length === 0 && (
               <div className={styles.suggestionItem}>No results</div>
             )}

@@ -68,7 +68,7 @@ const ShoppingCartPage = () => {
     return (
       <PageContainer
         isBreadcrumbHidden
-        className={clsx(styles.shoppingCartPage, styles.shoppingCartPageIsEmpty)}
+        className={clsx(styles.shoppingCartPage, styles['shoppingCartPage--isEmpty'])}
       >
         <NoDataFound
           iconComp={Package}
@@ -80,6 +80,39 @@ const ShoppingCartPage = () => {
     );
   }
 
+  // Reusable action buttons — rendered in both desktop and mobile slots
+  const renderActions = (item: (typeof items)[0]) => (
+    <>
+      <Button
+        appearance="link"
+        color="highlighted"
+        withoutPadding
+        onClick={() => setItemToDelete({ id: Number(item.id), name: item.productName })}
+      >
+        {t('common.delete', { defaultValue: 'Delete' })}
+      </Button>
+      {isAuthenticated && (
+        <>
+          <span>|</span>
+          <Button
+            appearance="link"
+            color="highlighted"
+            withoutPadding
+            onClick={() =>
+              handleMoveToWishlist({
+                id: Number(item.id),
+                productId: Number(item.productId),
+                productName: item.productName,
+              })
+            }
+          >
+            {t('cart.removeAndMoveToWishlist', { defaultValue: 'Remove and move to wishlist' })}
+          </Button>
+        </>
+      )}
+    </>
+  );
+
   return (
     <PageContainer
       header={t('cart.header')}
@@ -88,142 +121,161 @@ const ShoppingCartPage = () => {
       isLoading={isLoading}
       isMaskLoading={removeMutation.isPending}
     >
-      <div className={styles.shoppingCartPageTable}>
-        {hasOOS && (
-          <Alert appearance="warning" className="bts-marginBm">
-            {t('cart.removeOOSGlobal')}
-          </Alert>
-        )}
-        {hasOverAllocated && (
-          <Alert appearance="warning" className="bts-marginBm">
-            {t('cart.reduceQtyGlobal')}
-          </Alert>
-        )}
-        <div className={styles.shoppingCartPageTableHeader}>
-          <div>{t('cart.headers.product')}</div>
-          <div>{t('cart.headers.name')}</div>
-          <div>{t('cart.headers.price')}</div>
-          <div>{t('cart.headers.quantity')}</div>
-          <div>{t('cart.headers.subtotal')}</div>
-          <div>{t('cart.headers.action')}</div>
-        </div>
+      {hasOOS && (
+        <Alert appearance="warning" className="bts-marginBm">
+          {t('cart.removeOOSGlobal')}
+        </Alert>
+      )}
+      {hasOverAllocated && (
+        <Alert appearance="warning" className="bts-marginBm">
+          {t('cart.reduceQtyGlobal')}
+        </Alert>
+      )}
 
-        <div className={styles.shoppingCartPageTableBody}>
-          {items.map((item) => (
-            <div key={item.id} className={styles.shoppingCartPageTableRow}>
-              <div className={styles.shoppingCartPageImage}>
-                <Image src={item.variantImage || undefined} alt={item.productName} />
-              </div>
-              <Button
-                appearance="link"
-                className={styles.shoppingCartPageProductName}
-                onClick={() => navigate('/product-details/' + item.productId)}
-              >
-                <Flex direction="vertical">
-                  <span className={styles.shoppingCartPageName}>{item.productName}</span>
-                  {!!item?.variantOptions?.length && (
-                    <Text size="sm" color="secondary">
-                      {item.variantOptions?.join(', ')}
-                    </Text>
+      {/* Two-column layout: items left, summary right */}
+      <div className={styles['shoppingCartPage-pageLayout']}>
+        {/* ── Items table ── */}
+        <div className={styles['shoppingCartPage-table']}>
+          <div className={styles['shoppingCartPage-tableHeader']}>
+            <div />
+            <div>{t('cart.headers.product')}</div>
+            <div>{t('cart.headers.price')}</div>
+            <div>{t('cart.headers.quantity')}</div>
+            <div>{t('cart.headers.subtotal')}</div>
+          </div>
+
+          <div className={styles['shoppingCartPage-tableBody']}>
+            {items.map((item) => {
+              const oos = (item.availableStock ?? 0) <= 0;
+              const over =
+                (item.availableStock ?? 0) > 0 && item.quantity > (item.availableStock ?? 0);
+
+              return (
+                <div
+                  key={item.id}
+                  className={clsx(
+                    styles['shoppingCartPage-tableRow'],
+                    oos && styles['shoppingCartPage-oosRow']
                   )}
-                </Flex>
-              </Button>
-              <PriceDisplay
-                price={item.unitPrice}
-                oldPrice={item.originalPrice}
-                formatCurrency={formatCurrency}
-                className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}
-              />
-              <div className={styles.shoppingCartPageQuantityInput}>
-                <CartQuantityInput
-                  fullWidth
-                  itemId={Number(item.id)}
-                  availableInStock={item.availableStock}
-                  quantity={item.quantity}
-                  isDisabled={(item.availableStock ?? 0) <= 0}
-                />
-                {(item.availableStock ?? 0) <= 0 && (
-                  <Text size="sm" color="error" className="bts-marginTs">
-                    {t('cart.removeOOSNotice')}
-                  </Text>
-                )}
-                {(item.availableStock ?? 0) > 0 && item.quantity > (item.availableStock ?? 0) && (
-                  <Text size="sm" color="warning" className="bts-marginTs">
-                    {t('cart.reduceToStock', { count: item.availableStock })}
-                  </Text>
-                )}
-              </div>
-              <div className={(item.availableStock ?? 0) <= 0 ? styles.oosPrice : undefined}>
-                {formatCurrency(item.totalPrice)}
-              </div>
-              <div>
-                <Flex spacing="xs" align="center">
+                >
+                  {/* Image */}
+                  <div className={styles['shoppingCartPage-image']}>
+                    <Image src={item.variantImage || undefined} alt={item.productName} />
+                  </div>
+
+                  {/* Name + variant + stock notices + actions (desktop/tablet) */}
                   <Button
                     appearance="link"
-                    color="highlighted"
-                    withoutPadding
-                    onClick={() => setItemToDelete({ id: Number(item.id), name: item.productName })}
+                    className={styles['shoppingCartPage-nameCell']}
+                    onClick={() => navigate('/product-details/' + item.productId)}
                   >
-                    {t('common.delete', { defaultValue: 'Delete' })}
+                    <Flex direction="vertical">
+                      <span className={styles['shoppingCartPage--name']}>{item.productName}</span>
+                      {!!item?.variantOptions?.length && (
+                        <Text size="sm" color="secondary">
+                          {item.variantOptions?.join(', ')}
+                        </Text>
+                      )}
+                      {oos && (
+                        <Text size="sm" color="error" className="bts-marginTs">
+                          {t('cart.removeOOSNotice')}
+                        </Text>
+                      )}
+                      {over && (
+                        <Text size="sm" color="warning" className="bts-marginTs">
+                          {t('cart.reduceToStock', { count: item.availableStock })}
+                        </Text>
+                      )}
+                    </Flex>
+                    {/* Desktop + tablet: actions sit inside name column under the text */}
+                    <Flex
+                      spacing="xs"
+                      align="center"
+                      className={styles['shoppingCartPage-actionButtons']}
+                    >
+                      {renderActions(item)}
+                    </Flex>
                   </Button>
-                  {isAuthenticated && (
-                    <>
-                      <span>|</span>
-                      <Button
-                        appearance="link"
-                        color="highlighted"
-                        withoutPadding
-                        onClick={() =>
-                          handleMoveToWishlist({
-                            id: Number(item.id),
-                            productId: Number(item.productId),
-                            productName: item.productName,
-                          })
-                        }
-                      >
-                        {t('cart.removeAndMoveToWishlist', {
-                          defaultValue: 'Remove and move to wishlist',
-                        })}
-                      </Button>
-                    </>
-                  )}
-                </Flex>
-              </div>
-            </div>
-          ))}
+
+                  {/* Unit price */}
+                  <div className={styles['shoppingCartPage-priceCell']}>
+                    <PriceDisplay
+                      price={item.unitPrice}
+                      oldPrice={item.originalPrice}
+                      formatCurrency={formatCurrency}
+                      className={oos ? styles.oosPrice : undefined}
+                    />
+                  </div>
+
+                  {/* Quantity */}
+                  <div className={styles['shoppingCartPage-quantityInput']}>
+                    <CartQuantityInput
+                      fullWidth
+                      itemId={Number(item.id)}
+                      availableInStock={item.availableStock}
+                      quantity={item.quantity}
+                      isDisabled={oos}
+                    />
+                  </div>
+
+                  {/* Subtotal — hidden on tablet/mobile via CSS */}
+                  <div
+                    className={clsx(
+                      styles['shoppingCartPage-subtotalCell'],
+                      oos && styles.oosPrice
+                    )}
+                  >
+                    {formatCurrency(item.totalPrice)}
+                  </div>
+
+                  {/* Phone-only: actions as a full-width bottom row */}
+                  <Flex
+                    spacing="xs"
+                    align="center"
+                    className={styles['shoppingCartPage-actionButtonsMobile']}
+                  >
+                    {renderActions(item)}
+                  </Flex>
+                </div>
+              );
+            })}
+          </div>
         </div>
-      </div>
-      <Card header={t('cart.subtotal')} className={styles.shoppingCartPageSummary}>
-        <Flex justify="between">
-          <Text weight="bold" size="lg">
-            {t('cart.subtotal')}
-          </Text>
-          <Text weight="bold" size="lg">
-            {formatCurrency(subtotal || 0)}
-          </Text>
-        </Flex>
-        <Button
-          color="accent"
-          fullWidth
-          size="large"
-          className="bts-marginTxl"
-          onClick={() => navigate('/checkout')}
-          isDisabled={hasOOS || hasOverAllocated}
-          title={
-            hasOOS
+
+        {/* ── Order summary ── */}
+        <Card header={t('cart.subtotal')} className={styles['shoppingCartPage-summary']}>
+          <Flex justify="between" className={styles['shoppingCartPage-summaryRow']}>
+            <Text weight="bold" size="lg">
+              {t('cart.subtotal')}
+            </Text>
+            <Text weight="bold" size="lg">
+              {formatCurrency(subtotal || 0)}
+            </Text>
+          </Flex>
+          <Button
+            color="accent"
+            fullWidth
+            size="large"
+            className="bts-marginTxl"
+            onClick={() => navigate('/checkout')}
+            isDisabled={hasOOS || hasOverAllocated}
+            title={
+              hasOOS
+                ? t('cart.removeToProceed')
+                : hasOverAllocated
+                  ? t('cart.reduceToProceed')
+                  : undefined
+            }
+          >
+            {hasOOS
               ? t('cart.removeToProceed')
               : hasOverAllocated
                 ? t('cart.reduceToProceed')
-                : undefined
-          }
-        >
-          {hasOOS
-            ? t('cart.removeToProceed')
-            : hasOverAllocated
-              ? t('cart.reduceToProceed')
-              : t('cart.proceed')}
-        </Button>
-      </Card>
+                : t('cart.proceed')}
+          </Button>
+        </Card>
+      </div>
+
       <Divider className="bts-marginTxxxxl" />
       <YouMayAlsoLikeSection mode="flex" />
 

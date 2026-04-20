@@ -76,6 +76,7 @@ const Menu: React.FC<PanelMenuProps> = ({
               item.command?.();
             }
           }}
+          preventActiveTransform
           isDisabled={item.disabled}
           leftIconComp={item.iconComp}
           fullWidth
@@ -124,6 +125,7 @@ const Menu: React.FC<PanelMenuProps> = ({
                     item.command?.();
                   }
                 }}
+                preventActiveTransform
                 isDisabled={item.disabled}
                 leftIconComp={item.iconComp}
                 fullWidth

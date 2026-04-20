@@ -181,7 +181,7 @@ const CheckoutPage: React.FC = () => {
             ))}
           </div>
 
-          <div className={styles.checkoutPageSummaryRow}>
+          <div className={clsx(styles.checkoutPageSummaryRow, styles.checkoutPageSummaryRowFirst)}>
             <span>{t('common.subtotal')}</span>
             <span>{formatCurrency(view.subtotal)}</span>
           </div>
@@ -202,8 +202,6 @@ const CheckoutPage: React.FC = () => {
             </span>
             <span>{view.shippingCost == null ? '-' : formatCurrency(view.shippingCost)}</span>
           </div>
-
-          <Divider className="bts-marginBl" />
 
           <div className={`${styles.checkoutPageSummaryRow} ${styles.checkoutPageSummaryRowTotal}`}>
             <span>{t('checkout.total')}</span>

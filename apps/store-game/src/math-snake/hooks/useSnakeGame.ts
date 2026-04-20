@@ -38,7 +38,9 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
   const aliveRef = useRef<boolean>(false);
 
   // Keep refs in sync with props
-  useEffect(() => { deckRef.current = deck; }, [deck]);
+  useEffect(() => {
+    deckRef.current = deck;
+  }, [deck]);
 
   useEffect(() => {
     speedRef.current = speed;
@@ -52,7 +54,9 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
     }
   }, [speed]);
 
-  useEffect(() => { musicRef.current = musicEnabled; }, [musicEnabled]);
+  useEffect(() => {
+    musicRef.current = musicEnabled;
+  }, [musicEnabled]);
 
   // React state — only used to trigger re-renders and expose to UI
   const [renderTick, setRenderTick] = useState(0);
@@ -89,7 +93,9 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
     if (!el) return;
     el.style.background = color;
     el.style.opacity = '0.45';
-    setTimeout(() => { if (el) el.style.opacity = '0'; }, 200);
+    setTimeout(() => {
+      if (el) el.style.opacity = '0';
+    }, 200);
   }, []);
 
   const loseHeart = useCallback(
@@ -170,16 +176,28 @@ export function useSnakeGame(deck: Deck | null, speed: 'slow' | 'fast', musicEna
       const cur = dirRef.current;
       switch (e.key) {
         case 'ArrowUp':
-          if (cur.y !== 1) { nextDirRef.current = { x: 0, y: -1 }; e.preventDefault(); }
+          if (cur.y !== 1) {
+            nextDirRef.current = { x: 0, y: -1 };
+            e.preventDefault();
+          }
           break;
         case 'ArrowDown':
-          if (cur.y !== -1) { nextDirRef.current = { x: 0, y: 1 }; e.preventDefault(); }
+          if (cur.y !== -1) {
+            nextDirRef.current = { x: 0, y: 1 };
+            e.preventDefault();
+          }
           break;
         case 'ArrowLeft':
-          if (cur.x !== 1) { nextDirRef.current = { x: -1, y: 0 }; e.preventDefault(); }
+          if (cur.x !== 1) {
+            nextDirRef.current = { x: -1, y: 0 };
+            e.preventDefault();
+          }
           break;
         case 'ArrowRight':
-          if (cur.x !== -1) { nextDirRef.current = { x: 1, y: 0 }; e.preventDefault(); }
+          if (cur.x !== -1) {
+            nextDirRef.current = { x: 1, y: 0 };
+            e.preventDefault();
+          }
           break;
       }
     };

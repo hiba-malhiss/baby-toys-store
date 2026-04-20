@@ -76,6 +76,7 @@ const Accordion: React.FC<AccordionProps> = ({
         color={buttonColor}
         size={size}
         withoutPadding={withoutHeaderPadding}
+        preventActiveTransform
       >
         {unstyled ? <span>{header}</span> : <Heading level="h5">{header}</Heading>}
       </Button>

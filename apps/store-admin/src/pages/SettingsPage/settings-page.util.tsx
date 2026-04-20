@@ -8,6 +8,7 @@ export const themeSchema = z.object({
   secondaryColor: z.string().regex(HEX_COLOR_REGEX, 'Invalid hex color').optional(),
   fontFamily: z.string().optional(),
   translationEnabled: z.boolean().optional(),
+  themeName: z.string().optional(),
 });
 
 export type ThemeFormValues = z.infer<typeof themeSchema>;

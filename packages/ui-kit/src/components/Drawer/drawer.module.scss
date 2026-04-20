@@ -5,7 +5,7 @@
   background: var(--color-white, $color-white);
   z-index: 1050;
   transition:
-    transform 0.3s ease,
+    transform 0.3s cubic-bezier(0, 0, 0.3, 1),
     opacity 0.3s ease;
   box-shadow: $box-shadow-m;
   display: flex;

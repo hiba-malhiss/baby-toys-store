@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Flex,
-  Text,
-  ColorPicker,
-  Select,
-  ImageUploader,
-  useToast,
-  Divider,
-} from '@baby-toys/ui-kit';
-import { Control, Controller } from 'react-hook-form';
+import { ColorPicker, Select, ImageUploader, useToast, Divider } from '@baby-toys/ui-kit';
+import { Control, Controller, useWatch } from 'react-hook-form';
 import { useThemeSettings, useUploadLogo, useDeleteLogo } from '../../api/settingsApi';
+import styles from './theme-section.module.scss';
 
 interface ThemeSectionProps {
   control: Control<any>;
@@ -22,22 +15,30 @@ export const FONT_OPTIONS = [
   { label: 'Montserrat (Bold & Strong)', value: "'Montserrat', sans-serif" },
   { label: 'Inter (Professional & Minimal)', value: "'Inter', sans-serif" },
   { label: 'Playfair Display (Elegant & Serif)', value: "'Playfair Display', serif" },
+  { label: 'Cormorant Garamond (Luxury & Classic)', value: "'Cormorant Garamond', serif" },
   { label: 'Lato (Friendly & Readable)', value: "'Lato', sans-serif" },
+  { label: 'DM Sans (Clean & Humanist)', value: "'DM Sans', sans-serif" },
+  { label: 'Nunito (Rounded & Friendly)', value: "'Nunito', sans-serif" },
 ];
 
-const ColorField: React.FC<{
+export const THEME_PRESET_OPTIONS = [
+  { label: 'None (Custom)', value: '' },
+  { label: 'Kids', value: 'theme-kids' },
+  { label: 'Elegant', value: 'theme-elegant' },
+  { label: 'Luxury', value: 'theme-luxury' },
+];
+
+interface ColorFieldProps {
   name: string;
   label: string;
   hint: string;
   control: Control<any>;
-}> = ({ name, label, hint, control }) => (
-  <Flex direction="vertical" spacing="s">
-    <Text size="sm" weight="medium">
-      {label}
-    </Text>
-    <Text size="xs" color="muted">
-      {hint}
-    </Text>
+}
+
+const ColorField: React.FC<ColorFieldProps> = ({ name, label, hint, control }) => (
+  <div className={styles.colorItem}>
+    <span className={styles.fieldLabel}>{label}</span>
+    <span className={styles.fieldHint}>{hint}</span>
     <Controller
       name={name}
       control={control}
@@ -45,7 +46,7 @@ const ColorField: React.FC<{
         <ColorPicker value={field.value || '#1096b5'} onChange={field.onChange} />
       )}
     />
-  </Flex>
+  </div>
 );
 
 const ThemeSection: React.FC<ThemeSectionProps> = ({ control }) => {
@@ -55,6 +56,9 @@ const ThemeSection: React.FC<ThemeSectionProps> = ({ control }) => {
   const uploadLogoMutation = useUploadLogo();
   const deleteLogoMutation = useDeleteLogo();
   const [logoImages, setLogoImages] = useState<(string | File)[]>([]);
+
+  const themeName = useWatch({ control, name: 'theme.themeName' });
+  const isPresetSelected = Boolean(themeName);
 
   useEffect(() => {
     if (themeData?.logoUrl) {
@@ -101,25 +105,33 @@ const ThemeSection: React.FC<ThemeSectionProps> = ({ control }) => {
   const isLogoProcessing = uploadLogoMutation.isPending || deleteLogoMutation.isPending;
 
   return (
-    <Flex direction="vertical" spacing="xl" fullWidth>
-      <Text color="muted" size="sm">
-        {t('settings.theme.description', {
-          defaultValue:
-            'Customize your store colors, font, and logo. Changes apply immediately to the storefront.',
-        })}
-      </Text>
-
-      {/* Logo uploader */}
-      <Flex direction="vertical" spacing="s" style={{ maxWidth: 360 }}>
-        <Text size="sm" weight="medium">
-          {t('settings.theme.logo', { defaultValue: 'Store Logo' })}
-        </Text>
-        <Text size="xs" color="muted">
-          {t('settings.theme.logoHint', {
+    <div className={styles.section}>
+      {/* Header */}
+      <div className={styles.header}>
+        <p className={styles.title}>
+          {t('settings.theme.title', { defaultValue: 'Theme & Branding' })}
+        </p>
+        <p className={styles.description}>
+          {t('settings.theme.description', {
             defaultValue:
-              'Displayed in the header, footer, and admin sidebar. Recommended: PNG with transparent background.',
+              'Customize your store colors, font, and logo. Changes apply immediately to the storefront.',
           })}
-        </Text>
+        </p>
+      </div>
+
+      {/* Logo */}
+      <div className={styles.logoBlock}>
+        <div className={styles.fieldGroup}>
+          <span className={styles.fieldLabel}>
+            {t('settings.theme.logo', { defaultValue: 'Store logo' })}
+          </span>
+          <span className={styles.fieldHint}>
+            {t('settings.theme.logoHint', {
+              defaultValue:
+                'Displayed in the header, footer, and admin sidebar. Recommended: PNG with transparent background.',
+            })}
+          </span>
+        </div>
         <ImageUploader
           images={logoImages}
           multiple={false}
@@ -129,84 +141,124 @@ const ThemeSection: React.FC<ThemeSectionProps> = ({ control }) => {
           onImagesChange={handleLogoChange}
           isDisabled={isLogoProcessing}
         />
-      </Flex>
+      </div>
 
       <Divider />
 
-      {/* Color pickers row */}
-      <Flex spacing="xxl" fullWidth>
-        <ColorField
-          name="theme.primaryColor"
+      {/* Theme preset */}
+      <div className={styles.presetBlock}>
+        <div className={styles.fieldGroup}>
+          <span className={styles.fieldLabel}>
+            {t('settings.theme.preset', { defaultValue: 'Theme preset' })}
+          </span>
+          <span className={styles.fieldHint}>
+            {t('settings.theme.presetHint', {
+              defaultValue: 'Choose a preset to instantly apply a curated color palette and font.',
+            })}
+          </span>
+        </div>
+        <Controller
+          name="theme.themeName"
           control={control}
-          label={t('settings.theme.primaryColor', { defaultValue: 'Primary Color' })}
-          hint={t('settings.theme.primaryColorHint', {
-            defaultValue: 'Buttons, links, highlights',
-          })}
+          render={({ field }) => {
+            const activeSwatch = THEME_PRESET_OPTIONS.find(
+              (opt) => opt.value === field.value
+            )?.swatch;
+            return (
+              <div className={styles.presetRow}>
+                <div className={styles.presetSelect}>
+                  <Select
+                    value={field.value || ''}
+                    onChange={field.onChange}
+                    options={THEME_PRESET_OPTIONS}
+                    fullWidth
+                  />
+                </div>
+                {field.value && activeSwatch && (
+                  // CSS custom property drives the swatch color — no inline style object
+                  <div
+                    className={styles.presetSwatch}
+                    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                    // @ts-ignore — CSS custom properties on React elements
+                    style={{ '--swatch-color': activeSwatch }}
+                    aria-label={`Color swatch for selected preset`}
+                  />
+                )}
+              </div>
+            );
+          }}
         />
-        <ColorField
-          name="theme.accentColor"
-          control={control}
-          label={t('settings.theme.accentColor', { defaultValue: 'Accent Color' })}
-          hint={t('settings.theme.accentColorHint', {
-            defaultValue: 'Sale badges, alerts, CTA elements',
-          })}
-        />
-        <ColorField
-          name="theme.secondaryColor"
-          control={control}
-          label={t('settings.theme.secondaryColor', { defaultValue: 'Secondary Color' })}
-          hint={t('settings.theme.secondaryColorHint', {
-            defaultValue: 'Borders, muted text, backgrounds',
-          })}
-        />
-      </Flex>
+      </div>
 
-      {/* Font selector */}
-      <Flex direction="vertical" spacing="s" style={{ maxWidth: 360 }}>
-        <Text size="sm" weight="medium">
-          {t('settings.theme.fontFamily', { defaultValue: 'Font Family' })}
-        </Text>
-        <Text size="xs" color="muted">
-          {t('settings.theme.fontFamilyHint', {
-            defaultValue: 'Applied to all text across the storefront',
-          })}
-        </Text>
-        <Controller
-          name="theme.fontFamily"
-          control={control}
-          render={({ field }) => (
-            <Select
-              value={field.value || "'Comfortaa', sans-serif"}
-              onChange={field.onChange}
-              options={FONT_OPTIONS}
-              fullWidth
-            />
-          )}
-        />
-        {/* Live font preview */}
-        <Controller
-          name="theme.fontFamily"
-          control={control}
-          render={({ field }) => (
-            <div
-              style={{
-                fontFamily: field.value || "'Comfortaa', sans-serif",
-                padding: '12px 16px',
-                border: '1px solid var(--color-border)',
-                borderRadius: 8,
-                color: 'var(--color-text-primary)',
-                fontSize: 14,
-                marginTop: 4,
-              }}
-            >
-              {t('settings.theme.fontPreview', {
-                defaultValue: 'The quick brown fox jumps over the lazy dog — 0123456789',
+      {/* Color pickers — custom theme only */}
+      {!isPresetSelected && (
+        <div className={styles.colorsRow}>
+          <ColorField
+            name="theme.primaryColor"
+            control={control}
+            label={t('settings.theme.primaryColor', { defaultValue: 'Primary color' })}
+            hint={t('settings.theme.primaryColorHint', {
+              defaultValue: 'Buttons, links, highlights',
+            })}
+          />
+          <ColorField
+            name="theme.accentColor"
+            control={control}
+            label={t('settings.theme.accentColor', { defaultValue: 'Accent color' })}
+            hint={t('settings.theme.accentColorHint', {
+              defaultValue: 'Sale badges, alerts, CTA elements',
+            })}
+          />
+          <ColorField
+            name="theme.secondaryColor"
+            control={control}
+            label={t('settings.theme.secondaryColor', { defaultValue: 'Secondary color' })}
+            hint={t('settings.theme.secondaryColorHint', {
+              defaultValue: 'Borders, muted text, backgrounds',
+            })}
+          />
+        </div>
+      )}
+
+      {/* Font selector — custom theme only */}
+      {!isPresetSelected && (
+        <div className={styles.fontBlock}>
+          <div className={styles.fieldGroup}>
+            <span className={styles.fieldLabel}>
+              {t('settings.theme.fontFamily', { defaultValue: 'Font family' })}
+            </span>
+            <span className={styles.fieldHint}>
+              {t('settings.theme.fontFamilyHint', {
+                defaultValue: 'Applied to all text across the storefront.',
               })}
-            </div>
-          )}
-        />
-      </Flex>
-    </Flex>
+            </span>
+          </div>
+          <Controller
+            name="theme.fontFamily"
+            control={control}
+            render={({ field }) => (
+              <>
+                <Select
+                  value={field.value || "'Comfortaa', sans-serif"}
+                  onChange={field.onChange}
+                  options={FONT_OPTIONS}
+                  fullWidth
+                />
+                {/* Live preview — font injected via CSS custom property */}
+                <div
+                  className={styles.fontPreview}
+                  style={{ '--preview-font': field.value || "'Comfortaa', sans-serif" }}
+                >
+                  {t('settings.theme.fontPreview', {
+                    defaultValue: 'The quick brown fox jumps over the lazy dog — 0123456789',
+                  })}
+                </div>
+              </>
+            )}
+          />
+        </div>
+      )}
+    </div>
   );
 };
 

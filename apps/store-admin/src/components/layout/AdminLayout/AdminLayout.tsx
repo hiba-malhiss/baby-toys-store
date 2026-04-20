@@ -22,7 +22,7 @@ import {
   LogOut,
 } from 'lucide-react';
 import LanguageSwitcher from '../../../i18n/LanguageSwitcher.tsx';
-import { useLogo } from "../../../hooks/useLogo.ts";
+import { useLogo } from '../../../hooks/useLogo.ts';
 
 const AdminLayout: React.FC<{
   children: React.ReactNode;
@@ -101,11 +101,7 @@ const AdminLayout: React.FC<{
           model={menuItems}
           header={
             <Flex justify="between" align="center" wrap fullWidth>
-              <img
-                src={logoUrl}
-                alt="logo"
-                className={styles.adminLayoutLogo}
-              />
+              <img src={logoUrl} alt="logo" className={styles.adminLayoutLogo} />
               <LanguageSwitcher />
             </Flex>
           }

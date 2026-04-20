@@ -5,7 +5,12 @@
   width: 100%;
   justify-content: start;
   min-height: $header-min-height;
-  box-shadow: 0 2px 4px 0 rgba(var(--color-text-primary-rgb), 0.03);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: $z-sticky;
+  background: var(--color-white, #fff);
+  transition: box-shadow 0.2s ease;
 
   &-categories {
     overflow-x: auto;
@@ -13,6 +18,7 @@
     background: var(--color-white);
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
+    padding: 4px 24px;
 
     /* Hide scrollbar by default, show thin on hover */
     scrollbar-width: none; /* Firefox */
@@ -35,7 +41,6 @@
 
     /* Optional: scroll snap for nicer stops */
     scroll-snap-type: x proximity;
-    padding: 0 24px;
 
     > * {
       scroll-snap-align: start;
@@ -46,10 +51,10 @@
     height: 51px;
     padding: 0 100px;
     background-color: var(--color-primary);
-    mask-image: url(/assets/images/wave.svg);
+    mask-image: var(--wave-background, none);
     mask-repeat: repeat-x;
     mask-position: center;
-    -webkit-mask-image: url(/assets/images/wave.svg);
+    -webkit-mask-image: var(--wave-background, none);
     -webkit-mask-repeat: repeat-x;
     -webkit-mask-position: center;
     color: white;

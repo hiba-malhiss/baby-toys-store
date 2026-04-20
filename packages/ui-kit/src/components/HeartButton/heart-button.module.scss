@@ -8,10 +8,18 @@
   width: 48px;
   height: 48px;
   cursor: pointer;
-  transition: transform 0.3s ease;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
   user-select: none;
   -webkit-tap-highlight-color: transparent;
   border-radius: 16px;
+
+  &:hover:not(.isDisabled) {
+    transform: scale(1.12);
+  }
+
+  &:active:not(.isDisabled) {
+    transform: scale(0.88);
+  }
 
   &.isDisabled {
     cursor: not-allowed;

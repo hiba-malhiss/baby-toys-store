@@ -3,6 +3,7 @@ export interface ThemeSettings {
   accentColor?: string;
   secondaryColor?: string;
   fontFamily?: string;
+  themeName?: string;
 }
 
 const GOOGLE_FONT_LINK_ID = 'dynamic-google-font';
@@ -16,9 +17,15 @@ const FONT_IMPORT_MAP: Record<string, string> = {
     'https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap',
   "'Inter', sans-serif":
     'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
-  "'Comfortaa', sans-serif": '', // local font — no external import needed
+  "'Cormorant Garamond', serif":
+    'https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap',
   "'Lato', sans-serif":
     'https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap',
+  "'DM Sans', sans-serif":
+    'https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&display=swap',
+  "'Nunito', sans-serif":
+    'https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;500;600;700&display=swap',
+  "'Comfortaa', sans-serif": '', // local font — no external import needed
 };
 
 function loadGoogleFont(fontFamily: string): void {
@@ -37,30 +44,55 @@ function loadGoogleFont(fontFamily: string): void {
 export function applyThemeSettings(settings: ThemeSettings): void {
   const root = document.documentElement;
 
-  if (settings.primaryColor) {
-    root.style.setProperty('--color-primary', settings.primaryColor);
-    root.style.setProperty('--color-primary-dark', darkenHex(settings.primaryColor, 0.1));
-    root.style.setProperty('--color-primary-hover', darkenHex(settings.primaryColor, 0.2));
-    root.style.setProperty('--color-primary-light', lightenHex(settings.primaryColor, 0.88));
+  // If themeName is selected, use preset settings and ignore individual settings
+  let themeToApply: Omit<ThemeSettings, 'themeName'>;
+
+  if (settings.themeName) {
+    themeToApply = {};
+  } else {
+    // Use individual settings
+    themeToApply = {
+      primaryColor: settings.primaryColor,
+      accentColor: settings.accentColor,
+      secondaryColor: settings.secondaryColor,
+      fontFamily: settings.fontFamily,
+    };
   }
 
-  if (settings.accentColor) {
-    root.style.setProperty('--color-accent', settings.accentColor);
-    root.style.setProperty('--color-accent-hover', darkenHex(settings.accentColor, 0.1));
-    root.style.setProperty('--color-accent-light', lightenHex(settings.accentColor, 0.88));
-    root.style.setProperty('--color-accent-dark', darkenHex(settings.accentColor, 0.2));
+  if (themeToApply.primaryColor) {
+    root.style.setProperty('--color-primary', themeToApply.primaryColor);
+    root.style.setProperty('--color-primary-dark', darkenHex(themeToApply.primaryColor, 0.1));
+    root.style.setProperty('--color-primary-hover', darkenHex(themeToApply.primaryColor, 0.2));
+    root.style.setProperty('--color-primary-light', lightenHex(themeToApply.primaryColor, 0.88));
   }
 
-  if (settings.secondaryColor) {
-    root.style.setProperty('--color-secondary', settings.secondaryColor);
-    root.style.setProperty('--color-secondary-hover', darkenHex(settings.secondaryColor, 0.1));
-    root.style.setProperty('--color-secondary-dark', darkenHex(settings.secondaryColor, 0.2));
-    root.style.setProperty('--color-secondary-light', lightenHex(settings.secondaryColor, 0.85));
+  if (themeToApply.accentColor) {
+    root.style.setProperty('--color-accent', themeToApply.accentColor);
+    root.style.setProperty('--color-accent-hover', darkenHex(themeToApply.accentColor, 0.1));
+    root.style.setProperty('--color-accent-light', lightenHex(themeToApply.accentColor, 0.88));
+    root.style.setProperty('--color-accent-dark', darkenHex(themeToApply.accentColor, 0.2));
   }
 
-  if (settings.fontFamily) {
-    root.style.setProperty('--font-primary', settings.fontFamily);
-    loadGoogleFont(settings.fontFamily);
+  if (themeToApply.secondaryColor) {
+    root.style.setProperty('--color-secondary', themeToApply.secondaryColor);
+    root.style.setProperty('--color-secondary-hover', darkenHex(themeToApply.secondaryColor, 0.1));
+    root.style.setProperty('--color-secondary-dark', darkenHex(themeToApply.secondaryColor, 0.2));
+    root.style.setProperty(
+      '--color-secondary-light',
+      lightenHex(themeToApply.secondaryColor, 0.85)
+    );
+  }
+
+  if (themeToApply.fontFamily) {
+    root.style.setProperty('--font-primary', themeToApply.fontFamily);
+    loadGoogleFont(themeToApply.fontFamily);
+  }
+
+  // Add wave.svg background only for kids theme
+  if (settings.themeName === 'theme-kids') {
+    root.style.setProperty('--wave-background', "url('/assets/images/wave.svg')");
+  } else {
+    root.style.setProperty('--wave-background', 'none');
   }
 }
 
@@ -78,7 +110,11 @@ function rgbToHex(r: number, g: number, b: number): string {
   return (
     '#' +
     [r, g, b]
-      .map((x) => Math.max(0, Math.min(255, Math.round(x))).toString(16).padStart(2, '0'))
+      .map((x) =>
+        Math.max(0, Math.min(255, Math.round(x)))
+          .toString(16)
+          .padStart(2, '0')
+      )
       .join('')
   );
 }

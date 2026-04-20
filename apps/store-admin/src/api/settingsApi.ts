@@ -119,9 +119,7 @@ export const useThemeSettings = () =>
   useQuery<ThemeSettings>({
     queryKey: ['storeSettings', 'theme'],
     queryFn: async () => {
-      const { data } = await api.get<ApiEnvelope<ThemeSettings>>(
-        '/api/admin/store-settings/theme'
-      );
+      const { data } = await api.get<ApiEnvelope<ThemeSettings>>('/api/admin/store-settings/theme');
       return data.data ?? {};
     },
     staleTime: 60_000,

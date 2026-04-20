@@ -39,6 +39,7 @@ type ButtonProps = {
   align?: string;
   type?: 'button' | 'submit' | 'reset';
   form?: string;
+  preventActiveTransform?: boolean;
 };
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
@@ -59,6 +60,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       isRounded = false,
       withoutPadding,
       isSelected,
+      preventActiveTransform = false,
       className,
       align,
       iconBadge,
@@ -87,6 +89,7 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
       withoutPadding && styles.buttonNoPadding,
       withAutoHeight && styles.buttonAutoHeight,
       isSelected && styles.isSelected,
+      preventActiveTransform && styles.noActiveState,
       children && styles.buttonWithText
     );
 

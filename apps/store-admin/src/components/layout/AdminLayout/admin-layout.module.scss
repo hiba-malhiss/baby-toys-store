@@ -1,35 +1,38 @@
 .adminLayout {
   display: flex;
   height: 100vh;
+  overflow: hidden;
   background-color: $color-bg-secondary;
 
-  &-sidebar {
-    width: 250px;
-    color: $color-bg-secondary;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    box-shadow: $box-shadow-l;
-  }
-
   &-logo {
-    margin: 32px 0;
-    max-width: 120px;
-  }
-
-  &-nav {
-    flex-grow: 1;
-  }
-
-  &-logout {
-    display: flex;
-    flex: 1;
-    align-items: end;
+    max-width: 110px;
+    height: auto;
+    object-fit: contain;
   }
 
   &-content {
-    flex-grow: 1;
-    padding: 32px;
+    flex: 1;
+    padding: 28px 32px;
     overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    animation: fadeIn 0.25s ease;
+
+    @media (max-width: $breakpoint-large) {
+      padding: 20px 20px;
+    }
+
+    @media (max-width: $breakpoint-medium) {
+      padding: 16px 14px;
+    }
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
   }
 }

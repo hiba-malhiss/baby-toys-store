@@ -8,16 +8,22 @@
   z-index: 999;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.15s ease;
+  transition: opacity 0.2s ease;
 
   &--visible {
     opacity: 1;
     pointer-events: auto;
+
+    .dialog-root {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+    }
   }
 }
 
 .dialog-root {
   background: var(--color-white, $color-white);
+  opacity: 0;
   border-radius: $radius-md;
 
   /* Default size (can be overridden by inline styles via width/maxWidth props) */
@@ -29,8 +35,11 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transform: scale(0.95);
-  transition: transform 0.15s ease;
+  transform: scale(0.92) translateY(-8px);
+  transition:
+    transform 0.22s cubic-bezier(0, 0, 0.3, 1),
+    opacity 0.22s ease;
+  transform-origin: center top;
 
   &--maximized {
     width: 100vw;

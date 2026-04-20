@@ -3,30 +3,45 @@
   top: 20px;
   right: 20px;
   z-index: 2000;
-  display: grid;
-  gap: 12px;
-  justify-items: center;
-  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+
+  @media (max-width: 640px) {
+    top: auto;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    right: 12px;
+    left: 12px;
+    align-items: stretch;
+  }
 }
 
 .toast {
   position: relative;
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 1fr auto;
   gap: 12px;
-  align-items: center;
-  min-width: 250px;
-  max-width: 350px;
-  padding: $spacing-sm $spacing-lg;
-  border-left: 5px solid;
+  align-items: start;
+  min-width: 280px;
+  max-width: 380px;
+  padding: 14px 16px;
+  border-left: 4px solid;
   border-radius: $radius-md;
   background-color: var(--color-white, $color-white);
-  box-shadow: $box-shadow-m;
-  animation:
-    fadeIn 0.3s ease,
-    fadeOut 0.3s ease 2.7s;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.06);
+  animation: toastSlideIn 0.3s cubic-bezier(0, 0, 0.3, 1) both;
   color: var(--color-text-primary, $color-text-primary);
   font-size: 14px;
+  pointer-events: auto;
+
+  @media (max-width: 640px) {
+    min-width: 0;
+    max-width: 100%;
+    animation: toastSlideUp 0.3s cubic-bezier(0, 0, 0.3, 1) both;
+  }
 
   strong,
   p {
@@ -51,35 +66,43 @@
   }
 
   &-closeButton {
-    grid-column: 3 / 4;
+    justify-self: end;
+    margin-top: 2px;
   }
 
   strong {
     display: block;
     font-weight: 600;
-    margin-bottom: 4px;
+    margin-bottom: 2px;
+    font-size: 13px;
     color: var(--color-text-dark, $color-text-dark);
   }
 
   p {
+    font-size: 13px;
     color: var(--color-text-muted, $color-text-muted);
+    line-height: 1.4;
   }
 }
 
-@keyframes fadeIn {
+@keyframes toastSlideIn {
   from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateX(24px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0) scale(1);
   }
 }
 
-@keyframes fadeOut {
-  to {
+@keyframes toastSlideUp {
+  from {
     opacity: 0;
-    transform: translateY(-10px);
+    transform: translateY(16px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 }
