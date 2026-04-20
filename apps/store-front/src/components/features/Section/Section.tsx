@@ -1,8 +1,7 @@
 import styles from './section.module.scss';
-import { Flex } from '@baby-toys/ui-kit';
+import { Flex, Heading, BouncingDotsLoader } from '@baby-toys/ui-kit';
 import React, { type ReactNode } from 'react';
 import clsx from 'clsx';
-import { Heading, BouncingDotsLoader } from '@baby-toys/ui-kit';
 
 interface SectionProps {
   children?: ReactNode;
@@ -11,10 +10,12 @@ interface SectionProps {
   className?: string;
   compactPadding?: boolean;
   isLoading?: boolean;
+  visibleOverFlow?: boolean;
 }
 
 const Section = ({
   compactPadding,
+  visibleOverFlow,
   subTitle,
   className,
   title,
@@ -23,7 +24,12 @@ const Section = ({
 }: SectionProps) => {
   return (
     <Flex
-      className={clsx(className, styles.section, compactPadding && styles.sectionCompactPadding)}
+      className={clsx(
+        className,
+        styles.section,
+        compactPadding && styles.sectionCompactPadding,
+        visibleOverFlow && styles.sectionVisibleOverFlow
+      )}
       direction="vertical"
       justify="center"
       align="center"

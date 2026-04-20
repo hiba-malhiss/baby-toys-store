@@ -14,6 +14,7 @@ const CustomerReviewsSection = () => {
       subTitle={t('home.reviews.subtitle')}
       compactPadding
       isLoading={isLoading}
+      visibleOverFlow
     >
       <Carousel
         items={featuredReviews}
