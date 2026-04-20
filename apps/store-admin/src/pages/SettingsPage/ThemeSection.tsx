@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { ColorPicker, Select, ImageUploader, useToast, Divider } from '@baby-toys/ui-kit';
+import {
+  ColorPicker,
+  Select,
+  ImageUploader,
+  useToast,
+  Divider,
+  FONT_OPTIONS,
+  THEME_PRESET_OPTIONS,
+} from '@baby-toys/ui-kit';
 import { Control, Controller, useWatch } from 'react-hook-form';
 import { useThemeSettings, useUploadLogo, useDeleteLogo } from '../../api/settingsApi';
 import styles from './theme-section.module.scss';
@@ -8,25 +16,6 @@ import styles from './theme-section.module.scss';
 interface ThemeSectionProps {
   control: Control<any>;
 }
-
-export const FONT_OPTIONS = [
-  { label: 'Comfortaa (Default – Playful)', value: "'Comfortaa', sans-serif" },
-  { label: 'Poppins (Modern & Clean)', value: "'Poppins', sans-serif" },
-  { label: 'Montserrat (Bold & Strong)', value: "'Montserrat', sans-serif" },
-  { label: 'Inter (Professional & Minimal)', value: "'Inter', sans-serif" },
-  { label: 'Playfair Display (Elegant & Serif)', value: "'Playfair Display', serif" },
-  { label: 'Cormorant Garamond (Luxury & Classic)', value: "'Cormorant Garamond', serif" },
-  { label: 'Lato (Friendly & Readable)', value: "'Lato', sans-serif" },
-  { label: 'DM Sans (Clean & Humanist)', value: "'DM Sans', sans-serif" },
-  { label: 'Nunito (Rounded & Friendly)', value: "'Nunito', sans-serif" },
-];
-
-export const THEME_PRESET_OPTIONS = [
-  { label: 'None (Custom)', value: '' },
-  { label: 'Kids', value: 'theme-kids' },
-  { label: 'Elegant', value: 'theme-elegant' },
-  { label: 'Luxury', value: 'theme-luxury' },
-];
 
 interface ColorFieldProps {
   name: string;

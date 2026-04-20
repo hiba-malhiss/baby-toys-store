@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useStoreFrontThemeSettings } from '../../api/settingsApi';
-import { applyThemeSettings } from '../../utils/theme.utils';
+import { applyThemeSettings } from '@baby-toys/ui-kit';
 
 /**
  * Fetches theme settings from the backend and applies CSS variable overrides.

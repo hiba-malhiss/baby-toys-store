@@ -32,7 +32,7 @@ import { useLocales } from '../../hooks/useLocales';
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
 import ThemeSection from './ThemeSection';
-import { applyThemeSettings } from '../../utils/theme.utils';
+import { applyThemeSettings } from '@baby-toys/ui-kit';
 
 const emptyGeneral = {
   currency: '',
