@@ -25,16 +25,17 @@
   }
 
   &-popover {
+    position: relative;
     border: 1px solid var(--color-border, $color-border);
     border-radius: 4px;
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 
+    // img positioning is handled entirely via top/left in JS;
+    // do NOT set position, top, or left here.
     img {
-      position: absolute;
-      object-fit: contain;
-      top: 0;
-      left: 0;
+      display: block;
+      max-width: none;
     }
   }
 }

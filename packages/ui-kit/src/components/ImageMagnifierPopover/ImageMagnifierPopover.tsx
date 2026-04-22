@@ -183,18 +183,21 @@ const ImageMagnifierPopover: React.FC<Props> = ({
   const scale = popoverSize / lensSize;
 
   const magnifiedImageStyle = useMemo(() => {
-    // Mouse position within the rendered image box
+    // Mouse position within the rendered image box (relative to image top-left)
     const imgX = mousePos.x - imageBox.x;
     const imgY = mousePos.y - imageBox.y;
 
+    // Offset the full scaled image so the focused area is centred in the popover.
+    // We use top/left (not transform) so it cooperates with position:absolute in CSS.
     return {
+      position: 'absolute' as const,
       width: imageBox.w * scale,
       height: imageBox.h * scale,
-      transform: `translate(-${imgX * scale - popoverSize / 2}px, -${imgY * scale - popoverSize / 2}px)`,
-      display: 'block',
-      userSelect: 'none',
-      pointerEvents: 'none',
-    } as React.CSSProperties;
+      top: -(imgY * scale - popoverSize / 2),
+      left: -(imgX * scale - popoverSize / 2),
+      userSelect: 'none' as const,
+      pointerEvents: 'none' as const,
+    } satisfies React.CSSProperties;
   }, [mousePos, imageBox, scale, popoverSize]);
 
   const showPopover = canHover && isHovering && imageReady && imageBox.w > 0 && imageBox.h > 0;
@@ -222,10 +225,10 @@ const ImageMagnifierPopover: React.FC<Props> = ({
       </div>
 
       {showPopover && (
-        <Popover open targetRef={containerRef} position="right" width="auto">
+        <Popover open targetRef={containerRef} position="right" width="auto" size="small">
           <div
             className={styles.imageMagnifierPopover}
-            style={{ width: popoverSize, height: popoverSize, overflow: 'hidden' }}
+            style={{ width: popoverSize, height: popoverSize }}
           >
             <img src={resolvedSrc} alt={alt} style={magnifiedImageStyle} draggable={false} />
           </div>
