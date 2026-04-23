@@ -94,7 +94,10 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     );
 
     return (
-      <div className={clsx(className, resolvedFullWidth && styles.fullWidth)}>
+      <div
+        className={clsx(className, resolvedFullWidth && styles.fullWidth)}
+        style={{ flexShrink: '0' }}
+      >
         <button
           ref={ref}
           onKeyDown={(e) => {

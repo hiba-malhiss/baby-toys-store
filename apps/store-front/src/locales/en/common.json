@@ -369,6 +369,7 @@
   },
   "wishlist": {
     "header": "Wishlist",
+    "emptyTitle": "Your wishlist is empty.",
     "loginPromptTitle": "Nothing here yet.",
     "loginPromptSubtitle": "Save your favorite products in one place.",
     "login": "Log in",
