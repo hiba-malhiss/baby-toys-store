@@ -1,9 +1,9 @@
 {
   "nav": {
     "home": "Home",
-    "welcome": "Welcome to Baby Toy Store",
+    "welcome": "Welcome to our store",
     "shop": "Shop",
-    "cart": "Shopping Cart",
+    "cart": "Cart",
     "wishlist": "Wishlist",
     "checkoutLabel": "Checkout",
     "orders": "Orders",
@@ -12,23 +12,23 @@
     "admin": "Admin"
   },
   "admin": {
-    "redirecting": "Redirecting to admin panel..."
+    "redirecting": "Redirecting to dashboard..."
   },
   "cart": {
-    "header": "Your Shopping Cart",
-    "empty": "Oops! No toys here...",
-    "browse": "Browse Toys",
+    "header": "Shopping Cart",
+    "empty": "Oops! No products here...",
+    "browse": "Browse products",
     "subtotal": "Subtotal",
     "proceed": "Proceed to checkout",
-    "placeOrder": "Place order",
-    "goToCart": "Go To Shopping Cart",
+    "placeOrder": "Place Order",
+    "goToCart": "Go to Cart",
     "orderSummary": "Order Summary",
-    "reduceToStock": "Only {{count}} left. Please reduce quantity.",
-    "reduceQtyGlobal": "Some items exceed available stock. Please reduce quantities to proceed.",
+    "reduceToStock": "Only {{count}} left in stock. Please reduce quantity.",
+    "reduceQtyGlobal": "Some products exceed available stock. Please adjust quantities to proceed.",
     "reduceToProceed": "Reduce quantities to proceed",
-    "moveToWishlist": "Move to wishlist",
-    "removeAndMoveToWishlist": "Remove and move to wishlist",
-    "deleteItemTitle": "Remove item",
+    "moveToWishlist": "Move to Wishlist",
+    "removeAndMoveToWishlist": "Remove & move to Wishlist",
+    "deleteItemTitle": "Remove Product",
     "deleteItemMessage": "Are you sure you want to remove <strong>{{itemName}}</strong> from your cart?",
     "headers": {
       "product": "Product",
@@ -38,27 +38,27 @@
       "subtotal": "Subtotal",
       "action": "Action"
     },
-    "outOfStock": "Out of Stock",
-    "removeOOSNotice": "This product is out of stock. Please remove it to proceed.",
+    "outOfStock": "Out of stock",
+    "removeOOSNotice": "This product is out of stock. Please remove it to continue.",
     "removeOOSGlobal": "Some products are out of stock. Remove them to proceed to checkout.",
-    "removeToProceed": "Remove out-of-stock products to proceed"
+    "removeToProceed": "Remove unavailable products to continue"
   },
   "language": {
     "label": "Language"
   },
   "product": {
-    "aboutThisItem": "About this item",
-    "addToCart": "Add to cart",
-    "details": "Item details",
-    "recentShoots": "Recent photo Shoots",
-    "checkGallery": "Check gallery",
-    "productNumber": "Product Number",
+    "aboutThisItem": "About this product",
+    "addToCart": "Add to Cart",
+    "details": "Product details",
+    "recentShoots": "Latest images",
+    "checkGallery": "View gallery",
+    "productNumber": "Product number",
     "productNumberCopied": "Product number copied",
     "copyProductNumber": "Copy product number",
     "tooltips": {
       "share": "Share",
-      "shareWhatsapp": "Share on WhatsApp",
-      "shareFacebook": "Share on Facebook",
+      "shareWhatsapp": "Share via WhatsApp",
+      "shareFacebook": "Share via Facebook",
       "addToFavorites": "Add to favorites",
       "removeFromFavorites": "Remove from favorites",
       "copyLink": "Copy product link"
@@ -66,8 +66,8 @@
     "tabs": {
       "description": "Description",
       "reviews": "Reviews",
-      "cancelPolicy": "Cancellation Policy",
-      "returnPolicy": "Return Policy"
+      "cancelPolicy": "Cancel policy",
+      "returnPolicy": "Return policy"
     },
     "policies": {
       "noCancel": "No cancellation policy available.",
@@ -80,28 +80,28 @@
     "onlyLeft": "Only {{count}} left in stock",
     "largeQuantity": "Large quantity selected (max 100)",
     "searchPlaceholder": "Search products...",
-    "share": "Share this",
+    "share": "Share",
     "delete": "Delete",
     "cancel": "Cancel"
   },
   "shop": {
     "all": "All",
-    "allCategories": "All Categories",
+    "allCategories": "All categories",
     "sortBy": "Sort by",
-    "resultsSummary": "{{from}}–{{to}} of {{total}}",
+    "resultsSummary": "Showing {{from}}–{{to}} of {{total}} results",
     "sort": {
       "rating": "Featured",
-      "sales": "Best Seller",
-      "createdAt": "New Arrivals",
+      "sales": "Best selling",
+      "createdAt": "Newest",
       "price_asc": "Price: Low to High",
       "price_desc": "Price: High to Low"
     }
   },
   "filters": {
     "header": "Filters",
-    "none": "No filters applied",
+    "none": "No active filters",
     "headerWithCount": "Filters ({{count}})",
-    "clear": "Clear Filters",
+    "clear": "Clear filters",
     "category": "Category",
     "color": "Color",
     "brand": "Brand",
@@ -110,117 +110,21 @@
     "dealsAndDiscounts": "Deals & Discounts",
     "discounts": "Discounts",
     "availability": "Availability",
+    "onSale": "On sale",
+    "status": "Status",
+    "reset": "Reset",
+    "all": "All",
     "inStock": "In stock",
-    "onSale": "On sale"
+    "outOfStock": "Out of stock"
   },
   "policies": {
     "header": "Policies",
     "returnPolicy": "Return Policy",
     "shippingPolicy": "Shipping Policy",
-    "cancelPolicy": "Cancellation Policy"
-  },
-  "checkout": {
-    "shippingInfo": "Shipping Information",
-    "cartSummary": "Your Shopping Cart",
-    "discount": "Discount",
-    "shipping": "Shipping",
-    "freeShippingApplied": "Free Shipping Applied",
-    "total": "Total",
-    "invalidCoupon": "Invalid coupon",
-    "validateCouponFailed": "Failed to validate coupon",
-    "placeOrderFailed": "Failed to place order. Please try again.",
-    "form": {
-      "alertUsingSaved": "Using your saved shipping information",
-      "useDifferentAddress": "Use different shipping address",
-      "country": "Country",
-      "selectCountry": "Select country",
-      "countryOptions": {
-        "palestine": "Palestine"
-      },
-      "firstName": "First Name",
-      "lastName": "Last Name",
-      "town": "Town",
-      "region": "Village or Region",
-      "address": "Detailed Address",
-      "phone": "Phone Number",
-      "secondPhone": "Second Phone Number (optional)",
-      "note": "Note (optional)",
-      "shippingMethod": "Shipping Method",
-      "selectShipping": "Select shipping option",
-      "coupon": "Coupon Code (optional)",
-      "placeholder": {
-        "firstName": "Enter first name",
-        "lastName": "Enter last name",
-        "town": "Enter town",
-        "region": "Enter village or region",
-        "address": "Enter detailed address",
-        "phone": "Enter phone number",
-        "secondPhone": "Enter second phone number (optional)",
-        "note": "Add a note for your order (optional)",
-        "coupon": "Enter coupon code"
-      },
-      "selectTownForShipping": "Please select a town to calculate shipping"
-    }
-  },
-  "orders": {
-    "header": "Order History",
-    "emptyTitle": "No orders found.",
-    "emptySubtitle": "You haven't placed any orders yet.",
-    "orderNumber": "Order #{{number}}",
-    "cancel": "Cancel",
-    "buyAgain": "Buy Again",
-    "addReview": "Add Review",
-    "editReview": "Edit Review",
-    "aria": {
-      "buyAgain": "Buy {{name}} again",
-      "addReview": "Add review for {{name}}",
-      "editReview": "Edit review for {{name}}"
-    },
-    "subtotal": "Subtotal",
-    "coupon": "Coupon",
-    "discount": "Discount",
-    "shipping": "Shipping",
-    "total": "Total",
-    "confirmHeader": "Confirmation",
-    "confirmCancel": "Are you sure you want to cancel this order?",
-    "confirmYes": "Yes",
-    "confirmNo": "No",
-    "filterByMonth": "Filter by month",
-    "clearMonth": "Clear",
-    "showMore": "Show more ({{count}})",
-    "showLess": "Show less"
-  },
-  "wishlist": {
-    "header": "My Wish List",
-    "loginPromptTitle": "It is empty here.",
-    "loginPromptSubtitle": "Personalize your shopping experience with your Wishlist.",
-    "login": "Login",
-    "emptyTitle": "Your wish list is empty",
-    "emptySubtitle": "Store everything you love on one page."
-  },
-  "contact": {
-    "header": "Contact",
-    "title": "Contact us",
-    "name": "Name",
-    "subject": "Subject",
-    "email": "Email",
-    "phoneNumber": "Phone Number",
-    "message": "Message",
-    "placeholder": {
-      "name": "Enter your name",
-      "subject": "Enter subject",
-      "email": "Enter your email",
-      "phone": "Enter your phone number",
-      "message": "Enter your message"
-    },
-    "send": "Send Message",
-    "thankYou": "Thank you for reaching out!",
-    "sendFailed": "Failed to send message. Please try again later.",
-    "phone": "Phone",
-    "address": "Address"
+    "cancelPolicy": "Cancel Policy"
   },
   "footer": {
-    "description": "Bringing you quality products at affordable prices.",
+    "description": "We offer quality products at great prices.",
     "explore": "Explore",
     "customerService": "Customer Service",
     "links": {
@@ -235,41 +139,62 @@
       "email": "Email us:"
     }
   },
+  "contact": {
+    "header": "Contact",
+    "title": "Contact Us",
+    "name": "Name",
+    "subject": "Subject",
+    "email": "Email",
+    "phoneNumber": "Phone number",
+    "message": "Message",
+    "placeholder": {
+      "name": "Enter your name",
+      "subject": "Enter subject",
+      "email": "Enter your email",
+      "phone": "Enter your phone number",
+      "message": "Enter your message"
+    },
+    "send": "Send message",
+    "thankYou": "Thanks for reaching out!",
+    "sendFailed": "Failed to send message. Please try again later.",
+    "phone": "Phone",
+    "address": "Address"
+  },
   "home": {
     "topPicks": {
-      "title": "Top picks for your little ones",
+      "title": "Top picks for you",
       "viewAll": "View all {{label}}"
     },
     "shopNow": {
-      "title": "Play, learn, & grow!",
-      "subtitle": "Crafting smiles with every toy, made for learning, fun, and growth",
+      "title": "Shop what you love",
+      "subtitle": "Discover quality products at great prices",
       "cta": "Shop now"
     },
     "collection": {
-      "title": "Find The Perfect Toy",
-      "subtitle": "Our Collections"
+      "title": "Find your perfect product",
+      "subtitle": "Our collections"
     },
     "reviews": {
-      "title": "Hear from Other Happy Parents",
-      "subtitle": "Customer testimonials"
+      "title": "What our customers say",
+      "subtitle": "Real experiences from our customers"
     }
   },
   "related": {
     "title": "Related products"
   },
   "highlights": {
-    "youMayAlsoLike": "You May Also Like"
+    "youMayAlsoLike": "You may also like"
   },
   "reviews": {
     "dialog": {
-      "addHeader": "Add Review",
-      "editHeader": "Edit Review",
+      "addHeader": "Add review",
+      "editHeader": "Edit review",
       "product": "Product",
       "rating": "Rating",
       "comment": "Comment",
       "commentPlaceholder": "Add a comment (optional)",
-      "submit": "Submit Review",
-      "update": "Update Review",
+      "submit": "Submit review",
+      "update": "Update review",
       "error": "Failed to submit review. Please try again."
     }
   },
@@ -278,39 +203,39 @@
       "success": "Email verified successfully! You can now log in.",
       "invalidLink": "Invalid or expired verification link",
       "verifying": "Verifying your email...",
-      "failed": "Verification Failed",
-      "failedDetail": "Failed to verify email. The link may have expired or is invalid.",
-      "goHome": "Go to Home"
+      "failed": "Verification failed",
+      "failedDetail": "Email verification failed. The link may be invalid or expired.",
+      "goHome": "Go to home"
     },
     "dialogs": {
       "login": {
-        "header": "Login to Your Account",
-        "success": "Login successful!",
-        "failure": "Login failed. Please check your credentials and try again.",
+        "header": "Log in to your account",
+        "success": "Logged in successfully!",
+        "failure": "Login failed. Please check your details and try again.",
         "formAria": "Login form",
-        "submitAria": "Login to account",
-        "submitLabel": "Login",
-        "forgotLink": "Forgot Password?",
+        "submitAria": "Log in",
+        "submitLabel": "Log in",
+        "forgotLink": "Forgot password?",
         "emailLabel": "Email",
         "emailPlaceholder": "Enter your email",
         "passwordLabel": "Password",
         "passwordPlaceholder": "Enter your password"
       },
       "register": {
-        "header": "Create an Account",
+        "header": "Create an account",
         "failure": "Registration failed. Please check your details and try again.",
         "formAria": "Registration form",
         "submitAria": "Register account",
         "submitLabel": "Register",
-        "firstNameLabel": "First Name",
+        "firstNameLabel": "First name",
         "firstNamePlaceholder": "Enter first name",
-        "lastNameLabel": "Last Name",
+        "lastNameLabel": "Last name",
         "lastNamePlaceholder": "Enter last name",
         "emailLabel": "Email",
         "emailPlaceholder": "Enter your email",
         "passwordLabel": "Password",
         "passwordPlaceholder": "Create a password",
-        "phoneLabel": "Phone Number",
+        "phoneLabel": "Phone number",
         "phonePlaceholder": "Enter phone number (optional)",
         "ageLabel": "Age",
         "agePlaceholder": "Enter age (optional)",
@@ -318,73 +243,154 @@
         "countryPlaceholder": "Enter country (optional)"
       },
       "forgot": {
-        "header": "Forgot Password",
-        "description": "Enter your email address and we'll send you a link to reset your password.",
+        "header": "Forgot password",
+        "description": "Enter your email and we’ll send you a reset link.",
         "emailLabel": "Email",
         "emailPlaceholder": "Enter your email",
-        "submitLabel": "Send Reset Link",
+        "submitLabel": "Send reset link",
         "failure": "Failed to send reset link. Please try again."
       },
       "verification": {
         "close": "Close",
         "inboxPrompt": "Please check your inbox and click the link to continue.",
         "register": {
-          "title": "Verify Your Email",
-          "heading": "Registration Successful!",
-          "messagePrefix": "We've sent a verification link to ",
-          "hint": "Didn't receive the email? Check your spam folder."
+          "title": "Verify your email",
+          "heading": "Registration successful!",
+          "messagePrefix": "We sent a verification link to ",
+          "hint": "Didn’t receive it? Check your spam folder."
         },
         "password": {
-          "title": "Check Your Email",
-          "heading": "Reset Link Sent!",
-          "messagePrefix": "We’ve emailed a password-reset link to ",
-          "hint": "Didn’t get the email? Check your spam or try again."
+          "title": "Verify your email",
+          "heading": "Reset link sent!",
+          "messagePrefix": "We sent a password reset link to ",
+          "hint": "Didn’t receive it? Check spam or try again."
         }
       },
       "verifyResend": {
         "header": "Email verification required",
         "body": "Your email is not verified. The verification link may have expired.",
         "resend": "Resend verification email",
-        "success": "We sent you a new verification link.",
+        "success": "A new verification link has been sent.",
         "failure": "Failed to resend verification email."
       }
     },
     "reset": {
       "invalidLink": "Invalid or expired reset link",
-      "success": "Password has been reset successfully",
-      "failed": "Failed to reset password",
-      "header": "Reset Your Password",
-      "newPassword": "New Password",
-      "confirmNewPassword": "Confirm New Password",
+      "success": "Password reset successfully",
+      "failed": "Password reset failed",
+      "header": "Reset password",
+      "newPassword": "New password",
+      "confirmNewPassword": "Confirm new password",
       "placeholder": {
         "newPassword": "Enter new password",
         "confirmNewPassword": "Confirm new password"
       },
-      "submit": "Reset Password"
+      "submit": "Reset password"
     },
-    "login": "Login",
+    "login": "Log in",
     "register": "Register",
-    "logout": "Logout"
+    "logout": "Log out"
+  },
+  "freeShipping": {
+    "unlocked": "🎉 You’ve unlocked free shipping!",
+    "addMore": "Add {{amount}} to get free shipping 🚚",
+    "overThreshold": "Free shipping on orders over {{amount}} 🚚"
+  },
+  "orders": {
+    "header": "Order history",
+    "emptyTitle": "No orders yet.",
+    "emptySubtitle": "You haven’t placed any orders yet.",
+    "orderNumber": "Order #{{number}}",
+    "cancel": "Cancel",
+    "buyAgain": "Buy again",
+    "addReview": "Add review",
+    "editReview": "Edit review",
+    "aria": {
+      "buyAgain": "Buy {{name}} again",
+      "addReview": "Add review for {{name}}",
+      "editReview": "Edit review for {{name}}"
+    },
+    "subtotal": "Subtotal",
+    "coupon": "Coupon",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "total": "Total",
+    "confirmHeader": "Confirm",
+    "confirmCancel": "Are you sure you want to cancel this order?",
+    "confirmYes": "Yes",
+    "confirmNo": "No",
+    "filterByMonth": "Filter by month",
+    "clearMonth": "Clear",
+    "showMore": "Show more ({{count}})",
+    "showLess": "Show less"
+  },
+  "checkout": {
+    "shippingInfo": "Shipping information",
+    "cartSummary": "Cart summary",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "freeShippingApplied": "Free shipping applied",
+    "total": "Total",
+    "invalidCoupon": "Invalid coupon code",
+    "validateCouponFailed": "Failed to validate coupon",
+    "placeOrderFailed": "Failed to place order. Please try again.",
+    "form": {
+      "alertUsingSaved": "Using saved shipping information",
+      "useDifferentAddress": "Use a different shipping address",
+      "country": "Country",
+      "selectCountry": "Select country",
+      "countryOptions": {
+        "palestine": "Palestine"
+      },
+      "firstName": "First name",
+      "lastName": "Last name",
+      "town": "City",
+      "region": "Region / Area",
+      "address": "Detailed address",
+      "phone": "Phone number",
+      "secondPhone": "Second phone (optional)",
+      "note": "Note (optional)",
+      "shippingMethod": "Shipping method",
+      "selectShipping": "Select shipping option",
+      "coupon": "Coupon code (optional)",
+      "placeholder": {
+        "firstName": "Enter first name",
+        "lastName": "Enter last name",
+        "town": "Enter city",
+        "region": "Enter region / area",
+        "address": "Enter detailed address",
+        "phone": "Enter phone number",
+        "secondPhone": "Enter second phone (optional)",
+        "note": "Add a note (optional)",
+        "coupon": "Enter coupon code"
+      },
+      "selectTownForShipping": "Please select a city to calculate shipping cost"
+    }
+  },
+  "wishlist": {
+    "header": "Wishlist",
+    "loginPromptTitle": "Nothing here yet.",
+    "loginPromptSubtitle": "Save your favorite products in one place.",
+    "login": "Log in",
+    "emptySubtitle": "Keep everything you love in one spot.",
+    "sort": {
+      "recentlyAdded": "Recently added"
+    }
   },
   "rateLimit": {
     "passwordReset": {
       "cooldown": {
-        "tomorrow": "Too many attempts. Please try again tomorrow.",
-        "hours": "Too many attempts. Please try again in {{hours}} hour(s).",
-        "minutes": "Too many attempts. Please try again in {{mins}} minute(s)."
+        "tomorrow": "Too many attempts. Try again tomorrow.",
+        "hours": "Too many attempts. Try again in {{hours}} hour(s).",
+        "minutes": "Too many attempts. Try again in {{mins}} minute(s)."
       }
     },
     "verifyResend": {
       "cooldown": {
-        "tomorrow": "Too many attempts. Please try again tomorrow.",
-        "hours": "Too many attempts. Please try again in {{hours}} hour(s).",
-        "minutes": "Too many attempts. Please try again in {{mins}} minute(s)."
+        "tomorrow": "Too many attempts. Try again tomorrow.",
+        "hours": "Too many attempts. Try again in {{hours}} hour(s).",
+        "minutes": "Too many attempts. Try again in {{mins}} minute(s)."
       }
     }
-  },
-  "freeShipping": {
-    "unlocked": "🎉 You’ve unlocked free shipping!",
-    "addMore": "Add {{amount}} more to unlock free shipping 🚚",
-    "overThreshold": "Free shipping on orders over {{amount}} 🚚"
   }
 }

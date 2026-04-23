@@ -1,0 +1,86 @@
+@import '../styles/constants.scss';
+
+/*
+  Luxury theme - Premium, sophisticated, high-end
+*/
+.theme-luxury {
+  --font-primary: 'Cormorant Garamond', serif;
+
+  --color-primary: #7c5c3e;
+  --color-primary-dark: #5c3d20;
+  --color-primary-dark-rgb: 92, 61, 32;
+  --color-primary-hover: #6b4c30;
+  --color-primary-light: #fdf6ee;
+  --color-primary-rgb: 124, 92, 62;
+
+  --color-accent: #c8a96e;
+  --color-accent-hover: #b8953e;
+  --color-accent-light: #edddbe;
+  --color-accent-light-hover: #e9cf9b;
+  --color-accent-dark: #9e7a35;
+
+  --color-secondary: #3b2a1f;
+  --color-secondary-light: #f3e2ca;
+  --color-secondary-hover: #2c1f17;
+  --color-secondary-dark: #1c120d;
+  --color-secondary-light-hover: #f2ece4;
+
+  --color-text-primary: #2c1810;
+  --color-text-primary-rgb: 44, 24, 16;
+  --color-text-secondary: #5c3d20;
+  --color-text-muted: #7a5a3c;
+  --color-text-light: #b89a7a;
+
+  --color-bg-primary: #fefcf8;
+  --color-bg-secondary: #f9f5ef;
+  --color-bg-tertiary: #f2ece0;
+  --color-bg-hover: #f5efe6;
+  --color-bg-overlay: rgba(44, 24, 16, 0.5);
+  --color-bg-avatar: #e8ddd0;
+
+  --color-border: #e8ddd0;
+  --color-border-dark: #cdbca8;
+  --color-border-light: #f3ece2;
+  --color-border-disabled: #efe6da;
+
+  --color-white: #ffffff;
+  --color-black: #000000;
+  --color-black-rgb: 0, 0, 0;
+
+  --color-bg-info: #f6f0e8;
+  --color-bg-warning: #f7efe2;
+  --color-bg-success: #f3efe8;
+
+  --color-success: #3f6b4f;
+  --color-success-hover: #2f5140;
+  --color-success-light: #e9f2ec;
+  --color-success-dark: #1f3327;
+
+  --color-info: #5b6b7a;
+  --color-info-hover: #43515c;
+  --color-info-light: #eef3f6;
+  --color-info-dark: #2a343d;
+
+  --color-warning: #b8893a;
+  --color-warning-hover: #9e742f;
+  --color-warning-light: #fbf4e5;
+  --color-warning-dark: #6b4f1f;
+  --color-warning-brand: #d4af6a;
+
+  --color-error: #7a3b3b;
+  --color-error-hover: #5e2d2d;
+  --color-error-light: #f6eaea;
+  --color-error-dark: #3b1c1c;
+
+  --color-text-dark: #1f120d;
+  --color-text-grey: #6b4c30;
+  --color-text-grey-light: #a1886a;
+  --color-text-grey-dark: #4b3322;
+  --color-text-disabled: #c7b5a3;
+  --color-text-review: #2a1a12;
+
+  --color-icon: #4b3322;
+  --color-disabled: #e8ddd0;
+  --color-disabled2: #d9cbb9;
+  --color-disabled-text: #b8a28d;
+}

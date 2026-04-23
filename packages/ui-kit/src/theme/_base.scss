@@ -1,0 +1,81 @@
+@import '../styles/constants.scss';
+
+/*
+  Base theme variables (default/kids theme)
+  - Default variables mirror shared SCSS tokens
+*/
+:root {
+  --font-primary: 'Comfortaa', sans-serif;
+
+  --color-primary: #{$color-primary};
+  --color-primary-dark: #{$color-primary-dark};
+  --color-primary-dark-rgb: #{$color-primary-dark-rgb};
+  --color-primary-hover: #{$color-primary-hover};
+  --color-primary-light: #{$color-primary-light};
+  --color-primary-rgb: #{red($color-primary)}, #{green($color-primary)}, #{blue($color-primary)};
+
+  --color-accent: #{$color-accent};
+  --color-accent-hover: #{$color-accent-hover};
+  --color-accent-light: #{$color-accent-light};
+  --color-accent-light-hover: #{$color-accent-light};
+  --color-accent-dark: #{$color-accent-dark};
+
+  --color-secondary: #{$color-secondary};
+  --color-secondary-light: #{$color-secondary-light};
+
+  --color-text-primary: #{$color-text-primary};
+  --color-text-primary-rgb:
+    #{red($color-text-primary)}, #{green($color-text-primary)}, #{blue($color-text-primary)};
+  --color-text-secondary: #{$color-text-secondary};
+  --color-text-muted: #{$color-text-muted};
+  --color-text-light: #{$color-text-light};
+
+  --color-bg-primary: #{$color-bg-primary};
+  --color-bg-secondary: #{$color-bg-secondary};
+  --color-bg-tertiary: #{$color-bg-tertiary};
+
+  --color-border: #{$color-border};
+  --color-border-dark: #{$color-border-dark};
+
+  --color-white: #{$color-white};
+  --color-black: #{$color-black};
+  --color-black-rgb: #{red($color-black)}, #{green($color-black)}, #{blue($color-black)};
+  --color-border-light: #{$color-border-light};
+  --color-border-disabled: #{$color-border-disabled};
+  --color-bg-info: #{$color-bg-info};
+  --color-bg-warning: #{$color-bg-warning};
+  --color-bg-success: #{$color-bg-success};
+  --color-bg-overlay: #{$color-bg-overlay};
+  --color-bg-hover: #{$color-bg-hover};
+  --color-bg-avatar: #{$color-bg-avatar};
+  --color-secondary-hover: #{$color-secondary-hover};
+  --color-secondary-dark: #{$color-secondary-dark};
+  --color-secondary-light-hover: #{$color-secondary-light-hover};
+  --color-success: #{$color-success};
+  --color-success-hover: #{$color-success-hover};
+  --color-success-light: #{$color-success-light};
+  --color-success-dark: #{$color-success-dark};
+  --color-info: #{$color-info};
+  --color-info-hover: #{$color-info-hover};
+  --color-info-light: #{$color-info-light};
+  --color-info-dark: #{$color-info-dark};
+  --color-warning: #{$color-warning};
+  --color-warning-hover: #{$color-warning-hover};
+  --color-warning-light: #{$color-warning-light};
+  --color-warning-dark: #{$color-warning-dark};
+  --color-warning-brand: #{$color-warning-brand};
+  --color-error: #{$color-error};
+  --color-error-hover: #{$color-error-hover};
+  --color-error-light: #{$color-error-light};
+  --color-error-dark: #{$color-error-dark};
+  --color-text-dark: #{$color-text-dark};
+  --color-text-grey: #{$color-text-grey};
+  --color-text-grey-light: #{$color-text-grey-light};
+  --color-text-grey-dark: #{$color-text-grey-dark};
+  --color-text-disabled: #{$color-text-disabled};
+  --color-text-review: #{$color-text-review};
+  --color-icon: #{$color-icon};
+  --color-disabled: #{$color-disabled};
+  --color-disabled2: #{$color-disabled2};
+  --color-disabled-text: #{$color-disabled-text};
+}

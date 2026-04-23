@@ -26,15 +26,6 @@
     transform 0.25s cubic-bezier(0, 0, 0.3, 1),
     box-shadow 0.25s cubic-bezier(0, 0, 0.3, 1);
 
-  /* text readability overlay */
-  &::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.45) 0%, transparent 70%);
-    pointer-events: none;
-  }
-
   p {
     position: relative;
     z-index: 1;

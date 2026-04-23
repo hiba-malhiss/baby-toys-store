@@ -313,7 +313,7 @@ $appearances: (
       text-hover: var(--color-white, $color-white),
       text-selected: var(--color-white, $color-white),
       bg-default: var(--color-primary, $color-primary),
-      bg-hover: var(--color-info-hover, $color-info-hover),
+      bg-hover: var(--color-primary-hover, $color-info-hover),
       bg-selected: var(--color-primary-dark, $color-primary-dark),
       text-disabled: var(--color-disabled-text, $color-disabled-text),
       bg-disabled: var(--color-disabled, $color-disabled),
