@@ -10,6 +10,7 @@ type CardProps = {
   className?: string;
   fullWidth?: boolean;
   withoutBorder?: boolean;
+  withoutPadding?: boolean;
 };
 
 const sizeClassMap: Record<string, string> = {
@@ -22,6 +23,7 @@ const sizeClassMap: Record<string, string> = {
 const Card: React.FC<CardProps> = ({
   withoutBorder,
   fullWidth,
+  withoutPadding,
   children,
   className,
   header,
@@ -32,6 +34,7 @@ const Card: React.FC<CardProps> = ({
       className={clsx(
         fullWidth && styles.fullWidth,
         withoutBorder && styles.withoutBorder,
+        withoutPadding && styles.withoutPadding,
         styles.card,
         className,
         size && sizeClassMap[size]

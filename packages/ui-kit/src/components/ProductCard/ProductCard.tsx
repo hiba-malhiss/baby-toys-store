@@ -159,7 +159,7 @@ const ProductCard: React.FC<ProductCardProps> = ({
         }
       }}
     >
-      <Card size="small" className={styles.productCardBox}>
+      <Card size="small" className={styles.productCardBox} withoutPadding>
         {label && !isSmallSize && (
           <Chip label={label} appearance={labelAppearance} className={styles.productCardChip} />
         )}
