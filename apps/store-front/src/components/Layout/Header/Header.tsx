@@ -49,7 +49,6 @@ const Header = () => {
         <Flex align="center" spacing="s" className="bts-hideOnMobile">
           {isAuthenticated && (
             <Button
-              fullWidth
               appearance="link"
               color="light"
               onClick={() => {

@@ -10,6 +10,10 @@
   flex-wrap: wrap;
   color: var(--color-text-grey);
 
+  .footer-logo img {
+    max-height: 80px;
+  }
+
   p {
     min-height: 32px;
     display: flex;
