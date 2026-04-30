@@ -5,7 +5,8 @@
   margin-bottom: 50px;
   width: 100%;
 
-  &-actions > div:not(:first-of-type), &-actions > label {
+  &-actions > div:not(:first-of-type),
+  &-actions > label {
     flex-shrink: 0;
   }
 

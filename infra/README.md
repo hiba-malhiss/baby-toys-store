@@ -51,9 +51,11 @@ This project runs **everything inside Docker containers**.
 - SSH passwords / keys
 
 ## Git token
+
 The git token is stored under: `/opt/toy-store-infra/.ghcr-token`
 update token via: `ssh root@82.180.155.197 "printf '%s' 'NEW_TOKEN' > /opt/toy-store-infra/.ghcr-token"`
 
 ## ENV variable
+
 toy-store-infra → Actions tab
-You should see "Update Customer Env Variable" in the left sidebar. Click it → Run workflow button (top right) → fill in the fields. 
+You should see "Update Customer Env Variable" in the left sidebar. Click it → Run workflow button (top right) → fill in the fields.
