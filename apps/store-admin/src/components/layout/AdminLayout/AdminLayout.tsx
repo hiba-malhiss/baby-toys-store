@@ -20,6 +20,7 @@ import {
   Settings,
   Truck,
   LogOut,
+  FileUp,
 } from 'lucide-react';
 import LanguageSwitcher from '../../../i18n/LanguageSwitcher.tsx';
 import { useLogo } from '../../../hooks/useLogo.ts';
@@ -38,6 +39,7 @@ const AdminLayout: React.FC<{
     () => [
       { label: t('menu.dashboard'), route: '/dashboard', iconComp: LayoutDashboard },
       { label: t('menu.products'), route: '/products', iconComp: Box },
+      { label: t('menu.importProducts', { defaultValue: 'Import Products' }), route: '/products/import', iconComp: FileUp },
       {
         label: t('menu.catalog'),
         iconComp: Layers,
@@ -101,7 +103,7 @@ const AdminLayout: React.FC<{
           model={menuItems}
           header={
             <Flex justify="between" align="center" wrap fullWidth>
-              <img src={logoUrl} alt="logo" className={styles.adminLayoutLogo} />
+              {logoUrl ? <img src={logoUrl} alt="logo" className={styles.adminLayoutLogo} /> : null}
               <LanguageSwitcher />
             </Flex>
           }
