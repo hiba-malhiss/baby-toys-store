@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -14,7 +13,7 @@ import {
   Tooltip,
   NoDataFound,
 } from '@baby-toys/ui-kit';
-import { Plus, Search, Trash2, FileUp } from 'lucide-react';
+import { Plus, Search, Trash2 } from 'lucide-react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useProductsTableColumns } from './useProductsTableColumns';
 import { useProductsPage } from './useProductsPage';
@@ -23,7 +22,6 @@ import styles from './ProductsPage.module.scss';
 const ProductsPage: React.FC = () => {
   const { t } = useTranslation('common');
   const qc = useQueryClient();
-  const navigate = useNavigate();
   const [searchValue, setSearchValue] = React.useState('');
   const {
     rowsPerPage,
@@ -68,16 +66,6 @@ const ProductsPage: React.FC = () => {
                 aria-label={t('products.actions.refresh')}
               >
                 {t('products.actions.refresh')}
-              </Button>
-            </Tooltip>
-            <Tooltip position="top" content="Import Products from Excel">
-              <Button
-                onClick={() => navigate('/products/import')}
-                leftIconComp={FileUp}
-                color="secondary"
-                aria-label="Import Products"
-              >
-                Import Excel
               </Button>
             </Tooltip>
             <Select

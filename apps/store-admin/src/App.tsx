@@ -30,7 +30,6 @@ import ExpensesPage from './pages/ExpensesPage/ExpensesPage';
 import OptionsPage from './pages/OptionsPage/OptionsPage.tsx';
 import AttributesPage from './pages/AttributesPage/AttributesPage.tsx';
 import ProductVariationsPage from './pages/ProductVariationsPage/ProductVariationsPage';
-import ProductImportExportPage from './pages/ProductImportPage/ProductImportExportPage.tsx';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -85,14 +84,6 @@ const AppContent: React.FC = () => {
           element={
             <PrivateRoute>
               <DashboardPage />
-            </PrivateRoute>
-          }
-        />
-        <Route
-          path="/products/import"
-          element={
-            <PrivateRoute>
-              <ProductImportExportPage />
             </PrivateRoute>
           }
         />

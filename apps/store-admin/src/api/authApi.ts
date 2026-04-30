@@ -53,10 +53,7 @@ export const useLogout = () =>
     mutationFn: async () => {
       await api.post('/api/auth/logout');
       clearAccessToken();
-      // Set auth-init to false BEFORE clearing so AuthContext sees isAuthenticated=false
-      // immediately — queryClient.clear() alone leaves staleTime:Infinity queries stale/undefined
-      queryClient.setQueryData(['admin-auth-init'], { isAuthenticated: false });
-      queryClient.removeQueries({ queryKey: ['profile'] });
+      queryClient.clear();
     },
   });
 
