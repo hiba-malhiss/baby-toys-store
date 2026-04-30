@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@baby-toys/ui-kit';
 import { defaultProductValues, productSchema } from './product.helper';
-import { useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import {
   useCreateProduct,
@@ -77,6 +76,7 @@ export const useProductForm = () => {
     if (product) {
       setExistingImages(product.images || []);
       setMainImageUrl(product.mainImage || null);
+      setMainImageFile(null);
 
       // Build locale maps from admin translations
       const trMap = new Map<string, any>();
@@ -169,20 +169,22 @@ export const useProductForm = () => {
     }
   }, [product, reset]);
 
+  // Combined image pool for unified uploader
+  const allImages: (File | string)[] = [...existingImages, ...newImages];
+
   const submitForm = async (data: ProductFormValues) => {
     try {
       if (!mainImageUrl && !mainImageFile) {
-        toast.error('Please upload a main image');
+        toast.error('Please select a main image from the uploaded images');
         return;
       }
 
-      // Helper to sanitize a locale block
       const sanitizeLocale = (locale: 'en' | 'ar') => {
-        const t = (data.translations as any)[locale] || {};
-        const name = (t.name || '').trim().slice(0, MAX.name);
-        const shortDescription = (t.shortDescription || '').trim().slice(0, MAX.shortDescription);
-        const description = (t.description || '').trim().slice(0, MAX.description);
-        const featureBullets = (Array.isArray(t.featureBullets) ? t.featureBullets : [])
+        const tr = (data.translations as any)[locale] || {};
+        const name = (tr.name || '').trim().slice(0, MAX.name);
+        const shortDescription = (tr.shortDescription || '').trim().slice(0, MAX.shortDescription);
+        const description = (tr.description || '').trim().slice(0, MAX.description);
+        const featureBullets = (Array.isArray(tr.featureBullets) ? tr.featureBullets : [])
           .map((f: unknown) =>
             String(f || '')
               .trim()
@@ -190,8 +192,8 @@ export const useProductForm = () => {
           )
           .filter(Boolean)
           .slice(0, MAX.featureBulletsCount);
-        const detailsList: Array<{ label?: unknown; value?: unknown }> = Array.isArray(t.details)
-          ? (t.details as Array<{ label?: unknown; value?: unknown }>)
+        const detailsList: Array<{ label?: unknown; value?: unknown }> = Array.isArray(tr.details)
+          ? (tr.details as Array<{ label?: unknown; value?: unknown }>)
           : [];
         const detailsObj = detailsList.reduce<Record<string, string>>((acc, item) => {
           const key = String(item?.label || '')
@@ -232,12 +234,11 @@ export const useProductForm = () => {
         // non-localized (variant-first)
         releaseDate: data.releaseDate || undefined,
         images: existingImages.slice(0, MAX.images),
-        mainImage: mainImageUrl || '',
+        mainImage: mainImageFile ? '' : mainImageUrl || '',
         isActive: data.isActive,
         categoryId: data.categoryId,
-        attributes: attributes,
-        options: options,
-        // localized
+        attributes,
+        options,
         translations: [
           { locale: 'en', ...en },
           { locale: 'ar', ...ar },
@@ -250,12 +251,16 @@ export const useProductForm = () => {
 
       const newProductId = productId || returnedId;
 
-      if (mainImageFile) {
-        await uploadMainImage(newProductId, mainImageFile);
+      // Upload new gallery images
+      for (const file of newImages) {
+        if (file !== mainImageFile) {
+          await uploadProductImage(newProductId, file);
+        }
       }
 
-      for (const file of newImages) {
-        await uploadProductImage(newProductId, file);
+      // Upload main image if it's a new file
+      if (mainImageFile) {
+        await uploadMainImage(newProductId, mainImageFile);
       }
 
       toast.success(`Product ${productId ? 'updated' : 'created'} successfully`);
@@ -265,48 +270,40 @@ export const useProductForm = () => {
     }
   };
 
-  const mainImageUploaderProps = {
-    images: mainImageFile ? [mainImageFile] : mainImageUrl ? [mainImageUrl] : [],
-    multiple: false,
-    onBackendDelete: async (url: string) => {
-      if (!productId) return;
-      setIsDeletingImage(true);
-      try {
-        await deleteImageMutation.mutateAsync(url);
-        setMainImageUrl(null);
-      } catch (error: any) {
-        console.error('Error deleting main image:', error);
-        const backendMsg =
-          error?.response?.data?.message || error?.message || 'Failed to delete image';
-        toast.error(backendMsg);
-        throw error;
-      } finally {
-        setIsDeletingImage(false);
-      }
-    },
-    onImagesChange: (files: (File | string)[]) => {
-      const file = files[0];
-      if (file instanceof File) {
-        setMainImageFile(file);
-        setMainImageUrl(null);
-      } else if (typeof file === 'string') {
-        setMainImageUrl(file);
-        setMainImageFile(null);
-      }
-    },
+  // Handle selection from image picker modal
+  const handleMainImageSelect = (urlOrBlob: string) => {
+    setMainImageUrl(urlOrBlob);
+    // If it's a blob URL, find the matching File
+    if (urlOrBlob.startsWith('blob:')) {
+      const matchedFile = newImages.find((f) => urlOrBlob === URL.createObjectURL(f));
+      setMainImageFile(matchedFile || null);
+    } else {
+      setMainImageFile(null);
+    }
   };
 
-  const imageUploaderProps = {
-    images: [...existingImages, ...newImages],
+  // Unified uploader handler
+  const unifiedUploaderProps = {
+    images: allImages,
     multiple: true,
+    maxImages: MAX.images,
     onBackendDelete: async (url: string) => {
       if (!productId) return;
+
+      // Block deletion if this is the main image
+      if (mainImageUrl === url) {
+        toast.error(
+          'This image is currently set as the main image. Please choose a different main image first.'
+        );
+        // Throw to stop the uploader from removing it from the UI
+        throw new Error('Cannot delete main image');
+      }
+
       setIsDeletingImage(true);
       try {
         await deleteImageMutation.mutateAsync(url);
         setExistingImages((imgs) => imgs.filter((img) => img !== url));
       } catch (error: any) {
-        console.error('Error deleting image:', error);
         const backendMsg =
           error?.response?.data?.message || error?.message || 'Failed to delete image';
         toast.error(backendMsg);
@@ -324,7 +321,16 @@ export const useProductForm = () => {
       });
       setExistingImages(urls);
       setNewImages(filesArr);
+
+      // Clear main image if its backend URL was removed
+      if (mainImageUrl && !mainImageUrl.startsWith('blob:')) {
+        if (!urls.includes(mainImageUrl)) {
+          setMainImageUrl(null);
+          setMainImageFile(null);
+        }
+      }
     },
+    isDisabled: isDeletingImage,
   };
 
   const onInvalid = () => {
@@ -339,18 +345,17 @@ export const useProductForm = () => {
     setValue,
     categories,
     existingImages,
-    setExistingImages,
     newImages,
-    setNewImages,
+    allImages,
     mainImageUrl,
-    setMainImageUrl,
     mainImageFile,
+    setMainImageUrl,
     setMainImageFile,
+    handleMainImageSelect,
     isEditMode: !!productId,
+    productId,
     isDeletingImage,
-    imageUploaderProps,
-    mainImageUploaderProps,
-    // counters data
+    unifiedUploaderProps,
     counters: {
       en: {
         watchName: watchNameEn,

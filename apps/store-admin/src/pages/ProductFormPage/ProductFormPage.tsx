@@ -1,5 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
 
 import {
   Button,
@@ -12,14 +13,16 @@ import {
   Accordion,
   AccordionGroup,
   Divider,
+  ImagePickerModal,
 } from '@baby-toys/ui-kit';
+
+import { Layers } from 'lucide-react';
 
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import LocalizedFields from './LocalizedFields';
 
 import { useProductForm } from './useProductForm';
-
 import { useAttributeTypes } from '../../api/attributeApi';
 
 import styles from './Productsform.module.scss';
@@ -30,6 +33,7 @@ import ProductRelationshipDiagram from '../../components/ProductRelationshipDiag
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const { data: attributeTypes = [] } = useAttributeTypes();
 
   const {
@@ -39,8 +43,11 @@ const ProductFormPage: React.FC = () => {
     isLoadingProduct,
     categories,
     isEditMode,
-    imageUploaderProps,
-    mainImageUploaderProps,
+    productId,
+    unifiedUploaderProps,
+    allImages,
+    mainImageUrl,
+    handleMainImageSelect,
     isDeletingImage,
     setValue,
   } = useProductForm();
@@ -53,7 +60,20 @@ const ProductFormPage: React.FC = () => {
     <AdminLayout>
       <form onSubmit={handleSubmit}>
         <Flex direction="vertical" spacing="m">
-          <Heading>{isEditMode ? t('productForm.editTitle') : t('productForm.addTitle')}</Heading>
+          <Flex justify="between" align="center" fullWidth>
+            <Heading>{isEditMode ? t('productForm.editTitle') : t('productForm.addTitle')}</Heading>
+            {isEditMode && productId && (
+              <Button
+                type="button"
+                appearance="outline"
+                leftIconComp={Layers}
+                onClick={() => navigate(`/edit-product/${productId}/variations`)}
+              >
+                {t('productForm.manageVariations', { defaultValue: 'Manage Variations' })}
+              </Button>
+            )}
+          </Flex>
+
           <AccordionGroup fullWidth withDivider>
             <Accordion
               header={t('productForm.tab.general', { defaultValue: 'General' })}
@@ -85,26 +105,29 @@ const ProductFormPage: React.FC = () => {
             </Accordion>
 
             <Accordion header={t('productForm.tab.media', { defaultValue: 'Media' })}>
-              <div className={styles.productsFormGeneral}>
+              <Flex direction="vertical" spacing="m" fullWidth>
+                {/* Single unified uploader for all images */}
                 <FormFieldWrapper
-                  name="mainImagePresent"
-                  control={control as any}
-                  label={t('productForm.mainImage')}
+                  label={t('productForm.galleryImages', { defaultValue: 'Product Images' })}
                   fullWidth
-                  required
-                  rules={{
-                    validate: () =>
-                      (mainImageUploaderProps.images && mainImageUploaderProps.images.length > 0) ||
-                      'Required',
-                  }}
                 >
-                  <ImageUploader {...mainImageUploaderProps} fullHeight maxImages={1} />
+                  <ImageUploader {...unifiedUploaderProps} fullHeight maxImages={10} />
                 </FormFieldWrapper>
 
-                <FormFieldWrapper label={t('productForm.galleryImages')} fullWidth>
-                  <ImageUploader {...imageUploaderProps} fullHeight maxImages={10} />
-                </FormFieldWrapper>
-              </div>
+                {/* Main image selector */}
+                <ImagePickerModal
+                  images={allImages}
+                  value={mainImageUrl}
+                  onChange={handleMainImageSelect}
+                  label={t('productForm.mainImage', { defaultValue: 'Main Image' })}
+                  placeholder={t('productForm.selectMainImage', {
+                    defaultValue: 'Select Main Image',
+                  })}
+                  title={t('productForm.selectMainImage', { defaultValue: 'Select Main Image' })}
+                  disabled={isDeletingImage}
+                  status="default"
+                />
+              </Flex>
             </Accordion>
 
             <Accordion

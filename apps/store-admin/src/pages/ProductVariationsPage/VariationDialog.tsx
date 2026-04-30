@@ -9,8 +9,8 @@ import {
   Select,
   Option,
   useToast,
-  Image,
   Divider,
+  ImagePickerModal,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
@@ -191,7 +191,7 @@ const VariationDialog: React.FC<Props> = ({
     productOptions.map((o) => o.type.id),
     t
   );
-  const { control, handleSubmit, reset, watch } = useForm<FormState>({
+  const { control, handleSubmit, reset, watch, setValue } = useForm<FormState>({
     defaultValues: DEFAULT_FORM,
     resolver: zodResolver(schema),
   });
@@ -200,6 +200,8 @@ const VariationDialog: React.FC<Props> = ({
     () => uniq([...(productMainImage ? [productMainImage] : []), ...(productImages || [])]),
     [productMainImage, productImages]
   );
+
+  const selectedMainImage = watch('mainImage');
 
   useEffect(() => {
     if (!isOpen) return;
@@ -294,28 +296,28 @@ const VariationDialog: React.FC<Props> = ({
 
       <Divider className="bts-marginVm" />
 
-      <FormFieldWrapper
-        name="mainImage"
-        control={control}
+      {/* Image picker */}
+      <ImagePickerModal
+        images={allProductImages}
+        value={selectedMainImage}
+        onChange={(url) => {
+          setValue('mainImage', url, { shouldValidate: true });
+        }}
         label={t('app.variation.mainImage')}
-        required
-        fullWidth
-      >
-        <Select>
-          {allProductImages.map((img) => (
-            <Option key={img} value={img}>
-              <Flex align="center" spacing="m">
-                <Image
-                  src={img}
-                  alt="img"
-                  style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 4 }}
-                />
-                <span>{img}</span>
-              </Flex>
-            </Option>
-          ))}
-        </Select>
-      </FormFieldWrapper>
+        placeholder={t('app.variation.selectImage', { defaultValue: 'Select Image' })}
+        title={t('app.variation.selectVariationImage', {
+          defaultValue: 'Select Variation Image',
+        })}
+        hint={
+          allProductImages.length === 0
+            ? t('app.variation.noImagesHint', {
+                defaultValue: 'No product images available. Add images to the product first.',
+              })
+            : undefined
+        }
+        disabled={allProductImages.length === 0}
+        status="default"
+      />
 
       {productOptions.length > 0 && (
         <>
