@@ -1,7 +1,22 @@
 .pagination {
   display: flex;
+  align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  font-size: 13px;
+  color: var(--color-text-muted);
+  user-select: none;
+  letter-spacing: 0.05em;
+  padding-bottom: 4px; // optical alignment with dots
 }
 
 /* Flip chevron icons visually in RTL without changing behavior */
@@ -9,7 +24,6 @@
   transform: scaleX(-1);
 }
 
-/* If your Button renders the icon within a specific wrapper, use more specific selectors as needed */
 [dir='rtl'] .paginationPrev svg,
 [dir='rtl'] .paginationNext svg {
   transform-origin: center;

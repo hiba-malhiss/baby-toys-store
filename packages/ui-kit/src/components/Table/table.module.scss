@@ -10,7 +10,7 @@
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--color-border-light, $color-border-light);
   border-top: none;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
   &:first-child {
     border-radius: $radius-md;
@@ -18,14 +18,14 @@
   }
 
   &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
+    width: 5px;
+    height: 5px;
   }
   &::-webkit-scrollbar-track {
-    background: var(--color-bg-secondary, $color-bg-secondary);
+    background: transparent;
   }
   &::-webkit-scrollbar-thumb {
-    border-radius: 4px;
+    border-radius: 99px;
     background-color: var(--color-border-dark, $color-border-dark);
   }
   &::-webkit-scrollbar-thumb:hover {
@@ -34,50 +34,69 @@
 }
 
 .tableTitle {
-  padding: 1rem 1rem 0.5rem;
-  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 1.25rem;
+  font-size: 0.9375rem;
   font-weight: 600;
+  letter-spacing: -0.01em;
   color: var(--color-text-primary, $color-text-primary);
-  border-bottom: 1px solid var(--color-border-light, $color-border-light);
   background-color: var(--color-bg-primary, $color-bg-primary);
   border-radius: $radius-md $radius-md 0 0;
-  margin-bottom: 0;
+  border: 1px solid var(--color-border-light, $color-border-light);
+  border-bottom: none;
+
+    // subtle left accent stripe
+  &::before {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 1.1em;
+    border-radius: 99px;
+    background: var(--color-primary, $color-primary);
+    flex-shrink: 0;
+  }
 
   &:empty {
     display: none;
   }
 }
 
+// ─── Image cells ────────────────────────────────────────────────────────────
+
 .cellImageWrapper {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: $radius-xs;
+  border-radius: $radius-sm;
   overflow: hidden;
   background: var(--color-bg-tertiary, $color-bg-tertiary);
+  border: 1px solid var(--color-border-light, $color-border-light);
 }
 
 .cellImage {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 4px;
 }
 
 .cellPlaceholder {
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-secondary, $color-text-secondary);
   background-color: var(--color-bg-tertiary, $color-bg-tertiary);
   font-style: italic;
-  border-radius: $radius-xs;
+  border-radius: $radius-sm;
   font-size: 11px;
 }
+
+// ─── Table core ─────────────────────────────────────────────────────────────
 
 .table {
   width: 100%;
@@ -88,9 +107,9 @@
 
   .emptyMessage {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 3.5rem 1rem;
     color: var(--color-text-secondary, $color-text-secondary);
-    font-style: italic;
+    font-size: 0.875rem;
 
     &Content {
       display: flex;
@@ -101,26 +120,22 @@
   }
 
   th {
-    padding: 0.65rem 1rem;
-    border-bottom: 2px solid var(--color-border, $color-border);
+    padding: 0.6rem 1.125rem;
+    border-bottom: 1px solid var(--color-border, $color-border);
     vertical-align: middle;
     text-align: left;
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.07em;
     text-transform: uppercase;
     color: var(--color-text-muted, $color-text-muted);
     background-color: var(--color-bg-secondary, $color-bg-secondary);
     user-select: none;
-    position: relative;
-    transition: color $transition-fast;
     white-space: nowrap;
-
-    // Sticky header
     position: sticky;
     top: 0;
     z-index: 1;
-    background-color: var(--color-bg-secondary, $color-bg-secondary);
+    transition: color $transition-fast, background-color $transition-fast;
 
     &.isSortable {
       cursor: pointer;
@@ -133,11 +148,12 @@
   }
 
   td {
-    padding: 0.75rem 1rem;
+    padding: 0.75rem 1.125rem;
     border-bottom: 1px solid var(--color-border-light, $color-border-light);
     vertical-align: middle;
     text-align: left;
-    font-size: 14px;
+    font-size: 13.5px;
+    line-height: 1.45;
   }
 
   tbody {
@@ -181,7 +197,7 @@
 
 .filterMenuTitle {
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.825rem;
   color: var(--color-text-primary, $color-text-primary);
 }
 
