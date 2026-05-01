@@ -1,48 +1,4 @@
-@mixin bts-button-default($color, $background, $border: transparent, $text-decoration) {
-  background-color: $background;
-  color: $color;
-  border-color: $border;
-  text-decoration: $text-decoration;
-}
-
-@mixin bts-button-active($color, $background) {
-  &:active:not(.is-disabled):not(.has-error) {
-    background-color: $background !important;
-    color: $color;
-  }
-}
-
-@mixin bts-button-selected($color, $background, $border: transparent) {
-  &.is-selected {
-    background-color: $background;
-    color: $color;
-    border-color: $border;
-  }
-}
-
-@mixin bts-button-disabled($color, $background: transparent, $border: transparent) {
-  &.isDisabled {
-    background-color: $background !important;
-    color: $color !important;
-    border-color: $border !important;
-    cursor: not-allowed !important;
-    opacity: 0.6 !important;
-  }
-}
-
-@mixin bts-button-hover(
-  $color,
-  $background,
-  $border: transparent,
-  $text-underline-decoration: transparent
-) {
-  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
-    background-color: $background;
-    color: $color;
-    border-color: $border;
-    text-decoration-color: $text-underline-decoration;
-  }
-}
+@import '../../styles/constants.scss';
 
 .fullWidth {
   width: 100% !important;
@@ -52,34 +8,67 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 0.5rem;
   border: 1px solid transparent;
+  border-radius: 16px;
   cursor: pointer;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
   transition:
     background-color 0.15s ease,
     color 0.15s ease,
     border-color 0.15s ease,
-    transform 0.15s cubic-bezier(0, 0, 0.3, 1),
-    box-shadow 0.15s cubic-bezier(0, 0, 0.3, 1);
-  gap: 0.5rem;
-  border-radius: 16px;
+    box-shadow 0.15s cubic-bezier(0, 0, 0.3, 1),
+    transform 0.15s cubic-bezier(0, 0, 0.3, 1);
 
   svg {
     vertical-align: middle;
+    flex-shrink: 0;
     transition: transform 0.15s cubic-bezier(0, 0, 0.3, 1);
   }
 
+  // ── Hover lift ────────────────────────────────────────────────────────
   &:hover:not(:disabled):not(.is-disabled):not(.isDisabled) {
     transform: translateY(-1px);
+
     img {
       transform: scale(1.05);
     }
   }
 
+  // ── Active press ──────────────────────────────────────────────────────
   &:active:not(:disabled):not(.noActiveState):not(.is-disabled):not(.isDisabled) {
     transform: translateY(0) scale(0.97);
-    box-shadow: none;
+    box-shadow: none !important;
   }
 
+  // ── Focus ring ────────────────────────────────────────────────────────
+  &:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px $color-secondary-light-hover;
+  }
+
+  // ── Disabled — written ONCE, covers every combo ───────────────────────
+  // filled buttons get a grey wash
+  &.isDisabled {
+    cursor: not-allowed !important;
+    opacity: 0.6 !important;
+    transform: none !important;
+    box-shadow: none !important;
+    background-color: var(--color-disabled, $color-disabled) !important;
+    color: var(--color-disabled-text, $color-disabled-text) !important;
+    border-color: var(--color-disabled, $color-disabled) !important;
+  }
+
+  // outline + link keep transparent bg when disabled
+  &--outlineAppearance.isDisabled,
+  &--linkAppearance.isDisabled {
+    background-color: transparent !important;
+  }
+
+  // ── Alignment ─────────────────────────────────────────────────────────
   &--startAlign {
     text-align: start;
     justify-content: flex-start;
@@ -89,304 +78,354 @@
     justify-content: space-between;
   }
 
-  /* Sizes */
-  &--largeSize {
-    font-size: 16px;
-    height: 48px;
-
-    &.button--withText {
-      padding-left: 18px;
-      padding-right: 18px;
-
-      .button-icon {
-        &--left {
-          margin-right: 8px;
-        }
-
-        &--right {
-          padding-left: 8px;
-        }
-      }
-    }
-
-    &:not(.button--withText) {
-      width: 48px;
-    }
-  }
-
-  &--mediumSize {
-    font-size: 14px;
-    line-height: 18px;
-    min-height: 40px;
-
-    &.button--withText {
-      padding-left: 16px;
-      padding-right: 16px;
-
-      .button-icon {
-        &--left {
-          margin-right: 8px;
-        }
-
-        &--right {
-          padding-left: 8px;
-        }
-      }
-    }
-
-    &:not(.button--withText) {
-      width: 40px;
-    }
-  }
-
-  &--smallSize {
-    font-size: 16px;
-    line-height: 18px;
-    height: 32px;
-
-    &.button--withText {
-      padding-left: 8px;
-      padding-right: 8px;
-
-      &:not(.button--linkAppearance) {
-        padding-top: 4px;
-        padding-bottom: 4px;
-      }
-
-      .buttonIcon {
-        &--left {
-          margin-right: 4px;
-        }
-
-        &--right {
-          padding-left: 4px;
-        }
-      }
-    }
-
-    &:not(.button--withText) {
-      width: 32px;
-    }
-  }
-
-  &--xsmallSize {
-    @extend .button--smallSize;
-    height: auto;
-  }
-
-  &--xlargeSize,
-  &--xxlargeSize {
-    font-size: 18px;
-    height: 52px;
-
-    &.button--withText {
-      padding-left: 26px;
-      padding-right: 26px;
-
-      .buttonIcon {
-        &--left {
-          margin-right: 8px;
-        }
-
-        &--right {
-          padding-left: 8px;
-        }
-      }
-    }
-
-    &:not(.button--withText) {
-      width: 56px;
-    }
-  }
-
-  /* Utility Modifiers */
-  &--noPadding {
-    padding: 0 !important;
-  }
-
-  &--autoHeight {
-    height: auto !important;
-  }
-
+  // ── Misc modifiers ────────────────────────────────────────────────────
   &.isRounded {
     border-radius: 26px !important;
   }
+
+  &.buttonNoPadding {
+    padding: 0 !important;
+  }
+
+  &.buttonAutoHeight {
+    height: auto !important;
+  }
 }
 
-/* Appearance and color */
-$appearances: (
-  link: (
-    underline: (
-      text-default: var(--color-text-grey, $color-text-grey),
-      text-hover: var(--color-primary-hover, $color-primary-hover),
-      text-selected: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      text-decoration: underline,
-    ),
-    primary: (
-      text-default: var(--color-text-grey, $color-text-grey),
-      text-hover: var(--color-primary-hover, $color-primary-hover),
-      text-selected: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-    ),
-    light: (
-      text-default: var(--color-white, $color-white),
-      text-hover: var(--color-accent-light-hover, $color-accent-light-hover),
-      text-selected: var(--color-primary, $color-primary),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-    ),
-    icon: (
-      text-default: var(--color-secondary-hover, $color-secondary-hover),
-      text-hover: var(--color-secondary-dark, $color-secondary-dark),
-      text-selected: var(--color-secondary-hover, $color-secondary-hover),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-    ),
-    secondary: (
-      text-default: var(--color-secondary-hover, $color-secondary-hover),
-      text-hover: var(--color-secondary, $color-secondary),
-      text-selected: var(--color-primary, $color-primary),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-    ),
-    highlighted: (
-      text-default: var(--color-primary-dark, $color-primary-dark),
-      text-hover: var(--color-primary-hover, $color-primary-hover),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-    ),
-    secondary-light: (
-      text-default: var(--color-text-primary, $color-text-primary),
-      bg-hover: rgba(0, 0, 0, 0.1),
-      bg-selected: rgba(0, 0, 0, 0.1),
-    ),
-  ),
-  outline: (
-    primary: (
-      text-default: var(--color-secondary, $color-secondary),
-      text-hover: var(--color-primary-dark, $color-primary-dark),
-      border-default: var(--color-secondary, $color-secondary),
-      border-hover: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    icon: (
-      text-default: var(--color-secondary, $color-secondary),
-      text-hover: var(--color-secondary-dark, $color-secondary-dark),
-      border-default: var(--color-secondary, $color-secondary),
-      border-hover: var(--color-secondary-dark, $color-secondary-dark),
-      text-selected: var(--color-accent-hover, $color-accent-hover),
-      border-selected: var(--color-accent-hover, $color-accent-hover),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    highlighted: (
-      text-default: var(--color-secondary, $color-secondary),
-      border-default: var(--color-border, $color-border),
-      text-hover: var(--color-white, $color-white),
-      bg-hover: var(--color-primary-dark, $color-primary-dark),
-      border-hover: var(--color-primary-dark, $color-primary-dark),
-      text-selected: var(--color-white, $color-white),
-      bg-selected: var(--color-primary-dark, $color-primary-dark),
-      border-selected: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      border-disabled: var(--color-disabled, $color-disabled),
-      bg-disabled: transparent,
-    ),
-    secondary-light: (
-      text-default: var(--color-secondary, $color-secondary),
-      text-hover: var(--color-primary-dark, $color-primary-dark),
-      border-default: var(--color-secondary-light, $color-secondary-light),
-      border-hover: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    error: (
-      text-default: var(--color-error, $color-error),
-      text-hover: var(--color-error, $color-error),
-      border-default: var(--color-error, $color-error),
-      border-hover: var(--color-error, $color-error),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      border-disabled: var(--color-error, $color-error),
-    ),
-  ),
-  filled: (
-    primary: (
-      text-default: var(--color-white, $color-white),
-      text-hover: var(--color-white, $color-white),
-      text-selected: var(--color-white, $color-white),
-      bg-default: var(--color-primary, $color-primary),
-      bg-hover: var(--color-primary-hover, $color-info-hover),
-      bg-selected: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      bg-disabled: var(--color-disabled, $color-disabled),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    light: (
-      text-default: var(--color-text-grey, $color-text-grey),
-      text-hover: var(--color-text-grey, $color-text-grey),
-      bg-default: var(--color-white, $color-white),
-      bg-hover: var(--color-primary-light, $color-primary-light),
-      text-selected: var(--color-primary-dark, $color-primary-dark),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      bg-disabled: var(--color-disabled, $color-disabled),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    accent: (
-      text-default: var(--color-white, $color-white),
-      text-hover: var(--color-white, $color-white),
-      text-selected: var(--color-white, $color-white),
-      bg-default: var(--color-accent, $color-accent),
-      bg-hover: var(--color-accent-hover, $color-accent-hover),
-      bg-selected: var(--color-accent-hover, $color-accent-hover),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      bg-disabled: var(--color-disabled, $color-disabled),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    secondary: (
-      text-default: var(--color-white, $color-white),
-      bg-default: var(--color-secondary, $color-secondary),
-      bg-hover: var(--color-secondary-hover, $color-secondary-hover),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      bg-disabled: var(--color-disabled, $color-disabled),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-    secondary-light: (
-      text-default: var(--color-text-grey, $color-text-grey),
-      bg-default: var(--color-secondary-light, $color-secondary-light),
-      bg-hover: var(--color-secondary-light-hover, $color-secondary-light-hover),
-      text-disabled: var(--color-disabled-text, $color-disabled-text),
-      bg-disabled: var(--color-disabled, $color-disabled),
-      border-disabled: var(--color-disabled, $color-disabled),
-    ),
-  ),
-);
+.buttonWithText {
+  /* marker class consumed by size rules */
+}
 
-@each $appearance, $colorsMap in $appearances {
-  @each $colorName, $styleMap in $colorsMap {
-    .button--#{$colorName}Color.button--#{$appearance}Appearance {
-      @include bts-button-default(
-        map-get($styleMap, text-default),
-        map-get($styleMap, bg-default),
-        map-get($styleMap, border-default),
-        map-get($styleMap, text-decoration)
-      );
+// ═══════════════════════════════════════════════════════════════════════════
+// SIZES
+// ═══════════════════════════════════════════════════════════════════════════
 
-      @include bts-button-hover(
-        map-get($styleMap, text-hover),
-        map-get($styleMap, bg-hover),
-        map-get($styleMap, border-hover),
-        map-get($styleMap, text-decoration)
-      );
+.button--xsmallSize {
+  @extend .button--smallSize;
+  height: auto;
+}
 
-      @include bts-button-selected(
-        map-get($styleMap, text-selected),
-        map-get($styleMap, bg-selected),
-        map-get($styleMap, border-selected)
-      );
+.button--smallSize {
+  font-size: 16px;
+  line-height: 18px;
+  height: 32px;
 
-      @include bts-button-disabled(
-        map-get($styleMap, text-disabled),
-        map-get($styleMap, bg-disabled),
-        map-get($styleMap, border-disabled)
-      );
+  &.buttonWithText {
+    padding-left: 8px;
+    padding-right: 8px;
+
+    &:not(.button--linkAppearance) {
+      padding-top: 4px;
+      padding-bottom: 4px;
     }
+  }
+
+  &:not(.buttonWithText) {
+    width: 32px;
+  }
+}
+
+.button--mediumSize {
+  font-size: 14px;
+  line-height: 18px;
+  min-height: 40px;
+
+  &.buttonWithText {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  &:not(.buttonWithText) {
+    width: 40px;
+  }
+}
+
+.button--largeSize {
+  font-size: 16px;
+  height: 48px;
+
+  &.buttonWithText {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  &:not(.buttonWithText) {
+    width: 48px;
+  }
+}
+
+.button--xlargeSize,
+.button--xxlargeSize {
+  font-size: 18px;
+  height: 52px;
+
+  &.buttonWithText {
+    padding-left: 26px;
+    padding-right: 26px;
+  }
+
+  &:not(.buttonWithText) {
+    width: 56px;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// COLOR × APPEARANCE COMBOS
+//
+// Each block covers exactly 3 live states: default · hover · selected.
+// Disabled is handled globally above — not repeated per combo.
+//
+// Sections:
+//   A. filled
+//   B. outline
+//   C. link
+// ═══════════════════════════════════════════════════════════════════════════
+
+// ─────────────────────────────────────────────────────────────────────────
+// A. FILLED
+// ─────────────────────────────────────────────────────────────────────────
+
+.button--primaryColor.button--filledAppearance {
+  background-color: var(--color-primary, $color-primary);
+  color: var(--color-white, $color-white);
+  border-color: var(--color-primary, $color-primary);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: var(--color-primary-hover, $color-primary-hover);
+    border-color: var(--color-primary-hover, $color-primary-hover);
+    color: var(--color-white, $color-white);
+  }
+
+  &.is-selected {
+    background-color: var(--color-primary-dark, $color-primary-dark);
+    border-color: var(--color-primary-dark, $color-primary-dark);
+    color: var(--color-white, $color-white);
+  }
+}
+
+.button--accentColor.button--filledAppearance {
+  background-color: var(--color-accent, $color-accent);
+  color: var(--color-white, $color-white);
+  border-color: var(--color-accent, $color-accent);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: var(--color-accent-hover, $color-accent-hover);
+    border-color: var(--color-accent-hover, $color-accent-hover);
+    color: var(--color-white, $color-white);
+  }
+
+  &.is-selected {
+    background-color: var(--color-accent-hover, $color-accent-hover);
+    border-color: var(--color-accent-hover, $color-accent-hover);
+    color: var(--color-white, $color-white);
+  }
+}
+
+.button--lightColor.button--filledAppearance {
+  background-color: var(--color-white, $color-white);
+  color: var(--color-text-grey, $color-text-grey);
+  border-color: transparent;
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: var(--color-primary-light, $color-primary-light);
+    color: var(--color-text-grey, $color-text-grey);
+  }
+
+  &.is-selected {
+    color: var(--color-primary-dark, $color-primary-dark);
+  }
+}
+
+.button--secondaryColor.button--filledAppearance {
+  background-color: var(--color-secondary, $color-secondary);
+  color: var(--color-white, $color-white);
+  border-color: var(--color-secondary, $color-secondary);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: var(--color-secondary-hover, $color-secondary-hover);
+    border-color: var(--color-secondary-hover, $color-secondary-hover);
+  }
+}
+
+.button--secondary-lightColor.button--filledAppearance {
+  background-color: var(--color-secondary-light, $color-secondary-light);
+  color: var(--color-text-grey, $color-text-grey);
+  border-color: transparent;
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: var(--color-secondary-light-hover, $color-secondary-light-hover);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// B. OUTLINE
+// ─────────────────────────────────────────────────────────────────────────
+
+.button--primaryColor.button--outlineAppearance {
+  background-color: transparent;
+  color: var(--color-secondary, $color-secondary);
+  border-color: var(--color-secondary, $color-secondary);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-primary-dark, $color-primary-dark);
+    border-color: var(--color-primary-dark, $color-primary-dark);
+  }
+}
+
+.button--iconColor.button--outlineAppearance {
+  background-color: transparent;
+  color: var(--color-secondary, $color-secondary);
+  border-color: var(--color-secondary, $color-secondary);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-secondary-dark, $color-secondary-dark);
+    border-color: var(--color-secondary-dark, $color-secondary-dark);
+  }
+
+  &.is-selected {
+    color: var(--color-accent-hover, $color-accent-hover);
+    border-color: var(--color-accent-hover, $color-accent-hover);
+  }
+}
+
+.button--highlightedColor.button--outlineAppearance {
+  background-color: transparent;
+  color: var(--color-secondary, $color-secondary);
+  border-color: var(--color-border, $color-border);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: var(--color-primary-dark, $color-primary-dark);
+    color: var(--color-white, $color-white);
+    border-color: var(--color-primary-dark, $color-primary-dark);
+  }
+
+  &.is-selected {
+    background-color: var(--color-primary-dark, $color-primary-dark);
+    color: var(--color-white, $color-white);
+    border-color: var(--color-primary-dark, $color-primary-dark);
+  }
+
+  &.isDisabled {
+    background-color: transparent !important;
+  }
+}
+
+.button--secondary-lightColor.button--outlineAppearance {
+  background-color: transparent;
+  color: var(--color-secondary, $color-secondary);
+  border-color: var(--color-secondary-light, $color-secondary-light);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-primary-dark, $color-primary-dark);
+    border-color: var(--color-primary-dark, $color-primary-dark);
+  }
+}
+
+.button--errorColor.button--outlineAppearance {
+  background-color: transparent;
+  color: var(--color-error, $color-error);
+  border-color: var(--color-error, $color-error);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-error, $color-error);
+    border-color: var(--color-error, $color-error);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────
+// C. LINK
+// ─────────────────────────────────────────────────────────────────────────
+
+// All link buttons: no bg, no border, no side padding
+.button--linkAppearance {
+  background-color: transparent;
+  border-color: transparent;
+  padding-inline: 0;
+
+  // Links don't lift on hover — override the base
+  &:hover:not(:disabled):not(.is-disabled):not(.isDisabled) {
+    transform: none;
+  }
+}
+
+.button--primaryColor.button--linkAppearance {
+  color: var(--color-text-grey, $color-text-grey);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-primary-hover, $color-primary-hover);
+  }
+
+  &.is-selected {
+    color: var(--color-primary-dark, $color-primary-dark);
+  }
+}
+
+.button--underlineColor.button--linkAppearance {
+  color: var(--color-text-grey, $color-text-grey);
+  text-decoration: underline;
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-primary-hover, $color-primary-hover);
+    text-decoration-color: transparent;
+  }
+
+  &.is-selected {
+    color: var(--color-primary-dark, $color-primary-dark);
+  }
+}
+
+.button--lightColor.button--linkAppearance {
+  color: var(--color-white, $color-white);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-accent-light-hover, $color-accent-light-hover);
+  }
+
+  &.is-selected {
+    color: var(--color-primary, $color-primary);
+  }
+}
+
+.button--iconColor.button--linkAppearance {
+  color: var(--color-secondary-hover, $color-secondary-hover);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-secondary-dark, $color-secondary-dark);
+  }
+
+  &.is-selected {
+    color: var(--color-secondary-hover, $color-secondary-hover);
+  }
+}
+
+.button--secondaryColor.button--linkAppearance {
+  color: var(--color-secondary-hover, $color-secondary-hover);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-secondary, $color-secondary);
+  }
+
+  &.is-selected {
+    color: var(--color-primary, $color-primary);
+  }
+}
+
+.button--highlightedColor.button--linkAppearance {
+  color: var(--color-primary-dark, $color-primary-dark);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    color: var(--color-primary-hover, $color-primary-hover);
+  }
+}
+
+.button--secondary-lightColor.button--linkAppearance {
+  color: var(--color-text-primary, $color-text-primary);
+
+  &:hover:not(.is-disabled):not(.has-error):not(.is-selected) {
+    background-color: rgba(0, 0, 0, 0.1);
+  }
+
+  &.is-selected {
+    background-color: rgba(0, 0, 0, 0.1);
   }
 }
