@@ -8,3 +8,32 @@
     width: 100%;
   }
 }
+
+.mainImageLabel {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.mainImageRequired {
+  color: var(--color-error, #e53e3e);
+}
+
+.mainImagePreview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mainImageThumb {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--color-primary, #6366f1);
+}
+
+.mainImageHint {
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #888);
+  font-style: italic;
+}

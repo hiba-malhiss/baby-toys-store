@@ -1,8 +1,10 @@
+@import '../../styles/constants.scss';
+
 .productCard {
   cursor: pointer;
   display: grid;
   grid-template-columns: 1fr;
-  gap: 18px;
+  gap: 12px;
   width: 100%;
   transition:
     transform 0.22s cubic-bezier(0, 0, 0.3, 1),
@@ -10,234 +12,344 @@
 
   @include animate-fade-in-up();
 
+  // ─── Hover lift ────────────────────────────────────────────────────────
   &:hover {
-    transform: scale(1.02);
+    transform: translateY(-4px);
+
+    .productCardImageWrapper img {
+      transform: scale(1.06);
+    }
   }
 
   &:active {
-    transform: scale(1.02) translateY(-2px);
+    transform: translateY(-1px) scale(0.99);
+  }
+
+  // Keyboard focus ring
+  &:focus-visible {
+    outline: 2px solid var(--color-primary, $color-primary);
+    outline-offset: 3px;
+    border-radius: $radius-md;
   }
 
   &.fullWidth {
     max-width: 100%;
 
-    .productCard-box {
+    .productCardBox {
       max-width: 100%;
-      border-radius: 20px;
     }
   }
 
-  &--Small {
+  &Small {
     gap: 8px !important;
 
-    .productCard-box {
+    .productCardBox {
       height: 84px;
       width: 84px;
     }
   }
 
-  .productCard-mobileCart {
+  // ─── Mobile cart button: hidden on desktop ─────────────────────────────
+  .productCardMobileCart {
     display: none;
   }
 
-  .productCard-heart {
+  .productCardHeart {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
   }
 
-  .productCard-rating {
-    padding-top: 6px;
-
-    button {
-      padding-top: 2px;
-    }
-
-    .productCard-heart {
-      width: 40px;
-      height: 40px;
-    }
-  }
-
-  &-reviewCount {
-    font-size: 12px;
-    line-height: 16px !important;
-    color: var(--color-text-grey, $color-text-grey);
-  }
-
-  &--vertical {
-    .productCard-box {
-      max-height: 360px;
-    }
-
-    .productCard-info {
-      gap: 6px;
-      min-width: 0;
-    }
-  }
-
-  &--horizontal {
-    grid-template-columns: minmax(180px, 30%) minmax(auto, 1fr);
-    gap: 36px;
-    align-items: flex-start;
-    max-width: 100%;
-
-    .productCard-info {
-      height: 100%;
-      padding: 8px 0;
-    }
-
-    .productCard-buttons {
-      margin-top: auto;
-      position: static;
-      padding-top: 8px;
-    }
-
-    .productCard-rating {
-      padding-top: 12px;
-    }
-  }
-
-  &-box {
+  // ─── Image box ────────────────────────────────────────────────────────
+  &Box {
     position: relative;
-    height: 280px;
+    // Responsive height using aspect-ratio instead of fixed px
+    aspect-ratio: 1 / 1;
     width: 100%;
+    height: auto; // override any Card fixed height
     display: flex;
     align-items: center;
     flex-direction: column;
+    border-radius: $radius-md;
+    overflow: hidden;
+    background: var(--color-bg-secondary, $color-bg-secondary);
+    // Smooth shadow on hover
+    transition: box-shadow 0.22s cubic-bezier(0, 0, 0.3, 1);
+
+    .productCard:hover & {
+      box-shadow: $shadow-md;
+    }
   }
 
-  &-chip {
+  // ─── Label chip ───────────────────────────────────────────────────────
+  &Chip {
     position: absolute;
-    top: 13px;
+    top: 10px;
+    left: 10px;
     z-index: 10;
-    left: 11px;
+    font-size: 11px !important;
+    padding: 2px 8px !important;
+    line-height: 18px !important;
+    border-radius: $radius-sm !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    box-shadow: $shadow-xs;
   }
 
-  &-buttons {
+  // ─── Action buttons overlay (heart + cart icon) ───────────────────────
+  &Buttons {
     position: absolute;
-    top: 13px;
-    right: 11px;
+    top: 10px;
+    right: 10px;
     z-index: 10;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    opacity: 0;
+    transform: translateX(6px);
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
+
+    // Each button in vertical card gets a white pill look
+    button {
+      background: rgba(255, 255, 255, 0.92) !important;
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      box-shadow: $shadow-xs;
+      border-radius: 50% !important;
+
+      &:hover {
+        background: white !important;
+        box-shadow: $shadow-sm;
+      }
+    }
   }
 
-  &-imageWrapper {
+  // ─── Image wrapper ───────────────────────────────────────────────────
+  &ImageWrapper {
     width: 100%;
     height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     position: relative;
+    overflow: hidden;
+    padding: 12px;
 
     img {
       max-width: 100%;
       max-height: 100%;
       object-fit: contain;
-    }
-  }
-
-  &-info {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    max-width: 600px;
-
-    &-name {
-      @include line-clamp(2);
-      width: 100%;
-      line-height: 20px;
-      font-size: 18px;
-    }
-
-    &-description {
-      @include line-clamp(3);
-      width: 100%;
-      margin: 16px 0 10px 0;
-      color: var(--color-text-grey, $color-text-grey);
-    }
-  }
-
-  &--price {
-    margin-top: 6px;
-    margin-bottom: 12px;
-  }
-
-  // Image box - clip the scale-up inside rounded corners
-  &-box {
-    border-radius: $radius-md;
-    overflow: hidden;
-  }
-
-  &-imageWrapper {
-    overflow: hidden;
-
-    img {
-      transition: transform 0.3s cubic-bezier(0, 0, 0.3, 1);
+      transition: transform 0.35s cubic-bezier(0, 0, 0.3, 1);
       will-change: transform;
     }
   }
 
-  // Show buttons on hover for vertical cards
-  &--vertical .productCard-info-name {
-    @include line-clamp(1);
+  // ─── Info section ────────────────────────────────────────────────────
+  &Info {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    max-width: 600px;
+    min-width: 0;
+
+    &Name {
+      @include line-clamp(2);
+      width: 100%;
+      line-height: 1.4;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-primary, $color-text-primary);
+      // Override vertical's line-clamp(1) below
+    }
+
+    &Description {
+      @include line-clamp(3);
+      width: 100%;
+      margin: 8px 0 6px;
+      color: var(--color-text-grey, $color-text-grey);
+      font-size: 13px;
+      line-height: 1.5;
+    }
   }
 
-  &--vertical .productCard-buttons {
-    opacity: 0;
-    transform: translateY(-8px);
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
+  // ─── Price ───────────────────────────────────────────────────────────
+  &Price {
+    margin-top: 2px;
+    margin-bottom: 2px;
   }
 
-  &--vertical:hover .productCard-buttons {
-    opacity: 1;
-    transform: translateY(0);
+  // ─── Rating row ──────────────────────────────────────────────────────
+  &Rating {
+    padding-top: 4px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 6px;
+
+    button {
+      padding-top: 2px;
+    }
+
+    .productCardHeart {
+      width: 40px;
+      height: 40px;
+    }
   }
 
-  // Always show buttons for horizontal cards
-  &--horizontal .productCard-buttons {
-    opacity: 1;
-    transform: translateY(0);
+  // ─── Review count label ──────────────────────────────────────────────
+  &ReviewCount {
+    font-size: 12px;
+    line-height: 16px !important;
+    color: var(--color-text-grey, $color-text-grey);
   }
 
-  &-buttons {
-    opacity: 0;
-    transform: translateY(-8px);
-    transition:
-      opacity 0.2s ease,
-      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
+  // ═══ VERTICAL layout ══════════════════════════════════════════════════
+
+  &--vertical {
+    .productCardBox {
+      // No fixed px height — uses aspect-ratio: 1/1 above
+    }
+
+    .productCardInfo {
+      gap: 5px;
+      min-width: 0;
+    }
+
+    .productCardInfoName {
+      @include line-clamp(2);
+      font-size: 14px;
+    }
+
+    // Show buttons on hover (desktop only — mobile overrides below)
+    .productCardButtons {
+      opacity: 0;
+      transform: translateX(6px);
+    }
+
+    &:hover .productCardButtons {
+      opacity: 1;
+      transform: translateX(0);
+    }
   }
 
-  // 📱 GROUPED RESPONSIVE STYLES
-  @media (max-width: $breakpoint-medium) {
-    gap: 16px;
+  // ═══ HORIZONTAL layout ════════════════════════════════════════════════
 
-    &-info {
+  &--horizontal {
+    grid-template-columns: minmax(140px, 28%) 1fr;
+    gap: 20px;
+    align-items: flex-start;
+    max-width: 100%;
+
+    .productCardBox {
+      aspect-ratio: 1 / 1;
+      height: auto;
+    }
+
+    .productCardInfo {
+      height: 100%;
+      padding: 4px 0;
       max-width: 100%;
     }
 
-    &-buttons {
-      top: 8px;
-      right: 8px;
+    .productCardInfoName {
+      font-size: 16px;
+      line-height: 1.4;
+      @include line-clamp(2);
     }
 
-    &-info-description {
-      margin: 12px 0;
+    .productCardButtons {
+      margin-top: auto;
+      position: static;
+      opacity: 1;
+      transform: none;
+      flex-direction: row;
+      padding-top: 8px;
+
+      button {
+        background: transparent !important;
+        box-shadow: none !important;
+        backdrop-filter: none;
+        border-radius: $radius-md !important;
+      }
     }
 
-    &--vertical:hover .productCard-buttons {
-      display: none;
-    }
-
-    &--vertical .productCard-mobileCart {
-      display: block;
+    .productCardRating {
+      padding-top: 8px;
     }
   }
+}
 
-  @media (max-width: $breakpoint-small) {
+// ─── Responsive ──────────────────────────────────────────────────────────────
+
+@media (max-width: $breakpoint-medium) {
+  .productCard {
+    gap: 10px;
+
+    &Info {
+      max-width: 100%;
+    }
+
+    &InfoName {
+      font-size: 13px;
+    }
+
+    // Hide hover-only buttons on touch devices; show mobile cart instead
+    &--vertical .productCardButtons {
+      display: none !important;
+    }
+
+    &--vertical .productCardMobileCart {
+      display: flex !important;
+      width: 100%;
+      justify-content: center;
+    }
+
+    // Horizontal: stack on narrow mobile
+    &--horizontal {
+      gap: 14px;
+
+      .productCardInfoDescription {
+        margin: 8px 0;
+      }
+    }
+  }
+}
+
+@media (max-width: $breakpoint-small) {
+  .productCard {
+    // Horizontal becomes single column
     &--horizontal {
       grid-template-columns: 1fr;
+
+      .productCardBox {
+        max-height: 260px;
+        aspect-ratio: 4 / 3;
+      }
     }
+
+    &InfoName {
+      font-size: 13px;
+    }
+  }
+}
+
+// ─── Out-of-stock: dim the image ──────────────────────────────────────────────
+// Applied via the chip's 'secondary' appearance — add a subtle overlay too
+.productCard .productCardChip[class*='secondary'] ~ .productCardImageWrapper {
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.45);
+    pointer-events: none;
+  }
+
+  img {
+    filter: grayscale(30%);
   }
 }

@@ -1,6 +1,5 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import {
-  ImageGallery,
   Flex,
   Heading,
   Rating,
@@ -18,7 +17,7 @@ import {
 } from '@baby-toys/ui-kit';
 import { useStoreSettings } from '../../../api/settingsApi';
 import styles from './product-overview.module.scss';
-import { ArrowLeftRight, ShoppingCart } from 'lucide-react';
+import { ArrowLeftRight, ShoppingCart, Share2 } from 'lucide-react';
 import clsx from 'clsx';
 import { useAddToCart } from '../../../api/cartApi';
 import { useWishlist } from '../../../hooks/useWishlist';
@@ -30,6 +29,7 @@ import { shareProduct, type SharePlatform } from '../../../utils/share';
 import { useCurrencyFormatter } from '../../../hooks/useCurrencyFormatter';
 import VariantOptionsSelector from '../VariantPicker/VariantOptionsSelector.tsx';
 import type { Product, Variant } from '../../../api/types/product.ts';
+import { ProductImageGallery } from '@baby-toys/ui-kit';
 
 export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => {
   const [quantity, setQuantity] = useState(1);
@@ -75,13 +75,20 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
   const oldPrice = selectedVariant?.oldPrice;
   const maxStock = selectedVariant?.stockQuantity;
 
+  // Deduplicate images, keep mainImage last (as fallback)
+  const allImages = useMemo(() => {
+    const imgs = [...(product.images || [])];
+    if (product.mainImage && !imgs.includes(product.mainImage)) {
+      imgs.push(product.mainImage);
+    }
+    return imgs.filter(Boolean) as string[];
+  }, [product.images, product.mainImage]);
+
   const handleCopyUrl = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
       e.stopPropagation();
-
       const url = `${window.location.origin}/product-details/${product.id}`;
-
       copyTextToClipboard(url)
         .then(() => toast.success('Product URL copied to clipboard!'))
         .catch(() => toast.error('Failed to copy URL.'));
@@ -115,24 +122,34 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
     openShippingCartDrawer();
   };
 
+  const discountPercent =
+    price && oldPrice && oldPrice > price
+      ? Math.round(((oldPrice - price) / oldPrice) * 100)
+      : null;
+
   return (
     <div className={styles.productOverview}>
-      <ImageGallery
-        images={[...(product.images || []), product.mainImage!]}
-        productName={product.name}
-        selectedImage={selectedImage}
-        onSelectImage={setSelectedImage}
-      />
-      <Flex direction="vertical">
-        <Heading level="h3" className="bts-marginBxs">
+      {/* Gallery column */}
+      <div className={styles.productOverviewGalleryCol}>
+        <ProductImageGallery
+          images={allImages}
+          productName={product.name}
+          selectedImage={selectedImage}
+          onSelectImage={setSelectedImage}
+        />
+      </div>
+
+      {/* Info column */}
+      <Flex direction="vertical" className={styles.productOverviewInfoCol}>
+        <Heading level="h3" className={styles.productOverviewTitle}>
           {product.name}
         </Heading>
+
         {product.productSku && (
           <Flex className={styles.productOverviewSkuLine}>
             <span>
               {t('product.productNumber')}: {product.productSku}
             </span>
-
             <Tooltip content={t('product.copyProductNumber')}>
               <CopyToClipboardButton
                 value={product.productSku}
@@ -141,49 +158,67 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
                 withoutPadding
               />
             </Tooltip>
-
             <Rating
-              className="bts-marginLm"
+              className={styles.productOverviewRating}
               value={product.averageRating}
               reviewsCount={product.numberOfRatings || 0}
             />
           </Flex>
         )}
 
-        <Heading
-          level="h2"
-          className={clsx('bts-marginBl', oldPrice && styles.productOverviewWithDiscount)}
+        {/* Price block */}
+        <div
+          className={clsx(
+            styles.productOverviewPriceBlock,
+            oldPrice && styles.productOverviewWithDiscount
+          )}
         >
           <span className={styles.productOverviewPriceNew}>{formatCurrency(price)}</span>
           {oldPrice && (
             <span className={styles.productOverviewPriceOld}>{formatCurrency(oldPrice)}</span>
           )}
-        </Heading>
-        <Divider className="bts-marginBl" />
+          {discountPercent && (
+            <span className={styles.productOverviewDiscountBadge}>-{discountPercent}%</span>
+          )}
+        </div>
+
+        <Divider className={styles.productOverviewDivider} />
+
         {!!product.options?.length && (
           <>
             <VariantOptionsSelector
-              className="bts-marginBl"
+              className={styles.productOverviewVariants}
               product={product}
               preselectedVariantId={selectedVariantId}
               onChange={handleVariantChange}
             />
-            <Divider className="bts-marginBl" />
+            <Divider className={styles.productOverviewDivider} />
           </>
         )}
-        <ExpandableContent className="bts-marginBxl" maxHeight="200px">
-          <Text weight="semibold" size="sm" className="bts-marginBs">
-            {t('product.aboutThisItem')}
-          </Text>
-          <ul className={styles.productOverviewFeatureBullets}>
-            {product.featureBullets?.map((item: string, index: number) => (
-              <li key={index}>{item}</li>
-            ))}
-          </ul>
-        </ExpandableContent>
 
-        <Flex direction="horizontal" className="bts-marginBxxxl" spacing="s" align="center">
-          <span className="bts-marginRs"> {t('common.share')}</span>
+        {/* Feature bullets */}
+        {!!product.featureBullets?.length && (
+          <ExpandableContent className={styles.productOverviewBulletsWrap} maxHeight="200px">
+            <Text weight="semibold" size="sm" className={styles.productOverviewBulletsLabel}>
+              {t('product.aboutThisItem')}
+            </Text>
+            <ul className={styles.productOverviewFeatureBullets}>
+              {product.featureBullets.map((item: string, index: number) => (
+                <li key={index}>{item}</li>
+              ))}
+            </ul>
+          </ExpandableContent>
+        )}
+
+        {/* Social share row */}
+        <Flex
+          direction="horizontal"
+          className={styles.productOverviewShareRow}
+          spacing="s"
+          align="center"
+        >
+          <Share2 size={14} className={styles.productOverviewShareIcon} />
+          <span className={styles.productOverviewShareLabel}>{t('common.share')}</span>
           {socialMediaLinks.map(({ icon, platform }) => (
             <Tooltip
               key={platform}
@@ -200,11 +235,13 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             </Tooltip>
           ))}
         </Flex>
+
+        {/* Cart actions */}
         <Flex
           direction="horizontal"
           spacing="s"
           align="center"
-          className={clsx('bts-marginBxxxl', styles.productOverviewActions)}
+          className={clsx(styles.productOverviewActions)}
         >
           <StringInput
             type="number"
@@ -222,6 +259,8 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             isDisabled={isAddDisabled}
             isLoading={addToCartMutation.isPending}
             onClick={handleAddToCart}
+            fullWidth
+            className={styles.productOverviewAddBtn}
           >
             {product.outOfStock ? t('common.outOfStock') : t('product.addToCart')}
           </Button>
@@ -235,11 +274,26 @@ export const ProductOverview: React.FC<{ product: Product }> = ({ product }) => 
             onToggle={toggleFavorite}
           />
 
-          <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl} />
+          <Tooltip content={t('product.copyLink', { defaultValue: 'Copy link' })}>
+            <Button leftIconComp={ArrowLeftRight} appearance="outline" onClick={handleCopyUrl} />
+          </Tooltip>
         </Flex>
 
+        {/* Stock status */}
+        {maxStock !== undefined && maxStock <= 5 && maxStock > 0 && (
+          <span className={styles.productOverviewLowStock}>
+            ⚡ {t('product.onlyLeft', { count: maxStock, defaultValue: `Only ${maxStock} left!` })}
+          </span>
+        )}
+
+        {/* Details card */}
         {!!product.details?.length && (
-          <Card fullWidth size="small" header={t('product.details')}>
+          <Card
+            fullWidth
+            size="small"
+            header={t('product.details')}
+            className={styles.productOverviewDetailsCard}
+          >
             <ExpandableContent>
               <div className={styles.productOverviewDetails}>
                 {product.details.map(({ label, value }, index) => (

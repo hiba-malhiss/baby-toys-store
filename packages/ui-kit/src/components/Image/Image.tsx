@@ -10,6 +10,8 @@ export interface ImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   showLoading?: boolean;
   objectFit?: 'contain' | 'cover' | 'fill' | 'none' | 'scale-down';
   disableBaseUrl?: boolean;
+  /** Render at the image's natural pixel size (no stretching). Capped by max-width/max-height via className. */
+  naturalSize?: boolean;
 }
 
 export const resolveImageBaseUrl = (): string => resolveUiKitBaseUrl();
@@ -23,7 +25,9 @@ export const Image: React.FC<ImageProps> = ({
   showLoading = true,
   objectFit = 'contain',
   disableBaseUrl = false,
+  naturalSize = false,
   onError,
+  onLoad,
   ...rest
 }) => {
   const [isLoading, setIsLoading] = useState(!!src);
@@ -65,8 +69,9 @@ export const Image: React.FC<ImageProps> = ({
     onError?.(e);
   };
 
-  const handleLoad = () => {
+  const handleLoad = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
     setIsLoading(false);
+    onLoad?.(e);
   };
 
   const {
@@ -82,8 +87,11 @@ export const Image: React.FC<ImageProps> = ({
     className?: string;
   } & React.ImgHTMLAttributes<HTMLImageElement>;
 
-  const containerStyle: React.CSSProperties | undefined =
-    width || height ? { width, height } : undefined;
+  const containerStyle: React.CSSProperties | undefined = naturalSize
+    ? { width: 'auto', height: 'auto', overflow: 'visible' }
+    : width || height
+      ? { width, height }
+      : undefined;
 
   if (!processedSrc) {
     return (
@@ -109,12 +117,23 @@ export const Image: React.FC<ImageProps> = ({
         })}
         onError={handleError}
         onLoad={handleLoad}
-        style={{
-          ...imgStyle,
-          objectFit,
-          width: width ? '100%' : imgStyle?.width,
-          height: height ? '100%' : imgStyle?.height,
-        }}
+        style={
+          naturalSize
+            ? {
+                ...imgStyle,
+                objectFit: 'unset' as any,
+                width: 'auto',
+                height: 'auto',
+                maxWidth: '100%',
+                maxHeight: '100%',
+              }
+            : {
+                ...imgStyle,
+                objectFit,
+                width: width ? '100%' : imgStyle?.width,
+                height: height ? '100%' : imgStyle?.height,
+              }
+        }
       />
       {hasError && !isLoading && (
         <div className={styles.errorContainer}>

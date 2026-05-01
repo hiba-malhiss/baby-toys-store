@@ -243,11 +243,7 @@ const StringInput: React.FC<StringInputProps> = ({
     // Outer wrapper fills its container; extra className hooks in from the caller
     <div
       ref={anchorRef}
-      className={clsx(
-        styles.fullWidth, // always stretch to parent width
-        fullWidth && styles.fullWidth,
-        className
-      )}
+      className={clsx(fullWidth && styles.fullWidth, className)}
       onClick={onClick}
     >
       <div className={containerClass}>

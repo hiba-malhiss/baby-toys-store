@@ -7,6 +7,7 @@ import { ProductOverview } from './ProductOverview/ProductOverview.tsx';
 import { ProductInfoTabs } from './ProductInfoTabs.tsx';
 import RelatedProducts from './RelatedProducts.tsx';
 import { useProductById } from '../../api/productApi';
+import styles from './product-details-page.module.scss';
 
 const ProductDetailsPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -35,7 +36,9 @@ const ProductDetailsPage: React.FC = () => {
     <PageContainer>
       <ProductOverview product={product} />
       <ProductInfoTabs product={product} />
-      <RelatedProducts productId={id} />
+      <div className={styles['productDetails-relatedProd']}>
+        <RelatedProducts productId={id!} />
+      </div>
     </PageContainer>
   );
 };

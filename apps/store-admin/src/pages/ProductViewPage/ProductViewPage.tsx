@@ -9,6 +9,7 @@ import {
   CopyToClipboardButton,
   Accordion,
   AccordionGroup,
+  ImageLightboxGallery,
 } from '@baby-toys/ui-kit';
 import { Pencil } from 'lucide-react';
 import { useProduct } from '../../api/productApi';
@@ -42,9 +43,10 @@ const ProductViewPage: React.FC = () => {
     []
   );
 
-  const formatDateTime = useCallback((val?: string | null) => {
-    return val ? new Date(val).toLocaleString() : '-';
-  }, []);
+  const formatDateTime = useCallback(
+    (val?: string | null) => (val ? new Date(val).toLocaleString() : '-'),
+    []
+  );
 
   const vm = useMemo(() => {
     const name = product?.name || t('productView.fallbackName');
@@ -90,45 +92,37 @@ const ProductViewPage: React.FC = () => {
       { id: 'updated', label: t('productView.updated'), value: formatDateTime(product?.updatedAt) },
     ];
 
-    const options = (product as any)?.options || [];
-    const attributes = (product as any)?.attributes;
-    const variants = ((product as any)?.variants || []) as any[];
-
     return {
       id: product?.id,
       name,
       mainImage: product?.mainImage,
       categoryName: product?.categoryName,
       isActive: product?.isActive,
-
       kpis: {
         revenueLifetime: formatMoney(product?.totalRevenue),
         profitLifetime: formatMoney(product?.totalProfit),
         margin: formatPercent(product?.profitMargin),
       },
-
       inventoryRows,
       pricingRows,
       classificationRows,
       metaRows,
-
-      options,
-      attributes,
-      variants,
-
+      options: (product as any)?.options || [],
+      attributes: (product as any)?.attributes,
+      variants: ((product as any)?.variants || []) as any[],
       images: product?.images ?? [],
       shortDescription: product?.shortDescription,
       description: product?.description,
     };
   }, [product, t, formatMoney, formatPercent, formatDateTime]);
 
-  const hasImages = vm.images.length > 0;
-  const hasDesc = Boolean(vm.shortDescription || vm.description);
-
   const detailsRows = useMemo<KeyValueRow[]>(
     () => [...vm.inventoryRows, ...vm.pricingRows, ...vm.classificationRows, ...vm.metaRows],
     [vm.inventoryRows, vm.pricingRows, vm.classificationRows, vm.metaRows]
   );
+
+  const hasImages = vm.images.length > 0;
+  const hasDesc = Boolean(vm.shortDescription || vm.description);
 
   return (
     <AdminLayout isLoading={isLoading || !product}>
@@ -199,7 +193,7 @@ const ProductViewPage: React.FC = () => {
           />
         </div>
 
-        {/* Content / Cards */}
+        {/* Details + Images */}
         <div className={styles.contentGrid}>
           <Card>
             <div className={styles.cardHeader}>
@@ -219,27 +213,18 @@ const ProductViewPage: React.FC = () => {
                 <Heading level="h4">{t('productView.images')}</Heading>
               </div>
               <div className={styles.cardBody}>
-                <div className={styles.imagesGrid}>
-                  {vm.images.map((src, idx) => (
-                    <img
-                      key={`${src}-${idx}`}
-                      src={src}
-                      alt={`${t('productView.images')} ${idx + 1}`}
-                      className={styles.thumb}
-                    />
-                  ))}
-                </div>
+                <ImageLightboxGallery images={vm.images} altPrefix={t('productView.images')} />
               </div>
             </Card>
           )}
         </div>
 
+        {/* Description */}
         {hasDesc && (
           <Card>
             <div className={styles.cardHeader}>
               <Heading level="h4">{t('productView.description')}</Heading>
             </div>
-
             <div className={styles.cardBody}>
               {vm.shortDescription && (
                 <div className={styles.descBlock}>
@@ -247,7 +232,6 @@ const ProductViewPage: React.FC = () => {
                   <div className={styles.descBox}>{vm.shortDescription}</div>
                 </div>
               )}
-
               {vm.description && (
                 <div className={styles.descBlock}>
                   <div className={styles.descTitle}>{t('productView.description')}</div>
@@ -258,7 +242,7 @@ const ProductViewPage: React.FC = () => {
           </Card>
         )}
 
-        {/* Heavy sections only */}
+        {/* Heavy accordion sections */}
         <AccordionGroup allowMultipleOpen fullWidth withDivider>
           <Accordion
             key="variations"
@@ -271,11 +255,9 @@ const ProductViewPage: React.FC = () => {
               readOnly
             />
           </Accordion>
-
           <Accordion key="options" header={t('productView.options', { defaultValue: 'Options' })}>
             <ProductOptionsTable options={vm.options || []} />
           </Accordion>
-
           <Accordion
             key="attributes"
             header={t('productView.attributes', { defaultValue: 'Attributes' })}
