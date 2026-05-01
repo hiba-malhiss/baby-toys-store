@@ -1,9 +1,11 @@
 import React from 'react';
 import { Controller, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { Card, Flex, Select, Option, Button } from '@baby-toys/ui-kit';
+import { Select, Option, Button } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../../components/FormFieldWrapper/FormFieldWrapper';
 import { useAttributeTypeAdmin } from '../../../api/attributeApi';
+import styles from '../Productsform.module.scss';
+import { Trash2 } from 'lucide-react';
 
 interface AttributeRowProps {
   index: number;
@@ -37,9 +39,21 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
     (t) => !selectedTypeIds.includes(Number(t.id)) || Number(t.id) === Number(typeId)
   );
 
+  const getTypeLabel = (t: any) => {
+    const tr = t.translations || [];
+    const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
+    return en?.displayName || t.displayName || t.code;
+  };
+
+  const getValueLabel = (v: any) => {
+    const tr = v.translations || [];
+    const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
+    return en?.displayValue || v.display || v.code;
+  };
+
   return (
-    <Card fullWidth size="xsmall">
-      <Flex spacing="l" align="end" wrap>
+    <div className={styles.attributeRow}>
+      <div className={styles.attributeRowFields}>
         <Controller
           name={`attributes.${index}.attributeTypeId` as any}
           control={control}
@@ -60,16 +74,11 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                 isDisabled={isDisabled}
                 clearable
               >
-                {availableTypes.map((t) => {
-                  const tr = t.translations || [];
-                  const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
-                  const label = en?.displayName || t.displayName || t.code;
-                  return (
-                    <Option key={t.id} value={String(t.id)}>
-                      {label}
-                    </Option>
-                  );
-                })}
+                {availableTypes.map((t) => (
+                  <Option key={t.id} value={String(t.id)}>
+                    {getTypeLabel(t)}
+                  </Option>
+                ))}
               </Select>
             </FormFieldWrapper>
           )}
@@ -80,12 +89,16 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
           control={control}
           render={({ field }) => (
             <FormFieldWrapper
-              label={t('productForm.attributeValues', 'Attribute Values')}
+              label={t('productForm.attributeValues', 'Values')}
               fullWidth
               required={!!typeId}
             >
               <Select
-                placeholder={t('productForm.selectValues', 'Select values')}
+                placeholder={
+                  !currentType
+                    ? t('productForm.selectTypeFirst', 'Select type first')
+                    : t('productForm.selectValues', 'Select values')
+                }
                 value={
                   isMulti
                     ? Array.isArray(field.value)
@@ -108,26 +121,26 @@ const AttributeRow: React.FC<AttributeRowProps> = ({
                 clearable
                 isSearchableInternally
               >
-                {valueOptions.map((v: any) => {
-                  const tr = v.translations || [];
-                  const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
-                  const label = en?.displayValue || v.display || v.code;
-                  return (
-                    <Option key={v.id} value={String(v.id)}>
-                      {label}
-                    </Option>
-                  );
-                })}
+                {valueOptions.map((v: any) => (
+                  <Option key={v.id} value={String(v.id)}>
+                    {getValueLabel(v)}
+                  </Option>
+                ))}
               </Select>
             </FormFieldWrapper>
           )}
         />
+      </div>
 
-        <Button appearance="outline" onClick={onRemove}>
-          {t('common.remove', 'Remove')}
-        </Button>
-      </Flex>
-    </Card>
+      <Button
+        size="small"
+        className={styles.removeRowBtn}
+        appearance="outline"
+        leftIconComp={Trash2}
+        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+        onClick={onRemove}
+      />
+    </div>
   );
 };
 

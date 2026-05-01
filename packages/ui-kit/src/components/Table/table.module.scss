@@ -47,7 +47,7 @@
   border: 1px solid var(--color-border-light, $color-border-light);
   border-bottom: none;
 
-    // subtle left accent stripe
+  // subtle left accent stripe
   &::before {
     content: '';
     display: inline-block;
@@ -135,7 +135,9 @@
     position: sticky;
     top: 0;
     z-index: 1;
-    transition: color $transition-fast, background-color $transition-fast;
+    transition:
+      color $transition-fast,
+      background-color $transition-fast;
 
     &.isSortable {
       cursor: pointer;

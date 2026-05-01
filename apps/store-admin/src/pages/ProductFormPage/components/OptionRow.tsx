@@ -2,8 +2,10 @@ import React from 'react';
 import { useWatch } from 'react-hook-form';
 import { useOptionTypeDetail } from '../../../api/optionApi.ts';
 import { useTranslation } from 'react-i18next';
-import { Flex, Option, Select } from '@baby-toys/ui-kit';
+import { Button, Option, Select } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../../components/FormFieldWrapper/FormFieldWrapper.tsx';
+import styles from '../Productsform.module.scss';
+import { Trash2 } from 'lucide-react';
 
 const OptionRow: React.FC<{
   index: number;
@@ -12,7 +14,8 @@ const OptionRow: React.FC<{
   setValue: (name: any, value: any) => void;
   optionTypes: any[];
   selectedTypeIds: number[];
-}> = ({ index, control, isDisabled, setValue, optionTypes, selectedTypeIds }) => {
+  onRemove: () => void;
+}> = ({ index, control, isDisabled, setValue, optionTypes, selectedTypeIds, onRemove }) => {
   const currentTypeId = useWatch({
     control,
     name: `options.${index}.optionTypeId` as const,
@@ -22,8 +25,14 @@ const OptionRow: React.FC<{
   const values = optionType?.values || [];
   const { t } = useTranslation();
 
+  const selectedValues =
+    (useWatch({
+      control,
+      name: `options.${index}.valueIds` as const,
+    }) as number[]) || [];
+
   return (
-    <Flex spacing="m" align="start" fullWidth wrap>
+    <div className={styles.optionRow}>
       <FormFieldWrapper label={t('productForm.optionType', 'Option Type')} fullWidth required>
         <Select
           placeholder={t('productForm.selectOptionType', 'Select option type')}
@@ -34,6 +43,7 @@ const OptionRow: React.FC<{
             setValue(`options.${index}.valueIds`, []);
           }}
           isDisabled={isDisabled}
+          fullWidth
         >
           {optionTypes
             .filter((t: any) =>
@@ -41,18 +51,21 @@ const OptionRow: React.FC<{
             )
             .map((t: any) => (
               <Option key={t.id} value={t.id}>
-                {t.displayName}
+                {t.displayName || t.translations?.[0]?.displayName || t.code}
               </Option>
             ))}
         </Select>
       </FormFieldWrapper>
+
       <FormFieldWrapper label={t('productForm.optionValues', 'Option Values')} fullWidth required>
         <Select
           multiple
-          placeholder={t('productForm.selectValues', 'Select values')}
-          value={
-            (useWatch({ control, name: `options.${index}.valueIds` as const }) as number[]) || []
+          placeholder={
+            !numericTypeId
+              ? t('productForm.selectTypeFirst', 'Select type first')
+              : t('productForm.selectValues', 'Select values')
           }
+          value={selectedValues}
           onChange={(vals) =>
             setValue(
               `options.${index}.valueIds`,
@@ -60,15 +73,24 @@ const OptionRow: React.FC<{
             )
           }
           isDisabled={isDisabled || !numericTypeId}
+          fullWidth
         >
           {values.map((v: any) => (
             <Option key={v.id} value={v.id}>
-              {v.display || v.value}
+              {v.translations?.[0]?.display || v.display || v.value}
             </Option>
           ))}
         </Select>
       </FormFieldWrapper>
-    </Flex>
+      <Button
+        size="small"
+        className={styles.removeRowBtn}
+        appearance="outline"
+        leftIconComp={Trash2}
+        aria-label={t('common.delete', { defaultValue: 'Delete' })}
+        onClick={onRemove}
+      />
+    </div>
   );
 };
 

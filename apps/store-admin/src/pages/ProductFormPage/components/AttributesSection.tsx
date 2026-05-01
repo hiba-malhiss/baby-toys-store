@@ -1,8 +1,8 @@
 import React from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
-import { Button, Flex } from '@baby-toys/ui-kit';
-import AttributeRow from './AttributeRow';
 import { useTranslation } from 'react-i18next';
+import AttributeRow from './AttributeRow';
+import styles from '../Productsform.module.scss';
 
 interface AttributesSectionProps {
   control: any;
@@ -31,27 +31,61 @@ const AttributesSection: React.FC<AttributesSectionProps> = ({
   const isAddDisabled = remainingTypesCount === 0 || fields.length >= (attributeTypes?.length || 0);
 
   return (
-    <Flex direction="vertical" spacing="m" fullWidth>
-      {fields.map((field, idx) => (
-        <AttributeRow
-          key={field.id}
-          index={idx}
-          control={control}
-          attributeTypes={attributeTypes}
-          isDisabled={isDisabled}
-          onRemove={() => remove(idx)}
-          setValue={setValue}
-          selectedTypeIds={selectedTypeIds}
-        />
-      ))}
-      <Button
-        appearance="outline"
-        isDisabled={isAddDisabled}
-        onClick={() => append({ attributeTypeId: undefined as any, valueIds: [] })}
-      >
-        {t('productForm.addAttribute', { defaultValue: 'Add Attribute' })}
-      </Button>
-    </Flex>
+    <div className={styles.tagsSection}>
+      <div className={styles.tagsSectionHeader}>
+        <div className={styles.tagsSectionInfo}>
+          <span className={styles.tagsSectionTitle}>
+            {t('productForm.attributes', 'Attributes')}
+          </span>
+          <span className={styles.tagsSectionDesc}>
+            {t(
+              'productForm.attributesSubtitle',
+              'Fixed specs like Material, Brand — shown on product page and used for filtering.'
+            )}
+          </span>
+        </div>
+        <button
+          type="button"
+          className={styles.addRowBtn}
+          disabled={isAddDisabled || isDisabled}
+          onClick={() => append({ attributeTypeId: undefined as any, valueIds: [] })}
+        >
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path
+              d="M7 1V13M1 7H13"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+            />
+          </svg>
+          {t('productForm.addAttribute', 'Add Attribute')}
+        </button>
+      </div>
+
+      {fields.length > 0 ? (
+        <div className={styles.rowsList}>
+          {fields.map((field, idx) => (
+            <AttributeRow
+              key={field.id}
+              index={idx}
+              control={control}
+              attributeTypes={attributeTypes}
+              isDisabled={isDisabled}
+              onRemove={() => remove(idx)}
+              setValue={setValue}
+              selectedTypeIds={selectedTypeIds}
+            />
+          ))}
+        </div>
+      ) : (
+        <div className={styles.emptyRowsHint}>
+          {t(
+            'productForm.noAttributes',
+            'No attributes added yet. Click "Add Attribute" to start.'
+          )}
+        </div>
+      )}
+    </div>
   );
 };
 

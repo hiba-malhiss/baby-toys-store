@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,9 +10,6 @@ import {
   Select,
   Option,
   ImageUploader,
-  Accordion,
-  AccordionGroup,
-  Divider,
   ImagePickerModal,
 } from '@baby-toys/ui-kit';
 
@@ -28,13 +25,20 @@ import { useAttributeTypes } from '../../api/attributeApi';
 import styles from './Productsform.module.scss';
 import AttributesSection from './components/AttributesSection.tsx';
 import OptionsSection from './components/OptionsSection.tsx';
-import HelpTooltip from '../../components/HelpTooltip';
-import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
+
+type TabId = 'general' | 'media' | 'catalog';
+
+const TABS: { id: TabId; label: string; defaultLabel: string }[] = [
+  { id: 'general', label: 'productForm.tab.general', defaultLabel: 'General' },
+  { id: 'media', label: 'productForm.tab.media', defaultLabel: 'Media' },
+  { id: 'catalog', label: 'productForm.tab.catalog', defaultLabel: 'Catalog & Variants' },
+];
 
 const ProductFormPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { data: attributeTypes = [] } = useAttributeTypes();
+  const [activeTab, setActiveTab] = useState<TabId>('general');
 
   const {
     control,
@@ -59,30 +63,68 @@ const ProductFormPage: React.FC = () => {
   return (
     <AdminLayout>
       <form onSubmit={handleSubmit}>
-        <Flex direction="vertical" spacing="m">
-          <Flex justify="between" align="center" fullWidth>
-            <Heading>{isEditMode ? t('productForm.editTitle') : t('productForm.addTitle')}</Heading>
-            {isEditMode && productId && (
+        <div className={styles.pageLayout}>
+          {/* Page header */}
+          <div className={styles.pageHeader}>
+            <div>
+              <Heading>
+                {isEditMode ? t('productForm.editTitle') : t('productForm.addTitle')}
+              </Heading>
+              {isEditMode && productId && (
+                <p className={styles.pageHeaderSub}>
+                  {t('productForm.productId', { defaultValue: 'Product ID' })}: #{productId}
+                </p>
+              )}
+            </div>
+            <div className={styles.pageHeaderActions}>
+              {isEditMode && productId && (
+                <Button
+                  type="button"
+                  appearance="outline"
+                  leftIconComp={Layers}
+                  onClick={() => navigate(`/edit-product/${productId}/variations`)}
+                >
+                  {t('productForm.manageVariations', { defaultValue: 'Manage Variations' })}
+                </Button>
+              )}
               <Button
-                type="button"
-                appearance="outline"
-                leftIconComp={Layers}
-                onClick={() => navigate(`/edit-product/${productId}/variations`)}
+                type="submit"
+                isDisabled={isSubmitting || isDeletingImage}
+                isLoading={isSubmitting || isDeletingImage}
               >
-                {t('productForm.manageVariations', { defaultValue: 'Manage Variations' })}
+                {isEditMode
+                  ? t('productForm.saveChanges', { defaultValue: 'Save Changes' })
+                  : t('app.submit')}
               </Button>
-            )}
-          </Flex>
+            </div>
+          </div>
 
-          <AccordionGroup fullWidth withDivider>
-            <Accordion
-              header={t('productForm.tab.general', { defaultValue: 'General' })}
-              defaultOpen
-            >
+          {/* Tab nav */}
+          <div className={styles.tabNav}>
+            {TABS.map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                className={`${styles.tabBtn} ${activeTab === tab.id ? styles.tabBtnActive : ''}`}
+                onClick={() => setActiveTab(tab.id)}
+              >
+                {t(tab.label, tab.defaultLabel)}
+              </button>
+            ))}
+          </div>
+
+          {/* Tab content */}
+          <div className={styles.tabContent}>
+            {activeTab === 'general' && (
               <div className={styles.productsFormGeneral}>
                 <Card fullWidth>
                   <Flex direction="vertical" spacing="m" fullWidth>
-                    <Heading level="h4">AR</Heading>
+                    <div className={styles.localeSectionHeader}>
+                      <span className={styles.localeBadge}>AR</span>
+                      <span className={styles.localeLabel}>
+                        {t('productForm.arabicContent', 'Arabic Content')}
+                      </span>
+                    </div>
                     <LocalizedFields
                       control={control}
                       locale={'ar' as any}
@@ -93,7 +135,12 @@ const ProductFormPage: React.FC = () => {
 
                 <Card fullWidth>
                   <Flex direction="vertical" spacing="m" fullWidth>
-                    <Heading level="h4">EN</Heading>
+                    <div className={styles.localeSectionHeader}>
+                      <span className={styles.localeBadge}>EN</span>
+                      <span className={styles.localeLabel}>
+                        {t('productForm.englishContent', 'English Content')}
+                      </span>
+                    </div>
                     <LocalizedFields
                       control={control}
                       locale={'en' as any}
@@ -102,105 +149,118 @@ const ProductFormPage: React.FC = () => {
                   </Flex>
                 </Card>
               </div>
-            </Accordion>
+            )}
 
-            <Accordion header={t('productForm.tab.media', { defaultValue: 'Media' })}>
-              <Flex direction="vertical" spacing="m" fullWidth>
-                {/* Single unified uploader for all images */}
-                <FormFieldWrapper
-                  label={t('productForm.galleryImages', { defaultValue: 'Product Images' })}
-                  fullWidth
-                >
-                  <ImageUploader {...unifiedUploaderProps} fullHeight maxImages={10} />
-                </FormFieldWrapper>
+            {activeTab === 'media' && (
+              <Card fullWidth>
+                <Flex direction="vertical" spacing="xxl" fullWidth>
+                  <FormFieldWrapper
+                    label={t('productForm.galleryImages', { defaultValue: 'Product Images' })}
+                    fullWidth
+                  >
+                    <ImageUploader {...unifiedUploaderProps} fullHeight maxImages={10} />
+                  </FormFieldWrapper>
 
-                {/* Main image selector */}
-                <ImagePickerModal
-                  images={allImages}
-                  value={mainImageUrl}
-                  onChange={handleMainImageSelect}
-                  label={t('productForm.mainImage', { defaultValue: 'Main Image' })}
-                  placeholder={t('productForm.selectMainImage', {
-                    defaultValue: 'Select Main Image',
-                  })}
-                  title={t('productForm.selectMainImage', { defaultValue: 'Select Main Image' })}
-                  disabled={isDeletingImage}
-                  status="default"
-                />
-              </Flex>
-            </Accordion>
-
-            <Accordion
-              header={
-                <Flex align="center" spacing="m">
-                  <span>{t('productForm.options')}</span>
-                  <ProductRelationshipDiagram />
+                  <ImagePickerModal
+                    images={allImages}
+                    value={mainImageUrl}
+                    onChange={handleMainImageSelect}
+                    label={t('productForm.mainImage', { defaultValue: 'Main Image' })}
+                    placeholder={t('productForm.selectMainImage', {
+                      defaultValue: 'Select Main Image',
+                    })}
+                    title={t('productForm.selectMainImage', { defaultValue: 'Select Main Image' })}
+                    disabled={isDeletingImage}
+                    status="default"
+                  />
                 </Flex>
-              }
+              </Card>
+            )}
+
+            {activeTab === 'catalog' && (
+              <Flex direction="vertical" spacing="l" fullWidth>
+                {/* Category */}
+                <Card fullWidth>
+                  <div className={styles.catalogSectionTitle}>
+                    {t('productForm.category', 'Category')}
+                  </div>
+                  <FormFieldWrapper
+                    name="categoryId"
+                    control={control}
+                    label={t('productForm.category')}
+                    fullWidth
+                  >
+                    <Select fullWidth isDisabled={isDeletingImage}>
+                      {categories.map((cat) => (
+                        <Option key={cat.id} value={cat.id}>
+                          {cat.name}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormFieldWrapper>
+                </Card>
+
+                {/* Attributes */}
+                <Card fullWidth>
+                  <AttributesSection
+                    control={control}
+                    attributeTypes={attributeTypes}
+                    isDisabled={isDeletingImage}
+                    setValue={setValue}
+                  />
+                </Card>
+
+                {/* Options */}
+                <Card fullWidth>
+                  <OptionsSection
+                    control={control}
+                    isDisabled={isDeletingImage}
+                    setValue={setValue}
+                  />
+
+                  {isEditMode && productId && (
+                    <div className={styles.variantsCta}>
+                      <div className={styles.variantsCtaText}>
+                        <span className={styles.variantsCtaTitle}>
+                          {t('productForm.afterSavingOptions', {
+                            defaultValue: 'After saving, manage your variants',
+                          })}
+                        </span>
+                        <span className={styles.variantsCtaSub}>
+                          {t('productForm.variantsCtaSub', {
+                            defaultValue:
+                              'Each option combination becomes a variant with its own price, stock, and image.',
+                          })}
+                        </span>
+                      </div>
+                      <Button
+                        type="button"
+                        appearance="outline"
+                        leftIconComp={Layers}
+                        onClick={() => navigate(`/edit-product/${productId}/variations`)}
+                      >
+                        {t('productForm.manageVariations', { defaultValue: 'Manage Variations' })}
+                      </Button>
+                    </div>
+                  )}
+                </Card>
+              </Flex>
+            )}
+          </div>
+
+          {/* Bottom save */}
+          <div className={styles.formFooter}>
+            <Button
+              type="submit"
+              isDisabled={isSubmitting || isDeletingImage}
+              isLoading={isSubmitting || isDeletingImage}
             >
-              <Flex direction="vertical" spacing="xxl">
-                <FormFieldWrapper
-                  name="categoryId"
-                  control={control}
-                  label={t('productForm.category')}
-                  fullWidth
-                >
-                  <Select fullWidth isDisabled={isDeletingImage}>
-                    {categories.map((cat) => (
-                      <Option key={cat.id} value={cat.id}>
-                        {cat.name}
-                      </Option>
-                    ))}
-                  </Select>
-                </FormFieldWrapper>
-                <Divider />
-                <Flex align="center">
-                  <Heading level="h4">{t('productForm.attributes')}</Heading>
-                  <HelpTooltip
-                    title={t('productForm.attributesHelp', {
-                      defaultValue: 'What are Attributes?',
-                    })}
-                    description={t('productForm.attributesHelp', {
-                      defaultValue:
-                        'Attributes describe fixed specs (Material, Brand). They appear on the product page and can be used for filtering. Set up Attribute Types first in the Attributes menu.',
-                    })}
-                    position="top"
-                  />
-                </Flex>
-                <AttributesSection
-                  control={control}
-                  attributeTypes={attributeTypes}
-                  isDisabled={isDeletingImage}
-                  setValue={setValue}
-                />
-                <Divider />
-                <Flex align="center">
-                  <Heading level="h4">{t('productForm.options')}</Heading>
-                  <HelpTooltip
-                    title={t('productForm.optionsHelp', { defaultValue: 'What are Options?' })}
-                    description={t('productForm.optionsHelp', {
-                      defaultValue:
-                        'Options create purchasable variants (Size, Color). Set up Option Types first in the Options menu, then assign values here to generate variants.',
-                    })}
-                    position="top"
-                  />
-                </Flex>
-                <OptionsSection
-                  control={control}
-                  isDisabled={isDeletingImage}
-                  setValue={setValue}
-                />
-              </Flex>
-            </Accordion>
-          </AccordionGroup>
-          <Button
-            type="submit"
-            isDisabled={isSubmitting || isDeletingImage}
-            isLoading={isSubmitting || isDeletingImage}
-          >
-            {t('app.submit')}
-          </Button>
-        </Flex>
+              {isEditMode
+                ? t('productForm.saveChanges', { defaultValue: 'Save Changes' })
+                : t('app.submit')}
+            </Button>
+          </div>
+        </div>
       </form>
     </AdminLayout>
   );

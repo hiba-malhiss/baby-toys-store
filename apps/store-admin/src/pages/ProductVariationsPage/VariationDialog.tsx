@@ -9,7 +9,6 @@ import {
   Select,
   Option,
   useToast,
-  Divider,
   ImagePickerModal,
 } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
@@ -25,6 +24,7 @@ import type {
   UpdateVariantRequest,
 } from '../../api/types/variant';
 import type { ProductOptionDto } from '../../api/types/product';
+import styles from './product-variations.module.scss';
 
 type Props = {
   productId: number;
@@ -91,8 +91,6 @@ const buildVariationSchema = (optionTypeIds: number[], t: any) =>
           })
           .optional()
       ),
-
-      // costPrice: required number, non-negative
       costPrice: z.preprocess(
         (v) => {
           const s = typeof v === 'string' ? v.trim() : v;
@@ -120,7 +118,6 @@ const buildVariationSchema = (optionTypeIds: number[], t: any) =>
             message: t('validation.mustBeGreaterThanZero', { field: t('app.variation.stock') }),
           })
       ),
-
       active: z.boolean(),
       mainImage: z
         .string()
@@ -153,7 +150,6 @@ const buildVariationSchema = (optionTypeIds: number[], t: any) =>
         });
       }
 
-      // If product has options, require selection for each option type
       if (optionTypeIds && optionTypeIds.length > 0) {
         const sel = (data.selections || {}) as Record<string | number, unknown>;
         optionTypeIds.forEach((id) => {
@@ -223,7 +219,6 @@ const VariationDialog: React.FC<Props> = ({
 
   const onSubmit = async (data: FormState) => {
     const payload: CreateVariantRequest | UpdateVariantRequest = {
-      // Omit SKU when empty to let backend generate a default
       sku: data.sku && data.sku.trim() ? data.sku.trim() : undefined,
       price: Number(data.price),
       oldPrice: data.oldPrice ? Number(data.oldPrice) : undefined,
@@ -263,104 +258,124 @@ const VariationDialog: React.FC<Props> = ({
       width="60%"
       onVisibleChange={(v) => !v && onClose()}
     >
-      <Flex spacing="m" wrap>
-        <FormFieldWrapper name="sku" control={control} label={t('app.variation.sku')}>
-          <StringInput placeholder={t('app.variation.sku')} />
-        </FormFieldWrapper>
+      <div className={styles.dialogBody}>
+        {/* Option selections — top priority */}
+        {productOptions.length > 0 && (
+          <div className={styles.dialogSection}>
+            <div className={styles.optionSelectGrid}>
+              {productOptions.map((opt) => {
+                const optName = opt.type.translations?.[0]?.displayName || '';
+                return (
+                  <FormFieldWrapper
+                    key={opt.type.id}
+                    name={`selections.${opt.type.id}`}
+                    control={control}
+                    label={optName}
+                    required
+                    fullWidth
+                  >
+                    <Select fullWidth>
+                      <Option value="" disabled>
+                        {t('app.variation.selectPlaceholder', { option: optName })}
+                      </Option>
+                      {opt.values.map((val) => (
+                        <Option key={val.id} value={String(val.id)}>
+                          {val.translations?.[0]?.display}
+                        </Option>
+                      ))}
+                    </Select>
+                  </FormFieldWrapper>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
-        <FormFieldWrapper name="price" control={control} label={t('app.variation.price')} required>
-          <StringInput placeholder={t('app.variation.price')} type="number" />
-        </FormFieldWrapper>
+        {/* Pricing section */}
+        <div className={styles.dialogSection}>
+          <div className={styles.priceGrid}>
+            <FormFieldWrapper
+              name="price"
+              control={control}
+              label={t('app.variation.price')}
+              required
+            >
+              <StringInput placeholder="0.00" type="number" />
+            </FormFieldWrapper>
+            <FormFieldWrapper name="oldPrice" control={control} label={t('app.variation.oldPrice')}>
+              <StringInput placeholder="0.00" type="number" />
+            </FormFieldWrapper>
+            <FormFieldWrapper
+              name="costPrice"
+              control={control}
+              label={t('app.variation.costPrice')}
+              required
+            >
+              <StringInput placeholder="0.00" type="number" />
+            </FormFieldWrapper>
+          </div>
+        </div>
 
-        <FormFieldWrapper name="oldPrice" control={control} label={t('app.variation.oldPrice')}>
-          <StringInput placeholder={t('app.variation.oldPrice')} type="number" />
-        </FormFieldWrapper>
-
-        <FormFieldWrapper
-          name="costPrice"
-          control={control}
-          label={t('app.variation.costPrice')}
-          required
-        >
-          <StringInput placeholder={t('app.variation.costPrice')} type="number" />
-        </FormFieldWrapper>
-
-        <FormFieldWrapper name="stock" control={control} label={t('app.variation.stock')} required>
-          <StringInput placeholder={t('app.variation.stock')} type="number" />
-        </FormFieldWrapper>
-
-        <FormFieldWrapper name="active" control={control} label={t('app.variation.active')}>
-          <Toggle />
-        </FormFieldWrapper>
-      </Flex>
-
-      <Divider className="bts-marginVm" />
-
-      {/* Image picker */}
-      <ImagePickerModal
-        images={allProductImages}
-        value={selectedMainImage}
-        onChange={(url) => {
-          setValue('mainImage', url, { shouldValidate: true });
-        }}
-        label={t('app.variation.mainImage')}
-        placeholder={t('app.variation.selectImage', { defaultValue: 'Select Image' })}
-        title={t('app.variation.selectVariationImage', {
-          defaultValue: 'Select Variation Image',
-        })}
-        hint={
-          allProductImages.length === 0
-            ? t('app.variation.noImagesHint', {
-                defaultValue: 'No product images available. Add images to the product first.',
-              })
-            : undefined
-        }
-        disabled={allProductImages.length === 0}
-        status="default"
-      />
-
-      {productOptions.length > 0 && (
-        <>
-          <Divider className="bts-marginVm" />
-          <Flex direction="vertical" spacing="s" fullWidth>
-            {productOptions.map((opt) => (
-              <FormFieldWrapper
-                key={opt.type.id}
-                name={`selections.${opt.type.id}`}
-                control={control}
-                label={opt.type.translations?.[0]?.displayName || ''}
-                required
-                fullWidth
-              >
-                <Select>
-                  <Option value="" disabled>
-                    {t('app.variation.selectPlaceholder', {
-                      option: opt.type.translations?.[0]?.displayName,
-                    })}
-                  </Option>
-                  {opt.values.map((val) => (
-                    <Option key={val.id} value={String(val.id)}>
-                      {val.translations?.[0]?.display}
-                    </Option>
-                  ))}
-                </Select>
+        {/* Stock & details */}
+        <div className={styles.dialogSection}>
+          <div className={styles.detailsGrid}>
+            <FormFieldWrapper
+              name="stock"
+              control={control}
+              label={t('app.variation.stock')}
+              required
+            >
+              <StringInput placeholder="0" type="number" />
+            </FormFieldWrapper>
+            <FormFieldWrapper name="sku" control={control} label={t('app.variation.sku')}>
+              <StringInput
+                placeholder={t('app.variation.skuPlaceholder', 'Auto-generated if empty')}
+              />
+            </FormFieldWrapper>
+            <div className={styles.toggleField}>
+              <FormFieldWrapper name="active" control={control} label={t('app.variation.active')}>
+                <Toggle />
               </FormFieldWrapper>
-            ))}
-          </Flex>
-        </>
-      )}
+            </div>
+          </div>
+        </div>
 
-      <Flex justify="end" spacing="m" className="bts-marginTm">
-        <Button appearance="outline" onClick={onClose}>
-          {t('app.variation.cancel')}
-        </Button>
-        <Button
-          onClick={handleSubmit(onSubmit, onInvalid)}
-          isLoading={createVariant.isPending || updateVariant.isPending}
-        >
-          {editing ? t('app.variation.save') : t('app.variation.create')}
-        </Button>
-      </Flex>
+        {/* Image picker */}
+        <div className={styles.dialogSection}>
+          <ImagePickerModal
+            images={allProductImages}
+            value={selectedMainImage}
+            onChange={(url) => setValue('mainImage', url, { shouldValidate: true })}
+            label={t('app.variation.mainImage')}
+            placeholder={t('app.variation.selectImage', { defaultValue: 'Select Image' })}
+            title={t('app.variation.selectVariationImage', {
+              defaultValue: 'Select Variation Image',
+            })}
+            hint={
+              allProductImages.length === 0
+                ? t('app.variation.noImagesHint', {
+                    defaultValue: 'No product images available. Add images to the product first.',
+                  })
+                : undefined
+            }
+            disabled={allProductImages.length === 0}
+            status="default"
+          />
+        </div>
+
+        {/* Footer actions */}
+        <div className={styles.dialogFooter}>
+          <Button appearance="outline" onClick={onClose}>
+            {t('app.variation.cancel')}
+          </Button>
+          <Button
+            onClick={handleSubmit(onSubmit, onInvalid)}
+            isLoading={createVariant.isPending || updateVariant.isPending}
+          >
+            {editing ? t('app.variation.save') : t('app.variation.create')}
+          </Button>
+        </div>
+      </div>
     </Dialog>
   );
 };
