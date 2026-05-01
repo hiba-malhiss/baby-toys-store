@@ -26,16 +26,16 @@ export interface ProductImageGalleryProps {
 }
 
 const ProductImageGallery: React.FC<ProductImageGalleryProps> = ({
-                                                                   images,
-                                                                   productName = '',
-                                                                   selectedImage,
-                                                                   onSelectImage,
-                                                                   className,
-                                                                   showThumbnails = true,
-                                                                   showArrows = true,
-                                                                   showDots = true,
-                                                                   showZoomButton = true,
-                                                                 }) => {
+  images,
+  productName = '',
+  selectedImage,
+  onSelectImage,
+  className,
+  showThumbnails = true,
+  showArrows = true,
+  showDots = true,
+  showZoomButton = true,
+}) => {
   // Deduplicate + filter empty
   const uniqueImages = Array.from(new Set(images.filter(Boolean)));
 

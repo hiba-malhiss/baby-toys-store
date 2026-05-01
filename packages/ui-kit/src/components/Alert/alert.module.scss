@@ -9,46 +9,70 @@
   overflow: hidden;
   max-width: 100%;
   box-sizing: border-box;
+  gap: $spacing-sm;
+  animation: alertSlideIn 0.22s cubic-bezier(0, 0, 0.3, 1);
+
+  // Decorative left accent bar
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+  }
 
   &--small {
-    padding: $spacing-sm $spacing-md;
+    padding: $spacing-sm $spacing-md $spacing-sm calc($spacing-md + 4px);
     font-weight: 700;
-    font-size: 16px;
-    border-radius: 2px;
+    font-size: 14px;
+    border-radius: $radius-sm;
   }
 
   &--medium {
-    padding: $spacing-md;
-    font-size: 16px;
+    padding: $spacing-md $spacing-md $spacing-md calc($spacing-md + 4px);
+    font-size: 14px;
   }
 
   &--large {
-    padding: $spacing-lg;
-    font-size: 18px;
+    padding: $spacing-lg $spacing-lg $spacing-lg calc($spacing-lg + 4px);
+    font-size: 15px;
   }
 
   &--info {
     background-color: var(--color-info-light, $color-info-light);
     border-color: var(--color-info, $color-info);
     color: var(--color-info-dark, $color-info-dark);
+    &::before {
+      background: var(--color-info, $color-info);
+    }
   }
 
   &--success {
     background-color: var(--color-success-light, $color-success-light);
     border-color: var(--color-success, $color-success);
     color: var(--color-success-dark, $color-success-dark);
+    &::before {
+      background: var(--color-success, $color-success);
+    }
   }
 
   &--warning {
     background-color: var(--color-warning-light, $color-warning-light);
     border-color: var(--color-warning, $color-warning);
     color: var(--color-warning-dark, $color-warning-dark);
+    &::before {
+      background: var(--color-warning, $color-warning);
+    }
   }
 
   &--error {
     background-color: var(--color-error-light, $color-error-light);
     border-color: var(--color-error, $color-error);
     color: var(--color-error-dark, $color-error-dark);
+    &::before {
+      background: var(--color-error, $color-error);
+    }
   }
 
   &--flash-sale {
@@ -61,6 +85,9 @@
     color: var(--color-white, $color-white);
     box-shadow: $shadow-md;
     will-change: transform;
+    &::before {
+      display: none;
+    }
 
     &.alert--animated {
       animation: flashSalePulse 2s ease-in-out infinite;
@@ -86,47 +113,64 @@
 }
 
 .alertTitle {
-  font-weight: bold;
+  font-weight: 700;
+  font-size: 0.95em;
+  margin-bottom: 3px;
 }
 
 .alertMessage {
   line-height: 1.5;
+  font-size: 0.9em;
+  opacity: 0.9;
 }
 
 .alertCountdown {
   margin-top: $spacing-xs;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
 }
 
 .countdownTime {
-  font-weight: bold;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 15px;
   color: var(--color-warning, $color-warning);
-  text-shadow: 0 1px 2px rgba(var(--color-black, $color-black), 0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .alertCloseButton {
   flex-shrink: 0;
-  margin-left: $spacing-sm;
+  margin-left: $spacing-xs;
   color: inherit !important;
+  opacity: 0.7;
+  transition: opacity 0.15s ease;
 
   &:hover {
-    opacity: 0.8;
+    opacity: 1;
+  }
+}
+
+@keyframes alertSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
 @keyframes flashSalePulse {
   0% {
-    transform: scale(0.98);
+    transform: scale(0.99);
     box-shadow: $shadow-sm;
   }
   50% {
     transform: scale(1);
-    box-shadow: $shadow-md;
+    box-shadow: $shadow-lg;
   }
   100% {
-    transform: scale(0.98);
+    transform: scale(0.99);
     box-shadow: $shadow-sm;
   }
 }

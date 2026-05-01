@@ -2,57 +2,88 @@
   width: 100%;
   overflow-x: auto;
   overflow-y: auto;
-  border-radius: $radius-md;
+  border-radius: 0 0 $radius-md $radius-md;
   background-color: var(--color-bg-primary, $color-bg-primary);
   display: flex;
   flex-direction: column;
   height: 100%;
   -webkit-overflow-scrolling: touch;
+  border: 1px solid var(--color-border-light, $color-border-light);
+  border-top: none;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
 
-  &::-webkit-scrollbar {
-    -webkit-appearance: none;
-    width: 8px;
-    height: 8px;
+  &:first-child {
+    border-radius: $radius-md;
+    border-top: 1px solid var(--color-border-light, $color-border-light);
   }
 
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: var(--color-bg-secondary, $color-bg-secondary);
+  }
   &::-webkit-scrollbar-thumb {
     border-radius: 4px;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: var(--color-border-dark, $color-border-dark);
+  }
+  &::-webkit-scrollbar-thumb:hover {
+    background-color: var(--color-secondary, $color-secondary);
+  }
+}
+
+.tableTitle {
+  padding: 1rem 1rem 0.5rem;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-text-primary, $color-text-primary);
+  border-bottom: 1px solid var(--color-border-light, $color-border-light);
+  background-color: var(--color-bg-primary, $color-bg-primary);
+  border-radius: $radius-md $radius-md 0 0;
+  margin-bottom: 0;
+
+  &:empty {
+    display: none;
   }
 }
 
 .cellImageWrapper {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: $radius-xs;
+  overflow: hidden;
+  background: var(--color-bg-tertiary, $color-bg-tertiary);
 }
 
 .cellImage {
   width: 100%;
   height: 100%;
   object-fit: contain;
-  border-radius: 6px;
+  border-radius: 4px;
 }
 
 .cellPlaceholder {
-  width: 50px;
-  height: 50px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
   color: var(--color-text-secondary, $color-text-secondary);
-  background-color: #f0f0f0;
+  background-color: var(--color-bg-tertiary, $color-bg-tertiary);
   font-style: italic;
-  border-radius: 4px;
+  border-radius: $radius-xs;
+  font-size: 11px;
 }
 
 .table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--color-text-primary, $color-text-primary);
 
   .emptyMessage {
@@ -69,40 +100,60 @@
     }
   }
 
-  th,
-  td {
-    padding: 0.75rem 1rem;
-    border-bottom: 1px solid var(--color-border-light, $color-border-light);
+  th {
+    padding: 0.65rem 1rem;
+    border-bottom: 2px solid var(--color-border, $color-border);
     vertical-align: middle;
     text-align: left;
-  }
-
-  th {
-    font-weight: 600;
-    letter-spacing: 0.03em;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-text-muted, $color-text-muted);
+    background-color: var(--color-bg-secondary, $color-bg-secondary);
     user-select: none;
     position: relative;
     transition: color $transition-fast;
+    white-space: nowrap;
+
+    // Sticky header
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background-color: var(--color-bg-secondary, $color-bg-secondary);
 
     &.isSortable {
       cursor: pointer;
 
       &:hover {
-        color: var(--color-primary-hover, $color-primary-hover);
+        color: var(--color-primary, $color-primary);
+        background-color: var(--color-bg-tertiary, $color-bg-tertiary);
       }
     }
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-border-light, $color-border-light);
+    vertical-align: middle;
+    text-align: left;
+    font-size: 14px;
   }
 
   tbody {
     tr {
       transition: background-color $transition-fast;
 
+      &:last-child td {
+        border-bottom: none;
+      }
+
       &.isStriped:nth-child(even) {
         background-color: var(--color-bg-secondary, $color-bg-secondary);
       }
 
       &.withRowHover:hover {
-        background-color: var(--color-bg-secondary, $color-bg-secondary);
+        background-color: var(--color-primary-light, $color-primary-light);
       }
 
       &.isSelected {
@@ -130,7 +181,8 @@
 
 .filterMenuTitle {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
+  color: var(--color-text-primary, $color-text-primary);
 }
 
 .filterMenuContent {

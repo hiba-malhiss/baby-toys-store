@@ -269,13 +269,6 @@
       transform: none;
       flex-direction: row;
       padding-top: 8px;
-
-      button {
-        background: transparent !important;
-        box-shadow: none !important;
-        backdrop-filter: none;
-        border-radius: $radius-md !important;
-      }
     }
 
     .productCardRating {

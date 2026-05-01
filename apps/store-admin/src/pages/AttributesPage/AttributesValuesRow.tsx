@@ -1,13 +1,20 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Flex, Table, BouncingDotsLoader, ConfirmDialog, Tooltip } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Table,
+  BouncingDotsLoader,
+  ConfirmDialog,
+  Tooltip,
+  useToast,
+} from '@baby-toys/ui-kit';
 import type {
   AttributeTypeListDto as AttributeType,
   AttributeValueAdminDto as AttributeValue,
 } from '../../api/types/attribute';
 import { Pencil, Trash2 } from 'lucide-react';
 import { useAttributeTypeAdmin, useDeleteAttributeValue } from '../../api/attributeApi';
-import { useToast } from '@baby-toys/ui-kit';
 import ValueUpsertDialog from './ValueUpsertDialog';
 
 type Props = {

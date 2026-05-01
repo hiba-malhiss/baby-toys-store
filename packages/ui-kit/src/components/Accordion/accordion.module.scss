@@ -4,12 +4,12 @@
   background-color: var(--color-bg-primary, $color-bg-primary);
   overflow: hidden;
   width: 100%;
-  padding: 18px 10px;
+  padding: 0;
 
   .accordionDivider {
-    height: 2px;
+    height: 1px;
     background-color: var(--color-border-light, $color-border-light);
-    margin: 6px 0;
+    margin: 0;
   }
 
   &.autoOverflow {
@@ -36,6 +36,45 @@
 .accordion {
   width: 100%;
 
+  // Accordion header button (assumed to be rendered by AccordionGroup)
+  &-header {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    color: var(--color-text-primary, $color-text-primary);
+    transition:
+      background-color 0.15s ease,
+      color 0.15s ease;
+    text-align: left;
+    gap: 8px;
+
+    &:hover {
+      background-color: var(--color-bg-secondary, $color-bg-secondary);
+      color: var(--color-primary, $color-primary);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary, $color-primary);
+      outline-offset: -2px;
+    }
+
+    svg {
+      flex-shrink: 0;
+      transition: transform 0.25s cubic-bezier(0, 0, 0.3, 1);
+    }
+
+    &.isOpen svg {
+      transform: rotate(180deg);
+    }
+  }
+
   &.withoutPadding {
     .accordion-content {
       padding: 0;
@@ -46,7 +85,7 @@
     .accordion-content {
       color: var(--color-text-grey, $color-text-grey);
       font-size: 14px;
-      line-height: 20px;
+      line-height: 1.6;
     }
   }
 
@@ -56,8 +95,21 @@
   }
 
   &-content {
-    padding: 16px 20px;
+    padding: 4px 20px 20px;
     color: var(--color-text-grey, $color-text-grey);
-    border-radius: 0 0 $radius-md $radius-md;
+    font-size: 14px;
+    line-height: 1.6;
+    animation: accordionOpen 0.22s cubic-bezier(0, 0, 0.3, 1);
+  }
+}
+
+@keyframes accordionOpen {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

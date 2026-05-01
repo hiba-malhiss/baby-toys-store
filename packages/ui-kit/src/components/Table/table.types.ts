@@ -33,5 +33,4 @@ export type TableProps<T> = {
   children?: React.ReactNode;
   useLocalSortAndFilter?: boolean;
   emptyMessage?: string | React.ReactNode;
-  withoutCard?: boolean;
 };

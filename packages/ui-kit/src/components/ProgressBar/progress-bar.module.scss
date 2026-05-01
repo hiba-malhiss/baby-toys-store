@@ -6,10 +6,58 @@
   background-color: var(--color-secondary-light, $color-secondary-light);
   border-radius: $radius-md;
   overflow: hidden;
+  position: relative;
+
+  &--small {
+    height: 6px;
+  }
+
+  &--large {
+    height: 14px;
+  }
 
   &-filled {
     height: 100%;
     background-color: var(--color-primary, $color-primary);
-    transition: width $transition-fast;
+    border-radius: $radius-md;
+    transition: width 0.4s cubic-bezier(0, 0, 0.3, 1);
+    position: relative;
+    overflow: hidden;
+
+    // Animated shimmer on the fill
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 255, 255, 0.28) 50%,
+        transparent 100%
+      );
+      background-size: 200% 100%;
+      animation: progressShimmer 1.8s infinite linear;
+    }
+  }
+
+  &--success .progressBar-filled {
+    background-color: var(--color-success, $color-success);
+  }
+
+  &--warning .progressBar-filled {
+    background-color: var(--color-warning, $color-warning);
+  }
+
+  &--danger .progressBar-filled {
+    background-color: var(--color-error, $color-error);
+  }
+}
+
+@keyframes progressShimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
   }
 }

@@ -75,7 +75,6 @@ const Table = forwardRef<TableRef, TableProps<any>>(
       onPageChange = () => {},
       title,
       useLocalSortAndFilter = false,
-      withoutCard = false,
       expandedRows = {},
       onRowExpand,
       onRowCollapse,
@@ -605,8 +604,9 @@ const Table = forwardRef<TableRef, TableProps<any>>(
 
     /* ================== Render ================== */
 
-    const TableInner = (
+    return (
       <>
+        {title && <div className={styles.tableTitle}>{title}</div>}
         <div
           ref={wrapperRef}
           className={styles.tableWrapper}
@@ -636,14 +636,6 @@ const Table = forwardRef<TableRef, TableProps<any>>(
 
         {children}
       </>
-    );
-
-    if (withoutCard) return TableInner as any;
-
-    return (
-      <Card fullWidth header={title}>
-        {TableInner}
-      </Card>
     );
   }
 );

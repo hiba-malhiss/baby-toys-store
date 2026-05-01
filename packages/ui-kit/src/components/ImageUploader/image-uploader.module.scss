@@ -4,7 +4,6 @@
     flex-direction: column;
     gap: $spacing-md;
     width: 100%;
-    font-family: 'Comfortaa', sans-serif;
 
     &.fullHeight {
       height: 100%;
@@ -17,66 +16,90 @@
 
   &-content {
     border: 2px dashed var(--color-border, $color-border);
-    border-radius: $radius-sm;
-    padding: $spacing-md;
-    min-height: 150px;
+    border-radius: $radius-md;
+    padding: $spacing-xl $spacing-md;
+    min-height: 160px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     cursor: pointer;
     position: relative;
-    transition: $transition-colors;
+    transition:
+      border-color 0.2s ease,
+      background-color 0.2s ease,
+      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
+
+    &:hover {
+      border-color: var(--color-primary, $color-primary);
+      background-color: var(--color-primary-light, $color-primary-light);
+    }
 
     &.isDragover {
       border-color: var(--color-primary, $color-primary);
       background-color: var(--color-primary-light, $color-primary-light);
+      transform: scale(1.01);
+      box-shadow: 0 0 0 4px rgba(var(--color-primary-dark-rgb, 15, 131, 178), 0.1);
     }
   }
 
   .uploadButton {
-    margin-bottom: $spacing-sm;
+    margin-bottom: $spacing-xs;
   }
 
   &-empty {
     color: var(--color-text-muted, $color-text-muted);
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     text-align: center;
     pointer-events: none;
+    line-height: 1.5;
   }
 
   &-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: $spacing-md;
+    gap: $spacing-sm;
     width: 100%;
   }
 
   &-file {
-    width: 140px;
+    width: 120px;
     position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding-bottom: $spacing-xs;
-    gap: 0.25rem;
-    border-radius: $radius-xs;
+    gap: 4px;
+    border-radius: $radius-sm;
     overflow: hidden;
     background: var(--color-bg-primary, $color-bg-primary);
-    box-shadow: $box-shadow-s;
+    box-shadow:
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 0 0 1px var(--color-border-light, $color-border-light);
+    transition:
+      box-shadow 0.2s ease,
+      transform 0.2s cubic-bezier(0, 0, 0.3, 1);
 
     &:hover {
-      box-shadow: $box-shadow-m;
+      box-shadow:
+        0 4px 12px rgba(0, 0, 0, 0.12),
+        0 0 0 1px var(--color-border, $color-border);
+      transform: translateY(-2px);
+    }
+
+    @media (max-width: 480px) {
+      width: calc(50% - #{$spacing-xs});
     }
   }
 
   &-thumbnail {
     width: 100%;
-    height: 100px;
+    height: 90px;
     object-fit: contain;
     border-bottom: 1px solid var(--color-border-light, $color-border-light);
     background-color: var(--color-bg-tertiary, $color-bg-tertiary);
+    padding: 4px;
   }
 
   &-remove,
@@ -87,26 +110,41 @@
     cursor: pointer;
     background: transparent;
     border: none;
-    transition: $transition-fast;
+    transition:
+      transform 0.15s ease,
+      opacity 0.15s ease;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
   }
 
   &-remove {
     right: 4px;
     color: var(--color-error, $color-error);
-    background: white;
-    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
 
     &:hover {
       color: var(--color-error-hover, $color-error-hover);
+      transform: scale(1.15);
     }
   }
 
   &-star {
     left: 4px;
     color: gold;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(4px);
 
     &.activeStar {
       color: gold;
+    }
+
+    &:hover {
+      transform: scale(1.15);
     }
   }
 }

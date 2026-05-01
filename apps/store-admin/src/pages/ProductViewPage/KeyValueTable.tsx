@@ -42,10 +42,8 @@ const KeyValueTable: React.FC<Props> = ({ rows, labelHeader = 'Stat' }) => {
         paginator={false}
         rowHover={false}
         stripedRows
-        title={undefined}
         emptyMessage=""
         useLocalSortAndFilter={false}
-        withoutCard
       />
     </div>
   );

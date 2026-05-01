@@ -69,7 +69,10 @@
   cursor: pointer;
   padding: 0;
   background: var(--color-bg-tertiary, #f5f5f5);
-  transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.1s ease;
+  transition:
+    border-color 0.15s ease,
+    box-shadow 0.15s ease,
+    transform 0.1s ease;
   aspect-ratio: 1;
 
   &:hover {

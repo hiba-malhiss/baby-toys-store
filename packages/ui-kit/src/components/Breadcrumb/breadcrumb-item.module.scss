@@ -1,20 +1,46 @@
 .breadcrumbItem {
-  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: var(--color-text-grey-light, $color-text-grey-light);
+  color: var(--color-text-muted, $color-text-muted);
+
+  &:not(.is-last):hover &-content {
+    color: var(--color-primary, $color-primary);
+  }
 
   &-content {
-    color: var(--color-text-grey-light, $color-text-grey-light);
-    font-size: 12px;
-    font-weight: 600;
+    color: var(--color-text-muted, $color-text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    transition: color 0.15s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &:hover {
+      text-decoration: underline;
+      text-underline-offset: 2px;
+    }
   }
 
   &-separator {
     line-height: 16px;
+    margin: 0 2px;
+    color: var(--color-border-dark, $color-border-dark);
+    flex-shrink: 0;
   }
 
-  &.is-last &-content {
-    cursor: default;
+  &.is-last {
+    .breadcrumbItem-content {
+      cursor: default;
+      color: var(--color-text-primary, $color-text-primary);
+      font-weight: 600;
+
+      &:hover {
+        text-decoration: none;
+        color: var(--color-text-primary, $color-text-primary);
+      }
+    }
   }
 }

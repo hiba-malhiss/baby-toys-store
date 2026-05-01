@@ -1,14 +1,22 @@
 .dialog-mask {
   position: fixed;
   inset: 0;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 0.2s ease;
+  transition: opacity 0.22s ease;
+  padding: 16px;
+
+  @media (max-width: 480px) {
+    align-items: flex-end;
+    padding: 0;
+  }
 
   &--visible {
     opacity: 1;
@@ -24,22 +32,41 @@
 .dialog-root {
   background: var(--color-white, $color-white);
   opacity: 0;
-  border-radius: $radius-md;
-
-  /* Default size (can be overridden by inline styles via width/maxWidth props) */
+  border-radius: $radius-lg;
   width: 600px;
-  max-width: 95%;
-  max-height: 95%;
-
-  box-shadow: $box-shadow-l;
+  max-width: 100%;
+  max-height: 90vh;
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.14),
+    0 24px 64px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(0, 0, 0, 0.04);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transform: scale(0.92) translateY(-8px);
+  transform: scale(0.94) translateY(-10px);
   transition:
-    transform 0.22s cubic-bezier(0, 0, 0.3, 1),
-    opacity 0.22s ease;
+    transform 0.25s cubic-bezier(0, 0, 0.3, 1),
+    opacity 0.25s ease;
   transform-origin: center top;
+
+  @media (max-width: 480px) {
+    width: 100%;
+    max-height: 92vh;
+    border-radius: $radius-lg $radius-lg 0 0;
+    transform: scale(1) translateY(20px);
+
+    // Bottom sheet handle
+    &::before {
+      content: '';
+      display: block;
+      width: 40px;
+      height: 4px;
+      border-radius: 2px;
+      background: var(--color-border-dark, $color-border-dark);
+      margin: 10px auto 4px;
+      flex-shrink: 0;
+    }
+  }
 
   &--maximized {
     width: 100vw;
@@ -51,19 +78,21 @@
 }
 
 .dialog-header {
-  padding: $spacing-xs $spacing-lg;
+  padding: $spacing-sm $spacing-lg;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--color-bg-secondary, $color-bg-secondary);
   border-bottom: 1px solid var(--color-border-light, $color-border-light);
+  flex-shrink: 0;
 }
 
 .dialog-title {
-  font-size: 1.25rem;
-  font-weight: 600;
+  font-size: 1.1rem;
+  font-weight: 700;
   color: var(--color-text-primary, $color-text-primary);
-  padding: 16px 0;
+  padding: 12px 0;
+  letter-spacing: -0.01em;
 }
 
 .dialog-header-actions {
@@ -76,7 +105,19 @@
   overflow-y: auto;
   flex-grow: 1;
   color: var(--color-text-primary, $color-text-primary);
-  line-height: 20px;
+  line-height: 1.6;
+  -webkit-overflow-scrolling: touch;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-border-dark, $color-border-dark);
+    border-radius: 4px;
+  }
 }
 
 .dialog-footer {
@@ -84,5 +125,7 @@
   background-color: var(--color-bg-secondary, $color-bg-secondary);
   border-top: 1px solid var(--color-border-light, $color-border-light);
   display: flex;
-  justify-content: end;
+  justify-content: flex-end;
+  gap: $spacing-sm;
+  flex-shrink: 0;
 }
