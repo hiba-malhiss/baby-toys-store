@@ -14,13 +14,25 @@ import {
   useDeleteProductImage,
 } from '../../api/productApi';
 import { useCategories } from '../../api/categoryApi';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 
 type ProductFormValues = z.infer<typeof productSchema>;
+
+/**
+ * Upload progress phases — lets the UI show what's happening while the
+ * page stays locked during a multi-step save.
+ */
+export type SubmitPhase =
+  | 'idle'
+  | 'saving' // product create/update API call
+  | 'uploading' // gallery image uploads
+  | 'uploading-main' // main image upload
+  | 'done'; // brief "done" state before navigation
 
 export const useProductForm = () => {
   const toast = useToast();
   const { t } = useTranslation();
+  const navigate = useNavigate();
   const createProduct = useCreateProduct();
   const updateProduct = useUpdateProduct();
   const { id: productId } = useParams<{ id?: string }>();
@@ -36,6 +48,16 @@ export const useProductForm = () => {
 
   const [isDeletingImage, setIsDeletingImage] = useState(false);
 
+  /**
+   * submitPhase tracks the exact step during multi-step save so the UI can
+   * show precise progress and keep the submit button disabled + loading
+   * until navigation happens.
+   */
+  const [submitPhase, setSubmitPhase] = useState<SubmitPhase>('idle');
+  const [uploadProgress, setUploadProgress] = useState({ done: 0, total: 0 });
+
+  const isSaving = submitPhase !== 'idle';
+
   const {
     control,
     handleSubmit: rhfHandleSubmit,
@@ -49,7 +71,6 @@ export const useProductForm = () => {
     criteriaMode: 'all',
   });
 
-  // Max constraints for counters
   const MAX = {
     name: 255,
     shortDescription: 500,
@@ -61,7 +82,7 @@ export const useProductForm = () => {
     images: 10,
   } as const;
 
-  // Live watchers for counters
+  // Live watchers for char counters
   const watchNameEn = useWatch({ control, name: 'translations.en.name' });
   const watchShortDescriptionEn = useWatch({ control, name: 'translations.en.shortDescription' });
   const watchDescriptionEn = useWatch({ control, name: 'translations.en.description' });
@@ -78,7 +99,6 @@ export const useProductForm = () => {
       setMainImageUrl(product.mainImage || null);
       setMainImageFile(null);
 
-      // Build locale maps from admin translations
       const trMap = new Map<string, any>();
       (product as any).translations?.forEach((t: any) => {
         if (t?.locale) trMap.set(String(t.locale).toLowerCase(), t);
@@ -86,18 +106,13 @@ export const useProductForm = () => {
       const enTr = trMap.get('en') || {};
       const arTr = trMap.get('ar') || {};
 
-      const detailsArrayEn = enTr.details
-        ? Object.entries(enTr.details as Record<string, string>).map(([label, value]) => ({
-            label,
-            value: String(value),
-          }))
-        : [];
-      const detailsArrayAr = arTr.details
-        ? Object.entries(arTr.details as Record<string, string>).map(([label, value]) => ({
-            label,
-            value: String(value),
-          }))
-        : [];
+      const toDetailsArray = (details: any) =>
+        details
+          ? Object.entries(details as Record<string, string>).map(([label, value]) => ({
+              label,
+              value: String(value),
+            }))
+          : [];
 
       const optionsArray = Array.isArray((product as any).options)
         ? (product as any).options
@@ -110,7 +125,6 @@ export const useProductForm = () => {
             .filter((x: any) => Number.isFinite(x.optionTypeId))
         : [];
 
-      // Prefill product-level attributes for edit mode
       const attributesArray = Array.isArray((product as any).attributes)
         ? (product as any).attributes
             .map((a: any) => ({
@@ -122,17 +136,15 @@ export const useProductForm = () => {
             .filter((x: any) => Number.isFinite(x.attributeTypeId))
         : [];
 
-      const defaultValues: ProductFormValues = {
+      reset({
         ...defaultProductValues,
         options: optionsArray,
         attributes: attributesArray,
-        // non-localized
         releaseDate: product.releaseDate || '',
         images: product.images || [],
         mainImage: product.mainImage || '',
         isActive: product.isActive ?? true,
         categoryId: product.categoryId ?? undefined,
-        // localized (prefill from admin translations)
         translations: {
           en: {
             name: enTr.name || '',
@@ -142,7 +154,7 @@ export const useProductForm = () => {
               Array.isArray(enTr.featureBullets) && enTr.featureBullets.length
                 ? enTr.featureBullets
                 : [''],
-            details: detailsArrayEn,
+            details: toDetailsArray(enTr.details),
           },
           ar: {
             name: arTr.name || '',
@@ -152,12 +164,11 @@ export const useProductForm = () => {
               Array.isArray(arTr.featureBullets) && arTr.featureBullets.length
                 ? arTr.featureBullets
                 : [''],
-            details: detailsArrayAr,
+            details: toDetailsArray(arTr.details),
           },
         },
-      } as unknown as ProductFormValues;
+      } as unknown as ProductFormValues);
 
-      reset(defaultValues);
       setNewImages([]);
       setMainImageFile(null);
     } else {
@@ -169,13 +180,20 @@ export const useProductForm = () => {
     }
   }, [product, reset]);
 
-  // Combined image pool for unified uploader
+  // Combined image pool for ImagePickerModal
   const allImages: (File | string)[] = [...existingImages, ...newImages];
 
+  // ─────────────────────────────────────────────────────────────────────────────
+  // Core submit — stays on page until ALL API calls finish, then navigates
+  // ─────────────────────────────────────────────────────────────────────────────
   const submitForm = async (data: ProductFormValues) => {
     try {
       if (!mainImageUrl && !mainImageFile) {
-        toast.error('Please select a main image from the uploaded images');
+        toast.error(
+          t('productForm.errors.mainImageRequired', {
+            defaultValue: 'Please select a main image before saving.',
+          })
+        );
         return;
       }
 
@@ -220,7 +238,6 @@ export const useProductForm = () => {
             }))
         : [];
 
-      // Coerce attributes into backend shape with numeric IDs
       const attributes = (data as any).attributes
         ? (data as any).attributes
             .filter((a: any) => a && a.attributeTypeId)
@@ -231,7 +248,6 @@ export const useProductForm = () => {
         : [];
 
       const payload = {
-        // non-localized (variant-first)
         releaseDate: data.releaseDate || undefined,
         images: existingImages.slice(0, MAX.images),
         mainImage: mainImageFile ? '' : mainImageUrl || '',
@@ -245,35 +261,56 @@ export const useProductForm = () => {
         ],
       };
 
-      const returnedId = productId
+      // ── Step 1: Save product ──────────────────────────────────────────────
+      setSubmitPhase('saving');
+
+      const savedId = productId
         ? await updateProduct.mutateAsync({ id: productId, ...payload })
         : await createProduct.mutateAsync(payload);
 
-      const newProductId = productId || returnedId;
+      const resolvedId = productId || savedId;
 
-      // Upload new gallery images
-      for (const file of newImages) {
-        if (file !== mainImageFile) {
-          await uploadProductImage(newProductId, file);
+      // ── Step 2: Upload gallery images (sequentially to avoid overload) ────
+      const galleryFiles = newImages.filter((f) => f !== mainImageFile);
+
+      if (galleryFiles.length > 0) {
+        setSubmitPhase('uploading');
+        setUploadProgress({ done: 0, total: galleryFiles.length });
+
+        for (let i = 0; i < galleryFiles.length; i++) {
+          await uploadProductImage(resolvedId, galleryFiles[i]);
+          setUploadProgress({ done: i + 1, total: galleryFiles.length });
         }
       }
 
-      // Upload main image if it's a new file
+      // ── Step 3: Upload main image if it's a new file ──────────────────────
       if (mainImageFile) {
-        await uploadMainImage(newProductId, mainImageFile);
+        setSubmitPhase('uploading-main');
+        await uploadMainImage(resolvedId, mainImageFile);
       }
 
-      toast.success(`Product ${productId ? 'updated' : 'created'} successfully`);
+      // ── Step 4: All done — show success then navigate ─────────────────────
+      setSubmitPhase('done');
+      toast.success(
+        t(productId ? 'productForm.updatedSuccess' : 'productForm.createdSuccess', {
+          defaultValue: `Product ${productId ? 'updated' : 'created'} successfully`,
+        })
+      );
+
+      // Small delay so toast is visible before navigation
+      setTimeout(() => {
+        navigate('/products');
+      }, 400);
     } catch (err: any) {
+      setSubmitPhase('idle');
+      setUploadProgress({ done: 0, total: 0 });
       const backendMsg = err?.response?.data?.message || err?.message || 'Failed to save product';
       toast.error(backendMsg);
     }
   };
 
-  // Handle selection from image picker modal
   const handleMainImageSelect = (urlOrBlob: string) => {
     setMainImageUrl(urlOrBlob);
-    // If it's a blob URL, find the matching File
     if (urlOrBlob.startsWith('blob:')) {
       const matchedFile = newImages.find((f) => urlOrBlob === URL.createObjectURL(f));
       setMainImageFile(matchedFile || null);
@@ -282,23 +319,21 @@ export const useProductForm = () => {
     }
   };
 
-  // Unified uploader handler
   const unifiedUploaderProps = {
     images: allImages,
     multiple: true,
     maxImages: MAX.images,
     onBackendDelete: async (url: string) => {
       if (!productId) return;
-
-      // Block deletion if this is the main image
       if (mainImageUrl === url) {
         toast.error(
-          'This image is currently set as the main image. Please choose a different main image first.'
+          t('productForm.errors.cannotDeleteMainImage', {
+            defaultValue:
+              'This is the main image. Choose a different main image first, then delete this one.',
+          })
         );
-        // Throw to stop the uploader from removing it from the UI
         throw new Error('Cannot delete main image');
       }
-
       setIsDeletingImage(true);
       try {
         await deleteImageMutation.mutateAsync(url);
@@ -322,7 +357,6 @@ export const useProductForm = () => {
       setExistingImages(urls);
       setNewImages(filesArr);
 
-      // Clear main image if its backend URL was removed
       if (mainImageUrl && !mainImageUrl.startsWith('blob:')) {
         if (!urls.includes(mainImageUrl)) {
           setMainImageUrl(null);
@@ -330,17 +364,36 @@ export const useProductForm = () => {
         }
       }
     },
-    isDisabled: isDeletingImage,
+    isDisabled: isDeletingImage || isSaving,
   };
 
   const onInvalid = () => {
     toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
   };
 
+  // Human-readable label for the loading state shown in the submit button
+  const submitPhaseLabel = (() => {
+    if (submitPhase === 'saving')
+      return t('productForm.phases.saving', { defaultValue: 'Saving product…' });
+    if (submitPhase === 'uploading')
+      return t('productForm.phases.uploading', {
+        defaultValue: `Uploading images (${uploadProgress.done}/${uploadProgress.total})…`,
+        done: uploadProgress.done,
+        total: uploadProgress.total,
+      });
+    if (submitPhase === 'uploading-main')
+      return t('productForm.phases.uploadingMain', { defaultValue: 'Uploading main image…' });
+    if (submitPhase === 'done') return t('productForm.phases.done', { defaultValue: 'Done!' });
+    return null;
+  })();
+
   return {
     control,
     handleSubmit: rhfHandleSubmit(submitForm, onInvalid),
-    isSubmitting,
+    isSubmitting: isSubmitting || isSaving,
+    submitPhase,
+    submitPhaseLabel,
+    uploadProgress,
     isLoadingProduct,
     setValue,
     categories,

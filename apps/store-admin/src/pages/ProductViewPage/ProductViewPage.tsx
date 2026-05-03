@@ -1,4 +1,4 @@
-import React, { useMemo, useCallback } from 'react';
+import React, { useMemo, useCallback, useState } from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useParams, useNavigate } from 'react-router-dom';
 import {
@@ -7,9 +7,10 @@ import {
   Heading,
   Chip,
   CopyToClipboardButton,
-  Accordion,
-  AccordionGroup,
-  ImageLightboxGallery,
+  Divider,
+  TabBar,
+  TabBarItem,
+  ProductImageGallery,
 } from '@baby-toys/ui-kit';
 import { Pencil } from 'lucide-react';
 import { useProduct } from '../../api/productApi';
@@ -29,9 +30,10 @@ const ProductViewPage: React.FC = () => {
 
   const navigate = useNavigate();
   const { data: product, isLoading } = useProduct(productId);
-
   const { data: settings } = useStoreSettings();
   const symbol = settings?.general?.currencySymbol || '';
+
+  const [activeTab, setActiveTab] = useState('variations');
 
   const formatMoney = useCallback(
     (val?: number | null) => (val != null ? `${symbol}${Number(val).toLocaleString()}` : '-'),
@@ -51,26 +53,14 @@ const ProductViewPage: React.FC = () => {
   const vm = useMemo(() => {
     const name = product?.name || t('productView.fallbackName');
 
-    const inventoryRows: KeyValueRow[] = [
+    const quickFacts: KeyValueRow[] = [
+      { id: 'category', label: t('productView.category'), value: product?.categoryName ?? '-' },
       {
         id: 'stock',
         label: t('productView.stock'),
         value: (product as any)?.activeVariantsTotalStock ?? '-',
       },
       { id: 'unitsSold', label: t('productView.unitsSold'), value: product?.sales ?? 0 },
-      {
-        id: 'releaseDate',
-        label: t('productView.releaseDate'),
-        value: formatDateTime(product?.releaseDate),
-      },
-      {
-        id: 'active',
-        label: t('productView.active'),
-        value: product?.isActive ? t('app.yes') : t('app.no'),
-      },
-    ];
-
-    const pricingRows: KeyValueRow[] = [
       {
         id: 'fromPrice',
         label: t('productView.fromPrice', { defaultValue: 'From price' }),
@@ -81,101 +71,90 @@ const ProductViewPage: React.FC = () => {
         label: t('productView.wasPrice', { defaultValue: 'Was price' }),
         value: formatMoney((product as any)?.defaultVariant?.oldPrice),
       },
-    ];
-
-    const classificationRows: KeyValueRow[] = [
-      { id: 'category', label: t('productView.category'), value: product?.categoryName ?? '-' },
-    ];
-
-    const metaRows: KeyValueRow[] = [
+      {
+        id: 'releaseDate',
+        label: t('productView.releaseDate'),
+        value: formatDateTime(product?.releaseDate),
+      },
       { id: 'created', label: t('productView.created'), value: formatDateTime(product?.createdAt) },
       { id: 'updated', label: t('productView.updated'), value: formatDateTime(product?.updatedAt) },
     ];
 
+    const rawImages: string[] = (product as any)?.images ?? [];
+    const mainImage: string | undefined = product?.mainImage ?? undefined;
+
+    const allImages = mainImage
+      ? [mainImage, ...rawImages.filter((img) => img !== mainImage)]
+      : rawImages;
+
     return {
       id: product?.id,
       name,
-      mainImage: product?.mainImage,
-      categoryName: product?.categoryName,
       isActive: product?.isActive,
       kpis: {
         revenueLifetime: formatMoney(product?.totalRevenue),
         profitLifetime: formatMoney(product?.totalProfit),
         margin: formatPercent(product?.profitMargin),
       },
-      inventoryRows,
-      pricingRows,
-      classificationRows,
-      metaRows,
+      quickFacts,
       options: (product as any)?.options || [],
       attributes: (product as any)?.attributes,
       variants: ((product as any)?.variants || []) as any[],
-      images: product?.images ?? [],
+      allImages,
       shortDescription: product?.shortDescription,
       description: product?.description,
     };
   }, [product, t, formatMoney, formatPercent, formatDateTime]);
 
-  const detailsRows = useMemo<KeyValueRow[]>(
-    () => [...vm.inventoryRows, ...vm.pricingRows, ...vm.classificationRows, ...vm.metaRows],
-    [vm.inventoryRows, vm.pricingRows, vm.classificationRows, vm.metaRows]
-  );
-
-  const hasImages = vm.images.length > 0;
+  const hasImages = vm.allImages.length > 0;
   const hasDesc = Boolean(vm.shortDescription || vm.description);
+
+  const tabs = [
+    { value: 'variations', header: t('productView.variations', { defaultValue: 'Variations' }) },
+    { value: 'options', header: t('productView.options', { defaultValue: 'Options' }) },
+    { value: 'attributes', header: t('productView.attributes', { defaultValue: 'Attributes' }) },
+    ...(hasDesc ? [{ value: 'description', header: t('productView.description') }] : []),
+  ];
 
   return (
     <AdminLayout isLoading={isLoading || !product}>
-      <div className={styles.container}>
-        {/* Hero */}
-        <Card>
-          <div className={styles.heroCardGrid}>
-            <div className={styles.heroLeftGrid}>
-              {vm.mainImage && (
-                <img src={vm.mainImage} alt={vm.name} className={styles.mainImage} />
+      <div className={styles.page}>
+        {/* ─── HEADER ───────────────────────────── */}
+        <div className={styles.pageHeader}>
+          <div className={styles.pageHeaderLeft}>
+            <Heading level="h3" className={styles.pageTitle}>
+              {vm.name}
+            </Heading>
+
+            <div className={styles.pageHeaderMeta}>
+              <span className={styles.fadedId}>{t('productView.idLabel', { id: vm.id })}</span>
+
+              {vm.id != null && (
+                <CopyToClipboardButton
+                  value={vm.id}
+                  successMessage={t('productView.productIdCopied')}
+                  ariaLabel={t('productView.copyProductId')}
+                  appearance="link"
+                />
               )}
 
-              <div className={styles.heroText}>
-                <Heading level="h3" className={styles.title}>
-                  {vm.name}
-                </Heading>
-
-                <div className={styles.metaRow}>
-                  <span className={styles.fadedId}>{t('productView.idLabel', { id: vm.id })}</span>
-                  {vm.id != null && (
-                    <CopyToClipboardButton
-                      value={vm.id}
-                      successMessage={t('productView.productIdCopied')}
-                      ariaLabel={t('productView.copyProductId')}
-                      appearance="link"
-                    />
-                  )}
-                </div>
-
-                <div className={styles.metaRow}>
-                  <span className={styles.faded}>{vm.categoryName || '-'}</span>
-                  {vm.isActive === false && (
-                    <Chip label={t('productView.inactive')} appearance="error" />
-                  )}
-                </div>
-              </div>
-            </div>
-
-            <div className={styles.heroActions}>
-              <Button
-                leftIconComp={Pencil}
-                appearance="outline"
-                isDisabled={vm.id == null}
-                onClick={() => vm.id != null && navigate(`/edit-product/${vm.id}`)}
-              >
-                {t('productView.editProduct')}
-              </Button>
+              {vm.isActive === false && (
+                <Chip label={t('productView.inactive')} appearance="error" />
+              )}
             </div>
           </div>
-        </Card>
 
-        {/* KPIs */}
-        <div className={styles.kpiGrid}>
+          <Button
+            leftIconComp={Pencil}
+            isDisabled={vm.id == null}
+            onClick={() => vm.id != null && navigate(`/edit-product/${vm.id}`)}
+          >
+            {t('productView.editProduct')}
+          </Button>
+        </div>
+
+        {/* ─── KPIs ─────────────────────────────── */}
+        <div className={styles.kpiStrip}>
           <KPIWithTooltip
             label={t('productView.revenueLifetime')}
             tooltip={t('tooltips.productKPIs.revenueLifetime')}
@@ -193,78 +172,80 @@ const ProductViewPage: React.FC = () => {
           />
         </div>
 
-        {/* Details + Images */}
-        <div className={styles.contentGrid}>
-          <Card>
-            <div className={styles.cardHeader}>
-              <Heading level="h4">{t('productView.details', { defaultValue: 'Details' })}</Heading>
-            </div>
-            <div className={styles.cardBody}>
-              <KeyValueTable
-                rows={detailsRows}
-                labelHeader={t('productView.stat', { defaultValue: 'Stat' })}
-              />
-            </div>
-          </Card>
-
+        {/* ─── TOP SECTION (Gallery + Details) ─── */}
+        <div className={styles.topGrid}>
           {hasImages && (
-            <Card>
-              <div className={styles.cardHeader}>
-                <Heading level="h4">{t('productView.images')}</Heading>
-              </div>
-              <div className={styles.cardBody}>
-                <ImageLightboxGallery images={vm.images} altPrefix={t('productView.images')} />
-              </div>
+            <Card className={styles.galleryCard}>
+              <ProductImageGallery
+                images={vm.allImages}
+                productName={vm.name}
+                showThumbnails
+                showArrows
+                showDots
+              />
             </Card>
           )}
+
+          <Card>
+            <p className={styles.cardLabel}>
+              {t('productView.details', { defaultValue: 'Details' })}
+            </p>
+
+            <KeyValueTable
+              rows={vm.quickFacts}
+              labelHeader={t('productView.stat', { defaultValue: 'Stat' })}
+            />
+          </Card>
         </div>
 
-        {/* Description */}
-        {hasDesc && (
-          <Card>
-            <div className={styles.cardHeader}>
-              <Heading level="h4">{t('productView.description')}</Heading>
-            </div>
-            <div className={styles.cardBody}>
-              {vm.shortDescription && (
-                <div className={styles.descBlock}>
-                  <div className={styles.descTitle}>{t('productView.shortDescription')}</div>
-                  <div className={styles.descBox}>{vm.shortDescription}</div>
-                </div>
-              )}
-              {vm.description && (
-                <div className={styles.descBlock}>
-                  <div className={styles.descTitle}>{t('productView.description')}</div>
-                  <div className={styles.descBox}>{vm.description}</div>
-                </div>
-              )}
-            </div>
-          </Card>
-        )}
+        {/* ─── TABS FULL WIDTH ─── */}
+        <Card className={styles.tabCard}>
+          <TabBar fullWidth value={activeTab} onChange={setActiveTab} tabs={tabs}>
+            <TabBarItem value="variations">
+              <div className={styles.tabPanel}>
+                <ProductVariations
+                  productId={productId as number}
+                  variants={vm.variants}
+                  readOnly
+                />
+              </div>
+            </TabBarItem>
 
-        {/* Heavy accordion sections */}
-        <AccordionGroup allowMultipleOpen fullWidth withDivider>
-          <Accordion
-            key="variations"
-            header={t('productView.variations', { defaultValue: 'Variations' })}
-            defaultOpen
-          >
-            <ProductVariations
-              productId={productId as number}
-              variants={vm.variants as any}
-              readOnly
-            />
-          </Accordion>
-          <Accordion key="options" header={t('productView.options', { defaultValue: 'Options' })}>
-            <ProductOptionsTable options={vm.options || []} />
-          </Accordion>
-          <Accordion
-            key="attributes"
-            header={t('productView.attributes', { defaultValue: 'Attributes' })}
-          >
-            <ProductAttributesTable attributes={vm.attributes} />
-          </Accordion>
-        </AccordionGroup>
+            <TabBarItem value="options">
+              <div className={styles.tabPanel}>
+                <ProductOptionsTable options={vm.options || []} />
+              </div>
+            </TabBarItem>
+
+            <TabBarItem value="attributes">
+              <div className={styles.tabPanel}>
+                <ProductAttributesTable attributes={vm.attributes} />
+              </div>
+            </TabBarItem>
+
+            {hasDesc && (
+              <TabBarItem value="description">
+                <div className={styles.tabPanel}>
+                  {vm.shortDescription && (
+                    <div className={styles.descBlock}>
+                      <p className={styles.descLabel}>{t('productView.shortDescription')}</p>
+                      <div className={styles.descBox}>{vm.shortDescription}</div>
+                    </div>
+                  )}
+
+                  {vm.shortDescription && vm.description && <Divider className="bts-marginVl" />}
+
+                  {vm.description && (
+                    <div className={styles.descBlock}>
+                      <p className={styles.descLabel}>{t('productView.description')}</p>
+                      <div className={styles.descBox}>{vm.description}</div>
+                    </div>
+                  )}
+                </div>
+              </TabBarItem>
+            )}
+          </TabBar>
+        </Card>
       </div>
     </AdminLayout>
   );

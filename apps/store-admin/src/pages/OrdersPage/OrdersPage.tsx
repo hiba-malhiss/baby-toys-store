@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Table, Flex, StringInput, Select, Option } from '@baby-toys/ui-kit';
+import { Heading, Table, Flex, StringInput, Select, Option, PageHeader } from '@baby-toys/ui-kit';
 import { useOrdersPage } from './useOrdersPage.tsx';
 import styles from './orders-page.module.scss';
 import { Search } from 'lucide-react';
@@ -29,13 +29,13 @@ const OrdersPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('orders.title')}</Heading>
-          <Flex spacing="m">
+      <PageHeader
+        left={<Heading>{t('orders.title')}</Heading>}
+        right={
+          <Flex spacing="s" align="center">
             <Select
               value={statusFilter ?? ''}
-              className={styles.orderPageStatus}
+              className={styles.ordersPageStatus}
               onChange={(value) => setStatusFilter((value as string) || undefined)}
             >
               <Option value="">{t('app.all')}</Option>
@@ -47,8 +47,7 @@ const OrdersPage: React.FC = () => {
             </Select>
             <StringInput
               placeholder={t('orders.searchPlaceholder')}
-              className={styles.orderPageSearch}
-              fullWidth
+              className={styles.ordersPageSearch}
               value={searchValue}
               onChange={(v) => {
                 setSearchValue(v);
@@ -59,21 +58,22 @@ const OrdersPage: React.FC = () => {
               onIconClick={() => handleSearch(searchValue.trim())}
             />
           </Flex>
-        </Flex>
-        <Table
-          stripedRows
-          value={orders}
-          columns={columns}
-          paginator
-          rows={pageSize}
-          totalRecords={totalRecords}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          onSort={handleSort}
-          isLoading={loading}
-          onPageChange={handlePageChange}
-        />
-      </Flex>
+        }
+      />
+
+      <Table
+        stripedRows
+        value={orders}
+        columns={columns}
+        paginator
+        rows={pageSize}
+        totalRecords={totalRecords}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSort={handleSort}
+        isLoading={loading}
+        onPageChange={handlePageChange}
+      />
     </AdminLayout>
   );
 };

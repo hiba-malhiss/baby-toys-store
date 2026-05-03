@@ -3,22 +3,23 @@ import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import { useTranslation } from 'react-i18next';
 import {
   Button,
-  Flex,
   Heading,
   Table,
   BouncingDotsLoader,
   ConfirmDialog,
   Tooltip,
-  NoDataFound,
+  useToast,
+  Chip,
+  Flex,
+  PageHeader,
 } from '@baby-toys/ui-kit';
 import { useOptionTypes, useDeleteOptionType } from '../../api/optionApi';
 import type { OptionTypeDto as OptionType } from '../../api/types/option';
-import OptionsValuesRow from './OptionsValuesRow.tsx';
-import { Eye, Pencil, Trash2 } from 'lucide-react';
-import { useToast } from '@baby-toys/ui-kit';
-import TypeUpsertDialog from './TypeUpsertDialog';
+import { Pencil, Trash2, ChevronDown, Plus } from 'lucide-react';
+import TypeUpsertDialog from './TypeUpsertDialog.tsx';
 import HelpTooltip from '../../components/HelpTooltip';
-import ProductRelationshipDiagram from '../../components/ProductRelationshipDiagram';
+import styles from './options.module.scss';
+import OptionsValuesRow from './OptionsValuesRow.tsx';
 
 const OptionsPage: React.FC = () => {
   const { t } = useTranslation();
@@ -26,41 +27,38 @@ const OptionsPage: React.FC = () => {
   const toast = useToast();
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [dialogOpen, setDialogOpen] = useState(false);
-
-  // Edit/Delete state
   const [editRow, setEditRow] = useState<OptionType | null>(null);
   const [deleteRow, setDeleteRow] = useState<OptionType | null>(null);
-
   const deleteType = useDeleteOptionType();
 
   const openAdd = () => {
     setEditRow(null);
     setDialogOpen(true);
   };
-
   const handleOpenEdit = (row: OptionType) => {
     setEditRow(row);
     setDialogOpen(true);
   };
+  const toggleExpand = (id: string | number) =>
+    setExpandedRows((p) => ({ ...p, [String(id)]: !p[String(id)] }));
 
-  const handleRowExpand = ({ data }: { data: OptionType }) => {
-    setExpandedRows((prev) => ({ ...prev, [String(data.id)]: true }));
-  };
-
-  const handleRowCollapse = ({ data }: { data: OptionType }) => {
-    setExpandedRows((prev) => {
-      const next = { ...prev };
-      delete next[String(data.id)];
-      return next;
-    });
+  const handleDeleteOption = async () => {
+    if (!deleteRow) return;
+    try {
+      await deleteType.mutateAsync(deleteRow.id);
+      toast.success(t('common.delete', { defaultValue: 'Deleted' }));
+      setDeleteRow(null);
+    } catch (e: any) {
+      toast.error(e?.message || t('app.unexpectedError'));
+    }
   };
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="xl" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Flex align="center">
-            <Heading>{t('options.types', { defaultValue: 'Option Types' })}</Heading>
+      <PageHeader
+        left={
+          <Flex align="center" spacing="s">
+            <Heading>{t('options.types', { defaultValue: 'Options' })}</Heading>
             <HelpTooltip
               title={t('options.helpTitle', { defaultValue: 'What are Options?' })}
               description={t('options.helpText', {
@@ -69,142 +67,154 @@ const OptionsPage: React.FC = () => {
               })}
             />
           </Flex>
-          <Flex spacing="m" align="center">
-            <ProductRelationshipDiagram />
-            <Button onClick={openAdd}>
-              {t('options.addType', { defaultValue: 'Add Option Type' })}
-            </Button>
-          </Flex>
-        </Flex>
+        }
+        right={
+          <Button leftIconComp={Plus} onClick={openAdd}>
+            {t('options.addType', { defaultValue: 'Add Option Type' })}
+          </Button>
+        }
+      />
 
-        {loadingTypes ? (
-          <BouncingDotsLoader />
-        ) : types.length === 0 ? (
-          <NoDataFound
-            message={t('options.emptyTitle', { defaultValue: 'No Option Types Yet' })}
-            subtext={t('options.emptySubtext', {
-              defaultValue:
-                'Options create product variants like Size or Color. Add an option type, then assign values to a product to generate variants.',
-            })}
-            buttonText={t('options.emptyButton', { defaultValue: 'Add Option Type' })}
-            onButtonClick={openAdd}
-          />
-        ) : (
-          <Table
-            value={types}
-            rows={types.length || 1}
-            columns={[
-              {
-                header: t('options.typeCode', { defaultValue: 'Code' }),
-                field: 'code',
-                filter: true,
-                sortable: true,
+      {loadingTypes ? (
+        <BouncingDotsLoader />
+      ) : (
+        <Table
+          value={types}
+          rows={types.length || 1}
+          stripedRows
+          columns={[
+            {
+              header: t('options.displayName', { defaultValue: 'Name' }),
+              field: 'displayName',
+              sortable: true,
+              body: (row: OptionType) => (
+                <span>
+                  {row.displayName || row.translations?.[0]?.displayName || row.code || '—'}
+                </span>
+              ),
+            },
+            {
+              header: t('options.code', { defaultValue: 'Code' }),
+              field: 'code',
+              filter: true,
+              sortable: true,
+              body: (row: OptionType) => (
+                <code style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>
+                  {row.code}
+                </code>
+              ),
+            },
+            {
+              header: t('options.flags', { defaultValue: 'Flags' }),
+              field: 'isFilterable',
+              body: (row: OptionType) => (
+                <Chip
+                  appearance="secondary-outline"
+                  size="small"
+                  label={t('options.isFilterable', { defaultValue: 'Filterable' })}
+                />
+              ),
+            },
+            {
+              header: t('attributes.values', { defaultValue: 'Values' }),
+              field: 'values',
+              body: (row: OptionType) => {
+                const isOpen = !!expandedRows[String(row.id)];
+                return (
+                  <Button
+                    appearance="link"
+                    size="xsmall"
+                    isSelected={isOpen}
+                    leftIconComp={ChevronDown}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleExpand(row.id);
+                    }}
+                  >
+                    Values
+                  </Button>
+                );
               },
-              {
-                header: t('options.displayName', { defaultValue: 'Display name' }),
-                field: 'displayName',
-                filter: true,
-                sortable: true,
-              },
-              {
-                header: t('app.actions', { defaultValue: 'Actions' }),
-                field: 'actions',
-                body: (row: OptionType) => (
-                  <Flex spacing="m">
-                    <Tooltip
-                      position="top"
-                      content={t('options.manage', { defaultValue: 'Manage Values' })}
-                    >
-                      <Button
-                        size="small"
-                        appearance="outline"
-                        leftIconComp={Eye}
-                        aria-label={t('options.manage', { defaultValue: 'Manage Values' })}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          const key = String(row.id);
-                          setExpandedRows((prev) => ({ ...prev, [key]: !prev[key] }));
-                        }}
-                      />
-                    </Tooltip>
-                    <Tooltip position="top" content={t('common.edit', { defaultValue: 'Edit' })}>
-                      <Button
-                        size="small"
-                        appearance="outline"
-                        leftIconComp={Pencil}
-                        aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleOpenEdit(row);
-                        }}
-                      />
-                    </Tooltip>
-                    <Tooltip
-                      position="top"
-                      content={t('common.delete', { defaultValue: 'Delete' })}
-                    >
-                      <Button
-                        size="small"
-                        appearance="outline"
-                        leftIconComp={Trash2}
-                        aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setDeleteRow(row);
-                        }}
-                      />
-                    </Tooltip>
-                  </Flex>
-                ),
-              },
-            ]}
-            paginator={false}
-            stripedRows
-            emptyMessage={t('options.noTypes', { defaultValue: 'No option types' })}
-            useLocalSortAndFilter
-            rowHover
-            expandedRows={expandedRows}
-            onRowExpand={handleRowExpand as any}
-            onRowCollapse={handleRowCollapse as any}
-            rowExpansionTemplate={(row: OptionType) => <OptionsValuesRow activeType={row} />}
-          />
-        )}
-
-        <TypeUpsertDialog
-          visible={dialogOpen}
-          mode={editRow ? 'edit' : 'create'}
-          initial={editRow as any}
-          onClose={() => setDialogOpen(false)}
-          onSuccess={() =>
-            toast.success(
-              t(editRow ? 'common.update' : 'common.create', {
-                defaultValue: editRow ? 'Update' : 'Create',
-              })
-            )
+            },
+            {
+              header: '',
+              field: 'actions',
+              body: (row: OptionType) => (
+                <div className={styles.rowActions}>
+                  <Tooltip position="top" content={t('common.edit', { defaultValue: 'Edit' })}>
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      leftIconComp={Pencil}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleOpenEdit(row);
+                      }}
+                      aria-label={t('common.edit')}
+                    />
+                  </Tooltip>
+                  <Tooltip position="top" content={t('common.delete', { defaultValue: 'Delete' })}>
+                    <Button
+                      size="small"
+                      appearance="outline"
+                      color="error"
+                      leftIconComp={Trash2}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setDeleteRow(row);
+                      }}
+                      aria-label={t('common.delete')}
+                    />
+                  </Tooltip>
+                </div>
+              ),
+            },
+          ]}
+          paginator={false}
+          emptyMessage={t('options.noTypes', { defaultValue: 'No option types' })}
+          useLocalSortAndFilter
+          rowHover
+          expandedRows={expandedRows}
+          onRowExpand={({ data }: { data: OptionType }) =>
+            setExpandedRows((p) => ({ ...p, [String(data.id)]: true }))
           }
+          onRowCollapse={({ data }: { data: OptionType }) =>
+            setExpandedRows((p) => {
+              const n = { ...p };
+              delete n[String(data.id)];
+              return n;
+            })
+          }
+          rowExpansionTemplate={(row: OptionType) => <OptionsValuesRow activeType={row} />}
         />
+      )}
 
-        {/* Delete confirm */}
-        <ConfirmDialog
-          visible={!!deleteRow}
-          header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
-          message={t('categories.deleteConfirm', {
-            defaultValue: 'Are you sure you want to delete “{{name}}”?',
-            name: deleteRow?.code,
-          })}
-          onConfirm={async () => {
-            if (!deleteRow) return;
-            try {
-              await deleteType.mutateAsync(deleteRow.id);
-              toast.success(t('common.delete', { defaultValue: 'Delete' }));
-              setDeleteRow(null);
-            } catch (e: any) {
-              toast.error(e?.message || t('app.unexpectedError'));
-            }
-          }}
-          onCancel={() => setDeleteRow(null)}
-        />
-      </Flex>
+      <TypeUpsertDialog
+        visible={dialogOpen}
+        mode={editRow ? 'edit' : 'create'}
+        initial={editRow as any}
+        onClose={() => setDialogOpen(false)}
+        onSuccess={() =>
+          toast.success(
+            t(editRow ? 'common.update' : 'common.create', {
+              defaultValue: editRow ? 'Updated' : 'Created',
+            })
+          )
+        }
+      />
+
+      <ConfirmDialog
+        visible={!!deleteRow}
+        header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
+        message={t('options.deleteConfirm', {
+          defaultValue: 'Delete option "{{name}}"? This cannot be undone.',
+          name: deleteRow?.displayName ?? deleteRow?.code,
+        })}
+        onConfirm={handleDeleteOption}
+        onCancel={() => setDeleteRow(null)}
+        confirmLabel={t('common.delete')}
+        cancelLabel={t('common.cancel')}
+      />
     </AdminLayout>
   );
 };

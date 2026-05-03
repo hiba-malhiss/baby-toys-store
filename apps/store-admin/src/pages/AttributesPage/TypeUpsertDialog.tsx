@@ -1,11 +1,9 @@
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useTranslation } from 'react-i18next';
-import { Dialog, Flex, Button, StringInput, Toggle } from '@baby-toys/ui-kit';
-
-import { useToast } from '@baby-toys/ui-kit';
+import { Dialog, Button, StringInput, Toggle, useToast, LocaleBadge } from '@baby-toys/ui-kit';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
 import { useLocales } from '../../hooks/useLocales';
 import {
@@ -13,12 +11,9 @@ import {
   useCreateAttributeType,
   useUpdateAttributeType,
 } from '../../api/attributeApi';
+import styles from './attributes.module.scss';
 
-type TranslationForm = {
-  displayName?: string;
-  description?: string;
-};
-
+type TranslationForm = { displayName?: string; description?: string };
 type FormValues = {
   code: string;
   isFilterable?: boolean;
@@ -46,12 +41,9 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
   const { t } = useTranslation();
   const toast = useToast();
   const isEdit = mode === 'edit';
-
   const locales = useLocales();
-
   const { data: typeAdmin } = useAttributeTypeAdmin(isEdit ? typeId : undefined);
 
-  // ✅ enforce non-empty record keys
   const schema = useMemo(
     () =>
       z.object({
@@ -61,7 +53,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
         isActive: z.boolean().optional().default(true),
         sortOrder: z.coerce.number().int().nonnegative().optional().default(0),
         translations: z.record(
-          z.string().min(1), // <--- key must be non-empty
+          z.string().min(1),
           z.object({
             displayName: z.string().min(1, 'Required'),
             description: z.string().default(''),
@@ -80,7 +72,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
 
   useEffect(() => {
     if (!visible) return;
-
     const src: any = typeAdmin || {};
     const trList = (src?.translations || []) as Array<{
       locale: string;
@@ -88,7 +79,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       description?: string;
     }>;
     const normalize = (x: any) => String(x ?? '').toLowerCase();
-
     const defaults: FormValues = {
       code: src?.code ?? '',
       isFilterable: src?.isFilterable ?? false,
@@ -97,7 +87,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       sortOrder: src?.sortOrder ?? 0,
       translations: {},
     };
-
     locales.forEach((loc) => {
       const tr = trList.find((x) => normalize(x?.locale) === normalize(loc));
       defaults.translations[loc] = {
@@ -105,32 +94,28 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
         description: tr?.description || '',
       };
     });
-
     rhf.reset(defaults);
-  }, [visible, typeAdmin, locales, rhf]);
+  }, [visible, typeAdmin?.id]);
 
   const createMutation = useCreateAttributeType();
   const updateMutation = useUpdateAttributeType();
 
   const onSubmit = async (values: FormValues) => {
     const code = String(values.code ?? '').trim();
-
     const translations = Object.entries(values.translations || {})
       .map(([locale, tr]) => {
         const cleanLocale = String(locale ?? '').trim();
         if (!cleanLocale) return null;
-
         const displayName = String(tr?.displayName ?? '').trim();
         const description = String(tr?.description ?? '').trim();
         if (!displayName && !description) return null;
-
         return {
           locale: cleanLocale,
           displayName: displayName || undefined,
           description: description || undefined,
         };
       })
-      .filter(Boolean) as Array<{ locale: string; displayName?: string; description?: string }>;
+      .filter(Boolean) as any[];
 
     const payload: any = {
       isFilterable: !!values.isFilterable,
@@ -149,7 +134,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
         await updateMutation.mutateAsync({ id: typeId, payload });
         toast.success(t('common.update', { defaultValue: 'Update' }));
       }
-
       onSuccess?.();
       onClose();
     } catch (e: any) {
@@ -157,11 +141,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     }
   };
 
-  const onInvalid = (_errors: any) => {
-    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
-  };
-
-  const ToggleFieldAdapter: React.FC<{
+  const ToggleAdapter: React.FC<{
     value?: boolean;
     onChange?: (v: boolean) => void;
     isDisabled?: boolean;
@@ -169,86 +149,112 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     <Toggle checked={!!value} onChange={(v) => onChange?.(!!v)} isDisabled={isDisabled} />
   );
 
-  const headerText = !isEdit
-    ? t('attributes.addType', { defaultValue: 'Add Attribute' })
-    : t('common.edit', { defaultValue: 'Edit' });
-
   return (
-    <Dialog header={headerText} visible={visible} onHide={onClose} dismissibleMask modal>
-      <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
-        <Flex direction="vertical" spacing="m">
-          {locales.map((loc) => (
-            <Flex key={loc} spacing="l" wrap>
+    <Dialog
+      header={
+        isEdit
+          ? t('common.edit', { defaultValue: 'Edit Attribute' })
+          : t('attributes.addType', { defaultValue: 'Add Attribute' })
+      }
+      visible={visible}
+      onHide={onClose}
+      dismissibleMask
+      modal
+    >
+      <form
+        onSubmit={rhf.handleSubmit(onSubmit, () =>
+          toast.error(t('app.formInvalid', { defaultValue: 'Fix errors' }))
+        )}
+      >
+        <div className={styles.dialogBody}>
+          {/* Translations */}
+          <div className={styles.dialogSection}>
+            <div className={styles.dialogSectionLabel}>
+              {t('attributes.content', { defaultValue: 'Content' })}
+            </div>
+            {locales.map((loc) => (
+              <div key={loc} className={styles.localeRow}>
+                <FormFieldWrapper
+                  name={`translations.${loc}.displayName`}
+                  control={rhf.control}
+                  label={
+                    <>
+                      <LocaleBadge locale={loc} />
+                      {t('attributes.name', { defaultValue: 'Name' })}
+                    </>
+                  }
+                  required
+                >
+                  <StringInput isDisabled={rhf.formState.isSubmitting} />
+                </FormFieldWrapper>
+                <FormFieldWrapper
+                  name={`translations.${loc}.description`}
+                  control={rhf.control}
+                  label={t('attributes.description', { defaultValue: 'Description' })}
+                >
+                  <StringInput isDisabled={rhf.formState.isSubmitting} />
+                </FormFieldWrapper>
+              </div>
+            ))}
+          </div>
+
+          {/* Flags */}
+          <div className={styles.dialogSection}>
+            <div className={styles.dialogSectionLabel}>
+              {t('attributes.settings', { defaultValue: 'Settings' })}
+            </div>
+            <div className={styles.flagsRow}>
               <FormFieldWrapper
-                name={`translations.${loc}.displayName`}
+                name="isFilterable"
                 control={rhf.control}
-                label={`${t('attributes.name', { defaultValue: 'Name' })} (${loc.toUpperCase()})`}
-                required
-                rules={{ required: t('common.required', { defaultValue: 'Required' }) }}
+                label={t('attributes.filterable', { defaultValue: 'Filterable' })}
               >
-                <StringInput isDisabled={rhf.formState.isSubmitting} />
+                <ToggleAdapter isDisabled={rhf.formState.isSubmitting} />
               </FormFieldWrapper>
-
               <FormFieldWrapper
-                name={`translations.${loc}.description`}
+                name="isMultiselect"
                 control={rhf.control}
-                label={`${t('attributes.description', { defaultValue: 'Description' })} (${loc.toUpperCase()})`}
+                label={t('attributes.multi', { defaultValue: 'Multi-select' })}
               >
-                <StringInput isDisabled={rhf.formState.isSubmitting} />
+                <ToggleAdapter isDisabled={rhf.formState.isSubmitting} />
               </FormFieldWrapper>
-            </Flex>
-          ))}
+              <FormFieldWrapper
+                name="isActive"
+                control={rhf.control}
+                label={t('attributes.active', { defaultValue: 'Active' })}
+              >
+                <ToggleAdapter isDisabled={rhf.formState.isSubmitting} />
+              </FormFieldWrapper>
+            </div>
+          </div>
 
-          <Flex spacing="l" wrap>
-            <FormFieldWrapper
-              name="isFilterable"
-              control={rhf.control}
-              label={t('attributes.filterable', { defaultValue: 'Filterable' })}
-            >
-              <ToggleFieldAdapter isDisabled={rhf.formState.isSubmitting} />
-            </FormFieldWrapper>
+          {/* Meta */}
+          <div className={styles.dialogSection}>
+            <div className={styles.dialogSectionLabel}>
+              {t('attributes.meta', { defaultValue: 'Meta' })}
+            </div>
+            <div className={styles.metaRow}>
+              <FormFieldWrapper
+                name="sortOrder"
+                control={rhf.control}
+                label={t('attributes.sortOrder', { defaultValue: 'Sort Order' })}
+              >
+                <StringInput type="number" isDisabled={rhf.formState.isSubmitting} />
+              </FormFieldWrapper>
+              <FormFieldWrapper
+                name="code"
+                control={rhf.control}
+                label={t('attributes.code', { defaultValue: 'Code (optional)' })}
+              >
+                <StringInput isDisabled={rhf.formState.isSubmitting} placeholder="auto" />
+              </FormFieldWrapper>
+            </div>
+          </div>
 
-            <FormFieldWrapper
-              name="isMultiselect"
-              control={rhf.control}
-              label={t('attributes.multi', { defaultValue: 'Multi-select' })}
-            >
-              <ToggleFieldAdapter isDisabled={rhf.formState.isSubmitting} />
-            </FormFieldWrapper>
-
-            <FormFieldWrapper
-              name="isActive"
-              control={rhf.control}
-              label={t('attributes.active', { defaultValue: 'Active' })}
-            >
-              <ToggleFieldAdapter isDisabled={rhf.formState.isSubmitting} />
-            </FormFieldWrapper>
-
-            <FormFieldWrapper
-              name="sortOrder"
-              control={rhf.control}
-              label={t('attributes.sortOrder', { defaultValue: 'Sort Order' })}
-            >
-              <StringInput type="number" isDisabled={rhf.formState.isSubmitting} />
-            </FormFieldWrapper>
-          </Flex>
-          <FormFieldWrapper
-            name="code"
-            control={rhf.control}
-            label={t('attributes.code', { defaultValue: 'Code' })}
-            fullWidth
-          >
-            <StringInput
-              placeholder={t('attributes.code', { defaultValue: 'Code' })}
-              isDisabled={rhf.formState.isSubmitting}
-            />
-          </FormFieldWrapper>
-
-          <Flex justify="end" spacing="s">
+          <div className={styles.dialogFooter}>
             <Button appearance="outline" type="button" onClick={onClose}>
               {t('app.cancel', { defaultValue: 'Cancel' })}
             </Button>
-
             <Button
               type="submit"
               isLoading={isEdit ? updateMutation.isPending : createMutation.isPending}
@@ -258,8 +264,8 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
                 ? t('common.update', { defaultValue: 'Update' })
                 : t('app.save', { defaultValue: 'Save' })}
             </Button>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       </form>
     </Dialog>
   );

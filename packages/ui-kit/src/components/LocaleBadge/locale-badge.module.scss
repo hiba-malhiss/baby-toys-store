@@ -1,0 +1,21 @@
+.localeBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: var(--radius-xs);
+  background: var(--color-bg-tertiary);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-text-grey);
+  letter-spacing: 0.4px;
+  flex-shrink: 0;
+  margin-right: 5px;
+
+  &--medium {
+    width: 24px;
+    height: 24px;
+    font-size: 10px;
+  }
+}

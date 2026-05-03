@@ -1,25 +1,28 @@
-/* Top alerts row */
-.alertsTop {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-  width: 100%;
+@use '@baby-toys/ui-kit/styles/constants' as *;
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
-/* Main 2-col layout */
+.alertsTop {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
 .gridTwoCol {
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
+  align-items: start;
 
-  @media (min-width: 1024px) {
-    grid-template-columns: 1.8fr 1fr;
-    align-items: start;
+  @media (min-width: 1100px) {
+    grid-template-columns: 1.75fr 1fr;
   }
 }
 
-/* Left/Right stacks */
 .stack {
   display: flex;
   flex-direction: column;
@@ -32,19 +35,16 @@
   gap: 16px;
 }
 
-/* Tables already have their own card container => just spacing */
 .sectionBlock {
   display: flex;
   flex-direction: column;
 }
 
-/* Generic card */
 .card {
   background: $color-bg-primary;
   border: 1px solid $color-border;
   border-radius: $radius-lg;
-  box-shadow: $box-shadow-xs;
-  padding: 16px;
+  padding: 18px 20px;
 }
 
 .cardHeader {
@@ -52,7 +52,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid $color-border-light;
 }
 
 .sectionTitle {
@@ -62,20 +64,26 @@
 
 .pastelGrid {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(2, 1fr);
   gap: 12px;
-
-  @media (min-width: 640px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
   @media (min-width: 1280px) {
     grid-template-columns: repeat(4, 1fr);
   }
+
+  @media (max-width: 500px) {
+    grid-template-columns: 1fr;
+  }
 }
 
 .textWeak {
-  color: $color-text-grey;
+  color: $color-text-muted;
   font-size: 12px;
   margin-top: 2px;
+}
+
+.headerMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
 }

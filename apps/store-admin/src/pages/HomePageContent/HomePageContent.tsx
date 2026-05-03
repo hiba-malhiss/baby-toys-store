@@ -1,12 +1,14 @@
+import React, { useState } from 'react';
 import {
   Card,
-  Flex,
-  Accordion,
+  Heading,
   Button,
   Divider,
   TabBar,
   TabBarItem,
   ImageUploader,
+  Accordion,
+  Flex,
 } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 import { useLocales } from '../../hooks/useLocales';
@@ -17,6 +19,22 @@ import MainBannerSection from './MainBannerSection';
 import InfoCardsSection from './InfoCardsSection';
 import GallerySection from './GallerySection';
 import FooterSection from './FooterSection';
+import { Image, LayoutTemplate, Info, Grid2x2, ImageDown } from 'lucide-react';
+import styles from './home-page-content.module.scss';
+
+const SectionHeader: React.FC<{ icon: React.ReactNode; title: string; hint: string }> = ({
+  icon,
+  title,
+  hint,
+}) => (
+  <div className={styles.sectionHeader}>
+    <div className={styles.sectionIcon}>{icon}</div>
+    <div className={styles.sectionText}>
+      <span className={styles.sectionTitle}>{title}</span>
+      <span className={styles.sectionHint}>{hint}</span>
+    </div>
+  </div>
+);
 
 const HomePageContent: React.FC = () => {
   const { t } = useTranslation();
@@ -32,98 +50,177 @@ const HomePageContent: React.FC = () => {
     handleSubmit,
     isLoading,
     isSubmitting,
-    errors,
   } = useHomePageContentForm();
 
   const locales = useLocales();
+  const [mainBannerTab, setMainBannerTab] = useState(locales[0] ? `${locales[0]}-mainBanner` : '');
+  const [infoCardsTab, setInfoCardsTab] = useState(locales[0] ? `${locales[0]}-info` : '');
 
   return (
     <AdminLayout isLoading={isLoading}>
-      <Card header={t('homepage.title')} fullWidth>
-        <Flex direction="vertical" spacing="xxl" fullWidth>
-          {/* === Banners Section === */}
-          <Accordion
-            header={t('homepage.sections.banners')}
-            buttonAppearance="outline"
-            buttonColor={errors?.banners && 'error'}
-          >
-            <BannersSection
-              control={control}
-              banner1UploaderProps={banner1UploaderProps}
-              banner2UploaderProps={banner2UploaderProps}
-            />
-          </Accordion>
+      <div className={styles.pageLayout}>
+        <Heading>{t('homepage.title')}</Heading>
 
-          {/* === Main Banner Section === */}
-          <Accordion header={t('homepage.sections.mainBanner')} buttonAppearance="outline">
-            <Flex direction="vertical" spacing="l" fullWidth>
+        {/* Banners */}
+        <Card size="small">
+          <Accordion
+            buttonColor="light"
+            buttonAppearance="link"
+            withoutHeaderPadding
+            defaultOpen
+            header={
+              <SectionHeader
+                icon={<Image size={20} />}
+                title={t('homepage.sections.banners')}
+                hint={t('homepage.sections.bannersHint', {
+                  defaultValue: 'Side-by-side promotional banners with text overlay',
+                })}
+              />
+            }
+          >
+            <div className={styles.accordionBody}>
+              <BannersSection
+                control={control}
+                banner1UploaderProps={banner1UploaderProps}
+                banner2UploaderProps={banner2UploaderProps}
+              />
+            </div>
+          </Accordion>
+        </Card>
+
+        {/* Main Banner */}
+        <Card size="small">
+          <Accordion
+            buttonColor="light"
+            buttonAppearance="link"
+            withoutHeaderPadding
+            header={
+              <SectionHeader
+                icon={<LayoutTemplate size={20} />}
+                title={t('homepage.sections.mainBanner')}
+                hint={t('homepage.sections.mainBannerHint', {
+                  defaultValue: 'Full-width hero banner with title, subtitle, and call-to-action',
+                })}
+              />
+            }
+          >
+            <div className={styles.accordionBody}>
               <TabBar
                 fullWidth
                 size="small"
-                tabs={locales.map((l) => ({
-                  header: `${l.toUpperCase()} (${l})`,
-                  value: `${l}-mainBanner`,
-                }))}
+                value={mainBannerTab}
+                onChange={setMainBannerTab}
+                tabs={locales.map((l) => ({ header: l.toUpperCase(), value: `${l}-mainBanner` }))}
               >
                 {locales.map((l) => {
-                  const idx = mainBanners.findIndex((mb: any) => (mb as any)?.locale === l);
+                  const idx = mainBanners.findIndex((mb: any) => mb?.locale === l);
                   const baseName = idx >= 0 ? `mainBanners.${idx}` : `mainBanners.0`;
                   return (
                     <TabBarItem key={l} value={`${l}-mainBanner`}>
-                      <MainBannerSection control={control} baseName={baseName} />
+                      <div className={styles.tabContent}>
+                        <MainBannerSection control={control} baseName={baseName} />
+                      </div>
                     </TabBarItem>
                   );
                 })}
               </TabBar>
               <Divider />
-              <ImageUploader {...mainBannerUploaderProps} maxImages={5} />
-            </Flex>
+              <div className={styles.uploaderWrap}>
+                <p className={styles.uploaderLabel}>
+                  {t('homepage.mainBanner.images', { defaultValue: 'Banner images (up to 5)' })}
+                </p>
+                <ImageUploader {...mainBannerUploaderProps} maxImages={5} />
+              </div>
+            </div>
           </Accordion>
+        </Card>
 
-          {/* === Info Cards Section === */}
+        {/* Info Cards */}
+        <Card size="small">
           <Accordion
-            header={t('homepage.sections.infoCards')}
-            buttonAppearance="outline"
-            buttonColor={errors?.infoCards && 'error'}
+            buttonColor="light"
+            buttonAppearance="link"
+            withoutHeaderPadding
+            header={
+              <SectionHeader
+                icon={<Info size={20} />}
+                title={t('homepage.sections.infoCards')}
+                hint={t('homepage.sections.infoCardsHint', {
+                  defaultValue: 'Feature highlights shown on the storefront homepage',
+                })}
+              />
+            }
           >
-            <TabBar
-              fullWidth
-              size="small"
-              tabs={locales.map((l) => ({
-                header: `${l.toUpperCase()} (${l})`,
-                value: `${l}-info`,
-              }))}
-            >
-              {locales.map((l) => (
-                <TabBarItem key={l} value={`${l}-info`}>
-                  <InfoCardsSection locale={l} control={control} infoCards={infoCards} />
-                </TabBarItem>
-              ))}
-            </TabBar>
+            <div className={styles.accordionBody}>
+              <TabBar
+                fullWidth
+                size="small"
+                value={infoCardsTab}
+                onChange={setInfoCardsTab}
+                tabs={locales.map((l) => ({ header: l.toUpperCase(), value: `${l}-info` }))}
+              >
+                {locales.map((l) => (
+                  <TabBarItem key={l} value={`${l}-info`}>
+                    <div className={styles.tabContent}>
+                      <InfoCardsSection locale={l} control={control} infoCards={infoCards} />
+                    </div>
+                  </TabBarItem>
+                ))}
+              </TabBar>
+            </div>
           </Accordion>
+        </Card>
 
-          {/* === Gallery Section === */}
-          <Accordion header={t('homepage.sections.gallery')} buttonAppearance="outline">
-            <GallerySection galleryUploaderProps={galleryUploaderProps} />
-          </Accordion>
-
-          {/* === Footer Image Section === */}
+        {/* Gallery */}
+        <Card size="small">
           <Accordion
-            header={t('homepage.sections.footer', { defaultValue: 'Footer Image' })}
-            buttonAppearance="outline"
+            buttonColor="light"
+            buttonAppearance="link"
+            withoutHeaderPadding
+            header={
+              <SectionHeader
+                icon={<Grid2x2 size={20} />}
+                title={t('homepage.sections.gallery')}
+                hint={t('homepage.sections.galleryHint', {
+                  defaultValue: 'Photo grid displayed on the storefront homepage (up to 4 images)',
+                })}
+              />
+            }
           >
-            <FooterSection footerUploaderProps={footerUploaderProps} />
+            <div className={styles.accordionBody}>
+              <GallerySection galleryUploaderProps={galleryUploaderProps} />
+            </div>
           </Accordion>
+        </Card>
 
-          <Divider thickness="2px" />
+        {/* Footer Image */}
+        <Card size="small">
+          <Accordion
+            buttonColor="light"
+            buttonAppearance="link"
+            withoutHeaderPadding
+            header={
+              <SectionHeader
+                icon={<ImageDown size={20} />}
+                title={t('homepage.sections.footer', { defaultValue: 'Footer Image' })}
+                hint={t('homepage.sections.footerHint', {
+                  defaultValue: 'Payment strip, partner logos, or decorative footer banner',
+                })}
+              />
+            }
+          >
+            <div className={styles.accordionBody}>
+              <FooterSection footerUploaderProps={footerUploaderProps} />
+            </div>
+          </Accordion>
+        </Card>
 
-          <Flex justify="end">
-            <Button type="submit" color="primary" isLoading={isSubmitting} onClick={handleSubmit}>
-              {t('homepage.actions.saveChanges')}
-            </Button>
-          </Flex>
+        <Flex justify="end" fullWidth>
+          <Button color="primary" isLoading={isSubmitting} onClick={handleSubmit}>
+            {t('homepage.actions.saveChanges')}
+          </Button>
         </Flex>
-      </Card>
+      </div>
     </AdminLayout>
   );
 };

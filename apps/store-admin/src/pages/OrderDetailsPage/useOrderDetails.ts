@@ -85,12 +85,13 @@ export function useOrderDetails() {
       updateQty.mutate(
         { orderItemId: itemId, quantity: newQuantity },
         {
-          onSuccess: () =>
+          onSuccess: () => {
             setLocalQuantities((prev) => {
               const copy = { ...prev };
               delete copy[itemId];
               return copy;
-            }),
+            });
+          },
           onError: () =>
             setLocalQuantities((prev) => ({
               ...prev,

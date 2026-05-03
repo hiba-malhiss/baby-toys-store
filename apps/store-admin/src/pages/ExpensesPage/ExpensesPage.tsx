@@ -10,10 +10,13 @@ import {
   Table,
   Calendar,
   useToast,
+  PageHeader,
+  Plus,
 } from '@baby-toys/ui-kit';
 import { useExpensesPage } from './useExpensesPage.tsx';
 import moment from 'moment';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
+import { Plus as PlusIcon } from 'lucide-react';
 
 const CalendarFieldAdapter: React.FC<{
   value?: Date | null;
@@ -57,14 +60,16 @@ const ExpensesPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Flex direction="vertical" spacing="s">
+      <PageHeader
+        left={
+          <Flex direction="vertical" spacing="xs">
             <Heading>{t('app.expenses.title')}</Heading>
             <Heading level="h4" appearance="light">
               {t('app.expenses.description')}
             </Heading>
           </Flex>
+        }
+        right={
           <Flex spacing="s" align="center">
             <Calendar
               value={moment(yearMonth + '-01', 'YYYY-MM-DD') as any}
@@ -79,88 +84,98 @@ const ExpensesPage: React.FC = () => {
               selectionMode="single"
               typeView="month"
             />
-            <Button onClick={() => setIsOpen(true)}>{t('app.expenses.addExpense')}</Button>
+            <Button leftIconComp={PlusIcon} onClick={() => setIsOpen(true)}>
+              {t('app.expenses.addExpense')}
+            </Button>
           </Flex>
+        }
+      />
+
+      <Table value={expenses} columns={columns as any} isLoading={isLoading} stripedRows />
+
+      <Dialog
+        visible={isOpen}
+        onHide={() => setIsOpen(false)}
+        header={t('app.expenses.addExpense')}
+        footer={
+          <Flex justify="end" spacing="s">
+            <Button
+              appearance="outline"
+              onClick={() => {
+                setIsOpen(false);
+                reset();
+              }}
+            >
+              {t('app.common.cancel')}
+            </Button>
+            <Button
+              isLoading={isSubmitting}
+              isDisabled={isSubmitting}
+              onClick={handleSubmit(
+                async (data) => {
+                  try {
+                    const payload = {
+                      date: data.date ? moment(data.date).format('YYYY-MM-DD') : '',
+                      amount: Number(data.amount || 0),
+                      category: data.category || '',
+                      description: data.description || '',
+                    };
+                    await handleCreate(payload as any);
+                    setIsOpen(false);
+                    reset();
+                    toast.success(t('app.expenses.addSuccess'));
+                  } catch (e: any) {
+                    toast.error(e?.message || t('app.expenses.addError'));
+                  }
+                },
+                () =>
+                  toast.error(
+                    t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' })
+                  )
+              )}
+            >
+              {t('app.common.save')}
+            </Button>
+          </Flex>
+        }
+      >
+        <Flex direction="vertical" spacing="m">
+          <FormFieldWrapper
+            name="date"
+            control={control}
+            label={t('app.expenses.form.date')}
+            required
+            fullWidth
+          >
+            <CalendarFieldAdapter />
+          </FormFieldWrapper>
+          <FormFieldWrapper
+            name="amount"
+            control={control}
+            label={t('app.expenses.form.amount')}
+            required
+            fullWidth
+          >
+            <StringInput type="number" placeholder={t('app.expenses.form.amountPlaceholder')} />
+          </FormFieldWrapper>
+          <FormFieldWrapper
+            name="category"
+            control={control}
+            label={t('app.expenses.form.category')}
+            fullWidth
+          >
+            <StringInput placeholder={t('app.expenses.form.categoryPlaceholder')} />
+          </FormFieldWrapper>
+          <FormFieldWrapper
+            name="description"
+            control={control}
+            label={t('app.expenses.form.description')}
+            fullWidth
+          >
+            <StringInput placeholder={t('app.expenses.form.descriptionPlaceholder')} />
+          </FormFieldWrapper>
         </Flex>
-        <Table value={expenses} columns={columns as any} isLoading={isLoading} stripedRows />
-        <Dialog
-          visible={isOpen}
-          onHide={() => setIsOpen(false)}
-          header={t('app.expenses.addExpense')}
-          footer={
-            <Flex justify="end" spacing="s">
-              <Button appearance="outline" onClick={() => setIsOpen(false)}>
-                {t('app.common.cancel')}
-              </Button>
-              <Button
-                isLoading={isSubmitting}
-                isDisabled={isSubmitting}
-                onClick={handleSubmit(
-                  async (data) => {
-                    try {
-                      const payload = {
-                        date: data.date ? moment(data.date).format('YYYY-MM-DD') : '',
-                        amount: Number(data.amount || 0),
-                        category: data.category || '',
-                        description: data.description || '',
-                      };
-                      await handleCreate(payload as any);
-                      setIsOpen(false);
-                      reset();
-                      toast.success(t('app.expenses.addSuccess'));
-                    } catch (e: any) {
-                      toast.error(e?.message || t('app.expenses.addError'));
-                    }
-                  },
-                  () =>
-                    toast.error(
-                      t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' })
-                    )
-                )}
-              >
-                {t('app.common.save')}
-              </Button>
-            </Flex>
-          }
-        >
-          <Flex direction="vertical" spacing="m">
-            <FormFieldWrapper
-              name="date"
-              control={control}
-              label={t('app.expenses.form.date')}
-              required
-              fullWidth
-            >
-              <CalendarFieldAdapter />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name="amount"
-              control={control}
-              label={t('app.expenses.form.amount')}
-              required
-              fullWidth
-            >
-              <StringInput type="number" placeholder={t('app.expenses.form.amountPlaceholder')} />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name="category"
-              control={control}
-              label={t('app.expenses.form.category')}
-              fullWidth
-            >
-              <StringInput placeholder={t('app.expenses.form.categoryPlaceholder')} />
-            </FormFieldWrapper>
-            <FormFieldWrapper
-              name="description"
-              control={control}
-              label={t('app.expenses.form.description')}
-              fullWidth
-            >
-              <StringInput placeholder={t('app.expenses.form.descriptionPlaceholder')} />
-            </FormFieldWrapper>
-          </Flex>
-        </Dialog>
-      </Flex>
+      </Dialog>
     </AdminLayout>
   );
 };

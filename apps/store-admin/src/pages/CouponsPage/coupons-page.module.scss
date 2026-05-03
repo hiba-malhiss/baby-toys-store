@@ -1,9 +1,8 @@
-.couponsPage {
-  &-addBtn {
-    flex-shrink: 0;
-  }
+.couponsPageSearch {
+  width: 280px !important;
+}
 
-  &-Search {
-    width: 350px !important;
-  }
+.couponsPageAddBtn {
+  flex-shrink: 0;
+  white-space: nowrap;
 }

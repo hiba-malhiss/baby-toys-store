@@ -1,3 +1,5 @@
+@use '@baby-toys/ui-kit/styles/constants' as *;
+
 .adminLayout {
   display: flex;
   height: 100vh;
@@ -13,27 +15,23 @@
 
   &-content {
     flex: 1;
-    padding: 28px 32px;
+    padding: 24px 28px 32px;
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    animation: fadeIn 0.25s ease;
+
+    background-color: $color-bg-secondary;
+
+    & > * {
+      max-width: 100%;
+    }
 
     @media (max-width: $breakpoint-large) {
-      padding: 20px 20px;
+      padding: 18px 18px 24px;
     }
 
     @media (max-width: $breakpoint-medium) {
-      padding: 16px 14px;
+      padding: 14px 12px 20px;
     }
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
   }
 }

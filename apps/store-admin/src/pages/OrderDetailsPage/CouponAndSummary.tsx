@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './order-details-page.module.scss';
 import { Check, Trash2 } from 'lucide-react';
-import { Button, Card, Divider, Flex, StringInput } from '@baby-toys/ui-kit';
+import { Button, Card, Flex, StringInput } from '@baby-toys/ui-kit';
 import { useTranslation } from 'react-i18next';
 import { Order } from '../../api/types/order.ts';
 
@@ -25,11 +25,12 @@ export const CouponAndSummary: React.FC<{
   canEditOrder,
 }) => {
   const { t } = useTranslation();
+
   return (
-    <Card header={t('couponSummary.title')} fullWidth>
-      <Flex spacing="xl" direction="vertical">
+    <Card header={t('couponSummary.title')} fullWidth className={styles.orderDetailsCardDelay1}>
+      <Flex spacing="xl" direction="vertical" align="stretch">
         {isEdit && (
-          <Flex spacing="s" align="center" className={styles.couponRow}>
+          <Flex spacing="s" align="center" className={styles.orderDetailsCouponRow}>
             <StringInput
               placeholder={t('couponSummary.couponPlaceholder')}
               value={couponInput}
@@ -44,6 +45,7 @@ export const CouponAndSummary: React.FC<{
             {order?.couponCode && (
               <Button
                 appearance="outline"
+                color="error"
                 onClick={handleRemoveCoupon}
                 leftIconComp={Trash2}
                 isDisabled={!canEditOrder}
@@ -53,54 +55,44 @@ export const CouponAndSummary: React.FC<{
         )}
 
         {order?.couponCode ? (
-          <Flex spacing="s" justify="between" className={styles.orderDetailsCouponDetails}>
-            <span>{t('couponSummary.couponApplied')}:</span>
-            <span className={styles.couponCode}>{order.couponCode}</span>
-          </Flex>
+          <div className={styles.orderDetailsCouponApplied}>
+            <div>
+              <div className={styles.orderDetailsCouponAppliedLabel}>
+                {t('couponSummary.couponApplied')}
+              </div>
+              <span className={styles.couponCode}>{order.couponCode}</span>
+            </div>
+          </div>
         ) : (
           <span className={styles.orderDetailsNoCoupon}>{t('couponSummary.noCoupon')}</span>
         )}
 
-        <Flex spacing="s" justify="between">
+        <Flex spacing="s" justify="between" className={styles.orderDetailsSummaryLine}>
           <strong>{t('couponSummary.subtotal')}:</strong>
           <span>
             {order?.subtotal} {currency?.symbol}
           </span>
         </Flex>
-        <Flex spacing="s" justify="between">
+
+        <Flex spacing="s" justify="between" className={styles.orderDetailsSummaryLine}>
           <strong>{t('couponSummary.shipping')}:</strong>
           <span>
             {order?.shippingCost} {currency?.symbol}
           </span>
         </Flex>
-        <Flex spacing="s" justify="between">
+
+        <Flex spacing="s" justify="between" className={styles.orderDetailsSummaryLine}>
           <strong>{t('couponSummary.discount')}:</strong>
           <span className={styles.orderDetailsDiscount}>
-            - {order?.discountAmount} {currency?.symbol}
+            − {order?.discountAmount} {currency?.symbol}
           </span>
         </Flex>
+
         <Flex spacing="s" justify="between" className={styles.orderDetailsTotalSummary}>
           <strong>{t('couponSummary.total')}:</strong>
           <span>
             {order?.totalWithShipping} {currency?.symbol}
           </span>
-        </Flex>
-        <Divider />
-        <Flex spacing="s" justify="between">
-          <strong>{t('couponSummary.totalCost')}:</strong>
-          <span>
-            {order?.totalCost} {currency?.symbol}
-          </span>
-        </Flex>
-        <Flex spacing="s" justify="between">
-          <strong>{t('couponSummary.totalProfit')}:</strong>
-          <span className={styles.orderDetailsProfit}>
-            {order?.totalProfit} {currency?.symbol}
-          </span>
-        </Flex>
-        <Flex spacing="s" justify="between">
-          <strong>{t('couponSummary.profitMargin')}:</strong>
-          <span>{Number(order?.profitMargin) * 100}%</span>
         </Flex>
       </Flex>
     </Card>

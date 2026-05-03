@@ -1,7 +1,17 @@
 import React, { useMemo, useState } from 'react';
-import { Button, Table, Toggle, Image, ConfirmDialog, Flex, Tooltip } from '@baby-toys/ui-kit';
-import { useToast } from '@baby-toys/ui-kit';
-import { Pencil, Trash2 } from 'lucide-react';
+import {
+  Button,
+  Table,
+  Toggle,
+  Image,
+  ConfirmDialog,
+  Flex,
+  Tooltip,
+  Chip,
+  useToast,
+  ImagePlaceholder,
+} from '@baby-toys/ui-kit';
+import { Pencil, Trash2, Plus, Square } from 'lucide-react';
 import { useDeleteVariant, useUpdateVariant } from '../../api/variantApi';
 import type { VariantDto } from '../../api/types/variant';
 import { useTranslation } from 'react-i18next';
@@ -31,7 +41,8 @@ const PriceCell: React.FC<{
 
 const StockCell: React.FC<{ qty: number }> = ({ qty }) => {
   const level = qty === 0 ? 'out' : qty <= 5 ? 'low' : 'ok';
-  return <span className={`${styles.stockBadge} ${styles[`stockBadge_${level}`]}`}>{qty}</span>;
+  const appearance = level === 'out' ? 'error' : level === 'low' ? 'warning' : 'success';
+  return <Chip label={String(qty)} appearance={appearance} size="small" />;
 };
 
 const ProductVariations: React.FC<Props> = ({
@@ -92,32 +103,9 @@ const ProductVariations: React.FC<Props> = ({
         field: 'mainImage',
         body: (row: VariantDto) =>
           row.mainImage ? (
-            <Image
-              src={row.mainImage}
-              alt={row.sku}
-              style={{ width: 40, height: 40, objectFit: 'cover', borderRadius: 6 }}
-            />
+            <Image src={row.mainImage} alt={row.sku} width={50} height={50} />
           ) : (
-            <div className={styles.imgPlaceholder}>
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-                <rect
-                  x="1"
-                  y="1"
-                  width="14"
-                  height="14"
-                  rx="2"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                />
-                <path
-                  d="M1 11l4-4 3 3 2-2 5 5"
-                  stroke="currentColor"
-                  strokeWidth="1"
-                  strokeLinecap="round"
-                />
-                <circle cx="5.5" cy="5.5" r="1.5" fill="currentColor" />
-              </svg>
-            </div>
+            <ImagePlaceholder width={50} height={50} />
           ),
       },
       {
@@ -126,13 +114,11 @@ const ProductVariations: React.FC<Props> = ({
         body: (row: VariantDto) => {
           const options = getVariantOptions(row);
           return options?.length ? (
-            <div className={styles.comboCell}>
+            <Flex spacing="xs" wrap>
               {options.map((opt, i) => (
-                <span key={i} className={styles.comboBadge}>
-                  {opt}
-                </span>
+                <Chip key={i} label={opt} appearance="outline" size="small" />
               ))}
-            </div>
+            </Flex>
           ) : (
             <span className={styles.dimText}>—</span>
           );
@@ -210,25 +196,15 @@ const ProductVariations: React.FC<Props> = ({
         stripedRows
         emptyMessage={
           <div className={styles.emptyState}>
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
-              <rect
-                x="4"
-                y="4"
-                width="32"
-                height="32"
-                rx="6"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                opacity="0.3"
+            <div style={{ position: 'relative', width: 40, height: 40 }}>
+              <Square width={40} height={40} opacity={0.3} />
+              <Plus
+                width={24}
+                height={24}
+                style={{ position: 'absolute', top: 8, left: 8 }}
+                opacity={0.5}
               />
-              <path
-                d="M14 20h12M20 14v12"
-                stroke="currentColor"
-                strokeWidth="1.5"
-                strokeLinecap="round"
-                opacity="0.5"
-              />
-            </svg>
+            </div>
             <p>{t('app.variation.noVariations')}</p>
           </div>
         }

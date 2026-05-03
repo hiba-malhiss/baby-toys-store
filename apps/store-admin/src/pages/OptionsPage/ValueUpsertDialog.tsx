@@ -1,15 +1,14 @@
-import React, { useEffect, useMemo } from 'react';
-import { Dialog, Button, Flex, StringInput } from '@baby-toys/ui-kit';
+import React, { useEffect } from 'react';
+import { Dialog, Button, StringInput, useToast, LocaleBadge } from '@baby-toys/ui-kit';
 import { useForm } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
-import { useToast } from '@baby-toys/ui-kit';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper.tsx';
 import { useLocales } from '../../hooks/useLocales';
 import { useCreateOptionValue, useUpdateOptionValue } from '../../api/optionApi';
 import type { OptionValueDto } from '../../api/types/option';
+import styles from './options.module.scss';
 
 export type ValueUpsertDialogProps = {
   visible: boolean;
@@ -22,12 +21,7 @@ export type ValueUpsertDialogProps = {
 
 const schema = z.object({
   code: z.string().optional().default(''),
-  translations: z.record(
-    z.string().min(1),
-    z.object({
-      display: z.string().min(1, 'Required'),
-    })
-  ),
+  translations: z.record(z.string().min(1), z.object({ display: z.string().min(1, 'Required') })),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -43,6 +37,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
   const { t } = useTranslation();
   const toast = useToast();
   const locales = useLocales();
+  const isEdit = mode === 'edit';
   const createValue = useCreateOptionValue(typeId);
   const updateValue = useUpdateOptionValue(typeId);
 
@@ -50,32 +45,23 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     resolver: zodResolver(schema),
     defaultValues: { code: '', translations: {} },
     mode: 'onChange',
-    criteriaMode: 'all',
   });
 
   useEffect(() => {
     if (!visible) return;
-
-    const defaults: FormValues = {
-      code: initial?.code || '',
-      translations: {},
-    };
-
     const normalize = (x: any) => String(x ?? '').toLowerCase();
     const trList = (initial?.translations || []) as Array<{ locale: string; display?: string }>;
-
+    const defaults: FormValues = { code: initial?.code || '', translations: {} };
     locales.forEach((loc) => {
       const tr = trList.find((x) => normalize(x?.locale) === normalize(loc));
       defaults.translations[loc] = { display: tr?.display || '' };
     });
-
     rhf.reset(defaults);
-  }, [visible, initial, locales, rhf]);
+  }, [visible, initial?.id]);
 
   const onSubmit = async (values: FormValues) => {
     const codeRaw = String(values.code ?? '').trim();
     const hasCode = !!codeRaw;
-
     const translations: Record<string, string> = {};
     Object.entries(values.translations || {}).forEach(([loc, tr]) => {
       const txt = String(tr?.display ?? '').trim();
@@ -83,17 +69,17 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     });
 
     try {
-      if (mode === 'edit' && initial?.id) {
+      if (isEdit && initial?.id) {
         const payload: { value?: string; translations?: Record<string, string> } = {};
-        if (hasCode) payload.value = codeRaw; // only send if user supplied a code
+        if (hasCode) payload.value = codeRaw;
         if (Object.keys(translations).length) payload.translations = translations;
-
         await updateValue.mutateAsync({ valueId: initial.id, payload });
       } else {
-        const displayByLocale = Object.keys(translations).length ? translations : undefined;
-        await createValue.mutateAsync({ code: hasCode ? codeRaw : undefined, displayByLocale });
+        await createValue.mutateAsync({
+          code: hasCode ? codeRaw : undefined,
+          displayByLocale: Object.keys(translations).length ? translations : undefined,
+        });
       }
-
       onSuccess?.();
       onClose();
     } catch (e: any) {
@@ -101,63 +87,80 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     }
   };
 
-  const onInvalid = async () => {
-    // RHF will set field errors; our FieldWrapper shows red border via hasError
-    toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
-  };
-
-  const headerText =
-    mode === 'edit'
-      ? t('common.edit', { defaultValue: 'Edit' })
-      : t('options.addValue', { defaultValue: 'Add Value' });
-
   return (
     <Dialog
-      header={headerText}
+      header={
+        isEdit
+          ? t('common.edit', { defaultValue: 'Edit Value' })
+          : t('options.addValue', { defaultValue: 'Add Value' })
+      }
       visible={visible}
       onVisibleChange={onClose as any}
       dismissibleMask
       modal
     >
-      <form onSubmit={rhf.handleSubmit(onSubmit, onInvalid)}>
-        <Flex direction="vertical" spacing="m">
-          <FormFieldWrapper
-            name="code"
-            label={t('options.value', { defaultValue: 'Value' })}
-            control={rhf.control}
-          >
-            <StringInput placeholder={t('options.value', { defaultValue: 'Value' })} />
-          </FormFieldWrapper>
+      <form
+        onSubmit={rhf.handleSubmit(onSubmit, () =>
+          toast.error(t('app.formInvalid', { defaultValue: 'Fix errors' }))
+        )}
+      >
+        <div className={styles.dialogBody}>
+          {/* Display labels */}
+          <div className={styles.dialogSection}>
+            <div className={styles.dialogSectionLabel}>
+              {t('options.display', { defaultValue: 'Display Labels' })}
+            </div>
+            {locales.map((loc) => (
+              <FormFieldWrapper
+                key={loc}
+                name={`translations.${loc}.display`}
+                label={
+                  <>
+                    <LocaleBadge locale={loc} />
+                    {t('options.displayName', { defaultValue: 'Label' })}
+                  </>
+                }
+                control={rhf.control}
+                required
+                fullWidth
+              >
+                <StringInput
+                  placeholder={t('options.displayName', { defaultValue: 'Display Name' })}
+                />
+              </FormFieldWrapper>
+            ))}
+          </div>
 
-          {locales.map((loc) => (
+          {/* Meta */}
+          <div className={styles.dialogSection}>
+            <div className={styles.dialogSectionLabel}>
+              {t('options.meta', { defaultValue: 'Meta' })}
+            </div>
             <FormFieldWrapper
-              key={loc}
-              name={`translations.${loc}.display`}
-              label={`${t('options.displayName', { defaultValue: 'Display Name' })} (${String(loc).toUpperCase()})`}
+              name="code"
+              label={t('options.value', { defaultValue: 'Code / Value (optional)' })}
               control={rhf.control}
-              required
-              rules={{ required: t('common.required', { defaultValue: 'Required' }) }}
+              fullWidth
             >
-              <StringInput
-                placeholder={t('options.displayName', { defaultValue: 'Display Name' })}
-              />
+              <StringInput placeholder="auto" isDisabled={isEdit} />
             </FormFieldWrapper>
-          ))}
+          </div>
 
-          <Flex justify="end" spacing="s">
+          <div className={styles.dialogFooter}>
             <Button appearance="outline" type="button" onClick={onClose}>
               {t('app.cancel', { defaultValue: 'Cancel' })}
             </Button>
-
             <Button
               type="submit"
-              isLoading={mode === 'edit' ? updateValue.isPending : createValue.isPending}
-              isDisabled={mode === 'edit' ? updateValue.isPending : createValue.isPending}
+              isLoading={isEdit ? updateValue.isPending : createValue.isPending}
+              isDisabled={isEdit ? updateValue.isPending : createValue.isPending}
             >
-              {t('app.save', { defaultValue: 'Save' })}
+              {isEdit
+                ? t('common.update', { defaultValue: 'Update' })
+                : t('app.save', { defaultValue: 'Save' })}
             </Button>
-          </Flex>
-        </Flex>
+          </div>
+        </div>
       </form>
     </Dialog>
   );

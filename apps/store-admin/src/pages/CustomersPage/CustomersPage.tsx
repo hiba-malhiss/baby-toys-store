@@ -8,26 +8,25 @@ import {
   Flex,
   CopyToClipboardButton,
   Tooltip,
+  PageHeader,
 } from '@baby-toys/ui-kit';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import { useAdminUsers } from '../../api/usersApi';
 import type { AdminUser } from '../../api/types/user';
 import styles from './customer-page.module.scss';
-import { Eye, Search } from 'lucide-react';
+import { Search, ShoppingCart, Star } from 'lucide-react';
 
 const CustomersPage: React.FC = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Table & query state
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortField, setSortField] = useState<string>('createdAt');
   const [sortOrder, setSortOrder] = useState<-1 | 1>(-1);
 
-  // Separate input vs applied filter
   const initialQ = searchParams.get('query') || '';
   const [queryInput, setQueryInput] = useState<string>(initialQ);
   const [query, setQuery] = useState<string>(initialQ);
@@ -73,7 +72,7 @@ const CustomersPage: React.FC = () => {
         field: 'id',
         header: t('customers.columns.id'),
         body: (row: AdminUser) => (
-          <Flex spacing="s" align="center">
+          <Flex spacing="xs" align="center">
             <span>#{row.id}</span>
             <CopyToClipboardButton
               value={row.id}
@@ -89,7 +88,7 @@ const CustomersPage: React.FC = () => {
         header: t('customers.columns.email'),
         sortable: true,
         body: (row: AdminUser) => (
-          <Flex spacing="s" align="center">
+          <Flex spacing="xs" align="center">
             <span>{row.email}</span>
             <CopyToClipboardButton
               value={row.email}
@@ -124,58 +123,64 @@ const CustomersPage: React.FC = () => {
         field: 'actions',
         header: t('customers.columns.actions'),
         body: (row: AdminUser) => (
-          <Flex spacing="s">
+          <Flex spacing="xs">
             <Tooltip position="top" content={t('customers.actions.viewOrders')}>
-              <Button appearance="outline" onClick={() => navigate(`/orders?query=${row.id}`)}>
-                {t('customers.actions.viewOrders')}
-              </Button>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={ShoppingCart}
+                onClick={() => navigate(`/orders?query=${row.id}`)}
+              />
             </Tooltip>
             <Tooltip position="top" content={t('customers.actions.viewReviews')}>
-              <Button appearance="outline" onClick={() => navigate(`/reviews?userId=${row.id}`)}>
-                {t('customers.actions.viewReviews')}
-              </Button>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Star}
+                onClick={() => navigate(`/reviews?userId=${row.id}`)}
+              />
             </Tooltip>
           </Flex>
         ),
       },
     ],
-    [navigate]
+    [navigate, t]
   );
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex align="center" justify="between" fullWidth>
-          <Heading>{t('customers.pageTitle')}</Heading>
+      <PageHeader
+        left={<Heading>{t('customers.pageTitle')}</Heading>}
+        right={
           <StringInput
             className={styles.customersPageSearch}
             placeholder={t('customers.searchPlaceholder')}
-            leftIconComp={Eye}
+            value={queryInput}
             onChange={(v) => setQueryInput(String(v ?? ''))}
-            fullWidth
-            withIconBackground
             iconRight={Search}
+            withIconBackground
             onIconClick={() => {
               setQuery(queryInput.trim());
               setPage(1);
             }}
           />
-        </Flex>
+        }
+      />
 
-        <Table
-          stripedRows
-          value={customers}
-          columns={columns}
-          paginator
-          rows={pageSize}
-          totalRecords={totalRecords}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          onSort={handleSort}
-          onPageChange={handlePageChange}
-          isLoading={isLoading}
-        />
-      </Flex>
+      <Table
+        stripedRows
+        value={customers}
+        columns={columns}
+        paginator
+        rows={pageSize}
+        totalRecords={totalRecords}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSort={handleSort}
+        onPageChange={handlePageChange}
+        isLoading={isLoading}
+        emptyMessage={t('customers.empty', { defaultValue: 'No customers found.' })}
+      />
     </AdminLayout>
   );
 };

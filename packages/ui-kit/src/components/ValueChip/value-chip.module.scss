@@ -1,0 +1,35 @@
+.valueChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  font-size: 12px;
+  color: var(--color-text-primary);
+  transition: border-color 0.15s;
+
+  &:hover {
+    border-color: var(--color-border-dark);
+  }
+}
+
+.valueChipCode {
+  font-family: 'Courier New', monospace;
+  font-size: 10px;
+  color: var(--color-text-grey-light);
+  padding: 1px 5px;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-xs);
+}
+
+.valueChipInactive {
+  opacity: 0.45;
+}
+
+.valueChipActions {
+  display: flex;
+  gap: 2px;
+  margin-left: 2px;
+}

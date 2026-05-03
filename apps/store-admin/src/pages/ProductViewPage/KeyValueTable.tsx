@@ -35,7 +35,7 @@ const KeyValueTable: React.FC<Props> = ({ rows, labelHeader = 'Stat' }) => {
   if (!rows?.length) return null;
 
   return (
-    <div className={styles.statsTableWrapper}>
+    <div className={styles.details}>
       <Table
         value={rows}
         columns={columns as any}

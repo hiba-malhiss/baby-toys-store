@@ -52,14 +52,14 @@ export const useOrdersPage = () => {
   }, []);
 
   const HeaderWithTooltip: React.FC<{ label: string; tip: string }> = ({ label, tip }) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+    <Flex spacing="s" align="center">
       <span>{label}</span>
       <Tooltip position="top" content={tip}>
         <span>
           <Info style={{ opacity: 0.7, cursor: 'help' }} />
         </span>
       </Tooltip>
-    </span>
+    </Flex>
   );
 
   const columns = useMemo(

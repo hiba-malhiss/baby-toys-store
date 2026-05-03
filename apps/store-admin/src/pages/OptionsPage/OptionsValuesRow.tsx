@@ -1,130 +1,103 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button, Flex, Table, BouncingDotsLoader, ConfirmDialog } from '@baby-toys/ui-kit';
+import { Button, BouncingDotsLoader, ConfirmDialog, useToast, ValueChip } from '@baby-toys/ui-kit';
 import type {
   OptionTypeDto as OptionType,
   OptionValueDto as OptionValue,
 } from '../../api/types/option';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 import { useOptionTypeDetail, useDeleteOptionValue } from '../../api/optionApi';
-import { Pencil, Trash2 } from 'lucide-react';
-import { useToast } from '@baby-toys/ui-kit';
 import ValueUpsertDialog from './ValueUpsertDialog';
+import styles from './options.module.scss';
 
-type Props = {
-  activeType: OptionType;
-};
+type Props = { activeType: OptionType };
 
 const OptionsValuesRow: React.FC<Props> = ({ activeType }) => {
   const { t } = useTranslation();
+  const toast = useToast();
   const typeId = activeType.id;
   const { data: typeDetail, isLoading: loadingValues } = useOptionTypeDetail(typeId);
   const values: OptionValue[] = (typeDetail?.values as any) || [];
   const deleteValue = useDeleteOptionValue(typeId);
   const [dialogOpen, setDialogOpen] = React.useState(false);
-  const toast = useToast();
-
-  // Edit/Delete state
   const [editRow, setEditRow] = React.useState<OptionValue | null>(null);
   const [deleteRow, setDeleteRow] = React.useState<OptionValue | null>(null);
+
+  const getLabel = (v: OptionValue) => {
+    const tr = (v as any).translations || [];
+    const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
+    return en?.display || v.display || v.value || '—';
+  };
 
   const openAdd = () => {
     setEditRow(null);
     setDialogOpen(true);
   };
-
   const handleOpenEdit = (row: OptionValue) => {
     setEditRow(row);
     setDialogOpen(true);
   };
 
-  if (loadingValues) {
-    return <BouncingDotsLoader />;
-  }
+  if (loadingValues)
+    return (
+      <div className={styles.valuesPanel}>
+        <BouncingDotsLoader />
+      </div>
+    );
 
   return (
-    <>
-      <Table
-        value={values}
-        rows={values.length || 1}
-        title={
-          <Flex justify="end" align="center" fullWidth>
-            <Button appearance="outline" size="small" onClick={openAdd}>
-              {t('options.addValue', { defaultValue: 'Add Value' })}
-            </Button>
-          </Flex>
-        }
-        columns={[
-          {
-            header: t('options.value', { defaultValue: 'Value' }),
-            field: 'value',
-            filter: true,
-            sortable: true,
-          },
-          {
-            header: t('options.display', { defaultValue: 'Display' }),
-            field: 'display',
-            filter: true,
-            sortable: true,
-          },
-          {
-            header: t('app.actions', { defaultValue: 'Actions' }),
-            field: 'actions',
-            body: (row: OptionValue) => (
-              <Flex spacing="m">
-                <Button
-                  size="small"
-                  appearance="outline"
-                  leftIconComp={Pencil}
-                  aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                  onClick={() => handleOpenEdit(row)}
-                />
-                <Button
-                  size="small"
-                  appearance="outline"
-                  color="secondary"
-                  leftIconComp={Trash2}
-                  aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                  onClick={() => setDeleteRow(row)}
-                />
-              </Flex>
-            ),
-          },
-        ]}
-        paginator={false}
-        stripedRows
-        emptyMessage={t('options.noValues', { defaultValue: 'No values' })}
-        useLocalSortAndFilter
-        rowHover
-      />
+    <div className={styles.valuesPanel}>
+      <div className={styles.valuesPanelHeader}>
+        <span className={styles.valuesPanelTitle}>
+          {t('options.values', { defaultValue: 'Values' })} ({values.length})
+        </span>
+        <Button appearance="outline" size="small" onClick={openAdd} leftIconComp={Plus}>
+          {t('options.addValue', { defaultValue: 'Add Value' })}
+        </Button>
+      </div>
+
+      <div className={styles.valuesGrid}>
+        {values.map((v) => (
+          <ValueChip
+            key={v.id}
+            label={getLabel(v)}
+            code={v.value && v.value !== getLabel(v) ? v.value : undefined}
+            onEdit={() => handleOpenEdit(v)}
+            onDelete={() => setDeleteRow(v)}
+          />
+        ))}
+      </div>
 
       <ValueUpsertDialog
         visible={dialogOpen}
         mode={editRow ? 'edit' : 'create'}
         typeId={typeId}
         initial={editRow as any}
-        onClose={() => setDialogOpen(false)}
+        onClose={() => {
+          setDialogOpen(false);
+          setEditRow(null);
+        }}
         onSuccess={() =>
           toast.success(
             t(editRow ? 'common.update' : 'common.create', {
-              defaultValue: editRow ? 'Update' : 'Create',
+              defaultValue: editRow ? 'Updated' : 'Created',
             })
           )
         }
       />
 
-      {/* Delete confirm */}
       <ConfirmDialog
         visible={!!deleteRow}
         header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
         message={t('categories.deleteConfirm', {
-          defaultValue: 'Are you sure you want to delete “{{name}}”?',
-          name: deleteRow?.display || deleteRow?.value,
+          defaultValue: 'Are you sure you want to delete "{{name}}"?',
+          name: deleteRow ? getLabel(deleteRow) : '',
         })}
         onConfirm={async () => {
           if (!deleteRow) return;
           try {
             await deleteValue.mutateAsync(deleteRow.id);
-            toast.success(t('common.delete', { defaultValue: 'Delete' }));
+            toast.success(t('common.delete', { defaultValue: 'Deleted' }));
             setDeleteRow(null);
           } catch (e: any) {
             toast.error(e?.message || t('app.unexpectedError'));
@@ -132,7 +105,7 @@ const OptionsValuesRow: React.FC<Props> = ({ activeType }) => {
         }}
         onCancel={() => setDeleteRow(null)}
       />
-    </>
+    </div>
   );
 };
 

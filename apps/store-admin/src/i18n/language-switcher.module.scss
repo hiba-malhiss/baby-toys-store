@@ -39,7 +39,6 @@
     color: $color-text-muted;
     transition: color 0.25s;
 
-    // Selected state (scoped to CSS module)
     &.selected {
       color: $color-white;
     }
@@ -58,7 +57,6 @@
     transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
-  // If AR (first) selected, keep knob on the left
   .langText.selected ~ .knob {
     transform: translateX(calc(100% + 4px));
   }

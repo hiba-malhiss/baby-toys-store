@@ -2,6 +2,7 @@ import React from 'react';
 import { useFieldArray, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 import { useOptionTypes } from '../../../api/optionApi';
+import { Plus } from 'lucide-react';
 import OptionRow from './OptionRow.tsx';
 import styles from '../Productsform.module.scss';
 
@@ -44,14 +45,7 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({ control, isDisabled, se
           disabled={isAddDisabled || isDisabled}
           onClick={() => append({ optionTypeId: undefined as any, valueIds: [] })}
         >
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path
-              d="M7 1V13M1 7H13"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-            />
-          </svg>
+          <Plus width={14} height={14} />
           {t('productForm.addOption', 'Add Option')}
         </button>
       </div>

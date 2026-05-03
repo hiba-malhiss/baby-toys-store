@@ -1,25 +1,16 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import {
-  Button,
-  Flex,
-  Table,
-  BouncingDotsLoader,
-  ConfirmDialog,
-  Tooltip,
-  useToast,
-} from '@baby-toys/ui-kit';
+import { Button, BouncingDotsLoader, ConfirmDialog, useToast, ValueChip } from '@baby-toys/ui-kit';
 import type {
   AttributeTypeListDto as AttributeType,
   AttributeValueAdminDto as AttributeValue,
 } from '../../api/types/attribute';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useAttributeTypeAdmin, useDeleteAttributeValue } from '../../api/attributeApi';
 import ValueUpsertDialog from './ValueUpsertDialog';
+import styles from './attributes.module.scss';
 
-type Props = {
-  activeType: AttributeType;
-};
+type Props = { activeType: AttributeType };
 
 const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
   const { t } = useTranslation();
@@ -32,110 +23,55 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
   const [editValue, setEditValue] = React.useState<AttributeValue | null>(null);
   const [deleteValue, setDeleteValue] = React.useState<AttributeValue | null>(null);
 
-  const closeAdd = () => setShowAdd(false);
+  const getLabel = (v: AttributeValue) => {
+    const tr = v.translations || [];
+    const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
+    return en?.displayValue || v.display || v.code || '—';
+  };
+  const getArLabel = (v: AttributeValue) => {
+    const tr = v.translations || [];
+    const ar = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'ar');
+    return ar?.displayValue || null;
+  };
 
-  if (loadingValues) {
-    return <BouncingDotsLoader />;
-  }
+  if (loadingValues)
+    return (
+      <div className={styles.valuesPanel}>
+        <BouncingDotsLoader />
+      </div>
+    );
 
   return (
-    <>
-      <Table
-        value={values}
-        rows={values.length || 1}
-        title={
-          <Flex justify="end" align="center" fullWidth>
-            <Button appearance="outline" size="small" onClick={() => setShowAdd(true)}>
-              {t('attributes.addValue', { defaultValue: 'Add Value' })}
-            </Button>
-          </Flex>
-        }
-        columns={[
-          {
-            header: t('attributes.code', { defaultValue: 'Code' }),
-            field: 'code',
-            filter: true,
-            sortable: true,
-          },
-          {
-            header: t('attributes.displayEn', { defaultValue: 'Display (EN)' }),
-            field: 'displayEn',
-            filter: true,
-            sortable: false,
-            body: (row: AttributeValue) => {
-              const tr = row.translations || [];
-              const en = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'en');
-              return en?.displayValue ?? row.display ?? '-';
-            },
-          },
-          {
-            header: t('attributes.displayAr', { defaultValue: 'Display (AR)' }),
-            field: 'displayAr',
-            filter: true,
-            sortable: false,
-            body: (row: AttributeValue) => {
-              const tr = row.translations || [];
-              const ar = tr.find((x: any) => (x?.locale || '').toLowerCase() === 'ar');
-              return ar?.displayValue ?? '-';
-            },
-          },
-          {
-            header: t('attributes.sortOrder', { defaultValue: 'Sort Order' }),
-            field: 'sortOrder',
-            sortable: true,
-            body: (row: AttributeValue) => row.sortOrder ?? 0,
-          },
-          {
-            header: t('attributes.active', { defaultValue: 'Active' }),
-            field: 'isActive',
-            sortable: false,
-            body: (row: AttributeValue) => (row.isActive ? t('app.yes') : t('app.no')),
-          },
-          {
-            header: t('app.actions', { defaultValue: 'Actions' }),
-            field: 'actions',
-            body: (row: AttributeValue) => (
-              <Flex spacing="m">
-                <Tooltip position="top" content={t('common.edit', { defaultValue: 'Edit' })}>
-                  <Button
-                    size="small"
-                    appearance="outline"
-                    leftIconComp={Pencil}
-                    aria-label={t('common.edit', { defaultValue: 'Edit' })}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditValue({ ...row });
-                    }}
-                  />
-                </Tooltip>
-                <Tooltip position="top" content={t('common.delete', { defaultValue: 'Delete' })}>
-                  <Button
-                    size="small"
-                    appearance="outline"
-                    leftIconComp={Trash2}
-                    aria-label={t('common.delete', { defaultValue: 'Delete' })}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setDeleteValue(row);
-                    }}
-                  />
-                </Tooltip>
-              </Flex>
-            ),
-          },
-        ]}
-        paginator={false}
-        stripedRows
-        emptyMessage={t('attributes.noValues', { defaultValue: 'No values' })}
-        useLocalSortAndFilter
-        rowHover
-      />
+    <div className={styles.valuesPanel}>
+      <div className={styles.valuesPanelHeader}>
+        <span className={styles.valuesPanelTitle}>
+          {t('attributes.values', { defaultValue: 'Values' })} ({values.length})
+        </span>
+        <Button appearance="outline" size="small" onClick={() => setShowAdd(true)}>
+          <Plus size={12} />
+          {t('attributes.addValue', { defaultValue: 'Add Value' })}
+        </Button>
+      </div>
+
+      <div className={styles.valuesGrid}>
+        {values.map((v) => (
+          <ValueChip
+            key={v.id}
+            label={getLabel(v)}
+            secondaryLabel={getArLabel(v)}
+            code={v.code}
+            inactive={!v.isActive}
+            onEdit={() => setEditValue({ ...v })}
+            onDelete={() => setDeleteValue(v)}
+          />
+        ))}
+      </div>
 
       <ValueUpsertDialog
         mode={editValue ? 'edit' : 'create'}
         visible={showAdd || !!editValue}
         onClose={() => {
-          closeAdd();
+          setShowAdd(false);
           setEditValue(null);
         }}
         typeId={typeId}
@@ -143,7 +79,7 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
         onSuccess={() =>
           toast.success(
             t(editValue ? 'common.update' : 'common.create', {
-              defaultValue: editValue ? 'Update' : 'Create',
+              defaultValue: editValue ? 'Updated' : 'Created',
             })
           )
         }
@@ -151,13 +87,16 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
 
       <ConfirmDialog
         visible={!!deleteValue}
-        header="Confirm Delete"
-        message={t('common.delete', { defaultValue: 'Delete' })}
+        header={t('common.confirmDeleteTitle', { defaultValue: 'Confirm Delete' })}
+        message={t('categories.deleteConfirm', {
+          defaultValue: 'Are you sure you want to delete "{{name}}"?',
+          name: deleteValue ? getLabel(deleteValue) : '',
+        })}
         onConfirm={async () => {
           if (!deleteValue) return;
           try {
             await deleteValueHook.mutateAsync(deleteValue.id);
-            toast.success(t('common.delete', { defaultValue: 'Delete' }));
+            toast.success(t('common.delete', { defaultValue: 'Deleted' }));
             setDeleteValue(null);
           } catch (e: any) {
             toast.error(e?.message || t('app.unexpectedError'));
@@ -165,7 +104,7 @@ const AttributesValuesRow: React.FC<Props> = ({ activeType }) => {
         }}
         onCancel={() => setDeleteValue(null)}
       />
-    </>
+    </div>
   );
 };
 

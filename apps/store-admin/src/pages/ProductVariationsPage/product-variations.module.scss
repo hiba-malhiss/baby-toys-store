@@ -1,5 +1,3 @@
-// ─── Page Layout ───────────────────────────────────────────────────────────────
-
 .pageLayout {
   display: flex;
   flex-direction: column;
@@ -45,8 +43,6 @@
   flex-shrink: 0;
 }
 
-// ─── Variant Stats ─────────────────────────────────────────────────────────────
-
 .variantStats {
   display: flex;
   align-items: center;
@@ -80,8 +76,6 @@
   height: 14px;
   background: var(--color-border-dark);
 }
-
-// ─── Options Summary ───────────────────────────────────────────────────────────
 
 .optionsSummary {
   display: flex;
@@ -126,40 +120,9 @@
   height: 18px;
   border-radius: 50%;
   background: var(--color-text-info, #5a4de6);
-  color: #fff;
+  color: var(--color-white);
   font-size: 10px;
   font-weight: 600;
-}
-
-// ─── Table cells ───────────────────────────────────────────────────────────────
-
-.imgPlaceholder {
-  width: 40px;
-  height: 40px;
-  border-radius: 6px;
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border-dark);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-tertiary);
-}
-
-.comboCell {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.comboBadge {
-  display: inline-flex;
-  padding: 2px 8px;
-  border-radius: 4px;
-  background: var(--color-background-secondary);
-  border: 1px solid var(--color-border-dark);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--color-text-primary);
 }
 
 .skuText {
@@ -171,8 +134,6 @@
 .dimText {
   color: var(--color-text-tertiary);
 }
-
-// ─── Price cell ────────────────────────────────────────────────────────────────
 
 .priceCell {
   display: flex;
@@ -197,36 +158,6 @@
   color: var(--color-text-tertiary);
 }
 
-// ─── Stock badge ───────────────────────────────────────────────────────────────
-
-.stockBadge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 32px;
-  padding: 3px 8px;
-  border-radius: 6px;
-  font-size: 13px;
-  font-weight: 600;
-}
-
-.stockBadge_ok {
-  background: var(--color-background-success, rgba(22, 163, 74, 0.08));
-  color: var(--color-text-success, #15803d);
-}
-
-.stockBadge_low {
-  background: var(--color-background-warning, rgba(234, 179, 8, 0.1));
-  color: var(--color-text-warning, #a16207);
-}
-
-.stockBadge_out {
-  background: var(--color-background-danger, rgba(220, 38, 38, 0.08));
-  color: var(--color-text-danger, #dc2626);
-}
-
-// ─── Active status ─────────────────────────────────────────────────────────────
-
 .activeYes {
   font-size: 12px;
   color: var(--color-text-success, #16a34a);
@@ -237,8 +168,6 @@
   font-size: 12px;
   color: var(--color-text-secondary);
 }
-
-// ─── Empty state ───────────────────────────────────────────────────────────────
 
 .emptyState {
   display: flex;
@@ -253,8 +182,6 @@
     margin: 0;
   }
 }
-
-// ─── Dialog ────────────────────────────────────────────────────────────────────
 
 .dialogBody {
   display: flex;

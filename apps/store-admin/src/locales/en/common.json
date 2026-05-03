@@ -88,6 +88,9 @@
       "all": "All",
       "search": "Search",
       "resetAll": "Reset All",
+      "save": "Save",
+      "cancel": "Cancel",
+      "delete": "Delete",
       "actions": "actions"
     },
     "reviews": {

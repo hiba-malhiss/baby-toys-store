@@ -9,6 +9,7 @@ import {
   Rating,
   CopyToClipboardButton,
   Tooltip,
+  PageHeader,
 } from '@baby-toys/ui-kit';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
@@ -23,7 +24,6 @@ export default function ReviewsPage() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // filters from URL
   const [filters, setFilters] = useState({
     productId: searchParams.get('productId') || '',
     userId: searchParams.get('userId') || '',
@@ -39,7 +39,7 @@ export default function ReviewsPage() {
   const { productId, userId, rating, status } = filters;
 
   const applyFilters = useCallback(
-    (next) => {
+    (next: typeof filters) => {
       setFilters(next);
       const params: Record<string, string> = {};
       Object.entries(next).forEach(([k, v]) => {
@@ -72,7 +72,7 @@ export default function ReviewsPage() {
         field: 'productId',
         header: t('app.reviews.fields.product'),
         body: (row: ReviewDto) => (
-          <Flex spacing="s" align="center">
+          <Flex spacing="xs" align="center">
             <Button
               align="start"
               appearance="link"
@@ -104,7 +104,7 @@ export default function ReviewsPage() {
         field: 'userId',
         header: t('app.reviews.fields.user'),
         body: (row: ReviewDto) => (
-          <Flex spacing="s" align="center">
+          <Flex spacing="xs" align="center">
             <span>{row.userEmail ?? `#${row.userId}`}</span>
             <CopyToClipboardButton
               value={row.userId}
@@ -122,7 +122,7 @@ export default function ReviewsPage() {
         field: 'rating',
         header: t('app.reviews.fields.rating'),
         body: (row: ReviewDto) => (
-          <Flex spacing="s" align="center">
+          <Flex spacing="xs" align="center">
             <Rating value={row.rating} />
             <span>({row.rating})</span>
           </Flex>
@@ -163,9 +163,7 @@ export default function ReviewsPage() {
                 leftIconComp={hidden ? Eye : EyeOff}
                 isLoading={isHiding || isUnhiding}
                 onClick={() => (hidden ? unhideReview(row.id) : hideReview(row.id))}
-              >
-                {hidden ? t('app.reviews.actions.unhide') : t('app.reviews.actions.hide')}
-              </Button>
+              />
             </Tooltip>
           );
         },
@@ -176,32 +174,31 @@ export default function ReviewsPage() {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" fullWidth>
-          <Heading>{t('app.reviews.title')}</Heading>
-          <ReviewsFilters {...filters} onChange={applyFilters} />
-        </Flex>
-        <Table
-          stripedRows
-          value={data?.content ?? []}
-          columns={columns}
-          paginator
-          rows={pageSize}
-          totalRecords={data?.totalElements ?? 0}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          onSort={({ field, order }) => {
-            setSortField(field);
-            setSortOrder(order);
-            setPage(1);
-          }}
-          onPageChange={(newPage, newSize) => {
-            setPage(newPage);
-            setPageSize(newSize);
-          }}
-          isLoading={isLoading}
-        />
-      </Flex>
+      <PageHeader
+        left={<Heading>{t('app.reviews.title')}</Heading>}
+        right={<ReviewsFilters {...filters} onChange={applyFilters} />}
+      />
+      <Table
+        stripedRows
+        value={data?.content ?? []}
+        columns={columns}
+        paginator
+        rows={pageSize}
+        totalRecords={data?.totalElements ?? 0}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        onSort={({ field, order }) => {
+          setSortField(field);
+          setSortOrder(order);
+          setPage(1);
+        }}
+        onPageChange={(newPage, newSize) => {
+          setPage(newPage);
+          setPageSize(newSize);
+        }}
+        isLoading={isLoading}
+        emptyMessage={t('app.reviews.empty', { defaultValue: 'No reviews found.' })}
+      />
     </AdminLayout>
   );
 }

@@ -31,7 +31,7 @@ export default function DashboardStatCard({
           {tooltip ? (
             <Tooltip content={<div className={styles.tip}>{tooltip}</div>} position="top">
               <span className={styles.infoIcon} aria-label="info">
-                <Info style={{ width: 16, height: 16 }} />
+                <Info />
               </span>
             </Tooltip>
           ) : null}

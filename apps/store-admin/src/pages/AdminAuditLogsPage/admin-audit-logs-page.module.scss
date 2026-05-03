@@ -1,7 +1,10 @@
-.toolbar {
-  min-width: 520px;
+.auditSearch {
+  width: 280px !important;
 }
 
-.search {
-  width: 360px;
+.dialogContent {
+  font-family: monospace;
+  font-size: 13px;
+  overflow: auto;
+  max-height: 500px;
 }

@@ -1,6 +1,16 @@
 import React from 'react';
-import { Button, StringInput, Flex, Heading, Calendar, Table, Tooltip } from '@baby-toys/ui-kit';
-import { Info } from 'lucide-react';
+import {
+  Button,
+  StringInput,
+  Flex,
+  Heading,
+  Calendar,
+  Table,
+  Tooltip,
+  PageHeader,
+  Icon,
+} from '@baby-toys/ui-kit';
+import { Info, Search } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import moment from 'moment';
@@ -48,14 +58,14 @@ const ProductAnalyticsPage: React.FC = () => {
     },
     {
       header: (
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+        <Flex align="center" spacing="xs">
           <span>{t('menu.productAnalytics.columns.trendingScore')}</span>
           <Tooltip content={t('menu.productAnalytics.trendingScoreTooltip')} position="top">
-            <span>
-              <Info style={{ opacity: 0.7, cursor: 'help' }} />
-            </span>
+            <div>
+              <Icon icon={Info} />
+            </div>
           </Tooltip>
-        </span>
+        </Flex>
       ),
       field: 'trendingScore',
       body: (r: ProductAnalyticsRow) => r.trendingScore.toFixed(2),
@@ -64,29 +74,33 @@ const ProductAnalyticsPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Flex direction="vertical" spacing="s">
+      <PageHeader
+        left={
+          <Flex direction="vertical" spacing="xs">
             <Heading>{t('menu.productAnalytics.title')}</Heading>
             <Heading level="h4" appearance="light">
               {t('menu.productAnalytics.subtitle')}
             </Heading>
           </Flex>
+        }
+        right={
           <Flex spacing="s" align="center">
             <StringInput
               value={productQuery}
               onChange={(e: any) => setProductQuery(e)}
               placeholder={t('menu.productAnalytics.searchPlaceholder')}
+              iconRight={Search}
+              withIconBackground
+              onIconClick={applyFilters}
             />
             <Calendar
               value={moment(from + '-01', 'YYYY-MM-DD') as any}
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
                 if (!d) return;
-                const ym = (d as any).format
-                  ? (d as any).format('YYYY-MM')
-                  : moment(d).format('YYYY-MM');
-                setFrom(ym);
+                setFrom(
+                  (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM')
+                );
               }}
               selectionMode="single"
               typeView="month"
@@ -96,35 +110,32 @@ const ProductAnalyticsPage: React.FC = () => {
               onChange={(m) => {
                 const d = Array.isArray(m) ? m[0] : (m as any);
                 if (!d) return;
-                const ym = (d as any).format
-                  ? (d as any).format('YYYY-MM')
-                  : moment(d).format('YYYY-MM');
-                setTo(ym);
+                setTo(
+                  (d as any).format ? (d as any).format('YYYY-MM') : moment(d).format('YYYY-MM')
+                );
               }}
               selectionMode="single"
               typeView="month"
             />
             <Button onClick={applyFilters}>{t('menu.productAnalytics.applyButton')}</Button>
           </Flex>
-        </Flex>
+        }
+      />
 
-        <Table
-          stripedRows
-          columns={columns as any}
-          value={rows}
-          emptyMessage={t('menu.productAnalytics.emptyMessage')}
-          bordered
-          striped
-          onSort={handleSort as any}
-          sortField={sortField}
-          sortOrder={sortOrder}
-          paginator
-          isLoading={isFetching}
-          rows={50}
-          totalRecords={totalItems}
-          onPageChange={(newPage: number) => setPage(newPage)}
-        />
-      </Flex>
+      <Table
+        stripedRows
+        columns={columns as any}
+        value={rows}
+        emptyMessage={t('menu.productAnalytics.emptyMessage')}
+        onSort={handleSort as any}
+        sortField={sortField}
+        sortOrder={sortOrder}
+        paginator
+        isLoading={isFetching}
+        rows={50}
+        totalRecords={totalItems}
+        onPageChange={(newPage: number) => setPage(newPage)}
+      />
     </AdminLayout>
   );
 };

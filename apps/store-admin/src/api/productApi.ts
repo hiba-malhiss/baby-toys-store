@@ -45,7 +45,7 @@ export const useProducts = (params?: UseProductsParams) =>
     placeholderData: keepPreviousData,
   });
 
-export const useProduct = (id?: number) => {
+export const useProduct = (id?: string | number) => {
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -78,7 +78,6 @@ export const useCreateProduct = () => {
     },
     onSuccess: () => qc.invalidateQueries({ queryKey: ['products'] }),
     onError: (e: any) => {
-      // surface backend message
       throw new Error(e?.response?.data?.message || 'Failed to create product');
     },
   });
@@ -86,11 +85,8 @@ export const useCreateProduct = () => {
 
 export const useUpdateProduct = () => {
   const qc = useQueryClient();
-  const navigate = useNavigate();
-  const toast = useToast();
-
   return useMutation({
-    mutationFn: async ({ id, ...payload }: ProductUpsertRequest & { id: number }) => {
+    mutationFn: async ({ id, ...payload }: ProductUpsertRequest & { id: number | string }) => {
       const { data } = await api.put<ApiEnvelope<{ id: number }>>(
         `/api/admin/products/${id}`,
         payload
@@ -98,12 +94,11 @@ export const useUpdateProduct = () => {
       return data.data.id;
     },
     onSuccess: (_returnedId, variables) => {
-      // Invalidate product list and the specific product cache
       qc.invalidateQueries({ queryKey: ['products'] });
       if (variables?.id) {
         qc.invalidateQueries({ queryKey: ['product', variables.id] });
       }
-      navigate('/products');
+      // navigation happens in useProductForm after uploads
     },
     onError: (e: any) => {
       throw new Error(e?.response?.data?.message || 'Failed to update product');
@@ -131,7 +126,7 @@ export const useDeleteProduct = () => {
 };
 
 /** ---- Image helpers ---- */
-export const uploadMainImage = async (productId: number, file: File) => {
+export const uploadMainImage = async (productId: number | string, file: File) => {
   const formData = new FormData();
   formData.append('file', file);
   const { data } = await api.post<ApiEnvelope<{ id: number; imageUrl: string }>>(
@@ -142,7 +137,7 @@ export const uploadMainImage = async (productId: number, file: File) => {
   return data.data;
 };
 
-export const uploadProductImage = async (productId: number, file: File) => {
+export const uploadProductImage = async (productId: number | string, file: File) => {
   const formData = new FormData();
   formData.append('file', file);
   const { data } = await api.post<ApiEnvelope<{ id: number; imageUrl: string }>>(
@@ -162,9 +157,7 @@ export const useDeleteProducts = () => {
     mutationFn: async (ids: number[]) => {
       const { data } = await api.delete<ApiEnvelope<{ count: number }>>(
         '/api/admin/products/batch',
-        {
-          data: ids,
-        }
+        { data: ids }
       );
       return data.data.count;
     },
@@ -179,7 +172,7 @@ export const useDeleteProducts = () => {
   });
 };
 
-export const useDeleteProductImage = (productId: number) => {
+export const useDeleteProductImage = (productId: number | string) => {
   const qc = useQueryClient();
   const toast = useToast();
   return useMutation({

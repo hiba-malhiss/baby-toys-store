@@ -1,5 +1,14 @@
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Flex, Heading, Table, Calendar, Tooltip, Icon } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Flex,
+  Heading,
+  Table,
+  Calendar,
+  Tooltip,
+  Icon,
+  PageHeader,
+} from '@baby-toys/ui-kit';
 import { useNavigate } from 'react-router-dom';
 import { useFinancePage } from './useFinancePage';
 import { Eye, Info } from 'lucide-react';
@@ -13,14 +22,14 @@ const FinancePage: React.FC = () => {
   const { year, setYear, data, isLoading } = useFinancePage();
 
   const HeaderWithTooltip: React.FC<{ label: string; tip: string }> = ({ label, tip }) => (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+    <Flex align="center" spacing="s">
       <span>{label}</span>
       <Tooltip position="top" content={tip}>
         <div>
-          <Icon icon={Info}></Icon>
+          <Icon icon={Info} />
         </div>
       </Tooltip>
-    </span>
+    </Flex>
   );
 
   const columns = useMemo(
@@ -62,13 +71,18 @@ const FinancePage: React.FC = () => {
       {
         header: t('app.actions'),
         body: (row: any) => (
-          <Button
-            size="small"
-            appearance="outline"
-            leftIconComp={Eye}
-            onClick={() => navigate(`/finance/${row.month}`)}
-            aria-label={t('finance.viewProduct')}
-          />
+          <Tooltip
+            position="top"
+            content={t('finance.viewMonth', { defaultValue: 'View month detail' })}
+          >
+            <Button
+              size="small"
+              appearance="outline"
+              leftIconComp={Eye}
+              onClick={() => navigate(`/finance/${row.month}`)}
+              aria-label={t('finance.viewProduct')}
+            />
+          </Tooltip>
         ),
       },
     ],
@@ -79,30 +93,38 @@ const FinancePage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('finance.title')}</Heading>
-          <span>
-            Calculated from orders at the time of delivery (applied on delivery, reverted on
-            cancellation or return), plus added or removed expenses.
-          </span>
-          <Flex spacing="s" align="center">
-            <Calendar
-              value={currentYearMoment}
-              selectionMode="single"
-              typeView="year"
-              onChange={(m) => {
-                const d = Array.isArray(m) ? m[0] : (m as any);
-                if (!d) return;
-                const y = (d as any).year ? (d as any).year() : moment(d).year();
-                setYear(Number(y));
-              }}
-            />
+      <PageHeader
+        left={
+          <Flex direction="vertical" spacing="xs">
+            <Heading>{t('finance.title', { defaultValue: 'Finance' })}</Heading>
+            <Heading level="h4" appearance="light">
+              {t('finance.subtitle', { defaultValue: 'Monthly revenue, COGS, expenses & profit' })}
+            </Heading>
           </Flex>
-        </Flex>
+        }
+        right={
+          <Calendar
+            value={currentYearMoment}
+            onChange={(m) => {
+              const d = Array.isArray(m) ? m[0] : (m as any);
+              if (!d) return;
+              const yr = (d as any).format ? (d as any).format('YYYY') : moment(d).format('YYYY');
+              setYear(Number(yr));
+            }}
+            selectionMode="single"
+            typeView="year"
+            fullWidth={false}
+          />
+        }
+      />
 
-        <Table stripedRows value={data} columns={columns as any} isLoading={isLoading} />
-      </Flex>
+      <Table
+        stripedRows
+        value={data ?? []}
+        columns={columns}
+        isLoading={isLoading}
+        emptyMessage={t('finance.empty', { defaultValue: 'No financial data for this year.' })}
+      />
     </AdminLayout>
   );
 };

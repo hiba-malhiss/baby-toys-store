@@ -11,9 +11,12 @@ import {
   Option,
   ImageUploader,
   ImagePickerModal,
+  Text,
+  BouncingDotsLoader,
+  LocaleBadge,
 } from '@baby-toys/ui-kit';
 
-import { Layers } from 'lucide-react';
+import { Layers, CheckCircle } from 'lucide-react';
 
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import FormFieldWrapper from '../../components/FormFieldWrapper/FormFieldWrapper';
@@ -44,6 +47,8 @@ const ProductFormPage: React.FC = () => {
     control,
     handleSubmit,
     isSubmitting,
+    submitPhase,
+    submitPhaseLabel,
     isLoadingProduct,
     categories,
     isEditMode,
@@ -57,11 +62,27 @@ const ProductFormPage: React.FC = () => {
   } = useProductForm();
 
   if (isLoadingProduct) {
-    return <AdminLayout>{t('app.loading')}</AdminLayout>;
+    return (
+      <AdminLayout>
+        <Flex justify="center" align="center" className="bts-marginTxxxl">
+          <BouncingDotsLoader />
+        </Flex>
+      </AdminLayout>
+    );
   }
 
+  // Derive the save button label from the current submit phase
+  const saveLabel = (() => {
+    if (submitPhaseLabel) return submitPhaseLabel;
+    return isEditMode
+      ? t('productForm.saveChanges', { defaultValue: 'Save Changes' })
+      : t('productForm.createProduct', { defaultValue: 'Create Product' });
+  })();
+
+  const isFormDisabled = isSubmitting || isDeletingImage;
+
   return (
-    <AdminLayout>
+    <AdminLayout isMaskLoading={isSubmitting}>
       <form onSubmit={handleSubmit}>
         <div className={styles.pageLayout}>
           {/* Page header */}
@@ -82,20 +103,12 @@ const ProductFormPage: React.FC = () => {
                   type="button"
                   appearance="outline"
                   leftIconComp={Layers}
+                  isDisabled={isFormDisabled}
                   onClick={() => navigate(`/edit-product/${productId}/variations`)}
                 >
                   {t('productForm.manageVariations', { defaultValue: 'Manage Variations' })}
                 </Button>
               )}
-              <Button
-                type="submit"
-                isDisabled={isSubmitting || isDeletingImage}
-                isLoading={isSubmitting || isDeletingImage}
-              >
-                {isEditMode
-                  ? t('productForm.saveChanges', { defaultValue: 'Save Changes' })
-                  : t('app.submit')}
-              </Button>
             </div>
           </div>
 
@@ -107,6 +120,7 @@ const ProductFormPage: React.FC = () => {
                 type="button"
                 className={`${styles.tabBtn} ${activeTab === tab.id ? styles.tabBtnActive : ''}`}
                 onClick={() => setActiveTab(tab.id)}
+                disabled={isFormDisabled}
               >
                 {t(tab.label, tab.defaultLabel)}
               </button>
@@ -120,7 +134,7 @@ const ProductFormPage: React.FC = () => {
                 <Card fullWidth>
                   <Flex direction="vertical" spacing="m" fullWidth>
                     <div className={styles.localeSectionHeader}>
-                      <span className={styles.localeBadge}>AR</span>
+                      <LocaleBadge locale="ar" size="medium" />
                       <span className={styles.localeLabel}>
                         {t('productForm.arabicContent', 'Arabic Content')}
                       </span>
@@ -128,7 +142,7 @@ const ProductFormPage: React.FC = () => {
                     <LocalizedFields
                       control={control}
                       locale={'ar' as any}
-                      isDisabled={isDeletingImage}
+                      isDisabled={isFormDisabled}
                     />
                   </Flex>
                 </Card>
@@ -136,7 +150,7 @@ const ProductFormPage: React.FC = () => {
                 <Card fullWidth>
                   <Flex direction="vertical" spacing="m" fullWidth>
                     <div className={styles.localeSectionHeader}>
-                      <span className={styles.localeBadge}>EN</span>
+                      <LocaleBadge locale="en" size="medium" />
                       <span className={styles.localeLabel}>
                         {t('productForm.englishContent', 'English Content')}
                       </span>
@@ -144,7 +158,7 @@ const ProductFormPage: React.FC = () => {
                     <LocalizedFields
                       control={control}
                       locale={'en' as any}
-                      isDisabled={isDeletingImage}
+                      isDisabled={isFormDisabled}
                     />
                   </Flex>
                 </Card>
@@ -170,9 +184,18 @@ const ProductFormPage: React.FC = () => {
                       defaultValue: 'Select Main Image',
                     })}
                     title={t('productForm.selectMainImage', { defaultValue: 'Select Main Image' })}
-                    disabled={isDeletingImage}
+                    disabled={isFormDisabled}
                     status="default"
                   />
+
+                  {!mainImageUrl && allImages.length > 0 && (
+                    <Text size="sm" color="warning">
+                      {t('productForm.mainImageHint', {
+                        defaultValue:
+                          '⚠ No main image selected. Pick one above — it will be shown in product listings.',
+                      })}
+                    </Text>
+                  )}
                 </Flex>
               </Card>
             )}
@@ -190,7 +213,7 @@ const ProductFormPage: React.FC = () => {
                     label={t('productForm.category')}
                     fullWidth
                   >
-                    <Select fullWidth isDisabled={isDeletingImage}>
+                    <Select fullWidth isDisabled={isFormDisabled}>
                       {categories.map((cat) => (
                         <Option key={cat.id} value={cat.id}>
                           {cat.name}
@@ -205,7 +228,7 @@ const ProductFormPage: React.FC = () => {
                   <AttributesSection
                     control={control}
                     attributeTypes={attributeTypes}
-                    isDisabled={isDeletingImage}
+                    isDisabled={isFormDisabled}
                     setValue={setValue}
                   />
                 </Card>
@@ -214,7 +237,7 @@ const ProductFormPage: React.FC = () => {
                 <Card fullWidth>
                   <OptionsSection
                     control={control}
-                    isDisabled={isDeletingImage}
+                    isDisabled={isFormDisabled}
                     setValue={setValue}
                   />
 
@@ -237,6 +260,7 @@ const ProductFormPage: React.FC = () => {
                         type="button"
                         appearance="outline"
                         leftIconComp={Layers}
+                        isDisabled={isFormDisabled}
                         onClick={() => navigate(`/edit-product/${productId}/variations`)}
                       >
                         {t('productForm.manageVariations', { defaultValue: 'Manage Variations' })}
@@ -252,12 +276,11 @@ const ProductFormPage: React.FC = () => {
           <div className={styles.formFooter}>
             <Button
               type="submit"
-              isDisabled={isSubmitting || isDeletingImage}
-              isLoading={isSubmitting || isDeletingImage}
+              isDisabled={isFormDisabled}
+              isLoading={isSubmitting}
+              leftIconComp={submitPhase === 'done' ? CheckCircle : undefined}
             >
-              {isEditMode
-                ? t('productForm.saveChanges', { defaultValue: 'Save Changes' })
-                : t('app.submit')}
+              {saveLabel}
             </Button>
           </div>
         </div>

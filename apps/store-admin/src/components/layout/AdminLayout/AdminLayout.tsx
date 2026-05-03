@@ -101,7 +101,7 @@ const AdminLayout: React.FC<{
           model={menuItems}
           header={
             <Flex justify="between" align="center" wrap fullWidth>
-              <img src={logoUrl} alt="logo" className={styles.adminLayoutLogo} />
+              {logoUrl ? <img src={logoUrl} alt="logo" className={styles.adminLayoutLogo} /> : null}
               <LanguageSwitcher />
             </Flex>
           }

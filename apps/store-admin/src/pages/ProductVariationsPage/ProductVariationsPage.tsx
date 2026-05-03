@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Heading, Flex, Button } from '@baby-toys/ui-kit';
+import { Heading, Button } from '@baby-toys/ui-kit';
 import { ArrowLeft } from 'lucide-react';
 import ProductVariations from './ProductVariations';
 import { useProduct } from '../../api/productApi';
@@ -47,7 +47,7 @@ const ProductVariationsPage: React.FC = () => {
         <button
           type="button"
           className={styles.backBtn}
-          onClick={() => navigate(`/edit-product/${productId}`)}
+          onClick={() => navigate(`/product/${productId}`)}
         >
           <ArrowLeft size={15} />
           {t('productForm.backToProduct', { defaultValue: 'Back to Product' })}

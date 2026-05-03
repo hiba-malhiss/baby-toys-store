@@ -9,8 +9,9 @@ import {
   Alert,
   BouncingDotsLoader,
   Tooltip,
+  PageHeader,
 } from '@baby-toys/ui-kit';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Pencil, Trash2, Plus } from 'lucide-react';
 import { Category } from '../../api/types/category';
 import useCategories from './useCategories';
 import CategoryDialog from './CategoryDialog';
@@ -59,47 +60,49 @@ const CategoriesPage: React.FC = () => {
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" fullWidth>
-          <Heading>{t('categories.title')}</Heading>
-          <Button onClick={openAddDialog}>{t('categories.add')}</Button>
-        </Flex>
+      <PageHeader
+        left={<Heading>{t('categories.title')}</Heading>}
+        right={
+          <Button leftIconComp={Plus} onClick={openAddDialog}>
+            {t('categories.add')}
+          </Button>
+        }
+      />
 
-        <Table
-          stripedRows
-          value={categories}
-          columns={[
-            { header: t('categories.columns.image'), field: 'imageUrl', type: 'image' },
-            { header: t('categories.columns.name'), field: 'name' },
-            { header: t('categories.columns.description'), field: 'description' },
-            {
-              header: t('app.actions'),
-              field: 'actions',
-              body: (category: Category) => (
-                <Flex spacing="m">
-                  <Tooltip position="top" content={t('common.edit')}>
-                    <Button
-                      size="small"
-                      leftIconComp={Pencil}
-                      appearance="outline"
-                      onClick={() => openEditDialog(category)}
-                    />
-                  </Tooltip>
-                  <Tooltip position="top" content={t('common.delete')}>
-                    <Button
-                      size="small"
-                      appearance="outline"
-                      leftIconComp={Trash2}
-                      onClick={() => openDeleteDialog(category)}
-                    />
-                  </Tooltip>
-                </Flex>
-              ),
-            },
-          ]}
-          emptyMessage={t('categories.empty')}
-        />
-      </Flex>
+      <Table
+        stripedRows
+        value={categories}
+        columns={[
+          { header: t('categories.columns.image'), field: 'imageUrl', type: 'image' },
+          { header: t('categories.columns.name'), field: 'name' },
+          { header: t('categories.columns.description'), field: 'description' },
+          {
+            header: t('app.actions'),
+            field: 'actions',
+            body: (category: Category) => (
+              <Flex spacing="s">
+                <Tooltip position="top" content={t('common.edit')}>
+                  <Button
+                    size="small"
+                    leftIconComp={Pencil}
+                    appearance="outline"
+                    onClick={() => openEditDialog(category)}
+                  />
+                </Tooltip>
+                <Tooltip position="top" content={t('common.delete')}>
+                  <Button
+                    size="small"
+                    appearance="outline"
+                    leftIconComp={Trash2}
+                    onClick={() => openDeleteDialog(category)}
+                  />
+                </Tooltip>
+              </Flex>
+            ),
+          },
+        ]}
+        emptyMessage={t('categories.empty')}
+      />
 
       <CategoryDialog
         visible={dialogVisible}

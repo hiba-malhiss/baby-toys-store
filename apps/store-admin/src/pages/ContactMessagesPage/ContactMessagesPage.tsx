@@ -1,7 +1,18 @@
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Button, Chip, Flex, Heading, Select, Table, useToast, Tooltip } from '@baby-toys/ui-kit';
+import {
+  Button,
+  Chip,
+  Flex,
+  Heading,
+  Select,
+  Option,
+  Table,
+  useToast,
+  Tooltip,
+  PageHeader,
+} from '@baby-toys/ui-kit';
 import {
   useAdminContactMessages,
   useGetContactMessage,
@@ -10,11 +21,11 @@ import {
 import type { ContactMessage, ContactMessageStatus } from '../../api/types/contact';
 import ContactMessageDialog from './ContactMessageDialog';
 
-const STATUS_OPTIONS = (t: any) => [
-  { label: t('app.contact.status.new'), value: 'NEW' },
-  { label: t('app.contact.status.read'), value: 'READ' },
-  { label: t('app.contact.status.replied'), value: 'REPLIED' },
-];
+const STATUS_APPEARANCE: Record<string, 'warning' | 'secondary' | 'success'> = {
+  NEW: 'warning',
+  READ: 'secondary',
+  REPLIED: 'success',
+};
 
 export default function ContactMessagesPage() {
   const { t } = useTranslation('common');
@@ -25,11 +36,19 @@ export default function ContactMessagesPage() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const toast = useToast();
 
-  const statusOptions = useMemo(() => STATUS_OPTIONS(t), [t]);
-
   const { data, isLoading } = useAdminContactMessages({ page, size: pageSize, status });
   const { data: selectedMessage, isLoading: isLoadingSelected } = useGetContactMessage(selectedId);
   const { mutate: updateStatus } = useUpdateContactStatus();
+
+  const statusOptions = useMemo(
+    () => [
+      { label: t('app.all', { defaultValue: 'All' }), value: '' },
+      { label: t('app.contact.status.new'), value: 'NEW' },
+      { label: t('app.contact.status.read'), value: 'READ' },
+      { label: t('app.contact.status.replied'), value: 'REPLIED' },
+    ],
+    [t]
+  );
 
   const columns = useMemo(
     () => [
@@ -43,10 +62,10 @@ export default function ContactMessagesPage() {
         header: t('app.contact.fields.status'),
         body: (row: ContactMessage) => (
           <Chip
-            label={row.status}
-            appearance={
-              row.status === 'NEW' ? 'warning' : row.status === 'READ' ? 'secondary' : 'success'
-            }
+            label={t(`app.contact.status.${row.status.toLowerCase()}`, {
+              defaultValue: row.status,
+            })}
+            appearance={STATUS_APPEARANCE[row.status] ?? 'secondary'}
           />
         ),
       },
@@ -57,6 +76,7 @@ export default function ContactMessagesPage() {
           <Flex spacing="s">
             <Tooltip position="top" content={t('app.common.view')}>
               <Button
+                size="small"
                 appearance="outline"
                 onClick={() => {
                   setSelectedId(row.id);
@@ -67,53 +87,77 @@ export default function ContactMessagesPage() {
               </Button>
             </Tooltip>
             <Select
-              options={statusOptions as any}
               value={row.status}
-              onChange={(val) => updateStatus({ id: row.id, status: val as ContactMessageStatus })}
-            />
+              onChange={(val) =>
+                updateStatus(
+                  { id: row.id, status: val as ContactMessageStatus },
+                  {
+                    onSuccess: () =>
+                      toast.success(
+                        t('app.contact.statusUpdated', { defaultValue: 'Status updated' })
+                      ),
+                    onError: () => toast.error(t('app.unexpectedError')),
+                  }
+                )
+              }
+            >
+              {statusOptions
+                .filter((o) => o.value)
+                .map((opt) => (
+                  <Option key={opt.value} value={opt.value}>
+                    {opt.label}
+                  </Option>
+                ))}
+            </Select>
           </Flex>
         ),
       },
     ],
-    [toast, updateStatus]
+    [t, updateStatus, statusOptions, toast]
   );
 
   return (
     <AdminLayout>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('app.contact.title')}</Heading>
-          <Flex spacing="m" align="center">
-            <Select
-              options={[{ label: t('app.common.all'), value: '' }, ...statusOptions] as any}
-              value={status}
-              onChange={(val) => {
-                setStatus(val as ContactMessageStatus | '');
-                setPage(1);
-              }}
-              placeholder={t('app.contact.filterByStatus')}
-            />
-          </Flex>
-        </Flex>
+      <PageHeader
+        left={<Heading>{t('app.contact.title', { defaultValue: 'Contact Messages' })}</Heading>}
+        right={
+          <Select
+            value={status}
+            onChange={(val) => {
+              setStatus(val as any);
+              setPage(1);
+            }}
+          >
+            {statusOptions.map((opt) => (
+              <Option key={opt.value} value={opt.value}>
+                {opt.label}
+              </Option>
+            ))}
+          </Select>
+        }
+      />
 
-        <Table
-          stripedRows
-          value={data?.content ?? []}
-          columns={columns}
-          paginator
-          rows={pageSize}
-          totalRecords={data?.totalElements ?? 0}
-          onPageChange={(newPage, newSize) => {
-            setPage(newPage);
-            setPageSize(newSize);
-          }}
-          isLoading={isLoading}
-        />
-      </Flex>
+      <Table
+        stripedRows
+        value={data?.content ?? []}
+        columns={columns}
+        paginator
+        rows={pageSize}
+        totalRecords={data?.totalElements ?? 0}
+        onPageChange={(newPage, newSize) => {
+          setPage(newPage);
+          setPageSize(newSize);
+        }}
+        isLoading={isLoading}
+        emptyMessage={t('app.contact.empty', { defaultValue: 'No contact messages.' })}
+      />
 
       <ContactMessageDialog
         visible={dialogOpen}
-        onHide={() => setDialogOpen(false)}
+        onHide={() => {
+          setDialogOpen(false);
+          setSelectedId(undefined);
+        }}
         message={selectedMessage}
         isLoading={isLoadingSelected}
       />

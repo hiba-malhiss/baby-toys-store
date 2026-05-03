@@ -6,6 +6,20 @@ body {
   font-family: var(--font-primary, 'Comfortaa', sans-serif);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: var(--color-text-primary, $color-text-primary);
-  background-color: var(--color-bg-secondary, $color-bg-secondary);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-secondary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.01em;
+}
+
+.adminTableContainer {
+  width: 100%;
+  overflow: visible;
 }

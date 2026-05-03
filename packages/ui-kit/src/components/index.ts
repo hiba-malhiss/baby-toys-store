@@ -10,6 +10,8 @@ export { default as ButtonGroup } from './ButtonGroup/ButtonGroup';
 export { default as Card } from './Card/Card';
 export { default as Carousel } from './Carousel/Carousel';
 export { default as Chip } from './Chip/Chip';
+export { default as ValueChip } from './ValueChip/ValueChip';
+export { default as LocaleBadge } from './LocaleBadge/LocaleBadge';
 export { default as Dialog } from './Dialog/Dialog';
 export { default as Divider } from './Divider/Divider';
 export { default as Drawer } from './Drawer/Drawer';
@@ -72,3 +74,7 @@ export { default as ImagePickerModal } from './ImagePickerModal/ImagePickerModal
 export { default as ImageLightboxGallery } from './ImageLightboxGallery/ImageLightboxGallery';
 export { default as ProductImageGallery } from './ProductImageGallery/ProductImageGallery';
 export * from './Stepper';
+export { default as ImagePlaceholder } from './ImagePlaceholder/ImagePlaceholder';
+export { default as PageHeader } from './PageHeader/PageHeader';
+export type { PageHeaderProps } from './PageHeader/PageHeader';
+export { default as SkeletonTable } from './Skeleton/SkeletonTable';

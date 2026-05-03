@@ -89,6 +89,9 @@
       "all": "الكل",
       "search": "بحث",
       "resetAll": "إعادة تعيين الكل",
+      "save": "حفظ",
+      "cancel": "إلغاء",
+      "delete": "حذف",
       "actions": "الإجراءات"
     },
     "reviews": {

@@ -1,6 +1,6 @@
 import React from 'react';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
-import { Chip, Select, Option, Button, Flex, Heading, ConfirmDialog } from '@baby-toys/ui-kit';
+import { Chip, Select, Option, Button, ConfirmDialog } from '@baby-toys/ui-kit';
 import styles from './order-details-page.module.scss';
 import { statusColorMap, getOrderStatusOptions } from '../OrdersPage/orders-page.utils';
 import { formatDate } from '@baby-toys/ui-kit/utils';
@@ -8,6 +8,7 @@ import { OrderStatus } from '../../api/types/order';
 import { useOrderDetails } from './useOrderDetails';
 import { OrderItems } from './OrderItems';
 import { CouponAndSummary } from './CouponAndSummary';
+import { ProfitCard } from './Profitcard';
 import { ShippingAddressCard } from './ShippingAddressCard';
 import { ShippingNoteCard } from './ShippingNoteCard';
 import { useStoreSettings } from '../../api/settingsApi';
@@ -62,33 +63,30 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
   const resolvedStatusLabel =
     statusOptions.find((o) => o.value === order?.status)?.label || String(order?.status || '');
 
-  // Route edit mode vs. permission to edit
   const isEditRoute = Boolean(isEdit);
   const showEditMode = Boolean(isEdit && canEditOrder);
 
   return (
     <AdminLayout isLoading={!order || isLoading} isMaskLoading={isMutating}>
-      {/* Header */}
-      <Flex justify="between" align="center" className={styles.orderDetailsHeaderRow}>
-        <Flex direction="vertical" spacing="xs">
-          <Heading>
-            <Flex align="center" spacing="s">
-              {pageTitle}
-              {!showEditMode && (
-                <Chip
-                  label={t(`orderStatus.${String(order?.status || '').toLowerCase()}`, {
-                    defaultValue: String(order?.status || ''),
-                  })}
-                  appearance={statusColorMap[order?.status]}
-                />
-              )}
-            </Flex>
-          </Heading>
+      {/* ── Header ─────────────────────────────────────────────── */}
+      <div className={styles.orderDetailsHeaderRow}>
+        <div className={styles.orderDetailsHeaderLeft}>
+          <div className={styles.orderDetailsTitle}>
+            {pageTitle}
+            {!showEditMode && order?.status && (
+              <Chip
+                label={t(`orderStatus.${String(order.status).toLowerCase()}`, {
+                  defaultValue: String(order.status),
+                })}
+                appearance={statusColorMap[order.status]}
+              />
+            )}
+          </div>
           <span className={styles.orderDetailsOrderDate}>{placedOnLabel}</span>
-        </Flex>
+        </div>
 
-        {isEditRoute ? (
-          <Flex direction="vertical" spacing="xs" align="end">
+        <div className={styles.orderDetailsHeaderRight}>
+          {isEditRoute ? (
             <Select
               className={styles.orderDetailsStatus}
               value={selectValue}
@@ -100,27 +98,26 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
                   {t('orderDetails.currentStatus', { status: resolvedStatusLabel })}
                 </Option>
               )}
-
               {allowedOptions.map(({ label, value }) => (
                 <Option key={value} value={value}>
                   {label}
                 </Option>
               ))}
             </Select>
-          </Flex>
-        ) : (
-          <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
-            {t('orderDetails.editOrder')}
-          </Button>
-        )}
-      </Flex>
+          ) : (
+            <Button onClick={() => navigate(`/order-edit/${order?.id}`)} appearance="outline">
+              {t('orderDetails.editOrder')}
+            </Button>
+          )}
+        </div>
+      </div>
 
-      {/* Content */}
+      {/* ── Content grid ───────────────────────────────────────── */}
       <div className={styles.orderDetailsPageContent}>
         <OrderItems
-          order={order as any} // If order can be undefined in the hook type, keep the AdminLayout guard + cast here.
+          order={order as any}
           isEdit={showEditMode}
-          showHeaderActions={false}
+          showHeaderActions={!isEditRoute}
           currency={currency}
           navigate={navigate}
           localQuantities={localQuantities}
@@ -131,7 +128,11 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
           setItemIdToDelete={setItemIdToDelete}
         />
 
-        <Flex direction="vertical" spacing="xxl" align="start" fullHeight>
+        {/* ── Right column: note → summary → address ───────────── */}
+        <div className={styles.orderDetailsRightCol}>
+          {/* Note first — critical context, seen immediately */}
+          <ShippingNoteCard note={order?.note} />
+
           <CouponAndSummary
             isEdit={showEditMode}
             couponInput={couponInput}
@@ -142,12 +143,12 @@ const OrderDetailsPage: React.FC<OrderDetailsPageProps> = ({ isEdit = false }) =
             handleRemoveCoupon={handleRemoveCoupon}
             canEditOrder={canEditOrder}
           />
-
+          <ProfitCard order={order} currency={currency} />
           <ShippingAddressCard order={order as any} />
-          <ShippingNoteCard note={order?.note} />
-        </Flex>
+        </div>
       </div>
 
+      {/* ── Status change confirm ───────────────────────────────── */}
       <ConfirmDialog
         visible={statusConfirmVisible}
         header={t('orderDetails.changeStatusTitle')}

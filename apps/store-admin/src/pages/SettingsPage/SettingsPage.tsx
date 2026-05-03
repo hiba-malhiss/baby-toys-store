@@ -3,13 +3,11 @@ import { useTranslation } from 'react-i18next';
 import AdminLayout from '../../components/layout/AdminLayout/AdminLayout';
 import {
   Card,
-  Flex,
   Heading,
   Button,
   useToast,
   StringInput,
   TextArea,
-  Accordion,
   Calendar,
   Text,
   TabBar,
@@ -17,6 +15,9 @@ import {
   Select,
   Toggle,
   Divider,
+  Accordion,
+  applyThemeSettings,
+  Flex,
 } from '@baby-toys/ui-kit';
 import { useForm, Controller } from 'react-hook-form';
 import {
@@ -32,7 +33,8 @@ import { useLocales } from '../../hooks/useLocales';
 import moment from 'moment';
 import { ADMIN_LOCAL_DATETIME_FORMAT } from '../CouponsPage/coupons-page.utils.ts';
 import ThemeSection from './ThemeSection';
-import { applyThemeSettings } from '@baby-toys/ui-kit';
+import { Settings, Phone, FileText, Truck, Palette } from 'lucide-react';
+import styles from './settings-page.module.scss';
 
 const emptyGeneral = {
   currency: '',
@@ -43,27 +45,13 @@ const emptyGeneral = {
   dailyOrdersGoal: '',
   monthlyRevenueGoal: '',
 };
-
-const emptyContact = {
-  workDays: '',
-  workTimes: '',
-  phone: '',
-  email: '',
-  address: '',
-};
-
-const emptyPolicies = {
-  cancelPolicy: '',
-  returnPolicy: '',
-  shippingPolicy: '',
-};
-
+const emptyContact = { workDays: '', workTimes: '', phone: '', email: '', address: '' };
+const emptyPolicies = { cancelPolicy: '', returnPolicy: '', shippingPolicy: '' };
 const emptyPoliciesGlobal = {
   freeShippingMinSubtotal: null,
   freeShippingStartAt: null,
   freeShippingEndAt: null,
 };
-
 const emptyTheme = {
   primaryColor: '#1096b5',
   accentColor: '#f26c62',
@@ -100,20 +88,33 @@ const CalendarFieldAdapter = ({ value, onChange, isDisabled }: any) => (
 const contactFields = ['workDays', 'workTimes', 'phone', 'email', 'address'] as const;
 const policyFields = ['cancelPolicy', 'returnPolicy', 'shippingPolicy'] as const;
 
+const SectionHeader: React.FC<{ icon: React.ReactNode; title: string; hint: string }> = ({
+  icon,
+  title,
+  hint,
+}) => (
+  <div className={styles.sectionHeader}>
+    <div className={styles.sectionIcon}>{icon}</div>
+    <div className={styles.sectionText}>
+      <span className={styles.sectionTitle}>{title}</span>
+      <span className={styles.sectionHint}>{hint}</span>
+    </div>
+  </div>
+);
+
 const SettingsPage: React.FC = () => {
   const toast = useToast();
   const { t } = useTranslation();
   const { data: settingsMap } = useAdminStoreSettingsMap();
   const { data: themeData } = useThemeSettings();
   const upsertMutation = useUpsertStoreSettings();
-
   const locales = useLocales();
 
   const defaultValues = useMemo(
     () => ({
       general: { ...emptyGeneral },
-      contact: Object.fromEntries(locales.map((locale) => [locale, { ...emptyContact }])),
-      policies: Object.fromEntries(locales.map((locale) => [locale, { ...emptyPolicies }])),
+      contact: Object.fromEntries(locales.map((l) => [l, { ...emptyContact }])),
+      policies: Object.fromEntries(locales.map((l) => [l, { ...emptyPolicies }])),
       policiesGlobal: { ...emptyPoliciesGlobal },
       theme: { ...emptyTheme },
     }),
@@ -135,7 +136,6 @@ const SettingsPage: React.FC = () => {
     if (!settingsMap && !themeData) return;
     const localeKeys = settingsMap ? Object.keys(settingsMap) : [];
     const base = localeKeys.length > 0 ? settingsMap[localeKeys[0]] : undefined;
-
     reset({
       general: base?.general ?? emptyGeneral,
       contact: Object.fromEntries(
@@ -156,10 +156,9 @@ const SettingsPage: React.FC = () => {
     });
   }, [settingsMap, themeData]);
 
-  // Live preview: apply theme immediately as admin changes colors/font
   const watchedTheme = watch('theme');
   useEffect(() => {
-    if (watchedTheme) {
+    if (watchedTheme)
       applyThemeSettings({
         primaryColor: watchedTheme.primaryColor,
         accentColor: watchedTheme.accentColor,
@@ -167,7 +166,6 @@ const SettingsPage: React.FC = () => {
         fontFamily: watchedTheme.fontFamily,
         themeName: watchedTheme.themeName,
       });
-    }
   }, [watchedTheme]);
 
   const handleResetFreeShipping = () => {
@@ -179,13 +177,11 @@ const SettingsPage: React.FC = () => {
 
   const onSubmit = async (values: SettingsFormValues) => {
     const payload: StoreSettingUpdateItem[] = [
-      // General
       ...Object.entries(values.general).map(([key, value]) => ({
         section: 'GENERAL' as const,
         key,
         value: String(value ?? ''),
       })),
-      // Contact (per locale)
       ...locales.flatMap((locale) =>
         Object.entries(values.contact[locale]).map(([key, value]) => ({
           section: 'CONTACT' as const,
@@ -194,7 +190,6 @@ const SettingsPage: React.FC = () => {
           locale,
         }))
       ),
-      // Policies (per locale)
       ...locales.flatMap((locale) =>
         Object.entries(values.policies[locale]).map(([key, value]) => ({
           section: 'POLICIES' as const,
@@ -203,7 +198,6 @@ const SettingsPage: React.FC = () => {
           locale,
         }))
       ),
-      // Policies global (free shipping)
       ...Object.entries(values.policiesGlobal).map(([key, value]) => ({
         section: 'POLICIES' as const,
         key,
@@ -212,14 +206,9 @@ const SettingsPage: React.FC = () => {
             ? moment(value).format(ADMIN_LOCAL_DATETIME_FORMAT)
             : String(value ?? ''),
       })),
-      // Theme (global, no locale)
       ...(values.theme.themeName
-        ? [
-            // Only send themeName when preset is selected
-            { section: 'THEME' as const, key: 'themeName', value: values.theme.themeName },
-          ]
+        ? [{ section: 'THEME' as const, key: 'themeName', value: values.theme.themeName }]
         : [
-            // Send individual theme settings only when no preset is selected
             {
               section: 'THEME' as const,
               key: 'primaryColor',
@@ -237,14 +226,12 @@ const SettingsPage: React.FC = () => {
             },
             { section: 'THEME' as const, key: 'fontFamily', value: values.theme.fontFamily ?? '' },
           ]),
-      // Always send translationEnabled
       {
         section: 'THEME' as const,
         key: 'translationEnabled',
         value: String(values.theme.translationEnabled ?? true),
       },
     ];
-
     try {
       await upsertMutation.mutateAsync(payload);
       toast.success(t('settings.actions.success'));
@@ -260,173 +247,251 @@ const SettingsPage: React.FC = () => {
           toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }))
         )}
       >
-        <Card fullWidth>
-          <Flex direction="column" spacing="xxl" fullWidth>
-            <Heading>{t('settings.title')}</Heading>
+        <div className={styles.pageLayout}>
+          <Heading>{t('settings.title')}</Heading>
 
-            {/* General */}
-            <Accordion header={t('settings.sections.general')} buttonAppearance="outline">
-              <Flex direction="vertical" spacing="m" fullWidth>
-                {[
-                  'currency',
-                  'currencySymbol',
-                  'timezone',
-                  'priceRangeMin',
-                  'priceRangeMax',
-                  'dailyOrdersGoal',
-                  'monthlyRevenueGoal',
-                ].map((field) => (
-                  <FormFieldWrapper
-                    key={field}
-                    control={control}
-                    name={`general.${field}`}
-                    label={t(`settings.fields.${field}`)}
-                    required
-                    fullWidth
-                  >
-                    {field === 'timezone' ? (
-                      <Select
-                        options={TIMEZONE_OPTIONS}
-                        placeholder={t('settings.timezone.placeholder', {
-                          defaultValue: 'Select timezone',
-                        })}
-                      />
-                    ) : (
-                      <StringInput
-                        placeholder={field}
-                        type={
-                          field.includes('price') || field.toLowerCase().includes('goal')
-                            ? 'number'
-                            : 'text'
-                        }
-                      />
-                    )}
-                  </FormFieldWrapper>
-                ))}
-              </Flex>
-            </Accordion>
-
-            {/* Contact */}
-            <Accordion header={t('settings.sections.contact')} buttonAppearance="outline">
-              <TabBar
-                fullWidth
-                size="small"
-                value={activeContactTab}
-                onChange={setActiveContactTab}
-                tabs={locales.map((l) => ({ header: l.toUpperCase(), value: l }))}
-              >
-                {locales.map((l) => (
-                  <TabBarItem key={l} value={l}>
-                    <Flex direction="vertical" spacing="m" fullWidth>
-                      {contactFields.map((key) => (
-                        <FormFieldWrapper
-                          key={`${l}-${key}`}
-                          control={control}
-                          name={`contact.${l}.${key}`}
-                          label={`${t(`settings.fields.${key}`)} (${l.toUpperCase()})`}
-                          required
-                          fullWidth
-                        >
-                          {key === 'address' ? <TextArea rows={3} /> : <StringInput />}
-                        </FormFieldWrapper>
-                      ))}
-                    </Flex>
-                  </TabBarItem>
-                ))}
-              </TabBar>
-            </Accordion>
-
-            {/* Policies */}
-            <Accordion header={t('settings.sections.policies')} buttonAppearance="outline">
-              <TabBar
-                fullWidth
-                size="small"
-                value={activePoliciesTab}
-                onChange={setActivePoliciesTab}
-                tabs={locales.map((l) => ({ header: l.toUpperCase(), value: l }))}
-              >
-                {locales.map((l) => (
-                  <TabBarItem key={l} value={l}>
-                    <Flex direction="vertical" spacing="m" fullWidth>
-                      {policyFields.map((key) => (
-                        <FormFieldWrapper
-                          key={`${l}-${key}`}
-                          control={control}
-                          name={`policies.${l}.${key}`}
-                          label={`${t(`settings.fields.${key}`)} (${l.toUpperCase()})`}
-                          required
-                          fullWidth
-                        >
-                          <TextArea rows={4} />
-                        </FormFieldWrapper>
-                      ))}
-                    </Flex>
-                  </TabBarItem>
-                ))}
-              </TabBar>
-            </Accordion>
-
-            {/* Free Shipping */}
-            <Accordion header={t('settings.sections.freeShipping')} buttonAppearance="outline">
-              <Flex spacing="m" fullWidth direction="vertical">
-                <Text color="muted" size="sm">
-                  {t('settings.freeShipping.description')}
-                </Text>
-                <Flex align="end" spacing="m" fullWidth>
-                  <FormFieldWrapper
-                    control={control}
-                    name="policiesGlobal.freeShippingMinSubtotal"
-                    label={t('settings.fields.freeShippingMinSubtotal')}
-                    fullWidth
-                  >
-                    <StringInput placeholder="50.00" type="number" />
-                  </FormFieldWrapper>
-                  <Button type="button" appearance="outline" onClick={handleResetFreeShipping}>
-                    {t('settings.freeShipping.clearButton')}
-                  </Button>
-                </Flex>
-                <Flex fullWidth spacing="m">
-                  <FormFieldWrapper
-                    control={control}
-                    name="policiesGlobal.freeShippingStartAt"
-                    label={t('settings.fields.freeShippingStartAt')}
-                    fullWidth
-                  >
-                    <CalendarFieldAdapter />
-                  </FormFieldWrapper>
-                  <FormFieldWrapper
-                    control={control}
-                    name="policiesGlobal.freeShippingEndAt"
-                    label={t('settings.fields.freeShippingEndAt')}
-                    fullWidth
-                  >
-                    <CalendarFieldAdapter />
-                  </FormFieldWrapper>
-                </Flex>
-              </Flex>
-            </Accordion>
-
-            {/* Theme & Branding */}
+          {/* General */}
+          <Card size="small">
             <Accordion
-              header={t('settings.sections.theme', { defaultValue: 'Theme & Branding' })}
-              buttonAppearance="outline"
+              buttonColor="light"
+              buttonAppearance="link"
+              withoutHeaderPadding
+              defaultOpen
+              header={
+                <SectionHeader
+                  icon={<Settings size={20} />}
+                  title={t('settings.sections.general')}
+                  hint={t('settings.sections.generalHint', {
+                    defaultValue: 'Currency, timezone, and business goals',
+                  })}
+                />
+              }
             >
-              <Flex direction="vertical" spacing="xl" fullWidth>
+              <div className={styles.accordionBody}>
+                <div className={styles.fieldsGrid}>
+                  {(
+                    [
+                      'currency',
+                      'currencySymbol',
+                      'timezone',
+                      'priceRangeMin',
+                      'priceRangeMax',
+                      'dailyOrdersGoal',
+                      'monthlyRevenueGoal',
+                    ] as const
+                  ).map((field) => (
+                    <FormFieldWrapper
+                      key={field}
+                      control={control}
+                      name={`general.${field}`}
+                      label={t(`settings.fields.${field}`)}
+                      required
+                      fullWidth
+                    >
+                      {field === 'timezone' ? (
+                        <Select
+                          options={TIMEZONE_OPTIONS}
+                          placeholder={t('settings.timezone.placeholder', {
+                            defaultValue: 'Select timezone',
+                          })}
+                        />
+                      ) : (
+                        <StringInput
+                          placeholder={field}
+                          type={
+                            field.includes('price') || field.toLowerCase().includes('goal')
+                              ? 'number'
+                              : 'text'
+                          }
+                        />
+                      )}
+                    </FormFieldWrapper>
+                  ))}
+                </div>
+              </div>
+            </Accordion>
+          </Card>
+
+          {/* Contact */}
+          <Card size="small">
+            <Accordion
+              buttonColor="light"
+              buttonAppearance="link"
+              withoutHeaderPadding
+              header={
+                <SectionHeader
+                  icon={<Phone size={20} />}
+                  title={t('settings.sections.contact')}
+                  hint={t('settings.sections.contactHint', {
+                    defaultValue: 'Store contact details per language',
+                  })}
+                />
+              }
+            >
+              <div className={styles.accordionBody}>
+                <TabBar
+                  fullWidth
+                  size="small"
+                  value={activeContactTab}
+                  onChange={setActiveContactTab}
+                  tabs={locales.map((l) => ({ header: l.toUpperCase(), value: l }))}
+                >
+                  {locales.map((l) => (
+                    <TabBarItem key={l} value={l}>
+                      <div className={styles.fieldsGrid}>
+                        {contactFields.map((key) => (
+                          <FormFieldWrapper
+                            key={`${l}-${key}`}
+                            control={control}
+                            name={`contact.${l}.${key}`}
+                            label={`${t(`settings.fields.${key}`)} (${l.toUpperCase()})`}
+                            required
+                            fullWidth
+                          >
+                            {key === 'address' ? <TextArea rows={3} /> : <StringInput />}
+                          </FormFieldWrapper>
+                        ))}
+                      </div>
+                    </TabBarItem>
+                  ))}
+                </TabBar>
+              </div>
+            </Accordion>
+          </Card>
+
+          {/* Policies */}
+          <Card size="small">
+            <Accordion
+              buttonColor="light"
+              buttonAppearance="link"
+              withoutHeaderPadding
+              header={
+                <SectionHeader
+                  icon={<FileText size={20} />}
+                  title={t('settings.sections.policies')}
+                  hint={t('settings.sections.policiesHint', {
+                    defaultValue: 'Cancellation, return, and shipping policies per language',
+                  })}
+                />
+              }
+            >
+              <div className={styles.accordionBody}>
+                <TabBar
+                  fullWidth
+                  size="small"
+                  value={activePoliciesTab}
+                  onChange={setActivePoliciesTab}
+                  tabs={locales.map((l) => ({ header: l.toUpperCase(), value: l }))}
+                >
+                  {locales.map((l) => (
+                    <TabBarItem key={l} value={l}>
+                      <div className={styles.fieldsStack}>
+                        {policyFields.map((key) => (
+                          <FormFieldWrapper
+                            key={`${l}-${key}`}
+                            control={control}
+                            name={`policies.${l}.${key}`}
+                            label={`${t(`settings.fields.${key}`)} (${l.toUpperCase()})`}
+                            required
+                            fullWidth
+                          >
+                            <TextArea rows={4} />
+                          </FormFieldWrapper>
+                        ))}
+                      </div>
+                    </TabBarItem>
+                  ))}
+                </TabBar>
+              </div>
+            </Accordion>
+          </Card>
+
+          {/* Free Shipping */}
+          <Card size="small">
+            <Accordion
+              buttonColor="light"
+              buttonAppearance="link"
+              withoutHeaderPadding
+              header={
+                <SectionHeader
+                  icon={<Truck size={20} />}
+                  title={t('settings.sections.freeShipping')}
+                  hint={t('settings.freeShipping.description')}
+                />
+              }
+            >
+              <div className={styles.accordionBody}>
+                <div className={styles.freeShippingGrid}>
+                  <div className={styles.freeShippingRow}>
+                    <FormFieldWrapper
+                      control={control}
+                      name="policiesGlobal.freeShippingMinSubtotal"
+                      label={t('settings.fields.freeShippingMinSubtotal')}
+                      fullWidth
+                    >
+                      <StringInput placeholder="50.00" type="number" />
+                    </FormFieldWrapper>
+                    <div className={styles.clearButtonWrapper}>
+                      <Button type="button" appearance="outline" onClick={handleResetFreeShipping}>
+                        {t('settings.freeShipping.clearButton')}
+                      </Button>
+                    </div>
+                  </div>
+                  <div className={styles.dateRow}>
+                    <FormFieldWrapper
+                      control={control}
+                      name="policiesGlobal.freeShippingStartAt"
+                      label={t('settings.fields.freeShippingStartAt')}
+                      fullWidth
+                    >
+                      <CalendarFieldAdapter />
+                    </FormFieldWrapper>
+                    <FormFieldWrapper
+                      control={control}
+                      name="policiesGlobal.freeShippingEndAt"
+                      label={t('settings.fields.freeShippingEndAt')}
+                      fullWidth
+                    >
+                      <CalendarFieldAdapter />
+                    </FormFieldWrapper>
+                  </div>
+                </div>
+              </div>
+            </Accordion>
+          </Card>
+
+          {/* Theme */}
+          <Card size="small">
+            <Accordion
+              buttonColor="light"
+              buttonAppearance="link"
+              withoutHeaderPadding
+              header={
+                <SectionHeader
+                  icon={<Palette size={20} />}
+                  title={t('settings.sections.theme', { defaultValue: 'Theme & Branding' })}
+                  hint={t('settings.sections.themeHint', {
+                    defaultValue: 'Colors, fonts, and language settings',
+                  })}
+                />
+              }
+            >
+              <div className={styles.accordionBody}>
                 <ThemeSection control={control} />
-                <Divider thickness="2px" />
-                {/* Translation toggle */}
-                <Flex direction="vertical" spacing="s">
-                  <Text size="sm" weight="medium">
-                    {t('settings.theme.translationEnabled', {
-                      defaultValue: 'Enable Multi-language (AR + EN)',
-                    })}
-                  </Text>
-                  <Text size="xs" color="muted">
-                    {t('settings.theme.translationEnabledHint', {
-                      defaultValue:
-                        'When off, only Arabic content fields are shown in the admin. When on, both Arabic and English tabs appear.',
-                    })}
-                  </Text>
+                <Divider />
+                <div className={styles.toggleRow}>
+                  <div>
+                    <Text size="sm" weight="medium">
+                      {t('settings.theme.translationEnabled', {
+                        defaultValue: 'Enable Multi-language (AR + EN)',
+                      })}
+                    </Text>
+                    <Text size="xs" color="muted">
+                      {t('settings.theme.translationEnabledHint', {
+                        defaultValue: 'When off, only Arabic content fields are shown.',
+                      })}
+                    </Text>
+                  </div>
                   <Controller
                     name="theme.translationEnabled"
                     control={control}
@@ -434,17 +499,18 @@ const SettingsPage: React.FC = () => {
                       <Toggle value={!!field.value} onChange={field.onChange} />
                     )}
                   />
-                </Flex>
-              </Flex>
+                </div>
+              </div>
             </Accordion>
+          </Card>
 
-            <Flex justify="end">
-              <Button type="submit" isLoading={upsertMutation.isPending}>
-                {t('settings.actions.saveSettings')}
-              </Button>
-            </Flex>
+          {/* Fixed save */}
+          <Flex justify="end" fullWidth>
+            <Button color="primary" onClick={handleSubmit}>
+              {t('homepage.actions.saveChanges')}
+            </Button>
           </Flex>
-        </Card>
+        </div>
       </form>
     </AdminLayout>
   );

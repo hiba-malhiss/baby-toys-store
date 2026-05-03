@@ -1,5 +1,5 @@
 import React from 'react';
-import { KPI, Tooltip } from '@baby-toys/ui-kit';
+import { Flex, KPI, Tooltip } from '@baby-toys/ui-kit';
 import { Info } from 'lucide-react';
 
 export type KPIWithTooltipProps = {
@@ -10,21 +10,14 @@ export type KPIWithTooltipProps = {
 
 const KPIWithTooltip: React.FC<KPIWithTooltipProps> = ({ label, value, tooltip }) => {
   const labelNode = tooltip ? (
-    <span style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+    <Flex spacing="xs" wrap>
       <span>{label}</span>
-      <Tooltip
-        content={
-          <div style={{ maxWidth: 200, whiteSpace: 'normal', wordBreak: 'break-word' }}>
-            {tooltip}
-          </div>
-        }
-        position="top"
-      >
+      <Tooltip content={tooltip} position="top">
         <span>
           <Info style={{ opacity: 0.7, cursor: 'help', width: 16, height: 16 }} />
         </span>
       </Tooltip>
-    </span>
+    </Flex>
   ) : (
     label
   );

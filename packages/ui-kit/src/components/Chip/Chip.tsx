@@ -4,28 +4,37 @@ import clsx from 'clsx';
 import Button from '../Button/Button.tsx';
 import { X } from 'lucide-react';
 
+export type ChipAppearance =
+  | 'primary'
+  | 'secondary'
+  | 'secondary-outline'
+  | 'success'
+  | 'warning'
+  | 'info'
+  | 'danger'
+  | 'error';
+
 type ChipProps = {
   label: string;
-  appearance?:
-    | 'primary'
-    | 'secondary-outline'
-    | 'success'
-    | 'warning'
-    | 'info'
-    | 'danger'
-    | 'secondary';
+  appearance?: ChipAppearance;
   className?: string;
   size?: 'small';
   onClose?: () => void;
 };
 
-const Chip: React.FC<ChipProps> = ({ size, onClose, label, appearance = 'primary', className }) => {
+const Chip: React.FC<ChipProps> = ({
+  size,
+  onClose,
+  label,
+  appearance = 'secondary',
+  className,
+}) => {
   return (
     <span
       className={clsx(
         styles.chip,
         styles[`chip--${appearance}`],
-        size && styles[`chip--${size}Size`],
+        size && styles[`chip--smallSize`],
         className,
         onClose && styles.hasClose
       )}

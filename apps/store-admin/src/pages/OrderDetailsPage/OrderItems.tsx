@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import {
   Flex,
-  Heading,
   Button,
   ConfirmDialog,
   StringInput,
@@ -9,7 +8,7 @@ import {
   Table,
   Text,
 } from '@baby-toys/ui-kit';
-import { Pencil, Trash2 } from 'lucide-react';
+import { Trash2 } from 'lucide-react';
 import styles from './order-details-page.module.scss';
 import { NavigateFunction } from 'react-router-dom';
 import { Order } from '../../api/types/order';
@@ -38,7 +37,6 @@ interface OrderItemsProps {
 export const OrderItems: React.FC<OrderItemsProps> = ({
   order,
   isEdit = false,
-  showHeaderActions = false,
   currency,
   navigate,
   localQuantities,
@@ -51,23 +49,6 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
   const { t } = useTranslation();
 
   const items = order?.items ?? [];
-
-  const title = useMemo(
-    () => (
-      <Flex justify="between" fullWidth align="center">
-        <Heading level="h3">{t('orderItems.title')}</Heading>
-
-        {showHeaderActions && (
-          <Button
-            leftIconComp={Pencil}
-            appearance="outline"
-            onClick={() => navigate(`/order-edit/${order.id}`)}
-          />
-        )}
-      </Flex>
-    ),
-    [navigate, order.id, showHeaderActions, t]
-  );
 
   const columns = useMemo(
     () => [
@@ -122,6 +103,7 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
 
           return (
             <StringInput
+              key={`qty-${item.id}-${item.quantity}`}
               type="number"
               withControls
               value={value}
@@ -186,10 +168,10 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
   }, [itemIdToDelete, items]);
 
   return (
-    <Flex>
+    <>
       <Table
         stripedRows
-        title={title}
+        title={t('orderItems.title')}
         className={styles.orderDetailsItems}
         value={items}
         columns={columns}
@@ -209,6 +191,6 @@ export const OrderItems: React.FC<OrderItemsProps> = ({
         }}
         onCancel={() => setItemIdToDelete(null)}
       />
-    </Flex>
+    </>
   );
 };

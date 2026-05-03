@@ -1,25 +1,26 @@
 .tableWrapper {
   width: 100%;
+  // Horizontal scroll ONLY — no vertical scroll on the wrapper itself
+  // Vertical scroll is handled by the page/AdminLayout
   overflow-x: auto;
-  overflow-y: auto;
+  overflow-y: visible;
   border-radius: 0 0 $radius-md $radius-md;
   background-color: var(--color-bg-primary, $color-bg-primary);
   display: flex;
   flex-direction: column;
-  height: 100%;
   -webkit-overflow-scrolling: touch;
   border: 1px solid var(--color-border-light, $color-border-light);
   border-top: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 
   &:first-child {
     border-radius: $radius-md;
     border-top: 1px solid var(--color-border-light, $color-border-light);
   }
 
+  // Thin scrollbar for horizontal scroll
   &::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
   }
   &::-webkit-scrollbar-track {
     background: transparent;
@@ -33,7 +34,10 @@
   }
 }
 
+// ─── Title bar ──────────────────────────────────────────────────────────────
+
 .tableTitle {
+  width: 100%;
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -47,7 +51,6 @@
   border: 1px solid var(--color-border-light, $color-border-light);
   border-bottom: none;
 
-  // subtle left accent stripe
   &::before {
     content: '';
     display: inline-block;
@@ -75,6 +78,7 @@
   overflow: hidden;
   background: var(--color-bg-tertiary, $color-bg-tertiary);
   border: 1px solid var(--color-border-light, $color-border-light);
+  flex-shrink: 0;
 }
 
 .cellImage {
@@ -94,16 +98,20 @@
   font-style: italic;
   border-radius: $radius-sm;
   font-size: 11px;
+  flex-shrink: 0;
 }
 
-// ─── Table core ─────────────────────────────────────────────────────────────
+// ─── Core table ─────────────────────────────────────────────────────────────
 
 .table {
   width: 100%;
+  min-width: 100%;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 14px;
   color: var(--color-text-primary, $color-text-primary);
+  // Prevents table from collapsing columns aggressively
+  table-layout: auto;
 
   .emptyMessage {
     text-align: center;
@@ -120,7 +128,7 @@
   }
 
   th {
-    padding: 0.6rem 1.125rem;
+    padding: 0.65rem 1rem;
     border-bottom: 1px solid var(--color-border, $color-border);
     vertical-align: middle;
     text-align: left;
@@ -132,9 +140,10 @@
     background-color: var(--color-bg-secondary, $color-bg-secondary);
     user-select: none;
     white-space: nowrap;
+    // Sticky header — works because tableWrapper has overflow-x: auto
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 2;
     transition:
       color $transition-fast,
       background-color $transition-fast;
@@ -150,12 +159,19 @@
   }
 
   td {
-    padding: 0.75rem 1.125rem;
+    padding: 0.7rem 1rem;
     border-bottom: 1px solid var(--color-border-light, $color-border-light);
     vertical-align: middle;
     text-align: left;
     font-size: 13.5px;
     line-height: 1.45;
+    // Prevent cells from shrinking to nothing
+    white-space: nowrap;
+
+    // But text-heavy cells (body columns) should still wrap
+    &[data-wrap] {
+      white-space: normal;
+    }
   }
 
   tbody {
@@ -176,17 +192,38 @@
 
       &.isSelected {
         background-color: var(--color-primary-light, $color-primary-light);
-
-        &.withRowHover:hover {
-          background-color: var(--color-primary-light, $color-primary-light);
-        }
       }
     }
   }
 }
 
+// ─── Expand ─────────────────────────────────────────────────────────────────
+
+.expandCell {
+  width: 44px;
+  text-align: center;
+}
+
+.expandButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.expandedParent td {
+  background-color: var(--color-primary-light, $color-primary-light);
+}
+
+.expandedRow td {
+  background-color: var(--color-bg-tertiary, $color-bg-tertiary);
+  border-bottom: 1px solid var(--color-border, $color-border);
+}
+
+// ─── Filter menu ────────────────────────────────────────────────────────────
+
 .filterMenu {
   padding: 0.75rem;
+  min-width: 220px;
 }
 
 .filterMenuHeader {
@@ -208,6 +245,8 @@
   flex-direction: column;
   gap: 0.75rem;
 }
+
+// ─── RTL ────────────────────────────────────────────────────────────────────
 
 html[dir='rtl'] {
   .tableWrapper th,

@@ -1,5 +1,7 @@
-.customersPage {
-  &-search {
-    width: 350px !important;
+.customersPageSearch {
+  width: 260px !important;
+
+  @media (max-width: 640px) {
+    width: 100% !important;
   }
 }

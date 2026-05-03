@@ -8,6 +8,9 @@ import {
   BouncingDotsLoader,
   Alert,
   ConfirmDialog,
+  PageHeader,
+  Chip,
+  Tooltip,
 } from '@baby-toys/ui-kit';
 import { Pencil, Trash2, Plus } from 'lucide-react';
 import {
@@ -61,99 +64,106 @@ const DeliveryZonesPage: React.FC = () => {
       {
         header: t('delivery.columns.active'),
         field: 'active',
-        body: (row: AdminDeliveryZone) => (row.active ? t('app.yes') : t('app.no')),
+        body: (row: AdminDeliveryZone) => (
+          <Chip
+            label={row.active ? t('app.yes') : t('app.no')}
+            appearance={row.active ? 'success' : 'secondary'}
+          />
+        ),
       },
       {
         header: t('app.actions'),
         field: 'actions',
         body: (row: AdminDeliveryZone) => (
-          <Flex spacing="m">
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={Pencil}
-              onClick={() => onEdit(row)}
-              aria-label={t('common.edit')}
-            />
-            <Button
-              size="small"
-              appearance="outline"
-              leftIconComp={Trash2}
-              onClick={() => askDeactivate(row)}
-              aria-label={t('common.deactivate')}
-            />
+          <Flex spacing="s">
+            <Tooltip position="top" content={t('common.edit')}>
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Pencil}
+                onClick={() => onEdit(row)}
+                aria-label={t('common.edit')}
+              />
+            </Tooltip>
+            <Tooltip
+              position="top"
+              content={t('delivery.deactivate', { defaultValue: 'Deactivate' })}
+            >
+              <Button
+                size="small"
+                appearance="outline"
+                leftIconComp={Trash2}
+                isDisabled={!row.active || isMutating}
+                onClick={() => askDeactivate(row)}
+                aria-label={t('delivery.deactivate', { defaultValue: 'Deactivate' })}
+              />
+            </Tooltip>
           </Flex>
         ),
       },
     ];
-  }, [t]);
-
-  const doDeactivate = async () => {
-    if (!toDeactivate) return;
-    await deactivateZone.mutateAsync({ id: toDeactivate.id });
-    setConfirmVisible(false);
-    setToDeactivate(null);
-  };
+  }, [t, isMutating]);
 
   if (isLoading) {
     return (
       <AdminLayout>
-        <Flex justify="center">
-          <BouncingDotsLoader />
-        </Flex>
+        <BouncingDotsLoader />
       </AdminLayout>
     );
   }
 
   if (error) {
-    // @ts-ignore
-    const msg = error?.message || t('delivery.zones.loadError');
     return (
       <AdminLayout>
-        <Alert appearance="error" title={t('app.error')} message={msg} />
+        <Alert
+          appearance="error"
+          title={t('delivery.loadErrorTitle', { defaultValue: 'Error loading zones' })}
+          message={(error as any).message || t('app.unexpectedError')}
+        />
       </AdminLayout>
     );
   }
 
   return (
-    <AdminLayout isMaskLoading={isMutating}>
-      <Flex direction="vertical" spacing="m" fullWidth>
-        <Flex justify="between" align="center" fullWidth>
-          <Heading>{t('delivery.zones.title')}</Heading>
-          <Button
-            leftIconComp={Plus}
-            onClick={() => {
-              setEditing(null);
-              setDialogVisible(true);
-            }}
-          >
-            {t('delivery.zones.add')}
+    <AdminLayout>
+      <PageHeader
+        left={<Heading>{t('delivery.zones.title', { defaultValue: 'Delivery Zones' })}</Heading>}
+        right={
+          <Button leftIconComp={Plus} onClick={() => setDialogVisible(true)}>
+            {t('delivery.addZone', { defaultValue: 'Add Zone' })}
           </Button>
-        </Flex>
-
-        <Table
-          columns={columns as any}
-          value={zones}
-          stripedRows
-          emptyMessage={t('delivery.zones.empty')}
-        />
-      </Flex>
-
-      <DeliveryZoneDialog
-        visible={dialogVisible}
-        zone={editing || undefined}
-        onHide={closeDialog}
-        onSuccess={closeDialog}
+        }
       />
+
+      <Table
+        stripedRows
+        value={zones}
+        columns={columns}
+        emptyMessage={t('delivery.zones.empty', { defaultValue: 'No delivery zones found.' })}
+      />
+
+      <DeliveryZoneDialog visible={dialogVisible} onHide={closeDialog} zone={editing} />
 
       <ConfirmDialog
         visible={confirmVisible}
-        onCancel={() => setConfirmVisible(false)}
-        onConfirm={doDeactivate}
-        header={t('delivery.zones.deactivateTitle')}
-        message={
-          toDeactivate ? t('delivery.zones.deactivateConfirm', { code: toDeactivate.code }) : ''
-        }
+        header={t('delivery.deactivateTitle', { defaultValue: 'Deactivate Zone' })}
+        message={t('delivery.deactivateConfirm', {
+          defaultValue: 'Deactivate zone "{{code}}"?',
+          code: toDeactivate?.code,
+        })}
+        onConfirm={async () => {
+          if (toDeactivate) {
+            await deactivateZone.mutateAsync(toDeactivate.code);
+          }
+          setConfirmVisible(false);
+          setToDeactivate(null);
+        }}
+        onCancel={() => {
+          setConfirmVisible(false);
+          setToDeactivate(null);
+        }}
+        confirmLabel={t('delivery.deactivate', { defaultValue: 'Deactivate' })}
+        cancelLabel={t('common.cancel')}
       />
     </AdminLayout>
   );
