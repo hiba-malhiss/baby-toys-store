@@ -506,7 +506,7 @@ const SettingsPage: React.FC = () => {
 
           {/* Fixed save */}
           <Flex justify="end" fullWidth>
-            <Button color="primary" onClick={handleSubmit}>
+            <Button type="submit" color="primary" isLoading={upsertMutation.isPending}>
               {t('homepage.actions.saveChanges')}
             </Button>
           </Flex>
