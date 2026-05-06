@@ -13,7 +13,7 @@ import {
   Flex,
   PageHeader,
 } from '@baby-toys/ui-kit';
-import { useDeleteAttributeType, useAttributeTypes } from '../../api/attributeApi';
+import { useDeleteAttributeType, useAttributeTypes, useQueryClient } from '../../api/attributeApi';
 import TypeUpsertDialog from './TypeUpsertDialog.tsx';
 import type { AttributeTypeListDto as AttributeType } from '../../api/types/attribute';
 import { Pencil, Trash2, ChevronDown, Plus } from 'lucide-react';
@@ -23,7 +23,7 @@ import AttributesValuesRow from './AttributesValuesRow.tsx';
 
 const AttributesPage: React.FC = () => {
   const { t } = useTranslation();
-  const { data: types = [], isLoading: loadingTypes } = useAttributeTypes();
+  const { data: types = [], isLoading: loadingTypes, refetch: refetchTypes } = useAttributeTypes();
   const toast = useToast();
   const [expandedRows, setExpandedRows] = React.useState<Record<string, boolean>>({});
   const [showAddType, setShowAddType] = React.useState(false);
@@ -202,13 +202,14 @@ const AttributesPage: React.FC = () => {
           setShowAddType(false);
           setEditRow(null);
         }}
-        onSuccess={() =>
+        onSuccess={() => {
           toast.success(
             t(editRow ? 'common.update' : 'common.create', {
               defaultValue: editRow ? 'Updated' : 'Created',
             })
-          )
-        }
+          );
+          refetchTypes();
+        }}
       />
 
       <ConfirmDialog

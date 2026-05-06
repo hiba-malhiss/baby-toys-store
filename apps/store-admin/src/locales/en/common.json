@@ -939,6 +939,9 @@
         "maxUses": {
           "label": "Max Uses",
           "placeholder": "e.g., 100"
+        },
+        "validation": {
+          "validUntilAfterValidFrom": "Valid until date must be after valid from date"
         }
       },
       "or": "OR",

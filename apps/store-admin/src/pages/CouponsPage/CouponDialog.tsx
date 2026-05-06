@@ -204,7 +204,7 @@ const CouponDialog: React.FC<CouponDialogProps> = ({ visible, onHide, onSuccess,
           </FormFieldWrapper>
         </Flex>
 
-        <Flex spacing="m" fullWidth>
+        <Flex spacing="m" fullWidth align="end">
           <FormFieldWrapper
             name="validFrom"
             control={control}

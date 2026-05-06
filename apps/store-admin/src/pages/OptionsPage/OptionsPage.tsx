@@ -13,7 +13,7 @@ import {
   Flex,
   PageHeader,
 } from '@baby-toys/ui-kit';
-import { useOptionTypes, useDeleteOptionType } from '../../api/optionApi';
+import { useOptionTypes, useDeleteOptionType, useQueryClient } from '../../api/optionApi';
 import type { OptionTypeDto as OptionType } from '../../api/types/option';
 import { Pencil, Trash2, ChevronDown, Plus } from 'lucide-react';
 import TypeUpsertDialog from './TypeUpsertDialog.tsx';
@@ -23,7 +23,7 @@ import OptionsValuesRow from './OptionsValuesRow.tsx';
 
 const OptionsPage: React.FC = () => {
   const { t } = useTranslation();
-  const { data: types = [], isLoading: loadingTypes } = useOptionTypes();
+  const { data: types = [], isLoading: loadingTypes, refetch: refetchTypes } = useOptionTypes();
   const toast = useToast();
   const [expandedRows, setExpandedRows] = useState<Record<string, boolean>>({});
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -194,13 +194,14 @@ const OptionsPage: React.FC = () => {
         mode={editRow ? 'edit' : 'create'}
         initial={editRow as any}
         onClose={() => setDialogOpen(false)}
-        onSuccess={() =>
+        onSuccess={() => {
           toast.success(
             t(editRow ? 'common.update' : 'common.create', {
               defaultValue: editRow ? 'Updated' : 'Created',
             })
-          )
-        }
+          );
+          refetchTypes();
+        }}
       />
 
       <ConfirmDialog
