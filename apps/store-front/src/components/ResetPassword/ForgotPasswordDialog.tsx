@@ -50,6 +50,18 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      fullWidth
+      style={{ marginTop: '0.5rem' }}
+      isDisabled={isSubmitting || forgotMutation.isPending}
+      isLoading={isSubmitting || forgotMutation.isPending}
+    >
+      {t('auth.dialogs.forgot.submitLabel')}
+    </Button>
+  );
+
   return (
     <>
       <Dialog
@@ -58,6 +70,7 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
         header={t('auth.dialogs.forgot.header')}
         modal
         closable={!isSubmitting && !forgotMutation.isPending}
+        footer={footer}
       >
         <Text size="sm" color="muted" className="bts-marginBs">
           {t('auth.dialogs.forgot.description')}
@@ -81,16 +94,6 @@ const ForgotPasswordDialog: React.FC<ForgotPasswordDialogProps> = ({ open, onClo
                 isDisabled={isSubmitting || forgotMutation.isPending}
               />
             </FormFieldWrapper>
-
-            <Button
-              type="submit"
-              fullWidth
-              style={{ marginTop: '0.5rem' }}
-              isDisabled={isSubmitting || forgotMutation.isPending}
-              isLoading={isSubmitting || forgotMutation.isPending}
-            >
-              {t('auth.dialogs.forgot.submitLabel')}
-            </Button>
           </Flex>
         </form>
       </Dialog>

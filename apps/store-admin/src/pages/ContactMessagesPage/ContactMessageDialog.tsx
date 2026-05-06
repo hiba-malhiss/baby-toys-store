@@ -21,8 +21,14 @@ const ContactMessageDialog: React.FC<ContactMessageDialogProps> = ({
     ? t('app.contact.dialog.title', { id: message.id })
     : t('app.contact.dialog.defaultTitle');
 
+  const footer = (
+    <Flex justify="end">
+      <Button onClick={onHide}>{t('app.common.close')}</Button>
+    </Flex>
+  );
+
   return (
-    <Dialog visible={visible} onHide={onHide} header={header}>
+    <Dialog visible={visible} onHide={onHide} header={header} footer={footer}>
       {isLoading || !message ? (
         <BouncingDotsLoader />
       ) : (
@@ -47,9 +53,6 @@ const ContactMessageDialog: React.FC<ContactMessageDialogProps> = ({
           <Flex direction="vertical" spacing="s">
             <Text weight="bold">{t('app.contact.dialog.message')}</Text>
             <Text>{message.message}</Text>
-          </Flex>
-          <Flex justify="end" className="bts-marginTml">
-            <Button onClick={onHide}>{t('app.common.close')}</Button>
           </Flex>
         </Flex>
       )}

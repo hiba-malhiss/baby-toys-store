@@ -87,6 +87,23 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     }
   };
 
+  const footer = (
+    <>
+      <Button appearance="outline" type="button" onClick={onClose}>
+        {t('app.cancel', { defaultValue: 'Cancel' })}
+      </Button>
+      <Button
+        type="submit"
+        isLoading={isEdit ? updateValue.isPending : createValue.isPending}
+        isDisabled={isEdit ? updateValue.isPending : createValue.isPending}
+      >
+        {isEdit
+          ? t('common.update', { defaultValue: 'Update' })
+          : t('app.save', { defaultValue: 'Save' })}
+      </Button>
+    </>
+  );
+
   return (
     <Dialog
       header={
@@ -98,6 +115,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
       onVisibleChange={onClose as any}
       dismissibleMask
       modal
+      footer={footer}
     >
       <form
         onSubmit={rhf.handleSubmit(onSubmit, () =>
@@ -144,21 +162,6 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
             >
               <StringInput placeholder="auto" isDisabled={isEdit} />
             </FormFieldWrapper>
-          </div>
-
-          <div className={styles.dialogFooter}>
-            <Button appearance="outline" type="button" onClick={onClose}>
-              {t('app.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button
-              type="submit"
-              isLoading={isEdit ? updateValue.isPending : createValue.isPending}
-              isDisabled={isEdit ? updateValue.isPending : createValue.isPending}
-            >
-              {isEdit
-                ? t('common.update', { defaultValue: 'Update' })
-                : t('app.save', { defaultValue: 'Save' })}
-            </Button>
           </div>
         </div>
       </form>

@@ -124,9 +124,9 @@ const HomePageContent: React.FC = () => {
                   );
                 })}
               </TabBar>
-              <Divider />
-              <div className={styles.uploaderWrap}>
-                <p className={styles.uploaderLabel}>
+              <Divider className="bts-marginVl" />
+              <div>
+                <p>
                   {t('homepage.mainBanner.images', { defaultValue: 'Banner images (up to 5)' })}
                 </p>
                 <ImageUploader {...mainBannerUploaderProps} maxImages={5} />

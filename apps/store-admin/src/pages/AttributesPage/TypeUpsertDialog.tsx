@@ -149,6 +149,23 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     <Toggle checked={!!value} onChange={(v) => onChange?.(!!v)} isDisabled={isDisabled} />
   );
 
+  const footer = (
+    <>
+      <Button appearance="outline" type="button" onClick={onClose}>
+        {t('app.cancel', { defaultValue: 'Cancel' })}
+      </Button>
+      <Button
+        type="submit"
+        isLoading={isEdit ? updateMutation.isPending : createMutation.isPending}
+        isDisabled={isEdit ? updateMutation.isPending : createMutation.isPending}
+      >
+        {isEdit
+          ? t('common.update', { defaultValue: 'Update' })
+          : t('app.save', { defaultValue: 'Save' })}
+      </Button>
+    </>
+  );
+
   return (
     <Dialog
       header={
@@ -160,6 +177,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       onHide={onClose}
       dismissibleMask
       modal
+      footer={footer}
     >
       <form
         onSubmit={rhf.handleSubmit(onSubmit, () =>
@@ -249,21 +267,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
                 <StringInput isDisabled={rhf.formState.isSubmitting} placeholder="auto" />
               </FormFieldWrapper>
             </div>
-          </div>
-
-          <div className={styles.dialogFooter}>
-            <Button appearance="outline" type="button" onClick={onClose}>
-              {t('app.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button
-              type="submit"
-              isLoading={isEdit ? updateMutation.isPending : createMutation.isPending}
-              isDisabled={isEdit ? updateMutation.isPending : createMutation.isPending}
-            >
-              {isEdit
-                ? t('common.update', { defaultValue: 'Update' })
-                : t('app.save', { defaultValue: 'Save' })}
-            </Button>
           </div>
         </div>
       </form>

@@ -187,12 +187,19 @@ const AdminAuditDetailDialog: React.FC<Props> = ({ open, logId, onClose }) => {
     );
   };
 
+  const footer = (
+    <Flex justify="end">
+      <Button onClick={onClose}>{t('common.close', { defaultValue: 'Close' })}</Button>
+    </Flex>
+  );
+
   return (
     <Dialog
       visible={open}
       onHide={onClose}
       header={t('auditLogs.changeDetails', { defaultValue: 'Change Details' })}
       fullWidth
+      footer={footer}
     >
       <Flex direction="vertical" spacing="m" fullWidth>
         <div className={styles.detailHeader}>

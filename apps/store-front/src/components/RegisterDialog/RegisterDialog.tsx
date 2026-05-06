@@ -57,6 +57,18 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      fullWidth
+      isDisabled={isSubmitting || registerMutation.isPending}
+      aria-label={t('auth.dialogs.register.submitAria')}
+      isLoading={isSubmitting || registerMutation.isPending}
+    >
+      {t('auth.dialogs.register.submitLabel')}
+    </Button>
+  );
+
   return (
     <>
       <Dialog
@@ -68,6 +80,7 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
         focusOnShow
         dismissableMask={!isSubmitting && !registerMutation.isPending}
         aria-label={t('auth.dialogs.register.formAria')}
+        footer={footer}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
@@ -152,16 +165,6 @@ const RegisterDialog: React.FC<RegisterDialogProps> = ({ open, onClose }) => {
                 isSearchableInternally
               />
             </FormFieldWrapper>
-
-            <Button
-              type="submit"
-              fullWidth
-              isDisabled={isSubmitting || registerMutation.isPending}
-              aria-label={t('auth.dialogs.register.submitAria')}
-              isLoading={isSubmitting || registerMutation.isPending}
-            >
-              {t('auth.dialogs.register.submitLabel')}
-            </Button>
           </Flex>
         </form>
       </Dialog>

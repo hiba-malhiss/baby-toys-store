@@ -251,12 +251,27 @@ const VariationDialog: React.FC<Props> = ({
     toast.error(t('app.formInvalid', { defaultValue: 'Please fix the highlighted fields.' }));
   };
 
+  const footer = (
+    <>
+      <Button appearance="outline" onClick={onClose}>
+        {t('app.variation.cancel')}
+      </Button>
+      <Button
+        onClick={handleSubmit(onSubmit, onInvalid)}
+        isLoading={createVariant.isPending || updateVariant.isPending}
+      >
+        {editing ? t('app.variation.save') : t('app.variation.create')}
+      </Button>
+    </>
+  );
+
   return (
     <Dialog
       header={editing ? t('app.variation.editTitle') : t('app.variation.addTitle')}
       visible={isOpen}
       width="60%"
       onVisibleChange={(v) => !v && onClose()}
+      footer={footer}
     >
       <div className={styles.dialogBody}>
         {/* Option selections — top priority */}
@@ -361,19 +376,6 @@ const VariationDialog: React.FC<Props> = ({
             disabled={allProductImages.length === 0}
             status="default"
           />
-        </div>
-
-        {/* Footer actions */}
-        <div className={styles.dialogFooter}>
-          <Button appearance="outline" onClick={onClose}>
-            {t('app.variation.cancel')}
-          </Button>
-          <Button
-            onClick={handleSubmit(onSubmit, onInvalid)}
-            isLoading={createVariant.isPending || updateVariant.isPending}
-          >
-            {editing ? t('app.variation.save') : t('app.variation.create')}
-          </Button>
         </div>
       </div>
     </Dialog>

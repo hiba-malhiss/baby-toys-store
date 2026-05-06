@@ -52,6 +52,18 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      fullWidth
+      isDisabled={isSubmitting || loginMutation.isPending}
+      aria-label={t('auth.dialogs.login.submitAria')}
+      isLoading={isSubmitting || loginMutation.isPending}
+    >
+      {t('auth.dialogs.login.submitLabel')}
+    </Button>
+  );
+
   return (
     <>
       <Dialog
@@ -63,6 +75,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
         focusOnShow
         dismissableMask={!isSubmitting && !loginMutation.isPending}
         aria-label={t('auth.dialogs.login.formAria')}
+        footer={footer}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
@@ -96,16 +109,6 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
                 }}
               >
                 {t('auth.dialogs.login.forgotLink')}
-              </Button>
-
-              <Button
-                type="submit"
-                fullWidth
-                isDisabled={isSubmitting || loginMutation.isPending}
-                aria-label={t('auth.dialogs.login.submitAria')}
-                isLoading={isSubmitting || loginMutation.isPending}
-              >
-                {t('auth.dialogs.login.submitLabel')}
               </Button>
             </Flex>
           </Flex>

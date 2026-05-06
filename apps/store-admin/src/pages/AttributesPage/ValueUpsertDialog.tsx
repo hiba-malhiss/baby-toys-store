@@ -105,6 +105,23 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
     onChange,
   }) => <Toggle value={!!value} onChange={(v) => onChange?.(!!v)} />;
 
+  const footer = (
+    <>
+      <Button appearance="outline" type="button" onClick={onClose}>
+        {t('app.cancel', { defaultValue: 'Cancel' })}
+      </Button>
+      <Button
+        type="submit"
+        isLoading={isEdit ? updateHook.isPending : createHook.isPending}
+        isDisabled={isEdit ? updateHook.isPending : createHook.isPending}
+      >
+        {isEdit
+          ? t('common.update', { defaultValue: 'Update' })
+          : t('app.save', { defaultValue: 'Save' })}
+      </Button>
+    </>
+  );
+
   return (
     <Dialog
       header={
@@ -116,6 +133,7 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
       onHide={onClose}
       dismissibleMask
       modal
+      footer={footer}
     >
       <form
         onSubmit={rhf.handleSubmit(onSubmit, () =>
@@ -178,21 +196,6 @@ const ValueUpsertDialog: React.FC<ValueUpsertDialogProps> = ({
                 <StringInput isDisabled={rhf.formState.isSubmitting} placeholder="auto" />
               </FormFieldWrapper>
             )}
-          </div>
-
-          <div className={styles.dialogFooter}>
-            <Button appearance="outline" type="button" onClick={onClose}>
-              {t('app.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button
-              type="submit"
-              isLoading={isEdit ? updateHook.isPending : createHook.isPending}
-              isDisabled={isEdit ? updateHook.isPending : createHook.isPending}
-            >
-              {isEdit
-                ? t('common.update', { defaultValue: 'Update' })
-                : t('app.save', { defaultValue: 'Save' })}
-            </Button>
           </div>
         </div>
       </form>

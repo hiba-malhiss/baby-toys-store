@@ -112,6 +112,23 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
     }
   };
 
+  const footer = (
+    <>
+      <Button appearance="outline" type="button" onClick={onClose}>
+        {t('app.cancel', { defaultValue: 'Cancel' })}
+      </Button>
+      <Button
+        type="submit"
+        isLoading={isEdit ? updateType.isPending : createType.isPending}
+        isDisabled={isEdit ? updateType.isPending : createType.isPending}
+      >
+        {isEdit
+          ? t('common.update', { defaultValue: 'Update' })
+          : t('app.save', { defaultValue: 'Save' })}
+      </Button>
+    </>
+  );
+
   return (
     <Dialog
       header={
@@ -123,6 +140,7 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
       onVisibleChange={onClose as any}
       dismissibleMask
       modal
+      footer={footer}
     >
       <form
         onSubmit={rhf.handleSubmit(onSubmit, () =>
@@ -194,21 +212,6 @@ const TypeUpsertDialog: React.FC<TypeUpsertDialogProps> = ({
             >
               <StringInput placeholder="auto" />
             </FormFieldWrapper>
-          </div>
-
-          <div className={styles.dialogFooter}>
-            <Button appearance="outline" type="button" onClick={onClose}>
-              {t('app.cancel', { defaultValue: 'Cancel' })}
-            </Button>
-            <Button
-              type="submit"
-              isLoading={isEdit ? updateType.isPending : createType.isPending}
-              isDisabled={isEdit ? updateType.isPending : createType.isPending}
-            >
-              {isEdit
-                ? t('common.update', { defaultValue: 'Update' })
-                : t('app.save', { defaultValue: 'Save' })}
-            </Button>
           </div>
         </div>
       </form>

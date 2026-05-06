@@ -21,6 +21,17 @@ const ConfirmDialog = ({
   onConfirm,
   onCancel,
 }: ConfirmDialogProps) => {
+  const footer = (
+    <div className={styles.confirmDialogActions}>
+      <Button onClick={onCancel} color="secondary-light">
+        {cancelLabel}
+      </Button>
+      <Button onClick={onConfirm} color="secondary-light">
+        {confirmLabel}
+      </Button>
+    </div>
+  );
+
   return (
     <Dialog
       visible={visible}
@@ -29,16 +40,9 @@ const ConfirmDialog = ({
       dismissibleMask={true}
       onVisibleChange={() => onCancel()}
       modal
+      footer={footer}
     >
       <div>{message}</div>
-      <div className={styles.confirmDialogActions}>
-        <Button onClick={onCancel} color="secondary-light">
-          {cancelLabel}
-        </Button>
-        <Button onClick={onConfirm} color="secondary-light">
-          {confirmLabel}
-        </Button>
-      </div>
     </Dialog>
   );
 };

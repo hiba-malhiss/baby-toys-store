@@ -20,8 +20,14 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
   const { t } = useTranslation('common');
   const base = `auth.dialogs.verification.${variant}` as const;
 
+  const footer = (
+    <Button onClick={onClose} className={styles.closeBtn}>
+      {t('auth.dialogs.verification.close')}
+    </Button>
+  );
+
   return (
-    <Dialog visible={visible} onHide={onClose} header={t(`${base}.title`)}>
+    <Dialog visible={visible} onHide={onClose} header={t(`${base}.title`)} footer={footer}>
       <div className={styles.content}>
         <Icon icon={CheckCircle} color={IconColor.success} size={IconSize.xxlarge} />
         <p className={styles.successText}>{t(`${base}.heading`)}</p>
@@ -34,10 +40,6 @@ const VerificationDialog: React.FC<VerificationDialogProps> = ({
         </p>
 
         <p className={styles.hint}>{t(`${base}.hint`)}</p>
-
-        <Button onClick={onClose} className={styles.closeBtn}>
-          {t('auth.dialogs.verification.close')}
-        </Button>
       </div>
     </Dialog>
   );

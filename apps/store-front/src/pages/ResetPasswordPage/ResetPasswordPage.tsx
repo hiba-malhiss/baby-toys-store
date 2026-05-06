@@ -63,6 +63,17 @@ const ResetPasswordPage: React.FC = () => {
     return <BouncingDotsLoader />;
   }
 
+  const footer = (
+    <Button
+      type="submit"
+      fullWidth
+      isDisabled={isSubmitting || resetPassword.isPending}
+      isLoading={isSubmitting || resetPassword.isPending}
+    >
+      {t('auth.reset.submit')}
+    </Button>
+  );
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
       <Dialog
@@ -71,6 +82,7 @@ const ResetPasswordPage: React.FC = () => {
         header={t('auth.reset.header')}
         closable={false}
         modal
+        footer={footer}
       >
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex direction="vertical" spacing="m" fullWidth>
@@ -107,15 +119,6 @@ const ResetPasswordPage: React.FC = () => {
                 fullWidth
               />
             </FormFieldWrapper>
-
-            <Button
-              type="submit"
-              fullWidth
-              isDisabled={isSubmitting || resetPassword.isPending}
-              isLoading={isSubmitting || resetPassword.isPending}
-            >
-              {t('auth.reset.submit')}
-            </Button>
           </Flex>
         </form>
       </Dialog>

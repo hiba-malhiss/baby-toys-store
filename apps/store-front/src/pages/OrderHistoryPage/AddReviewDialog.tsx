@@ -96,6 +96,18 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
 
   if (!item) return null;
 
+  const footer = (
+    <Button
+      onClick={onSubmit}
+      isLoading={createMutation.isPending || updateMutation.isPending}
+      color="primary"
+      fullWidth
+      isDisabled={createMutation.isPending || updateMutation.isPending}
+    >
+      {isEdit ? t('reviews.dialog.update') : t('reviews.dialog.submit')}
+    </Button>
+  );
+
   return (
     <Dialog
       header={isEdit ? t('reviews.dialog.editHeader') : t('reviews.dialog.addHeader')}
@@ -103,6 +115,7 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
       onVisibleChange={onCloseDialog}
       modal
       closable
+      footer={footer}
     >
       <Flex direction="vertical" spacing="xxl" fullWidth>
         <Flex>
@@ -130,16 +143,6 @@ const AddReviewDialog = ({ open, onClose, item, onSubmitSuccess }: AddReviewDial
         >
           <TextArea fullWidth placeholder={t('reviews.dialog.commentPlaceholder')} />
         </FormFieldWrapper>
-
-        <Button
-          onClick={onSubmit}
-          isLoading={createMutation.isPending || updateMutation.isPending}
-          color="primary"
-          fullWidth
-          isDisabled={createMutation.isPending || updateMutation.isPending}
-        >
-          {isEdit ? t('reviews.dialog.update') : t('reviews.dialog.submit')}
-        </Button>
       </Flex>
     </Dialog>
   );

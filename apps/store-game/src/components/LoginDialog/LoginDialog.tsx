@@ -55,6 +55,18 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
     }
   };
 
+  const footer = (
+    <Button
+      type="submit"
+      fullWidth
+      isDisabled={isSubmitting || loginMutation.isPending}
+      aria-label="Submit login"
+      isLoading={isSubmitting || loginMutation.isPending}
+    >
+      Login
+    </Button>
+  );
+
   return (
     <Dialog
       visible={open}
@@ -65,6 +77,7 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
       focusOnShow
       dismissableMask={!isSubmitting && !loginMutation.isPending}
       aria-label="Admin login form"
+      footer={footer}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Flex direction="vertical" spacing="m" fullWidth>
@@ -87,16 +100,6 @@ const LoginDialog: React.FC<LoginDialogProps> = ({ open, onClose, onSuccess }) =
               isDisabled={isSubmitting || loginMutation.isPending}
             />
           </FormFieldWrapper>
-
-          <Button
-            type="submit"
-            fullWidth
-            isDisabled={isSubmitting || loginMutation.isPending}
-            aria-label="Submit login"
-            isLoading={isSubmitting || loginMutation.isPending}
-          >
-            Login
-          </Button>
         </Flex>
       </form>
     </Dialog>
