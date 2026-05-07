@@ -5,6 +5,7 @@ import { useOptionTypes } from '../../../api/optionApi';
 import { Plus } from 'lucide-react';
 import OptionRow from './OptionRow.tsx';
 import styles from '../Productsform.module.scss';
+import { Button } from '@baby-toys/ui-kit';
 
 interface OptionsSectionProps {
   control: any;
@@ -39,15 +40,15 @@ const OptionsSection: React.FC<OptionsSectionProps> = ({ control, isDisabled, se
             )}
           </span>
         </div>
-        <button
-          type="button"
-          className={styles.addRowBtn}
-          disabled={isAddDisabled || isDisabled}
+        <Button
+          appearance="outline"
+          size="small"
+          isDisabled={isAddDisabled || isDisabled}
           onClick={() => append({ optionTypeId: undefined as any, valueIds: [] })}
         >
           <Plus width={14} height={14} />
           {t('productForm.addOption', 'Add Option')}
-        </button>
+        </Button>
       </div>
 
       {fields.length > 0 ? (

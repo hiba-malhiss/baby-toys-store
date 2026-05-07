@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { Plus } from 'lucide-react';
 import AttributeRow from './AttributeRow';
 import styles from '../Productsform.module.scss';
+import { Button } from '@baby-toys/ui-kit';
 
 interface AttributesSectionProps {
   control: any;
@@ -45,15 +46,15 @@ const AttributesSection: React.FC<AttributesSectionProps> = ({
             )}
           </span>
         </div>
-        <button
-          type="button"
-          className={styles.addRowBtn}
-          disabled={isAddDisabled || isDisabled}
+        <Button
+          appearance="outline"
+          size="small"
+          isDisabled={isAddDisabled || isDisabled}
           onClick={() => append({ attributeTypeId: undefined as any, valueIds: [] })}
         >
           <Plus width={14} height={14} />
           {t('productForm.addAttribute', 'Add Attribute')}
-        </button>
+        </Button>
       </div>
 
       {fields.length > 0 ? (

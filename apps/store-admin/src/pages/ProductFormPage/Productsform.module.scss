@@ -125,35 +125,6 @@
   max-width: 480px;
 }
 
-.addRowBtn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: $radius-sm;
-  border: 1px dashed var(--color-border-dark);
-  background: none;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  white-space: nowrap;
-  transition: all 0.15s;
-  flex-shrink: 0;
-  font-family: var(--font-primary);
-
-  &:hover:not(:disabled) {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
-    background: var(--color-primary-light);
-  }
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: not-allowed;
-  }
-}
-
 .rowsList {
   display: flex;
   flex-direction: column;
