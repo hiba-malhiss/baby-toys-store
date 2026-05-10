@@ -141,7 +141,7 @@ const OrderProductCard = ({
           {t('orders.shipping')}: {formatCurrency(order.shippingCost)}
         </div>
         <div>
-          {t('orders.total')}: {formatCurrency(order.totalWithShipping)}
+          {t('orders.total')}: {formatCurrency(order.grandTotal)}
         </div>
       </footer>
     </Card>

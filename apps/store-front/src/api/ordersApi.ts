@@ -39,7 +39,10 @@ export type OrderDTO = {
   status: OrderStatus;
   subtotal: number;
   discountAmount?: number | null;
-  totalWithShipping: number;
+  /** Product revenue = subtotal − discountAmount. Shipping excluded. */
+  total: number;
+  /** What the customer pays = total + shippingCost. Use on receipts/confirmations. */
+  grandTotal: number;
   couponCode?: string | null;
   items: OrderItemDTO[];
   shippingCost: number;
@@ -47,6 +50,10 @@ export type OrderDTO = {
   shippingAddress: AddressDTO;
   note: string;
 };
+
+/** Convenience aliases used by components */
+export type Order = OrderDTO;
+export type OrderItem = OrderItemDTO;
 
 export function useCancelMyOrder() {
   const qc = useQueryClient();

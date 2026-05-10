@@ -40,11 +40,15 @@ export interface Order {
   id: number;
   orderNumber: string;
   createdAt: string;
+  deliveredAt?: string | null;
   status: OrderStatus | string;
   subtotal: string;
   shippingCost?: string;
   discountAmount: string;
-  totalWithShipping: string;
+  /** Product revenue = subtotal − discountAmount. Shipping excluded. Used for profit/margin. */
+  total: string;
+  /** What the customer pays = total + shippingCost. Use on receipts and order summaries. */
+  grandTotal: string;
   couponCode?: string | null;
   items: OrderItem[];
   totalCost?: string;
@@ -53,5 +57,4 @@ export interface Order {
   shippingAddress?: ShippingAddress;
   note?: string | null;
   freeShipping: boolean;
-  deliveredAt?: string | null;
 }
