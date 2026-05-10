@@ -9,10 +9,12 @@ import type { Order, OrderItem } from '../../../api/ordersApi.ts';
 import { useTranslation } from 'react-i18next';
 
 export const statusColorMap: Record<string, string> = {
-  pending: 'warning',
-  processing: 'info',
-  shipped: 'success',
-  delivered: 'primary',
+  PENDING: 'warning',
+  PROCESSING: 'info',
+  SHIPPED: 'success',
+  DELIVERED: 'primary',
+  CANCELLED: 'error',
+  RETURNED: 'default',
 };
 
 interface OrderProductCardProps {
@@ -42,13 +44,13 @@ const OrderProductCard = ({
     <Card fullWidth size="small" className={styles.orderCard}>
       <header className={styles.orderCardHeader}>
         <div>{t('orders.orderNumber', { number: order.id })}</div>
-        <div>{formatDate(order.date)}</div>
+        <div>{formatDate(order.createdAt)}</div>
         <Chip
           label={order.status}
           severity={statusColorMap[order.status]}
           className={styles.orderCardStatus}
         />
-        {order.status === 'pending' && onCancel && (
+        {order.status === 'PENDING' && onCancel && (
           <Button
             appearance="outline"
             size="small"

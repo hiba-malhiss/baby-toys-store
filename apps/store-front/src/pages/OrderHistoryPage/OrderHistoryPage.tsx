@@ -51,9 +51,10 @@ const OrderHistoryPage: React.FC = () => {
     month: month || undefined,
   });
   const cancelMutation = useCancelMyOrder();
-  const [cancelingId, setCancelingId] = useState<string | null>(null);
-  const [confirmOrderId, setConfirmOrderId] = useState<string | null>(null);
-  const [awaitingRefetchForId, setAwaitingRefetchForId] = useState<string | null>(null);
+
+  const [cancelingId, setCancelingId] = useState<number | null>(null);
+  const [confirmOrderId, setConfirmOrderId] = useState<number | null>(null);
+  const [awaitingRefetchForId, setAwaitingRefetchForId] = useState<number | null>(null);
   const isOrdersRefetching = useIsFetching({ queryKey: ['customer-orders-normalized'] }) > 0;
 
   // When refetch completes after a cancel, clear loading state
@@ -127,7 +128,7 @@ const OrderHistoryPage: React.FC = () => {
               onBuyAgain={handleBuyAgain}
               onAddReview={(item) => setReviewDialog({ open: true, item })}
               onCancel={
-                order.status === 'pending'
+                order.status === 'PENDING'
                   ? () => {
                       if (cancelingId) return; // prevent concurrent
                       setConfirmOrderId(order.id);
@@ -167,12 +168,11 @@ const OrderHistoryPage: React.FC = () => {
           const id = confirmOrderId;
           if (!id) return;
           setConfirmOrderId(null);
-          // Defensive: ensure we only cancel pending
           const target = items.find((o) => o.id === id);
-          if (!target || target.status !== 'pending') return;
+          if (!target || target.status !== 'PENDING') return;
           setCancelingId(id);
           try {
-            await cancelMutation.mutateAsync(Number(id));
+            await cancelMutation.mutateAsync(id);
           } finally {
             // Keep button loading until the orders refetch completes
             setAwaitingRefetchForId(id);
