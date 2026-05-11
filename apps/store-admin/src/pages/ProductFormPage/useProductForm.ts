@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -48,6 +48,15 @@ export const useProductForm = () => {
 
   const [isDeletingImage, setIsDeletingImage] = useState(false);
 
+  const blobUrlMap = useRef<Map<File, string>>(new Map());
+
+  const getBlobUrl = (file: File): string => {
+    if (!blobUrlMap.current.has(file)) {
+      blobUrlMap.current.set(file, URL.createObjectURL(file));
+    }
+    return blobUrlMap.current.get(file)!;
+  };
+
   /**
    * submitPhase tracks the exact step during multi-step save so the UI can
    * show precise progress and keep the submit button disabled + loading
@@ -95,8 +104,12 @@ export const useProductForm = () => {
   // Pre-fill form when editing
   useEffect(() => {
     if (product) {
-      setExistingImages(product.images || []);
-      setMainImageUrl(product.mainImage || null);
+      const images = product.images || [];
+      const mainImg = product.mainImage || null;
+      const deduped = mainImg && !images.includes(mainImg) ? [mainImg, ...images] : images;
+
+      setExistingImages(deduped);
+      setMainImageUrl(mainImg);
       setMainImageFile(null);
 
       const trMap = new Map<string, any>();
@@ -141,8 +154,8 @@ export const useProductForm = () => {
         options: optionsArray,
         attributes: attributesArray,
         releaseDate: product.releaseDate || '',
-        images: product.images || [],
-        mainImage: product.mainImage || '',
+        images: deduped,
+        mainImage: mainImg || '',
         isActive: product.isActive ?? true,
         categoryId: product.categoryId ?? undefined,
         translations: {
@@ -171,12 +184,15 @@ export const useProductForm = () => {
 
       setNewImages([]);
       setMainImageFile(null);
+      // Clear stale blob URL mappings when re-loading a product
+      blobUrlMap.current.clear();
     } else {
       reset(defaultProductValues);
       setExistingImages([]);
       setNewImages([]);
       setMainImageUrl(null);
       setMainImageFile(null);
+      blobUrlMap.current.clear();
     }
   }, [product, reset]);
 
@@ -312,7 +328,7 @@ export const useProductForm = () => {
   const handleMainImageSelect = (urlOrBlob: string) => {
     setMainImageUrl(urlOrBlob);
     if (urlOrBlob.startsWith('blob:')) {
-      const matchedFile = newImages.find((f) => urlOrBlob === URL.createObjectURL(f));
+      const matchedFile = newImages.find((f) => getBlobUrl(f) === urlOrBlob);
       setMainImageFile(matchedFile || null);
     } else {
       setMainImageFile(null);
@@ -357,12 +373,32 @@ export const useProductForm = () => {
       setExistingImages(urls);
       setNewImages(filesArr);
 
-      if (mainImageUrl && !mainImageUrl.startsWith('blob:')) {
-        if (!urls.includes(mainImageUrl)) {
-          setMainImageUrl(null);
-          setMainImageFile(null);
+      if (mainImageUrl) {
+        if (mainImageUrl.startsWith('blob:')) {
+          // Find the File that owns this blob URL
+          const ownerFile = [...blobUrlMap.current.entries()].find(
+            ([, blobUrl]) => blobUrl === mainImageUrl
+          )?.[0];
+          // If that file is no longer in the new list, clear the selection
+          if (ownerFile && !filesArr.includes(ownerFile)) {
+            setMainImageUrl(null);
+            setMainImageFile(null);
+          }
+        } else {
+          if (!urls.includes(mainImageUrl)) {
+            setMainImageUrl(null);
+            setMainImageFile(null);
+          }
         }
       }
+
+      // Revoke blob URLs for files that were removed to avoid memory leaks
+      blobUrlMap.current.forEach((blobUrl, file) => {
+        if (!filesArr.includes(file)) {
+          URL.revokeObjectURL(blobUrl);
+          blobUrlMap.current.delete(file);
+        }
+      });
     },
     isDisabled: isDeletingImage || isSaving,
   };
