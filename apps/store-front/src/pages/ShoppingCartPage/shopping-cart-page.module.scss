@@ -6,6 +6,9 @@
   &--name {
     @include line-clamp(2);
     font-weight: 600;
+    width: 100%;
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   &--isEmpty {
@@ -145,7 +148,16 @@
     flex-direction: column;
     gap: 3px;
     min-width: 0;
-    align-items: flex-start !important; // override Button default
+
+    button {
+      width: 100%;
+      overflow: hidden;
+      justify-content: start;
+      word-break: break-word;
+      overflow-wrap: break-word;
+      display: -webkit-box;
+      text-align: start;
+    }
 
     @media (max-width: $breakpoint-large) {
       grid-area: name;
