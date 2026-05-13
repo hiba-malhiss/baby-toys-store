@@ -11,13 +11,9 @@ import { useTranslation } from 'react-i18next';
 const AuthButtonsWithDialogs: React.FC<{
   isDarkMode?: boolean;
   isLink?: boolean;
+  isVertical?: boolean;
   onAfterClick?: () => void;
-}> = ({
-  isDarkMode,
-  onAfterClick,
-
-  isLink = true,
-}) => {
+}> = ({ isDarkMode, onAfterClick, isLink = true, isVertical = false }) => {
   const { isOpen, open, close } = useLoginDialogStore();
   const [isRegisterOpen, setRegisterOpen] = React.useState(false);
   const { isAuthenticated } = useAuth();
@@ -35,7 +31,11 @@ const AuthButtonsWithDialogs: React.FC<{
   }, [logoutApi]);
 
   return (
-    <Flex spacing={!isLink && 's'} align="center">
+    <Flex
+      spacing={!isLink && 's'}
+      align="center"
+      direction={isVertical ? 'vertical' : 'horizontal'}
+    >
       {!isAuthenticated ? (
         <>
           <Button

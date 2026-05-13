@@ -51,7 +51,7 @@ const BurgerMenu = () => {
             onClick={() => navigate('/')}
           />
         }
-        footer={<AuthButtonsWithDialogs isLink={false} onAfterClick={toggleMenu} />}
+        footer={<AuthButtonsWithDialogs isLink={false} onAfterClick={toggleMenu} isVertical />}
       >
         <Flex direction="vertical" spacing="s">
           <Button
