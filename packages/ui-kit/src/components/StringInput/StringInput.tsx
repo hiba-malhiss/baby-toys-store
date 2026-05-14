@@ -112,13 +112,19 @@ const StringInput: React.FC<StringInputProps> = ({
   const anchorRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<number | undefined>(undefined);
 
+  // Holds the raw string the user is actively typing for number inputs.
+  // This prevents parseFloat("2.0") → 2 → "2" from clobbering in-progress decimals.
+  const rawNumberInputRef = useRef<string | null>(null);
+
   const resolvedIcon = iconRight ?? icon;
   const resolvedIconPosition: IconPosition = iconRight ? 'right' : iconPosition;
 
   const handleChange = (newVal: string, byControls = false) => {
-    if (!isControlled) setInternalValue(newVal);
-
     if (type === 'number') {
+      // Always preserve the raw string so trailing zeros / decimal points survive
+      if (!isControlled) setInternalValue(newVal);
+      rawNumberInputRef.current = newVal;
+
       const trimmed = newVal.trim();
       if (!trimmed) {
         onChange?.(null as any, byControls);
@@ -135,11 +141,14 @@ const StringInput: React.FC<StringInputProps> = ({
       } else {
         onChange?.(NaN as any, byControls);
       }
-    } else {
-      onChange?.(newVal as any, byControls);
+      return;
     }
 
-    if (autoCompleteEnabled && type !== 'number') {
+    if (!isControlled) setInternalValue(newVal);
+
+    onChange?.(newVal as any, byControls);
+
+    if (autoCompleteEnabled) {
       const trimmed = newVal.trim();
       if (!trimmed) {
         setSuggestions([]);
@@ -169,6 +178,8 @@ const StringInput: React.FC<StringInputProps> = ({
 
   const handleStep = (step: number) => {
     if (isDisabled) return;
+    // When stepping via controls, clear the raw ref so the numeric value renders cleanly
+    rawNumberInputRef.current = null;
     const currentValue = isControlled ? String(value ?? '') : internalValue;
     const current = parseFloat(currentValue || String(min ?? '0'));
     const next = current + step;
@@ -228,7 +239,16 @@ const StringInput: React.FC<StringInputProps> = ({
     }
   );
 
-  const currentStr = isControlled ? String(value ?? '') : internalValue;
+  // For number inputs: while the user is actively typing, show their raw string
+  // so that "2.0" / "2.03" aren't collapsed to "2" by parseFloat round-tripping.
+  // The raw ref is cleared on blur so the parent's canonical value takes over.
+  const currentStr = (() => {
+    if (type === 'number' && rawNumberInputRef.current !== null) {
+      return rawNumberInputRef.current;
+    }
+    return isControlled ? String(value ?? '') : internalValue;
+  })();
+
   const currentLen = currentStr?.length ?? 0;
 
   const highlightMatch = useCallback((label: string, query: string) => {
@@ -274,7 +294,11 @@ const StringInput: React.FC<StringInputProps> = ({
           placeholder={placeholder}
           value={currentStr}
           onFocus={() => onFocus?.()}
-          onBlur={() => onBlur?.()}
+          onBlur={() => {
+            // Clear the raw ref on blur so the parent's formatted value takes over
+            rawNumberInputRef.current = null;
+            onBlur?.();
+          }}
           onChange={(e) => handleChange(e.target.value)}
           onKeyDown={handleKeyDown}
           className={clsx(inputClass, truncateOverflow && styles.inputTruncate)}
