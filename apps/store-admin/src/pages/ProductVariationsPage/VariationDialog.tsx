@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next';
 import {
   Button,
   Dialog,
-  Flex,
   StringInput,
   Toggle,
   Select,
@@ -126,8 +125,8 @@ const buildVariationSchema = (optionTypeIds: number[], t: any) =>
     })
     .superRefine((data, ctx) => {
       const priceNum = data.price as unknown as number;
-      const costNum = (data.costPrice as unknown as number) ?? 0;
-      const oldPriceNum = (data.oldPrice as unknown as number) ?? 0;
+      const costNum = data.costPrice as unknown as number;
+      const oldPriceNum = data.oldPrice as unknown as number | undefined;
 
       if (Number.isFinite(priceNum) && Number.isFinite(costNum) && costNum > priceNum) {
         ctx.addIssue({
@@ -138,7 +137,7 @@ const buildVariationSchema = (optionTypeIds: number[], t: any) =>
       }
 
       if (
-        data.oldPrice !== undefined &&
+        oldPriceNum !== undefined &&
         Number.isFinite(oldPriceNum) &&
         Number.isFinite(priceNum) &&
         oldPriceNum < priceNum
