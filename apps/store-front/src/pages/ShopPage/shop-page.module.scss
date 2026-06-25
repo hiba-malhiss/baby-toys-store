@@ -1,3 +1,5 @@
+@import '@baby-toys/ui-kit/styles/constants';
+
 $sidebar-width: 280px;
 $gap: 32px;
 
@@ -8,6 +10,7 @@ $gap: 32px;
   width: 100%;
   align-items: start;
 
+  /* ─── Sidebar ─────────────────────────────────────── */
   &-rightSide {
     position: sticky;
     top: 16px;
@@ -15,23 +18,31 @@ $gap: 32px;
     overflow-y: auto;
     width: $sidebar-width;
     scrollbar-width: thin;
-    scrollbar-color: var(--color-border, $color-border) transparent;
+    scrollbar-color: var(--color-border) transparent;
     padding-bottom: 16px;
-    animation: fadeInLeft 0.3s cubic-bezier(0, 0, 0.3, 1);
+
+    /* Refined entrance */
+    opacity: 0;
+    transform: translateX(-14px);
+    animation: sidebarIn var(--duration-slow, 480ms)
+      var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) 0.05s both;
 
     &::-webkit-scrollbar {
       width: 4px;
     }
     &::-webkit-scrollbar-thumb {
-      background: var(--color-border, $color-border);
+      background: var(--color-border);
       border-radius: 4px;
     }
   }
 
+  /* ─── Product grid column ─────────────────────────── */
   &-collection {
     flex: 1;
-    padding-bottom: 48px;
-    animation: fadeIn 0.3s ease;
+    padding-bottom: 56px;
+    opacity: 0;
+    animation: collectionIn var(--duration-slow, 480ms)
+      var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1)) 0.08s both;
   }
 
   &-youMayAlsoLike {
@@ -46,60 +57,82 @@ $gap: 32px;
   &-filterIcon {
     display: none;
   }
-
   &-filterDrawerBtn {
     display: none;
-    align-items: center;
-    gap: 8px;
-    padding: 10px 16px;
-    border: 1px solid var(--color-border, $color-border);
-    border-radius: $radius-sm;
-    background: var(--color-white, white);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition:
-      background 0.15s ease,
-      border-color 0.15s ease;
-
-    &:hover {
-      background: var(--color-bg-secondary, $color-bg-secondary);
-      border-color: var(--color-primary, $color-primary);
-    }
   }
 }
 
+/* Filter drawer button (mobile) */
+.shopPage-filterDrawerBtn {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border: 1px solid var(--color-border);
+  border-radius: $radius-sm;
+  background: var(--color-white, white);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background var(--duration-fast, 140ms) ease,
+    border-color var(--duration-fast, 140ms) ease,
+    transform var(--duration-fast, 140ms) ease;
+
+  &:hover {
+    background: var(--color-bg-secondary);
+    border-color: var(--color-primary);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* ─── Responsive ───────────────────────────────────── */
 @media (max-width: $breakpoint-large) {
   .shopPage {
     grid-template-columns: 1fr;
     column-gap: 0;
   }
-
   .shopPage-rightSide {
     display: none;
   }
-
   .shopPage-filterIcon,
   .shopPage-filterDrawerBtn {
     display: flex;
   }
 }
 
-@keyframes fadeIn {
+/* ─── Keyframes ────────────────────────────────────── */
+@keyframes sidebarIn {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-@keyframes fadeInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-12px);
+    transform: translateX(-14px);
   }
   to {
     opacity: 1;
     transform: translateX(0);
+  }
+}
+
+@keyframes collectionIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shopPage-rightSide,
+  .shopPage-collection {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 }
