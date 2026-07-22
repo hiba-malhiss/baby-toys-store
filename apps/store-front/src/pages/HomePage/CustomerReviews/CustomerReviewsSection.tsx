@@ -8,6 +8,8 @@ const CustomerReviewsSection = () => {
   const { data: featuredReviews = [], isLoading } = useHighlightedReviews();
   const { t } = useTranslation('common');
 
+  if (!isLoading && !featuredReviews.length) return null;
+
   return (
     <Section
       title={t('home.reviews.title')}
