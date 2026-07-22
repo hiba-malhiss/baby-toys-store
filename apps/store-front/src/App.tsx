@@ -2,7 +2,7 @@ import React from 'react';
 import './styles/App.scss';
 import './styles/main.scss';
 import { Routes, Route, BrowserRouter, Navigate, useLocation } from 'react-router-dom';
-import HomePage from './pages/HomePage/HomePage.tsx';
+import HomePage from './pages/HomePage/HomePageV2.tsx';
 import Layout from './components/Layout/Layout.tsx';
 import { BouncingDotsLoader, ScrollToTop, ToastProvider } from '@baby-toys/ui-kit';
 import { BreadcrumbProvider } from '@baby-toys/ui-kit/hooks';
