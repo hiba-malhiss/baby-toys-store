@@ -1,0 +1,110 @@
+@import '@baby-toys/ui-kit/styles/constants';
+
+.section {
+  padding: 48px 0;
+  width: 100%;
+
+  @media (max-width: $breakpoint-medium) {
+    padding: 32px 0;
+  }
+
+  @media (max-width: $breakpoint-small) {
+    padding: 24px 0;
+  }
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin: 0 0 12px;
+  position: relative;
+  display: inline-block;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 40px;
+    height: 3px;
+    border-radius: 2px;
+    background: var(--color-accent);
+  }
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #888);
+  max-width: 520px;
+  margin: 20px auto 0;
+  line-height: 1.5;
+}
+
+.filters {
+  margin-bottom: 28px;
+  display: flex;
+  justify-content: center;
+}
+
+.grid {
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+  margin-bottom: 36px;
+
+  @media (max-width: $breakpoint-large) {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: $breakpoint-medium) {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  @media (max-width: $breakpoint-small) {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.gridItem {
+  opacity: 0;
+  animation: fadeInUp 0.4s cubic-bezier(0, 0, 0.3, 1) forwards;
+
+  @for $i from 1 through 12 {
+    &:nth-child(#{$i}) {
+      animation-delay: #{($i - 1) * 60}ms;
+    }
+  }
+}
+
+.cta {
+  margin-top: 8px;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gridItem {
+    opacity: 1;
+    animation: none;
+  }
+}

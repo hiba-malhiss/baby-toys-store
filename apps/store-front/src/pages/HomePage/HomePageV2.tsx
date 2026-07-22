@@ -1,17 +1,19 @@
 import { PageContainer } from '../../components/Layout/PageContainer/PageContainer.tsx';
-import HeroCarousel from './HeroCarousel/HeroCarousel.tsx';
-import OurCollectionSection from './OurCollectionSection/OurCollectionSection.tsx';
-import TopPicksV2 from './TopPicksV2/TopPicksV2.tsx';
+import ShopNowSection from './ShopNowSection/ShopNowSection.tsx';
+import CategoriesStrip from './CategoriesStrip/CategoriesStrip.tsx';
+import PromoBanners from './PromoBanners/PromoBanners.tsx';
+import BestSellingGrid from './BestSellingGrid/BestSellingGrid.tsx';
 import CustomerReviewsSection from './CustomerReviews/CustomerReviewsSection.tsx';
 import PolicyCardsSection from './PolicyCardsSection/PolicyCardsSection.tsx';
 
 const HomePageV2 = () => {
   return (
     <>
-      <HeroCarousel />
+      <ShopNowSection />
       <PageContainer>
-        <OurCollectionSection />
-        <TopPicksV2 />
+        <CategoriesStrip />
+        <PromoBanners />
+        <BestSellingGrid />
         <CustomerReviewsSection />
         <PolicyCardsSection />
       </PageContainer>

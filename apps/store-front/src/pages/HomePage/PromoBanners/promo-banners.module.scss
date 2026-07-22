@@ -1,0 +1,73 @@
+@import '@baby-toys/ui-kit/styles/constants';
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+  padding: 8px 0;
+
+  @media (max-width: $breakpoint-medium) {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}
+
+.card {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  border-radius: 16px;
+  padding: 28px 24px;
+  background-size: cover;
+  background-position: center;
+  background-image: var(--bg-image);
+  display: flex;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+  }
+
+  @media (max-width: $breakpoint-medium) {
+    height: 200px;
+    padding: 20px;
+  }
+
+  @media (max-width: $breakpoint-small) {
+    height: 180px;
+    border-radius: 12px;
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(0, 0, 0, 0.35) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  );
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.text {
+  position: relative;
+  z-index: 1;
+  width: 65%;
+  font-size: clamp(1.1rem, 2vw, 1.5rem);
+  color: #fff;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+
+  @media (max-width: $breakpoint-medium) {
+    width: 70%;
+    font-size: clamp(1rem, 3.5vw, 1.3rem);
+  }
+}
